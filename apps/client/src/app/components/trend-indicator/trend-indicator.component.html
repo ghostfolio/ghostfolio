@@ -1,0 +1,43 @@
+<ngx-skeleton-loader
+  *ngIf="isLoading; else other"
+  animation="pulse"
+  appearance="circle"
+  [theme]="{
+    height: '1.8rem',
+    width: '1.8rem'
+  }"
+></ngx-skeleton-loader>
+
+<ng-template #other>
+  <ion-icon
+    *ngIf="isPaused && range === '1d'; else trend"
+    class="text-muted"
+    name="pause-circle-outline"
+    size="large"
+  >
+  </ion-icon>
+  <ng-template #trend>
+    <ng-container>
+      <ion-icon
+        *ngIf="value <= -0.0005"
+        class="text-danger"
+        name="arrow-down-circle-outline"
+        size="large"
+        [ngClass]="{ 'rotate-45-down': value > -0.01 }"
+      ></ion-icon>
+      <ion-icon
+        *ngIf="value > -0.0005 && value < 0.0005"
+        class="text-muted"
+        name="arrow-forward-circle-outline"
+        size="large"
+      ></ion-icon>
+      <ion-icon
+        *ngIf="value >= 0.0005"
+        class="text-success"
+        name="arrow-up-circle-outline"
+        size="large"
+        [ngClass]="{ 'rotate-45-up': value < 0.01 }"
+      ></ion-icon>
+    </ng-container>
+  </ng-template>
+</ng-template>

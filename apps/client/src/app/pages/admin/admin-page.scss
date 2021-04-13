@@ -1,0 +1,34 @@
+:host {
+  color: rgb(var(--dark-primary-text));
+  display: block;
+
+  table {
+    &.analytics {
+      table-layout: fixed;
+
+      tr {
+        &:nth-child(even) {
+          background-color: rgba(
+            var(--dark-primary-text),
+            var(--palette-background-hover-alpha)
+          );
+        }
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
+
+  .mat-table {
+    tr {
+      &:nth-child(even) {
+        background-color: rgba(
+          var(--light-primary-text),
+          var(--palette-background-hover-alpha)
+        );
+      }
+    }
+  }
+}

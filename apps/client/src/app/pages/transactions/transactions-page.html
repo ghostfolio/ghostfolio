@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row mb-3">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>Transactions</h3>
+      <gf-transactions-table
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [deviceType]="deviceType"
+        [locale]="user?.settings?.locale"
+        [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder"
+        [transactions]="transactions"
+        (transactionDeleted)="onDeleteTransaction($event)"
+        (transactionToUpdate)="onUpdateTransaction($event)"
+      ></gf-transactions-table>
+    </div>
+  </div>
+
+  <div
+    *ngIf="!hasImpersonationId && hasPermissionToCreateOrder"
+    class="fab-container"
+  >
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [routerLink]="[]"
+      [queryParams]="{ createDialog: true }"
+    >
+      <ion-icon name="add-outline" size="large"></ion-icon>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+{
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
+    "tsconfig.base.json": "*",
+    ".eslintrc.json": "*",
+    "nx.json": "*"
+  },
+  "affected": { "defaultBase": "master" },
+  "npmScope": "ghostfolio",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": { "cacheableOperations": ["build", "lint", "test", "e2e"] }
+    }
+  },
+  "projects": {
+    "api": { "tags": [] },
+    "client": { "tags": [] },
+    "client-e2e": {
+      "tags": [],
+      "implicitDependencies": ["client"]
+    },
+    "helper": { "tags": [] }
+  }
+}

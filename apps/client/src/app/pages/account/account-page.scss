@@ -1,0 +1,16 @@
+:host {
+  color: rgb(var(--dark-primary-text));
+  display: block;
+
+  .mat-form-field {
+    ::ng-deep {
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
+}

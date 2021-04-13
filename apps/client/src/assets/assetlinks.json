@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ch.dotsilver.ghostfolio.twa",
+      "sha256_cert_fingerprints": [
+        "22:99:86:01:E3:25:AF:BA:58:52:95:AB:05:2B:E8:C7:9B:DB:77:87:16:89:52:95:A2:1A:03:0F:51:F9:E4:41"
+      ]
+    }
+  }
+]

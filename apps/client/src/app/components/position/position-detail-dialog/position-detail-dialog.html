@@ -1,0 +1,101 @@
+<gf-dialog-header
+  mat-dialog-title
+  [deviceType]="data.deviceType"
+  [title]="data.title"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-header>
+
+<div class="flex-grow-1" mat-dialog-content>
+  <div class="container p-0">
+    <gf-line-chart
+      class="mb-4"
+      benchmarkLabel="Buy Price"
+      [benchmarkDataItems]="benchmarkDataItems"
+      [historicalDataItems]="historicalDataItems"
+      [showXAxis]="true"
+      [showYAxis]="true"
+      [symbol]="data.symbol"
+    ></gf-line-chart>
+
+    <div class="row">
+      <div class="col-6 mb-3">
+        <gf-value
+          colorizeSign="true"
+          isPercent="true"
+          label="Performance"
+          size="medium"
+          [locale]="data.locale"
+          [value]="grossPerformancePercent"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="First Buy Date"
+          size="medium"
+          [value]="firstBuyDate"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Ø Buy Price"
+          size="medium"
+          [currency]="currency"
+          [locale]="data.locale"
+          [value]="averagePrice"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Market Price"
+          size="medium"
+          [currency]="currency"
+          [locale]="data.locale"
+          [value]="marketPrice"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Minimum Price"
+          size="medium"
+          [currency]="currency"
+          [locale]="data.locale"
+          [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [value]="minPrice"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Maximum Price"
+          size="medium"
+          [currency]="currency"
+          [locale]="data.locale"
+          [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [value]="maxPrice"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          isCurrency="true"
+          label="Quantity"
+          size="medium"
+          [value]="quantity"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Investment"
+          size="medium"
+          [currency]="data.baseCurrency"
+          [locale]="data.locale"
+          [value]="investment"
+        ></gf-value>
+      </div>
+    </div>
+  </div>
+</div>
+
+<gf-dialog-footer
+  mat-dialog-actions
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-footer>

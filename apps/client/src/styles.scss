@@ -1,0 +1,144 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import './styles/bootstrap';
+
+@import '~angular-material-css-vars/main';
+
+$mat-css-dark-theme-selector: '.is-dark-theme';
+$mat-css-light-theme-selector: '.is-light-theme';
+
+@include init-material-css-vars() {
+  // If your app has any theme mixins, call them here.
+  // $mat-css-theme gets set to an appropriate value before this content is called.
+  // @include your-custom-component-theme($mat-css-theme);
+}
+
+:root {
+  --dark-background: rgb(39, 39, 39);
+  --light-background: rgb(255, 255, 255);
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-family-sans-serif);
+  margin: 0;
+  margin-bottom: 5rem;
+
+  a {
+    color: var(--dark-primary-text);
+  }
+
+  &.is-dark-theme {
+    background: var(--dark-background);
+    color: rgba(var(--light-primary-text));
+
+    a {
+      color: var(--light-primary-text);
+    }
+
+    hr {
+      border-top-color: rgba(
+        var(--light-primary-text),
+        var(--palette-foreground-divider-alpha)
+      );
+    }
+
+    ngx-skeleton-loader {
+      line-height: 0;
+      outline: 0;
+
+      .loader {
+        background-color: #323232;
+        outline: 0;
+      }
+    }
+
+    .mat-card:not([class*='mat-elevation-z']) {
+      border-color: rgba(
+        var(--light-primary-text),
+        var(--palette-foreground-divider-alpha)
+      );
+    }
+
+    .mat-fab,
+    .mat-flat-button {
+      &.mat-primary {
+        color: rgba(var(--dark-primary-text)) !important;
+      }
+    }
+  }
+}
+
+a:hover {
+  color: unset;
+  text-decoration: none;
+}
+
+button:focus {
+  outline: 0;
+}
+
+hr {
+  border-top: 1px solid
+    rgba(var(--dark-primary-text), var(--palette-foreground-divider-alpha));
+}
+
+ion-icon {
+  pointer-events: none;
+}
+
+ngx-skeleton-loader {
+  display: block;
+
+  .loader {
+    margin: 0 !important;
+  }
+}
+
+[hidden] {
+  display: flex !important;
+  visibility: hidden;
+}
+
+.cdk-overlay-container {
+  .cdk-overlay-pane {
+    max-width: 95vw !important;
+  }
+}
+
+.mat-fab,
+.mat-flat-button {
+  &.mat-primary {
+    color: rgba(var(--light-primary-text)) !important;
+  }
+}
+
+.mat-card-header-text {
+  margin: 0 !important;
+}
+
+.mat-card:not([class*='mat-elevation-z']) {
+  border: 1px solid
+    rgba(var(--dark-primary-text), var(--palette-foreground-divider-alpha));
+  box-shadow: none;
+}
+
+.mat-row {
+  &:last-child {
+    td.mat-cell {
+      border-bottom-width: 0;
+    }
+  }
+}
+
+.mat-table {
+  background: transparent !important;
+}
+
+.no-min-width {
+  min-width: unset !important;
+}

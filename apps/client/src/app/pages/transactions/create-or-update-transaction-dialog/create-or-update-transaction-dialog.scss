@@ -1,0 +1,43 @@
+:host {
+  display: block;
+
+  .mat-dialog-content {
+    max-height: unset;
+
+    .autocomplete {
+      font-size: 90%;
+      height: 2.5rem;
+
+      .symbol {
+        display: inline-block;
+        min-width: 4rem;
+      }
+    }
+
+    .mat-select {
+      &.no-arrow {
+        ::ng-deep {
+          .mat-select-arrow {
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    .mat-datepicker-input {
+      &.mat-input-element:disabled {
+        color: var(--dark-primary-text);
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-dialog-content {
+    .mat-datepicker-input {
+      &.mat-input-element:disabled {
+        color: var(--light-primary-text);
+      }
+    }
+  }
+}

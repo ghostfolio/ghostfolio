@@ -1,0 +1,157 @@
+<div class="container">
+  <div class="row">
+    <div
+      class="align-items-center d-flex flex-column justify-content-center mb-4 w-100"
+    >
+      <gf-logo size="large"></gf-logo>
+      <p class="lead m-0">Privacy-first Portfolio Tracker</p>
+    </div>
+  </div>
+
+  <div class="button-container row">
+    <div
+      class="align-items-center col d-flex justify-content-center position-relative"
+    >
+      <div class="py-5 text-center">
+        <button
+          class="d-inline-block"
+          color="primary"
+          i18n
+          mat-flat-button
+          [disabled]="!demoAuthToken"
+          (click)="createAccount()"
+        >
+          Create Account
+        </button>
+        <div class="d-inline-block mx-3 text-muted" i18n>or</div>
+        <button
+          class="d-inline-block"
+          mat-stroked-button
+          [disabled]="!demoAuthToken"
+          (click)="setToken(demoAuthToken)"
+        >
+          <span i18n>Live Demo</span>
+        </button>
+      </div>
+      <gf-line-chart
+        class="position-absolute"
+        symbol="Performance"
+        [historicalDataItems]="historicalDataItems"
+        [showLoader]="false"
+        [showXAxis]="false"
+        [showYAxis]="false"
+      ></gf-line-chart>
+    </div>
+  </div>
+
+  <div class="row my-5">
+    <div class="col text-center">
+      <h2 class="h4 mb-1 text-center">
+        Protect your <strong>wealth</strong>. Refine your
+        <strong>personal investment strategy</strong>.
+      </h2>
+      <p class="lead">
+        <strong>Ghostfolio</strong> empowers busy folks to have a sharp look of
+        their financial assets and to make solid, data-driven investment
+        decisions by evaluating automated
+        <strong>Static Portfolio Analysis Rules</strong>.
+      </p>
+    </div>
+  </div>
+
+  <div class="row my-5">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="h4 mb-1 text-center">Why <strong>Ghostfolio</strong>?</h2>
+      <p class="lead mb-3 text-center">Ghostfolio is for you if you are...</p>
+      <ul class="list-unstyled">
+        <li class="d-flex mb-3">
+          <span class="mr-3">💼 </span
+          ><span
+            >trading stocks, ETFs or cryptocurrencies on multiple
+            platforms</span
+          >
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">🏦</span
+          ><span>pursuing a buy & hold strategy</span>
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">🎯</span
+          ><span
+            >interested in getting insights of your portfolio composition</span
+          >
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">👻</span
+          ><span>valuing privacy and data ownership</span>
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">🧘</span><span>into minimalism</span>
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">🧺</span
+          ><span>caring about diversifying your financial resources</span>
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">🆓</span
+          ><span>interested in financial independence</span>
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">🙅</span
+          ><span>saying no to spreadsheets in {{ currentYear }}</span>
+        </li>
+        <li class="d-flex mb-3">
+          <span class="mr-3">😎</span><span>still reading this list</span>
+        </li>
+      </ul>
+      <div class="mt-4 text-center">
+        <a href="/about" mat-stroked-button>Learn more about Ghostfolio</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row my-5">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="h4 mb-1 text-center">
+        How does <strong>Ghostfolio</strong> work?
+      </h2>
+      <p class="lead mb-3 text-center">Get started in only 3 steps</p>
+      <ol class="m-0 pl-3">
+        <li class="mb-2">
+          Sign up anonymously<br />(no e-mail address nor credit card required)
+        </li>
+        <li class="mb-2">Add any of your historical transactions</li>
+        <li>Get valuable insights of your portfolio composition</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row my-5">
+    <div class="col-md-6 offset-md-3">
+      <h2 class="h4 mb-1 text-center">Are <strong>you</strong> ready?</h2>
+      <p class="lead mb-3 text-center">
+        Join for free now or check out the example account
+      </p>
+      <div class="py-2 text-center">
+        <button
+          color="primary"
+          i18n
+          mat-flat-button
+          [disabled]="!demoAuthToken"
+          (click)="createAccount()"
+        >
+          Create Account
+        </button>
+        <div class="d-inline-block mx-3 text-muted" i18n>or</div>
+        <button
+          class="d-inline-block"
+          mat-stroked-button
+          [disabled]="!demoAuthToken"
+          (click)="setToken(demoAuthToken)"
+        >
+          <span i18n>Live Demo</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

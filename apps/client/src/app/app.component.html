@@ -1,0 +1,37 @@
+<header>
+  <gf-header
+    class="position-fixed px-2 w-100"
+    [currentRoute]="currentRoute"
+    [user]="user"
+  ></gf-header>
+</header>
+
+<main role="main">
+  <div *ngIf="canCreateAccount" class="container create-account-container">
+    <div class="row mb-5">
+      <div class="col-md-6 offset-md-3">
+        <div
+          class="create-account-box p-2 text-center"
+          (click)="onCreateAccount()"
+        >
+          <div class="mt-1" i18n>You are using the Live Demo.</div>
+          <button mat-button color="primary" i18n>Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer d-flex justify-content-center position-absolute w-100">
+  <div class="container text-center">
+    <div>Ghostfolio {{ version }}</div>
+    <div class="py-2 text-muted">
+      <small i18n
+        >The risk of loss in trading can be substantial. It is not advisable to
+        invest money you may need in the short term.</small
+      >
+    </div>
+  </div>
+</footer>

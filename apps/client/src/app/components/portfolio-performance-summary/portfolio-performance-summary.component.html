@@ -1,0 +1,54 @@
+<div class="container p-0">
+  <div class="row no-gutters">
+    <div class="flex-grow-1"></div>
+    <div *ngIf="isLoading" class="align-items-center d-flex">
+      <ngx-skeleton-loader
+        animation="pulse"
+        class="mb-2"
+        [theme]="{
+          height: '4rem',
+          width: '15rem'
+        }"
+      ></ngx-skeleton-loader>
+    </div>
+    <div
+      [hidden]="isLoading"
+      class="display-4 font-weight-bold m-0 text-center value-container"
+    >
+      <span #value id="value"></span>
+    </div>
+    <div class="flex-grow-1 px-1">
+      <ngx-skeleton-loader
+        *ngIf="isLoading"
+        animation="pulse"
+        [theme]="{
+          height: '1.3rem',
+          width: '2.5rem'
+        }"
+      ></ngx-skeleton-loader>
+      <div *ngIf="!isLoading">
+        {{ unit }}
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showDetails" class="row">
+    <div class="d-flex col justify-content-end">
+      <gf-value
+        colorizeSign="true"
+        isCurrency="true"
+        [locale]="locale"
+        [value]="isLoading ? undefined : performance?.currentNetPerformance"
+      ></gf-value>
+    </div>
+    <div class="col">
+      <gf-value
+        colorizeSign="true"
+        isPercent="true"
+        [locale]="locale"
+        [value]="
+          isLoading ? undefined : performance?.currentNetPerformancePercent
+        "
+      ></gf-value>
+    </div>
+  </div>
+</div>

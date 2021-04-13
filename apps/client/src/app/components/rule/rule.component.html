@@ -1,0 +1,46 @@
+<div class="py-3">
+  <div class="flex-nowrap no-gutters row">
+    <div *ngIf="isLoading">
+      <ngx-skeleton-loader
+        animation="pulse"
+        class="mr-3"
+        [theme]="{
+          height: '3rem',
+          width: '3rem'
+        }"
+      ></ngx-skeleton-loader>
+    </div>
+    <div
+      *ngIf="!isLoading"
+      class="align-items-center d-flex icon-container mr-3 px-3"
+      [ngClass]="{ okay: rule?.value === true, warn: rule?.value === false }"
+    >
+      <ion-icon
+        *ngIf="rule?.value === true"
+        name="checkmark-circle-outline"
+      ></ion-icon>
+      <ion-icon *ngIf="rule?.value === false" name="warning-outline"></ion-icon>
+    </div>
+    <div *ngIf="isLoading" class="flex-grow-1">
+      <ngx-skeleton-loader
+        animation="pulse"
+        class="mt-1 mb-1"
+        [theme]="{
+          height: '1rem',
+          width: '10rem'
+        }"
+      ></ngx-skeleton-loader>
+      <ngx-skeleton-loader
+        animation="pulse"
+        [theme]="{
+          height: '1rem',
+          width: '15rem'
+        }"
+      ></ngx-skeleton-loader>
+    </div>
+    <div *ngIf="!isLoading" class="flex-grow-1">
+      <div class="h6 my-1">{{ rule?.name }}</div>
+      <div class="evaluation">{{ rule?.evaluation }}</div>
+    </div>
+  </div>
+</div>

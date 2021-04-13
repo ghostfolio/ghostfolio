@@ -1,0 +1,19 @@
+<table mat-table [dataSource]="dataSource" class="w-100">
+  <ng-container matColumnDef="granteeAlias">
+    <th mat-header-cell *matHeaderCellDef i18n>User</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.granteeAlias }}
+    </td></ng-container
+  >
+
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef i18n>Type</th>
+    <td mat-cell *matCellDef="let element">
+      <ion-icon class="mr-1" name="lock-closed-outline"></ion-icon>
+      Restricted Access
+    </td></ng-container
+  >
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

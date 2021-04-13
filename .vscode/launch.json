@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Jest File",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng",
+      "args": [
+        "test",
+        "--codeCoverage=false",
+        "--testFile=${workspaceFolder}/apps/api/src/models/portfolio.spec.ts"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole"
+    },
+    {
+      "envFile": "${workspaceFolder}/.env",
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/apps/api/src/main.ts",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "outFiles": ["${workspaceFolder}/dist/apps/api/**/*.js"],
+      "autoAttachChildProcesses": true,
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**/*.js",
+        "<node_internals>/**/*.js"
+      ]
+    }
+  ]
+}

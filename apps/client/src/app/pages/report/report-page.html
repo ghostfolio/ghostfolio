@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="align-items-center d-flex justify-content-center mb-3">
+        <span i18n>X-ray</span
+        ><ion-icon class="ml-2 text-muted" name="diamond-outline"></ion-icon>
+      </h3>
+      <p class="mb-4" i18n>
+        Ghostfolio X-ray uses static analysis to identify potential issues and
+        risks in your portfolio.
+        <span class="d-none"
+          >It will be highly configurable in the future: activate / deactivate
+          rules and customize the thresholds to match your personal investment
+          style.</span
+        >
+      </p>
+      <div class="mb-4">
+        <h4 class="m-0" i18n>Currency Cluster Risks</h4>
+        <gf-rules [rules]="currencyClusterRiskRules"></gf-rules>
+      </div>
+      <div class="mb-4">
+        <h4 class="m-0" i18n>Platform Cluster Risks</h4>
+        <gf-rules [rules]="platformClusterRiskRules"></gf-rules>
+      </div>
+      <div>
+        <h4 class="m-0" i18n>Fees</h4>
+        <gf-rules [rules]="feeRules"></gf-rules>
+      </div>
+    </div>
+  </div>
+</div>

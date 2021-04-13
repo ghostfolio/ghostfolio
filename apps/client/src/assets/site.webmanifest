@@ -1,0 +1,24 @@
+{
+  "background_color": "transparent",
+  "categories": ["finance", "utilities"],
+  "description": "Privacy-first Portfolio Tracker",
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "192x192",
+      "src": "/assets/android-chrome-192x192.png",
+      "type": "image/png"
+    },
+    {
+      "sizes": "512x512",
+      "src": "/assets/android-chrome-512x512.png",
+      "type": "image/png"
+    }
+  ],
+  "name": "Ghostfolio",
+  "orientation": "portrait",
+  "short_name": "Ghostfolio",
+  "start_url": "https://www.ghostfol.io",
+  "theme_color": "#FFFFFF",
+  "url": "https://www.ghostfol.io"
+}

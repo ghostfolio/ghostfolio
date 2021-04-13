@@ -1,0 +1,12 @@
+:host {
+  display: block;
+
+  .mat-dialog-content {
+    max-height: unset;
+
+    gf-line-chart {
+      aspect-ratio: 16 / 9;
+      margin: 0 -0.5rem;
+    }
+  }
+}

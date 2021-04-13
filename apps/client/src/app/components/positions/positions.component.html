@@ -1,0 +1,32 @@
+<div class="container p-0">
+  <div class="row no-gutters">
+    <div class="col">
+      <ng-container *ngIf="positions === undefined">
+        <gf-position [isLoading]="true"></gf-position>
+      </ng-container>
+      <ng-container *ngIf="positions !== undefined">
+        <ng-container *ngIf="hasPositions">
+          <gf-position
+            *ngFor="let position of positionsWithPriority"
+            [baseCurrency]="baseCurrency"
+            [deviceType]="deviceType"
+            [locale]="locale"
+            [position]="position"
+            [range]="range"
+          ></gf-position>
+          <gf-position
+            *ngFor="let position of positionsRest"
+            [baseCurrency]="baseCurrency"
+            [deviceType]="deviceType"
+            [locale]="locale"
+            [position]="position"
+            [range]="range"
+          ></gf-position>
+        </ng-container>
+        <div *ngIf="!hasPositions" class="p-3 text-center">
+          <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

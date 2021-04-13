@@ -1,0 +1,23 @@
+:host {
+  display: block;
+
+  gf-position {
+    &:nth-child(even) {
+      background-color: rgba(
+        var(--dark-primary-text),
+        var(--palette-background-hover-alpha)
+      );
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  gf-position {
+    &:nth-child(even) {
+      background-color: rgba(
+        var(--light-primary-text),
+        var(--palette-background-hover-alpha)
+      );
+    }
+  }
+}

@@ -1,0 +1,114 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>Resources</h3>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <h4 class="mb-3">Market</h4>
+          <div class="mb-5">
+            <div class="mb-4 media">
+              <!--<img src="" class="mr-3" />-->
+              <div class="media-body">
+                <h5 class="mt-0">
+                  Fear & Greed Index<br class="d-block d-sm-none" />
+                  <small *ngIf="currentFearAndGreedIndex">
+                    (currently
+                    <strong>{{ currentFearAndGreedIndexAsText }}</strong> at
+                    <strong>{{ currentFearAndGreedIndex }}</strong>/100)</small
+                  >
+                </h5>
+                <div class="mb-1">
+                  The fear and greed index was developed by <i>CNNMoney</i> to
+                  measure the primary emotions (fear and greed) that influence
+                  how much investors are willing to pay for stocks.
+                </div>
+                <div>
+                  <a
+                    href="https://money.cnn.com/data/fear-and-greed"
+                    target="_blank"
+                    >Fear & Greed Index →</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="media">
+              <!--<img src="" class="mr-3" />-->
+              <div class="media-body">
+                <h5 class="mt-0">Inflation Chart</h5>
+                <div class="mb-1">
+                  Inflation Chart helps you find the intrinsic value of stock
+                  markets, stock prices, goods and services by adjusting them to
+                  the amount of the money supply (M0, M1, M2) or price of other
+                  goods (food or oil).
+                </div>
+                <div>
+                  <a href="https://inflationchart.com" target="_blank"
+                    >Inflation Chart →</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <h4 class="mb-3">Glossary</h4>
+          <div>
+            <div class="mb-4 media">
+              <!--<img src="" class="mr-3" />-->
+              <div class="media-body">
+                <h5 class="mt-0">Buy and Hold</h5>
+                <div class="mb-1">
+                  Buy and hold is a passive investment strategy where you buy
+                  assets and hold them for a long period regardless of
+                  fluctuations in the market.
+                </div>
+                <div>
+                  <a
+                    href="https://www.investopedia.com/terms/b/buyandhold.asp"
+                    target="_blank"
+                    >Buy and Hold →</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="mb-4 media">
+              <!--<img src="" class="mr-3" />-->
+              <div class="media-body">
+                <h5 class="mt-0">Dollar-Cost Averaging (DCA)</h5>
+                <div class="mb-1">
+                  Dollar-cost averaging is an investment strategy where you
+                  split the total amount to be invested across periodic
+                  purchases of a target asset to reduce the impact of volatility
+                  on the overall purchase.
+                </div>
+                <div>
+                  <a
+                    href="https://www.investopedia.com/terms/d/dollarcostaveraging.asp"
+                    target="_blank"
+                    >Dollar-Cost Averaging →</a
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="media">
+              <!--<img src="" class="mr-3" />-->
+              <div class="media-body">
+                <h5 class="mt-0">Financial Independence</h5>
+                <div class="mb-1">
+                  Financial independence is the status of having enough income,
+                  for example with a passive income like dividends, to cover
+                  your living expenses for the rest of your life.
+                </div>
+                <div>
+                  <a
+                    href="https://en.wikipedia.org/wiki/Financial_independence"
+                    target="_blank"
+                    >Financial Independence →</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

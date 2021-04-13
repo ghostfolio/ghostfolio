@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="row">
+    <a
+      class="chart-container col mr-3"
+      [routerLink]="[]"
+      [queryParams]="{performanceChartDialog: true}"
+    >
+      <gf-line-chart
+        symbol="Performance"
+        [historicalDataItems]="historicalDataItems"
+        [showLoader]="false"
+        [showXAxis]="false"
+        [showYAxis]="false"
+      ></gf-line-chart>
+    </a>
+  </div>
+  <div class="overview-container row mb-5 mt-1">
+    <div class="col">
+      <gf-portfolio-performance-summary
+        class="pb-4"
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [isLoading]="isLoadingPerformance"
+        [locale]="user?.settings?.locale"
+        [performance]="performance"
+        [showDetails]="!hasImpersonationId || hasPermissionToReadForeignPortfolio"
+      ></gf-portfolio-performance-summary>
+      <div class="text-center">
+        <gf-toggle
+          [defaultValue]="dateRange"
+          [isLoading]="isLoadingPerformance"
+          [options]="dateRangeOptions"
+          (change)="onChangeDateRange($event.value)"
+        ></gf-toggle>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row mb-3">
+    <div class="col">
+      <mat-card class="p-0">
+        <mat-card-content>
+          <gf-positions
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [deviceType]="deviceType"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+            [range]="dateRange"
+          ></gf-positions>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-6 mb-3">
+      <mat-card class="h-100">
+        <mat-card-header>
+          <mat-card-title i18n>Performance</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-performance
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isLoading]="isLoadingPerformance"
+            [locale]="user?.settings?.locale"
+            [performance]="performance"
+          ></gf-portfolio-performance>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-xs-12 col-md-6 mb-3">
+      <mat-card class="h-100">
+        <mat-card-header>
+          <mat-card-title i18n>Summary</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-overview
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isLoading]="isLoadingOverview"
+            [locale]="user?.settings?.locale"
+            [overview]="overview"
+          ></gf-portfolio-overview>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+/*
+  import { Test } from '@nestjs/testing';
+
+  import { YahooFinanceService } from './yahoo-finance.service';
+
+  describe('AppService', () => {
+    let service: YahooFinanceService;
+
+    beforeAll(async () => {
+      const app = await Test.createTestingModule({
+        imports: [],
+        providers: [YahooFinanceService]
+      }).compile();
+
+      service = app.get<YahooFinanceService>(YahooFinanceService);
+    });
+
+    describe('get', () => {
+      it('should return data for USDCHF', () => {
+        expect(service.get(['USDCHF'])).toEqual('{}');
+      });
+    });
+  });
+*/

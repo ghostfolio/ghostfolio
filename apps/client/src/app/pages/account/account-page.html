@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3">
+        <ng-container *ngIf="user?.alias">{{ user.alias }}</ng-container>
+        <ng-container *ngIf="!user?.alias" i18n>Account</ng-container>
+      </h3>
+    </div>
+  </div>
+  <div *ngIf="user?.settings" class="mb-5 row">
+    <div class="col">
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <div *ngIf="user.alias" class="d-flex py-1">
+            <div class="w-50" i18n>Alias</div>
+            <div class="w-50">{{ user.alias }}</div>
+          </div>
+          <div class="d-flex py-1">
+            <div class="w-50" i18n>Membership</div>
+            <div class="w-50">
+              <div class="align-items-center d-flex mb-1">
+                <span>{{ user?.subscription?.type }}</span>
+                <ion-icon
+                  class="ml-1 text-muted"
+                  name="diamond-outline"
+                ></ion-icon>
+              </div>
+              <div>
+                Valid until {{ user.subscription.expiresAt | date:
+                defaultDateFormat }}
+              </div>
+            </div>
+          </div>
+          <div class="d-flex mt-4 py-1">
+            <div class="pt-4 w-50" i18n>Settings</div>
+            <div class="w-50">
+              <form #addTransactionForm="ngForm">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label i18n>Base Currency</mat-label>
+                  <mat-select
+                    name="baseCurrency"
+                    [value]="user.settings.baseCurrency"
+                    (selectionChange)="onChangeBaseCurrency($event)"
+                  >
+                    <mat-option
+                      *ngFor="let currency of currencies"
+                      [value]="currency"
+                      >{{ currency }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </form>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div *ngIf="accesses?.length > 0" class="row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>Granted Access</h3>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <gf-access-table [accesses]="accesses"></gf-access-table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

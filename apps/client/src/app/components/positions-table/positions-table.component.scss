@@ -1,0 +1,51 @@
+:host {
+  display: block;
+
+  ::ng-deep {
+    .mat-form-field-infix {
+      border-top: 0 solid transparent !important;
+    }
+  }
+
+  .mat-table {
+    td {
+      border: 0;
+    }
+
+    th {
+      ::ng-deep {
+        .mat-sort-header-container {
+          justify-content: inherit;
+        }
+      }
+    }
+
+    .mat-row {
+      cursor: pointer;
+
+      &:nth-child(even) {
+        background-color: rgba(
+          var(--dark-primary-text),
+          var(--palette-background-hover-alpha)
+        );
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-form-field {
+    color: rgba(var(--light-primary-text));
+  }
+
+  .mat-table {
+    .mat-row {
+      &:nth-child(even) {
+        background-color: rgba(
+          var(--light-primary-text),
+          var(--palette-background-hover-alpha)
+        );
+      }
+    }
+  }
+}

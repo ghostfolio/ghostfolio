@@ -1,0 +1,29 @@
+:host {
+  display: block;
+
+  .button-container {
+    aspect-ratio: 16 / 9;
+    margin-top: -4rem;
+
+    gf-line-chart {
+      bottom: 0;
+      left: 0;
+      opacity: 0.67;
+      right: 0;
+      top: 0;
+      z-index: -1;
+    }
+
+    .mat-stroked-button {
+      background-color: var(--light-background);
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .button-container {
+    .mat-stroked-button {
+      background-color: var(--dark-background);
+    }
+  }
+}

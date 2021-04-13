@@ -1,0 +1,53 @@
+:host {
+  display: block;
+
+  .mat-radio-button {
+    border-radius: 1rem;
+    margin: 0 0.25rem;
+    padding: 0.15rem 0.75rem;
+
+    &.mat-radio-checked {
+      background-color: rgba(
+        var(--dark-primary-text),
+        var(--palette-foreground-divider-alpha)
+      );
+    }
+
+    ::ng-deep {
+      .mat-radio-container {
+        display: none;
+      }
+
+      .mat-radio-label {
+        margin-bottom: 0;
+      }
+
+      .mat-radio-label-content {
+        color: rgba(var(--dark-primary-text), 1);
+        padding: 0;
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-radio-button {
+    &.mat-radio-checked {
+      background-color: rgba(
+        var(--light-primary-text),
+        var(--palette-foreground-divider-alpha)
+      );
+      border: 1px solid
+        rgba(
+          var(--light-primary-text),
+          var(--palette-foreground-disabled-button-alpha)
+        );
+    }
+
+    ::ng-deep {
+      .mat-radio-label-content {
+        color: rgba(var(--light-primary-text), 1);
+      }
+    }
+  }
+}

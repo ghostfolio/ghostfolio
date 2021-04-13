@@ -1,0 +1,136 @@
+<form #addTransactionForm="ngForm" class="d-flex flex-column h-100">
+  <h1 *ngIf="data.id" mat-dialog-title i18n>Update transaction</h1>
+  <h1 *ngIf="!data.id" mat-dialog-title i18n>Add transaction</h1>
+  <div class="flex-grow-1" mat-dialog-content>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Symbol or ISIN</mat-label>
+        <input
+          autocapitalize="off"
+          autocomplete="off"
+          autocorrect="off"
+          matInput
+          required
+          [formControl]="searchSymbolCtrl"
+          [matAutocomplete]="auto"
+          (change)="onUpdateSymbolByTyping($event.target.value)"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          (optionSelected)="onUpdateSymbol($event)"
+        >
+          <ng-container>
+            <mat-option
+              *ngFor="let lookupItem of filteredLookupItems | async"
+              class="autocomplete"
+              [value]="lookupItem.symbol"
+            >
+              <span class="mr-2 symbol">{{ lookupItem.symbol }}</span
+              ><span><b>{{ lookupItem.name }}</b></span>
+            </mat-option>
+          </ng-container>
+        </mat-autocomplete>
+        <mat-spinner *ngIf="isLoading" matSuffix [diameter]="20"></mat-spinner>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Type</mat-label>
+        <mat-select name="type" required [(value)]="data.type">
+          <mat-option value="BUY" i18n> BUY </mat-option>
+          <mat-option value="SELL" i18n> SELL </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Currency</mat-label>
+        <mat-select
+          class="no-arrow"
+          disabled
+          name="currency"
+          required
+          [(value)]="data.currency"
+        >
+          <mat-option *ngFor="let currency of currencies" [value]="currency"
+            >{{ currency }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Date</mat-label>
+        <input
+          disabled
+          matInput
+          name="date"
+          required
+          [matDatepicker]="date"
+          [(ngModel)]="data.date"
+        />
+        <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+        <mat-datepicker #date disabled="false"></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Fee</mat-label>
+        <input
+          matInput
+          name="fee"
+          required
+          type="number"
+          [(ngModel)]="data.fee"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Quantity</mat-label>
+        <input
+          matInput
+          name="quantity"
+          required
+          type="number"
+          [(ngModel)]="data.quantity"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Unit Price</mat-label>
+        <input
+          matInput
+          name="unitPrice"
+          required
+          type="number"
+          [(ngModel)]="data.unitPrice"
+        />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Platform</mat-label>
+        <mat-select name="platformId" [(value)]="data.platformId">
+          <mat-option [value]="null"></mat-option>
+          <mat-option *ngFor="let platform of platforms" [value]="platform.id"
+            >{{ platform.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="justify-content-end" mat-dialog-actions>
+    <button i18n mat-button (click)="onCancel()">Cancel</button>
+    <button
+      color="primary"
+      i18n
+      mat-flat-button
+      [disabled]="!(addTransactionForm.form.valid && data.symbol)"
+      [mat-dialog-close]="data"
+    >
+      Save
+    </button>
+  </div>
+</form>

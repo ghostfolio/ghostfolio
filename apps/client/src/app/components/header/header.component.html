@@ -1,0 +1,203 @@
+<mat-toolbar class="p-0">
+  <ng-container *ngIf="user">
+    <a href="/" class="no-min-width px-2" mat-button>
+      <gf-logo></gf-logo>
+    </a>
+    <span class="spacer"></span>
+    <a
+      class="d-none d-sm-block"
+      href="/"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'home' ? 'primary' : null"
+      >Overview</a
+    >
+    <a
+      class="d-none d-sm-block mx-1"
+      href="/analysis"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'analysis' ? 'primary' : null"
+      >Analysis</a
+    >
+    <a
+      class="d-none d-sm-block mx-1"
+      href="/report"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'report' ? 'primary' : null"
+      >X-ray</a
+    >
+    <a
+      class="d-none d-sm-block mx-1"
+      href="/transactions"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'transactions' ? 'primary' : null"
+      >Transactions</a
+    >
+    <a
+      *ngIf="canAccessAdminAccessControl"
+      class="d-none d-sm-block mx-1"
+      href="/admin"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'admin' ? 'primary' : null"
+      >Admin Control</a
+    >
+    <a
+      class="d-none d-sm-block mx-1"
+      href="/resources"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'resources' ? 'primary' : null"
+      >Resources</a
+    >
+    <a
+      class="d-none d-sm-block mx-1"
+      href="/about"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'about' ? 'primary' : null"
+      >About</a
+    >
+    <button
+      class="no-min-width px-1"
+      mat-flat-button
+      [matMenuTriggerFor]="accountMenu"
+    >
+      <ion-icon
+        class="d-none d-sm-block"
+        name="person-circle-outline"
+        size="large"
+      ></ion-icon>
+      <ion-icon
+        class="d-block d-sm-none"
+        name="menu-outline"
+        size="large"
+      ></ion-icon>
+    </button>
+    <mat-menu #accountMenu="matMenu" xPosition="before">
+      <ng-container *ngIf="user?.access?.length > 0">
+        <button
+          class="align-items-center d-flex"
+          mat-menu-item
+          (click)="impersonateAccount(null)"
+        >
+          <ion-icon
+            *ngIf="user?.access?.length > 0"
+            class="mr-2"
+            [name]="
+              impersonationId
+                ? 'radio-button-off-outline'
+                : 'radio-button-on-outline'
+            "
+          ></ion-icon>
+          <span *ngIf="user?.alias">{{ user.alias }}</span>
+          <span *ngIf="!user?.alias" i18n><span></span>Me</span>
+        </button>
+        <button
+          *ngFor="let accessItem of user?.access"
+          class="align-items-center d-flex"
+          disabled="false"
+          mat-menu-item
+          (click)="impersonateAccount(accessItem.id)"
+        >
+          <ion-icon
+            class="mr-2"
+            name="square-outline"
+            [name]="
+              accessItem.id === impersonationId
+                ? 'radio-button-on-outline'
+                : 'radio-button-off-outline'
+            "
+          ></ion-icon>
+          <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
+          <span *ngIf="!accessItem.alias" i18n>User</span>
+        </button>
+        <hr class="m-0" />
+      </ng-container>
+      <a
+        class="d-block d-sm-none"
+        href="/analysis"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'analysis' }"
+        >Analysis</a
+      >
+      <a
+        class="d-block d-sm-none"
+        href="/report"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'report' }"
+        >X-ray</a
+      >
+      <a
+        class="d-block d-sm-none"
+        href="/transactions"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'transactions' }"
+        >Transactions</a
+      >
+      <a
+        class="align-items-center d-flex"
+        href="/account"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
+        ><span>Account</span
+        ><ion-icon class="ml-1 text-muted" name="diamond-outline"></ion-icon
+      ></a>
+      <a
+        *ngIf="canAccessAdminAccessControl"
+        class="d-block d-sm-none"
+        href="/admin"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
+        >Admin Control</a
+      >
+      <hr class="m-0" />
+      <a
+        class="d-block d-sm-none"
+        href="/resources"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'resources' }"
+        >Resources</a
+      >
+      <a
+        class="d-block d-sm-none"
+        href="/about"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'about' }"
+        >About Ghostfolio</a
+      >
+      <hr class="d-block d-sm-none m-0" />
+      <button mat-menu-item (click)="onSignOut()">Logout</button>
+    </mat-menu>
+  </ng-container>
+  <ng-container *ngIf="user === null">
+    <a
+      *ngIf="currentRoute && currentRoute !== 'start'"
+      href="/"
+      class="mx-2 no-min-width px-2"
+      mat-button
+    >
+      <gf-logo></gf-logo>
+    </a>
+    <span class="spacer"></span>
+    <a
+      class="d-none d-sm-block mx-1"
+      href="/about"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'about' ? 'primary' : null"
+      >About</a
+    >
+    <button i18n mat-flat-button (click)="openLoginDialog()">Sign in</button>
+  </ng-container>
+</mat-toolbar>

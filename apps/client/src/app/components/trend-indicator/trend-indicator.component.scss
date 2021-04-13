@@ -1,0 +1,11 @@
+:host {
+  display: block;
+
+  .rotate-45-down {
+    transform: rotateY(0deg) rotate(-45deg);
+  }
+
+  .rotate-45-up {
+    transform: rotateY(0deg) rotate(45deg);
+  }
+}

@@ -1,0 +1,38 @@
+:host {
+  .logo {
+    background-color: rgba(var(--dark-primary-text));
+    mask: url(~apps/client/src/assets/ghost.svg) no-repeat center;
+  }
+
+  .name {
+    font-weight: 500;
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .logo {
+    background-color: rgba(var(--light-primary-text));
+  }
+}
+
+:host-context(.large) {
+  .logo {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  .name {
+    font-size: 3rem;
+  }
+}
+
+:host-context(.medium) {
+  .logo {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  .name {
+    font-size: 1.5rem;
+  }
+}

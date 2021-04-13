@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets   = ["debian-openssl-1.1.x", "native"]
+  previewFeatures = ["orderByRelation", "selectRelationCount"]
+}
+
+model Access {
+  createdAt     DateTime @default(now())
+  GranteeUser   User     @relation(fields: [granteeUserId], name: "accessGet", references: [id])
+  granteeUserId String
+  id            String   @default(uuid())
+  updatedAt     DateTime @updatedAt
+  User          User     @relation(fields: [userId], name: "accessGive", references: [id])
+  userId        String
+
+  @@id([id, userId])
+}
+
+model Analytics {
+  activityCount Int      @default(0)
+  updatedAt     DateTime @updatedAt
+  User          User     @relation(fields: [userId], references: [id])
+  userId        String   @id
+}
+
+model MarketData {
+  createdAt   DateTime @default(now())
+  date        DateTime
+  id          String   @default(uuid())
+  symbol      String
+  marketPrice Float
+
+  @@unique([date, symbol])
+  @@index(fields: [symbol])
+}
+
+model Order {
+  createdAt  DateTime  @default(now())
+  currency   Currency
+  date       DateTime
+  fee        Float
+  id         String    @default(uuid())
+  Platform   Platform? @relation(fields: [platformId], references: [id])
+  platformId String?
+  quantity   Float
+  symbol     String
+  type       Type
+  unitPrice  Float
+  updatedAt  DateTime  @updatedAt
+  User       User      @relation(fields: [userId], references: [id])
+  userId     String
+
+  @@id([id, userId])
+}
+
+model Platform {
+  id    String  @id @default(uuid())
+  name  String?
+  url   String  @unique
+  Order Order[]
+}
+
+model Property {
+  key   String @id
+  value String
+}
+
+model Settings {
+  currency  Currency
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String   @id
+}
+
+model User {
+  Access       Access[]   @relation("accessGet")
+  AccessGive   Access[]   @relation(name: "accessGive")
+  accessToken  String?
+  alias        String?
+  Analytics    Analytics?
+  createdAt    DateTime   @default(now())
+  id           String     @id @default(uuid())
+  Order        Order[]
+  provider     Provider?
+  role         Role       @default(USER)
+  Settings     Settings?
+  thirdPartyId String?
+  updatedAt    DateTime   @updatedAt
+}
+
+enum Currency {
+  CHF
+  EUR
+  GBP
+  USD
+}
+
+enum Provider {
+  ANONYMOUS
+  GOOGLE
+}
+
+enum Role {
+  ADMIN
+  DEMO
+  USER
+}
+
+enum Type {
+  BUY
+  SELL
+}

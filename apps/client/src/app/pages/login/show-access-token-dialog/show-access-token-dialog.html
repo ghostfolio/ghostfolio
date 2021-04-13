@@ -1,0 +1,42 @@
+<h1 mat-dialog-title i18n>Create Account</h1>
+<div mat-dialog-content>
+  <div>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label i18n>Security Token</mat-label>
+      <textarea
+        cdkTextareaAutosize
+        matInput
+        readonly
+        type="text"
+        [(value)]="data.accessToken"
+      ></textarea>
+      <div class="float-right mt-3">
+        <button
+          color="secondary"
+          mat-flat-button
+          [cdkCopyToClipboard]="data.accessToken"
+          (click)="enableAgreeButton()"
+        >
+          <ion-icon class="mr-1" name="copy-outline"></ion-icon
+          ><span i18n>Copy to clipboard</span>
+        </button>
+      </div>
+    </mat-form-field>
+  </div>
+  <p i18n>
+    I agree to have stored my <i>Security Token</i> from above in a secure
+    place. If I lose it, I cannot get my account back.
+  </p>
+</div>
+<div class="float-right" mat-dialog-actions>
+  <button i18n mat-flat-button [mat-dialog-close]="undefined">Cancel</button>
+  <button
+    color="primary"
+    i18n
+    mat-flat-button
+    [disabled]="isAgreeButtonDisabled"
+    [mat-dialog-close]="data"
+  >
+    Agree and continue
+  </button>
+</div>

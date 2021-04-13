@@ -1,0 +1,26 @@
+:host {
+  display: block;
+
+  .icon-container {
+    border-radius: 0.25rem;
+    height: 3rem;
+
+    &.okay {
+      background-color: var(--success);
+    }
+
+    &.warn {
+      background-color: var(--warning);
+    }
+  }
+
+  .evaluation {
+    line-height: 1.2;
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .icon-container {
+    color: rgba(var(--dark-primary-text));
+  }
+}

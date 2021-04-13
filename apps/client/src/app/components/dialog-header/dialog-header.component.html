@@ -1,0 +1,9 @@
+<span class="flex-grow-1 text-truncate">{{ title }}</span>
+<button
+  *ngIf="deviceType !== 'mobile'"
+  class="no-min-width px-0"
+  mat-button
+  (click)="onClickCloseButton()"
+>
+  <ion-icon name="close" size="large"></ion-icon>
+</button>

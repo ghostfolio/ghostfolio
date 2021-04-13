@@ -1,0 +1,24 @@
+:host {
+  display: block;
+
+  main {
+    padding: 5rem 0;
+
+    .create-account-box {
+      border: 1px solid rgba(var(--palette-primary-500), 1);
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 90%;
+
+      .link {
+        color: rgba(var(--palette-primary-500), 1);
+      }
+    }
+  }
+
+  .footer {
+    bottom: 0;
+    height: 5rem;
+    line-height: 1;
+  }
+}

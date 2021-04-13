@@ -1,0 +1,38 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
+:host {
+  display: block;
+  z-index: 999;
+
+  .mat-toolbar {
+    background-color: rgba(
+      var(--light-primary-text),
+      var(--palette-foreground-disabled-alpha)
+    );
+
+    .spacer {
+      flex: 1 1 auto;
+    }
+
+    .mat-flat-button {
+      &:not(.mat-primary) {
+        background-color: transparent;
+      }
+
+      ion-icon {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-toolbar {
+    background-color: rgba(
+      39,
+      39,
+      39,
+      var(--palette-foreground-disabled-alpha)
+    );
+  }
+}

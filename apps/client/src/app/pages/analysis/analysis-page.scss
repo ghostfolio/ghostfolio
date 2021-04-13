@@ -1,0 +1,32 @@
+:host {
+  .proportion-charts {
+    .mat-card {
+      .mat-card-content {
+        padding: 1rem 2rem;
+      }
+    }
+  }
+
+  .mat-card {
+    .mat-card-header {
+      ::ng-deep {
+        .mat-card-header-text {
+          flex: 1 1 auto;
+        }
+      }
+
+      gf-toggle {
+        font-size: 90%;
+      }
+    }
+
+    a {
+      color: rgba(var(--palette-primary-500), 1);
+      font-weight: bold;
+
+      &:hover {
+        color: rgba(var(--palette-primary-300), 1);
+      }
+    }
+  }
+}

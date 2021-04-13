@@ -1,0 +1,187 @@
+<div class="container">
+  <div class="mb-5 row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>Analysis</h3>
+      <gf-positions-table
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [deviceType]="deviceType"
+        [locale]="user?.settings?.locale"
+        [positions]="positionsArray"
+      ></gf-positions-table>
+    </div>
+  </div>
+  <div class="proportion-charts row">
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>By Type</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            key="type"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="true"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>By Platform</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            key="name"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="hasImpersonationId"
+            [locale]="user?.settings?.locale"
+            [positions]="platforms"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>By Sector</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            key="sector"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="true"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>By Industry</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            key="industry"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="true"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>By Currency</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            key="currency"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="true"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>By Exchange</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            key="exchange"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="true"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="d-block d-sm-none row">
+    <div class="col-lg">
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <div class="d-flex align-items-center justify-content-center">
+            <div class="mr-2">
+              <ion-icon
+                name="information-circle-outline"
+                size="small"
+              ></ion-icon>
+            </div>
+            <div i18n>
+              You can find more charts on your desktop:
+              <a href="https://ghostfol.io" target="_blank">www.ghostfol.io</a>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div *ngIf="!hasImpersonationId" class="d-none d-sm-block row">
+    <div class="col-lg">
+      <mat-card class="mb-3">
+        <mat-card-header>
+          <mat-card-title class="align-items-center d-flex"
+            ><span i18n>Investment</span
+            ><ion-icon class="ml-1 text-muted" name="diamond-outline"></ion-icon
+          ></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!--<gf-positions-chart
+            [portfolioItems]="portfolioItems"
+          ></gf-positions-chart>-->
+          <gf-investment-chart
+            [portfolioItems]="portfolioItems"
+          ></gf-investment-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

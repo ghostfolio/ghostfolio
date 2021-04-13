@@ -1,0 +1,60 @@
+<div class="container p-0">
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Buy</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : overview?.totalBuy"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Sell</div>
+    <div class="d-flex justify-content-end">
+      <span
+        *ngIf="overview?.totalSell || overview?.totalSell === 0"
+        class="mr-1"
+        >-</span
+      >
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : overview?.totalSell"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3">
+    <div class="d-flex flex-grow-1" i18n>Investment</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : overview?.committedFunds"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3">
+    <div class="d-flex flex-grow-1" i18n>
+      Fees for {{ overview?.ordersCount }} {overview?.ordersCount, plural, =1
+      {order} other {orders}}
+    </div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : overview?.fees"
+      ></gf-value>
+    </div>
+  </div>
+</div>

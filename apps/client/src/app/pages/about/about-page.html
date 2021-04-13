@@ -1,0 +1,152 @@
+<div class="container">
+  <div class="mb-5 row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>About Ghostfolio</h3>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <p>
+            Ghostfolio is a side project by
+            <a href="https://dotsilver.ch">Thomas Kaul</a>.
+          </p>
+          <p>
+            This is <strong>Ghostfolio {{ version }}</strong>
+            <ng-container *ngIf="lastPublish">
+              and was last published on {{ lastPublish }}</ng-container
+            >.
+          </p>
+          <p>
+            If you encounter a bug or would like to suggest an improvement or a
+            new feature, please send an e-mail to
+            <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a> or tweet to
+            <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a>.
+          </p>
+          <p class="text-center">
+            <a
+              href="https://twitter.com/ghostfolio_"
+              mat-icon-button
+              title="Follow Ghostfolio on Twitter"
+            >
+              <ion-icon name="logo-twitter" size="large"></ion-icon>
+            </a>
+          </p>
+          <div class="d-flex justify-content-center">
+            <div
+              class="independent-and-bootstrapped-logo"
+              title="Ghostfolio is an independent & bootstrapped business"
+            ></div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="mb-5 row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>Pricing Plans</h3>
+      <div class="row">
+        <div class="col-xs-12 col-md-6">
+          <mat-card class="mb-3">
+            <h4 i18n>Basic</h4>
+            <p>
+              The starting point for tracking your goals and adopting your
+              personal investment strategy.
+            </p>
+            <ul class="list-unstyled mb-3">
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Performance</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Summary</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Unlimited Transactions</span>
+              </li>
+              <li class="d-none d-sm-block mb-1">&#8203;</li>
+            </ul>
+            <p class="h5 text-right">
+              <span>Free</span>
+            </p>
+          </mat-card>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <mat-card
+            class="mb-3"
+            [ngClass]="{ 'active': user?.subscription?.type === 'Diamond' }"
+          >
+            <h4 class="align-items-center d-flex" i18n>
+              Diamond
+              <ion-icon
+                class="ml-1 text-muted"
+                name="diamond-outline"
+              ></ion-icon>
+            </h4>
+            <p>
+              Get a bird's-eye view of your financial assets for making
+              sustainable investment decisions.
+            </p>
+            <ul class="list-unstyled mb-3">
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Performance</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Summary</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Unlimited Transactions</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Advanced Insights</span>
+              </li>
+            </ul>
+            <p class="h5 text-right">
+              <span class="font-weight-normal"
+                >{{ user?.settings.baseCurrency || baseCurrency }}
+                <strong>3.99</strong>
+                <del class="ml-1 text-muted">4.99</del> / Month</span
+              >
+            </p>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>Changelog</h3>
+      <mat-card class="changelog mb-3">
+        <mat-card-content>
+          <markdown [src]="'CHANGELOG.md'"></markdown>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

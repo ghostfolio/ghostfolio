@@ -1,0 +1,100 @@
+<div class="container">
+  <div class="mb-5 row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>
+        Admin Control Panel
+      </h3>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>Exchange Rates</div>
+            <div class="w-50">
+              <div *ngFor="let exchangeRate of exchangeRates" class="mb-1">
+                1 {{ exchangeRate.label1 }} = {{ exchangeRate.value | number :
+                '1.5-5' }} {{ exchangeRate.label2 }}
+              </div>
+            </div>
+          </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>Last Data Gathering</div>
+            <div class="w-50">
+              <div>
+                <ng-container *ngIf="lastDataGathering"
+                  >{{ lastDataGathering }}</ng-container
+                >
+                <ng-container *ngIf="dataGatheringInProgress" i18n
+                  >In Progress</ng-container
+                >
+              </div>
+              <div class="mt-2">
+                <button
+                  class="mb-2 mr-2"
+                  color="accent"
+                  mat-flat-button
+                  (click)="onFlushCache()"
+                >
+                  <ion-icon class="mr-1" name="close-circle-outline"></ion-icon>
+                  <span i18n>Reset</span>
+                </button>
+                <button color="warn" mat-flat-button (click)="onGatherMax()">
+                  <ion-icon class="mr-1" name="warning-outline"></ion-icon>
+                  <span i18n>Gather Max</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>User Count</div>
+            <div class="w-50">{{ userCount }}</div>
+          </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>Transaction Count</div>
+            <div class="w-50">
+              <ng-container *ngIf="transactionCount">
+                {{ transactionCount }} ({{ transactionCount / userCount | number
+                : '1.2-2' }} <span i18n>per User</span>)
+              </ng-container>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>Analytics</h3>
+      <mat-card>
+        <mat-card-content>
+          <table class="analytics w-100">
+            <thead>
+              <tr class="mat-header-row">
+                <th class="mat-header-cell pl-2 py-2" i18n>User</th>
+                <th class="mat-header-cell pr-2 py-2" i18n>
+                  Registration Date
+                </th>
+                <th class="mat-header-cell pr-2 py-2" i18n>Engagement</th>
+                <th class="mat-header-cell pr-2 py-2" i18n>Last Activitiy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let analyticsItem of analytics" class="mat-row">
+                <td class="mat-cell text-truncate pl-2 py-2">
+                  {{ analyticsItem.User.alias || analyticsItem.User.id }}
+                </td>
+                <td class="mat-cell pr-2 py-2">
+                  {{ analyticsItem.User.createdAt | date: defaultDateFormat }}
+                </td>
+                <td class="mat-cell pr-2 py-2">
+                  {{ analyticsItem.activityCount }}
+                </td>
+                <td class="mat-cell pr-2 py-2">
+                  {{ formatDistanceToNow(analyticsItem.updatedAt) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
