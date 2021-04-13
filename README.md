@@ -33,6 +33,10 @@
 
 - Start server
   - Serve: Run `yarn start:server`
-  - Debug: Run `yarn watch:server` and run "Launch Program" in _Visual Studio Code_
+  - Debug: Run `yarn watch:server` and click "Launch Program" in _Visual Studio Code_
 - Start client
   - Run `yarn start:client`
+
+## Testing
+
+Run `yarn test`
