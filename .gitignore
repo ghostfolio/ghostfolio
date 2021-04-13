@@ -44,5 +44,4 @@ Thumbs.db
 # Local
 /backups
 .env
-.env.*
 ec2-nano-ssh.pem
