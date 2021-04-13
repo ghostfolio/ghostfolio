@@ -29,7 +29,6 @@
     "nx": "nx",
     "postinstall": "yarn prisma generate",
     "replace-placeholders-in-build": "node ./replace.build.js",
-    "seed": "yarn prisma db push --preview-feature && ts-node ./prisma/seed/seed.ts",
     "start": "node dist/apps/api/main",
     "start:client": "ng serve client --hmr -o",
     "start:prod": "node apps/api/main",
