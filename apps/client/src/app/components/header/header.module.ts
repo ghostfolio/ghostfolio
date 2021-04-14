@@ -7,6 +7,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { LoginWithAccessTokenDialogModule } from '../../pages/login/login-with-access-token-dialog/login-with-access-token-dialog.module';
 import { GfLogoModule } from '../logo/logo.module';
 import { HeaderComponent } from './header.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [HeaderComponent],
@@ -17,7 +18,8 @@ import { HeaderComponent } from './header.component';
     LoginWithAccessTokenDialogModule,
     MatButtonModule,
     MatMenuModule,
-    MatToolbarModule
+    MatToolbarModule,
+    RouterModule,
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
