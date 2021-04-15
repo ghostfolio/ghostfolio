@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the routing to `routerLink` for an improved navigation experience
+- Simplified the initial project setup
 
 ## 0.85.0 - 12.04.2021
 
