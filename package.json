@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "0.84.0",
+  "version": "0.85.0",
   "scripts": {
     "affected": "nx affected",
     "affected:apps": "nx affected:apps",
