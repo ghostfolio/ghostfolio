@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 
 import { GfLineChartModule } from '../../components/line-chart/line-chart.module';
 import { GfLogoModule } from '../../components/logo/logo.module';
@@ -17,6 +18,7 @@ import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-acc
     GfLogoModule,
     LoginPageRoutingModule,
     MatButtonModule,
+    RouterModule,
     ShowAccessTokenDialogModule
   ],
   providers: [],
