@@ -40,8 +40,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# Local
-/backups
-.env
-ec2-nano-ssh.pem

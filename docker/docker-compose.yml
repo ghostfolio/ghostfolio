@@ -1,20 +1,5 @@
 version: '3.7'
 services:
-  ghostfolio:
-    container_name: ghostfolio
-    image: ghostfolio:{{VERSION}}
-    restart: unless-stopped
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - postgres
-      - redis
-    env_file:
-      - ../.env
-    environment:
-      - NODE_ENV=production
-
   postgres:
     image: postgres:12
     container_name: postgres
@@ -34,6 +19,4 @@ services:
       - 6379:6379
 
 volumes:
-  portainer_data:
   postgres:
-    name: ghostfolio-db
