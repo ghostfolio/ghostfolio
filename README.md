@@ -6,7 +6,7 @@
   <p>
     <a href="https://www.ghostfol.io"><strong>Live Demo</strong></a>
   </p>
-  <p style="margin: 3rem 0;">
+  <p>
     <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
       <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3">
     </a>
