@@ -4,9 +4,45 @@
 		<strong>Privacy-first Portfolio Tracker</strong>
 	</p>
   <p>
-    <a href="https://www.ghostfol.io"><strong>Ghostfolio</strong></a>
+    <a href="https://www.ghostfol.io"><strong>Live Demo</strong></a>
   </p>
 </div>
+
+**Ghostfolio** is a privacy-first portfolio tracker. It empowers busy folks to have a sharp look of their financial assets and to make solid, data-driven investment decisions by evaluating automated Static Portfolio Analysis Rules.
+
+## Why Ghostfolio?
+
+Ghostfolio is for you if you are...
+
+<ul>
+  <li>
+    💼 trading stocks, ETFs or cryptocurrencies on multiple platforms
+  </li>
+  <li>
+    🏦 pursuing a buy & hold strategy
+  </li>
+  <li>
+    🎯 interested in getting insights of your portfolio composition
+  </li>
+  <li>
+    👻 valuing privacy and data ownership
+  </li>
+  <li>
+    🧘 into minimalism
+  </li>
+  <li>
+    🧺 caring about diversifying your financial resources
+  </li>
+  <li>
+    🆓 interested in financial independence
+  </li>
+  <li>
+    🙅 saying no to spreadsheets in 2021
+  </li>
+  <li>
+    😎 still reading this list
+  </li>
+</ul>
 
 ## Features
 
