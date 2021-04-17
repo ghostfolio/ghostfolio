@@ -4,7 +4,7 @@
     <strong>Open Source Portfolio Tracker</strong>
   </p>
   <p>
-    <a href="https://www.ghostfol.io"><strong>Live Demo</strong></a>
+    <a href="https://ghostfol.io"><strong>Live Demo</strong></a>
   </p>
   <p>
     <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
