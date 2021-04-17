@@ -1,11 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/dist/apps/api/data/*.json
-/docker/**/*.*.*
-/docker/**/*.*.*.zip
-/tmp
 /out-tsc
+/tmp
 
 # dependencies
 /node_modules
@@ -24,7 +21,6 @@
 !.vscode/extensions.json
 !.vscode/launch.json
 !.vscode/settings.json
-!.vscode/tasks.json
 
 # misc
 /.sass-cache
