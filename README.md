@@ -14,35 +14,23 @@
 
 Ghostfolio is for you if you are...
 
-<ul>
-  <li>
-    💼 trading stocks, ETFs or cryptocurrencies on multiple platforms
-  </li>
-  <li>
-    🏦 pursuing a buy & hold strategy
-  </li>
-  <li>
-    🎯 interested in getting insights of your portfolio composition
-  </li>
-  <li>
-    👻 valuing privacy and data ownership
-  </li>
-  <li>
-    🧘 into minimalism
-  </li>
-  <li>
-    🧺 caring about diversifying your financial resources
-  </li>
-  <li>
-    🆓 interested in financial independence
-  </li>
-  <li>
-    🙅 saying no to spreadsheets in 2021
-  </li>
-  <li>
-    😎 still reading this list
-  </li>
-</ul>
+- 💼 trading stocks, ETFs or cryptocurrencies on multiple platforms
+
+- 🏦 pursuing a buy & hold strategy
+
+- 🎯 interested in getting insights of your portfolio composition
+
+- 👻 valuing privacy and data ownership
+
+- 🧘 into minimalism
+
+- 🧺 caring about diversifying your financial resources
+
+- 🆓 interested in financial independence
+
+- 🙅 saying no to spreadsheets in 2021
+
+- 😎 still reading this list
 
 ## Features
 
