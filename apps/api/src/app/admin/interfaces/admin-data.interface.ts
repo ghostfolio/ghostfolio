@@ -1,5 +1,9 @@
 export interface AdminData {
-  analytics: {
+  exchangeRates: { label1: string; label2: string; value: number }[];
+  lastDataGathering: Date | 'IN_PROGRESS';
+  transactionCount: number;
+  userCount: number;
+  users: {
     activityCount: number;
     updatedAt: Date;
     User: {
@@ -7,8 +11,4 @@ export interface AdminData {
       id: string;
     };
   }[];
-  exchangeRates: { label1: string; label2: string; value: number }[];
-  lastDataGathering: Date | 'IN_PROGRESS';
-  transactionCount: number;
-  userCount: number;
 }
