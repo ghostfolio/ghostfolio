@@ -4,6 +4,7 @@ import { baseCurrency } from 'libs/helper/src';
 import { getYesterday } from 'libs/helper/src';
 import { getUtc } from 'libs/helper/src';
 
+import { ConfigurationService } from '../services/configuration.service';
 import { DataProviderService } from '../services/data-provider.service';
 import { AlphaVantageService } from '../services/data-provider/alpha-vantage/alpha-vantage.service';
 import { RakutenRapidApiService } from '../services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
@@ -15,6 +16,7 @@ import { Portfolio } from './portfolio';
 
 describe('Portfolio', () => {
   let alphaVantageService: AlphaVantageService;
+  let configurationService: ConfigurationService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolio: Portfolio;
@@ -28,6 +30,7 @@ describe('Portfolio', () => {
       imports: [],
       providers: [
         AlphaVantageService,
+        ConfigurationService,
         DataProviderService,
         ExchangeRateDataService,
         PrismaService,
@@ -38,6 +41,7 @@ describe('Portfolio', () => {
     }).compile();
 
     alphaVantageService = app.get<AlphaVantageService>(AlphaVantageService);
+    configurationService = app.get<ConfigurationService>(ConfigurationService);
     dataProviderService = app.get<DataProviderService>(DataProviderService);
     exchangeRateDataService = app.get<ExchangeRateDataService>(
       ExchangeRateDataService
