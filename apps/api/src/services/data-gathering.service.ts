@@ -66,9 +66,11 @@ export class DataGatheringService {
   }
 
   public async gatherMax() {
-    const isDataGatheringNeeded = await this.isDataGatheringNeeded();
+    const isDataGatheringLocked = await this.prisma.property.findUnique({
+      where: { key: 'LOCKED_DATA_GATHERING' }
+    });
 
-    if (isDataGatheringNeeded) {
+    if (!isDataGatheringLocked) {
       console.log('Max data gathering has been started.');
       console.time('data-gathering');
 
