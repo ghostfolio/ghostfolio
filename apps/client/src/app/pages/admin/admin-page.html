@@ -99,13 +99,13 @@
                   {{ userItem.createdAt | date: defaultDateFormat }}
                 </td>
                 <td class="mat-cell pr-2 py-2 text-truncate">
-                  {{ userItem._count.Order }}
+                  {{ userItem._count?.Order }}
                 </td>
                 <td class="mat-cell pr-2 py-2 text-truncate">
-                  {{ userItem.Analytics.activityCount }}
+                  {{ userItem.Analytics?.activityCount }}
                 </td>
                 <td class="mat-cell pr-2 py-2 text-truncate">
-                  {{ formatDistanceToNow(userItem.Analytics.updatedAt) }}
+                  {{ formatDistanceToNow(userItem.Analytics?.updatedAt) }}
                 </td>
               </tr>
             </tbody>
