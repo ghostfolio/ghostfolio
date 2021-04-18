@@ -147,9 +147,8 @@
         i18n
         mat-menu-item
         [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
-        ><span>Account</span
-        ><ion-icon class="ml-1 text-muted" name="diamond-outline"></ion-icon
-      ></a>
+        >Account</a
+      >
       <a
         *ngIf="canAccessAdminAccessControl"
         class="d-block d-sm-none"
@@ -197,6 +196,12 @@
       mat-flat-button
       [color]="currentRoute === 'about' ? 'primary' : null"
       >About</a
+    >
+    <a
+      class="d-none d-sm-block mx-1"
+      href="https://github.com/ghostfolio/ghostfolio"
+      mat-flat-button
+      >GitHub</a
     >
     <button i18n mat-flat-button (click)="openLoginDialog()">Sign in</button>
   </ng-container>

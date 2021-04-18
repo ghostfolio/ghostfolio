@@ -5,33 +5,54 @@
       <mat-card class="mb-3">
         <mat-card-content>
           <p>
-            Ghostfolio is a side project by
+            <strong>Ghostfolio</strong> ({{ version }}) is open source software
+            which empowers busy folks to have a sharp look of their financial
+            assets and to make solid, data-driven investment decisions by
+            evaluating automated static portfolio analysis rules. The project
+            has been initiated by
             <a href="https://dotsilver.ch">Thomas Kaul</a>.
-          </p>
-          <p>
-            This is <strong>Ghostfolio {{ version }}</strong>
             <ng-container *ngIf="lastPublish">
-              and was last published on {{ lastPublish }}</ng-container
-            >.
+              This instance has been last published on {{ lastPublish
+              }}</ng-container
+            >
           </p>
           <p>
             If you encounter a bug or would like to suggest an improvement or a
-            new feature, please send an e-mail to
-            <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a> or tweet to
-            <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a>.
+            new feature, please open an issue at
+            <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>, tweet
+            to <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a> or
+            send an e-mail to
+            <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a>.
           </p>
           <p class="text-center">
             <a
+              class="mx-2"
+              href="https://github.com/ghostfolio/ghostfolio"
+              mat-icon-button
+              title="Find Ghostfolio on GitHub"
+            >
+              <ion-icon name="logo-github" size="large"></ion-icon>
+            </a>
+            <a
+              class="mx-2"
               href="https://twitter.com/ghostfolio_"
               mat-icon-button
               title="Follow Ghostfolio on Twitter"
             >
               <ion-icon name="logo-twitter" size="large"></ion-icon>
             </a>
+            <a
+              class="mx-2"
+              href="mailto:hi@ghostfol.io"
+              mat-icon-button
+              title="Send an e-mail"
+            >
+              <ion-icon name="mail" size="large"></ion-icon>
+            </a>
           </p>
           <div class="d-flex justify-content-center">
             <div
-              class="independent-and-bootstrapped-logo"
+              class="independent-and-bootstrapped-logo mb-2"
               title="Ghostfolio is an independent & bootstrapped business"
             ></div>
           </div>
@@ -46,11 +67,8 @@
       <div class="row">
         <div class="col-xs-12 col-md-6">
           <mat-card class="mb-3">
-            <h4 i18n>Basic</h4>
-            <p>
-              The starting point for tracking your goals and adopting your
-              personal investment strategy.
-            </p>
+            <h4 i18n>Open Source</h4>
+            <p>Host your <strong>Ghostfolio</strong> instance by yourself.</p>
             <ul class="list-unstyled mb-3">
               <li class="align-items-center d-flex mb-1">
                 <ion-icon
@@ -73,7 +91,13 @@
                 ></ion-icon>
                 <span>Unlimited Transactions</span>
               </li>
-              <li class="d-none d-sm-block mb-1">&#8203;</li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Advanced Insights</span>
+              </li>
             </ul>
             <p class="h5 text-right">
               <span>Free</span>
@@ -83,7 +107,7 @@
         <div class="col-xs-12 col-md-6">
           <mat-card
             class="mb-3"
-            [ngClass]="{ 'active': user?.subscription?.type === 'Diamond' }"
+            [ngClass]="{ 'active': user?.subscription?.type === 'Trial' }"
           >
             <h4 class="align-items-center d-flex" i18n>
               Diamond
@@ -92,10 +116,7 @@
                 name="diamond-outline"
               ></ion-icon>
             </h4>
-            <p>
-              Get a bird's-eye view of your financial assets for making
-              sustainable investment decisions.
-            </p>
+            <p>Get a managed <strong>Ghostfolio</strong> cloud offering.</p>
             <ul class="list-unstyled mb-3">
               <li class="align-items-center d-flex mb-1">
                 <ion-icon
@@ -129,8 +150,8 @@
             <p class="h5 text-right">
               <span class="font-weight-normal"
                 >{{ user?.settings.baseCurrency || baseCurrency }}
-                <strong>3.99</strong>
-                <del class="ml-1 text-muted">4.99</del> / Month</span
+                <strong>2.99</strong>
+                <del class="ml-1 text-muted">3.99</del> / Month</span
               >
             </p>
           </mat-card>
@@ -139,12 +160,23 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="mb-5 row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Changelog</h3>
       <mat-card class="changelog mb-3">
         <mat-card-content>
           <markdown [src]="'CHANGELOG.md'"></markdown>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>License</h3>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <markdown [src]="'LICENSE'"></markdown>
         </mat-card-content>
       </mat-card>
     </div>
