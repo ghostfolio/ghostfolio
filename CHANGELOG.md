@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized the data management for historical data
 - Optimized the exchange rate service
 
+### Fixed
+
+- Restored the scroll position when opening a new page
+
 ## 0.85.0 - 16.04.2021
 
 ### Changed
