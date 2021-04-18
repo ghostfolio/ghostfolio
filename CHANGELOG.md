@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed an issue in the user table of the admin control panel with missing data
+
 ## 0.86.1 - 18.04.2021
 
 ### Added
@@ -18,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the about page for the new license
 - Optimized the data management for historical data
 - Optimized the exchange rate service
-- Improved the user table in the admin control panel
+- Improved the user table of the admin control panel
 
 ### Fixed
 
