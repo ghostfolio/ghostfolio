@@ -45,17 +45,17 @@ Ghostfolio is for you if you are...
 - ✅ Static analysis to identify potential risks in your portfolio
 - ✅ Dark Mode
 
-## Technology
+## Technology Stack
 
 Ghostfolio is a modern web application written in [TypeScript](https://www.typescriptlang.org) and organized as an [Nx](https://nx.dev) workspace.
-
-### Frontend
-
-The frontend is built with [Angular](https://angular.io).
 
 ### Backend
 
 The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://www.postgresql.org) as a database and [Redis](https://redis.io) for caching.
+
+### Frontend
+
+The frontend is built with [Angular](https://angular.io).
 
 ## Getting Started
 
@@ -91,5 +91,7 @@ The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://
 Run `yarn test`
 
 ## License
+
+© 2021 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
