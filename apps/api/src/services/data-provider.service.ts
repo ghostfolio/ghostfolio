@@ -1,8 +1,9 @@
+import { isCrypto, isRakutenRapidApi } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
 import { format } from 'date-fns';
-import { isCrypto, isRakutenRapidApi } from 'libs/helper/src';
 
+import { ConfigurationService } from './configuration.service';
 import { AlphaVantageService } from './data-provider/alpha-vantage/alpha-vantage.service';
 import { RakutenRapidApiService } from './data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from './data-provider/yahoo-finance/yahoo-finance.service';
@@ -17,10 +18,11 @@ import { PrismaService } from './prisma.service';
 @Injectable()
 export class DataProviderService implements DataProviderInterface {
   public constructor(
-    private alphaVantageService: AlphaVantageService,
+    private readonly alphaVantageService: AlphaVantageService,
+    private readonly configurationService: ConfigurationService,
     private prisma: PrismaService,
-    private rakutenRapidApiService: RakutenRapidApiService,
-    private yahooFinanceService: YahooFinanceService
+    private readonly rakutenRapidApiService: RakutenRapidApiService,
+    private readonly yahooFinanceService: YahooFinanceService
   ) {
     this.rakutenRapidApiService.setPrisma(this.prisma);
   }
@@ -107,7 +109,10 @@ export class DataProviderService implements DataProviderInterface {
     if (aSymbols.length === 1) {
       const symbol = aSymbols[0];
 
-      if (isCrypto(symbol)) {
+      if (
+        isCrypto(symbol) &&
+        this.configurationService.get('ALPHA_VANTAGE_API_KEY')
+      ) {
         // Merge data from Yahoo with data from Alpha Vantage
         const dataOfAlphaVantage = await this.alphaVantageService.getHistorical(
           [symbol],
@@ -122,7 +127,10 @@ export class DataProviderService implements DataProviderInterface {
             ...dataOfAlphaVantage[symbol]
           }
         };
-      } else if (isRakutenRapidApi(symbol)) {
+      } else if (
+        isRakutenRapidApi(symbol) &&
+        this.configurationService.get('RAKUTEN_RAPID_API_KEY')
+      ) {
         const dataOfRakutenRapidApi = await this.rakutenRapidApiService.getHistorical(
           [symbol],
           undefined,
