@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
+import { InfoItem } from 'apps/api/src/app/info/interfaces/info-item.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
-import { formatDistanceToNow } from 'date-fns';
 import { primaryColorHex, secondaryColorHex } from 'libs/helper/src';
 import { hasPermission, permissions } from 'libs/helper/src';
 import { Subject } from 'rxjs';
@@ -28,8 +28,8 @@ export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentYear = new Date().getFullYear();
+  public info: InfoItem;
   public isLoggedIn = false;
-  public lastDataGathering: string;
   public user: User;
   public version = environment.version;
 
@@ -47,10 +47,8 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.dataService.fetchInfo().subscribe(({ lastDataGathering }) => {
-      this.lastDataGathering = lastDataGathering
-        ? formatDistanceToNow(new Date(lastDataGathering), { addSuffix: true })
-        : '';
+    this.dataService.fetchInfo().subscribe((info) => {
+      this.info = info;
     });
 
     this.router.events

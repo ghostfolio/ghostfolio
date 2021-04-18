@@ -34,11 +34,16 @@
                   (click)="onFlushCache()"
                 >
                   <ion-icon class="mr-1" name="close-circle-outline"></ion-icon>
-                  <span i18n>Reset</span>
+                  <span i18n>Reset Data Gathering</span>
                 </button>
-                <button color="warn" mat-flat-button (click)="onGatherMax()">
+                <button
+                  color="warn"
+                  mat-flat-button
+                  [disabled]="dataGatheringInProgress"
+                  (click)="onGatherMax()"
+                >
                   <ion-icon class="mr-1" name="warning-outline"></ion-icon>
-                  <span i18n>Gather Max</span>
+                  <span i18n>Gather All Data</span>
                 </button>
               </div>
             </div>

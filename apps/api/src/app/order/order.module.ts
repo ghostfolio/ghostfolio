@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { DataGatheringService } from '../../services/data-gathering.service';
 import { DataProviderService } from '../../services/data-provider.service';
 import { AlphaVantageService } from '../../services/data-provider/alpha-vantage/alpha-vantage.service';
@@ -18,6 +19,7 @@ import { OrderService } from './order.service';
   providers: [
     AlphaVantageService,
     CacheService,
+    ConfigurationService,
     DataGatheringService,
     DataProviderService,
     ImpersonationService,

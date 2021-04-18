@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { isAfter, isBefore, parse } from 'date-fns';
 
+import { ConfigurationService } from '../../configuration.service';
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
 import { Granularity } from '../../interfaces/granularity.type';
 import {
@@ -9,13 +10,17 @@ import {
 } from '../../interfaces/interfaces';
 import { IAlphaVantageHistoricalResponse } from './interfaces/interfaces';
 
-const alphaVantage = require('alphavantage')({
-  key: process.env.ALPHA_VANTAGE_API_KEY
-});
-
 @Injectable()
 export class AlphaVantageService implements DataProviderInterface {
-  public constructor() {}
+  public alphaVantage;
+
+  public constructor(
+    private readonly configurationService: ConfigurationService
+  ) {
+    this.alphaVantage = require('alphavantage')({
+      key: this.configurationService.get('ALPHA_VANTAGE_API_KEY')
+    });
+  }
 
   public async get(
     aSymbols: string[]
@@ -40,7 +45,7 @@ export class AlphaVantageService implements DataProviderInterface {
     try {
       const historicalData: {
         [symbol: string]: IAlphaVantageHistoricalResponse[];
-      } = await alphaVantage.crypto.daily(
+      } = await this.alphaVantage.crypto.daily(
         symbol.substring(0, symbol.length - 3).toLowerCase(),
         'usd'
       );
@@ -73,6 +78,6 @@ export class AlphaVantageService implements DataProviderInterface {
   }
 
   public search(aSymbol: string) {
-    return alphaVantage.data.search(aSymbol);
+    return this.alphaVantage.data.search(aSymbol);
   }
 }

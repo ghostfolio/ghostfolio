@@ -83,11 +83,17 @@ export class AdminPageComponent implements OnInit {
   }
 
   public onGatherMax() {
-    this.adminService.gatherMax().subscribe(() => {
-      setTimeout(() => {
-        window.location.reload();
-      }, 300);
-    });
+    const confirmation = confirm(
+      'This action may take some time. Do you want to proceed?'
+    );
+
+    if (confirmation === true) {
+      this.adminService.gatherMax().subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
+    }
   }
 
   public formatDistanceToNow(aDateString: string) {
