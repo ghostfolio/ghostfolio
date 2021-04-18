@@ -4,11 +4,12 @@ export interface AdminData {
   transactionCount: number;
   userCount: number;
   users: {
-    activityCount: number;
-    updatedAt: Date;
-    User: {
-      alias: string;
-      id: string;
+    alias: string;
+    createdAt: Date;
+    Analytics: {
+      activityCount: number;
+      updatedAt: Date;
     };
+    id: string;
   }[];
 }
