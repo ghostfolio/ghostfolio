@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { PrismaService } from '../../services/prisma.service';
 import { InfoController } from './info.controller';
 import { InfoService } from './info.service';
@@ -13,6 +14,6 @@ import { InfoService } from './info.service';
     })
   ],
   controllers: [InfoController],
-  providers: [InfoService, PrismaService]
+  providers: [ConfigurationService, InfoService, PrismaService]
 })
 export class InfoModule {}

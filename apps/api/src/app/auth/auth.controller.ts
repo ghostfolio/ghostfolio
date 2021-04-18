@@ -10,11 +10,15 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  public constructor(private readonly authService: AuthService) {}
+  public constructor(
+    private readonly authService: AuthService,
+    private readonly configurationService: ConfigurationService
+  ) {}
 
   @Get('anonymous/:accessToken')
   public async accessTokenLogin(@Param('accessToken') accessToken: string) {
@@ -44,9 +48,9 @@ export class AuthController {
     const jwt: string = req.user.jwt;
 
     if (jwt) {
-      res.redirect(`${process.env.ROOT_URL}/auth/${jwt}`);
+      res.redirect(`${this.configurationService.get('ROOT_URL')}/auth/${jwt}`);
     } else {
-      res.redirect(`${process.env.ROOT_URL}/auth`);
+      res.redirect(`${this.configurationService.get('ROOT_URL')}/auth`);
     }
   }
 }

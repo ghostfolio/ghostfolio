@@ -11,13 +11,15 @@ import {
 import { benchmarks, currencyPairs } from 'libs/helper/src';
 import { getUtc, resetHours } from 'libs/helper/src';
 
+import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider.service';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class DataGatheringService {
   public constructor(
-    private dataProviderService: DataProviderService,
+    private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private prisma: PrismaService
   ) {}
 
@@ -174,6 +176,24 @@ export class DataGatheringService {
     }
   }
 
+  private getBenchmarksToGather(startDate: Date) {
+    const benchmarksToGather = benchmarks.map((symbol) => {
+      return {
+        symbol,
+        date: startDate
+      };
+    });
+
+    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
+      benchmarksToGather.push({
+        date: startDate,
+        symbol: 'GF.FEAR_AND_GREED_INDEX'
+      });
+    }
+
+    return benchmarksToGather;
+  }
+
   private async getSymbols7D(): Promise<{ date: Date; symbol: string }[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
@@ -190,13 +210,6 @@ export class DataGatheringService {
       };
     });
 
-    const benchmarksToGather = benchmarks.map((symbol) => {
-      return {
-        symbol,
-        date: startDate
-      };
-    });
-
     const currencyPairsToGather = currencyPairs.map((symbol) => {
       return {
         symbol,
@@ -205,7 +218,7 @@ export class DataGatheringService {
     });
 
     return [
-      ...benchmarksToGather,
+      ...this.getBenchmarksToGather(startDate),
       ...currencyPairsToGather,
       ...distinctOrdersWithDate
     ];
@@ -220,13 +233,6 @@ export class DataGatheringService {
       select: { date: true, symbol: true }
     });
 
-    const benchmarksToGather = benchmarks.map((symbol) => {
-      return {
-        symbol,
-        date: startDate
-      };
-    });
-
     const currencyPairsToGather = currencyPairs.map((symbol) => {
       return {
         symbol,
@@ -234,7 +240,11 @@ export class DataGatheringService {
       };
     });
 
-    return [...benchmarksToGather, ...currencyPairsToGather, ...distinctOrders];
+    return [
+      ...this.getBenchmarksToGather(startDate),
+      ...currencyPairsToGather,
+      ...distinctOrders
+    ];
   }
 
   private async isDataGatheringNeeded() {

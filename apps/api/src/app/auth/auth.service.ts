@@ -1,13 +1,15 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { UserService } from '../user/user.service';
 import { ValidateOAuthLoginParams } from './interfaces/interfaces';
 
 @Injectable()
 export class AuthService {
   public constructor(
-    private jwtService: JwtService,
+    private readonly configurationService: ConfigurationService,
+    private readonly jwtService: JwtService,
     private readonly userService: UserService
   ) {}
 
@@ -16,7 +18,7 @@ export class AuthService {
       try {
         const hashedAccessToken = this.userService.createAccessToken(
           accessToken,
-          process.env.ACCESS_TOKEN_SALT
+          this.configurationService.get('ACCESS_TOKEN_SALT')
         );
 
         const [user] = await this.userService.users({

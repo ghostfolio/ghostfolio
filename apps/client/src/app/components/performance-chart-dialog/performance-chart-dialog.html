@@ -19,7 +19,7 @@
     ></gf-line-chart>
   </div>
 
-  <div class="container p-0">
+  <div *ngIf="data.fearAndGreedIndex" class="container p-0">
     <gf-fear-and-greed-index
       class="d-flex flex-column justify-content-center"
       [fearAndGreedIndex]="data.fearAndGreedIndex"

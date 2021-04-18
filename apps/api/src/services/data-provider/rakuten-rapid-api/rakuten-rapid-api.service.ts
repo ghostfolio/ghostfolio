@@ -3,6 +3,7 @@ import * as bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
 import { getToday, getYesterday } from 'libs/helper/src';
 
+import { ConfigurationService } from '../../configuration.service';
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
 import { Granularity } from '../../interfaces/granularity.type';
 import {
@@ -17,7 +18,9 @@ export class RakutenRapidApiService implements DataProviderInterface {
 
   private prisma: PrismaService;
 
-  public constructor() {}
+  public constructor(
+    private readonly configurationService: ConfigurationService
+  ) {}
 
   public async get(
     aSymbols: string[]
@@ -127,7 +130,9 @@ export class RakutenRapidApiService implements DataProviderInterface {
         {
           useQueryString: true,
           'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
-          'x-rapidapi-key': process.env.RAKUTEN_RAPID_API_KEY
+          'x-rapidapi-key': this.configurationService.get(
+            'RAKUTEN_RAPID_API_KEY'
+          )
         }
       );
 

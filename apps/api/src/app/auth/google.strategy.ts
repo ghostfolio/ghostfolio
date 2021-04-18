@@ -3,15 +3,21 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { Strategy } from 'passport-google-oauth20';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { AuthService } from './auth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  public constructor(private readonly authService: AuthService) {
+  public constructor(
+    private readonly authService: AuthService,
+    readonly configurationService: ConfigurationService
+  ) {
     super({
-      callbackURL: `${process.env.ROOT_URL}/api/auth/google/callback`,
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
+      callbackURL: `${configurationService.get(
+        'ROOT_URL'
+      )}/api/auth/google/callback`,
+      clientID: configurationService.get('GOOGLE_CLIENT_ID'),
+      clientSecret: configurationService.get('GOOGLE_SECRET'),
       passReqToCallback: true,
       scope: ['email', 'profile']
     });
