@@ -15,13 +15,13 @@ import { DataService } from '../../services/data.service';
   styleUrls: ['./admin-page.scss']
 })
 export class AdminPageComponent implements OnInit {
-  public analytics: AdminData['analytics'];
   public dataGatheringInProgress: boolean;
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public exchangeRates: { label1: string; label2: string; value: number }[];
   public lastDataGathering: string;
   public transactionCount: number;
   public userCount: number;
+  public users: AdminData['users'];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -44,14 +44,14 @@ export class AdminPageComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
-          analytics,
           exchangeRates,
           lastDataGathering,
           transactionCount,
-          userCount
+          userCount,
+          users
         }) => {
-          this.analytics = analytics;
           this.exchangeRates = exchangeRates;
+          this.users = users;
 
           if (isValid(parseISO(lastDataGathering?.toString()))) {
             this.lastDataGathering = formatDistanceToNow(

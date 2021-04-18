@@ -14,7 +14,6 @@ export class AdminService {
 
   public async get(): Promise<AdminData> {
     return {
-      analytics: await this.getUserAnalytics(),
       exchangeRates: [
         {
           label1: Currency.EUR,
@@ -64,7 +63,8 @@ export class AdminService {
       ],
       lastDataGathering: await this.getLastDataGathering(),
       transactionCount: await this.prisma.order.count(),
-      userCount: await this.prisma.user.count()
+      userCount: await this.prisma.user.count(),
+      users: await this.getUsersWithAnalytics()
     };
   }
 
@@ -88,19 +88,26 @@ export class AdminService {
     return null;
   }
 
-  private async getUserAnalytics() {
-    return await this.prisma.analytics.findMany({
-      orderBy: { updatedAt: 'desc' },
-      select: {
-        activityCount: true,
-        updatedAt: true,
-        User: {
-          select: {
-            alias: true,
-            createdAt: true,
-            id: true
-          }
+  private async getUsersWithAnalytics() {
+    return await this.prisma.user.findMany({
+      orderBy: {
+        Analytics: {
+          updatedAt: 'desc'
         }
+      },
+      select: {
+        _count: {
+          select: { Order: true }
+        },
+        alias: true,
+        Analytics: {
+          select: {
+            activityCount: true,
+            updatedAt: true
+          }
+        },
+        createdAt: true,
+        id: true
       },
       take: 20
     });

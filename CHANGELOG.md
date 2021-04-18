@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the about page for the new license
 - Optimized the data management for historical data
 - Optimized the exchange rate service
+- Improved the user table in the admin control panel
 
 ### Fixed
 
