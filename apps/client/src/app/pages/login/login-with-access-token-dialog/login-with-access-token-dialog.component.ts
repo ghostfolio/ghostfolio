@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { DataService } from '../../../services/data.service';
-
 @Component({
   selector: 'login-with-access-token-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,

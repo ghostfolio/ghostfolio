@@ -2,15 +2,7 @@ import { Currency } from '.prisma/client';
 
 export const baseCurrency = Currency.CHF;
 
-export const benchmarks = [
-  'CSSMIM.SW',
-  'GC=F',
-  'GF.FEAR_AND_GREED_INDEX',
-  'VOO',
-  'VTI',
-  'VWRD.L',
-  'VXUS'
-];
+export const benchmarks = ['CSSMIM.SW', 'GC=F', 'VOO', 'VTI', 'VWRD.L', 'VXUS'];
 
 export const currencyPairs = [
   `${Currency.EUR}${Currency.CHF}`,

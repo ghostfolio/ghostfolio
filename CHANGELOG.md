@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the about page for the new license
+- Added a validation for environment variables
+- Added support for feature flags to simplify the initial project setup
 
 ## 0.85.0 - 16.04.2021
 

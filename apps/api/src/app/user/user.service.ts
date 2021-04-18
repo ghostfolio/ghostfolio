@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User } from '@prisma/client';
 import { add } from 'date-fns';
-import { locale, resetHours } from 'libs/helper/src';
+import { locale, permissions, resetHours } from 'libs/helper/src';
 import { getPermissions } from 'libs/helper/src';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { PrismaService } from '../../services/prisma.service';
 import { UserWithSettings } from '../interfaces/user-with-settings';
 import { User as IUser } from './interfaces/user.interface';
@@ -14,7 +15,10 @@ const crypto = require('crypto');
 export class UserService {
   public static DEFAULT_CURRENCY = Currency.USD;
 
-  public constructor(private prisma: PrismaService) {}
+  public constructor(
+    private readonly configurationService: ConfigurationService,
+    private prisma: PrismaService
+  ) {}
 
   public async getUser({
     alias,
@@ -30,6 +34,16 @@ export class UserService {
       where: { GranteeUser: { id } }
     });
 
+    const currentPermissions = getPermissions(role);
+
+    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
+      currentPermissions.push(permissions.accessFearAndGreedIndex);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
+      currentPermissions.push(permissions.useSocialLogin);
+    }
+
     return {
       alias,
       id,
@@ -39,7 +53,7 @@ export class UserService {
           id: accessItem.id
         };
       }),
-      permissions: getPermissions(role),
+      permissions: currentPermissions,
       settings: {
         baseCurrency: Settings?.currency || UserService.DEFAULT_CURRENCY,
         locale

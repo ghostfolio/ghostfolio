@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
+import { ConfigurationService } from '../services/configuration.service';
 import { CronService } from '../services/cron.service';
 import { DataGatheringService } from '../services/data-gathering.service';
 import { DataProviderService } from '../services/data-provider.service';
@@ -59,6 +60,7 @@ import { UserModule } from './user/user.module';
   controllers: [AppController],
   providers: [
     AlphaVantageService,
+    ConfigurationService,
     CronService,
     DataGatheringService,
     DataProviderService,

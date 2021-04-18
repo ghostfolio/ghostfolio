@@ -1,7 +1,9 @@
+import { permissions } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Currency } from '@prisma/client';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { PrismaService } from '../../services/prisma.service';
 import { InfoItem } from './interfaces/info-item.interface';
 
@@ -10,6 +12,7 @@ export class InfoService {
   private static DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
 
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private jwtService: JwtService,
     private prisma: PrismaService
   ) {}
@@ -20,7 +23,14 @@ export class InfoService {
       select: { id: true, name: true }
     });
 
+    const globalPermissions: string[] = [];
+
+    if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
+      globalPermissions.push(permissions.useSocialLogin);
+    }
+
     return {
+      globalPermissions,
       platforms,
       currencies: Object.values(Currency),
       demoAuthToken: this.getDemoAuthToken(),

@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { InfoItem } from 'apps/api/src/app/info/interfaces/info-item.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
 import { hasPermission, permissions } from 'libs/helper/src';
 import { EMPTY, Subject } from 'rxjs';
@@ -24,9 +25,11 @@ import { TokenStorageService } from '../../services/token-storage.service';
 })
 export class HeaderComponent implements OnChanges {
   @Input() currentRoute: string;
+  @Input() info: InfoItem;
   @Input() user: User;
 
   public canAccessAdminAccessControl: boolean;
+  public hasPermissionToUseSocialLogin: boolean;
   public impersonationId: string;
 
   private unsubscribeSubject = new Subject<void>();
@@ -52,6 +55,11 @@ export class HeaderComponent implements OnChanges {
         permissions.accessAdminControl
       );
     }
+
+    this.hasPermissionToUseSocialLogin = hasPermission(
+      this.info?.globalPermissions,
+      permissions.useSocialLogin
+    );
   }
 
   public impersonateAccount(aId: string) {
@@ -72,7 +80,10 @@ export class HeaderComponent implements OnChanges {
   public openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
       autoFocus: false,
-      data: { accessToken: '' },
+      data: {
+        accessToken: '',
+        hasPermissionToUseSocialLogin: this.hasPermissionToUseSocialLogin
+      },
       width: '30rem'
     });
 

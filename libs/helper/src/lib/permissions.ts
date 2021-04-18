@@ -6,12 +6,14 @@ export function isApiTokenAuthorized(aApiToken: string) {
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
+  accessFearAndGreedIndex: 'accessFearAndGreedIndex',
   createAccount: 'createAccount',
   createOrder: 'createOrder',
   deleteOrder: 'deleteOrder',
   readForeignPortfolio: 'readForeignPortfolio',
   updateOrder: 'updateOrder',
-  updateUserSettings: 'updateUserSettings'
+  updateUserSettings: 'updateUserSettings',
+  useSocialLogin: 'useSocialLogin'
 };
 
 export function hasPermission(

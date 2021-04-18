@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
+import { ConfigurationService } from '../../services/configuration.service';
 import { PrismaService } from '../../services/prisma.service';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
@@ -18,6 +19,7 @@ import { JwtStrategy } from './jwt.strategy';
   ],
   providers: [
     AuthService,
+    ConfigurationService,
     GoogleStrategy,
     JwtStrategy,
     PrismaService,

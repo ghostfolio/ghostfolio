@@ -39,6 +39,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public fearAndGreedIndex: number;
   public hasImpersonationId: boolean;
+  public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToReadForeignPortfolio: boolean;
   public hasPositions = false;
   public historicalDataItems: LineChartItem[];
@@ -80,6 +81,10 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.dataService.fetchUser().subscribe((user) => {
           this.user = user;
+          this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+            user.permissions,
+            permissions.accessFearAndGreedIndex
+          );
           this.hasPermissionToReadForeignPortfolio = hasPermission(
             user.permissions,
             permissions.readForeignPortfolio
@@ -175,14 +180,16 @@ export class HomePageComponent implements OnDestroy, OnInit {
         this.cd.markForCheck();
       });
 
-    this.dataService
-      .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ marketPrice }) => {
-        this.fearAndGreedIndex = marketPrice;
+    if (this.hasPermissionToAccessFearAndGreedIndex) {
+      this.dataService
+        .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ marketPrice }) => {
+          this.fearAndGreedIndex = marketPrice;
 
-        this.cd.markForCheck();
-      });
+          this.cd.markForCheck();
+        });
+    }
 
     this.cd.markForCheck();
   }

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { hasPermission, permissions } from '@ghostfolio/helper';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -276,7 +277,10 @@ export class LoginPageComponent implements OnDestroy, OnInit {
     authToken: string
   ): void {
     const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
-      data: { accessToken, authToken },
+      data: {
+        accessToken,
+        authToken
+      },
       disableClose: true,
       width: '30rem'
     });

@@ -1,13 +1,15 @@
 <h1 mat-dialog-title i18n>Sign in</h1>
 <div mat-dialog-content>
   <div>
-    <div class="text-center">
-      <a color="accent" href="/api/auth/google" mat-flat-button
-        ><ion-icon class="mr-1" name="logo-google"></ion-icon
-        ><span i18n>Sign in with Google</span></a
-      >
-    </div>
-    <div class="my-3 text-center text-muted" i18n>or</div>
+    <ng-container *ngIf="data.hasPermissionToUseSocialLogin">
+      <div class="text-center">
+        <a color="accent" href="/api/auth/google" mat-flat-button
+          ><ion-icon class="mr-1" name="logo-google"></ion-icon
+          ><span i18n>Sign in with Google</span></a
+        >
+      </div>
+      <div class="my-3 text-center text-muted" i18n>or</div>
+    </ng-container>
     <mat-form-field appearance="outline" class="w-100">
       <mat-label i18n>Security Token</mat-label>
       <textarea
