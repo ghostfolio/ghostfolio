@@ -10,7 +10,7 @@ export interface User {
   settings: UserSettings;
   subscription: {
     expiresAt: Date;
-    type: 'Diamond';
+    type: 'Trial';
   };
 }
 

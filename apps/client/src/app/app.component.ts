@@ -27,6 +27,7 @@ import { TokenStorageService } from './services/token-storage.service';
 export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
+  public currentYear = new Date().getFullYear();
   public isLoggedIn = false;
   public lastDataGathering: string;
   public user: User;

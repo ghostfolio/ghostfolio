@@ -1,14 +1,19 @@
 <div align="center">
-	<h1>Ghostfolio</h1>
-	<p>
-		<strong>Privacy-first Portfolio Tracker</strong>
-	</p>
+  <h1>Ghostfolio</h1>
   <p>
-    <a href="https://www.ghostfol.io"><strong>Live Demo</strong></a>
+    <strong>Open Source Portfolio Tracker</strong>
+  </p>
+  <p>
+    <a href="https://ghostfol.io"><strong>Live Demo</strong></a>
+  </p>
+  <p>
+    <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
+      <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3">
+    </a>
   </p>
 </div>
 
-**Ghostfolio** is a privacy-first portfolio tracker. It empowers busy folks to have a sharp look of their financial assets and to make solid, data-driven investment decisions by evaluating automated Static Portfolio Analysis Rules.
+**Ghostfolio** is an open source portfolio tracker. The software empowers busy folks to have a sharp look of their financial assets and to make solid, data-driven investment decisions by evaluating automated static portfolio analysis rules.
 
 ## Why Ghostfolio?
 
@@ -84,3 +89,7 @@ The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://
 ## Testing
 
 Run `yarn test`
+
+## License
+
+Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
