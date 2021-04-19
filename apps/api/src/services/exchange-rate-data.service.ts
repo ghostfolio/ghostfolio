@@ -58,8 +58,8 @@ export class ExchangeRateDataService {
       if (!this.currencies[pair]) {
         // Not found, calculate indirectly via USD
         this.currencies[pair] =
-          resultExtended[`${currency1}${Currency.USD}`][date].marketPrice *
-          resultExtended[`${Currency.USD}${currency2}`][date].marketPrice;
+          resultExtended[`${currency1}${Currency.USD}`]?.[date]?.marketPrice *
+          resultExtended[`${Currency.USD}${currency2}`]?.[date]?.marketPrice;
 
         // Calculate the opposite direction
         this.currencies[`${currency2}${currency1}`] = 1 / this.currencies[pair];
