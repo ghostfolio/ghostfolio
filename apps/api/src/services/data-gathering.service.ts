@@ -200,10 +200,36 @@ export class DataGatheringService {
     return benchmarksToGather;
   }
 
+  private async getCustomSymbolsToGather(startDate: Date) {
+    const customSymbolsToGather = [];
+
+    if (this.configurationService.get('ENABLE_FEATURE_CUSTOM_SYMBOLS')) {
+      try {
+        const {
+          value: scraperConfigString
+        } = await this.prisma.property.findFirst({
+          select: {
+            value: true
+          },
+          where: { key: 'SCRAPER_CONFIG' }
+        });
+
+        JSON.parse(scraperConfigString).forEach((item) => {
+          customSymbolsToGather.push({
+            date: startDate,
+            symbol: item.symbol
+          });
+        });
+      } catch {}
+    }
+
+    return customSymbolsToGather;
+  }
+
   private async getSymbols7D(): Promise<{ date: Date; symbol: string }[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
-    let distinctOrders = await this.prisma.order.findMany({
+    const distinctOrders = await this.prisma.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
       select: { symbol: true }
@@ -223,8 +249,13 @@ export class DataGatheringService {
       };
     });
 
+    const customSymbolsToGather = await this.getCustomSymbolsToGather(
+      startDate
+    );
+
     return [
       ...this.getBenchmarksToGather(startDate),
+      ...customSymbolsToGather,
       ...currencyPairsToGather,
       ...distinctOrdersWithDate
     ];
@@ -233,11 +264,9 @@ export class DataGatheringService {
   private async getSymbolsMax() {
     const startDate = new Date(getUtc('2000-01-01'));
 
-    let distinctOrders = await this.prisma.order.findMany({
-      distinct: ['symbol'],
-      orderBy: [{ date: 'asc' }],
-      select: { date: true, symbol: true }
-    });
+    const customSymbolsToGather = await this.getCustomSymbolsToGather(
+      startDate
+    );
 
     const currencyPairsToGather = currencyPairs.map((symbol) => {
       return {
@@ -246,8 +275,15 @@ export class DataGatheringService {
       };
     });
 
+    const distinctOrders = await this.prisma.order.findMany({
+      distinct: ['symbol'],
+      orderBy: [{ date: 'asc' }],
+      select: { date: true, symbol: true }
+    });
+
     return [
       ...this.getBenchmarksToGather(startDate),
+      ...customSymbolsToGather,
       ...currencyPairsToGather,
       ...distinctOrders
     ];

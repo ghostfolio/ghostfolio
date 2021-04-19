@@ -66,6 +66,10 @@ export function isCurrency(aSymbol = '') {
   );
 }
 
+export function isGhostfolioScraperApi(aSymbol = '') {
+  return aSymbol.startsWith('[GF]');
+}
+
 export function isRakutenRapidApi(aSymbol = '') {
   return aSymbol === 'GF.FEAR_AND_GREED_INDEX';
 }
