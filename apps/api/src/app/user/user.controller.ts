@@ -1,3 +1,4 @@
+import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
 import {
   Body,
   Controller,
@@ -15,7 +16,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { RequestWithUser } from 'apps/api/src/app/interfaces/request-with-user.type';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { getPermissions, hasPermission, permissions } from 'libs/helper/src';
 
 import { UserItem } from './interfaces/user-item.interface';
 import { User } from './interfaces/user.interface';

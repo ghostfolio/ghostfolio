@@ -1,8 +1,6 @@
+import { baseCurrency, getUtc, getYesterday } from '@ghostfolio/helper';
 import { Test } from '@nestjs/testing';
 import { Currency, Role, Type } from '@prisma/client';
-import { baseCurrency } from 'libs/helper/src';
-import { getYesterday } from 'libs/helper/src';
-import { getUtc } from 'libs/helper/src';
 
 import { ConfigurationService } from '../services/configuration.service';
 import { DataProviderService } from '../services/data-provider.service';

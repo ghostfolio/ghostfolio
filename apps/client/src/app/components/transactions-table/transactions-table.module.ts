@@ -8,7 +8,7 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { PositionDetailDialogModule } from '../position/position-detail-dialog/position-detail-dialog.module';
+import { GfPositionDetailDialogModule } from '../position/position-detail-dialog/position-detail-dialog.module';
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 import { GfValueModule } from '../value/value.module';
 import { TransactionsTableComponent } from './transactions-table.component';
@@ -18,6 +18,7 @@ import { TransactionsTableComponent } from './transactions-table.component';
   exports: [TransactionsTableComponent],
   imports: [
     CommonModule,
+    GfPositionDetailDialogModule,
     GfSymbolIconModule,
     GfValueModule,
     MatButtonModule,
@@ -26,7 +27,6 @@ import { TransactionsTableComponent } from './transactions-table.component';
     MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
-    PositionDetailDialogModule,
     RouterModule
   ],
   providers: [],

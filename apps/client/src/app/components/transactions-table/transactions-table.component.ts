@@ -13,8 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
 import { Order as OrderModel } from '@prisma/client';
-import { DEFAULT_DATE_FORMAT } from 'libs/helper/src';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

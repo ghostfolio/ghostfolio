@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfNoTransactionsInfoModule } from '../no-transactions-info/no-transactions-info.module';
-import { PositionDetailDialogModule } from '../position/position-detail-dialog/position-detail-dialog.module';
+import { GfPositionDetailDialogModule } from '../position/position-detail-dialog/position-detail-dialog.module';
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 import { GfValueModule } from '../value/value.module';
 import { PositionsTableComponent } from './positions-table.component';
@@ -21,6 +21,7 @@ import { PositionsTableComponent } from './positions-table.component';
   imports: [
     CommonModule,
     GfNoTransactionsInfoModule,
+    GfPositionDetailDialogModule,
     GfSymbolIconModule,
     GfValueModule,
     MatButtonModule,
@@ -30,7 +31,6 @@ import { PositionsTableComponent } from './positions-table.component';
     MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
-    PositionDetailDialogModule,
     RouterModule
   ],
   providers: [],

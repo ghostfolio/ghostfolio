@@ -1,6 +1,6 @@
+import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { format } from 'date-fns';
-import { isCrypto, isCurrency, parseCurrency } from 'libs/helper/src';
 import * as yahooFinance from 'yahoo-finance';
 
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';

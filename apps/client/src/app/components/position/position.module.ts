@@ -7,7 +7,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 import { GfTrendIndicatorModule } from '../trend-indicator/trend-indicator.module';
 import { GfValueModule } from '../value/value.module';
-import { PositionDetailDialogModule } from './position-detail-dialog/position-detail-dialog.module';
+import { GfPositionDetailDialogModule } from './position-detail-dialog/position-detail-dialog.module';
 import { PositionComponent } from './position.component';
 
 @NgModule({
@@ -15,12 +15,12 @@ import { PositionComponent } from './position.component';
   exports: [PositionComponent],
   imports: [
     CommonModule,
+    GfPositionDetailDialogModule,
     GfSymbolIconModule,
     GfTrendIndicatorModule,
     GfValueModule,
     MatDialogModule,
     NgxSkeletonLoaderModule,
-    PositionDetailDialogModule,
     RouterModule
   ],
   providers: [],

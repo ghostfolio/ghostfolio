@@ -9,6 +9,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { primaryColorRgb } from '@ghostfolio/helper';
 import { PortfolioItem } from 'apps/api/src/app/portfolio/interfaces/portfolio-item.interface';
 import {
   LineController,
@@ -18,7 +19,6 @@ import {
   TimeScale
 } from 'chart.js';
 import { Chart } from 'chart.js';
-import { primaryColorRgb } from 'libs/helper/src';
 
 @Component({
   selector: 'gf-investment-chart',

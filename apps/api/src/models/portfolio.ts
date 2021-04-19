@@ -1,3 +1,4 @@
+import { getToday, getYesterday, resetHours } from '@ghostfolio/helper';
 import {
   PortfolioItem,
   Position
@@ -18,7 +19,6 @@ import {
   setMonth,
   sub
 } from 'date-fns';
-import { getToday, getYesterday, resetHours } from 'libs/helper/src';
 import { cloneDeep, isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 

@@ -13,7 +13,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
-  selector: 'position-detail-dialog',
+  selector: 'gf-position-detail-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'position-detail-dialog.html',
   styleUrls: ['./position-detail-dialog.component.scss']

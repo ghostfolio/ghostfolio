@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { hasPermission, permissions } from '@ghostfolio/helper';
 import { DateRange } from 'apps/api/src/app/portfolio/interfaces/date-range.type';
 import { PortfolioOverview } from 'apps/api/src/app/portfolio/interfaces/portfolio-overview.interface';
 import { PortfolioPerformance } from 'apps/api/src/app/portfolio/interfaces/portfolio-performance.interface';
@@ -10,7 +11,6 @@ import {
   RANGE,
   SettingsStorageService
 } from 'apps/client/src/app/services/settings-storage.service';
-import { hasPermission, permissions } from 'libs/helper/src';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

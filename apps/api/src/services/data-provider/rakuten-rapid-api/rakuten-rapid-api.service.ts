@@ -1,7 +1,7 @@
+import { getToday, getYesterday } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import * as bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
-import { getToday, getYesterday } from 'libs/helper/src';
 
 import { ConfigurationService } from '../../configuration.service';
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';

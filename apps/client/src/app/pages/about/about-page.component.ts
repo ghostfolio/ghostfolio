@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { baseCurrency } from '@ghostfolio/helper';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
 import { environment } from 'apps/client/src/environments/environment';
-import { baseCurrency } from 'libs/helper/src';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

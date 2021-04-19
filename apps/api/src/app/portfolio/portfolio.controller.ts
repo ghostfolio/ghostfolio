@@ -1,3 +1,4 @@
+import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
 import {
   Controller,
   Get,
@@ -13,7 +14,6 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { getPermissions, hasPermission, permissions } from 'libs/helper/src';
 
 import {
   hasNotDefinedValuesInObject,

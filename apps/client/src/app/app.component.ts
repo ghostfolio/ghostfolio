@@ -6,11 +6,15 @@ import {
   OnInit
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import {
+  hasPermission,
+  permissions,
+  primaryColorHex,
+  secondaryColorHex
+} from '@ghostfolio/helper';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { InfoItem } from 'apps/api/src/app/info/interfaces/info-item.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
-import { primaryColorHex, secondaryColorHex } from 'libs/helper/src';
-import { hasPermission, permissions } from 'libs/helper/src';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 

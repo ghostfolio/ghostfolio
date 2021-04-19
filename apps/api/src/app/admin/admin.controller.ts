@@ -1,3 +1,4 @@
+import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
 import {
   Controller,
   Get,
@@ -10,7 +11,6 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { RequestWithUser } from 'apps/api/src/app/interfaces/request-with-user.type';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { getPermissions, hasPermission, permissions } from 'libs/helper/src';
 
 import { DataGatheringService } from '../../services/data-gathering.service';
 import { AdminService } from './admin.service';

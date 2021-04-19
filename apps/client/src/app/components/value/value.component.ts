@@ -5,8 +5,8 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
+import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
 import { format, isDate } from 'date-fns';
-import { DEFAULT_DATE_FORMAT } from 'libs/helper/src';
 import { isNumber } from 'lodash';
 
 @Component({
