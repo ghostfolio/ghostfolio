@@ -97,16 +97,20 @@ export class AdminPageComponent implements OnInit {
   }
 
   public formatDistanceToNow(aDateString: string) {
-    const distanceString = formatDistanceToNow(
-      sub(parseISO(aDateString), { seconds: 10 }),
-      {
-        addSuffix: true
-      }
-    );
+    if (aDateString) {
+      const distanceString = formatDistanceToNow(
+        sub(parseISO(aDateString), { seconds: 10 }),
+        {
+          addSuffix: true
+        }
+      );
 
-    return distanceString === 'less than a minute ago'
-      ? 'just now'
-      : distanceString;
+      return distanceString === 'less than a minute ago'
+        ? 'just now'
+        : distanceString;
+    }
+
+    return '';
   }
 
   public ngOnDestroy() {
