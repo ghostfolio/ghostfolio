@@ -1,3 +1,9 @@
+import {
+  benchmarks,
+  currencyPairs,
+  getUtc,
+  resetHours
+} from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import {
   differenceInHours,
@@ -8,8 +14,6 @@ import {
   isBefore,
   subDays
 } from 'date-fns';
-import { benchmarks, currencyPairs } from 'libs/helper/src';
-import { getUtc, resetHours } from 'libs/helper/src';
 
 import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider.service';

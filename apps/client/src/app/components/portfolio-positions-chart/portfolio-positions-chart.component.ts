@@ -5,13 +5,10 @@ import {
   Component,
   Input,
   OnChanges,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { PortfolioItem } from 'apps/api/src/app/portfolio/interfaces/portfolio-item.interface';
-import { Chart } from 'chart.js';
 import { endOfDay, parseISO, startOfDay } from 'date-fns';
-import { primaryColorRgb } from 'libs/helper/src';
 
 @Component({
   selector: 'gf-portfolio-positions-chart',

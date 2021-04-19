@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
 import { Access } from 'apps/api/src/app/access/interfaces/access.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
-import { DEFAULT_DATE_FORMAT } from 'libs/helper/src';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { hasPermission, permissions } from '@ghostfolio/helper';
 import { Order as OrderModel } from '@prisma/client';
 import { UpdateOrderDto } from 'apps/api/src/app/order/update-order.dto';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
-import { hasPermission, permissions } from 'libs/helper/src';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

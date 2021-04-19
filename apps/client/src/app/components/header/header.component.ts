@@ -6,9 +6,9 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { hasPermission, permissions } from '@ghostfolio/helper';
 import { InfoItem } from 'apps/api/src/app/info/interfaces/info-item.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
-import { hasPermission, permissions } from 'libs/helper/src';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 

@@ -26,4 +26,4 @@ import { PositionDetailDialog } from './position-detail-dialog.component';
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class PositionDetailDialogModule {}
+export class GfPositionDetailDialogModule {}

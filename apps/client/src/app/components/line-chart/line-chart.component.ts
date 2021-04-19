@@ -9,6 +9,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/helper';
 import {
   Chart,
   Filler,
@@ -18,7 +19,6 @@ import {
   PointElement,
   TimeScale
 } from 'chart.js';
-import { primaryColorRgb, secondaryColorRgb } from 'libs/helper/src';
 
 import { LineChartItem } from './interfaces/line-chart.interface';
 

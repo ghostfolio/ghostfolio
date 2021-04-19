@@ -1,8 +1,12 @@
+import {
+  getPermissions,
+  locale,
+  permissions,
+  resetHours
+} from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User } from '@prisma/client';
 import { add } from 'date-fns';
-import { locale, permissions, resetHours } from 'libs/helper/src';
-import { getPermissions } from 'libs/helper/src';
 
 import { ConfigurationService } from '../../services/configuration.service';
 import { PrismaService } from '../../services/prisma.service';
