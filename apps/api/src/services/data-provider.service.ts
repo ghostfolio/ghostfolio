@@ -1,10 +1,15 @@
-import { isCrypto, isRakutenRapidApi } from '@ghostfolio/helper';
+import {
+  isCrypto,
+  isGhostfolioScraperApi,
+  isRakutenRapidApi
+} from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 
 import { ConfigurationService } from './configuration.service';
 import { AlphaVantageService } from './data-provider/alpha-vantage/alpha-vantage.service';
+import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from './data-provider/yahoo-finance/yahoo-finance.service';
 import { DataProviderInterface } from './interfaces/data-provider.interface';
@@ -20,6 +25,7 @@ export class DataProviderService implements DataProviderInterface {
   public constructor(
     private readonly alphaVantageService: AlphaVantageService,
     private readonly configurationService: ConfigurationService,
+    private readonly ghostfolioScraperApiService: GhostfolioScraperApiService,
     private prisma: PrismaService,
     private readonly rakutenRapidApiService: RakutenRapidApiService,
     private readonly yahooFinanceService: YahooFinanceService
@@ -33,7 +39,9 @@ export class DataProviderService implements DataProviderInterface {
     if (aSymbols.length === 1) {
       const symbol = aSymbols[0];
 
-      if (isRakutenRapidApi(symbol)) {
+      if (isGhostfolioScraperApi(symbol)) {
+        return this.ghostfolioScraperApiService.get(aSymbols);
+      } else if (isRakutenRapidApi(symbol)) {
         return this.rakutenRapidApiService.get(aSymbols);
       }
     }
@@ -53,12 +61,12 @@ export class DataProviderService implements DataProviderInterface {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
 
-    let granularityQuery =
+    const granularityQuery =
       aGranularity === 'month'
         ? `AND (date_part('day', date) = 1 OR date >= TIMESTAMP 'yesterday')`
         : '';
 
-    let rangeQuery =
+    const rangeQuery =
       from && to
         ? `AND date >= '${format(from, 'yyyy-MM-dd')}' AND date <= '${format(
             to,
@@ -127,6 +135,15 @@ export class DataProviderService implements DataProviderInterface {
             ...dataOfAlphaVantage[symbol]
           }
         };
+      } else if (isGhostfolioScraperApi(symbol)) {
+        const dataOfGhostfolioScraperApi = await this.ghostfolioScraperApiService.getHistorical(
+          [symbol],
+          undefined,
+          from,
+          to
+        );
+
+        return dataOfGhostfolioScraperApi;
       } else if (
         isRakutenRapidApi(symbol) &&
         this.configurationService.get('RAKUTEN_RAPID_API_KEY')

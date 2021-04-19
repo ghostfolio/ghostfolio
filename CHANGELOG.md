@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a generic scraper
+
 ### Fixed
 
 - Fixed an issue in the user table of the admin control panel with missing data
