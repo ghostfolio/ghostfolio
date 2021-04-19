@@ -1,5 +1,8 @@
-import { Currency } from '.prisma/client';
+import { getYesterday } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
+import * as bent from 'bent';
+import * as cheerio from 'cheerio';
+import { format } from 'date-fns';
 
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
 import { Granularity } from '../../interfaces/granularity.type';
@@ -7,11 +10,8 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '../../interfaces/interfaces';
-import * as bent from 'bent';
-import * as cheerio from 'cheerio';
-import { getYesterday } from '@ghostfolio/helper';
-import { format } from 'date-fns';
 import { PrismaService } from '../../prisma.service';
+import { Currency } from '.prisma/client';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
