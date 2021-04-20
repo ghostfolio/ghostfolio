@@ -40,7 +40,9 @@
             class="ml-1"
             [url]="position?.url"
           ></gf-symbol-icon>
-          <span class="ml-2 text-muted">({{ position?.exchange }})</span>
+          <span *ngIf="position?.exchange" class="ml-2 text-muted"
+            >({{ position.exchange }})</span
+          >
         </div>
         <div class="d-flex mt-1">
           <gf-value

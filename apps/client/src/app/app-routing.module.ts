@@ -81,8 +81,7 @@ const routes: Routes = [
       {
         preloadingStrategy: ModulePreloadService,
         // enableTracing: true // <-- debugging purposes only
-        relativeLinkResolution: 'legacy',
-        scrollPositionRestoration: 'enabled'
+        relativeLinkResolution: 'legacy'
       }
     )
   ],

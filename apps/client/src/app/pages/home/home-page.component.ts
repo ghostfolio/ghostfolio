@@ -85,6 +85,18 @@ export class HomePageComponent implements OnDestroy, OnInit {
             user.permissions,
             permissions.accessFearAndGreedIndex
           );
+
+          if (this.hasPermissionToAccessFearAndGreedIndex) {
+            this.dataService
+              .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe(({ marketPrice }) => {
+                this.fearAndGreedIndex = marketPrice;
+
+                this.cd.markForCheck();
+              });
+          }
+
           this.hasPermissionToReadForeignPortfolio = hasPermission(
             user.permissions,
             permissions.readForeignPortfolio
@@ -179,17 +191,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
 
         this.cd.markForCheck();
       });
-
-    if (this.hasPermissionToAccessFearAndGreedIndex) {
-      this.dataService
-        .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ marketPrice }) => {
-          this.fearAndGreedIndex = marketPrice;
-
-          this.cd.markForCheck();
-        });
-    }
 
     this.cd.markForCheck();
   }

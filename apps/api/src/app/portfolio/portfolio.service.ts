@@ -48,53 +48,6 @@ export class PortfolioService {
     private readonly userService: UserService
   ) {}
 
-  private convertDateRangeToDate(aDateRange: DateRange, aMinDate: Date) {
-    let currentDate = new Date();
-
-    const normalizedMinDate =
-      getDate(aMinDate) === 1
-        ? aMinDate
-        : add(setDate(aMinDate, 1), { months: 1 });
-
-    const year = getYear(currentDate);
-    const month = getMonth(currentDate);
-    const day = getDate(currentDate);
-
-    currentDate = new Date(Date.UTC(year, month, day, 0));
-
-    switch (aDateRange) {
-      case '1d':
-        return sub(currentDate, {
-          days: 1
-        });
-      case 'ytd':
-        currentDate = setDate(currentDate, 1);
-        currentDate = setMonth(currentDate, 0);
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      case '1y':
-        currentDate = setDate(currentDate, 1);
-        currentDate = sub(currentDate, {
-          years: 1
-        });
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      case '5y':
-        currentDate = setDate(currentDate, 1);
-        currentDate = sub(currentDate, {
-          years: 5
-        });
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      default:
-        // Gets handled as all data
-        return undefined;
-    }
-  }
-
   public async createPortfolio(aUserId: string): Promise<Portfolio> {
     let portfolio: Portfolio;
     let stringifiedPortfolio = await this.redisCacheService.get(
@@ -381,5 +334,52 @@ export class PortfolioService {
       quantity: undefined,
       symbol: aSymbol
     };
+  }
+
+  private convertDateRangeToDate(aDateRange: DateRange, aMinDate: Date) {
+    let currentDate = new Date();
+
+    const normalizedMinDate =
+      getDate(aMinDate) === 1
+        ? aMinDate
+        : add(setDate(aMinDate, 1), { months: 1 });
+
+    const year = getYear(currentDate);
+    const month = getMonth(currentDate);
+    const day = getDate(currentDate);
+
+    currentDate = new Date(Date.UTC(year, month, day, 0));
+
+    switch (aDateRange) {
+      case '1d':
+        return sub(currentDate, {
+          days: 1
+        });
+      case 'ytd':
+        currentDate = setDate(currentDate, 1);
+        currentDate = setMonth(currentDate, 0);
+        return isAfter(currentDate, normalizedMinDate)
+          ? currentDate
+          : undefined;
+      case '1y':
+        currentDate = setDate(currentDate, 1);
+        currentDate = sub(currentDate, {
+          years: 1
+        });
+        return isAfter(currentDate, normalizedMinDate)
+          ? currentDate
+          : undefined;
+      case '5y':
+        currentDate = setDate(currentDate, 1);
+        currentDate = sub(currentDate, {
+          years: 5
+        });
+        return isAfter(currentDate, normalizedMinDate)
+          ? currentDate
+          : undefined;
+      default:
+        // Gets handled as all data
+        return undefined;
+    }
   }
 }

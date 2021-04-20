@@ -44,10 +44,6 @@ export class UserService {
       currentPermissions.push(permissions.accessFearAndGreedIndex);
     }
 
-    if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
-      currentPermissions.push(permissions.useSocialLogin);
-    }
-
     return {
       alias,
       id,
@@ -162,18 +158,6 @@ export class UserService {
     });
   }
 
-  private getRandomString(length: number) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const result = [];
-
-    for (let i = 0; i < length; i++) {
-      result.push(
-        characters.charAt(Math.floor(Math.random() * characters.length))
-      );
-    }
-    return result.join('');
-  }
-
   public async updateUserSettings({
     currency,
     userId
@@ -199,5 +183,17 @@ export class UserService {
     });
 
     return;
+  }
+
+  private getRandomString(length: number) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const result = [];
+
+    for (let i = 0; i < length; i++) {
+      result.push(
+        characters.charAt(Math.floor(Math.random() * characters.length))
+      );
+    }
+    return result.join('');
   }
 }
