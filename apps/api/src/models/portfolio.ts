@@ -79,7 +79,9 @@ export class Portfolio implements PortfolioInterface {
         investmentInOriginalCurrency:
           portfolioItemsYesterday?.positions[symbol]
             ?.investmentInOriginalCurrency,
-        marketPrice: currentData[symbol]?.marketPrice,
+        marketPrice:
+          currentData[symbol]?.marketPrice ??
+          portfolioItemsYesterday.positions[symbol]?.marketPrice,
         quantity: portfolioItemsYesterday?.positions[symbol]?.quantity
       };
     });
@@ -156,53 +158,6 @@ export class Portfolio implements PortfolioInterface {
     this.setUser(user);
 
     return this;
-  }
-
-  private convertDateRangeToDate(aDateRange: DateRange, aMinDate: Date) {
-    let currentDate = new Date();
-
-    const normalizedMinDate =
-      getDate(aMinDate) === 1
-        ? aMinDate
-        : add(setDate(aMinDate, 1), { months: 1 });
-
-    const year = getYear(currentDate);
-    const month = getMonth(currentDate);
-    const day = getDate(currentDate);
-
-    currentDate = new Date(Date.UTC(year, month, day, 0));
-
-    switch (aDateRange) {
-      case '1d':
-        return sub(currentDate, {
-          days: 1
-        });
-      case 'ytd':
-        currentDate = setDate(currentDate, 1);
-        currentDate = setMonth(currentDate, 0);
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      case '1y':
-        currentDate = setDate(currentDate, 1);
-        currentDate = sub(currentDate, {
-          years: 1
-        });
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      case '5y':
-        currentDate = setDate(currentDate, 1);
-        currentDate = sub(currentDate, {
-          years: 5
-        });
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      default:
-        // Gets handled as all data
-        return undefined;
-    }
   }
 
   public get(aDate?: Date): PortfolioItem[] {
@@ -528,12 +483,6 @@ export class Portfolio implements PortfolioInterface {
     return this.orders;
   }
 
-  private getOrdersByType(aFilter: string[]) {
-    return this.orders.filter((order) => {
-      return aFilter.includes(order.getType());
-    });
-  }
-
   public getValue(aDate = getToday()) {
     const positions = this.getPositions(aDate);
     let value = 0;
@@ -690,6 +639,53 @@ export class Portfolio implements PortfolioInterface {
     }
 
     this.updatePortfolioItems();
+  }
+
+  private convertDateRangeToDate(aDateRange: DateRange, aMinDate: Date) {
+    let currentDate = new Date();
+
+    const normalizedMinDate =
+      getDate(aMinDate) === 1
+        ? aMinDate
+        : add(setDate(aMinDate, 1), { months: 1 });
+
+    const year = getYear(currentDate);
+    const month = getMonth(currentDate);
+    const day = getDate(currentDate);
+
+    currentDate = new Date(Date.UTC(year, month, day, 0));
+
+    switch (aDateRange) {
+      case '1d':
+        return sub(currentDate, {
+          days: 1
+        });
+      case 'ytd':
+        currentDate = setDate(currentDate, 1);
+        currentDate = setMonth(currentDate, 0);
+        return isAfter(currentDate, normalizedMinDate)
+          ? currentDate
+          : undefined;
+      case '1y':
+        currentDate = setDate(currentDate, 1);
+        currentDate = sub(currentDate, {
+          years: 1
+        });
+        return isAfter(currentDate, normalizedMinDate)
+          ? currentDate
+          : undefined;
+      case '5y':
+        currentDate = setDate(currentDate, 1);
+        currentDate = sub(currentDate, {
+          years: 5
+        });
+        return isAfter(currentDate, normalizedMinDate)
+          ? currentDate
+          : undefined;
+      default:
+        // Gets handled as all data
+        return undefined;
+    }
   }
 
   private updatePortfolioItems() {

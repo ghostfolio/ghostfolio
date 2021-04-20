@@ -1,7 +1,7 @@
 import {
   isCrypto,
-  isGhostfolioScraperApi,
-  isRakutenRapidApi
+  isGhostfolioScraperApiSymbol,
+  isRakutenRapidApiSymbol
 } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
@@ -39,14 +39,33 @@ export class DataProviderService implements DataProviderInterface {
     if (aSymbols.length === 1) {
       const symbol = aSymbols[0];
 
-      if (isGhostfolioScraperApi(symbol)) {
+      if (isGhostfolioScraperApiSymbol(symbol)) {
         return this.ghostfolioScraperApiService.get(aSymbols);
-      } else if (isRakutenRapidApi(symbol)) {
+      } else if (isRakutenRapidApiSymbol(symbol)) {
         return this.rakutenRapidApiService.get(aSymbols);
       }
     }
 
-    return this.yahooFinanceService.get(aSymbols);
+    const yahooFinanceSymbols = aSymbols.filter((symbol) => {
+      return !isGhostfolioScraperApiSymbol(symbol);
+    });
+
+    const response = await this.yahooFinanceService.get(yahooFinanceSymbols);
+
+    const ghostfolioScraperApiSymbols = aSymbols.filter((symbol) => {
+      return isGhostfolioScraperApiSymbol(symbol);
+    });
+
+    for (const symbol of ghostfolioScraperApiSymbols) {
+      if (symbol) {
+        const ghostfolioScraperApiResult = await this.ghostfolioScraperApiService.get(
+          [symbol]
+        );
+        response[symbol] = ghostfolioScraperApiResult[symbol];
+      }
+    }
+
+    return response;
   }
 
   public async getHistorical(
@@ -107,8 +126,12 @@ export class DataProviderService implements DataProviderInterface {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
+    const filteredSymbols = aSymbols.filter((symbol) => {
+      return !isGhostfolioScraperApiSymbol(symbol);
+    });
+
     const dataOfYahoo = await this.yahooFinanceService.getHistorical(
-      aSymbols,
+      filteredSymbols,
       undefined,
       from,
       to
@@ -135,7 +158,7 @@ export class DataProviderService implements DataProviderInterface {
             ...dataOfAlphaVantage[symbol]
           }
         };
-      } else if (isGhostfolioScraperApi(symbol)) {
+      } else if (isGhostfolioScraperApiSymbol(symbol)) {
         const dataOfGhostfolioScraperApi = await this.ghostfolioScraperApiService.getHistorical(
           [symbol],
           undefined,
@@ -145,7 +168,7 @@ export class DataProviderService implements DataProviderInterface {
 
         return dataOfGhostfolioScraperApi;
       } else if (
-        isRakutenRapidApi(symbol) &&
+        isRakutenRapidApiSymbol(symbol) &&
         this.configurationService.get('RAKUTEN_RAPID_API_KEY')
       ) {
         const dataOfRakutenRapidApi = await this.rakutenRapidApiService.getHistorical(

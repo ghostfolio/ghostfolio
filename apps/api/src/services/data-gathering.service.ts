@@ -2,6 +2,7 @@ import {
   benchmarks,
   currencyPairs,
   getUtc,
+  isGhostfolioScraperApiSymbol,
   resetHours
 } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
@@ -235,12 +236,16 @@ export class DataGatheringService {
       select: { symbol: true }
     });
 
-    const distinctOrdersWithDate = distinctOrders.map((distinctOrder) => {
-      return {
-        ...distinctOrder,
-        date: startDate
-      };
-    });
+    const distinctOrdersWithDate = distinctOrders
+      .filter((distinctOrder) => {
+        return !isGhostfolioScraperApiSymbol(distinctOrder.symbol);
+      })
+      .map((distinctOrder) => {
+        return {
+          ...distinctOrder,
+          date: startDate
+        };
+      });
 
     const currencyPairsToGather = currencyPairs.map((symbol) => {
       return {
