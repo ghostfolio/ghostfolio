@@ -45,21 +45,7 @@ export class AuthInterceptor implements HttpInterceptor {
       authReq = req.clone({ headers });
     }
 
-    return next.handle(authReq).pipe(
-      tap(
-        () => {},
-        (err: any) => {
-          if (err instanceof HttpErrorResponse) {
-            if (err.status !== 401) {
-              return;
-            }
-
-            this.tokenStorageService.signOut();
-            this.router.navigate(['start']);
-          }
-        }
-      )
-    );
+    return next.handle(authReq);
   }
 }
 

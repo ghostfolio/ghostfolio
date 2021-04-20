@@ -15,15 +15,21 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar
 } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { StatusCodes } from 'http-status-codes';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
 
-  public constructor(private snackBar: MatSnackBar) {}
+  public constructor(
+    private router: Router,
+    private tokenStorageService: TokenStorageService,
+    private snackBar: MatSnackBar
+  ) {}
 
   public intercept(
     request: HttpRequest<any>,
@@ -70,6 +76,9 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               window.location.reload();
             });
           }
+        } else if (error.status === StatusCodes.UNAUTHORIZED) {
+          this.tokenStorageService.signOut();
+          this.router.navigate(['start']);
         }
 
         return throwError('');

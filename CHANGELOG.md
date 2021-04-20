@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the frozen screen if the token has expired
 - Fixed some issues in the generic scraper
 
 ## 0.87.0 - 19.04.2021
