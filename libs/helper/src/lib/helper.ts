@@ -1,6 +1,8 @@
 import { Currency } from '@prisma/client';
 import { getDate, getMonth, getYear, subDays } from 'date-fns';
 
+import { ghostfolioScraperApiSymbolPrefix } from './config';
+
 const cryptocurrencies = require('cryptocurrencies');
 
 export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
@@ -67,7 +69,7 @@ export function isCurrency(aSymbol = '') {
 }
 
 export function isGhostfolioScraperApiSymbol(aSymbol = '') {
-  return aSymbol.startsWith('[GF]');
+  return aSymbol.startsWith(ghostfolioScraperApiSymbolPrefix);
 }
 
 export function isRakutenRapidApiSymbol(aSymbol = '') {

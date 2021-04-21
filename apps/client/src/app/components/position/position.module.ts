@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
@@ -17,6 +18,7 @@ import { PositionComponent } from './position.component';
     CommonModule,
     GfPositionDetailDialogModule,
     GfSymbolIconModule,
+    GfSymbolModule,
     GfTrendIndicatorModule,
     GfValueModule,
     MatDialogModule,
