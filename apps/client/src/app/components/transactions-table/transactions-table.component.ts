@@ -55,11 +55,7 @@ export class TransactionsTableComponent
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (
-          params['positionDetailDialog'] &&
-          params['symbol'] &&
-          params['title']
-        ) {
+        if (params['positionDetailDialog'] && params['symbol']) {
           this.openPositionDialog({
             symbol: params['symbol'],
             title: params['title']

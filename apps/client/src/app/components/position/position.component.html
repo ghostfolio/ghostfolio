@@ -34,7 +34,7 @@
       <div *ngIf="!isLoading" class="flex-grow-1 text-truncate">
         <div class="h6 m-0 text-truncate">{{ position?.name }}</div>
         <div class="d-flex">
-          <span>{{ position?.symbol }}</span>
+          <span>{{ position?.symbol | gfSymbol }}</span>
           <gf-symbol-icon
             *ngIf="position?.url"
             class="ml-1"

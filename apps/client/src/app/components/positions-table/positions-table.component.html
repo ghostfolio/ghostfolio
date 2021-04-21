@@ -13,7 +13,7 @@
 >
   <ng-container matColumnDef="symbol">
     <th mat-header-cell *matHeaderCellDef mat-sort-header i18n>Symbol</th>
-    <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+    <td mat-cell *matCellDef="let element">{{ element.symbol | gfSymbol }}</td>
   </ng-container>
 
   <ng-container matColumnDef="performance">

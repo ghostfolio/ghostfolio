@@ -10,6 +10,8 @@ export const currencyPairs = [
   `${Currency.USD}${Currency.CHF}`
 ];
 
+export const ghostfolioScraperApiSymbolPrefix = '_GF_';
+
 export const locale = 'de-CH';
 
 export const primaryColorHex = '#36cfcc';

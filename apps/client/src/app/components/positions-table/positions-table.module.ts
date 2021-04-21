@@ -7,6 +7,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfNoTransactionsInfoModule } from '../no-transactions-info/no-transactions-info.module';
@@ -23,6 +24,7 @@ import { PositionsTableComponent } from './positions-table.component';
     GfNoTransactionsInfoModule,
     GfPositionDetailDialogModule,
     GfSymbolIconModule,
+    GfSymbolModule,
     GfValueModule,
     MatButtonModule,
     MatDialogModule,

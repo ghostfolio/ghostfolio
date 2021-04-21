@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a prettifier (pipe) for generic scraper symbols
+
 ### Fixed
 
 - Fixed the text truncation in buttons of the admin control panel
