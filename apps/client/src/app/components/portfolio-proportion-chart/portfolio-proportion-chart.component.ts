@@ -8,7 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Currency } from '@prisma/client';
-import { PortfolioPosition } from 'apps/api/src/app/portfolio/interfaces/portfolio-position.interface';
+import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';

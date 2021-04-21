@@ -14,7 +14,7 @@ import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
-import { RequestWithUser } from 'apps/api/src/app/interfaces/request-with-user.type';
+import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { UserItem } from './interfaces/user-item.interface';

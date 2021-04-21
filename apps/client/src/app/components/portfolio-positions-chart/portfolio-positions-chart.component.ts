@@ -7,7 +7,7 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
-import { PortfolioItem } from 'apps/api/src/app/portfolio/interfaces/portfolio-item.interface';
+import { PortfolioItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
 import { endOfDay, parseISO, startOfDay } from 'date-fns';
 
 @Component({

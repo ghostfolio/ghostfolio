@@ -3,7 +3,7 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
-import { AdminData } from 'apps/api/src/app/admin/interfaces/admin-data.interface';
+import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
 import { formatDistanceToNow, isValid, parseISO, sub } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

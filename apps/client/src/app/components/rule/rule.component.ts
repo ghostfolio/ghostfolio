@@ -4,7 +4,7 @@ import {
   Input,
   OnInit
 } from '@angular/core';
-import { PortfolioReportRule } from 'apps/api/src/app/portfolio/interfaces/portfolio-report.interface';
+import { PortfolioReportRule } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-report.interface';
 
 @Component({
   selector: 'gf-rule',

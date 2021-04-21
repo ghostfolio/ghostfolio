@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
-import { Access } from 'apps/api/src/app/access/interfaces/access.interface';
-import { User } from 'apps/api/src/app/user/interfaces/user.interface';
+import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
+import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

@@ -6,8 +6,8 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { hasPermission, permissions } from '@ghostfolio/helper';
 import { Order as OrderModel } from '@prisma/client';
-import { UpdateOrderDto } from 'apps/api/src/app/order/update-order.dto';
-import { User } from 'apps/api/src/app/user/interfaces/user.interface';
+import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
