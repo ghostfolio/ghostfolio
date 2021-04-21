@@ -1,9 +1,9 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { Strategy } from 'passport-google-oauth20';
 
-import { ConfigurationService } from '../../services/configuration.service';
 import { AuthService } from './auth.service';
 
 @Injectable()

@@ -1,8 +1,8 @@
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Order, Prisma } from '@prisma/client';
 
-import { DataGatheringService } from '../../services/data-gathering.service';
-import { PrismaService } from '../../services/prisma.service';
 import { CacheService } from '../cache/cache.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { OrderWithPlatform } from './interfaces/order-with-platform.type';

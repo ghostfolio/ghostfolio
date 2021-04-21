@@ -1,10 +1,10 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { permissions } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Currency } from '@prisma/client';
 
-import { ConfigurationService } from '../../services/configuration.service';
-import { PrismaService } from '../../services/prisma.service';
 import { InfoItem } from './interfaces/info-item.interface';
 
 @Injectable()

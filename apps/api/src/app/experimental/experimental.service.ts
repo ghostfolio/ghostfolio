@@ -1,12 +1,12 @@
+import { Portfolio } from '@ghostfolio/api/models/portfolio';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { Injectable } from '@nestjs/common';
 import { Currency, Type } from '@prisma/client';
 import { parseISO } from 'date-fns';
 
-import { Portfolio } from '../../models/portfolio';
-import { DataProviderService } from '../../services/data-provider.service';
-import { ExchangeRateDataService } from '../../services/exchange-rate-data.service';
-import { PrismaService } from '../../services/prisma.service';
-import { RulesService } from '../../services/rules.service';
 import { OrderWithPlatform } from '../order/interfaces/order-with-platform.type';
 import { CreateOrderDto } from './create-order.dto';
 import { Data } from './interfaces/data.interface';

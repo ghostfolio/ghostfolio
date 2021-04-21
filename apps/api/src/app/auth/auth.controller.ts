@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import {
   Controller,
   Get,
@@ -10,7 +11,6 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { ConfigurationService } from '../../services/configuration.service';
 import { AuthService } from './auth.service';
 
 @Controller('auth')

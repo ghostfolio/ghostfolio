@@ -1,9 +1,9 @@
+import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { convertFromYahooSymbol } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
-import { convertFromYahooSymbol } from 'apps/api/src/services/data-provider/yahoo-finance/yahoo-finance.service';
 import * as bent from 'bent';
 
-import { DataProviderService } from '../../services/data-provider.service';
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
 

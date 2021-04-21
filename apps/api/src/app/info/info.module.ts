@@ -1,8 +1,8 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
-import { ConfigurationService } from '../../services/configuration.service';
-import { PrismaService } from '../../services/prisma.service';
 import { InfoController } from './info.controller';
 import { InfoService } from './info.service';
 

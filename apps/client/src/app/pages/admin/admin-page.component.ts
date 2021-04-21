@@ -1,13 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AdminService } from '@ghostfolio/client/app/services/admin.service';
+import { CacheService } from '@ghostfolio/client/app/services/cache.service';
+import { DataService } from '@ghostfolio/client/app/services/data.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
 import { AdminData } from 'apps/api/src/app/admin/interfaces/admin-data.interface';
 import { formatDistanceToNow, isValid, parseISO, sub } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { AdminService } from '../../services/admin.service';
-import { CacheService } from '../../services/cache.service';
-import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'gf-admin-page',

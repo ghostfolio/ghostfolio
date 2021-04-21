@@ -1,3 +1,9 @@
+import {
+  hasNotDefinedValuesInObject,
+  nullifyValuesInObject
+} from '@ghostfolio/api/helper/object.helper';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
 import {
   Controller,
@@ -15,12 +21,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import {
-  hasNotDefinedValuesInObject,
-  nullifyValuesInObject
-} from '../../helper/object.helper';
-import { ExchangeRateDataService } from '../../services/exchange-rate-data.service';
-import { ImpersonationService } from '../../services/impersonation.service';
 import { RequestWithUser } from '../interfaces/request-with-user.type';
 import { PortfolioItem } from './interfaces/portfolio-item.interface';
 import { PortfolioOverview } from './interfaces/portfolio-overview.interface';

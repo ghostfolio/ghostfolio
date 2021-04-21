@@ -1,4 +1,5 @@
-import { PortfolioPosition } from '../../app/portfolio/interfaces/portfolio-position.interface';
+import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
+
 import { EvaluationResult } from './evaluation-result.interface';
 
 export interface RuleInterface {

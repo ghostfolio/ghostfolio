@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DataService } from '@ghostfolio/client/app/services/data.service';
 import { PortfolioReportRule } from 'apps/api/src/app/portfolio/interfaces/portfolio-report.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'gf-report-page',

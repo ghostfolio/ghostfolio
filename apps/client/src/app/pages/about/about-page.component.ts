@@ -1,12 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DataService } from '@ghostfolio/client/app/services/data.service';
+import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
 import { baseCurrency } from '@ghostfolio/helper';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
 import { environment } from 'apps/client/src/environments/environment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { DataService } from '../../services/data.service';
-import { TokenStorageService } from '../../services/token-storage.service';
 
 @Component({
   selector: 'gf-about-page',

@@ -1,26 +1,25 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LineChartItem } from '@ghostfolio/client/app/components/line-chart/interfaces/line-chart.interface';
+import { PerformanceChartDialog } from '@ghostfolio/client/app/components/performance-chart-dialog/performance-chart-dialog.component';
+import { ToggleOption } from '@ghostfolio/client/app/components/toggle/interfaces/toggle-option.type';
+import { DataService } from '@ghostfolio/client/app/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/app/services/impersonation-storage.service';
+import {
+  RANGE,
+  SettingsStorageService
+} from '@ghostfolio/client/app/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
 import { hasPermission, permissions } from '@ghostfolio/helper';
 import { DateRange } from 'apps/api/src/app/portfolio/interfaces/date-range.type';
 import { PortfolioOverview } from 'apps/api/src/app/portfolio/interfaces/portfolio-overview.interface';
 import { PortfolioPerformance } from 'apps/api/src/app/portfolio/interfaces/portfolio-performance.interface';
 import { PortfolioPosition } from 'apps/api/src/app/portfolio/interfaces/portfolio-position.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
-import {
-  RANGE,
-  SettingsStorageService
-} from 'apps/client/src/app/services/settings-storage.service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { LineChartItem } from '../../components/line-chart/interfaces/line-chart.interface';
-import { PerformanceChartDialog } from '../../components/performance-chart-dialog/performance-chart-dialog.component';
-import { ToggleOption } from '../../components/toggle/interfaces/toggle-option.type';
-import { DataService } from '../../services/data.service';
-import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
-import { TokenStorageService } from '../../services/token-storage.service';
 
 @Component({
   selector: 'gf-home-page',

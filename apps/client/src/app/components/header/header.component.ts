@@ -6,16 +6,15 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { LoginWithAccessTokenDialog } from '@ghostfolio/client/app/pages/login/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { DataService } from '@ghostfolio/client/app/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/app/services/impersonation-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
 import { hasPermission, permissions } from '@ghostfolio/helper';
 import { InfoItem } from 'apps/api/src/app/info/interfaces/info-item.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
-
-import { LoginWithAccessTokenDialog } from '../../pages/login/login-with-access-token-dialog/login-with-access-token-dialog.component';
-import { DataService } from '../../services/data.service';
-import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
-import { TokenStorageService } from '../../services/token-storage.service';
 
 @Component({
   selector: 'gf-header',
