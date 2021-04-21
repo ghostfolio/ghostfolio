@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { GfTransactionsTableModule } from '@ghostfolio/client/app/components/transactions-table/transactions-table.module';
+import { GfTransactionsTableModule } from '@ghostfolio/client/components/transactions-table/transactions-table.module';
 
 import { CreateOrUpdateTransactionDialogModule } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.module';
 import { TransactionsPageRoutingModule } from './transactions-page-routing.module';

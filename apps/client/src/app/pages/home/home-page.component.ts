@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LineChartItem } from '@ghostfolio/client/app/components/line-chart/interfaces/line-chart.interface';
-import { PerformanceChartDialog } from '@ghostfolio/client/app/components/performance-chart-dialog/performance-chart-dialog.component';
-import { ToggleOption } from '@ghostfolio/client/app/components/toggle/interfaces/toggle-option.type';
-import { DataService } from '@ghostfolio/client/app/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/app/services/impersonation-storage.service';
+import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
+import { PerformanceChartDialog } from '@ghostfolio/client/components/performance-chart-dialog/performance-chart-dialog.component';
+import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
   RANGE,
   SettingsStorageService
-} from '@ghostfolio/client/app/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
+} from '@ghostfolio/client/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { hasPermission, permissions } from '@ghostfolio/helper';
 import { DateRange } from 'apps/api/src/app/portfolio/interfaces/date-range.type';
 import { PortfolioOverview } from 'apps/api/src/app/portfolio/interfaces/portfolio-overview.interface';

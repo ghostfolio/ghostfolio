@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { GfLineChartModule } from '@ghostfolio/client/app/components/line-chart/line-chart.module';
-import { GfLogoModule } from '@ghostfolio/client/app/components/logo/logo.module';
+import { GfLineChartModule } from '@ghostfolio/client/components/line-chart/line-chart.module';
+import { GfLogoModule } from '@ghostfolio/client/components/logo/logo.module';
 
 import { LoginPageRoutingModule } from './login-page-routing.module';
 import { LoginPageComponent } from './login-page.component';

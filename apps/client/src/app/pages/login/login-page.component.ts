@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { LineChartItem } from '@ghostfolio/client/app/components/line-chart/interfaces/line-chart.interface';
-import { DataService } from '@ghostfolio/client/app/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
+import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

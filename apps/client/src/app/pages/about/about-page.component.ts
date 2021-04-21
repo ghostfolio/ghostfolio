@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { DataService } from '@ghostfolio/client/app/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { baseCurrency } from '@ghostfolio/helper';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';
 import { environment } from 'apps/client/src/environments/environment';

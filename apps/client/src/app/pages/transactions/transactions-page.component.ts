@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from '@ghostfolio/client/app/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/app/services/impersonation-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { hasPermission, permissions } from '@ghostfolio/helper';
 import { Order as OrderModel } from '@prisma/client';
 import { UpdateOrderDto } from 'apps/api/src/app/order/update-order.dto';

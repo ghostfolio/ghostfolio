@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ToggleOption } from '@ghostfolio/client/app/components/toggle/interfaces/toggle-option.type';
-import { DataService } from '@ghostfolio/client/app/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/app/services/impersonation-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/app/services/token-storage.service';
+import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { PortfolioItem } from 'apps/api/src/app/portfolio/interfaces/portfolio-item.interface';
 import { PortfolioPosition } from 'apps/api/src/app/portfolio/interfaces/portfolio-position.interface';
 import { User } from 'apps/api/src/app/user/interfaces/user.interface';

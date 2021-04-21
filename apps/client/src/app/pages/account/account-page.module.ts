@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { GfPortfolioAccessTableModule } from '@ghostfolio/client/app/components/access-table/access-table.module';
+import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
 
 import { AccountPageRoutingModule } from './account-page-routing.module';
 import { AccountPageComponent } from './account-page.component';

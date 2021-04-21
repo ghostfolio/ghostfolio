@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@ghostfolio/client/app/core/auth.guard';
+import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
 import { AccountPageComponent } from './account-page.component';
 
