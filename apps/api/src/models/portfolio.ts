@@ -1,8 +1,8 @@
-import { getToday, getYesterday, resetHours } from '@ghostfolio/helper';
 import {
   PortfolioItem,
   Position
-} from 'apps/api/src/app/portfolio/interfaces/portfolio-item.interface';
+} from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
+import { getToday, getYesterday, resetHours } from '@ghostfolio/helper';
 import {
   add,
   format,

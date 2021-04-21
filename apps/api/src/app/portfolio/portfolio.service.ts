@@ -1,6 +1,12 @@
+import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
+import { Portfolio } from '@ghostfolio/api/models/portfolio';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
+import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
+import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { RequestWithUser } from 'apps/api/src/app/interfaces/request-with-user.type';
 import {
   add,
   format,
@@ -9,7 +15,6 @@ import {
   getYear,
   isAfter,
   isSameDay,
-  parse,
   parseISO,
   setDate,
   setMonth,
@@ -18,12 +23,6 @@ import {
 import { isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 
-import { Portfolio } from '../../models/portfolio';
-import { DataProviderService } from '../../services/data-provider.service';
-import { ExchangeRateDataService } from '../../services/exchange-rate-data.service';
-import { ImpersonationService } from '../../services/impersonation.service';
-import { IOrder } from '../../services/interfaces/interfaces';
-import { RulesService } from '../../services/rules.service';
 import { OrderService } from '../order/order.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { UserService } from '../user/user.service';

@@ -1,7 +1,7 @@
+import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { Controller, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { RequestWithUser } from 'apps/api/src/app/interfaces/request-with-user.type';
 
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { CacheService } from './cache.service';

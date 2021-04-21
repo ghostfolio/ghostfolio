@@ -4,8 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { LoginWithAccessTokenDialogModule } from '@ghostfolio/client/pages/login/login-with-access-token-dialog/login-with-access-token-dialog.module';
 
-import { LoginWithAccessTokenDialogModule } from '../../pages/login/login-with-access-token-dialog/login-with-access-token-dialog.module';
 import { GfLogoModule } from '../logo/logo.module';
 import { HeaderComponent } from './header.component';
 

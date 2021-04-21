@@ -1,3 +1,4 @@
+import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import {
   baseCurrency,
   benchmarks,
@@ -14,7 +15,6 @@ import {
   Post
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { RequestWithUser } from 'apps/api/src/app/interfaces/request-with-user.type';
 import { parse } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 

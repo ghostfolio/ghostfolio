@@ -5,9 +5,9 @@ import {
   Inject
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { isToday, parse } from 'date-fns';
 
-import { DataService } from '../../services/data.service';
 import { LineChartItem } from '../line-chart/interfaces/line-chart.interface';
 import { PositionDetailDialogParams } from './interfaces/interfaces';
 

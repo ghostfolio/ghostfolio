@@ -1,14 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { hasPermission, permissions } from '@ghostfolio/helper';
+import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { LineChartItem } from '../../components/line-chart/interfaces/line-chart.interface';
-import { DataService } from '../../services/data.service';
-import { TokenStorageService } from '../../services/token-storage.service';
 import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
 
 @Component({

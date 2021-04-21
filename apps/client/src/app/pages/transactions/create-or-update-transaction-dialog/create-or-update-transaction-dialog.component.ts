@@ -7,8 +7,8 @@ import {
 import { FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { Currency, Order as OrderModel } from '@prisma/client';
-import { LookupItem } from 'apps/api/src/app/symbol/interfaces/lookup-item.interface';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,

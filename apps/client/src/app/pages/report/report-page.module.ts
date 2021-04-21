@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { RulesModule } from 'apps/client/src/app/components/rules/rules.module';
+import { RulesModule } from '@ghostfolio/client/components/rules/rules.module';
 
 import { ReportPageRoutingModule } from './report-page-routing.module';
 import { ReportPageComponent } from './report-page.component';

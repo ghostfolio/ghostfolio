@@ -1,7 +1,6 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-
-import { ConfigurationService } from '../../services/configuration.service';
 
 @Injectable()
 export class RedisCacheService {

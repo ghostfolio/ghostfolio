@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { TokenStorageService } from '../../services/token-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 
 @Component({
   selector: 'gf-auth-page',

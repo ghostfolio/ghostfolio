@@ -1,7 +1,7 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { ConfigurationService } from '../../services/configuration.service';
 import { UserService } from '../user/user.service';
 import { ValidateOAuthLoginParams } from './interfaces/interfaces';
 

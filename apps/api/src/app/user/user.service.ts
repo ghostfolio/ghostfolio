@@ -1,3 +1,5 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import {
   getPermissions,
   locale,
@@ -8,8 +10,6 @@ import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User } from '@prisma/client';
 import { add } from 'date-fns';
 
-import { ConfigurationService } from '../../services/configuration.service';
-import { PrismaService } from '../../services/prisma.service';
 import { UserWithSettings } from '../interfaces/user-with-settings';
 import { User as IUser } from './interfaces/user.interface';
 

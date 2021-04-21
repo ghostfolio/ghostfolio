@@ -1,24 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Order as OrderModel } from '@prisma/client';
-import { Access } from 'apps/api/src/app/access/interfaces/access.interface';
-import { AdminData } from 'apps/api/src/app/admin/interfaces/admin-data.interface';
-import { InfoItem } from 'apps/api/src/app/info/interfaces/info-item.interface';
-import { UpdateOrderDto } from 'apps/api/src/app/order/update-order.dto';
-import { PortfolioItem } from 'apps/api/src/app/portfolio/interfaces/portfolio-item.interface';
-import { PortfolioOverview } from 'apps/api/src/app/portfolio/interfaces/portfolio-overview.interface';
-import { PortfolioPerformance } from 'apps/api/src/app/portfolio/interfaces/portfolio-performance.interface';
+import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
+import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
+import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
+import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { PortfolioItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
+import { PortfolioOverview } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-overview.interface';
+import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
-} from 'apps/api/src/app/portfolio/interfaces/portfolio-position-detail.interface';
-import { PortfolioPosition } from 'apps/api/src/app/portfolio/interfaces/portfolio-position.interface';
-import { PortfolioReport } from 'apps/api/src/app/portfolio/interfaces/portfolio-report.interface';
-import { LookupItem } from 'apps/api/src/app/symbol/interfaces/lookup-item.interface';
-import { SymbolItem } from 'apps/api/src/app/symbol/interfaces/symbol-item.interface';
-import { UserItem } from 'apps/api/src/app/user/interfaces/user-item.interface';
-import { User } from 'apps/api/src/app/user/interfaces/user.interface';
-import { UpdateUserSettingsDto } from 'apps/api/src/app/user/update-user-settings.dto';
+} from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
+import { PortfolioReport } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-report.interface';
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
+import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
+import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
+import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
+import { Order as OrderModel } from '@prisma/client';
 
 @Injectable({
   providedIn: 'root'

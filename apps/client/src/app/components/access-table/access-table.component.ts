@@ -6,7 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Access } from 'apps/api/src/app/access/interfaces/access.interface';
+import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
 
 @Component({
   selector: 'gf-access-table',

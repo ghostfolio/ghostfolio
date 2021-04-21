@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { GfLineChartModule } from '@ghostfolio/client/components/line-chart/line-chart.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { GfLineChartModule } from '../../components/line-chart/line-chart.module';
 import { GfDialogFooterModule } from '../dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '../dialog-header/dialog-header.module';
 import { GfFearAndGreedIndexModule } from '../fear-and-greed-index/fear-and-greed-index.module';

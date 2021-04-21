@@ -1,3 +1,4 @@
+import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import {
   Controller,
   Get,
@@ -9,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { RequestWithUser } from 'apps/api/src/app/interfaces/request-with-user.type';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
