@@ -26,9 +26,9 @@
                   >In Progress</ng-container
                 >
               </div>
-              <div class="mt-2">
+              <div class="mt-2 overflow-hidden">
                 <button
-                  class="mb-2 mr-2"
+                  class="mb-2 mr-2 mw-100"
                   color="accent"
                   mat-flat-button
                   (click)="onFlushCache()"
@@ -37,6 +37,7 @@
                   <span i18n>Reset Data Gathering</span>
                 </button>
                 <button
+                  class="mw-100"
                   color="warn"
                   mat-flat-button
                   [disabled]="dataGatheringInProgress"
