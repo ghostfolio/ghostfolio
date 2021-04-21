@@ -4,8 +4,8 @@ import {
   Input,
   OnInit
 } from '@angular/core';
-import { Currency } from '@prisma/client';
 import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
+import { Currency } from '@prisma/client';
 
 @Component({
   selector: 'gf-portfolio-performance',

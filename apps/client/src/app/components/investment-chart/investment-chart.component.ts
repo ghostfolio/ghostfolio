@@ -9,8 +9,8 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { primaryColorRgb } from '@ghostfolio/helper';
 import { PortfolioItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
+import { primaryColorRgb } from '@ghostfolio/helper';
 import {
   LineController,
   LineElement,

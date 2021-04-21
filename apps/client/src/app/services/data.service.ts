@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Order as OrderModel } from '@prisma/client';
 import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
 import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
 import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
@@ -19,6 +18,7 @@ import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.in
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
+import { Order as OrderModel } from '@prisma/client';
 
 @Injectable({
   providedIn: 'root'

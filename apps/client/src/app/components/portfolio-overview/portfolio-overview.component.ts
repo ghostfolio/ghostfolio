@@ -5,8 +5,8 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
-import { Currency } from '@prisma/client';
 import { PortfolioOverview } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-overview.interface';
+import { Currency } from '@prisma/client';
 
 @Component({
   selector: 'gf-portfolio-overview',
