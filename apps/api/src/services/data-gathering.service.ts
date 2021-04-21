@@ -267,7 +267,7 @@ export class DataGatheringService {
   }
 
   private async getSymbolsMax() {
-    const startDate = new Date(getUtc('2000-01-01'));
+    const startDate = new Date(getUtc('2015-01-01'));
 
     const customSymbolsToGather = await this.getCustomSymbolsToGather(
       startDate
