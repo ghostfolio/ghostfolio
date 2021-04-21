@@ -61,7 +61,7 @@ The frontend is built with [Angular](https://angular.io).
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/en/download)
+- [Node.js](https://nodejs.org/en/download) (version 14+)
 - [Yarn](https://yarnpkg.com/en/docs/install)
 - [Docker](https://www.docker.com/products/docker-desktop)
 
@@ -71,11 +71,16 @@ The frontend is built with [Angular](https://angular.io).
 2. Run `cd docker`
 3. Run `docker compose build`
 4. Run `docker compose up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
-5. Run `yarn setup:database` to initialize the database schema and populate your database with (example) data
-6. Start server and client (see _Development_)
-7. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
+5. Run `cd -` to go back to the project root directory
+6. Run `yarn setup:database` to initialize the database schema and populate your database with (example) data
+7. Start server and client (see _Development_)
+8. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
+9. Go to the _Admin Control Panel_ and press _Gather All Data_ to fetch historical data
+10. Press _Sign out_ and check out the _Live Demo_
 
 ## Development
+
+Please make sure you have completed the instructions from _Setup_
 
 ### Start server
 
