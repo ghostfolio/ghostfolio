@@ -5,5 +5,10 @@
     border-radius: 0.2rem;
     height: 0.8rem;
     width: 0.8rem;
+
+    &.large {
+      height: 1.4rem;
+      width: 1.4rem;
+    }
   }
 }

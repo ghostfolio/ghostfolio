@@ -51,6 +51,11 @@ export class PositionComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {}
 
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   private openDialog(): void {
     const dialogRef = this.dialog.open(PositionDetailDialog, {
       autoFocus: false,
@@ -59,6 +64,7 @@ export class PositionComponent implements OnDestroy, OnInit {
         deviceType: this.deviceType,
         locale: this.locale,
         symbol: this.position?.symbol,
+        symbolUrl: this.position?.url,
         title: this.position?.name
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
@@ -68,10 +74,5 @@ export class PositionComponent implements OnDestroy, OnInit {
     dialogRef.afterClosed().subscribe(() => {
       this.router.navigate(['.'], { relativeTo: this.route });
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

@@ -1,5 +1,6 @@
 <img
   *ngIf="url"
   src="https://www.google.com/s2/favicons?domain={{ url }}&sz=64"
+  [ngClass]="{ large: size === 'large' }"
   [title]="tooltip ? tooltip : ''"
 />

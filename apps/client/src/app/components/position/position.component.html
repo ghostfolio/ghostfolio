@@ -35,11 +35,6 @@
         <div class="h6 m-0 text-truncate">{{ position?.name }}</div>
         <div class="d-flex">
           <span>{{ position?.symbol | gfSymbol }}</span>
-          <gf-symbol-icon
-            *ngIf="position?.url"
-            class="ml-1"
-            [url]="position?.url"
-          ></gf-symbol-icon>
           <span *ngIf="position?.exchange" class="ml-2 text-muted"
             >({{ position.exchange }})</span
           >
