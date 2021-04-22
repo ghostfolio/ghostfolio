@@ -1,3 +1,4 @@
+import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Currency } from '@prisma/client';
 
 export interface PortfolioPosition {
@@ -7,10 +8,10 @@ export interface PortfolioPosition {
   grossPerformancePercent: number;
   industry?: string;
   investment: number;
-  isMarketOpen: boolean;
   marketChange?: number;
   marketChangePercent?: number;
   marketPrice: number;
+  marketState: MarketState;
   name: string;
   platforms: {
     [name: string]: { current: number; original: number };

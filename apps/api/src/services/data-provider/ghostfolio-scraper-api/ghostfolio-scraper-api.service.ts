@@ -8,7 +8,8 @@ import { DataProviderInterface } from '../../interfaces/data-provider.interface'
 import { Granularity } from '../../interfaces/granularity.type';
 import {
   IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  IDataProviderResponse,
+  MarketState
 } from '../../interfaces/interfaces';
 import { PrismaService } from '../../prisma.service';
 
@@ -41,7 +42,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         [symbol]: {
           marketPrice,
           currency: scraperConfig?.currency,
-          isMarketOpen: false,
+          marketState: MarketState.delayed,
           name: scraperConfig?.name
         }
       };

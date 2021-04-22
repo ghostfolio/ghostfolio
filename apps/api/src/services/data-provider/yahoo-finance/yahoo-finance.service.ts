@@ -9,6 +9,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
   Industry,
+  MarketState,
   Sector,
   Type
 } from '../../interfaces/interfaces';
@@ -49,8 +50,10 @@ export class YahooFinanceService implements DataProviderInterface {
         response[symbol] = {
           currency: parseCurrency(value.price?.currency),
           exchange: this.parseExchange(value.price?.exchangeName),
-          isMarketOpen:
-            value.price?.marketState === 'REGULAR' || isCrypto(symbol),
+          marketState:
+            value.price?.marketState === 'REGULAR' || isCrypto(symbol)
+              ? MarketState.open
+              : MarketState.closed,
           marketPrice: value.price?.regularMarketPrice || 0,
           name: value.price?.longName || value.price?.shortName || symbol,
           type: this.parseType(this.getType(symbol, value))

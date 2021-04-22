@@ -5,9 +5,11 @@ import { Currency, Role, Type } from '@prisma/client';
 import { ConfigurationService } from '../services/configuration.service';
 import { DataProviderService } from '../services/data-provider.service';
 import { AlphaVantageService } from '../services/data-provider/alpha-vantage/alpha-vantage.service';
+import { GhostfolioScraperApiService } from '../services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from '../services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from '../services/data-provider/yahoo-finance/yahoo-finance.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
+import { MarketState } from '../services/interfaces/interfaces';
 import { PrismaService } from '../services/prisma.service';
 import { RulesService } from '../services/rules.service';
 import { Portfolio } from './portfolio';
@@ -17,6 +19,7 @@ describe('Portfolio', () => {
   let configurationService: ConfigurationService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let ghostfolioScraperApiService: GhostfolioScraperApiService;
   let portfolio: Portfolio;
   let prismaService: PrismaService;
   let rakutenRapidApiService: RakutenRapidApiService;
@@ -31,6 +34,7 @@ describe('Portfolio', () => {
         ConfigurationService,
         DataProviderService,
         ExchangeRateDataService,
+        GhostfolioScraperApiService,
         PrismaService,
         RakutenRapidApiService,
         RulesService,
@@ -43,6 +47,9 @@ describe('Portfolio', () => {
     dataProviderService = app.get<DataProviderService>(DataProviderService);
     exchangeRateDataService = app.get<ExchangeRateDataService>(
       ExchangeRateDataService
+    );
+    ghostfolioScraperApiService = app.get<GhostfolioScraperApiService>(
+      GhostfolioScraperApiService
     );
     prismaService = app.get<PrismaService>(PrismaService);
     rakutenRapidApiService = app.get<RakutenRapidApiService>(
@@ -154,8 +161,8 @@ describe('Portfolio', () => {
             Currency.USD,
             baseCurrency
           ),
-          isMarketOpen: true,
           // marketPrice: 57973.008,
+          marketState: MarketState.open,
           name: 'Bitcoin USD',
           platforms: {
             Other: {

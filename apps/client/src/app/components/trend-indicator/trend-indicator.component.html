@@ -10,12 +10,21 @@
 
 <ng-template #other>
   <ion-icon
-    *ngIf="isPaused && range === '1d'; else trend"
+    *ngIf="marketState === 'closed' && range === '1d'; else delayed"
     class="text-muted"
     name="pause-circle-outline"
     size="large"
   >
   </ion-icon>
+  <ng-template #delayed>
+    <ion-icon
+      *ngIf="marketState === 'delayed' && range === '1d'; else trend"
+      class="text-muted"
+      name="time-outline"
+      size="large"
+    >
+    </ion-icon>
+  </ng-template>
   <ng-template #trend>
     <ng-container>
       <ion-icon
