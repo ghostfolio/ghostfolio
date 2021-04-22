@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 import { GfTrendIndicatorModule } from '../trend-indicator/trend-indicator.module';
 import { GfValueModule } from '../value/value.module';
 import { GfPositionDetailDialogModule } from './position-detail-dialog/position-detail-dialog.module';
@@ -17,7 +16,6 @@ import { PositionComponent } from './position.component';
   imports: [
     CommonModule,
     GfPositionDetailDialogModule,
-    GfSymbolIconModule,
     GfSymbolModule,
     GfTrendIndicatorModule,
     GfValueModule,

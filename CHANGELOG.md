@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Improved the user table of the admin control panel
+- Added the symbol logo to the position detail dialog
 
 ## 0.89.0 - 21.04.2021
 

@@ -1,3 +1,9 @@
+<gf-symbol-icon
+  *ngIf="symbolUrl"
+  class="mr-1"
+  size="large"
+  [url]="symbolUrl"
+></gf-symbol-icon>
 <span class="flex-grow-1 text-truncate">{{ title }}</span>
 <button
   *ngIf="deviceType !== 'mobile'"

@@ -12,6 +12,7 @@ import {
   styleUrls: ['./symbol-icon.component.scss']
 })
 export class SymbolIconComponent implements OnInit {
+  @Input() size: 'large';
   @Input() tooltip: string;
   @Input() url: string;
 

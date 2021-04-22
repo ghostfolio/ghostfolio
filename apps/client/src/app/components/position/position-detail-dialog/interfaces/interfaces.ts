@@ -3,5 +3,6 @@ export interface PositionDetailDialogParams {
   deviceType: string;
   locale: string;
   symbol: string;
+  symbolUrl: string;
   title: string;
 }
