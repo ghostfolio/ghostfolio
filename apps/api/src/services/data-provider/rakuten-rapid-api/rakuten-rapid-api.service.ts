@@ -8,7 +8,8 @@ import { DataProviderInterface } from '../../interfaces/data-provider.interface'
 import { Granularity } from '../../interfaces/granularity.type';
 import {
   IDataProviderHistoricalResponse,
-  IDataProviderResponse
+  IDataProviderResponse,
+  MarketState
 } from '../../interfaces/interfaces';
 import { PrismaService } from '../../prisma.service';
 
@@ -38,8 +39,8 @@ export class RakutenRapidApiService implements DataProviderInterface {
         return {
           'GF.FEAR_AND_GREED_INDEX': {
             currency: undefined,
-            isMarketOpen: true,
             marketPrice: fgi.now.value,
+            marketState: MarketState.open,
             name: RakutenRapidApiService.FEAR_AND_GREED_INDEX_NAME
           }
         };

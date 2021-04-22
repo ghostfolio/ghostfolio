@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
+import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 
 @Component({
   selector: 'gf-positions',
@@ -40,7 +41,10 @@ export class PositionsComponent implements OnChanges, OnInit {
       this.positionsWithPriority = [];
 
       for (const [, portfolioPosition] of Object.entries(this.positions)) {
-        if (portfolioPosition.isMarketOpen || this.range !== '1d') {
+        if (
+          portfolioPosition.marketState === MarketState.open ||
+          this.range !== '1d'
+        ) {
           // Only show positions where the market is open in today's view
           this.positionsWithPriority.push(portfolioPosition);
         } else {

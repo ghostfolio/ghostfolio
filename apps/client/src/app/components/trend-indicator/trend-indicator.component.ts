@@ -4,6 +4,7 @@ import {
   Input,
   OnInit
 } from '@angular/core';
+import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 
 @Component({
   selector: 'gf-trend-indicator',
@@ -13,7 +14,7 @@ import {
 })
 export class TrendIndicatorComponent implements OnInit {
   @Input() isLoading: boolean;
-  @Input() isPaused: boolean;
+  @Input() marketState: MarketState;
   @Input() range: string;
   @Input() value: number;
 

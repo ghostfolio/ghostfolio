@@ -9,7 +9,7 @@
         <gf-trend-indicator
           class="d-flex"
           [isLoading]="isLoading"
-          [isPaused]="!position?.isMarketOpen"
+          [marketState]="position?.marketState"
           [range]="range"
           [value]="position?.grossPerformancePercent"
         ></gf-trend-indicator>

@@ -12,6 +12,12 @@ export const Industry = {
   Software: 'Software'
 };
 
+export const MarketState = {
+  closed: 'closed',
+  delayed: 'delayed',
+  open: 'open'
+};
+
 export const Sector = {
   Consumer: 'Consumer',
   Healthcare: 'Healthcare',
@@ -47,10 +53,10 @@ export interface IDataProviderResponse {
   currency: Currency;
   exchange?: string;
   industry?: Industry;
-  isMarketOpen: boolean;
   marketChange?: number;
   marketChangePercent?: number;
   marketPrice: number;
+  marketState: MarketState;
   name: string;
   sector?: Sector;
   type?: Type;
@@ -58,6 +64,8 @@ export interface IDataProviderResponse {
 }
 
 export type Industry = typeof Industry[keyof typeof Industry];
+
+export type MarketState = typeof MarketState[keyof typeof MarketState];
 
 export type Sector = typeof Sector[keyof typeof Sector];
 
