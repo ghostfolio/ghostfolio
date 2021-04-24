@@ -61,7 +61,7 @@
     </div>
   </div>
 
-  <div class="mb-5 row">
+  <div *ngIf="hasPermissionForSubscription" class="mb-5 row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Pricing Plans</h3>
       <div class="row">

@@ -37,7 +37,7 @@
       >Transactions</a
     >
     <a
-      *ngIf="canAccessAdminAccessControl"
+      *ngIf="hasPermissionToAccessAdminControl"
       class="d-none d-sm-block mx-1"
       [routerLink]="['/admin']"
       i18n
@@ -150,7 +150,7 @@
         >Account</a
       >
       <a
-        *ngIf="canAccessAdminAccessControl"
+        *ngIf="hasPermissionForAdminControl"
         class="d-block d-sm-none"
         [routerLink]="['/admin']"
         i18n

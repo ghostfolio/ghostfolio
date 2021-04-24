@@ -27,8 +27,8 @@ export class HeaderComponent implements OnChanges {
   @Input() info: InfoItem;
   @Input() user: User;
 
-  public canAccessAdminAccessControl: boolean;
-  public hasPermissionToUseSocialLogin: boolean;
+  public hasPermissionToAccessAdminControl: boolean;
+  public hasPermissionForSocialLogin: boolean;
   public impersonationId: string;
 
   private unsubscribeSubject = new Subject<void>();
@@ -49,15 +49,15 @@ export class HeaderComponent implements OnChanges {
 
   public ngOnChanges() {
     if (this.user) {
-      this.canAccessAdminAccessControl = hasPermission(
+      this.hasPermissionToAccessAdminControl = hasPermission(
         this.user.permissions,
         permissions.accessAdminControl
       );
     }
 
-    this.hasPermissionToUseSocialLogin = hasPermission(
+    this.hasPermissionForSocialLogin = hasPermission(
       this.info?.globalPermissions,
-      permissions.useSocialLogin
+      permissions.enableSocialLogin
     );
   }
 
@@ -81,7 +81,7 @@ export class HeaderComponent implements OnChanges {
       autoFocus: false,
       data: {
         accessToken: '',
-        hasPermissionToUseSocialLogin: this.hasPermissionToUseSocialLogin
+        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin
       },
       width: '30rem'
     });

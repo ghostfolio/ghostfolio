@@ -26,7 +26,11 @@ export class InfoService {
     const globalPermissions: string[] = [];
 
     if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
-      globalPermissions.push(permissions.useSocialLogin);
+      globalPermissions.push(permissions.enableSocialLogin);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      globalPermissions.push(permissions.enableSubscription);
     }
 
     return {
