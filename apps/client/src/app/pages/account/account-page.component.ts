@@ -3,7 +3,11 @@ import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
+import {
+  DEFAULT_DATE_FORMAT,
+  hasPermission,
+  permissions
+} from '@ghostfolio/helper';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,6 +23,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public baseCurrency: Currency;
   public currencies: Currency[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public hasPermissionForSubscription: boolean;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -34,8 +39,13 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchInfo()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currencies }) => {
+      .subscribe(({ currencies, globalPermissions }) => {
         this.currencies = currencies;
+
+        this.hasPermissionForSubscription = hasPermission(
+          globalPermissions,
+          permissions.enableSubscription
+        );
       });
 
     this.tokenStorageService
@@ -70,6 +80,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   private update() {
     this.dataService
       .fetchAccesses()
@@ -79,10 +94,5 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
         this.cd.markForCheck();
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

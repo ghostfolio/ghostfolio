@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { baseCurrency } from '@ghostfolio/helper';
+import { baseCurrency, hasPermission, permissions } from '@ghostfolio/helper';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -15,6 +16,7 @@ import { environment } from '../../../environments/environment';
 })
 export class AboutPageComponent implements OnInit {
   public baseCurrency = baseCurrency;
+  public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
   public lastPublish = environment.lastPublish;
   public user: User;
@@ -35,6 +37,13 @@ export class AboutPageComponent implements OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
+    this.dataService.fetchInfo().subscribe((info) => {
+      this.hasPermissionForSubscription = hasPermission(
+        info.globalPermissions,
+        permissions.enableSubscription
+      );
+    });
+
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 
     if (this.isLoggedIn)

@@ -10,10 +10,11 @@ export const permissions = {
   createAccount: 'createAccount',
   createOrder: 'createOrder',
   deleteOrder: 'deleteOrder',
+  enableSocialLogin: 'enableSocialLogin',
+  enableSubscription: 'enableSubscription',
   readForeignPortfolio: 'readForeignPortfolio',
   updateOrder: 'updateOrder',
-  updateUserSettings: 'updateUserSettings',
-  useSocialLogin: 'useSocialLogin'
+  updateUserSettings: 'updateUserSettings'
 };
 
 export function hasPermission(
