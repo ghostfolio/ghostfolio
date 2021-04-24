@@ -11,13 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the support for feature flags to simplify the initial project setup
 
+### Changed
+
+- Improved the styling of the rules in the _X-ray_ section
+
 ## 0.90.0 - 22.04.2021
 
 ### Added
 
-- Improved the user table of the admin control panel
 - Added the symbol logo to the position detail dialog
 - Introduced a third option for the market state: `delayed` (besides `open` and `closed`)
+
+### Changed
+
+- Improved the user table of the admin control panel
 
 ## 0.89.0 - 21.04.2021
 
@@ -98,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the portfolio update on deleting a transaction
-- Fixed an issue in the _X-Ray_ section (missing redirection on logout)
+- Fixed an issue in the _X-ray_ section (missing redirection on logout)
 
 ## 0.82.0 - 10.04.2021
 
@@ -171,7 +178,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Grouped the _X-Ray_ section visually in _Currency Cluster Risk_ and _Platform Cluster Risk_
+- Grouped the _X-ray_ section visually in _Currency Cluster Risk_ and _Platform Cluster Risk_
 
 ## 0.76.0 - 02.04.2021
 
@@ -183,7 +190,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue in the _X-Ray_ section (empty portfolio)
+- Fixed an issue in the _X-ray_ section (empty portfolio)
 
 ## 0.75.0 - 01.04.2021
 
@@ -196,7 +203,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a _Create Account_ message in the _Live Demo_
-- Added skeleton loaders to the _X-Ray_ section
+- Added skeleton loaders to the _X-ray_ section
 
 ### Changed
 
@@ -212,7 +219,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the intro text in the _X-Ray_ section
+- Improved the intro text in the _X-ray_ section
 
 ### Fixed
 
@@ -228,7 +235,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added an intro text to the _X-Ray_ section
+- Added an intro text to the _X-ray_ section
 
 ### Changed
 
@@ -247,7 +254,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the styling in the _X-Ray_ section
+- Improved the styling in the _X-ray_ section
 
 ## 0.70.0 - 27.03.2021
 
@@ -255,7 +262,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the current _Fear & Greed Index_ as text
 - Extended the landing page text: _Ghostfolio_ empowers busy folks...
-- Added the first static portfolio analysis rule in the brand new _X-Ray_ section
+- Added the first static portfolio analysis rule in the brand new _X-ray_ section
 
 ### Changed
 

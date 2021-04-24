@@ -2,15 +2,16 @@
   display: block;
 
   .icon-container {
+    background-color: rgba(var(--dark-primary-text), 0.05);
     border-radius: 0.25rem;
-    height: 3rem;
+    height: 2rem;
 
     &.okay {
-      background-color: var(--success);
+      color: var(--success);
     }
 
     &.warn {
-      background-color: var(--warning);
+      color: var(--danger);
     }
   }
 
@@ -21,6 +22,6 @@
 
 :host-context(.is-dark-theme) {
   .icon-container {
-    color: rgba(var(--dark-primary-text));
+    background-color: rgba(var(--light-primary-text), 0.05);
   }
 }
