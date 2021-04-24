@@ -11,13 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the support for feature flags to simplify the initial project setup
 
+### Changed
+
+- Improved the styling of the rules in the _X-Ray_ section
+
 ## 0.90.0 - 22.04.2021
 
 ### Added
 
-- Improved the user table of the admin control panel
 - Added the symbol logo to the position detail dialog
 - Introduced a third option for the market state: `delayed` (besides `open` and `closed`)
+
+### Changed
+
+- Improved the user table of the admin control panel
 
 ## 0.89.0 - 21.04.2021
 

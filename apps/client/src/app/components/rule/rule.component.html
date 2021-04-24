@@ -1,18 +1,18 @@
 <div class="py-3">
-  <div class="flex-nowrap no-gutters row">
+  <div class="align-items-center flex-nowrap no-gutters row">
     <div *ngIf="isLoading">
       <ngx-skeleton-loader
         animation="pulse"
-        class="mr-3"
+        class="mr-2"
         [theme]="{
-          height: '3rem',
-          width: '3rem'
+          height: '2rem',
+          width: '2rem'
         }"
       ></ngx-skeleton-loader>
     </div>
     <div
       *ngIf="!isLoading"
-      class="align-items-center d-flex icon-container mr-3 px-3"
+      class="align-items-center d-flex icon-container mr-2 px-2"
       [ngClass]="{ okay: rule?.value === true, warn: rule?.value === false }"
     >
       <ion-icon
