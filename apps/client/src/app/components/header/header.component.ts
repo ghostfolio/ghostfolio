@@ -27,7 +27,7 @@ export class HeaderComponent implements OnChanges {
   @Input() info: InfoItem;
   @Input() user: User;
 
-  public hasPermissionForAdminControl: boolean;
+  public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionForSocialLogin: boolean;
   public impersonationId: string;
 
@@ -49,7 +49,7 @@ export class HeaderComponent implements OnChanges {
 
   public ngOnChanges() {
     if (this.user) {
-      this.hasPermissionForAdminControl = hasPermission(
+      this.hasPermissionToAccessAdminControl = hasPermission(
         this.user.permissions,
         permissions.accessAdminControl
       );
