@@ -34,16 +34,16 @@
   <div *ngIf="showDetails" class="row">
     <div class="d-flex col justify-content-end">
       <gf-value
-        colorizeSign="true"
-        isCurrency="true"
+        [colorizeSign]="true"
+        [isCurrency]="true"
         [locale]="locale"
         [value]="isLoading ? undefined : performance?.currentNetPerformance"
       ></gf-value>
     </div>
     <div class="col">
       <gf-value
-        colorizeSign="true"
-        isPercent="true"
+        [colorizeSign]="true"
+        [isPercent]="true"
         [locale]="locale"
         [value]="
           isLoading ? undefined : performance?.currentNetPerformancePercent

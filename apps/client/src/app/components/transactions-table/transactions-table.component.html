@@ -116,7 +116,7 @@
     <td *matCellDef="let element" class="d-none d-lg-table-cell" mat-cell>
       <div class="d-flex justify-content-end">
         <gf-value
-          isCurrency="true"
+          [isCurrency]="true"
           [locale]="locale"
           [value]="isLoading ? undefined : element.quantity"
         ></gf-value>
@@ -137,7 +137,7 @@
     <td *matCellDef="let element" class="d-none d-lg-table-cell" mat-cell>
       <div class="d-flex justify-content-end">
         <gf-value
-          isCurrency="true"
+          [isCurrency]="true"
           [locale]="locale"
           [value]="isLoading ? undefined : element.unitPrice"
         ></gf-value>
@@ -158,7 +158,7 @@
     <td class="d-none d-lg-table-cell" mat-cell *matCellDef="let element">
       <div class="d-flex justify-content-end">
         <gf-value
-          isCurrency="true"
+          [isCurrency]="true"
           [locale]="locale"
           [value]="isLoading ? undefined : element.fee"
         ></gf-value>
