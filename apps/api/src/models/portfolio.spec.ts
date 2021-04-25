@@ -14,6 +14,9 @@ import { PrismaService } from '../services/prisma.service';
 import { RulesService } from '../services/rules.service';
 import { Portfolio } from './portfolio';
 
+const DEFAULT_ACCOUNT_ID = '693a834b-eb89-42c9-ae47-35196c25d269';
+const USER_ID = 'ca6ce867-5d31-495a-bce9-5942bbca9237';
+
 describe('Portfolio', () => {
   let alphaVantageService: AlphaVantageService;
   let configurationService: ConfigurationService;
@@ -69,13 +72,13 @@ describe('Portfolio', () => {
       accessToken: null,
       alias: 'Test',
       createdAt: new Date(),
-      id: '',
+      id: USER_ID,
       provider: null,
       role: Role.USER,
       Settings: {
         currency: Currency.CHF,
         updatedAt: new Date(),
-        userId: ''
+        userId: USER_ID
       },
       thirdPartyId: null,
       updatedAt: new Date()
@@ -126,6 +129,8 @@ describe('Portfolio', () => {
     it('should return ["BTC"]', async () => {
       await portfolio.setOrders([
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 0,
@@ -137,7 +142,7 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 49631.24,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         }
       ]);
 
@@ -224,6 +229,8 @@ describe('Portfolio', () => {
     it('should return ["ETHUSD"]', async () => {
       await portfolio.setOrders([
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 0,
@@ -235,7 +242,7 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 991.49,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         }
       ]);
 
@@ -276,7 +283,7 @@ describe('Portfolio', () => {
             }
           },
           quantity: 0.2,
-          shareCurrent: 1,
+          // shareCurrent: 1,
           shareInvestment: 1,
           symbol: 'ETHUSD',
           type: 'Cryptocurrency'
@@ -316,6 +323,8 @@ describe('Portfolio', () => {
     it('should return ["ETHUSD"]', async () => {
       await portfolio.setOrders([
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 0,
@@ -327,9 +336,11 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 991.49,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         },
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 0,
@@ -341,7 +352,7 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 1050,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         }
       ]);
 
@@ -388,6 +399,8 @@ describe('Portfolio', () => {
     it('should return ["BTCUSD", "ETHUSD"]', async () => {
       await portfolio.setOrders([
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.EUR,
           date: new Date(getUtc('2017-08-16')),
@@ -399,9 +412,11 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 3562.089535970158,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         },
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 2.99,
@@ -413,7 +428,7 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 991.49,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         }
       ]);
 
@@ -473,6 +488,8 @@ describe('Portfolio', () => {
     it('should work with buy and sell', async () => {
       await portfolio.setOrders([
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 1.0,
@@ -484,9 +501,11 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 991.49,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         },
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 1.0,
@@ -498,9 +517,11 @@ describe('Portfolio', () => {
           type: Type.SELL,
           unitPrice: 1050,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         },
         {
+          accountId: DEFAULT_ACCOUNT_ID,
+          accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
           fee: 1.0,
@@ -512,7 +533,7 @@ describe('Portfolio', () => {
           type: Type.BUY,
           unitPrice: 1050,
           updatedAt: null,
-          userId: null
+          userId: USER_ID
         }
       ]);
 
