@@ -42,6 +42,8 @@ export class AboutPageComponent implements OnInit {
         info.globalPermissions,
         permissions.enableSubscription
       );
+
+      this.cd.markForCheck();
     });
 
     this.isLoggedIn = !!this.tokenStorageService.getToken();
