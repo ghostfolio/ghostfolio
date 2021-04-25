@@ -1,4 +1,10 @@
-import { Currency, PrismaClient, Role, Type } from '@prisma/client';
+import {
+  AccountType,
+  Currency,
+  PrismaClient,
+  Role,
+  Type
+} from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
@@ -88,104 +94,153 @@ async function main() {
     create: {
       accessToken:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjliMTEyYjRkLTNiN2QtNGJhZC05YmRkLTNiMGY3YjRkYWMyZiIsImlhdCI6MTYxODUxMjAxNCwiZXhwIjoxNjIxMTA0MDE0fQ.l3WUxpI0hxuQtdPrD0kd7sem6S2kx_7CrdNvkmlKuWw',
-      alias: 'Demo',
-      id: '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f',
-      role: Role.DEMO,
-      Order: {
+      Account: {
         create: [
           {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2017, 0, 3, 0, 0, 0)),
-            fee: 30,
-            id: 'cf7c0418-8535-4089-ae3d-5dbfa0aec2e1',
-            platformId: platformDegiro.id,
-            quantity: 50,
-            symbol: 'TSLA',
-            type: Type.BUY,
-            unitPrice: 42.97
+            accountType: AccountType.SECURITIES,
+            id: 'd804de69-0429-42dc-b6ca-b308fd7dd926',
+            name: 'Coinbase Account',
+            platformId: platformCoinbase.id
           },
           {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2017, 7, 16, 0, 0, 0)),
-            fee: 29.9,
-            id: 'a1c5d73a-8631-44e5-ac44-356827a5212c',
-            platformId: platformCoinbase.id,
-            quantity: 0.5614682,
-            symbol: 'BTCUSD',
-            type: Type.BUY,
-            unitPrice: 3562.089535970158
+            accountType: AccountType.SECURITIES,
+            id: '65cfb79d-b6c7-4591-9d46-73426bc62094',
+            name: 'DEGIRO Account',
+            platformId: platformDegiro.id
           },
           {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2018, 9, 1, 0, 0, 0)),
-            fee: 80.79,
-            id: '71c08e2a-4a86-44ae-a890-c337de5d5f9b',
-            platformId: platformInteractiveBrokers.id,
-            quantity: 5,
-            symbol: 'AMZN',
-            type: Type.BUY,
-            unitPrice: 2021.99
-          },
-          {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2019, 2, 1, 0, 0, 0)),
-            fee: 19.9,
-            id: '385f2c2c-d53e-4937-b0e5-e92ef6020d4e',
-            platformId: platformInteractiveBrokers.id,
-            quantity: 10,
-            symbol: 'VTI',
-            type: Type.BUY,
-            unitPrice: 144.38
-          },
-          {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2019, 8, 3, 0, 0, 0)),
-            fee: 19.9,
-            id: '185f2c2c-d53e-4937-b0e5-a93ef6020d4e',
-            platformId: platformInteractiveBrokers.id,
-            quantity: 10,
-            symbol: 'VTI',
-            type: Type.BUY,
-            unitPrice: 147.99
-          },
-          {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2020, 2, 2, 0, 0, 0)),
-            fee: 19.9,
-            id: '347b0430-a84f-4031-a0f9-390399066ad6',
-            platformId: platformInteractiveBrokers.id,
-            quantity: 10,
-            symbol: 'VTI',
-            type: Type.BUY,
-            unitPrice: 151.41
-          },
-          {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2020, 8, 1, 0, 0, 0)),
-            fee: 19.9,
-            id: '67ec3f47-3189-4b63-ba05-60d3a06b302f',
-            platformId: platformInteractiveBrokers.id,
-            quantity: 10,
-            symbol: 'VTI',
-            type: Type.BUY,
-            unitPrice: 177.69
-          },
-          {
-            currency: Currency.USD,
-            date: new Date(Date.UTC(2020, 2, 1, 0, 0, 0)),
-            fee: 19.9,
-            id: 'd01c6fbc-fa8d-47e6-8e80-66f882d2bfd2',
-            platformId: platformInteractiveBrokers.id,
-            quantity: 10,
-            symbol: 'VTI',
-            type: Type.BUY,
-            unitPrice: 203.15
+            accountType: AccountType.SECURITIES,
+            id: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+            isDefault: true,
+            name: 'Interactive Brokers Account',
+            platformId: platformInteractiveBrokers.id
           }
         ]
-      }
+      },
+      alias: 'Demo',
+      id: '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f',
+      role: Role.DEMO
     },
     update: {},
     where: { id: '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f' }
+  });
+
+  await prisma.order.createMany({
+    data: [
+      {
+        accountId: '65cfb79d-b6c7-4591-9d46-73426bc62094',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2017, 0, 3, 0, 0, 0)),
+        fee: 30,
+        id: 'cf7c0418-8535-4089-ae3d-5dbfa0aec2e1',
+        platformId: platformDegiro.id,
+        quantity: 50,
+        symbol: 'TSLA',
+        type: Type.BUY,
+        unitPrice: 42.97,
+        userId: userDemo.id
+      },
+      {
+        accountId: 'd804de69-0429-42dc-b6ca-b308fd7dd926',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2017, 7, 16, 0, 0, 0)),
+        fee: 29.9,
+        id: 'a1c5d73a-8631-44e5-ac44-356827a5212c',
+        platformId: platformCoinbase.id,
+        quantity: 0.5614682,
+        symbol: 'BTCUSD',
+        type: Type.BUY,
+        unitPrice: 3562.089535970158,
+        userId: userDemo.id
+      },
+      {
+        accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2018, 9, 1, 0, 0, 0)),
+        fee: 80.79,
+        id: '71c08e2a-4a86-44ae-a890-c337de5d5f9b',
+        platformId: platformInteractiveBrokers.id,
+        quantity: 5,
+        symbol: 'AMZN',
+        type: Type.BUY,
+        unitPrice: 2021.99,
+        userId: userDemo.id
+      },
+      {
+        accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2019, 2, 1, 0, 0, 0)),
+        fee: 19.9,
+        id: '385f2c2c-d53e-4937-b0e5-e92ef6020d4e',
+        platformId: platformInteractiveBrokers.id,
+        quantity: 10,
+        symbol: 'VTI',
+        type: Type.BUY,
+        unitPrice: 144.38,
+        userId: userDemo.id
+      },
+      {
+        accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2019, 8, 3, 0, 0, 0)),
+        fee: 19.9,
+        id: '185f2c2c-d53e-4937-b0e5-a93ef6020d4e',
+        platformId: platformInteractiveBrokers.id,
+        quantity: 10,
+        symbol: 'VTI',
+        type: Type.BUY,
+        unitPrice: 147.99,
+        userId: userDemo.id
+      },
+      {
+        accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2020, 2, 2, 0, 0, 0)),
+        fee: 19.9,
+        id: '347b0430-a84f-4031-a0f9-390399066ad6',
+        platformId: platformInteractiveBrokers.id,
+        quantity: 10,
+        symbol: 'VTI',
+        type: Type.BUY,
+        unitPrice: 151.41,
+        userId: userDemo.id
+      },
+      {
+        accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2020, 8, 1, 0, 0, 0)),
+        fee: 19.9,
+        id: '67ec3f47-3189-4b63-ba05-60d3a06b302f',
+        platformId: platformInteractiveBrokers.id,
+        quantity: 10,
+        symbol: 'VTI',
+        type: Type.BUY,
+        unitPrice: 177.69,
+        userId: userDemo.id
+      },
+      {
+        accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
+        accountUserId: userDemo.id,
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2020, 2, 1, 0, 0, 0)),
+        fee: 19.9,
+        id: 'd01c6fbc-fa8d-47e6-8e80-66f882d2bfd2',
+        platformId: platformInteractiveBrokers.id,
+        quantity: 10,
+        symbol: 'VTI',
+        type: Type.BUY,
+        unitPrice: 203.15,
+        userId: userDemo.id
+      }
+    ],
+    skipDuplicates: true
   });
 
   console.log({

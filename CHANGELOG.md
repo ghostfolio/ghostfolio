@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the support for feature flags to simplify the initial project setup
+- Prepared for multi accounts support
 
 ### Changed
 

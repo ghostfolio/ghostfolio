@@ -116,7 +116,15 @@ export class UserService {
 
   public async createUser(data?: Prisma.UserCreateInput): Promise<User> {
     let user = await this.prisma.user.create({
-      data
+      data: {
+        ...data,
+        Account: {
+          create: {
+            isDefault: true,
+            name: 'Default Account'
+          }
+        }
+      }
     });
 
     if (data.provider === Provider.ANONYMOUS) {

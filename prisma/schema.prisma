@@ -24,6 +24,22 @@ model Access {
   @@id([id, userId])
 }
 
+model Account {
+  accountType AccountType @default(SECURITIES)
+  createdAt   DateTime    @default(now())
+  id          String      @default(uuid())
+  isDefault   Boolean     @default(false)
+  name        String?
+  Order       Order[]
+  Platform    Platform?   @relation(fields: [platformId], references: [id])
+  platformId  String?
+  updatedAt   DateTime    @updatedAt
+  User        User        @relation(fields: [userId], references: [id])
+  userId      String
+
+  @@id([id, userId])
+}
+
 model Analytics {
   activityCount Int      @default(0)
   updatedAt     DateTime @updatedAt
@@ -43,29 +59,33 @@ model MarketData {
 }
 
 model Order {
-  createdAt  DateTime  @default(now())
-  currency   Currency
-  date       DateTime
-  fee        Float
-  id         String    @default(uuid())
-  Platform   Platform? @relation(fields: [platformId], references: [id])
-  platformId String?
-  quantity   Float
-  symbol     String
-  type       Type
-  unitPrice  Float
-  updatedAt  DateTime  @updatedAt
-  User       User      @relation(fields: [userId], references: [id])
-  userId     String
+  Account       Account?  @relation(fields: [accountId, accountUserId], references: [id, userId])
+  accountId     String?
+  accountUserId String?
+  createdAt     DateTime  @default(now())
+  currency      Currency
+  date          DateTime
+  fee           Float
+  id            String    @default(uuid())
+  Platform      Platform? @relation(fields: [platformId], references: [id])
+  platformId    String?
+  quantity      Float
+  symbol        String
+  type          Type
+  unitPrice     Float
+  updatedAt     DateTime  @updatedAt
+  User          User      @relation(fields: [userId], references: [id])
+  userId        String
 
   @@id([id, userId])
 }
 
 model Platform {
-  id    String  @id @default(uuid())
-  name  String?
-  url   String  @unique
-  Order Order[]
+  Account Account[]
+  id      String    @id @default(uuid())
+  name    String?
+  Order   Order[]
+  url     String    @unique
 }
 
 model Property {
@@ -84,6 +104,7 @@ model User {
   Access       Access[]   @relation("accessGet")
   AccessGive   Access[]   @relation(name: "accessGive")
   accessToken  String?
+  Account      Account[]
   alias        String?
   Analytics    Analytics?
   createdAt    DateTime   @default(now())
@@ -94,6 +115,10 @@ model User {
   Settings     Settings?
   thirdPartyId String?
   updatedAt    DateTime   @updatedAt
+}
+
+enum AccountType {
+  SECURITIES
 }
 
 enum Currency {
