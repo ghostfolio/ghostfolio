@@ -2,16 +2,23 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  table {
+  .mat-card-content {
     &.users {
-      table-layout: fixed;
+      overflow-x: auto;
 
-      tr {
-        &:nth-child(even) {
-          background-color: rgba(
-            var(--dark-primary-text),
-            var(--palette-background-hover-alpha)
-          );
+      table {
+        tr {
+          &:nth-child(even) {
+            background-color: rgba(
+              var(--dark-primary-text),
+              var(--palette-background-hover-alpha)
+            );
+          }
+        }
+
+        .mat-row,
+        .mat-header-row {
+          width: 100%;
         }
       }
     }

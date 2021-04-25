@@ -70,42 +70,36 @@
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Users</h3>
       <mat-card class="px-0">
-        <mat-card-content>
-          <table class="users w-100">
+        <mat-card-content class="users">
+          <table>
             <thead>
               <tr class="mat-header-row">
-                <th class="mat-header-cell pl-2 py-2 text-truncate" i18n>
-                  User
-                </th>
-                <th class="mat-header-cell pr-2 py-2 text-truncate" i18n>
+                <th class="mat-header-cell pl-2 py-2" i18n>User</th>
+                <th class="mat-header-cell pr-2 py-2" i18n>
                   Registration Date
                 </th>
-                <th class="mat-header-cell pr-2 py-2 text-truncate" i18n>
-                  Transactions
-                </th>
-                <th class="mat-header-cell pr-2 py-2 text-truncate" i18n>
-                  Engagement
-                </th>
-                <th class="mat-header-cell pr-2 py-2 text-truncate" i18n>
-                  Last Activitiy
-                </th>
+                <th class="mat-header-cell pr-2 py-2" i18n>Accounts</th>
+                <th class="mat-header-cell pr-2 py-2" i18n>Transactions</th>
+                <th class="mat-header-cell pr-2 py-2" i18n>Engagement</th>
+                <th class="mat-header-cell pr-2 py-2" i18n>Last Activitiy</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let userItem of users" class="mat-row">
-                <td class="mat-cell pl-2 py-2 text-truncate">
+                <td class="mat-cell pl-2 py-2">
                   {{ userItem.alias || userItem.id }}
                 </td>
-                <td class="mat-cell pr-2 py-2 text-truncate">
+                <td class="mat-cell pr-2 py-2">
                   {{ userItem.createdAt | date: defaultDateFormat }}
                 </td>
-                <td class="mat-cell pr-2 py-2 text-truncate">
-                  {{ userItem._count?.Order }}
+                <td class="mat-cell pr-2 py-2">
+                  {{ userItem._count?.Account }}
                 </td>
-                <td class="mat-cell pr-2 py-2 text-truncate">
+                <td class="mat-cell pr-2 py-2">{{ userItem._count?.Order }}</td>
+                <td class="mat-cell pr-2 py-2">
                   {{ userItem.Analytics?.activityCount }}
                 </td>
-                <td class="mat-cell pr-2 py-2 text-truncate">
+                <td class="mat-cell pr-2 py-2">
                   {{ formatDistanceToNow(userItem.Analytics?.updatedAt) }}
                 </td>
               </tr>

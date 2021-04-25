@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Prepared further for multi accounts support: store account for new transactions
+- Added a horizontal scrollbar to the user table of the admin control panel
 
 ### Fixed
 

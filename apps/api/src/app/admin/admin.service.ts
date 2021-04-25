@@ -97,7 +97,7 @@ export class AdminService {
       },
       select: {
         _count: {
-          select: { Order: true }
+          select: { Account: true, Order: true }
         },
         alias: true,
         Analytics: {
