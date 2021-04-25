@@ -82,6 +82,16 @@ async function main() {
     create: {
       accessToken:
         'c689bcc894e4a420cb609ee34271f3e07f200594f7d199c50d75add7102889eb60061a04cd2792ebc853c54e37308271271e7bf588657c9e0c37faacbc28c3c6',
+      Account: {
+        create: [
+          {
+            accountType: AccountType.SECURITIES,
+            id: 'f4425b66-9ba9-4ac4-93d7-fdf9a145e8cb',
+            isDefault: true,
+            name: 'Default Account'
+          }
+        ]
+      },
       alias: 'Admin',
       id: '4e1af723-95f6-44f8-92a7-464df17f6ec3',
       role: Role.ADMIN

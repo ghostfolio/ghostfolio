@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Prepared further for multi accounts support: store account for new transactions
+
 ### Fixed
 
 - Fixed an issue in the header with outdated data

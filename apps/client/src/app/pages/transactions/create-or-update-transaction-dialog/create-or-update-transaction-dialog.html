@@ -1,6 +1,6 @@
 <form #addTransactionForm="ngForm" class="d-flex flex-column h-100">
-  <h1 *ngIf="data.id" mat-dialog-title i18n>Update transaction</h1>
-  <h1 *ngIf="!data.id" mat-dialog-title i18n>Add transaction</h1>
+  <h1 *ngIf="data.transaction.id" mat-dialog-title i18n>Update transaction</h1>
+  <h1 *ngIf="!data.transaction.id" mat-dialog-title i18n>Add transaction</h1>
   <div class="flex-grow-1" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
@@ -36,7 +36,7 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
-        <mat-select name="type" required [(value)]="data.type">
+        <mat-select name="type" required [(value)]="data.transaction.type">
           <mat-option value="BUY" i18n> BUY </mat-option>
           <mat-option value="SELL" i18n> SELL </mat-option>
         </mat-select>
@@ -50,7 +50,7 @@
           disabled
           name="currency"
           required
-          [(value)]="data.currency"
+          [(value)]="data.transaction.currency"
         >
           <mat-option *ngFor="let currency of currencies" [value]="currency"
             >{{ currency }}</mat-option
@@ -67,7 +67,7 @@
           name="date"
           required
           [matDatepicker]="date"
-          [(ngModel)]="data.date"
+          [(ngModel)]="data.transaction.date"
         />
         <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
         <mat-datepicker #date disabled="false"></mat-datepicker>
@@ -81,7 +81,7 @@
           name="fee"
           required
           type="number"
-          [(ngModel)]="data.fee"
+          [(ngModel)]="data.transaction.fee"
         />
       </mat-form-field>
     </div>
@@ -93,7 +93,7 @@
           name="quantity"
           required
           type="number"
-          [(ngModel)]="data.quantity"
+          [(ngModel)]="data.transaction.quantity"
         />
       </mat-form-field>
     </div>
@@ -105,14 +105,28 @@
           name="unitPrice"
           required
           type="number"
-          [(ngModel)]="data.unitPrice"
+          [(ngModel)]="data.transaction.unitPrice"
         />
+      </mat-form-field>
+    </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Account</mat-label>
+        <mat-select
+          name="accountId"
+          required
+          [(value)]="data.transaction.accountId"
+        >
+          <mat-option *ngFor="let account of data.accounts" [value]="account.id"
+            >{{ account.name }}</mat-option
+          >
+        </mat-select>
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
-        <mat-select name="platformId" [(value)]="data.platformId">
+        <mat-select name="platformId" [(value)]="data.transaction.platformId">
           <mat-option [value]="null"></mat-option>
           <mat-option *ngFor="let platform of platforms" [value]="platform.id"
             >{{ platform.name }}</mat-option
@@ -127,7 +141,7 @@
       color="primary"
       i18n
       mat-flat-button
-      [disabled]="!(addTransactionForm.form.valid && data.symbol)"
+      [disabled]="!(addTransactionForm.form.valid && data.transaction.symbol)"
       [mat-dialog-close]="data"
     >
       Save

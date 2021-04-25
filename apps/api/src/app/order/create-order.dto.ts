@@ -3,6 +3,9 @@ import { IsISO8601, IsNumber, IsString, ValidateIf } from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
+  accountId: string;
+
+  @IsString()
   currency: Currency;
 
   @IsISO8601()

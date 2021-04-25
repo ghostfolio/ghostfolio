@@ -122,36 +122,8 @@ export class TransactionsPageComponent implements OnInit {
     });
   }
 
-  private openCreateTransactionDialog(): void {
-    const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
-      data: {
-        currency: null,
-        date: new Date(),
-        fee: 0,
-        platformId: null,
-        quantity: null,
-        symbol: null,
-        type: 'BUY',
-        unitPrice: null
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef.afterClosed().subscribe((order: UpdateOrderDto) => {
-      if (order) {
-        this.dataService.postOrder(order).subscribe({
-          next: () => {
-            this.fetchOrders();
-          }
-        });
-      }
-
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
-  }
-
   public openUpdateTransactionDialog({
+    accountId,
     currency,
     date,
     fee,
@@ -164,23 +136,29 @@ export class TransactionsPageComponent implements OnInit {
   }: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
-        currency,
-        date,
-        fee,
-        id,
-        platformId,
-        quantity,
-        symbol,
-        type,
-        unitPrice
+        accounts: this.user.accounts,
+        transaction: {
+          accountId,
+          currency,
+          date,
+          fee,
+          id,
+          platformId,
+          quantity,
+          symbol,
+          type,
+          unitPrice
+        }
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((order: UpdateOrderDto) => {
-      if (order) {
-        this.dataService.putOrder(order).subscribe({
+    dialogRef.afterClosed().subscribe((data: any) => {
+      const transaction: UpdateOrderDto = data?.transaction;
+
+      if (transaction) {
+        this.dataService.putOrder(transaction).subscribe({
           next: () => {
             this.fetchOrders();
           }
@@ -194,5 +172,42 @@ export class TransactionsPageComponent implements OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private openCreateTransactionDialog(): void {
+    const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
+      data: {
+        accounts: this.user.accounts,
+        transaction: {
+          accountId: this.user.accounts.find((account) => {
+            return account.isDefault;
+          })?.id,
+          currency: null,
+          date: new Date(),
+          fee: 0,
+          platformId: null,
+          quantity: null,
+          symbol: null,
+          type: 'BUY',
+          unitPrice: null
+        }
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef.afterClosed().subscribe((data: any) => {
+      const transaction: UpdateOrderDto = data?.transaction;
+
+      if (transaction) {
+        this.dataService.postOrder(transaction).subscribe({
+          next: () => {
+            this.fetchOrders();
+          }
+        });
+      }
+
+      this.router.navigate(['.'], { relativeTo: this.route });
+    });
   }
 }
