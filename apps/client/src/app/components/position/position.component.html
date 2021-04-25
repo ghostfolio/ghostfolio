@@ -42,14 +42,14 @@
         <div class="d-flex mt-1">
           <gf-value
             class="mr-3"
-            colorizeSign="true"
+            [colorizeSign]="true"
             [currency]="position?.currency"
             [locale]="locale"
             [value]="position?.grossPerformance"
           ></gf-value>
           <gf-value
-            colorizeSign="true"
-            isPercent="true"
+            [colorizeSign]="true"
+            [isPercent]="true"
             [locale]="locale"
             [value]="position?.grossPerformancePercent"
           ></gf-value>
