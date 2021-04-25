@@ -8,7 +8,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { Currency, Order as OrderModel } from '@prisma/client';
+import { Currency } from '@prisma/client';
 import { Observable, Subject } from 'rxjs';
 import {
   debounceTime,
@@ -19,6 +19,7 @@ import {
 } from 'rxjs/operators';
 
 import { DataService } from '../../../services/data.service';
+import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'h-100' },
@@ -33,7 +34,7 @@ export class CreateOrUpdateTransactionDialog {
   public isLoading = false;
   public platforms: { id: string; name: string }[];
   public searchSymbolCtrl = new FormControl(
-    this.data.symbol,
+    this.data.transaction.symbol,
     Validators.required
   );
 
@@ -43,7 +44,7 @@ export class CreateOrUpdateTransactionDialog {
     private cd: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<CreateOrUpdateTransactionDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: OrderModel
+    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTransactionDialogParams
   ) {}
 
   ngOnInit() {
@@ -72,14 +73,14 @@ export class CreateOrUpdateTransactionDialog {
 
   public onUpdateSymbol(event: MatAutocompleteSelectedEvent) {
     this.isLoading = true;
-    this.data.symbol = event.option.value;
+    this.data.transaction.symbol = event.option.value;
 
     this.dataService
-      .fetchSymbolItem(this.data.symbol)
+      .fetchSymbolItem(this.data.transaction.symbol)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ currency, marketPrice }) => {
-        this.data.currency = currency;
-        this.data.unitPrice = marketPrice;
+        this.data.transaction.currency = currency;
+        this.data.transaction.unitPrice = marketPrice;
 
         this.isLoading = false;
 
@@ -88,10 +89,10 @@ export class CreateOrUpdateTransactionDialog {
   }
 
   public onUpdateSymbolByTyping(value: string) {
-    this.data.currency = null;
-    this.data.unitPrice = null;
+    this.data.transaction.currency = null;
+    this.data.transaction.unitPrice = null;
 
-    this.data.symbol = value;
+    this.data.transaction.symbol = value;
   }
 
   public ngOnDestroy() {

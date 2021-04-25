@@ -118,6 +118,9 @@ export class OrderController {
 
     const date = parseISO(data.date);
 
+    const accountId = data.accountId;
+    delete data.accountId;
+
     if (data.platformId) {
       const platformId = data.platformId;
       delete data.platformId;
@@ -126,6 +129,11 @@ export class OrderController {
         {
           ...data,
           date,
+          Account: {
+            connect: {
+              id_userId: { id: accountId, userId: this.request.user.id }
+            }
+          },
           Platform: { connect: { id: platformId } },
           User: { connect: { id: this.request.user.id } }
         },
@@ -138,6 +146,11 @@ export class OrderController {
         {
           ...data,
           date,
+          Account: {
+            connect: {
+              id_userId: { id: accountId, userId: this.request.user.id }
+            }
+          },
           User: { connect: { id: this.request.user.id } }
         },
         this.request.user.id
@@ -169,6 +182,9 @@ export class OrderController {
 
     const date = parseISO(data.date);
 
+    const accountId = data.accountId;
+    delete data.accountId;
+
     if (data.platformId) {
       const platformId = data.platformId;
       delete data.platformId;
@@ -178,6 +194,11 @@ export class OrderController {
           data: {
             ...data,
             date,
+            Account: {
+              connect: {
+                id_userId: { id: accountId, userId: this.request.user.id }
+              }
+            },
             Platform: { connect: { id: platformId } },
             User: { connect: { id: this.request.user.id } }
           },
@@ -199,6 +220,11 @@ export class OrderController {
           data: {
             ...data,
             date,
+            Account: {
+              connect: {
+                id_userId: { id: accountId, userId: this.request.user.id }
+              }
+            },
             Platform: originalOrder.platformId
               ? { disconnect: true }
               : undefined,

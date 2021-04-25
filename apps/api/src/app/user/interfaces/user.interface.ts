@@ -1,9 +1,10 @@
-import { Currency } from '@prisma/client';
+import { Account, Currency } from '@prisma/client';
 
 import { Access } from './access.interface';
 
 export interface User {
   access: Access[];
+  accounts: Account[];
   alias?: string;
   id: string;
   permissions: string[];

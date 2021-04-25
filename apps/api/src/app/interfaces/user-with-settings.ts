@@ -1,3 +1,6 @@
-import { Settings, User } from '@prisma/client';
+import { Account, Settings, User } from '@prisma/client';
 
-export type UserWithSettings = User & { Settings: Settings };
+export type UserWithSettings = User & {
+  Account: Account[];
+  Settings: Settings;
+};

@@ -25,6 +25,7 @@ export class UserService {
   ) {}
 
   public async getUser({
+    Account,
     alias,
     id,
     role,
@@ -53,6 +54,7 @@ export class UserService {
           id: accessItem.id
         };
       }),
+      accounts: Account,
       permissions: currentPermissions,
       settings: {
         baseCurrency: Settings?.currency || UserService.DEFAULT_CURRENCY,
@@ -69,7 +71,7 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
     const user = await this.prisma.user.findUnique({
-      include: { Settings: true },
+      include: { Account: true, Settings: true },
       where: userWhereUniqueInput
     });
 
