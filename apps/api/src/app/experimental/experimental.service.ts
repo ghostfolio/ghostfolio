@@ -36,6 +36,8 @@ export class ExperimentalService {
     const ordersWithPlatform: OrderWithPlatform[] = aOrders.map((order) => {
       return {
         ...order,
+        accountId: undefined,
+        accountUserId: undefined,
         createdAt: new Date(),
         date: parseISO(order.date),
         fee: 0,
