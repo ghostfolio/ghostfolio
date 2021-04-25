@@ -15,7 +15,7 @@ import { PrismaService } from '../../prisma.service';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
-  private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.]{0,1}[\d]+/g;
+  private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
   public constructor(private prisma: PrismaService) {}
 
