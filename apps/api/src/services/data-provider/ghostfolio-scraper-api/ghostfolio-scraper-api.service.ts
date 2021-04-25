@@ -15,6 +15,8 @@ import { PrismaService } from '../../prisma.service';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
+  private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
+
   public constructor(private prisma: PrismaService) {}
 
   public async get(
@@ -75,12 +77,9 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
       const html = await get();
       const $ = cheerio.load(html);
 
-      const string = $(scraperConfig?.selector)
-        .text()
-        .replace('CHF', '')
-        .trim();
-
-      const value = parseFloat(string);
+      const value = this.extractNumberFromString(
+        $(scraperConfig?.selector).text()
+      );
 
       return {
         [symbol]: {
@@ -94,6 +93,17 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
 
     return {};
+  }
+
+  private extractNumberFromString(aString: string): number {
+    try {
+      const [numberString] = aString.match(
+        GhostfolioScraperApiService.NUMERIC_REGEXP
+      );
+      return parseFloat(numberString.trim());
+    } catch {
+      return undefined;
+    }
   }
 
   private async getScraperConfig(aSymbol: string) {
