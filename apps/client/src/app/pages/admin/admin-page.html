@@ -74,19 +74,19 @@
           <table>
             <thead>
               <tr class="mat-header-row">
-                <th class="mat-header-cell pl-2 py-2" i18n>User</th>
+                <th class="mat-header-cell pl-3 py-2" i18n>User</th>
                 <th class="mat-header-cell pr-2 py-2" i18n>
                   Registration Date
                 </th>
                 <th class="mat-header-cell pr-2 py-2" i18n>Accounts</th>
                 <th class="mat-header-cell pr-2 py-2" i18n>Transactions</th>
                 <th class="mat-header-cell pr-2 py-2" i18n>Engagement</th>
-                <th class="mat-header-cell pr-2 py-2" i18n>Last Activitiy</th>
+                <th class="mat-header-cell pr-3 py-2" i18n>Last Activitiy</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let userItem of users" class="mat-row">
-                <td class="mat-cell pl-2 py-2">
+                <td class="mat-cell pl-3 py-2">
                   {{ userItem.alias || userItem.id }}
                 </td>
                 <td class="mat-cell pr-2 py-2">
@@ -99,7 +99,7 @@
                 <td class="mat-cell pr-2 py-2">
                   {{ userItem.Analytics?.activityCount }}
                 </td>
-                <td class="mat-cell pr-2 py-2">
+                <td class="mat-cell pr-3 py-2">
                   {{ formatDistanceToNow(userItem.Analytics?.updatedAt) }}
                 </td>
               </tr>
