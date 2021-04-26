@@ -57,11 +57,20 @@ body {
       }
     }
 
-    .mat-card:not([class*='mat-elevation-z']) {
-      border-color: rgba(
-        var(--light-primary-text),
-        var(--palette-foreground-divider-alpha)
-      );
+    .mat-card {
+      background: var(--dark-background);
+
+      &:not([class*='mat-elevation-z']) {
+        border-color: rgba(
+          var(--light-primary-text),
+          var(--palette-foreground-divider-alpha)
+        );
+        box-shadow: none;
+      }
+    }
+
+    .mat-dialog-container {
+      background: var(--dark-background);
     }
 
     .mat-fab,
