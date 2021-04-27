@@ -1,4 +1,6 @@
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { convertFromYahooSymbol } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
@@ -10,7 +12,8 @@ import { SymbolItem } from './interfaces/symbol-item.interface';
 @Injectable()
 export class SymbolService {
   public constructor(
-    private readonly dataProviderService: DataProviderService
+    private readonly dataProviderService: DataProviderService,
+    private readonly ghostfolioScraperApiService: GhostfolioScraperApiService
   ) {}
 
   public async get(aSymbol: string): Promise<SymbolItem> {
@@ -23,18 +26,36 @@ export class SymbolService {
     };
   }
 
-  public async lookup(aQuery: string): Promise<LookupItem[]> {
+  public async lookup(aQuery = ''): Promise<LookupItem[]> {
+    const query = aQuery.toLowerCase();
+    const results: LookupItem[] = [];
+
+    if (!query) {
+      return results;
+    }
+
     const get = bent(
-      `https://query1.finance.yahoo.com/v1/finance/search?q=${aQuery}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
+      `https://query1.finance.yahoo.com/v1/finance/search?q=${query}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
       'GET',
       'json',
       200
     );
 
+    // Add custom symbols
+    const scraperConfigurations = await this.ghostfolioScraperApiService.getScraperConfigurations();
+    scraperConfigurations.forEach((scraperConfiguration) => {
+      if (scraperConfiguration.name.toLowerCase().startsWith(query)) {
+        results.push({
+          name: scraperConfiguration.name,
+          symbol: scraperConfiguration.symbol
+        });
+      }
+    });
+
     try {
       const { quotes } = await get();
 
-      return quotes
+      const searchResult = quotes
         .filter(({ isYahooFinance }) => {
           return isYahooFinance;
         })
@@ -59,6 +80,8 @@ export class SymbolService {
             symbol: convertFromYahooSymbol(symbol)
           };
         });
+
+      return results.concat(searchResult);
     } catch (error) {
       console.error(error);
 
