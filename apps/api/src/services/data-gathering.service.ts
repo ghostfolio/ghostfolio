@@ -18,6 +18,7 @@ import {
 
 import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider.service';
+import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
@@ -25,6 +26,7 @@ export class DataGatheringService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
+    private readonly ghostfolioScraperApi: GhostfolioScraperApiService,
     private prisma: PrismaService
   ) {}
 
@@ -183,6 +185,17 @@ export class DataGatheringService {
     }
   }
 
+  public async getCustomSymbolsToGather(startDate?: Date) {
+    const scraperConfigurations = await this.ghostfolioScraperApi.getScraperConfigurations();
+
+    return scraperConfigurations.map((scraperConfiguration) => {
+      return {
+        date: startDate,
+        symbol: scraperConfiguration.symbol
+      };
+    });
+  }
+
   private getBenchmarksToGather(startDate: Date) {
     const benchmarksToGather = benchmarks.map((symbol) => {
       return {
@@ -199,32 +212,6 @@ export class DataGatheringService {
     }
 
     return benchmarksToGather;
-  }
-
-  private async getCustomSymbolsToGather(startDate: Date) {
-    const customSymbolsToGather = [];
-
-    if (this.configurationService.get('ENABLE_FEATURE_CUSTOM_SYMBOLS')) {
-      try {
-        const {
-          value: scraperConfigString
-        } = await this.prisma.property.findFirst({
-          select: {
-            value: true
-          },
-          where: { key: 'SCRAPER_CONFIG' }
-        });
-
-        JSON.parse(scraperConfigString).forEach((item) => {
-          customSymbolsToGather.push({
-            date: startDate,
-            symbol: item.symbol
-          });
-        });
-      } catch {}
-    }
-
-    return customSymbolsToGather;
   }
 
   private async getSymbols7D(): Promise<{ date: Date; symbol: string }[]> {

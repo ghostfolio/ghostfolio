@@ -12,6 +12,7 @@ import {
   MarketState
 } from '../../interfaces/interfaces';
 import { PrismaService } from '../../prisma.service';
+import { ScraperConfig } from './interfaces/scraper-config.interface';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
@@ -29,7 +30,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     try {
       const symbol = aSymbols[0];
 
-      const scraperConfig = await this.getScraperConfig(symbol);
+      const scraperConfig = await this.getScraperConfigurationBySymbol(symbol);
 
       const { marketPrice } = await this.prisma.marketData.findFirst({
         orderBy: {
@@ -70,15 +71,17 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     try {
       const symbol = aSymbols[0];
 
-      const scraperConfig = await this.getScraperConfig(symbol);
+      const scraperConfiguration = await this.getScraperConfigurationBySymbol(
+        symbol
+      );
 
-      const get = bent(scraperConfig?.url, 'GET', 'string', 200, {});
+      const get = bent(scraperConfiguration?.url, 'GET', 'string', 200, {});
 
       const html = await get();
       const $ = cheerio.load(html);
 
       const value = this.extractNumberFromString(
-        $(scraperConfig?.selector).text()
+        $(scraperConfiguration?.selector).text()
       );
 
       return {
@@ -95,6 +98,23 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return {};
   }
 
+  public async getScraperConfigurations(): Promise<ScraperConfig[]> {
+    try {
+      const {
+        value: scraperConfigString
+      } = await this.prisma.property.findFirst({
+        select: {
+          value: true
+        },
+        where: { key: 'SCRAPER_CONFIG' }
+      });
+
+      return JSON.parse(scraperConfigString);
+    } catch {}
+
+    return [];
+  }
+
   private extractNumberFromString(aString: string): number {
     try {
       const [numberString] = aString.match(
@@ -106,22 +126,10 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
   }
 
-  private async getScraperConfig(aSymbol: string) {
-    try {
-      const {
-        value: scraperConfigString
-      } = await this.prisma.property.findFirst({
-        select: {
-          value: true
-        },
-        where: { key: 'SCRAPER_CONFIG' }
-      });
-
-      return JSON.parse(scraperConfigString).find((item) => {
-        return item.symbol === aSymbol;
-      });
-    } catch {}
-
-    return {};
+  private async getScraperConfigurationBySymbol(aSymbol: string) {
+    const scraperConfigurations = await this.getScraperConfigurations();
+    return scraperConfigurations.find((scraperConfiguration) => {
+      return scraperConfiguration.symbol === aSymbol;
+    });
   }
 }
