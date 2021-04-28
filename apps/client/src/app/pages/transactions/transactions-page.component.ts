@@ -125,6 +125,7 @@ export class TransactionsPageComponent implements OnInit {
   public openUpdateTransactionDialog({
     accountId,
     currency,
+    dataSource,
     date,
     fee,
     id,
@@ -140,6 +141,7 @@ export class TransactionsPageComponent implements OnInit {
         transaction: {
           accountId,
           currency,
+          dataSource,
           date,
           fee,
           id,
@@ -177,9 +179,9 @@ export class TransactionsPageComponent implements OnInit {
   private openCreateTransactionDialog(): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
-        accounts: this.user.accounts,
+        accounts: this.user?.accounts,
         transaction: {
-          accountId: this.user.accounts.find((account) => {
+          accountId: this.user?.accounts.find((account) => {
             return account.isDefault;
           })?.id,
           currency: null,

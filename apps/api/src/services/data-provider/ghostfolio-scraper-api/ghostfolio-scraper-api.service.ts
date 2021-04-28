@@ -1,3 +1,4 @@
+import { DataSource } from '.prisma/client';
 import { getYesterday } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import * as bent from 'bent';
@@ -45,6 +46,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         [symbol]: {
           marketPrice,
           currency: scraperConfig?.currency,
+          dataSource: DataSource.GHOSTFOLIO,
           marketState: MarketState.delayed,
           name: scraperConfig?.name
         }

@@ -1,3 +1,4 @@
+import { DataSource } from '.prisma/client';
 import { getToday, getYesterday } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import * as bent from 'bent';
@@ -39,6 +40,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
         return {
           'GF.FEAR_AND_GREED_INDEX': {
             currency: undefined,
+            dataSource: DataSource.RAKUTEN,
             marketPrice: fgi.now.value,
             marketState: MarketState.open,
             name: RakutenRapidApiService.FEAR_AND_GREED_INDEX_NAME

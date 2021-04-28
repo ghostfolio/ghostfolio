@@ -78,8 +78,9 @@ export class CreateOrUpdateTransactionDialog {
     this.dataService
       .fetchSymbolItem(this.data.transaction.symbol)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currency, marketPrice }) => {
+      .subscribe(({ currency, dataSource, marketPrice }) => {
         this.data.transaction.currency = currency;
+        this.data.transaction.dataSource = dataSource;
         this.data.transaction.unitPrice = marketPrice;
 
         this.isLoading = false;
@@ -90,6 +91,7 @@ export class CreateOrUpdateTransactionDialog {
 
   public onUpdateSymbolByTyping(value: string) {
     this.data.transaction.currency = null;
+    this.data.transaction.dataSource = null;
     this.data.transaction.unitPrice = null;
 
     this.data.transaction.symbol = value;
