@@ -1,6 +1,9 @@
+import { Currency, DataSource } from '.prisma/client';
+
 export interface Order {
   accountId: string;
-  currency: string;
+  currency: Currency;
+  dataSource: DataSource;
   date: Date;
   fee: number;
   id: string;

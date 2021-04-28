@@ -1,6 +1,8 @@
+import { Currency } from '@prisma/client';
+
 export interface PortfolioPositionDetail {
   averagePrice: number;
-  currency: string;
+  currency: Currency;
   firstBuyDate: string;
   grossPerformance: number;
   grossPerformancePercent: number;

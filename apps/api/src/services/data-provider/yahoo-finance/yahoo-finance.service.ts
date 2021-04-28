@@ -1,3 +1,4 @@
+import { DataSource } from '.prisma/client';
 import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { format } from 'date-fns';
@@ -49,6 +50,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
         response[symbol] = {
           currency: parseCurrency(value.price?.currency),
+          dataSource: DataSource.YAHOO,
           exchange: this.parseExchange(value.price?.exchangeName),
           marketState:
             value.price?.marketState === 'REGULAR' || isCrypto(symbol)

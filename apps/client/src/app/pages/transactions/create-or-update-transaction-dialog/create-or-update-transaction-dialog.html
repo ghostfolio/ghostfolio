@@ -58,6 +58,18 @@
         </mat-select>
       </mat-form-field>
     </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Data Source</mat-label>
+        <input
+          disabled
+          matInput
+          name="dataSource"
+          required
+          [(ngModel)]="data.transaction.dataSource"
+        />
+      </mat-form-field>
+    </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
@@ -113,6 +125,7 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account</mat-label>
         <mat-select
+          disabled
           name="accountId"
           required
           [(value)]="data.transaction.accountId"

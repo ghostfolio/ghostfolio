@@ -18,9 +18,10 @@ export class SymbolService {
 
   public async get(aSymbol: string): Promise<SymbolItem> {
     const response = await this.dataProviderService.get([aSymbol]);
-    const { currency, marketPrice } = response[aSymbol];
+    const { currency, dataSource, marketPrice } = response[aSymbol];
 
     return {
+      dataSource,
       marketPrice,
       currency: <Currency>(<unknown>currency)
     };

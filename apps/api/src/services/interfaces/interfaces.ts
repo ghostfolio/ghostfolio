@@ -1,4 +1,4 @@
-import { Currency, Platform } from '@prisma/client';
+import { Currency, DataSource, Platform } from '@prisma/client';
 
 import { OrderType } from '../../models/order-type';
 
@@ -51,6 +51,7 @@ export interface IDataProviderHistoricalResponse {
 
 export interface IDataProviderResponse {
   currency: Currency;
+  dataSource: DataSource;
   exchange?: string;
   industry?: Industry;
   marketChange?: number;
