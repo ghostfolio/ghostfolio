@@ -23,6 +23,7 @@ export class PositionDetailDialog {
   public benchmarkDataItems: LineChartItem[];
   public currency: string;
   public firstBuyDate: string;
+  public grossPerformance: number;
   public grossPerformancePercent: number;
   public historicalDataItems: LineChartItem[];
   public investment: number;
@@ -30,6 +31,7 @@ export class PositionDetailDialog {
   public maxPrice: number;
   public minPrice: number;
   public quantity: number;
+  public transactionCount: number;
 
   public constructor(
     private cd: ChangeDetectorRef,
@@ -44,18 +46,21 @@ export class PositionDetailDialog {
           averagePrice,
           currency,
           firstBuyDate,
+          grossPerformance,
           grossPerformancePercent,
           historicalData,
           investment,
           marketPrice,
           maxPrice,
           minPrice,
-          quantity
+          quantity,
+          transactionCount
         }) => {
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.currency = currency;
           this.firstBuyDate = firstBuyDate;
+          this.grossPerformance = quantity * grossPerformance;
           this.grossPerformancePercent = grossPerformancePercent;
           this.historicalDataItems = historicalData.map(
             (historicalDataItem) => {
@@ -75,6 +80,7 @@ export class PositionDetailDialog {
           this.maxPrice = maxPrice;
           this.minPrice = minPrice;
           this.quantity = quantity;
+          this.transactionCount = transactionCount;
 
           if (isToday(parseISO(this.firstBuyDate))) {
             // Add average price

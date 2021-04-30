@@ -13,6 +13,7 @@ export interface PortfolioPositionDetail {
   minPrice: number;
   quantity: number;
   symbol: string;
+  transactionCount: number;
 }
 
 export interface HistoricalDataItem {

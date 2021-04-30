@@ -20,6 +20,7 @@ export interface PortfolioPosition {
   sector?: string;
   shareCurrent: number;
   shareInvestment: number;
+  transactionCount: number;
   symbol: string;
   type?: string;
   url?: string;

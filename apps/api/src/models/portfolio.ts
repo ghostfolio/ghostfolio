@@ -57,7 +57,7 @@ export class Portfolio implements PortfolioInterface {
   public async addCurrentPortfolioItems() {
     const currentData = await this.dataProviderService.get(this.getSymbols());
 
-    let currentDate = new Date();
+    const currentDate = new Date();
 
     const year = getYear(currentDate);
     const month = getMonth(currentDate);
@@ -82,7 +82,9 @@ export class Portfolio implements PortfolioInterface {
         marketPrice:
           currentData[symbol]?.marketPrice ??
           portfolioItemsYesterday.positions[symbol]?.marketPrice,
-        quantity: portfolioItemsYesterday?.positions[symbol]?.quantity
+        quantity: portfolioItemsYesterday?.positions[symbol]?.quantity,
+        transactionCount:
+          portfolioItemsYesterday?.positions[symbol]?.transactionCount
       };
     });
 
@@ -289,7 +291,9 @@ export class Portfolio implements PortfolioInterface {
             data[symbol]?.currency,
             this.user.Settings.currency
           ) / value,
-        shareInvestment: portfolioItem.positions[symbol].investment / investment
+        shareInvestment:
+          portfolioItem.positions[symbol].investment / investment,
+        transactionCount: portfolioItem.positions[symbol].transactionCount
       };
     });
 
@@ -582,7 +586,8 @@ export class Portfolio implements PortfolioInterface {
           marketPrice:
             historicalData[symbol]?.[format(currentDate, 'yyyy-MM-dd')]
               ?.marketPrice || 0,
-          quantity: 0
+          quantity: 0,
+          transactionCount: 0
         };
       });
 
@@ -623,7 +628,8 @@ export class Portfolio implements PortfolioInterface {
           marketPrice:
             historicalData[symbol]?.[format(yesterday, 'yyyy-MM-dd')]
               ?.marketPrice || 0,
-          quantity: 0
+          quantity: 0,
+          transactionCount: 0
         };
       });
 
@@ -729,6 +735,10 @@ export class Portfolio implements PortfolioInterface {
         this.portfolioItems[i].positions[
           order.getSymbol()
         ].currency = order.getCurrency();
+
+        this.portfolioItems[i].positions[
+          order.getSymbol()
+        ].transactionCount += 1;
 
         if (order.getType() === 'BUY') {
           if (
