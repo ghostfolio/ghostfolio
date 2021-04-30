@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the generic scraper symbols to the symbol lookup results
 
+### Changed
+
+- Harmonized the slogan to "Open Source Portfolio Tracker"
+
 ## 0.93.0 - 26.04.2021
 
 ### Changed
