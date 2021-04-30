@@ -82,8 +82,6 @@ export class PositionDetailDialog {
           this.quantity = quantity;
           this.transactionCount = transactionCount;
 
-          console.log(this.grossPerformance);
-
           if (isToday(parseISO(this.firstBuyDate))) {
             // Add average price
             this.historicalDataItems.push({
