@@ -1,7 +1,7 @@
 {
   "background_color": "transparent",
   "categories": ["finance", "utilities"],
-  "description": "Privacy-first Portfolio Tracker",
+  "description": "Open Source Portfolio Tracker",
   "display": "standalone",
   "icons": [
     {
