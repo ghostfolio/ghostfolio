@@ -209,7 +209,8 @@ export class PortfolioService {
         firstBuyDate,
         investment,
         marketPrice,
-        quantity
+        quantity,
+        transactionCount
       } = portfolio.getPositions(new Date())[aSymbol];
 
       const historicalData = await this.dataProviderService.getHistorical(
@@ -262,6 +263,7 @@ export class PortfolioService {
         maxPrice,
         minPrice,
         quantity,
+        transactionCount,
         grossPerformance: this.exchangeRateDataService.toCurrency(
           marketPrice - averagePrice,
           currency,
@@ -315,7 +317,8 @@ export class PortfolioService {
         maxPrice: undefined,
         minPrice: undefined,
         quantity: undefined,
-        symbol: aSymbol
+        symbol: aSymbol,
+        transactionCount: undefined
       };
     }
 
@@ -331,7 +334,8 @@ export class PortfolioService {
       maxPrice: undefined,
       minPrice: undefined,
       quantity: undefined,
-      symbol: aSymbol
+      symbol: aSymbol,
+      transactionCount: undefined
     };
   }
 

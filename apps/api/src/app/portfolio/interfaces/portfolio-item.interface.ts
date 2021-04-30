@@ -16,4 +16,5 @@ export interface Position {
   investmentInOriginalCurrency?: number;
   marketPrice?: number;
   quantity: number;
+  transactionCount: number;
 }
