@@ -32,18 +32,6 @@
         background-color: rgba(var(--dark-primary-text), 0.05);
         border-radius: 1rem;
         line-height: 1em;
-
-        ion-icon {
-          font-size: 1rem;
-        }
-
-        &.buy {
-          color: var(--green);
-        }
-
-        &.sell {
-          color: var(--orange);
-        }
       }
     }
   }
