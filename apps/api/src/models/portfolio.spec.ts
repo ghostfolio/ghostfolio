@@ -1,6 +1,6 @@
 import { baseCurrency, getUtc, getYesterday } from '@ghostfolio/helper';
 import { Test } from '@nestjs/testing';
-import { Currency, Role, Type } from '@prisma/client';
+import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
 
 import { ConfigurationService } from '../services/configuration.service';
 import { DataProviderService } from '../services/data-provider.service';
@@ -70,6 +70,18 @@ describe('Portfolio', () => {
     );
     portfolio.setUser({
       accessToken: null,
+      Account: [
+        {
+          accountType: AccountType.SECURITIES,
+          createdAt: new Date(),
+          id: DEFAULT_ACCOUNT_ID,
+          isDefault: true,
+          name: 'Default Account',
+          platformId: null,
+          updatedAt: new Date(),
+          userId: USER_ID
+        }
+      ],
       alias: 'Test',
       createdAt: new Date(),
       id: USER_ID,
@@ -133,6 +145,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 0,
           date: new Date(),
           id: '8d999347-dee2-46ee-88e1-26b344e71fcc',
@@ -187,6 +200,7 @@ describe('Portfolio', () => {
           // shareCurrent: 0.9999999559148652,
           shareInvestment: 1,
           symbol: 'BTCUSD',
+          transactionCount: 0,
           type: 'Cryptocurrency'
         }
       });
@@ -233,6 +247,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 0,
           date: new Date(getUtc('2018-01-05')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fb',
@@ -285,6 +300,7 @@ describe('Portfolio', () => {
           quantity: 0.2,
           // shareCurrent: 1,
           shareInvestment: 1,
+          transactionCount: 1,
           symbol: 'ETHUSD',
           type: 'Cryptocurrency'
         }
@@ -327,6 +343,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 0,
           date: new Date(getUtc('2018-01-05')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fb',
@@ -343,6 +360,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 0,
           date: new Date(getUtc('2018-01-28')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fc',
@@ -403,6 +421,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.EUR,
+          dataSource: DataSource.YAHOO,
           date: new Date(getUtc('2017-08-16')),
           fee: 2.99,
           id: 'd96795b2-6ae6-420e-aa21-fabe5e45d475',
@@ -419,6 +438,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 2.99,
           date: new Date(getUtc('2018-01-05')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fb',
@@ -492,6 +512,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 1.0,
           date: new Date(getUtc('2018-01-05')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fb',
@@ -508,6 +529,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 1.0,
           date: new Date(getUtc('2018-01-28')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fc',
@@ -524,6 +546,7 @@ describe('Portfolio', () => {
           accountUserId: USER_ID,
           createdAt: null,
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: 1.0,
           date: new Date(getUtc('2018-01-31')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fc',
