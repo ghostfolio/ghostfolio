@@ -17,8 +17,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order as OrderModel } from '@prisma/client';
-import { parseISO } from 'date-fns';
+import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
@@ -35,11 +34,11 @@ export class AccountController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
+  public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
     if (
       !hasPermission(
         getPermissions(this.request.user.role),
-        permissions.deleteOrder
+        permissions.deleteAccount
       )
     ) {
       throw new HttpException(
@@ -48,7 +47,7 @@ export class AccountController {
       );
     }
 
-    return this.accountService.deleteOrder(
+    return this.accountService.deleteAccount(
       {
         id_userId: {
           id,
@@ -61,23 +60,17 @@ export class AccountController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  public async getAllOrders(
+  public async getAllAccounts(
     @Headers('impersonation-id') impersonationId
-  ): Promise<OrderModel[]> {
+  ): Promise<AccountModel[]> {
     const impersonationUserId = await this.impersonationService.validateImpersonationId(
       impersonationId,
       this.request.user.id
     );
 
-    let orders = await this.accountService.orders({
-      include: {
-        Account: {
-          include: {
-            Platform: true
-          }
-        }
-      },
-      orderBy: { date: 'desc' },
+    let accounts = await this.accountService.accounts({
+      include: { Platform: true },
+      orderBy: { name: 'desc' },
       where: { userId: impersonationUserId || this.request.user.id }
     });
 
@@ -88,16 +81,20 @@ export class AccountController {
         permissions.readForeignPortfolio
       )
     ) {
-      orders = nullifyValuesInObjects(orders, ['fee', 'quantity', 'unitPrice']);
+      accounts = nullifyValuesInObjects(accounts, [
+        'fee',
+        'quantity',
+        'unitPrice'
+      ]);
     }
 
-    return orders;
+    return accounts;
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  public async getOrderById(@Param('id') id: string): Promise<OrderModel> {
-    return this.accountService.order({
+  public async getAccountById(@Param('id') id: string): Promise<AccountModel> {
+    return this.accountService.account({
       id_userId: {
         id,
         userId: this.request.user.id
@@ -107,13 +104,13 @@ export class AccountController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  public async createOrder(
+  public async createAccount(
     @Body() data: CreateAccountDto
-  ): Promise<OrderModel> {
+  ): Promise<AccountModel> {
     if (
       !hasPermission(
         getPermissions(this.request.user.role),
-        permissions.createOrder
+        permissions.createAccount
       )
     ) {
       throw new HttpException(
@@ -122,24 +119,13 @@ export class AccountController {
       );
     }
 
-    const date = parseISO(data.date);
-
-    const accountId = data.accountId;
-    delete data.accountId;
-
     if (data.platformId) {
       const platformId = data.platformId;
       delete data.platformId;
 
-      return this.accountService.createOrder(
+      return this.accountService.createAccount(
         {
           ...data,
-          date,
-          Account: {
-            connect: {
-              id_userId: { id: accountId, userId: this.request.user.id }
-            }
-          },
           Platform: { connect: { id: platformId } },
           User: { connect: { id: this.request.user.id } }
         },
@@ -148,15 +134,9 @@ export class AccountController {
     } else {
       delete data.platformId;
 
-      return this.accountService.createOrder(
+      return this.accountService.createAccount(
         {
           ...data,
-          date,
-          Account: {
-            connect: {
-              id_userId: { id: accountId, userId: this.request.user.id }
-            }
-          },
           User: { connect: { id: this.request.user.id } }
         },
         this.request.user.id
@@ -170,7 +150,7 @@ export class AccountController {
     if (
       !hasPermission(
         getPermissions(this.request.user.role),
-        permissions.updateOrder
+        permissions.updateAccount
       )
     ) {
       throw new HttpException(
@@ -179,32 +159,21 @@ export class AccountController {
       );
     }
 
-    const originalOrder = await this.accountService.order({
+    const originalAccount = await this.accountService.account({
       id_userId: {
         id,
         userId: this.request.user.id
       }
     });
 
-    const date = parseISO(data.date);
-
-    const accountId = data.accountId;
-    delete data.accountId;
-
     if (data.platformId) {
       const platformId = data.platformId;
       delete data.platformId;
 
-      return this.accountService.updateOrder(
+      return this.accountService.updateAccount(
         {
           data: {
             ...data,
-            date,
-            Account: {
-              connect: {
-                id_userId: { id: accountId, userId: this.request.user.id }
-              }
-            },
             Platform: { connect: { id: platformId } },
             User: { connect: { id: this.request.user.id } }
           },
@@ -221,17 +190,11 @@ export class AccountController {
       // platformId is null, remove it
       delete data.platformId;
 
-      return this.accountService.updateOrder(
+      return this.accountService.updateAccount(
         {
           data: {
             ...data,
-            date,
-            Account: {
-              connect: {
-                id_userId: { id: accountId, userId: this.request.user.id }
-              }
-            },
-            Platform: originalOrder.platformId
+            Platform: originalAccount.platformId
               ? { disconnect: true }
               : undefined,
             User: { connect: { id: this.request.user.id } }

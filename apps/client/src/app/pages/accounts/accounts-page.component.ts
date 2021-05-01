@@ -23,8 +23,8 @@ export class AccountsPageComponent implements OnInit {
   public accounts: OrderModel[];
   public deviceType: string;
   public hasImpersonationId: boolean;
-  public hasPermissionToCreateOrder: boolean;
-  public hasPermissionToDeleteOrder: boolean;
+  public hasPermissionToCreateAccount: boolean;
+  public hasPermissionToDeleteAccount: boolean;
   public routeQueryParams: Subscription;
   public user: User;
 
@@ -47,14 +47,14 @@ export class AccountsPageComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['createDialog']) {
-          this.openCreateTransactionDialog();
+          this.openCreateAccountDialog();
         } else if (params['editDialog']) {
           if (this.accounts) {
-            const transaction = this.accounts.find((transaction) => {
-              return transaction.id === params['transactionId'];
+            const account = this.accounts.find((account) => {
+              return account.id === params['transactionId'];
             });
 
-            this.openUpdateTransactionDialog(transaction);
+            this.openUpdateAccountDialog(account);
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -80,13 +80,13 @@ export class AccountsPageComponent implements OnInit {
       .subscribe(() => {
         this.dataService.fetchUser().subscribe((user) => {
           this.user = user;
-          this.hasPermissionToCreateOrder = hasPermission(
+          this.hasPermissionToCreateAccount = hasPermission(
             user.permissions,
-            permissions.createOrder
+            permissions.createAccount
           );
-          this.hasPermissionToDeleteOrder = hasPermission(
+          this.hasPermissionToDeleteAccount = hasPermission(
             user.permissions,
-            permissions.deleteOrder
+            permissions.deleteAccount
           );
 
           this.cd.markForCheck();
@@ -108,7 +108,7 @@ export class AccountsPageComponent implements OnInit {
     });
   }
 
-  public onDeleteTransaction(aId: string) {
+  public onDeleteAccount(aId: string) {
     this.dataService.deleteAccount(aId).subscribe({
       next: () => {
         this.fetchAccounts();
@@ -116,13 +116,13 @@ export class AccountsPageComponent implements OnInit {
     });
   }
 
-  public onUpdateTransaction(aTransaction: OrderModel) {
+  public onUpdateAccount(aAccount: OrderModel) {
     this.router.navigate([], {
-      queryParams: { editDialog: true, transactionId: aTransaction.id }
+      queryParams: { editDialog: true, transactionId: aAccount.id }
     });
   }
 
-  public openUpdateTransactionDialog({
+  public openUpdateAccountDialog({
     accountId,
     currency,
     dataSource,
@@ -176,7 +176,7 @@ export class AccountsPageComponent implements OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateTransactionDialog(): void {
+  private openCreateAccountDialog(): void {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
         accounts: this.user?.accounts,

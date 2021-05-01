@@ -1,40 +1,35 @@
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Order, Prisma } from '@prisma/client';
+import { Account, Prisma } from '@prisma/client';
 
-import { CacheService } from '../cache/cache.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
-import { OrderWithPlatform } from './interfaces/order-with-platform.type';
 
 @Injectable()
 export class AccountService {
   public constructor(
-    private readonly cacheService: CacheService,
-    private readonly dataGatheringService: DataGatheringService,
     private readonly redisCacheService: RedisCacheService,
     private prisma: PrismaService
   ) {}
 
-  public async order(
-    orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
-  ): Promise<Order | null> {
-    return this.prisma.order.findUnique({
-      where: orderWhereUniqueInput
+  public async account(
+    accountWhereUniqueInput: Prisma.AccountWhereUniqueInput
+  ): Promise<Account | null> {
+    return this.prisma.account.findUnique({
+      where: accountWhereUniqueInput
     });
   }
 
-  public async orders(params: {
-    include?: Prisma.OrderInclude;
+  public async accounts(params: {
+    include?: Prisma.AccountInclude;
     skip?: number;
     take?: number;
-    cursor?: Prisma.OrderWhereUniqueInput;
-    where?: Prisma.OrderWhereInput;
-    orderBy?: Prisma.OrderOrderByInput;
-  }): Promise<OrderWithPlatform[]> {
+    cursor?: Prisma.AccountWhereUniqueInput;
+    where?: Prisma.AccountWhereInput;
+    orderBy?: Prisma.AccountOrderByInput;
+  }): Promise<Account[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 
-    return this.prisma.order.findMany({
+    return this.prisma.account.findMany({
       cursor,
       include,
       orderBy,
@@ -44,60 +39,35 @@ export class AccountService {
     });
   }
 
-  public async createOrder(
-    data: Prisma.OrderCreateInput,
+  public async createAccount(
+    data: Prisma.AccountCreateInput,
     aUserId: string
-  ): Promise<Order> {
-    this.redisCacheService.remove(`${aUserId}.portfolio`);
-
-    // Gather symbol data of order in the background
-    this.dataGatheringService.gatherSymbols([
-      {
-        date: <Date>data.date,
-        symbol: data.symbol
-      }
-    ]);
-
-    await this.cacheService.flush(aUserId);
-
-    return this.prisma.order.create({
+  ): Promise<Account> {
+    return this.prisma.account.create({
       data
     });
   }
 
-  public async deleteOrder(
-    where: Prisma.OrderWhereUniqueInput,
+  public async deleteAccount(
+    where: Prisma.AccountWhereUniqueInput,
     aUserId: string
-  ): Promise<Order> {
+  ): Promise<Account> {
     this.redisCacheService.remove(`${aUserId}.portfolio`);
 
-    return this.prisma.order.delete({
+    return this.prisma.account.delete({
       where
     });
   }
 
-  public async updateOrder(
+  public async updateAccount(
     params: {
-      where: Prisma.OrderWhereUniqueInput;
-      data: Prisma.OrderUpdateInput;
+      where: Prisma.AccountWhereUniqueInput;
+      data: Prisma.AccountUpdateInput;
     },
     aUserId: string
-  ): Promise<Order> {
+  ): Promise<Account> {
     const { data, where } = params;
-
-    this.redisCacheService.remove(`${aUserId}.portfolio`);
-
-    // Gather symbol data of order in the background
-    this.dataGatheringService.gatherSymbols([
-      {
-        date: <Date>data.date,
-        symbol: <string>data.symbol
-      }
-    ]);
-
-    await this.cacheService.flush(aUserId);
-
-    return this.prisma.order.update({
+    return this.prisma.account.update({
       data,
       where
     });

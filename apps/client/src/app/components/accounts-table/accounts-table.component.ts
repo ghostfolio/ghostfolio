@@ -29,8 +29,8 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() locale: string;
   @Input() showActions: boolean;
 
-  @Output() transactionDeleted = new EventEmitter<string>();
-  @Output() transactionToUpdate = new EventEmitter<OrderModel>();
+  @Output() accountDeleted = new EventEmitter<string>();
+  @Output() accountToUpdate = new EventEmitter<OrderModel>();
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -50,7 +50,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = ['account', 'type', 'symbol'];
+    this.displayedColumns = ['account', 'type', 'platform'];
 
     this.isLoading = true;
 
@@ -66,18 +66,16 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onDeleteTransaction(aId: string) {
-    const confirmation = confirm(
-      'Do you really want to delete this transaction?'
-    );
+  public onDeleteAccount(aId: string) {
+    const confirmation = confirm('Do you really want to delete this account?');
 
     if (confirmation) {
-      this.transactionDeleted.emit(aId);
+      this.accountDeleted.emit(aId);
     }
   }
 
-  public onUpdateTransaction(aTransaction: OrderModel) {
-    this.transactionToUpdate.emit(aTransaction);
+  public onUpdateAccount(aAccount: OrderModel) {
+    this.accountToUpdate.emit(aAccount);
   }
 
   public ngOnDestroy() {

@@ -1,4 +1,4 @@
-<form #addTransactionForm="ngForm" class="d-flex flex-column h-100">
+<form #addAccountForm="ngForm" class="d-flex flex-column h-100">
   <h1 *ngIf="data.transaction.id" mat-dialog-title i18n>Update account</h1>
   <h1 *ngIf="!data.transaction.id" mat-dialog-title i18n>Add account</h1>
   <div class="flex-grow-1" mat-dialog-content>
@@ -154,7 +154,7 @@
       color="primary"
       i18n
       mat-flat-button
-      [disabled]="!(addTransactionForm.form.valid && data.transaction.symbol)"
+      [disabled]="!(addAccountForm.form.valid && data.transaction.symbol)"
       [mat-dialog-close]="data"
     >
       Save
