@@ -1,6 +1,6 @@
-import { DataSource } from '.prisma/client';
 import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
 

@@ -8,10 +8,9 @@ import {
   hasPermission,
   permissions
 } from '@ghostfolio/helper';
+import { Currency } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { Currency } from '.prisma/client';
 
 @Component({
   selector: 'gf-account-page',

@@ -1,0 +1,250 @@
+import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
+import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
+import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  HttpException,
+  Inject,
+  Param,
+  Post,
+  Put,
+  UseGuards
+} from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { AuthGuard } from '@nestjs/passport';
+import { Order as OrderModel } from '@prisma/client';
+import { parseISO } from 'date-fns';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
+import { AccountService } from './account.service';
+import { CreateAccountDto } from './create-account.dto';
+import { UpdateAccountDto } from './update-account.dto';
+
+@Controller('account')
+export class AccountController {
+  public constructor(
+    private readonly accountService: AccountService,
+    private readonly impersonationService: ImpersonationService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
+  ) {}
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.deleteOrder
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accountService.deleteOrder(
+      {
+        id_userId: {
+          id,
+          userId: this.request.user.id
+        }
+      },
+      this.request.user.id
+    );
+  }
+
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  public async getAllOrders(
+    @Headers('impersonation-id') impersonationId
+  ): Promise<OrderModel[]> {
+    const impersonationUserId = await this.impersonationService.validateImpersonationId(
+      impersonationId,
+      this.request.user.id
+    );
+
+    let orders = await this.accountService.orders({
+      include: {
+        Account: {
+          include: {
+            Platform: true
+          }
+        }
+      },
+      orderBy: { date: 'desc' },
+      where: { userId: impersonationUserId || this.request.user.id }
+    });
+
+    if (
+      impersonationUserId &&
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.readForeignPortfolio
+      )
+    ) {
+      orders = nullifyValuesInObjects(orders, ['fee', 'quantity', 'unitPrice']);
+    }
+
+    return orders;
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'))
+  public async getOrderById(@Param('id') id: string): Promise<OrderModel> {
+    return this.accountService.order({
+      id_userId: {
+        id,
+        userId: this.request.user.id
+      }
+    });
+  }
+
+  @Post()
+  @UseGuards(AuthGuard('jwt'))
+  public async createOrder(
+    @Body() data: CreateAccountDto
+  ): Promise<OrderModel> {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.createOrder
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const date = parseISO(data.date);
+
+    const accountId = data.accountId;
+    delete data.accountId;
+
+    if (data.platformId) {
+      const platformId = data.platformId;
+      delete data.platformId;
+
+      return this.accountService.createOrder(
+        {
+          ...data,
+          date,
+          Account: {
+            connect: {
+              id_userId: { id: accountId, userId: this.request.user.id }
+            }
+          },
+          Platform: { connect: { id: platformId } },
+          User: { connect: { id: this.request.user.id } }
+        },
+        this.request.user.id
+      );
+    } else {
+      delete data.platformId;
+
+      return this.accountService.createOrder(
+        {
+          ...data,
+          date,
+          Account: {
+            connect: {
+              id_userId: { id: accountId, userId: this.request.user.id }
+            }
+          },
+          User: { connect: { id: this.request.user.id } }
+        },
+        this.request.user.id
+      );
+    }
+  }
+
+  @Put(':id')
+  @UseGuards(AuthGuard('jwt'))
+  public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.updateOrder
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const originalOrder = await this.accountService.order({
+      id_userId: {
+        id,
+        userId: this.request.user.id
+      }
+    });
+
+    const date = parseISO(data.date);
+
+    const accountId = data.accountId;
+    delete data.accountId;
+
+    if (data.platformId) {
+      const platformId = data.platformId;
+      delete data.platformId;
+
+      return this.accountService.updateOrder(
+        {
+          data: {
+            ...data,
+            date,
+            Account: {
+              connect: {
+                id_userId: { id: accountId, userId: this.request.user.id }
+              }
+            },
+            Platform: { connect: { id: platformId } },
+            User: { connect: { id: this.request.user.id } }
+          },
+          where: {
+            id_userId: {
+              id,
+              userId: this.request.user.id
+            }
+          }
+        },
+        this.request.user.id
+      );
+    } else {
+      // platformId is null, remove it
+      delete data.platformId;
+
+      return this.accountService.updateOrder(
+        {
+          data: {
+            ...data,
+            date,
+            Account: {
+              connect: {
+                id_userId: { id: accountId, userId: this.request.user.id }
+              }
+            },
+            Platform: originalOrder.platformId
+              ? { disconnect: true }
+              : undefined,
+            User: { connect: { id: this.request.user.id } }
+          },
+          where: {
+            id_userId: {
+              id,
+              userId: this.request.user.id
+            }
+          }
+        },
+        this.request.user.id
+      );
+    }
+  }
+}

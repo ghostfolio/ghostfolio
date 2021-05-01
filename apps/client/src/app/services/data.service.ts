@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
+import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
 import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
@@ -28,8 +29,16 @@ export class DataService {
 
   public constructor(private http: HttpClient) {}
 
+  public fetchAccounts() {
+    return this.http.get<OrderModel[]>('/api/account');
+  }
+
   public fetchAdminData() {
     return this.http.get<AdminData>('/api/admin');
+  }
+
+  public deleteAccount(aId: string) {
+    return this.http.delete<any>(`/api/account/${aId}`);
   }
 
   public deleteOrder(aId: string) {
@@ -108,12 +117,20 @@ export class DataService {
     return this.http.get<any>(`/api/auth/anonymous/${accessToken}`);
   }
 
+  public postAccount(aAccount: UpdateAccountDto) {
+    return this.http.post<OrderModel>(`/api/account`, aAccount);
+  }
+
   public postOrder(aOrder: UpdateOrderDto) {
     return this.http.post<OrderModel>(`/api/order`, aOrder);
   }
 
   public postUser() {
     return this.http.post<UserItem>(`/api/user`, {});
+  }
+
+  public putAccount(aAccount: UpdateAccountDto) {
+    return this.http.put<UserItem>(`/api/account/${aAccount.id}`, aAccount);
   }
 
   public putOrder(aOrder: UpdateOrderDto) {

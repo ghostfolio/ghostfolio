@@ -16,6 +16,7 @@ import { YahooFinanceService } from '../services/data-provider/yahoo-finance/yah
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { PrismaService } from '../services/prisma.service';
 import { AccessModule } from './access/access.module';
+import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
@@ -32,6 +33,7 @@ import { UserModule } from './user/user.module';
   imports: [
     AdminModule,
     AccessModule,
+    AccountModule,
     AuthModule,
     CacheModule,
     ConfigModule.forRoot(),

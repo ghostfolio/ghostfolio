@@ -37,6 +37,14 @@
       >Transactions</a
     >
     <a
+      class="d-none d-sm-block mx-1"
+      [routerLink]="['/accounts']"
+      i18n
+      mat-flat-button
+      [color]="currentRoute === 'accounts' ? 'primary' : null"
+      >Accounts</a
+    >
+    <a
       *ngIf="hasPermissionToAccessAdminControl"
       class="d-none d-sm-block mx-1"
       [routerLink]="['/admin']"
@@ -140,6 +148,14 @@
         mat-menu-item
         [ngClass]="{ 'font-weight-bold': currentRoute === 'transactions' }"
         >Transactions</a
+      >
+      <a
+        class="d-block d-sm-none"
+        [routerLink]="['/accounts']"
+        i18n
+        mat-menu-item
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
+        >Accounts</a
       >
       <a
         class="align-items-center d-flex"
