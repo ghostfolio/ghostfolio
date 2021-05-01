@@ -1,6 +1,6 @@
-import { DataSource } from '.prisma/client';
 import { getYesterday } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import * as cheerio from 'cheerio';
 import { format } from 'date-fns';

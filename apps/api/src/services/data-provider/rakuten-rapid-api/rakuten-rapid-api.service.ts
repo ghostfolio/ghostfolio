@@ -1,6 +1,6 @@
-import { DataSource } from '.prisma/client';
 import { getToday, getYesterday } from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
 

@@ -1,0 +1,86 @@
+<table
+  class="w-100"
+  matSort
+  matSortActive="account"
+  matSortDirection="desc"
+  mat-table
+  [dataSource]="dataSource"
+>
+  <ng-container matColumnDef="account">
+    <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Name</th>
+    <td *matCellDef="let element" mat-cell>
+      {{ element.name }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell justify-content-center"
+      i18n
+      mat-header-cell
+      mat-sort-header
+    >
+      Type
+    </th>
+    <td
+      mat-cell
+      *matCellDef="let element"
+      class="d-none d-lg-table-cell text-center"
+    >
+      <div class="d-inline-flex justify-content-center px-2 py-1 type-badge">
+        <span>{{ element.accountType }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="platform">
+    <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Platform</th>
+    <td mat-cell *matCellDef="let element">
+      <div class="d-flex">
+        <gf-symbol-icon
+          *ngIf="element.Platform?.url"
+          class="mr-1"
+          [tooltip]=""
+          [url]="element.Platform?.url"
+        ></gf-symbol-icon>
+        <span>{{ element.Platform?.name }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th *matHeaderCellDef class="px-0 text-center" i18n mat-header-cell></th>
+    <td *matCellDef="let element" class="px-0 text-center" mat-cell>
+      <button
+        class="mx-1 no-min-width px-2"
+        mat-button
+        [matMenuTriggerFor]="accountMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </button>
+      <mat-menu #accountMenu="matMenu" xPosition="before">
+        <button i18n mat-menu-item (click)="onUpdateAccount(element)">
+          Edit
+        </button>
+        <button i18n mat-menu-item (click)="onDeleteAccount(element.id)">
+          Delete
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+</table>
+
+<ngx-skeleton-loader
+  *ngIf="isLoading"
+  animation="pulse"
+  class="px-4 py-3"
+  [theme]="{
+    height: '1.5rem',
+    width: '100%'
+  }"
+></ngx-skeleton-loader>

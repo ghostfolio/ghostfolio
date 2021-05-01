@@ -10,16 +10,23 @@ const routes: Routes = [
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   },
   {
-    path: 'admin',
-    loadChildren: () =>
-      import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
-  },
-  {
     path: 'account',
     loadChildren: () =>
       import('./pages/account/account-page.module').then(
         (m) => m.AccountPageModule
       )
+  },
+  {
+    path: 'accounts',
+    loadChildren: () =>
+      import('./pages/accounts/accounts-page.module').then(
+        (m) => m.AccountsPageModule
+      )
+  },
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
   {
     path: 'auth',

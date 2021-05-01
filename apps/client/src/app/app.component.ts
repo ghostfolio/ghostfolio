@@ -74,7 +74,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
             this.canCreateAccount = hasPermission(
               this.user.permissions,
-              permissions.createAccount
+              permissions.createUserAccount
             );
 
             this.cd.markForCheck();

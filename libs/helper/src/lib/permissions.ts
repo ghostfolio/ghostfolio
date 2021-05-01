@@ -9,10 +9,13 @@ export const permissions = {
   accessFearAndGreedIndex: 'accessFearAndGreedIndex',
   createAccount: 'createAccount',
   createOrder: 'createOrder',
+  createUserAccount: 'createUserAccount',
+  deleteAccount: 'deleteAcccount',
   deleteOrder: 'deleteOrder',
   enableSocialLogin: 'enableSocialLogin',
   enableSubscription: 'enableSubscription',
   readForeignPortfolio: 'readForeignPortfolio',
+  updateAccount: 'updateAccount',
   updateOrder: 'updateOrder',
   updateUserSettings: 'updateUserSettings'
 };
@@ -37,7 +40,7 @@ export function getPermissions(aRole: Role): string[] {
       ];
 
     case 'DEMO':
-      return [permissions.createAccount];
+      return [permissions.createUserAccount];
 
     case 'USER':
       return [

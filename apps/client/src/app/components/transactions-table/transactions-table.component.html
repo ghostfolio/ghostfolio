@@ -17,25 +17,21 @@
   mat-table
   [dataSource]="dataSource"
 >
-  <ng-container matColumnDef="platform">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell text-center px-0"
-      i18n
-      mat-header-cell
-    >
-      Platform
-    </th>
-    <td *matCellDef="let element" class="d-none d-lg-table-cell px-0" mat-cell>
-      <div class="d-flex justify-content-center">
+  <ng-container matColumnDef="account">
+    <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Account</th>
+    <td *matCellDef="let element" mat-cell>
+      <div class="d-flex">
         <gf-symbol-icon
-          *ngIf="element.Platform?.url"
-          [tooltip]="element.Platform?.name"
-          [url]="element.Platform?.url"
+          *ngIf="element.Account?.Platform?.url"
+          class="mr-1"
+          [tooltip]="element.Account?.Platform?.name"
+          [url]="element.Account?.Platform?.url"
         ></gf-symbol-icon>
+        <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
       </div>
     </td>
   </ng-container>
+
   <ng-container matColumnDef="date">
     <th
       *matHeaderCellDef
