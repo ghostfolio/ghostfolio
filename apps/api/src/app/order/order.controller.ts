@@ -71,7 +71,11 @@ export class OrderController {
 
     let orders = await this.orderService.orders({
       include: {
-        Platform: true
+        Account: {
+          include: {
+            Platform: true
+          }
+        }
       },
       orderBy: { date: 'desc' },
       where: { userId: impersonationUserId || this.request.user.id }

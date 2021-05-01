@@ -68,7 +68,7 @@ export class TransactionsTableComponent
 
   public ngOnChanges() {
     this.displayedColumns = [
-      'platform',
+      'account',
       'date',
       'type',
       'symbol',
