@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Order as OrderModel } from '@prisma/client';
+import { Account as AccountModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -23,18 +23,18 @@ import { Subject, Subscription } from 'rxjs';
   styleUrls: ['./accounts-table.component.scss']
 })
 export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
-  @Input() accounts: OrderModel[];
+  @Input() accounts: AccountModel[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() locale: string;
   @Input() showActions: boolean;
 
   @Output() accountDeleted = new EventEmitter<string>();
-  @Output() accountToUpdate = new EventEmitter<OrderModel>();
+  @Output() accountToUpdate = new EventEmitter<AccountModel>();
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<OrderModel> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<AccountModel> = new MatTableDataSource();
   public displayedColumns = [];
   public isLoading = true;
   public routeQueryParams: Subscription;
@@ -50,13 +50,13 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = ['account', 'type', 'platform'];
-
-    this.isLoading = true;
+    this.displayedColumns = ['account', 'type', 'platform', 'transactions'];
 
     if (this.showActions) {
       this.displayedColumns.push('actions');
     }
+
+    this.isLoading = true;
 
     if (this.accounts) {
       this.dataSource = new MatTableDataSource(this.accounts);
@@ -74,7 +74,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onUpdateAccount(aAccount: OrderModel) {
+  public onUpdateAccount(aAccount: AccountModel) {
     this.accountToUpdate.emit(aAccount);
   }
 

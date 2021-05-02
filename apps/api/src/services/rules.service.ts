@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 
 import { Portfolio } from '../models/portfolio';
 import { Rule } from '../models/rule';
+import { AccountClusterRiskCurrentInvestment } from '../models/rules/account-cluster-risk/current-investment';
+import { AccountClusterRiskInitialInvestment } from '../models/rules/account-cluster-risk/initial-investment';
+import { AccountClusterRiskSingleAccount } from '../models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '../models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from '../models/rules/currency-cluster-risk/base-currency-initial-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '../models/rules/currency-cluster-risk/current-investment';
 import { CurrencyClusterRiskInitialInvestment } from '../models/rules/currency-cluster-risk/initial-investment';
 import { FeeRatioInitialInvestment } from '../models/rules/fees/fee-ratio-initial-investment';
-import { PlatformClusterRiskCurrentInvestment } from '../models/rules/platform-cluster-risk/current-investment';
-import { PlatformClusterRiskInitialInvestment } from '../models/rules/platform-cluster-risk/initial-investment';
-import { PlatformClusterRiskSinglePlatform } from '../models/rules/platform-cluster-risk/single-platform';
 
 @Injectable()
 export class RulesService {
@@ -39,6 +39,17 @@ export class RulesService {
 
   private getDefaultRuleSettings(aUserSettings: { baseCurrency: string }) {
     return {
+      [AccountClusterRiskCurrentInvestment.name]: {
+        baseCurrency: aUserSettings.baseCurrency,
+        isActive: true,
+        threshold: 0.5
+      },
+      [AccountClusterRiskInitialInvestment.name]: {
+        baseCurrency: aUserSettings.baseCurrency,
+        isActive: true,
+        threshold: 0.5
+      },
+      [AccountClusterRiskSingleAccount.name]: { isActive: true },
       [CurrencyClusterRiskBaseCurrencyInitialInvestment.name]: {
         baseCurrency: aUserSettings.baseCurrency,
         isActive: true
@@ -61,18 +72,7 @@ export class RulesService {
         baseCurrency: aUserSettings.baseCurrency,
         isActive: true,
         threshold: 0.01
-      },
-      [PlatformClusterRiskCurrentInvestment.name]: {
-        baseCurrency: aUserSettings.baseCurrency,
-        isActive: true,
-        threshold: 0.5
-      },
-      [PlatformClusterRiskInitialInvestment.name]: {
-        baseCurrency: aUserSettings.baseCurrency,
-        isActive: true,
-        threshold: 0.5
-      },
-      [PlatformClusterRiskSinglePlatform.name]: { isActive: true }
+      }
     };
   }
 }

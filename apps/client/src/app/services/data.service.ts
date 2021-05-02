@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
+import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
 import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PortfolioItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
 import { PortfolioOverview } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-overview.interface';
@@ -20,6 +22,7 @@ import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interfac
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import { Order as OrderModel } from '@prisma/client';
+import { Account as AccountModel } from '@prisma/client';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +33,7 @@ export class DataService {
   public constructor(private http: HttpClient) {}
 
   public fetchAccounts() {
-    return this.http.get<OrderModel[]>('/api/account');
+    return this.http.get<AccountModel[]>('/api/account');
   }
 
   public fetchAdminData() {
@@ -117,11 +120,11 @@ export class DataService {
     return this.http.get<any>(`/api/auth/anonymous/${accessToken}`);
   }
 
-  public postAccount(aAccount: UpdateAccountDto) {
+  public postAccount(aAccount: CreateAccountDto) {
     return this.http.post<OrderModel>(`/api/account`, aAccount);
   }
 
-  public postOrder(aOrder: UpdateOrderDto) {
+  public postOrder(aOrder: CreateOrderDto) {
     return this.http.post<OrderModel>(`/api/order`, aOrder);
   }
 

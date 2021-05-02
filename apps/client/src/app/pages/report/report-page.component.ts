@@ -10,9 +10,9 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./report-page.scss']
 })
 export class ReportPageComponent implements OnInit {
+  public accountClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public feeRules: PortfolioReportRule[];
-  public platformClusterRiskRules: PortfolioReportRule[];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -32,11 +32,11 @@ export class ReportPageComponent implements OnInit {
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((portfolioReport) => {
+        this.accountClusterRiskRules =
+          portfolioReport.rules['accountClusterRisk'] || null;
         this.currencyClusterRiskRules =
           portfolioReport.rules['currencyClusterRisk'] || null;
         this.feeRules = portfolioReport.rules['fees'] || null;
-        this.platformClusterRiskRules =
-          portfolioReport.rules['platformClusterRisk'] || null;
 
         this.cd.markForCheck();
       });

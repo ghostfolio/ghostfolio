@@ -1,4 +1,4 @@
-import { Currency, DataSource, Platform } from '@prisma/client';
+import { Account, Currency, DataSource, Platform } from '@prisma/client';
 
 import { OrderType } from '../../models/order-type';
 
@@ -33,11 +33,11 @@ export const Type = {
 };
 
 export interface IOrder {
+  account: Account;
   currency: Currency;
   date: string;
   fee: number;
   id?: string;
-  platform: Platform;
   quantity: number;
   symbol: string;
   type: OrderType;

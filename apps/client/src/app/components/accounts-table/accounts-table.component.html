@@ -64,10 +64,22 @@
         <button i18n mat-menu-item (click)="onUpdateAccount(element)">
           Edit
         </button>
-        <button i18n mat-menu-item (click)="onDeleteAccount(element.id)">
+        <button
+          i18n
+          mat-menu-item
+          [disabled]="element.isDefault || element.Order?.length > 0"
+          (click)="onDeleteAccount(element.id)"
+        >
           Delete
         </button>
       </mat-menu>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="transactions">
+    <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Transactions</th>
+    <td *matCellDef="let element" mat-cell>
+      {{ element.Order?.length }}
     </td>
   </ng-container>
 

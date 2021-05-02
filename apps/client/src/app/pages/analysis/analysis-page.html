@@ -36,7 +36,7 @@
     <div class="col-md-6">
       <mat-card class="mb-3">
         <mat-card-header class="w-100">
-          <mat-card-title i18n>By Platform</mat-card-title>
+          <mat-card-title i18n>By Account</mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -50,7 +50,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="hasImpersonationId"
             [locale]="user?.settings?.locale"
-            [positions]="platforms"
+            [positions]="accounts"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>

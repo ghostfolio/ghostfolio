@@ -32,9 +32,12 @@ export function getPermissions(aRole: Role): string[] {
     case 'ADMIN':
       return [
         permissions.accessAdminControl,
+        permissions.createAccount,
         permissions.createOrder,
+        permissions.deleteAccount,
         permissions.deleteOrder,
         permissions.readForeignPortfolio,
+        permissions.updateAccount,
         permissions.updateOrder,
         permissions.updateUserSettings
       ];
@@ -44,8 +47,11 @@ export function getPermissions(aRole: Role): string[] {
 
     case 'USER':
       return [
+        permissions.createAccount,
         permissions.createOrder,
+        permissions.deleteAccount,
         permissions.deleteOrder,
+        permissions.updateAccount,
         permissions.updateOrder,
         permissions.updateUserSettings
       ];

@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { hasPermission, permissions } from '@ghostfolio/helper';
-import { Order as OrderModel } from '@prisma/client';
+import { Account as AccountModel, AccountType } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +21,7 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/c
   styleUrls: ['./accounts-page.scss']
 })
 export class AccountsPageComponent implements OnInit {
-  public accounts: OrderModel[];
+  public accounts: AccountModel[];
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateAccount: boolean;
@@ -116,40 +117,25 @@ export class AccountsPageComponent implements OnInit {
     });
   }
 
-  public onUpdateAccount(aAccount: OrderModel) {
+  public onUpdateAccount(aAccount: AccountModel) {
     this.router.navigate([], {
       queryParams: { editDialog: true, transactionId: aAccount.id }
     });
   }
 
   public openUpdateAccountDialog({
-    accountId,
-    currency,
-    dataSource,
-    date,
-    fee,
+    accountType,
     id,
-    platformId,
-    quantity,
-    symbol,
-    type,
-    unitPrice
-  }: OrderModel): void {
+    name,
+    platformId
+  }: AccountModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
-        accounts: this.user.accounts,
-        transaction: {
-          accountId,
-          currency,
-          dataSource,
-          date,
-          fee,
+        account: {
+          accountType,
           id,
-          platformId,
-          quantity,
-          symbol,
-          type,
-          unitPrice
+          name,
+          platformId
         }
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
@@ -157,10 +143,10 @@ export class AccountsPageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((data: any) => {
-      const transaction: UpdateOrderDto = data?.transaction;
+      const account: UpdateAccountDto = data?.account;
 
-      if (transaction) {
-        this.dataService.putAccount(transaction).subscribe({
+      if (account) {
+        this.dataService.putAccount(account).subscribe({
           next: () => {
             this.fetchAccounts();
           }
@@ -179,19 +165,10 @@ export class AccountsPageComponent implements OnInit {
   private openCreateAccountDialog(): void {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
-        accounts: this.user?.accounts,
-        transaction: {
-          accountId: this.user?.accounts.find((account) => {
-            return account.isDefault;
-          })?.id,
-          currency: null,
-          date: new Date(),
-          fee: 0,
-          platformId: null,
-          quantity: null,
-          symbol: null,
-          type: 'BUY',
-          unitPrice: null
+        account: {
+          accountType: AccountType.SECURITIES,
+          name: null,
+          platformId: null
         }
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
@@ -199,10 +176,10 @@ export class AccountsPageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((data: any) => {
-      const transaction: UpdateOrderDto = data?.transaction;
+      const account: CreateAccountDto = data?.account;
 
-      if (transaction) {
-        this.dataService.postAccount(transaction).subscribe({
+      if (account) {
+        this.dataService.postAccount(account).subscribe({
           next: () => {
             this.fetchAccounts();
           }

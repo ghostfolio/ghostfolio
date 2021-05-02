@@ -78,11 +78,11 @@ export class TransactionsTableComponent
       'fee'
     ];
 
-    this.isLoading = true;
-
     if (this.showActions) {
       this.displayedColumns.push('actions');
     }
+
+    this.isLoading = true;
 
     if (this.transactions) {
       this.dataSource = new MatTableDataSource(this.transactions);

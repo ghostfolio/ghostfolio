@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -199,7 +200,7 @@ export class TransactionsPageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((data: any) => {
-      const transaction: UpdateOrderDto = data?.transaction;
+      const transaction: CreateOrderDto = data?.transaction;
 
       if (transaction) {
         this.dataService.postOrder(transaction).subscribe({

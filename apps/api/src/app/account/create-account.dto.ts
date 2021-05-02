@@ -1,35 +1,14 @@
-import { Currency, DataSource, Type } from '@prisma/client';
-import { IsISO8601, IsNumber, IsString, ValidateIf } from 'class-validator';
+import { AccountType } from '@prisma/client';
+import { IsString, ValidateIf } from 'class-validator';
 
 export class CreateAccountDto {
   @IsString()
-  accountId: string;
+  accountType: AccountType;
 
   @IsString()
-  currency: Currency;
-
-  @IsString()
-  dataSource: DataSource;
-
-  @IsISO8601()
-  date: string;
-
-  @IsNumber()
-  fee: number;
+  name: string;
 
   @IsString()
   @ValidateIf((object, value) => value !== null)
   platformId: string | null;
-
-  @IsNumber()
-  quantity: number;
-
-  @IsString()
-  symbol: string;
-
-  @IsString()
-  type: Type;
-
-  @IsNumber()
-  unitPrice: number;
 }

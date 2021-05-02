@@ -17,7 +17,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Account as AccountModel } from '@prisma/client';
+import { Account as AccountModel, Order } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
@@ -47,6 +47,23 @@ export class AccountController {
       );
     }
 
+    const account = await this.accountService.accountWithOrders(
+      {
+        id_userId: {
+          id,
+          userId: this.request.user.id
+        }
+      },
+      { Order: true }
+    );
+
+    if (account?.isDefault || account?.Order.length > 0) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     return this.accountService.deleteAccount(
       {
         id_userId: {
@@ -69,8 +86,8 @@ export class AccountController {
     );
 
     let accounts = await this.accountService.accounts({
-      include: { Platform: true },
-      orderBy: { name: 'desc' },
+      include: { Order: true, Platform: true },
+      orderBy: { name: 'asc' },
       where: { userId: impersonationUserId || this.request.user.id }
     });
 
@@ -165,6 +182,13 @@ export class AccountController {
         userId: this.request.user.id
       }
     });
+
+    if (!originalAccount) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
 
     if (data.platformId) {
       const platformId = data.platformId;

@@ -1,6 +1,4 @@
-import { Account } from '@prisma/client';
-
-import { Order } from '../../interfaces/order.interface';
+import { Account, Order } from '@prisma/client';
 
 export interface CreateOrUpdateTransactionDialogParams {
   accountId: string;

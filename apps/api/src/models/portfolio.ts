@@ -23,7 +23,7 @@ import { cloneDeep, isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 
 import { UserWithSettings } from '../app/interfaces/user-with-settings';
-import { OrderWithPlatform } from '../app/order/interfaces/order-with-platform.type';
+import { OrderWithAccount } from '../app/order/interfaces/order-with-account.type';
 import { DateRange } from '../app/portfolio/interfaces/date-range.type';
 import { PortfolioPerformance } from '../app/portfolio/interfaces/portfolio-performance.interface';
 import { PortfolioPosition } from '../app/portfolio/interfaces/portfolio-position.interface';
@@ -34,14 +34,14 @@ import { IOrder } from '../services/interfaces/interfaces';
 import { RulesService } from '../services/rules.service';
 import { PortfolioInterface } from './interfaces/portfolio.interface';
 import { Order } from './order';
+import { AccountClusterRiskCurrentInvestment } from './rules/account-cluster-risk/current-investment';
+import { AccountClusterRiskInitialInvestment } from './rules/account-cluster-risk/initial-investment';
+import { AccountClusterRiskSingleAccount } from './rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from './rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from './rules/currency-cluster-risk/base-currency-initial-investment';
 import { CurrencyClusterRiskCurrentInvestment } from './rules/currency-cluster-risk/current-investment';
 import { CurrencyClusterRiskInitialInvestment } from './rules/currency-cluster-risk/initial-investment';
 import { FeeRatioInitialInvestment } from './rules/fees/fee-ratio-initial-investment';
-import { PlatformClusterRiskCurrentInvestment } from './rules/platform-cluster-risk/current-investment';
-import { PlatformClusterRiskInitialInvestment } from './rules/platform-cluster-risk/initial-investment';
-import { PlatformClusterRiskSinglePlatform } from './rules/platform-cluster-risk/single-platform';
 
 export class Portfolio implements PortfolioInterface {
   private orders: Order[] = [];
@@ -119,11 +119,11 @@ export class Portfolio implements PortfolioInterface {
   }): Portfolio {
     orders.forEach(
       ({
+        account,
         currency,
         fee,
         date,
         id,
-        platform,
         quantity,
         symbol,
         type,
@@ -131,11 +131,11 @@ export class Portfolio implements PortfolioInterface {
       }) => {
         this.orders.push(
           new Order({
+            account,
             currency,
             fee,
             date,
             id,
-            platform,
             quantity,
             symbol,
             type,
@@ -202,7 +202,7 @@ export class Portfolio implements PortfolioInterface {
     const data = await this.dataProviderService.get(symbols);
 
     symbols.forEach((symbol) => {
-      const platforms: PortfolioPosition['platforms'] = {};
+      const accounts: PortfolioPosition['accounts'] = {};
       const [portfolioItem] = portfolioItems;
 
       const ordersBySymbol = this.getOrders().filter((order) => {
@@ -227,15 +227,15 @@ export class Portfolio implements PortfolioInterface {
           originalValueOfSymbol *= -1;
         }
 
-        if (platforms[orderOfSymbol.getPlatform()?.name || 'Other']?.current) {
-          platforms[
-            orderOfSymbol.getPlatform()?.name || 'Other'
+        if (accounts[orderOfSymbol.getAccount()?.name || 'Other']?.current) {
+          accounts[
+            orderOfSymbol.getAccount()?.name || 'Other'
           ].current += currentValueOfSymbol;
-          platforms[
-            orderOfSymbol.getPlatform()?.name || 'Other'
+          accounts[
+            orderOfSymbol.getAccount()?.name || 'Other'
           ].original += originalValueOfSymbol;
         } else {
-          platforms[orderOfSymbol.getPlatform()?.name || 'Other'] = {
+          accounts[orderOfSymbol.getAccount()?.name || 'Other'] = {
             current: currentValueOfSymbol,
             original: originalValueOfSymbol
           };
@@ -276,7 +276,7 @@ export class Portfolio implements PortfolioInterface {
 
       details[symbol] = {
         ...data[symbol],
-        platforms,
+        accounts,
         symbol,
         grossPerformance: roundTo(
           portfolioItemsNow.positions[symbol].quantity * (now - before),
@@ -396,6 +396,19 @@ export class Portfolio implements PortfolioInterface {
 
     return {
       rules: {
+        accountClusterRisk: await this.rulesService.evaluate(
+          this,
+          [
+            new AccountClusterRiskCurrentInvestment(
+              this.exchangeRateDataService
+            ),
+            new AccountClusterRiskInitialInvestment(
+              this.exchangeRateDataService
+            ),
+            new AccountClusterRiskSingleAccount(this.exchangeRateDataService)
+          ],
+          { baseCurrency: this.user.Settings.currency }
+        ),
         currencyClusterRisk: await this.rulesService.evaluate(
           this,
           [
@@ -409,19 +422,6 @@ export class Portfolio implements PortfolioInterface {
               this.exchangeRateDataService
             ),
             new CurrencyClusterRiskCurrentInvestment(
-              this.exchangeRateDataService
-            )
-          ],
-          { baseCurrency: this.user.Settings.currency }
-        ),
-        platformClusterRisk: await this.rulesService.evaluate(
-          this,
-          [
-            new PlatformClusterRiskSinglePlatform(this.exchangeRateDataService),
-            new PlatformClusterRiskInitialInvestment(
-              this.exchangeRateDataService
-            ),
-            new PlatformClusterRiskCurrentInvestment(
               this.exchangeRateDataService
             )
           ],
@@ -522,17 +522,17 @@ export class Portfolio implements PortfolioInterface {
     return isFinite(value) ? value : null;
   }
 
-  public async setOrders(aOrders: OrderWithPlatform[]) {
+  public async setOrders(aOrders: OrderWithAccount[]) {
     this.orders = [];
 
     // Map data
     aOrders.forEach((order) => {
       this.orders.push(
         new Order({
+          account: order.Account,
           currency: <any>order.currency,
           date: order.date.toISOString(),
           fee: order.fee,
-          platform: order.Platform,
           quantity: order.quantity,
           symbol: order.symbol,
           type: <any>order.type,
