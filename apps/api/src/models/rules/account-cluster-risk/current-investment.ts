@@ -3,7 +3,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 
 import { Rule } from '../../rule';
 
-export class PlatformClusterRiskCurrentInvestment extends Rule {
+export class AccountClusterRiskCurrentInvestment extends Rule {
   public constructor(public exchangeRateDataService: ExchangeRateDataService) {
     super(exchangeRateDataService, {
       name: 'Current Investment'
@@ -18,24 +18,22 @@ export class PlatformClusterRiskCurrentInvestment extends Rule {
     }
   ) {
     const ruleSettings =
-      aRuleSettingsMap[PlatformClusterRiskCurrentInvestment.name];
+      aRuleSettingsMap[AccountClusterRiskCurrentInvestment.name];
 
-    const platforms: {
+    const accounts: {
       [symbol: string]: Pick<PortfolioPosition, 'name'> & {
         investment: number;
       };
     } = {};
 
     Object.values(aPositions).forEach((position) => {
-      for (const [platform, { current }] of Object.entries(
-        position.platforms
-      )) {
-        if (platforms[platform]?.investment) {
-          platforms[platform].investment += current;
+      for (const [account, { current }] of Object.entries(position.accounts)) {
+        if (accounts[account]?.investment) {
+          accounts[account].investment += current;
         } else {
-          platforms[platform] = {
+          accounts[account] = {
             investment: current,
-            name: platform
+            name: account
           };
         }
       }
@@ -44,17 +42,17 @@ export class PlatformClusterRiskCurrentInvestment extends Rule {
     let maxItem;
     let totalInvestment = 0;
 
-    Object.values(platforms).forEach((platform) => {
+    Object.values(accounts).forEach((account) => {
       if (!maxItem) {
-        maxItem = platform;
+        maxItem = account;
       }
 
       // Calculate total investment
-      totalInvestment += platform.investment;
+      totalInvestment += account.investment;
 
       // Find maximum
-      if (platform.investment > maxItem?.investment) {
-        maxItem = platform;
+      if (account.investment > maxItem?.investment) {
+        maxItem = account;
       }
     });
 

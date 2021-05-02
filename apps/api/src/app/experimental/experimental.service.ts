@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { Currency, Type } from '@prisma/client';
 import { parseISO } from 'date-fns';
 
-import { OrderWithPlatform } from '../order/interfaces/order-with-platform.type';
+import { OrderWithAccount } from '../order/interfaces/order-with-account.type';
 import { CreateOrderDto } from './create-order.dto';
 import { Data } from './interfaces/data.interface';
 
@@ -33,7 +33,7 @@ export class ExperimentalService {
     aDate: Date,
     aBaseCurrency: Currency
   ): Promise<Data> {
-    const ordersWithPlatform: OrderWithPlatform[] = aOrders.map((order) => {
+    const ordersWithPlatform: OrderWithAccount[] = aOrders.map((order) => {
       return {
         ...order,
         accountId: undefined,

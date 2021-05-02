@@ -3,33 +3,33 @@ import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-dat
 
 import { Rule } from '../../rule';
 
-export class PlatformClusterRiskSinglePlatform extends Rule {
+export class AccountClusterRiskSingleAccount extends Rule {
   public constructor(public exchangeRateDataService: ExchangeRateDataService) {
     super(exchangeRateDataService, {
-      name: 'Single Platform'
+      name: 'Single Account'
     });
   }
 
   public evaluate(positions: { [symbol: string]: PortfolioPosition }) {
-    const platforms: string[] = [];
+    const accounts: string[] = [];
 
     Object.values(positions).forEach((position) => {
-      for (const [platform] of Object.entries(position.platforms)) {
-        if (!platforms.includes(platform)) {
-          platforms.push(platform);
+      for (const [account] of Object.entries(position.accounts)) {
+        if (!accounts.includes(account)) {
+          accounts.push(account);
         }
       }
     });
 
-    if (platforms.length === 1) {
+    if (accounts.length === 1) {
       return {
-        evaluation: `All your investment is managed by a single platform`,
+        evaluation: `All your investment is managed by a single account`,
         value: false
       };
     }
 
     return {
-      evaluation: `Your investment is managed by ${platforms.length} platforms`,
+      evaluation: `Your investment is managed by ${accounts.length} accounts`,
       value: true
     };
   }

@@ -16,6 +16,9 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./analysis-page.scss']
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  public accounts: {
+    [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
+  };
   public deviceType: string;
   public period = 'current';
   public periodOptions: ToggleOption[] = [
@@ -23,9 +26,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     { label: 'Current', value: 'current' }
   ];
   public hasImpersonationId: boolean;
-  public platforms: {
-    [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
-  };
   public portfolioItems: PortfolioItem[];
   public portfolioPositions: { [symbol: string]: PortfolioPosition };
   public positions: { [symbol: string]: any };
@@ -95,7 +95,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     },
     aPeriod: string
   ) {
-    this.platforms = {};
+    this.accounts = {};
     this.positions = {};
     this.positionsArray = [];
 
@@ -113,16 +113,16 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       };
       this.positionsArray.push(position);
 
-      for (const [platform, { current, original }] of Object.entries(
-        position.platforms
+      for (const [account, { current, original }] of Object.entries(
+        position.accounts
       )) {
-        if (this.platforms[platform]?.value) {
-          this.platforms[platform].value +=
+        if (this.accounts[account]?.value) {
+          this.accounts[account].value +=
             aPeriod === 'original' ? original : current;
         } else {
-          this.platforms[platform] = {
+          this.accounts[account] = {
             value: aPeriod === 'original' ? original : current,
-            name: platform
+            name: account
           };
         }
       }

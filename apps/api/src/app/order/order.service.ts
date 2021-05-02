@@ -5,7 +5,7 @@ import { Order, Prisma } from '@prisma/client';
 
 import { CacheService } from '../cache/cache.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
-import { OrderWithPlatform } from './interfaces/order-with-platform.type';
+import { OrderWithAccount } from './interfaces/order-with-account.type';
 
 @Injectable()
 export class OrderService {
@@ -31,7 +31,7 @@ export class OrderService {
     cursor?: Prisma.OrderWhereUniqueInput;
     where?: Prisma.OrderWhereInput;
     orderBy?: Prisma.OrderOrderByInput;
-  }): Promise<OrderWithPlatform[]> {
+  }): Promise<OrderWithAccount[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 
     return this.prisma.order.findMany({

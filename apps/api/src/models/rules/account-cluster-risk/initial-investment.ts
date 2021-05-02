@@ -3,7 +3,7 @@ import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-dat
 
 import { Rule } from '../../rule';
 
-export class PlatformClusterRiskInitialInvestment extends Rule {
+export class AccountClusterRiskInitialInvestment extends Rule {
   public constructor(public exchangeRateDataService: ExchangeRateDataService) {
     super(exchangeRateDataService, {
       name: 'Initial Investment'
@@ -18,7 +18,7 @@ export class PlatformClusterRiskInitialInvestment extends Rule {
     }
   ) {
     const ruleSettings =
-      aRuleSettingsMap[PlatformClusterRiskInitialInvestment.name];
+      aRuleSettingsMap[AccountClusterRiskInitialInvestment.name];
 
     const platforms: {
       [symbol: string]: Pick<PortfolioPosition, 'name'> & {
@@ -27,15 +27,13 @@ export class PlatformClusterRiskInitialInvestment extends Rule {
     } = {};
 
     Object.values(aPositions).forEach((position) => {
-      for (const [platform, { original }] of Object.entries(
-        position.platforms
-      )) {
-        if (platforms[platform]?.investment) {
-          platforms[platform].investment += original;
+      for (const [account, { original }] of Object.entries(position.accounts)) {
+        if (platforms[account]?.investment) {
+          platforms[account].investment += original;
         } else {
-          platforms[platform] = {
+          platforms[account] = {
             investment: original,
-            name: platform
+            name: account
           };
         }
       }
