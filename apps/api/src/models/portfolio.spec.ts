@@ -170,19 +170,7 @@ describe('Portfolio', () => {
       const details = await portfolio.getDetails('1d');
       expect(details).toMatchObject({
         BTCUSD: {
-          currency: Currency.USD,
-          exchange: 'Other',
-          grossPerformance: 0,
-          grossPerformancePercent: 0,
-          investment: exchangeRateDataService.toCurrency(
-            1 * 49631.24,
-            Currency.USD,
-            baseCurrency
-          ),
-          // marketPrice: 57973.008,
-          marketState: MarketState.open,
-          name: 'Bitcoin USD',
-          platforms: {
+          accounts: {
             Other: {
               /*current: exchangeRateDataService.toCurrency(
                 1 * 49631.24,
@@ -196,6 +184,18 @@ describe('Portfolio', () => {
               )
             }
           },
+          currency: Currency.USD,
+          exchange: 'Other',
+          grossPerformance: 0,
+          grossPerformancePercent: 0,
+          investment: exchangeRateDataService.toCurrency(
+            1 * 49631.24,
+            Currency.USD,
+            baseCurrency
+          ),
+          // marketPrice: 57973.008,
+          marketState: MarketState.open,
+          name: 'Bitcoin USD',
           quantity: 1,
           // shareCurrent: 0.9999999559148652,
           shareInvestment: 1,
@@ -272,18 +272,7 @@ describe('Portfolio', () => {
       const details = await portfolio.getDetails('1d');
       expect(details).toMatchObject({
         ETHUSD: {
-          currency: Currency.USD,
-          exchange: 'Other',
-          // grossPerformance: 0,
-          // grossPerformancePercent: 0,
-          investment: exchangeRateDataService.toCurrency(
-            0.2 * 991.49,
-            Currency.USD,
-            baseCurrency
-          ),
-          // marketPrice: 57973.008,
-          name: 'Ethereum USD',
-          platforms: {
+          accounts: {
             Other: {
               /*current: exchangeRateDataService.toCurrency(
                 0.2 * 991.49,
@@ -297,6 +286,17 @@ describe('Portfolio', () => {
               )
             }
           },
+          currency: Currency.USD,
+          exchange: 'Other',
+          // grossPerformance: 0,
+          // grossPerformancePercent: 0,
+          investment: exchangeRateDataService.toCurrency(
+            0.2 * 991.49,
+            Currency.USD,
+            baseCurrency
+          ),
+          // marketPrice: 57973.008,
+          name: 'Ethereum USD',
           quantity: 0.2,
           // shareCurrent: 1,
           shareInvestment: 1,
