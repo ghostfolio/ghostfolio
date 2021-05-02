@@ -1,6 +1,6 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Account, Prisma } from '@prisma/client';
+import { Account, Order, Prisma } from '@prisma/client';
 
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
 
@@ -15,6 +15,20 @@ export class AccountService {
     accountWhereUniqueInput: Prisma.AccountWhereUniqueInput
   ): Promise<Account | null> {
     return this.prisma.account.findUnique({
+      where: accountWhereUniqueInput
+    });
+  }
+
+  public async accountWithOrders(
+    accountWhereUniqueInput: Prisma.AccountWhereUniqueInput,
+    accountInclude: Prisma.AccountInclude
+  ): Promise<
+    Account & {
+      Order?: Order[];
+    }
+  > {
+    return this.prisma.account.findUnique({
+      include: accountInclude,
       where: accountWhereUniqueInput
     });
   }

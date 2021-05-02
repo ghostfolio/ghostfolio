@@ -50,7 +50,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = ['account', 'type', 'platform'];
+    this.displayedColumns = ['account', 'type', 'platform', 'transactions'];
 
     if (this.showActions) {
       this.displayedColumns.push('actions');

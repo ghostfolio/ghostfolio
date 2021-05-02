@@ -121,28 +121,16 @@
         />
       </mat-form-field>
     </div>
-    <div class="d-none">
+    <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account</mat-label>
         <mat-select
-          disabled
           name="accountId"
           required
           [(value)]="data.transaction.accountId"
         >
           <mat-option *ngFor="let account of data.accounts" [value]="account.id"
             >{{ account.name }}</mat-option
-          >
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Platform</mat-label>
-        <mat-select name="platformId" [(value)]="data.transaction.platformId">
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let platform of platforms" [value]="platform.id"
-            >{{ platform.name }}</mat-option
           >
         </mat-select>
       </mat-form-field>
