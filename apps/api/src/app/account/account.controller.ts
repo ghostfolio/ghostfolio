@@ -47,6 +47,20 @@ export class AccountController {
       );
     }
 
+    const account = await this.accountService.account({
+      id_userId: {
+        id,
+        userId: this.request.user.id
+      }
+    });
+
+    if (account.isDefault) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     return this.accountService.deleteAccount(
       {
         id_userId: {
@@ -70,7 +84,7 @@ export class AccountController {
 
     let accounts = await this.accountService.accounts({
       include: { Platform: true },
-      orderBy: { name: 'desc' },
+      orderBy: { name: 'asc' },
       where: { userId: impersonationUserId || this.request.user.id }
     });
 
@@ -165,6 +179,13 @@ export class AccountController {
         userId: this.request.user.id
       }
     });
+
+    if (!originalAccount) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
 
     if (data.platformId) {
       const platformId = data.platformId;

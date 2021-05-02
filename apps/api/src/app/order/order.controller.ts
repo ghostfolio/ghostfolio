@@ -184,6 +184,13 @@ export class OrderController {
       }
     });
 
+    if (!originalOrder) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     const date = parseISO(data.date);
 
     const accountId = data.accountId;
