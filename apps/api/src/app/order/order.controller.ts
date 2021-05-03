@@ -125,41 +125,19 @@ export class OrderController {
     const accountId = data.accountId;
     delete data.accountId;
 
-    if (data.platformId) {
-      const platformId = data.platformId;
-      delete data.platformId;
-
-      return this.orderService.createOrder(
-        {
-          ...data,
-          date,
-          Account: {
-            connect: {
-              id_userId: { id: accountId, userId: this.request.user.id }
-            }
-          },
-          Platform: { connect: { id: platformId } },
-          User: { connect: { id: this.request.user.id } }
+    return this.orderService.createOrder(
+      {
+        ...data,
+        date,
+        Account: {
+          connect: {
+            id_userId: { id: accountId, userId: this.request.user.id }
+          }
         },
-        this.request.user.id
-      );
-    } else {
-      delete data.platformId;
-
-      return this.orderService.createOrder(
-        {
-          ...data,
-          date,
-          Account: {
-            connect: {
-              id_userId: { id: accountId, userId: this.request.user.id }
-            }
-          },
-          User: { connect: { id: this.request.user.id } }
-        },
-        this.request.user.id
-      );
-    }
+        User: { connect: { id: this.request.user.id } }
+      },
+      this.request.user.id
+    );
   }
 
   @Put(':id')
@@ -196,60 +174,26 @@ export class OrderController {
     const accountId = data.accountId;
     delete data.accountId;
 
-    if (data.platformId) {
-      const platformId = data.platformId;
-      delete data.platformId;
-
-      return this.orderService.updateOrder(
-        {
-          data: {
-            ...data,
-            date,
-            Account: {
-              connect: {
-                id_userId: { id: accountId, userId: this.request.user.id }
-              }
-            },
-            Platform: { connect: { id: platformId } },
-            User: { connect: { id: this.request.user.id } }
-          },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
+    return this.orderService.updateOrder(
+      {
+        data: {
+          ...data,
+          date,
+          Account: {
+            connect: {
+              id_userId: { id: accountId, userId: this.request.user.id }
             }
-          }
-        },
-        this.request.user.id
-      );
-    } else {
-      // platformId is null, remove it
-      delete data.platformId;
-
-      return this.orderService.updateOrder(
-        {
-          data: {
-            ...data,
-            date,
-            Account: {
-              connect: {
-                id_userId: { id: accountId, userId: this.request.user.id }
-              }
-            },
-            Platform: originalOrder.platformId
-              ? { disconnect: true }
-              : undefined,
-            User: { connect: { id: this.request.user.id } }
           },
-          where: {
-            id_userId: {
-              id,
-              userId: this.request.user.id
-            }
-          }
+          User: { connect: { id: this.request.user.id } }
         },
-        this.request.user.id
-      );
-    }
+        where: {
+          id_userId: {
+            id,
+            userId: this.request.user.id
+          }
+        }
+      },
+      this.request.user.id
+    );
   }
 }

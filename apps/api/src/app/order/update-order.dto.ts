@@ -18,10 +18,6 @@ export class UpdateOrderDto {
   fee: number;
 
   @IsString()
-  @ValidateIf((object, value) => value !== null)
-  platformId: string | null;
-
-  @IsString()
   id: string;
 
   @IsNumber()
