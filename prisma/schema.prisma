@@ -68,8 +68,6 @@ model Order {
   date          DateTime
   fee           Float
   id            String     @default(uuid())
-  Platform      Platform?  @relation(fields: [platformId], references: [id])
-  platformId    String?
   quantity      Float
   symbol        String
   type          Type
@@ -85,7 +83,6 @@ model Platform {
   Account Account[]
   id      String    @id @default(uuid())
   name    String?
-  Order   Order[]
   url     String    @unique
 }
 

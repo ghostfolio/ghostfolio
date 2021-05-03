@@ -17,10 +17,6 @@ export class CreateOrderDto {
   @IsNumber()
   fee: number;
 
-  @IsString()
-  @ValidateIf((object, value) => value !== null)
-  platformId: string | null;
-
   @IsNumber()
   quantity: number;
 
