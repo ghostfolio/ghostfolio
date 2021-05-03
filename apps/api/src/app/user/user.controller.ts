@@ -16,13 +16,13 @@ import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
+import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { UserItem } from './interfaces/user-item.interface';
 import { User } from './interfaces/user.interface';
 import { UpdateUserSettingsDto } from './update-user-settings.dto';
 import { UserService } from './user.service';
-import { User as UserModel } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
