@@ -163,6 +163,28 @@ export class UserService {
   }
 
   public async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+    await this.prisma.access.deleteMany({
+      where: { OR: [{ granteeUserId: where.id }, { userId: where.id }] }
+    });
+
+    await this.prisma.account.deleteMany({
+      where: { userId: where.id }
+    });
+
+    await this.prisma.analytics.delete({
+      where: { userId: where.id }
+    });
+
+    await this.prisma.order.deleteMany({
+      where: { userId: where.id }
+    });
+
+    try {
+      await this.prisma.settings.delete({
+        where: { userId: where.id }
+      });
+    } catch {}
+
     return this.prisma.user.delete({
       where
     });

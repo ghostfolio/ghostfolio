@@ -3,6 +3,7 @@ import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   Inject,
@@ -21,6 +22,7 @@ import { UserItem } from './interfaces/user-item.interface';
 import { User } from './interfaces/user.interface';
 import { UpdateUserSettingsDto } from './update-user-settings.dto';
 import { UserService } from './user.service';
+import { User as UserModel } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
@@ -29,6 +31,27 @@ export class UserController {
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteUser(@Param('id') id: string): Promise<UserModel> {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.deleteUser
+      ) ||
+      id === this.request.user.id
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.userService.deleteUser({
+      id
+    });
+  }
 
   @Get()
   @UseGuards(AuthGuard('jwt'))

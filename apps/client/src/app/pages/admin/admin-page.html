@@ -82,6 +82,7 @@
                 <th class="mat-header-cell pr-2 py-2" i18n>Transactions</th>
                 <th class="mat-header-cell pr-2 py-2" i18n>Engagement</th>
                 <th class="mat-header-cell pr-3 py-2" i18n>Last Activitiy</th>
+                <th class="mat-header-cell pr-3 py-2"></th>
               </tr>
             </thead>
             <tbody>
@@ -101,6 +102,26 @@
                 </td>
                 <td class="mat-cell pr-3 py-2">
                   {{ formatDistanceToNow(userItem.Analytics?.updatedAt) }}
+                </td>
+                <td class="mat-cell pr-3 py-2">
+                  <button
+                    class="mx-1 no-min-width px-2"
+                    mat-button
+                    [matMenuTriggerFor]="accountMenu"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                  </button>
+                  <mat-menu #accountMenu="matMenu" xPosition="before">
+                    <button
+                      i18n
+                      mat-menu-item
+                      [disabled]="userItem.id === user?.id"
+                      (click)="onDeleteUser(userItem.id)"
+                    >
+                      Delete
+                    </button>
+                  </mat-menu>
                 </td>
               </tr>
             </tbody>
