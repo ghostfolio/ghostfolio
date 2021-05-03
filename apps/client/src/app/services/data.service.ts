@@ -48,6 +48,10 @@ export class DataService {
     return this.http.delete<any>(`/api/order/${aId}`);
   }
 
+  public deleteUser(aId: string) {
+    return this.http.delete<any>(`/api/user/${aId}`);
+  }
+
   public fetchAccesses() {
     return this.http.get<Access[]>('/api/access');
   }

@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
+import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
 import { formatDistanceToNow, isValid, parseISO, sub } from 'date-fns';
 import { Subject } from 'rxjs';
@@ -20,6 +22,7 @@ export class AdminPageComponent implements OnInit {
   public lastDataGathering: string;
   public transactionCount: number;
   public userCount: number;
+  public user: User;
   public users: AdminData['users'];
 
   private unsubscribeSubject = new Subject<void>();
@@ -31,46 +34,24 @@ export class AdminPageComponent implements OnInit {
     private adminService: AdminService,
     private cacheService: CacheService,
     private cd: ChangeDetectorRef,
-    private dataService: DataService
+    private dataService: DataService,
+    private tokenStorageService: TokenStorageService
   ) {}
 
   /**
    * Initializes the controller
    */
   public ngOnInit() {
-    this.dataService
-      .fetchAdminData()
+    this.fetchAdminData();
+
+    this.tokenStorageService
+      .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(
-        ({
-          exchangeRates,
-          lastDataGathering,
-          transactionCount,
-          userCount,
-          users
-        }) => {
-          this.exchangeRates = exchangeRates;
-          this.users = users;
-
-          if (isValid(parseISO(lastDataGathering?.toString()))) {
-            this.lastDataGathering = formatDistanceToNow(
-              new Date(lastDataGathering),
-              {
-                addSuffix: true
-              }
-            );
-          } else if (lastDataGathering === 'IN_PROGRESS') {
-            this.dataGatheringInProgress = true;
-          } else {
-            this.lastDataGathering = '-';
-          }
-
-          this.transactionCount = transactionCount;
-          this.userCount = userCount;
-
-          this.cd.markForCheck();
-        }
-      );
+      .subscribe(() => {
+        this.dataService.fetchUser().subscribe((user) => {
+          this.user = user;
+        });
+      });
   }
 
   public onFlushCache() {
@@ -112,8 +93,56 @@ export class AdminPageComponent implements OnInit {
     return '';
   }
 
+  public onDeleteUser(aId: string) {
+    const confirmation = confirm('Do you really want to delete this user?');
+
+    if (confirmation) {
+      this.dataService.deleteUser(aId).subscribe({
+        next: () => {
+          this.fetchAdminData();
+        }
+      });
+    }
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchAdminData() {
+    this.dataService
+      .fetchAdminData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(
+        ({
+          exchangeRates,
+          lastDataGathering,
+          transactionCount,
+          userCount,
+          users
+        }) => {
+          this.exchangeRates = exchangeRates;
+          this.users = users;
+
+          if (isValid(parseISO(lastDataGathering?.toString()))) {
+            this.lastDataGathering = formatDistanceToNow(
+              new Date(lastDataGathering),
+              {
+                addSuffix: true
+              }
+            );
+          } else if (lastDataGathering === 'IN_PROGRESS') {
+            this.dataGatheringInProgress = true;
+          } else {
+            this.lastDataGathering = '-';
+          }
+
+          this.transactionCount = transactionCount;
+          this.userCount = userCount;
+
+          this.cd.markForCheck();
+        }
+      );
   }
 }
