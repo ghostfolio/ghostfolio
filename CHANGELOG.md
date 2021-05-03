@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for deleting users in the admin control panel
+
 ### Changed
 
 - Eliminated the platform attribute from the transaction model
