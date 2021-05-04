@@ -18,6 +18,12 @@
       background-color: var(--light-background);
     }
   }
+
+  .downloads {
+    img {
+      height: 2.5rem;
+    }
+  }
 }
 
 :host-context(.is-dark-theme) {
