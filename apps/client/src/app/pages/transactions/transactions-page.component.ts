@@ -123,6 +123,10 @@ export class TransactionsPageComponent implements OnInit {
     });
   }
 
+  public onDuplicateTransaction(aTransaction: OrderModel) {
+    this.openCreateTransactionDialog(aTransaction);
+  }
+
   public openUpdateTransactionDialog({
     accountId,
     currency,
@@ -175,7 +179,7 @@ export class TransactionsPageComponent implements OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateTransactionDialog(): void {
+  private openCreateTransactionDialog(aTransaction?: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
         accounts: this.user?.accounts,
@@ -183,11 +187,11 @@ export class TransactionsPageComponent implements OnInit {
           accountId: this.user?.accounts.find((account) => {
             return account.isDefault;
           })?.id,
-          currency: null,
+          currency: aTransaction?.currency || null,
           date: new Date(),
           fee: 0,
           quantity: null,
-          symbol: null,
+          symbol: aTransaction?.symbol || null,
           type: 'BUY',
           unitPrice: null
         }

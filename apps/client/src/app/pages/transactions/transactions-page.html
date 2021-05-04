@@ -10,6 +10,7 @@
         [transactions]="transactions"
         (transactionDeleted)="onDeleteTransaction($event)"
         (transactionToUpdate)="onUpdateTransaction($event)"
+        (transactionToDuplicate)="onDuplicateTransaction($event)"
       ></gf-transactions-table>
     </div>
   </div>
