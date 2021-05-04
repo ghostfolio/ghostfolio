@@ -62,6 +62,7 @@ model Order {
   Account       Account?   @relation(fields: [accountId, accountUserId], references: [id, userId])
   accountId     String?
   accountUserId String?
+  platformId    String?
   createdAt     DateTime   @default(now())
   currency      Currency
   dataSource    DataSource @default(YAHOO)
