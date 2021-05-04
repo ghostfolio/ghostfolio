@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a badge for _Google Play_ on the landing page
+- Added a _Google Play_ badge on the landing page
 
 ### Changed
 
