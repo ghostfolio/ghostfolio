@@ -35,8 +35,8 @@ export class TransactionsTableComponent
   @Input() transactions: OrderModel[];
 
   @Output() transactionDeleted = new EventEmitter<string>();
+  @Output() transactionToClone = new EventEmitter<OrderModel>();
   @Output() transactionToUpdate = new EventEmitter<OrderModel>();
-  @Output() transactionToDuplicate = new EventEmitter<OrderModel>();
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -124,8 +124,8 @@ export class TransactionsTableComponent
     this.transactionToUpdate.emit(aTransaction);
   }
 
-  public onDuplicateTransaction(aTransaction: OrderModel) {
-    this.transactionToDuplicate.emit(aTransaction);
+  public onCloneTransaction(aTransaction: OrderModel) {
+    this.transactionToClone.emit(aTransaction);
   }
 
   public openPositionDialog({
