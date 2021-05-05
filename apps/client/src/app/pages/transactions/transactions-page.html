@@ -9,6 +9,7 @@
         [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder"
         [transactions]="transactions"
         (transactionDeleted)="onDeleteTransaction($event)"
+        (transactionToClone)="onCloneTransaction($event)"
         (transactionToUpdate)="onUpdateTransaction($event)"
       ></gf-transactions-table>
     </div>

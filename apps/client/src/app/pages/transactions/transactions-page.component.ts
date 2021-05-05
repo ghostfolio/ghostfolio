@@ -109,6 +109,10 @@ export class TransactionsPageComponent implements OnInit {
     });
   }
 
+  public onCloneTransaction(aTransaction: OrderModel) {
+    this.openCreateTransactionDialog(aTransaction);
+  }
+
   public onDeleteTransaction(aId: string) {
     this.dataService.deleteOrder(aId).subscribe({
       next: () => {
@@ -175,20 +179,21 @@ export class TransactionsPageComponent implements OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateTransactionDialog(): void {
+  private openCreateTransactionDialog(aTransaction?: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
         accounts: this.user?.accounts,
         transaction: {
-          accountId: this.user?.accounts.find((account) => {
+          accountId: aTransaction?.accountId ?? this.user?.accounts.find((account) => {
             return account.isDefault;
           })?.id,
-          currency: null,
+          currency: aTransaction?.currency ?? null,
+          dataSource: aTransaction?.dataSource ?? null,
           date: new Date(),
           fee: 0,
           quantity: null,
-          symbol: null,
-          type: 'BUY',
+          symbol: aTransaction?.symbol ?? null,
+          type: aTransaction?.type ?? 'BUY',
           unitPrice: null
         }
       },
