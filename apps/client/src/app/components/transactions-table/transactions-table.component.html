@@ -1,3 +1,24 @@
+<div *ngIf="chipsAccount.length > 1">
+  <mat-chip-list aria-label="Account selection" class="d-block mb-4">
+    <mat-chip
+      [selected]="true"
+      #c="matChip"
+      (click)="!c.selected && c.toggleSelected()"
+      (selectionChange)="applyAccountFilter($event)"
+    >
+      All
+    </mat-chip>
+    <mat-chip
+      #c="matChip"
+      *ngFor="let account of chipsAccount"
+      (click)="!c.selected && c.toggleSelected()"
+      (selectionChange)="applyAccountFilter($event)"
+    >
+      {{ account }}
+    </mat-chip>
+  </mat-chip-list>
+</div>
+
 <mat-form-field appearance="outline" class="w-100">
   <input
     #input

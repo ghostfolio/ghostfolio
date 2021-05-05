@@ -11,6 +11,11 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
+import {
+  MatChipList,
+  MatChip,
+  MatChipSelectionChange
+} from '@angular/material/chips';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
@@ -39,12 +44,15 @@ export class TransactionsTableComponent
   @Output() transactionToUpdate = new EventEmitter<OrderModel>();
 
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatChipList) chipsList: MatChipList;
 
   public dataSource: MatTableDataSource<OrderModel> = new MatTableDataSource();
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public displayedColumns = [];
   public isLoading = true;
   public routeQueryParams: Subscription;
+
+  chipsAccount: string[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -89,7 +97,25 @@ export class TransactionsTableComponent
       this.dataSource = new MatTableDataSource(this.transactions);
       this.dataSource.sort = this.sort;
 
+      this.chipsAccount = [
+        ...new Set(this.transactions.map((t) => t.Account?.name))
+      ];
+
       this.isLoading = false;
+    }
+  }
+
+  public applyAccountFilter(event: MatChipSelectionChange) {
+    if (event.selected) {
+      const selectedAccount = event.source.value.trim();
+      if (selectedAccount === 'All') {
+        this.dataSource.data = this.transactions;
+      } else {
+        const filtered = this.transactions.filter(
+          (f) => f.Account.name === selectedAccount
+        );
+        this.dataSource.data = filtered;
+      }
     }
   }
 

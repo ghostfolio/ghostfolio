@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatChipsModule } from '@angular/material/chips';
 import { RouterModule } from '@angular/router';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -29,6 +30,7 @@ import { TransactionsTableComponent } from './transactions-table.component';
     MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
+    MatChipsModule,
     RouterModule
   ],
   providers: [],
