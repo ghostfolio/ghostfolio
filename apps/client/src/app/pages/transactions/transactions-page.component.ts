@@ -188,11 +188,12 @@ export class TransactionsPageComponent implements OnInit {
             return account.isDefault;
           })?.id,
           currency: aTransaction?.currency ?? null,
+          dataSource: aTransaction?.dataSource ?? null,
           date: new Date(),
           fee: 0,
           quantity: null,
           symbol: aTransaction?.symbol ?? null,
-          type: 'BUY',
+          type: aTransaction?.type ?? 'BUY',
           unitPrice: null
         }
       },
