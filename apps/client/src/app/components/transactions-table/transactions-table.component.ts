@@ -89,6 +89,17 @@ export class TransactionsTableComponent
       this.dataSource = new MatTableDataSource(this.transactions);
       this.dataSource.sort = this.sort;
 
+      this.dataSource.filterPredicate = (data, filter: string) => {
+        const accumulator = (currentTerm, key) => {
+          return key === 'Account'
+            ? currentTerm + data.Account.name
+            : currentTerm + data[key];
+        };
+        const dataStr = Object.keys(data).reduce(accumulator, '').toLowerCase();
+        const transformedFilter = filter.trim().toLowerCase();
+        return dataStr.indexOf(transformedFilter) !== -1;
+      };
+
       this.isLoading = false;
     }
   }
