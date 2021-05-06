@@ -13,8 +13,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OrderWithAccount } from '@ghostfolio/api/app/order/interfaces/order-with-account.type';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
-import { Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -32,15 +32,15 @@ export class TransactionsTableComponent
   @Input() deviceType: string;
   @Input() locale: string;
   @Input() showActions: boolean;
-  @Input() transactions: OrderModel[];
+  @Input() transactions: OrderWithAccount[];
 
   @Output() transactionDeleted = new EventEmitter<string>();
-  @Output() transactionToClone = new EventEmitter<OrderModel>();
-  @Output() transactionToUpdate = new EventEmitter<OrderModel>();
+  @Output() transactionToClone = new EventEmitter<OrderWithAccount>();
+  @Output() transactionToUpdate = new EventEmitter<OrderWithAccount>();
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<OrderModel> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<OrderWithAccount> = new MatTableDataSource();
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public displayedColumns = [];
   public isLoading = true;
@@ -87,6 +87,18 @@ export class TransactionsTableComponent
 
     if (this.transactions) {
       this.dataSource = new MatTableDataSource(this.transactions);
+      this.dataSource.filterPredicate = (data, filter) => {
+        const accumulator = (currentTerm: string, key: string) => {
+          return key === 'Account'
+            ? currentTerm + data.Account.name
+            : currentTerm + data[key];
+        };
+        const dataString = Object.keys(data)
+          .reduce(accumulator, '')
+          .toLowerCase();
+        const transformedFilter = filter.trim().toLowerCase();
+        return dataString.includes(transformedFilter);
+      };
       this.dataSource.sort = this.sort;
 
       this.isLoading = false;
@@ -120,11 +132,11 @@ export class TransactionsTableComponent
     });
   }
 
-  public onUpdateTransaction(aTransaction: OrderModel) {
+  public onUpdateTransaction(aTransaction: OrderWithAccount) {
     this.transactionToUpdate.emit(aTransaction);
   }
 
-  public onCloneTransaction(aTransaction: OrderModel) {
+  public onCloneTransaction(aTransaction: OrderWithAccount) {
     this.transactionToClone.emit(aTransaction);
   }
 
