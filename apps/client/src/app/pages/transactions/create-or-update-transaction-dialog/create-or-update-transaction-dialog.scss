@@ -29,6 +29,14 @@
         color: var(--dark-primary-text);
       }
     }
+
+    .hint-action {
+      color: var(--dark-primary-text);
+      text-decoration: underline;
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }
 
