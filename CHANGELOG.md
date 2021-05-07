@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the filtering by account name in the transactions table
 - Fixed the active menu item state when a modal has opened
 
+### Added
+
+- Improved transaction filtering with multi filter support
+
 ## 1.0.0 - 05.05.2021
 
 ### Added
