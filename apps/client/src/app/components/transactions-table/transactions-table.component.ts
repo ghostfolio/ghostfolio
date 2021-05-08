@@ -92,6 +92,8 @@ export class TransactionsTableComponent
             (filter) => filter.toLowerCase().indexOf(filterValue) === 0
           )
         );
+      } else {
+        this.filteredTransactions$.next(this.allFilteredTransactions);
       }
     });
   }
@@ -249,7 +251,9 @@ export class TransactionsTableComponent
       this.getFilterableValues(transaction, fieldValues);
     }
 
-    return [...fieldValues].sort();
+    return [...fieldValues]
+      .filter(item => item != undefined)
+      .sort();
   }
 
   private static getFilterableValues(
@@ -261,6 +265,7 @@ export class TransactionsTableComponent
     fieldValues.add(transaction.type);
     fieldValues.add(transaction.Account?.name);
     fieldValues.add(transaction.Account?.Platform?.name);
-    return [...fieldValues];
+    return [...fieldValues]
+      .filter(item => item != undefined);
   }
 }
