@@ -12,8 +12,23 @@ import { ExchangeRateDataService } from '../services/exchange-rate-data.service'
 import { MarketState } from '../services/interfaces/interfaces';
 import { RulesService } from '../services/rules.service';
 import { Portfolio } from './portfolio';
+import { format } from 'date-fns';
 
-jest.mock('../services/data-provider.service');
+jest.mock('../services/data-provider.service', () => {
+  return {
+    DataProviderService: jest.fn().mockImplementation(() => {
+      const today = format(new Date(), 'yyyy-MM-dd');
+      return {
+        getHistorical: () =>
+          Promise.resolve({
+            BTCUSD: {
+              today: 57973.008
+            }
+          })
+      };
+    })
+  };
+});
 jest.mock('../services/exchange-rate-data.service');
 jest.mock('../services/rules.service');
 
@@ -29,11 +44,7 @@ describe('Portfolio', () => {
   beforeAll(async () => {
     const app = await Test.createTestingModule({
       imports: [],
-      providers: [
-        DataProviderService,
-        ExchangeRateDataService,
-        RulesService,
-      ]
+      providers: [DataProviderService, ExchangeRateDataService, RulesService]
     }).compile();
 
     dataProviderService = app.get<DataProviderService>(DataProviderService);
@@ -576,5 +587,4 @@ describe('Portfolio', () => {
       expect(portfolio.getSymbols(getYesterday())).toEqual(['ETHUSD']);
     });
   });
-
 });
