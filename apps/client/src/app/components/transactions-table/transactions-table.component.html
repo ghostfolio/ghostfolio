@@ -1,4 +1,4 @@
-<mat-form-field class="w-100">
+<mat-form-field appearance="outline" class="w-100">
   <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
   <mat-chip-list #chipList aria-label="Search keywords">
     <mat-chip
@@ -8,12 +8,12 @@
       matChipRemove
     >
       {{ searchKeyword }}
-      <ion-icon class="mr-1" matPrefix name="close-outline"></ion-icon>
+      <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
     </mat-chip>
     <input
-      placeholder="Search for transactions..."
-      name="close-outline"
       #searchInput
+      name="close-outline"
+      placeholder="Search for account, type, symbol or currency..."
       [formControl]="searchControl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"

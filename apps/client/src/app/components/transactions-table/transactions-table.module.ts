@@ -15,7 +15,7 @@ import { GfValueModule } from '../value/value.module';
 import { TransactionsTableComponent } from './transactions-table.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [TransactionsTableComponent],
@@ -34,8 +34,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
-    RouterModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
