@@ -4,7 +4,6 @@ import {
   getUtc,
   getYesterday
 } from '@ghostfolio/helper';
-import { Test } from '@nestjs/testing';
 import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
 
 import { DataProviderService } from '../services/data-provider.service';
@@ -70,6 +69,10 @@ jest.mock('../services/exchange-rate-data.service', () => {
 
 jest.mock('../services/rules.service');
 
+jest.mock('../services/data-provider.service');
+jest.mock('../services/exchange-rate-data.service');
+jest.mock('../services/rules.service');
+
 const DEFAULT_ACCOUNT_ID = '693a834b-eb89-42c9-ae47-35196c25d269';
 const USER_ID = 'ca6ce867-5d31-495a-bce9-5942bbca9237';
 
@@ -80,11 +83,6 @@ describe('Portfolio', () => {
   let rulesService: RulesService;
 
   beforeAll(async () => {
-    const app = await Test.createTestingModule({
-      imports: [],
-      providers: [DataProviderService, ExchangeRateDataService, RulesService]
-    }).compile();
-
     dataProviderService = new DataProviderService(
       null,
       null,
