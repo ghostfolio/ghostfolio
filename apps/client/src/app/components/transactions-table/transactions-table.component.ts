@@ -48,22 +48,22 @@ export class TransactionsTableComponent
   @Output() transactionToClone = new EventEmitter<OrderWithAccount>();
   @Output() transactionToUpdate = new EventEmitter<OrderWithAccount>();
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
-  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<OrderWithAccount> = new MatTableDataSource();
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public displayedColumns = [];
-  public isLoading = true;
-  public routeQueryParams: Subscription;
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public searchKeywords: string[] = [];
-  public searchControl = new FormControl();
   public filteredTransactions$: Subject<string[]> = new BehaviorSubject([]);
   public filteredTransactions: Observable<
     string[]
   > = this.filteredTransactions$.asObservable();
+  public isLoading = true;
+  public routeQueryParams: Subscription;
+  public searchKeywords: string[] = [];
+  public searchControl = new FormControl();
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private allFilteredTransactions: string[];
   private unsubscribeSubject = new Subject<void>();
@@ -102,7 +102,7 @@ export class TransactionsTableComponent
     const input = event.input;
     const value = event.value;
 
-    if ((value || '').trim()) {
+    if (value?.trim()) {
       this.searchKeywords.push(value.trim());
       this.updateFilter();
     }
@@ -154,7 +154,7 @@ export class TransactionsTableComponent
     if (this.transactions) {
       this.dataSource = new MatTableDataSource(this.transactions);
       this.dataSource.filterPredicate = (data, filter) => {
-        let dataString = TransactionsTableComponent.getFilterableValues(data)
+        const dataString = TransactionsTableComponent.getFilterableValues(data)
           .join(' ')
           .toLowerCase();
         let contains = true;
@@ -251,9 +251,7 @@ export class TransactionsTableComponent
       this.getFilterableValues(transaction, fieldValues);
     }
 
-    return [...fieldValues]
-      .filter(item => item != undefined)
-      .sort();
+    return [...fieldValues].filter((item) => item != undefined).sort();
   }
 
   private static getFilterableValues(
@@ -265,7 +263,6 @@ export class TransactionsTableComponent
     fieldValues.add(transaction.type);
     fieldValues.add(transaction.Account?.name);
     fieldValues.add(transaction.Account?.Platform?.name);
-    return [...fieldValues]
-      .filter(item => item != undefined);
+    return [...fieldValues].filter((item) => item != undefined);
   }
 }
