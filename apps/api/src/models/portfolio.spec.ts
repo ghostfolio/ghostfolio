@@ -67,8 +67,6 @@ jest.mock('../services/exchange-rate-data.service', () => {
   };
 });
 
-jest.mock('../services/rules.service');
-
 jest.mock('../services/data-provider.service');
 jest.mock('../services/exchange-rate-data.service');
 jest.mock('../services/rules.service');
