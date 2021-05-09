@@ -7,64 +7,40 @@ import {
 import { Test } from '@nestjs/testing';
 import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
 
-import { ConfigurationService } from '../services/configuration.service';
 import { DataProviderService } from '../services/data-provider.service';
-import { AlphaVantageService } from '../services/data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from '../services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '../services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '../services/data-provider/yahoo-finance/yahoo-finance.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { MarketState } from '../services/interfaces/interfaces';
-import { PrismaService } from '../services/prisma.service';
 import { RulesService } from '../services/rules.service';
 import { Portfolio } from './portfolio';
+
+jest.mock('../services/data-provider.service');
+jest.mock('../services/exchange-rate-data.service');
+jest.mock('../services/rules.service');
 
 const DEFAULT_ACCOUNT_ID = '693a834b-eb89-42c9-ae47-35196c25d269';
 const USER_ID = 'ca6ce867-5d31-495a-bce9-5942bbca9237';
 
 describe('Portfolio', () => {
-  let alphaVantageService: AlphaVantageService;
-  let configurationService: ConfigurationService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
-  let ghostfolioScraperApiService: GhostfolioScraperApiService;
   let portfolio: Portfolio;
-  let prismaService: PrismaService;
-  let rakutenRapidApiService: RakutenRapidApiService;
   let rulesService: RulesService;
-  let yahooFinanceService: YahooFinanceService;
 
   beforeAll(async () => {
     const app = await Test.createTestingModule({
       imports: [],
       providers: [
-        AlphaVantageService,
-        ConfigurationService,
         DataProviderService,
         ExchangeRateDataService,
-        GhostfolioScraperApiService,
-        PrismaService,
-        RakutenRapidApiService,
         RulesService,
-        YahooFinanceService
       ]
     }).compile();
 
-    alphaVantageService = app.get<AlphaVantageService>(AlphaVantageService);
-    configurationService = app.get<ConfigurationService>(ConfigurationService);
     dataProviderService = app.get<DataProviderService>(DataProviderService);
     exchangeRateDataService = app.get<ExchangeRateDataService>(
       ExchangeRateDataService
     );
-    ghostfolioScraperApiService = app.get<GhostfolioScraperApiService>(
-      GhostfolioScraperApiService
-    );
-    prismaService = app.get<PrismaService>(PrismaService);
-    rakutenRapidApiService = app.get<RakutenRapidApiService>(
-      RakutenRapidApiService
-    );
     rulesService = app.get<RulesService>(RulesService);
-    yahooFinanceService = app.get<YahooFinanceService>(YahooFinanceService);
 
     await exchangeRateDataService.initialize();
 
@@ -601,7 +577,4 @@ describe('Portfolio', () => {
     });
   });
 
-  afterAll(async () => {
-    prismaService.$disconnect();
-  });
 });
