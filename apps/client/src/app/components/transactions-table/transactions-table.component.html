@@ -13,16 +13,16 @@
     <input
       #searchInput
       name="close-outline"
-      placeholder="Search for account, type, symbol or currency..."
+      placeholder="Search for account, currency, symbol or type..."
       [formControl]="searchControl"
-      [matAutocomplete]="auto"
+      [matAutocomplete]="autocomplete"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="addKeyword($event)"
     />
   </mat-chip-list>
   <mat-autocomplete
-    #auto="matAutocomplete"
+    #autocomplete="matAutocomplete"
     (optionSelected)="keywordSelected($event)"
   >
     <mat-option
