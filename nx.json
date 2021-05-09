@@ -6,7 +6,7 @@
     ".eslintrc.json": "*",
     "nx.json": "*"
   },
-  "affected": { "defaultBase": "main" },
+  "affected": { "defaultBase": "origin/main" },
   "npmScope": "ghostfolio",
   "tasksRunnerOptions": {
     "default": {
