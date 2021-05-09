@@ -30,9 +30,9 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdateTransactionDialog {
   public currencies: Currency[] = [];
+  public currentMarketPrice = null;
   public filteredLookupItems: Observable<LookupItem[]>;
   public isLoading = false;
-  public currentMarketPrice = null;
   public platforms: { id: string; name: string }[];
   public searchSymbolCtrl = new FormControl(
     this.data.transaction.symbol,
@@ -80,7 +80,6 @@ export class CreateOrUpdateTransactionDialog {
 
   public applyCurrentMarketPrice() {
     this.data.transaction.unitPrice = this.currentMarketPrice;
-    this.cd.markForCheck();
   }
 
   public onCancel(): void {
