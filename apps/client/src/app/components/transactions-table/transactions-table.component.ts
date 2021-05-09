@@ -61,8 +61,8 @@ export class TransactionsTableComponent
   > = this.filteredTransactions$.asObservable();
   public isLoading = true;
   public routeQueryParams: Subscription;
-  public searchKeywords: string[] = [];
   public searchControl = new FormControl();
+  public searchKeywords: string[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private allFilteredTransactions: string[];
@@ -98,10 +98,7 @@ export class TransactionsTableComponent
     });
   }
 
-  public addKeyword(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
+  public addKeyword({ input, value }: MatChipInputEvent): void {
     if (value?.trim()) {
       this.searchKeywords.push(value.trim());
       this.updateFilter();

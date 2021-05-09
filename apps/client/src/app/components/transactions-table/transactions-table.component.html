@@ -3,9 +3,9 @@
   <mat-chip-list #chipList aria-label="Search keywords">
     <mat-chip
       *ngFor="let searchKeyword of searchKeywords"
+      matChipRemove
       [removable]="true"
       (removed)="removeKeyword(searchKeyword)"
-      matChipRemove
     >
       {{ searchKeyword }}
       <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
