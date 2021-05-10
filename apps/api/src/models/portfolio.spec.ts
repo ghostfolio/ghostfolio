@@ -18,18 +18,52 @@ jest.mock('../services/data-provider.service', () => {
   return {
     DataProviderService: jest.fn().mockImplementation(() => {
       const today = format(new Date(), 'yyyy-MM-dd');
+
       return {
-        getHistorical: () =>
-          Promise.resolve({
+        get: () => {
+          return Promise.resolve({
             BTCUSD: {
-              today: 57973.008
+              currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
+              marketPrice: 57973.008,
+              marketState: MarketState.open,
+              name: 'Bitcoin USD'
+            },
+            ETHUSD: {
+              currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
+              marketPrice: 3915.337,
+              marketState: MarketState.open,
+              name: 'Ethereum USD'
             }
-          })
+          });
+        },
+        getHistorical: () => {
+          return Promise.resolve({
+            BTCUSD: {
+              [today]: 57973.008
+            },
+            ETHUSD: {
+              [today]: 3915.337
+            }
+          });
+        }
       };
     })
   };
 });
-jest.mock('../services/exchange-rate-data.service');
+
+jest.mock('../services/exchange-rate-data.service', () => {
+  return {
+    ExchangeRateDataService: jest.fn().mockImplementation(() => {
+      return {
+        initialize: () => Promise.resolve(),
+        toCurrency: () => Promise.resolve(1)
+      };
+    })
+  };
+});
+
 jest.mock('../services/rules.service');
 
 const DEFAULT_ACCOUNT_ID = '693a834b-eb89-42c9-ae47-35196c25d269';
