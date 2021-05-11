@@ -81,7 +81,13 @@
           [matDatepicker]="date"
           [(ngModel)]="data.transaction.date"
         />
-        <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="date">
+          <ion-icon
+            class="text-muted"
+            matDatepickerToggleIcon
+            name="calendar-clear-outline"
+          ></ion-icon>
+        </mat-datepicker-toggle>
         <mat-datepicker #date disabled="false"></mat-datepicker>
       </mat-form-field>
     </div>
@@ -110,7 +116,7 @@
       </mat-form-field>
     </div>
     <div>
-      <mat-form-field appearance="outline" class="w-100">
+      <mat-form-field appearance="outline" class="unit-price w-100">
         <mat-label i18n>Unit Price</mat-label>
         <input
           matInput
@@ -119,6 +125,15 @@
           type="number"
           [(ngModel)]="data.transaction.unitPrice"
         />
+        <button
+          *ngIf="currentMarketPrice"
+          mat-icon-button
+          matSuffix
+          title="Apply current market price"
+          (click)="applyCurrentMarketPrice()"
+        >
+          <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+        </button>
       </mat-form-field>
     </div>
     <div>

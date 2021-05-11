@@ -14,6 +14,18 @@
       }
     }
 
+    .mat-form-field-appearance-outline {
+      ::ng-deep {
+        .mat-form-field-suffix {
+          top: -0.3rem;
+        }
+      }
+
+      ion-icon {
+        font-size: 130%;
+      }
+    }
+
     .mat-select {
       &.no-arrow {
         ::ng-deep {

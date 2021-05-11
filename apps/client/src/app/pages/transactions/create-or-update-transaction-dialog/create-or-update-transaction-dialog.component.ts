@@ -30,6 +30,7 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdateTransactionDialog {
   public currencies: Currency[] = [];
+  public currentMarketPrice = null;
   public filteredLookupItems: Observable<LookupItem[]>;
   public isLoading = false;
   public platforms: { id: string; name: string }[];
@@ -65,6 +66,20 @@ export class CreateOrUpdateTransactionDialog {
         return [];
       })
     );
+
+    if (this.data.transaction.symbol) {
+      this.dataService
+        .fetchSymbolItem(this.data.transaction.symbol)
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ marketPrice }) => {
+          this.currentMarketPrice = marketPrice;
+          this.cd.markForCheck();
+        });
+    }
+  }
+
+  public applyCurrentMarketPrice() {
+    this.data.transaction.unitPrice = this.currentMarketPrice;
   }
 
   public onCancel(): void {
@@ -81,7 +96,7 @@ export class CreateOrUpdateTransactionDialog {
       .subscribe(({ currency, dataSource, marketPrice }) => {
         this.data.transaction.currency = currency;
         this.data.transaction.dataSource = dataSource;
-        this.data.transaction.unitPrice = marketPrice;
+        this.currentMarketPrice = marketPrice;
 
         this.isLoading = false;
 

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a button to fetch the current market price in the create or edit transaction dialog
+
 ### Changed
 
 - Improved the transaction filtering with multi filter support
