@@ -57,9 +57,8 @@ export class AppComponent implements OnDestroy, OnInit {
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((test) => {
+      .subscribe(() => {
         this.currentRoute = this.router.url.toString().substring(1);
-        // this.initializeTheme();
       });
 
     this.tokenStorageService
