@@ -184,9 +184,11 @@ export class TransactionsPageComponent implements OnInit {
       data: {
         accounts: this.user?.accounts,
         transaction: {
-          accountId: aTransaction?.accountId ?? this.user?.accounts.find((account) => {
-            return account.isDefault;
-          })?.id,
+          accountId:
+            aTransaction?.accountId ??
+            this.user?.accounts.find((account) => {
+              return account.isDefault;
+            })?.id,
           currency: aTransaction?.currency ?? null,
           dataSource: aTransaction?.dataSource ?? null,
           date: new Date(),

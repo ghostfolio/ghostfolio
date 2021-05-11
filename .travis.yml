@@ -1,0 +1,9 @@
+language: node_js
+git:
+  depth: false
+node_js:
+  - 14
+before_script:
+  - yarn
+script:
+  - yarn format:check
