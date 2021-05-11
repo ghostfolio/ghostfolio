@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -15,10 +16,19 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderWithAccount } from '@ghostfolio/api/app/order/interfaces/order-with-account.type';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
-import { Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { PositionDetailDialog } from '../position/position-detail-dialog/position-detail-dialog.component';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent
+} from '@angular/material/autocomplete';
+import { FormControl } from '@angular/forms';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+
+const SEARCH_STRING_SEPARATOR = ',';
 
 @Component({
   selector: 'gf-transactions-table',
@@ -38,14 +48,24 @@ export class TransactionsTableComponent
   @Output() transactionToClone = new EventEmitter<OrderWithAccount>();
   @Output() transactionToUpdate = new EventEmitter<OrderWithAccount>();
 
+  @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
+  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<OrderWithAccount> = new MatTableDataSource();
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public displayedColumns = [];
+  public filteredTransactions$: Subject<string[]> = new BehaviorSubject([]);
+  public filteredTransactions: Observable<
+    string[]
+  > = this.filteredTransactions$.asObservable();
   public isLoading = true;
   public routeQueryParams: Subscription;
+  public searchControl = new FormControl();
+  public searchKeywords: string[] = [];
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
+  private allFilteredTransactions: string[];
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -63,6 +83,49 @@ export class TransactionsTableComponent
           });
         }
       });
+
+    this.searchControl.valueChanges.subscribe((keyword) => {
+      if (keyword) {
+        const filterValue = keyword.toLowerCase();
+        this.filteredTransactions$.next(
+          this.allFilteredTransactions.filter(
+            (filter) => filter.toLowerCase().indexOf(filterValue) === 0
+          )
+        );
+      } else {
+        this.filteredTransactions$.next(this.allFilteredTransactions);
+      }
+    });
+  }
+
+  public addKeyword({ input, value }: MatChipInputEvent): void {
+    if (value?.trim()) {
+      this.searchKeywords.push(value.trim());
+      this.updateFilter();
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.searchControl.setValue(null);
+  }
+
+  public removeKeyword(keyword: string): void {
+    const index = this.searchKeywords.indexOf(keyword);
+
+    if (index >= 0) {
+      this.searchKeywords.splice(index, 1);
+      this.updateFilter();
+    }
+  }
+
+  public keywordSelected(event: MatAutocompleteSelectedEvent): void {
+    this.searchKeywords.push(event.option.viewValue);
+    this.updateFilter();
+    this.searchInput.nativeElement.value = '';
+    this.searchControl.setValue(null);
   }
 
   public ngOnInit() {}
@@ -88,26 +151,20 @@ export class TransactionsTableComponent
     if (this.transactions) {
       this.dataSource = new MatTableDataSource(this.transactions);
       this.dataSource.filterPredicate = (data, filter) => {
-        const accumulator = (currentTerm: string, key: string) => {
-          return key === 'Account'
-            ? currentTerm + data.Account.name
-            : currentTerm + data[key];
-        };
-        const dataString = Object.keys(data)
-          .reduce(accumulator, '')
+        const dataString = TransactionsTableComponent.getFilterableValues(data)
+          .join(' ')
           .toLowerCase();
-        const transformedFilter = filter.trim().toLowerCase();
-        return dataString.includes(transformedFilter);
+        let contains = true;
+        for (const singleFilter of filter.split(SEARCH_STRING_SEPARATOR)) {
+          contains =
+            contains && dataString.includes(singleFilter.trim().toLowerCase());
+        }
+        return contains;
       };
       this.dataSource.sort = this.sort;
-
+      this.updateFilter();
       this.isLoading = false;
     }
-  }
-
-  public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   public onDeleteTransaction(aId: string) {
@@ -168,5 +225,41 @@ export class TransactionsTableComponent
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private updateFilter() {
+    this.dataSource.filter = this.searchKeywords.join(SEARCH_STRING_SEPARATOR);
+    const lowercaseSearchKeywords = this.searchKeywords.map((keyword) =>
+      keyword.trim().toLowerCase()
+    );
+    this.allFilteredTransactions = TransactionsTableComponent.getSearchableFieldValues(
+      this.transactions
+    ).filter((item) => {
+      return !lowercaseSearchKeywords.includes(item.trim().toLowerCase());
+    });
+    this.filteredTransactions$.next(this.allFilteredTransactions);
+  }
+
+  private static getSearchableFieldValues(
+    transactions: OrderWithAccount[]
+  ): string[] {
+    const fieldValues = new Set<string>();
+    for (const transaction of transactions) {
+      this.getFilterableValues(transaction, fieldValues);
+    }
+
+    return [...fieldValues].filter((item) => item != undefined).sort();
+  }
+
+  private static getFilterableValues(
+    transaction,
+    fieldValues: Set<string> = new Set<string>()
+  ): string[] {
+    fieldValues.add(transaction.currency);
+    fieldValues.add(transaction.symbol);
+    fieldValues.add(transaction.type);
+    fieldValues.add(transaction.Account?.name);
+    fieldValues.add(transaction.Account?.Platform?.name);
+    return [...fieldValues].filter((item) => item != undefined);
   }
 }

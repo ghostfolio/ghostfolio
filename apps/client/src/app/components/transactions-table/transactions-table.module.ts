@@ -13,6 +13,9 @@ import { GfPositionDetailDialogModule } from '../position/position-detail-dialog
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 import { GfValueModule } from '../value/value.module';
 import { TransactionsTableComponent } from './transactions-table.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [TransactionsTableComponent],
@@ -23,12 +26,15 @@ import { TransactionsTableComponent } from './transactions-table.component';
     GfSymbolIconModule,
     GfSymbolModule,
     GfValueModule,
+    MatAutocompleteModule,
     MatButtonModule,
+    MatChipsModule,
     MatInputModule,
     MatMenuModule,
     MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
+    ReactiveFormsModule,
     RouterModule
   ],
   providers: [],

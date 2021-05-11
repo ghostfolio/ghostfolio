@@ -1,12 +1,37 @@
 <mat-form-field appearance="outline" class="w-100">
-  <input
-    #input
-    autocomplete="off"
-    matInput
-    placeholder="Search for transactions..."
-    (keyup)="applyFilter($event)"
-  />
   <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
+  <mat-chip-list #chipList aria-label="Search keywords">
+    <mat-chip
+      *ngFor="let searchKeyword of searchKeywords"
+      matChipRemove
+      [removable]="true"
+      (removed)="removeKeyword(searchKeyword)"
+    >
+      {{ searchKeyword }}
+      <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
+    </mat-chip>
+    <input
+      #searchInput
+      name="close-outline"
+      placeholder="Search for account, currency, symbol or type..."
+      [formControl]="searchControl"
+      [matAutocomplete]="autocomplete"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="addKeyword($event)"
+    />
+  </mat-chip-list>
+  <mat-autocomplete
+    #autocomplete="matAutocomplete"
+    (optionSelected)="keywordSelected($event)"
+  >
+    <mat-option
+      *ngFor="let transaction of filteredTransactions | async"
+      [value]="transaction"
+    >
+      {{ transaction }}
+    </mat-option>
+  </mat-autocomplete>
 </mat-form-field>
 
 <table

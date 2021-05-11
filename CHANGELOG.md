@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the transaction filtering with multi filter support
+
 ### Fixed
 
 - Fixed the filtering by account name in the transactions table
