@@ -1,14 +1,14 @@
-<table mat-table [dataSource]="dataSource" class="w-100">
+<table class="gf-table w-100" mat-table [dataSource]="dataSource">
   <ng-container matColumnDef="granteeAlias">
-    <th mat-header-cell *matHeaderCellDef i18n>User</th>
-    <td mat-cell *matCellDef="let element">
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>User</th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
       {{ element.granteeAlias }}
     </td></ng-container
   >
 
   <ng-container matColumnDef="type">
-    <th mat-header-cell *matHeaderCellDef i18n>Type</th>
-    <td mat-cell *matCellDef="let element">
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Type</th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
       <ion-icon class="mr-1" name="lock-closed-outline"></ion-icon>
       Restricted Access
     </td></ng-container

@@ -1,10 +1,5 @@
-<!--<mat-form-field appearance="outline" class="w-100">
-  <input #input autocomplete="off" matInput (keyup)="applyFilter($event)" />
-  <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
-</mat-form-field>-->
-
 <table
-  class="w-100"
+  class="gf-table w-100"
   matSort
   matSortActive="shareCurrent"
   matSortDirection="desc"
@@ -12,20 +7,24 @@
   [dataSource]="dataSource"
 >
   <ng-container matColumnDef="symbol">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header i18n>Symbol</th>
-    <td mat-cell *matCellDef="let element">{{ element.symbol | gfSymbol }}</td>
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
+      Symbol
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
+      {{ element.symbol | gfSymbol }}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="performance">
     <th
       *matHeaderCellDef
-      class="d-none d-lg-table-cell text-right"
+      class="d-none d-lg-table-cell px-1 text-right"
       i18n
       mat-header-cell
     >
       Performance
     </th>
-    <td class="d-none d-lg-table-cell" mat-cell *matCellDef="let element">
+    <td class="d-none d-lg-table-cell px-1" mat-cell *matCellDef="let element">
       <div class="d-flex justify-content-end">
         <gf-value
           [colorizeSign]="true"
@@ -40,7 +39,7 @@
   <ng-container matColumnDef="shareInvestment">
     <th
       *matHeaderCellDef
-      class="justify-content-end"
+      class="justify-content-end px-1"
       i18n
       mat-header-cell
       mat-sort-header
@@ -48,7 +47,7 @@
       Initial Share
     </th>
     <td mat-cell *matCellDef="let element">
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-end px-1">
         <gf-value
           [isPercent]="true"
           [locale]="locale"
@@ -61,14 +60,14 @@
   <ng-container matColumnDef="shareCurrent">
     <th
       *matHeaderCellDef
-      class="justify-content-end"
+      class="justify-content-end px-1"
       i18n
       mat-header-cell
       mat-sort-header
     >
       Current Share
     </th>
-    <td mat-cell *matCellDef="let element">
+    <td *matCellDef="let element" class="px-1" mat-cell>
       <div class="d-flex justify-content-end">
         <gf-value
           [isPercent]="true"

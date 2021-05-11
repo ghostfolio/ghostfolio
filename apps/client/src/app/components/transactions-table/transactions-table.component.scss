@@ -1,3 +1,5 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
 :host {
   display: block;
 
@@ -12,10 +14,6 @@
   }
 
   .mat-table {
-    td {
-      border: 0;
-    }
-
     th {
       ::ng-deep {
         .mat-sort-header-container {
@@ -26,13 +24,6 @@
 
     .mat-row {
       cursor: pointer;
-
-      &:nth-child(even) {
-        background-color: rgba(
-          var(--dark-primary-text),
-          var(--palette-background-hover-alpha)
-        );
-      }
 
       .type-badge {
         background-color: rgba(var(--dark-primary-text), 0.05);
@@ -61,17 +52,8 @@
   }
 
   .mat-table {
-    .mat-row {
-      &:nth-child(even) {
-        background-color: rgba(
-          var(--light-primary-text),
-          var(--palette-background-hover-alpha)
-        );
-      }
-
-      .type-badge {
-        background-color: rgba(var(--light-primary-text), 0.1);
-      }
+    .type-badge {
+      background-color: rgba(var(--light-primary-text), 0.1);
     }
   }
 }

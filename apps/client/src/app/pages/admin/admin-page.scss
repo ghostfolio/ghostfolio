@@ -1,27 +1,18 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
 :host {
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  .mat-card-content {
-    &.users {
-      overflow-x: auto;
+  .users {
+    overflow-x: auto;
 
-      table {
-        min-width: 100%;
+    table {
+      min-width: 100%;
 
-        tr {
-          &:nth-child(even) {
-            background-color: rgba(
-              var(--dark-primary-text),
-              var(--palette-background-hover-alpha)
-            );
-          }
-        }
-
-        .mat-row,
-        .mat-header-row {
-          width: 100%;
-        }
+      .mat-row,
+      .mat-header-row {
+        width: 100%;
       }
     }
   }
@@ -41,15 +32,4 @@
 
 :host-context(.is-dark-theme) {
   color: rgb(var(--light-primary-text));
-
-  .mat-table {
-    tr {
-      &:nth-child(even) {
-        background-color: rgba(
-          var(--light-primary-text),
-          var(--palette-background-hover-alpha)
-        );
-      }
-    }
-  }
 }
