@@ -4066,10 +4066,10 @@ chardet@^0.7.0:
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
-chart.js@3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.0.2.tgz#5893b0548714445b5190cbda9ac307357a56a0c7"
-  integrity sha512-DR0GmFSlxcFJp/w//ZmbxSduAkH/AqwxoiZxK97KHnWZf6gvsKWS3160WvNMMHYvzW9OXqGWjPjVh1Qu+xDabg==
+chart.js@3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.2.1.tgz#1a17d6a88cef324ef711949e227eb51d6c4c26d3"
+  integrity sha512-XsNDf3854RGZkLCt+5vWAXGAtUdKP2nhfikLGZqud6G4CvRE2ts64TIxTTfspOin2kEZvPgomE29E6oU02dYjQ==
 
 chartjs-adapter-date-fns@1.1.0-beta.1:
   version "1.1.0-beta.1"
