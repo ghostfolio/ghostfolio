@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
@@ -13,9 +16,6 @@ import { GfPositionDetailDialogModule } from '../position/position-detail-dialog
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 import { GfValueModule } from '../value/value.module';
 import { TransactionsTableComponent } from './transactions-table.component';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [TransactionsTableComponent],

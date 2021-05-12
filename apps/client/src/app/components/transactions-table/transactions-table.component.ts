@@ -1,3 +1,4 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,6 +11,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent
+} from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,13 +27,6 @@ import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { PositionDetailDialog } from '../position/position-detail-dialog/position-detail-dialog.component';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent
-} from '@angular/material/autocomplete';
-import { FormControl } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
 
 const SEARCH_STRING_SEPARATOR = ',';
 
