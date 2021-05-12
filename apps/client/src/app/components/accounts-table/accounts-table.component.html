@@ -1,5 +1,5 @@
 <table
-  class="w-100"
+  class="gf-table w-100"
   matSort
   matSortActive="account"
   matSortDirection="desc"
@@ -7,36 +7,19 @@
   [dataSource]="dataSource"
 >
   <ng-container matColumnDef="account">
-    <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Name</th>
-    <td *matCellDef="let element" mat-cell>
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
+      Name
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
       {{ element.name }}
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="type">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell justify-content-center"
-      i18n
-      mat-header-cell
-      mat-sort-header
-    >
-      Type
-    </th>
-    <td
-      mat-cell
-      *matCellDef="let element"
-      class="d-none d-lg-table-cell text-center"
-    >
-      <div class="d-inline-flex justify-content-center px-2 py-1 type-badge">
-        <span>{{ element.accountType }}</span>
-      </div>
-    </td>
-  </ng-container>
-
   <ng-container matColumnDef="platform">
-    <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Platform</th>
-    <td mat-cell *matCellDef="let element">
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
+      Platform
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
       <div class="d-flex">
         <gf-symbol-icon
           *ngIf="element.Platform?.url"
@@ -50,8 +33,8 @@
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <th *matHeaderCellDef class="px-0 text-center" i18n mat-header-cell></th>
-    <td *matCellDef="let element" class="px-0 text-center" mat-cell>
+    <th *matHeaderCellDef class="px-1 text-center" i18n mat-header-cell></th>
+    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
       <button
         class="mx-1 no-min-width px-2"
         mat-button

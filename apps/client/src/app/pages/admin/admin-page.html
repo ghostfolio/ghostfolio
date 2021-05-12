@@ -69,65 +69,59 @@
   <div class="row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Users</h3>
-      <mat-card class="px-0">
-        <mat-card-content class="users">
-          <table>
-            <thead>
-              <tr class="mat-header-row">
-                <th class="mat-header-cell pl-3 py-2" i18n>User</th>
-                <th class="mat-header-cell pr-2 py-2" i18n>
-                  Registration Date
-                </th>
-                <th class="mat-header-cell pr-2 py-2" i18n>Accounts</th>
-                <th class="mat-header-cell pr-2 py-2" i18n>Transactions</th>
-                <th class="mat-header-cell pr-2 py-2" i18n>Engagement</th>
-                <th class="mat-header-cell pr-3 py-2" i18n>Last Activitiy</th>
-                <th class="mat-header-cell pr-3 py-2"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let userItem of users" class="mat-row">
-                <td class="mat-cell pl-3 py-2">
-                  {{ userItem.alias || userItem.id }}
-                </td>
-                <td class="mat-cell pr-2 py-2">
-                  {{ userItem.createdAt | date: defaultDateFormat }}
-                </td>
-                <td class="mat-cell pr-2 py-2">
-                  {{ userItem._count?.Account }}
-                </td>
-                <td class="mat-cell pr-2 py-2">{{ userItem._count?.Order }}</td>
-                <td class="mat-cell pr-2 py-2">
-                  {{ userItem.Analytics?.activityCount }}
-                </td>
-                <td class="mat-cell pr-3 py-2">
-                  {{ formatDistanceToNow(userItem.Analytics?.updatedAt) }}
-                </td>
-                <td class="mat-cell pr-3 py-2">
+      <div class="users">
+        <table class="gf-table">
+          <thead>
+            <tr class="mat-header-row">
+              <th class="mat-header-cell px-1 py-2" i18n>User</th>
+              <th class="mat-header-cell px-1 py-2" i18n>Registration Date</th>
+              <th class="mat-header-cell px-1 py-2" i18n>Accounts</th>
+              <th class="mat-header-cell px-1 py-2" i18n>Transactions</th>
+              <th class="mat-header-cell px-1 py-2" i18n>Engagement</th>
+              <th class="mat-header-cell px-1 py-2" i18n>Last Activitiy</th>
+              <th class="mat-header-cell px-1 py-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let userItem of users" class="mat-row">
+              <td class="mat-cell px-1 py-2">
+                {{ userItem.alias || userItem.id }}
+              </td>
+              <td class="mat-cell px-1 py-2">
+                {{ userItem.createdAt | date: defaultDateFormat }}
+              </td>
+              <td class="mat-cell px-1 py-2">{{ userItem._count?.Account }}</td>
+              <td class="mat-cell px-1 py-2">{{ userItem._count?.Order }}</td>
+              <td class="mat-cell px-1 py-2">
+                {{ userItem.Analytics?.activityCount }}
+              </td>
+              <td class="mat-cell px-1 py-2">
+                {{ formatDistanceToNow(userItem.Analytics?.updatedAt) }}
+              </td>
+              <td class="mat-cell px-1 py-2">
+                <button
+                  class="mx-1 no-min-width px-2"
+                  mat-button
+                  [matMenuTriggerFor]="accountMenu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ion-icon name="ellipsis-vertical"></ion-icon>
+                </button>
+                <mat-menu #accountMenu="matMenu" xPosition="before">
                   <button
-                    class="mx-1 no-min-width px-2"
-                    mat-button
-                    [matMenuTriggerFor]="accountMenu"
-                    (click)="$event.stopPropagation()"
+                    i18n
+                    mat-menu-item
+                    [disabled]="userItem.id === user?.id"
+                    (click)="onDeleteUser(userItem.id)"
                   >
-                    <ion-icon name="ellipsis-vertical"></ion-icon>
+                    Delete
                   </button>
-                  <mat-menu #accountMenu="matMenu" xPosition="before">
-                    <button
-                      i18n
-                      mat-menu-item
-                      [disabled]="userItem.id === user?.id"
-                      (click)="onDeleteUser(userItem.id)"
-                    >
-                      Delete
-                    </button>
-                  </mat-menu>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </mat-card-content>
-      </mat-card>
+                </mat-menu>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

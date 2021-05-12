@@ -132,14 +132,14 @@ export class TransactionsTableComponent
 
   public ngOnChanges() {
     this.displayedColumns = [
-      'account',
       'date',
       'type',
       'symbol',
       'currency',
       'quantity',
       'unitPrice',
-      'fee'
+      'fee',
+      'account'
     ];
 
     if (this.showActions) {

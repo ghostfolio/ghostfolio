@@ -1,3 +1,31 @@
 $mat-css-dark-theme-selector: '.is-dark-theme';
 
 @import '~angular-material-css-vars/public-util';
+
+.gf-table {
+  td {
+    border: 0;
+  }
+
+  .mat-row {
+    &:nth-child(even) {
+      background-color: rgba(
+        var(--dark-primary-text),
+        var(--palette-background-hover-alpha)
+      );
+    }
+  }
+}
+
+.is-dark-theme {
+  .gf-table {
+    .mat-row {
+      &:nth-child(even) {
+        background-color: rgba(
+          var(--light-primary-text),
+          var(--palette-background-hover-alpha)
+        );
+      }
+    }
+  }
+}
