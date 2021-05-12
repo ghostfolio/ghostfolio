@@ -1,0 +1,58 @@
+<table
+  class="w-100"
+  matSort
+  matSortActive="shareCurrent"
+  matSortDirection="desc"
+  mat-table
+  [dataSource]="dataSource"
+>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header i18n>Name</th>
+    <td mat-cell *matCellDef="let element">{{element.name}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header i18n>Created at</th>
+    <td mat-cell *matCellDef="let element">{{element.createdAt | date}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th *matHeaderCellDef class="px-0 text-center" i18n mat-header-cell></th>
+    <td *matCellDef="let element" class="px-0 text-center" mat-cell>
+      <button
+        class="mx-1 no-min-width px-2"
+        mat-button
+        [matMenuTriggerFor]="accountMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </button>
+      <mat-menu #accountMenu="matMenu" xPosition="before">
+        <button i18n mat-menu-item (click)="authDeviceToUpdate.emit(element)">
+          Edit
+        </button>
+        <button i18n mat-menu-item (click)="onDeleteAuthDevice(element.id)">
+          Delete
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    *matRowDef="let row; columns: displayedColumns"
+    mat-row
+  ></tr>
+</table>
+
+<ngx-skeleton-loader
+  *ngIf="isLoading"
+  animation="pulse"
+  class="px-4 py-3"
+  [theme]="{
+    height: '1.5rem',
+    width: '100%'
+  }"
+></ngx-skeleton-loader>
+
+<mat-paginator class="d-none" [pageSize]="pageSize"></mat-paginator>

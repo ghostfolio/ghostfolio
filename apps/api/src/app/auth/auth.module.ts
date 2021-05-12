@@ -8,6 +8,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
+import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 
 @Module({
   controllers: [AuthController],
@@ -23,7 +25,9 @@ import { JwtStrategy } from './jwt.strategy';
     GoogleStrategy,
     JwtStrategy,
     PrismaService,
-    UserService
+    UserService,
+    WebAuthService,
+    AuthDeviceService,
   ]
 })
 export class AuthModule {}

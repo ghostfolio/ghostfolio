@@ -1,9 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import {
+  Body,
   Controller,
   Get,
   HttpException,
-  Param,
+  Param, Post,
   Req,
   Res,
   UseGuards
@@ -12,11 +13,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
+import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
+// TODO fix type compilation error
+// import { AttestationCredentialJSON } from '@simplewebauthn/typescript-types';
 
 @Controller('auth')
 export class AuthController {
   public constructor(
     private readonly authService: AuthService,
+    private readonly webAuthService: WebAuthService,
     private readonly configurationService: ConfigurationService
   ) {}
 
@@ -52,5 +57,29 @@ export class AuthController {
     } else {
       res.redirect(`${this.configurationService.get('ROOT_URL')}/auth`);
     }
+  }
+
+  @Get('webauthn/generate-attestation-options')
+  @UseGuards(AuthGuard('jwt'))
+  public async generateAttestationOptions() {
+    return this.webAuthService.generateAttestationOptions();
+  }
+
+  @Post('webauthn/verify-attestation')
+  @UseGuards(AuthGuard('jwt'))
+  public async verifyAttestation(@Body() body: any) {
+    return this.webAuthService.verifyAttestation(body);
+  }
+
+  @Get('webauthn/generate-assertion-options')
+  @UseGuards(AuthGuard('jwt'))
+  public async generateAssertionOptions() {
+    return this.webAuthService.generateAssertionOptions();
+  }
+
+  @Post('webauthn/verify-assertion')
+  @UseGuards(AuthGuard('jwt'))
+  public async verifyAssertion(@Body() body: any) {
+    return this.webAuthService.verifyAssertion(body);
   }
 }
