@@ -36,6 +36,10 @@ export class PortfolioProportionChartComponent
   public chart: Chart;
   public isLoading = true;
 
+  private colorMap: {
+    [symbol: string]: string;
+  } = {};
+
   public constructor() {
     Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
   }
@@ -48,37 +52,67 @@ export class PortfolioProportionChartComponent
     }
   }
 
+  public ngOnDestroy() {
+    this.chart?.destroy();
+  }
+
   private initialize() {
     this.isLoading = true;
-    const chartData: { [symbol: string]: number } = {};
+    const chartData: {
+      [symbol: string]: { color?: string; value: number };
+    } = {};
 
     Object.keys(this.positions).forEach((symbol) => {
       if (this.positions[symbol][this.key]) {
         if (chartData[this.positions[symbol][this.key]]) {
-          chartData[this.positions[symbol][this.key]] += this.positions[
+          chartData[this.positions[symbol][this.key]].value += this.positions[
             symbol
           ].value;
         } else {
-          chartData[this.positions[symbol][this.key]] = this.positions[
-            symbol
-          ].value;
+          chartData[this.positions[symbol][this.key]] = {
+            value: this.positions[symbol].value
+          };
+        }
+      } else {
+        if (chartData['Other']) {
+          chartData['Other'].value += this.positions[symbol].value;
+        } else {
+          chartData['Other'] = {
+            value: this.positions[symbol].value
+          };
         }
       }
     });
 
     const chartDataSorted = Object.entries(chartData)
       .sort((a, b) => {
-        return a[1] - b[1];
+        return a[1].value - b[1].value;
       })
       .reverse();
+
+    chartDataSorted.forEach(([symbol, item], index) => {
+      if (this.colorMap[symbol]) {
+        // Reuse color
+        item.color = this.colorMap[symbol];
+      } else {
+        const color = this.getColorPalette()[index];
+
+        // Store color for reuse
+        this.colorMap[symbol] = color;
+
+        item.color = color;
+      }
+    });
 
     const data = {
       datasets: [
         {
-          backgroundColor: this.getColorPalette(),
+          backgroundColor: chartDataSorted.map(([, item]) => {
+            return item.color;
+          }),
           borderWidth: 0,
-          data: chartDataSorted.map(([, value]) => {
-            return value;
+          data: chartDataSorted.map(([, item]) => {
+            return item.value;
           })
         }
       ],
@@ -100,21 +134,13 @@ export class PortfolioProportionChartComponent
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const label = data.labels[context.dataIndex];
+                    const label = context.label;
 
                     if (this.isInPercent) {
-                      const value =
-                        100 *
-                        data.datasets[context.datasetIndex].data[
-                          context.dataIndex
-                        ];
+                      const value = 100 * <number>context.raw;
                       return `${label} (${value.toFixed(2)}%)`;
                     } else {
-                      const value =
-                        data.datasets[context.datasetIndex].data[
-                          context.dataIndex
-                        ];
-
+                      const value = <number>context.raw;
                       return `${label} (${value.toLocaleString(this.locale, {
                         maximumFractionDigits: 2,
                         minimumFractionDigits: 2
@@ -152,9 +178,5 @@ export class PortfolioProportionChartComponent
       '#ff6b6b', // red 5
       '#cc5de8' // grape 5
     ];
-  }
-
-  public ngOnDestroy() {
-    this.chart?.destroy();
   }
 }

@@ -71,7 +71,7 @@
     "bootstrap": "4.6.0",
     "cache-manager": "3.4.3",
     "cache-manager-redis-store": "2.0.0",
-    "chart.js": "3.0.2",
+    "chart.js": "3.2.1",
     "chartjs-adapter-date-fns": "1.1.0-beta.1",
     "chartjs-chart-timeline": "0.4.0",
     "cheerio": "1.0.0-rc.6",
