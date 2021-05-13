@@ -59,7 +59,7 @@ export class PortfolioProportionChartComponent
   private initialize() {
     this.isLoading = true;
     const chartData: {
-      [symbol: string]: { color: string; value: number };
+      [symbol: string]: { color?: string; value: number };
     } = {};
 
     Object.keys(this.positions).forEach((symbol) => {
@@ -70,7 +70,6 @@ export class PortfolioProportionChartComponent
           ].value;
         } else {
           chartData[this.positions[symbol][this.key]] = {
-            color: 'red',
             value: this.positions[symbol].value
           };
         }
@@ -79,7 +78,6 @@ export class PortfolioProportionChartComponent
           chartData['Other'].value += this.positions[symbol].value;
         } else {
           chartData['Other'] = {
-            color: 'red',
             value: this.positions[symbol].value
           };
         }
