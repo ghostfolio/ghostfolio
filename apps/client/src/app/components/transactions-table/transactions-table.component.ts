@@ -249,15 +249,20 @@ export class TransactionsTableComponent
 
   private getSearchableFieldValues(transactions: OrderWithAccount[]): string[] {
     const fieldValues = new Set<string>();
+
     for (const transaction of transactions) {
       this.getFilterableValues(transaction, fieldValues);
     }
 
-    return [...fieldValues].filter((item) => item !== undefined).sort();
+    return [...fieldValues]
+      .filter((item) => {
+        return item !== undefined;
+      })
+      .sort();
   }
 
   private getFilterableValues(
-    transaction,
+    transaction: OrderWithAccount,
     fieldValues: Set<string> = new Set<string>()
   ): string[] {
     fieldValues.add(transaction.currency);
@@ -265,6 +270,9 @@ export class TransactionsTableComponent
     fieldValues.add(transaction.type);
     fieldValues.add(transaction.Account?.name);
     fieldValues.add(transaction.Account?.Platform?.name);
-    return [...fieldValues].filter((item) => item !== undefined);
+
+    return [...fieldValues].filter((item) => {
+      return item !== undefined;
+    });
   }
 }
