@@ -6,14 +6,18 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
     <loc>https://ghostfol.io</loc>
-    <lastmod>2021-03-18T20:24:46+00:00</lastmod>
+    <lastmod>2021-05-14T20:24:46+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/about</loc>
-    <lastmod>2021-03-18T20:24:46+00:00</lastmod>
+    <lastmod>2021-05-14T20:24:46+00:00</lastmod>
+  </url>
+    <url>
+    <loc>https://ghostfol.io/pricing</loc>
+    <lastmod>2021-05-14T20:24:46+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/resources</loc>
-    <lastmod>2021-03-18T20:24:46+00:00</lastmod>
+    <lastmod>2021-05-14T20:24:46+00:00</lastmod>
   </url>
 </urlset>
