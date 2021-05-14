@@ -27,8 +27,9 @@ export class HeaderComponent implements OnChanges {
   @Input() info: InfoItem;
   @Input() user: User;
 
-  public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionForSocialLogin: boolean;
+  public hasPermissionForSubscription: boolean;
+  public hasPermissionToAccessAdminControl: boolean;
   public impersonationId: string;
 
   private unsubscribeSubject = new Subject<void>();
@@ -49,16 +50,21 @@ export class HeaderComponent implements OnChanges {
 
   public ngOnChanges() {
     if (this.user) {
+      this.hasPermissionForSocialLogin = hasPermission(
+        this.info?.globalPermissions,
+        permissions.enableSocialLogin
+      );
+
+      this.hasPermissionForSubscription = hasPermission(
+        this.info?.globalPermissions,
+        permissions.enableSubscription
+      );
+
       this.hasPermissionToAccessAdminControl = hasPermission(
         this.user.permissions,
         permissions.accessAdminControl
       );
     }
-
-    this.hasPermissionForSocialLogin = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSocialLogin
-    );
   }
 
   public impersonateAccount(aId: string) {
