@@ -28,6 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { PositionDetailDialog } from '../position/position-detail-dialog/position-detail-dialog.component';
 
+const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
 const SEARCH_STRING_SEPARATOR = ',';
 
 @Component({
@@ -60,6 +61,7 @@ export class TransactionsTableComponent
     string[]
   > = this.filteredTransactions$.asObservable();
   public isLoading = true;
+  public placeholder = '';
   public routeQueryParams: Subscription;
   public searchControl = new FormControl();
   public searchKeywords: string[] = [];
@@ -151,7 +153,7 @@ export class TransactionsTableComponent
     if (this.transactions) {
       this.dataSource = new MatTableDataSource(this.transactions);
       this.dataSource.filterPredicate = (data, filter) => {
-        const dataString = TransactionsTableComponent.getFilterableValues(data)
+        const dataString = this.getFilterableValues(data)
           .join(' ')
           .toLowerCase();
         let contains = true;
@@ -232,27 +234,35 @@ export class TransactionsTableComponent
     const lowercaseSearchKeywords = this.searchKeywords.map((keyword) =>
       keyword.trim().toLowerCase()
     );
-    this.allFilteredTransactions = TransactionsTableComponent.getSearchableFieldValues(
+
+    this.placeholder =
+      lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
+
+    this.allFilteredTransactions = this.getSearchableFieldValues(
       this.transactions
     ).filter((item) => {
       return !lowercaseSearchKeywords.includes(item.trim().toLowerCase());
     });
+
     this.filteredTransactions$.next(this.allFilteredTransactions);
   }
 
-  private static getSearchableFieldValues(
-    transactions: OrderWithAccount[]
-  ): string[] {
+  private getSearchableFieldValues(transactions: OrderWithAccount[]): string[] {
     const fieldValues = new Set<string>();
+
     for (const transaction of transactions) {
       this.getFilterableValues(transaction, fieldValues);
     }
 
-    return [...fieldValues].filter((item) => item != undefined).sort();
+    return [...fieldValues]
+      .filter((item) => {
+        return item !== undefined;
+      })
+      .sort();
   }
 
-  private static getFilterableValues(
-    transaction,
+  private getFilterableValues(
+    transaction: OrderWithAccount,
     fieldValues: Set<string> = new Set<string>()
   ): string[] {
     fieldValues.add(transaction.currency);
@@ -260,6 +270,9 @@ export class TransactionsTableComponent
     fieldValues.add(transaction.type);
     fieldValues.add(transaction.Account?.name);
     fieldValues.add(transaction.Account?.Platform?.name);
-    return [...fieldValues].filter((item) => item != undefined);
+
+    return [...fieldValues].filter((item) => {
+      return item !== undefined;
+    });
   }
 }

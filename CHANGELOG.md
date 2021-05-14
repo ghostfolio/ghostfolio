@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Harmonized the style of various tables
 - Keep the color per type when switching between _Initial_ and _Current_ in pie charts
 - Upgraded `chart.js` from version `3.0.2` to `3.2.1`
+- Improved the style of the transaction filtering component
 
 ### Fixed
 

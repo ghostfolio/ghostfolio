@@ -3,6 +3,7 @@
   <mat-chip-list #chipList aria-label="Search keywords">
     <mat-chip
       *ngFor="let searchKeyword of searchKeywords"
+      class="mx-1 my-0 px-2 py-0"
       matChipRemove
       [removable]="true"
       (removed)="removeKeyword(searchKeyword)"
@@ -13,11 +14,11 @@
     <input
       #searchInput
       name="close-outline"
-      placeholder="Search for account, currency, symbol or type..."
       [formControl]="searchControl"
       [matAutocomplete]="autocomplete"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [placeholder]="placeholder"
       (matChipInputTokenEnd)="addKeyword($event)"
     />
   </mat-chip-list>
