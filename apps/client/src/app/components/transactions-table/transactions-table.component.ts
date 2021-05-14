@@ -234,14 +234,15 @@ export class TransactionsTableComponent
     const lowercaseSearchKeywords = this.searchKeywords.map((keyword) =>
       keyword.trim().toLowerCase()
     );
+
+    this.placeholder =
+      lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
+
     this.allFilteredTransactions = this.getSearchableFieldValues(
       this.transactions
     ).filter((item) => {
       return !lowercaseSearchKeywords.includes(item.trim().toLowerCase());
     });
-
-    this.placeholder =
-      lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
 
     this.filteredTransactions$.next(this.allFilteredTransactions);
   }
