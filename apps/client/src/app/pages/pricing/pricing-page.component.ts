@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { baseCurrency } from '@ghostfolio/helper';
-import { Subject } from 'rxjs';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
-import { takeUntil } from 'rxjs/operators';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { baseCurrency } from '@ghostfolio/helper';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-pricing-page',
