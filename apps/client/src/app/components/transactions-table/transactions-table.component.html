@@ -14,11 +14,11 @@
     <input
       #searchInput
       name="close-outline"
-      [placeholder]="placeholder"
       [formControl]="searchControl"
       [matAutocomplete]="autocomplete"
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [placeholder]="placeholder"
       (matChipInputTokenEnd)="addKeyword($event)"
     />
   </mat-chip-list>
