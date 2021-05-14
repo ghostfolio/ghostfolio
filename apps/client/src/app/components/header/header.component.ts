@@ -49,22 +49,20 @@ export class HeaderComponent implements OnChanges {
   }
 
   public ngOnChanges() {
-    if (this.user) {
-      this.hasPermissionForSocialLogin = hasPermission(
-        this.info?.globalPermissions,
-        permissions.enableSocialLogin
-      );
+    this.hasPermissionForSocialLogin = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSocialLogin
+    );
 
-      this.hasPermissionForSubscription = hasPermission(
-        this.info?.globalPermissions,
-        permissions.enableSubscription
-      );
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
 
-      this.hasPermissionToAccessAdminControl = hasPermission(
-        this.user.permissions,
-        permissions.accessAdminControl
-      );
-    }
+    this.hasPermissionToAccessAdminControl = hasPermission(
+      this.user?.permissions,
+      permissions.accessAdminControl
+    );
   }
 
   public impersonateAccount(aId: string) {
