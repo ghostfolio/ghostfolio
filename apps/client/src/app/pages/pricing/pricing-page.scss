@@ -1,0 +1,14 @@
+:host {
+  color: rgb(var(--dark-primary-text));
+  display: block;
+
+  .mat-card {
+    &.active {
+      border-color: rgba(var(--palette-primary-500), 1);
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
+}

@@ -1,0 +1,102 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>Pricing Plans</h3>
+      <div class="row">
+        <div class="col-xs-12 col-md-6">
+          <mat-card class="mb-3">
+            <h4 i18n>Open Source</h4>
+            <p>Host your <strong>Ghostfolio</strong> instance by yourself.</p>
+            <ul class="list-unstyled mb-3">
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Performance</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Summary</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Unlimited Transactions</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Advanced Insights</span>
+              </li>
+            </ul>
+            <p class="h5 text-right">
+              <span>Free</span>
+            </p>
+          </mat-card>
+        </div>
+        <div class="col-xs-12 col-md-6">
+          <mat-card
+            class="mb-3"
+            [ngClass]="{ 'active': user?.subscription?.type === 'Trial' }"
+          >
+            <h4 class="align-items-center d-flex" i18n>
+              Diamond
+              <ion-icon
+                class="ml-1 text-muted"
+                name="diamond-outline"
+              ></ion-icon>
+            </h4>
+            <p>
+              Get a fully managed <strong>Ghostfolio</strong> cloud offering.
+            </p>
+            <ul class="list-unstyled mb-3">
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Performance</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Portfolio Summary</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Unlimited Transactions</span>
+              </li>
+              <li class="align-items-center d-flex mb-1">
+                <ion-icon
+                  class="mr-1 text-muted"
+                  name="checkmark-circle-outline"
+                ></ion-icon>
+                <span>Advanced Insights</span>
+              </li>
+            </ul>
+            <p class="h5 text-right">
+              <span class="font-weight-normal"
+                >{{ user?.settings.baseCurrency || baseCurrency }}
+                <strong>2.99</strong>
+                <del class="ml-1 text-muted">3.99</del> / Month</span
+              >
+            </p>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,24 +1,20 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { baseCurrency } from '@ghostfolio/helper';
 import { Subject } from 'rxjs';
+import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { takeUntil } from 'rxjs/operators';
-
-import { environment } from '../../../environments/environment';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 
 @Component({
-  selector: 'gf-about-page',
-  templateUrl: './about-page.html',
-  styleUrls: ['./about-page.scss']
+  selector: 'gf-pricing-page',
+  templateUrl: './pricing-page.html',
+  styleUrls: ['./pricing-page.scss']
 })
-export class AboutPageComponent implements OnInit {
+export class PricingPageComponent implements OnInit {
   public baseCurrency = baseCurrency;
   public isLoggedIn: boolean;
-  public lastPublish = environment.lastPublish;
   public user: User;
-  public version = environment.version;
 
   private unsubscribeSubject = new Subject<void>();
 

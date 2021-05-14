@@ -29,11 +29,6 @@ const routes: Routes = [
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
   {
-    path: 'auth',
-    loadChildren: () =>
-      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
-  },
-  {
     path: 'analysis',
     loadChildren: () =>
       import('./pages/analysis/analysis-page.module').then(
@@ -41,9 +36,21 @@ const routes: Routes = [
       )
   },
   {
+    path: 'auth',
+    loadChildren: () =>
+      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
+  },
+  {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
+  },
+  {
+    path: 'pricing',
+    loadChildren: () =>
+      import('./pages/pricing/pricing-page.module').then(
+        (m) => m.PricingPageModule
+      )
   },
   {
     path: 'report',

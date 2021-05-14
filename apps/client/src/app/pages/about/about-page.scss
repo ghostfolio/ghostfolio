@@ -7,10 +7,6 @@
   }
 
   .mat-card {
-    &.active {
-      border-color: rgba(var(--palette-primary-500), 1);
-    }
-
     &.changelog {
       ::ng-deep {
         markdown {
