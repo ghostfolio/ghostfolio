@@ -73,8 +73,8 @@ export class PositionsTableComponent implements OnChanges, OnInit {
     this.displayedColumns = [
       'symbol',
       'performance',
-      'shareInvestment',
-      'shareCurrent'
+      'allocationInvestment',
+      'allocationCurrent'
     ];
 
     this.isLoading = true;

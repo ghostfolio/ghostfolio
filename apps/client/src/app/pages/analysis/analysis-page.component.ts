@@ -108,8 +108,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         type: position.type,
         value:
           aPeriod === 'original'
-            ? position.shareInvestment
-            : position.shareCurrent
+            ? position.allocationInvestment
+            : position.allocationCurrent
       };
       this.positionsArray.push(position);
 

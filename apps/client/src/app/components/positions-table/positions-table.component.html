@@ -1,7 +1,7 @@
 <table
   class="gf-table w-100"
   matSort
-  matSortActive="shareCurrent"
+  matSortActive="allocationCurrent"
   matSortDirection="desc"
   mat-table
   [dataSource]="dataSource"
@@ -36,7 +36,7 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="shareInvestment">
+  <ng-container matColumnDef="allocationInvestment">
     <th
       *matHeaderCellDef
       class="justify-content-end px-1"
@@ -44,20 +44,20 @@
       mat-header-cell
       mat-sort-header
     >
-      Initial Share
+      Initial Allocation
     </th>
     <td mat-cell *matCellDef="let element">
       <div class="d-flex justify-content-end px-1">
         <gf-value
           [isPercent]="true"
           [locale]="locale"
-          [value]="isLoading ? undefined : element.shareInvestment"
+          [value]="isLoading ? undefined : element.allocationInvestment"
         ></gf-value>
       </div>
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="shareCurrent">
+  <ng-container matColumnDef="allocationCurrent">
     <th
       *matHeaderCellDef
       class="justify-content-end px-1"
@@ -65,14 +65,14 @@
       mat-header-cell
       mat-sort-header
     >
-      Current Share
+      Current Allocation
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <div class="d-flex justify-content-end">
         <gf-value
           [isPercent]="true"
           [locale]="locale"
-          [value]="isLoading ? undefined : element.shareCurrent"
+          [value]="isLoading ? undefined : element.allocationCurrent"
         ></gf-value>
       </div>
     </td>

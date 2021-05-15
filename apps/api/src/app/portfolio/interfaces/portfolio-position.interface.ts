@@ -5,6 +5,8 @@ export interface PortfolioPosition {
   accounts: {
     [name: string]: { current: number; original: number };
   };
+  allocationCurrent: number;
+  allocationInvestment: number;
   currency: Currency;
   exchange?: string;
   grossPerformance: number;
@@ -18,8 +20,6 @@ export interface PortfolioPosition {
   name: string;
   quantity: number;
   sector?: string;
-  shareCurrent: number;
-  shareInvestment: number;
   transactionCount: number;
   symbol: string;
   type?: string;

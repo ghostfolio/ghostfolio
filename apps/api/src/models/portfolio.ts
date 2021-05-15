@@ -39,6 +39,7 @@ import { IOrder } from '../services/interfaces/interfaces';
 import { RulesService } from '../services/rules.service';
 import { PortfolioInterface } from './interfaces/portfolio.interface';
 import { Order } from './order';
+import { OrderType } from './order-type';
 import { AccountClusterRiskCurrentInvestment } from './rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskInitialInvestment } from './rules/account-cluster-risk/initial-investment';
 import { AccountClusterRiskSingleAccount } from './rules/account-cluster-risk/single-account';
@@ -285,6 +286,14 @@ export class Portfolio implements PortfolioInterface {
         ...data[symbol],
         accounts,
         symbol,
+        allocationCurrent:
+          this.exchangeRateDataService.toCurrency(
+            portfolioItem.positions[symbol].quantity * now,
+            data[symbol]?.currency,
+            this.user.Settings.currency
+          ) / value,
+        allocationInvestment:
+          portfolioItem.positions[symbol].investment / investment,
         grossPerformance: roundTo(
           portfolioItemsNow.positions[symbol].quantity * (now - before),
           2
@@ -292,14 +301,6 @@ export class Portfolio implements PortfolioInterface {
         grossPerformancePercent: roundTo((now - before) / before, 4),
         investment: portfolioItem.positions[symbol].investment,
         quantity: portfolioItem.positions[symbol].quantity,
-        shareCurrent:
-          this.exchangeRateDataService.toCurrency(
-            portfolioItem.positions[symbol].quantity * now,
-            data[symbol]?.currency,
-            this.user.Settings.currency
-          ) / value,
-        shareInvestment:
-          portfolioItem.positions[symbol].investment / investment,
         transactionCount: portfolioItem.positions[symbol].transactionCount
       };
     });
@@ -537,12 +538,12 @@ export class Portfolio implements PortfolioInterface {
       this.orders.push(
         new Order({
           account: order.Account,
-          currency: <any>order.currency,
+          currency: order.currency,
           date: order.date.toISOString(),
           fee: order.fee,
           quantity: order.quantity,
           symbol: order.symbol,
-          type: <any>order.type,
+          type: <OrderType>order.type,
           unitPrice: order.unitPrice
         })
       );
