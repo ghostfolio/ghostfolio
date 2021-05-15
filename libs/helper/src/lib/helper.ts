@@ -11,6 +11,28 @@ export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }
 
+export function getBackgroundColor() {
+  return getCssVariable(
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? '--dark-background'
+      : '--light-background'
+  );
+}
+
+export function getCssVariable(aCssVariable: string) {
+  return getComputedStyle(document.documentElement).getPropertyValue(
+    aCssVariable
+  );
+}
+
+export function getTextColor() {
+  return getCssVariable(
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? '--light-primary-text'
+      : '--dark-primary-text'
+  );
+}
+
 export function getToday() {
   const year = getYear(new Date());
   const month = getMonth(new Date());

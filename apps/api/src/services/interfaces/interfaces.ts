@@ -1,4 +1,5 @@
-import { Account, Currency, DataSource, Platform } from '@prisma/client';
+import { UNKNOWN_KEY } from '@ghostfolio/helper';
+import { Account, Currency, DataSource } from '@prisma/client';
 
 import { OrderType } from '../../models/order-type';
 
@@ -7,9 +8,9 @@ export const Industry = {
   Biotechnology: 'Biotechnology',
   Food: 'Food',
   Internet: 'Internet',
-  Other: 'Other',
   Pharmaceutical: 'Pharmaceutical',
-  Software: 'Software'
+  Software: 'Software',
+  Unknown: UNKNOWN_KEY
 };
 
 export const MarketState = {
@@ -21,15 +22,15 @@ export const MarketState = {
 export const Sector = {
   Consumer: 'Consumer',
   Healthcare: 'Healthcare',
-  Other: 'Other',
-  Technology: 'Technology'
+  Technology: 'Technology',
+  Unknown: UNKNOWN_KEY
 };
 
 export const Type = {
   Cryptocurrency: 'Cryptocurrency',
   ETF: 'ETF',
-  Other: 'Other',
-  Stock: 'Stock'
+  Stock: 'Stock',
+  Unknown: UNKNOWN_KEY
 };
 
 export interface IOrder {

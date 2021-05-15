@@ -1,4 +1,9 @@
-import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/helper';
+import {
+  UNKNOWN_KEY,
+  isCrypto,
+  isCurrency,
+  parseCurrency
+} from '@ghostfolio/helper';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { format } from 'date-fns';
@@ -170,7 +175,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
   private parseExchange(aString: string): string {
     if (aString?.toLowerCase() === 'ccc') {
-      return 'Other';
+      return UNKNOWN_KEY;
     }
 
     return aString;
@@ -200,7 +205,7 @@ export class YahooFinanceService implements DataProviderInterface {
       return Industry.Software;
     }
 
-    return Industry.Other;
+    return Industry.Unknown;
   }
 
   private parseSector(aString: string): Sector {
@@ -222,7 +227,7 @@ export class YahooFinanceService implements DataProviderInterface {
       return Sector.Technology;
     }
 
-    return Sector.Other;
+    return Sector.Unknown;
   }
 
   private parseType(aString: string): Type {
@@ -234,7 +239,7 @@ export class YahooFinanceService implements DataProviderInterface {
       return Type.Stock;
     }
 
-    return Type.Other;
+    return Type.Unknown;
   }
 }
 

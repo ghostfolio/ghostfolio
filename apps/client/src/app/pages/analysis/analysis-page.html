@@ -2,12 +2,15 @@
   <div class="mb-5 row">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>Analysis</h3>
-      <gf-positions-table
-        [baseCurrency]="user?.settings?.baseCurrency"
-        [deviceType]="deviceType"
-        [locale]="user?.settings?.locale"
-        [positions]="positionsArray"
-      ></gf-positions-table>
+      <div class="mb-4">
+        <h4 class="m-0" i18n>Positions</h4>
+        <gf-positions-table
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="deviceType"
+          [locale]="user?.settings?.locale"
+          [positions]="positionsArray"
+        ></gf-positions-table>
+      </div>
     </div>
   </div>
   <div class="proportion-charts row">
@@ -157,7 +160,7 @@
             </div>
             <div i18n>
               You can find more charts on your desktop:
-              <a href="https://ghostfol.io" target="_blank">www.ghostfol.io</a>
+              <a href="https://ghostfol.io" target="_blank">Ghostfol.io</a>
             </div>
           </div>
         </mat-card-content>

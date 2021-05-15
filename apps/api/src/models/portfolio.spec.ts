@@ -1,4 +1,9 @@
-import { baseCurrency, getUtc, getYesterday } from '@ghostfolio/helper';
+import {
+  UNKNOWN_KEY,
+  baseCurrency,
+  getUtc,
+  getYesterday
+} from '@ghostfolio/helper';
 import { Test } from '@nestjs/testing';
 import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
 
@@ -170,7 +175,7 @@ describe('Portfolio', () => {
       expect(details).toMatchObject({
         BTCUSD: {
           accounts: {
-            Other: {
+            [UNKNOWN_KEY]: {
               /*current: exchangeRateDataService.toCurrency(
                 1 * 49631.24,
                 Currency.USD,
@@ -184,7 +189,7 @@ describe('Portfolio', () => {
             }
           },
           currency: Currency.USD,
-          exchange: 'Other',
+          exchange: UNKNOWN_KEY,
           grossPerformance: 0,
           grossPerformancePercent: 0,
           investment: exchangeRateDataService.toCurrency(
@@ -271,7 +276,7 @@ describe('Portfolio', () => {
       expect(details).toMatchObject({
         ETHUSD: {
           accounts: {
-            Other: {
+            [UNKNOWN_KEY]: {
               /*current: exchangeRateDataService.toCurrency(
                 0.2 * 991.49,
                 Currency.USD,
@@ -285,7 +290,7 @@ describe('Portfolio', () => {
             }
           },
           currency: Currency.USD,
-          exchange: 'Other',
+          exchange: UNKNOWN_KEY,
           // grossPerformance: 0,
           // grossPerformancePercent: 0,
           investment: exchangeRateDataService.toCurrency(
