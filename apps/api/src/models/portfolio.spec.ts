@@ -239,7 +239,7 @@ describe('Portfolio', () => {
         }
       });
 
-      // expect(portfolio.getFees()).toEqual(0);
+      expect(portfolio.getFees()).toEqual(0);
 
       /*const performance1d = await portfolio.getPerformance('1d');
       expect(performance1d).toEqual({
@@ -339,7 +339,7 @@ describe('Portfolio', () => {
         }
       });
 
-      // expect(portfolio.getFees()).toEqual(0);
+      expect(portfolio.getFees()).toEqual(0);
 
       /*const performance = await portfolio.getPerformance('max');
       expect(performance).toEqual({
@@ -418,7 +418,7 @@ describe('Portfolio', () => {
           )
       );
 
-      // expect(portfolio.getFees()).toEqual(0);
+      expect(portfolio.getFees()).toEqual(0);
 
       expect(portfolio.getPositions(getYesterday())).toMatchObject({
         ETHUSD: {
