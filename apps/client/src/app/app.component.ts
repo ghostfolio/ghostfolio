@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
 import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import {
@@ -58,7 +58,10 @@ export class AppComponent implements OnDestroy, OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.currentRoute = this.router.url.toString().substring(1);
+        const urlTree = this.router.parseUrl(this.router.url);
+        const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
+        const urlSegments = urlSegmentGroup.segments;
+        this.currentRoute = urlSegments[0].path;
       });
 
     this.tokenStorageService
@@ -84,6 +87,16 @@ export class AppComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onCreateAccount() {
+    this.tokenStorageService.signOut();
+    window.location.reload();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   private initializeTheme() {
     this.materialCssVarsService.setDarkTheme(
       window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -95,15 +108,5 @@ export class AppComponent implements OnDestroy, OnInit {
 
     this.materialCssVarsService.setPrimaryColor(primaryColorHex);
     this.materialCssVarsService.setAccentColor(secondaryColorHex);
-  }
-
-  public onCreateAccount() {
-    this.tokenStorageService.signOut();
-    window.location.reload();
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }
