@@ -4,67 +4,93 @@ import {
   getUtc,
   getYesterday
 } from '@ghostfolio/helper';
-import { Test } from '@nestjs/testing';
 import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
 
-import { ConfigurationService } from '../services/configuration.service';
 import { DataProviderService } from '../services/data-provider.service';
-import { AlphaVantageService } from '../services/data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from '../services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '../services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '../services/data-provider/yahoo-finance/yahoo-finance.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { MarketState } from '../services/interfaces/interfaces';
-import { PrismaService } from '../services/prisma.service';
 import { RulesService } from '../services/rules.service';
 import { Portfolio } from './portfolio';
+import { format } from 'date-fns';
+
+jest.mock('../services/data-provider.service', () => {
+  return {
+    DataProviderService: jest.fn().mockImplementation(() => {
+      const today = format(new Date(), 'yyyy-MM-dd');
+
+      return {
+        get: () => {
+          return Promise.resolve({
+            BTCUSD: {
+              currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
+              exchange: UNKNOWN_KEY,
+              marketPrice: 57973.008,
+              marketState: MarketState.open,
+              name: 'Bitcoin USD',
+              type: 'Cryptocurrency'
+            },
+            ETHUSD: {
+              currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
+              exchange: UNKNOWN_KEY,
+              marketPrice: 3915.337,
+              marketState: MarketState.open,
+              name: 'Ethereum USD',
+              type: 'Cryptocurrency'
+            }
+          });
+        },
+        getHistorical: () => {
+          return Promise.resolve({
+            BTCUSD: {
+              [today]: 57973.008
+            },
+            ETHUSD: {
+              [today]: 3915.337
+            }
+          });
+        }
+      };
+    })
+  };
+});
+
+jest.mock('../services/exchange-rate-data.service', () => {
+  return {
+    ExchangeRateDataService: jest.fn().mockImplementation(() => {
+      return {
+        initialize: () => Promise.resolve(),
+        toCurrency: (value: number) => value
+      };
+    })
+  };
+});
+
+jest.mock('../services/data-provider.service');
+jest.mock('../services/exchange-rate-data.service');
+jest.mock('../services/rules.service');
 
 const DEFAULT_ACCOUNT_ID = '693a834b-eb89-42c9-ae47-35196c25d269';
 const USER_ID = 'ca6ce867-5d31-495a-bce9-5942bbca9237';
 
 describe('Portfolio', () => {
-  let alphaVantageService: AlphaVantageService;
-  let configurationService: ConfigurationService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
-  let ghostfolioScraperApiService: GhostfolioScraperApiService;
   let portfolio: Portfolio;
-  let prismaService: PrismaService;
-  let rakutenRapidApiService: RakutenRapidApiService;
   let rulesService: RulesService;
-  let yahooFinanceService: YahooFinanceService;
 
   beforeAll(async () => {
-    const app = await Test.createTestingModule({
-      imports: [],
-      providers: [
-        AlphaVantageService,
-        ConfigurationService,
-        DataProviderService,
-        ExchangeRateDataService,
-        GhostfolioScraperApiService,
-        PrismaService,
-        RakutenRapidApiService,
-        RulesService,
-        YahooFinanceService
-      ]
-    }).compile();
-
-    alphaVantageService = app.get<AlphaVantageService>(AlphaVantageService);
-    configurationService = app.get<ConfigurationService>(ConfigurationService);
-    dataProviderService = app.get<DataProviderService>(DataProviderService);
-    exchangeRateDataService = app.get<ExchangeRateDataService>(
-      ExchangeRateDataService
+    dataProviderService = new DataProviderService(
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
     );
-    ghostfolioScraperApiService = app.get<GhostfolioScraperApiService>(
-      GhostfolioScraperApiService
-    );
-    prismaService = app.get<PrismaService>(PrismaService);
-    rakutenRapidApiService = app.get<RakutenRapidApiService>(
-      RakutenRapidApiService
-    );
-    rulesService = app.get<RulesService>(RulesService);
-    yahooFinanceService = app.get<YahooFinanceService>(YahooFinanceService);
+    exchangeRateDataService = new ExchangeRateDataService(null);
+    rulesService = new RulesService();
 
     await exchangeRateDataService.initialize();
 
@@ -599,9 +625,5 @@ describe('Portfolio', () => {
 
       expect(portfolio.getSymbols(getYesterday())).toEqual(['ETHUSD']);
     });
-  });
-
-  afterAll(async () => {
-    prismaService.$disconnect();
   });
 });

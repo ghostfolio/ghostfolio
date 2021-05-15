@@ -37,10 +37,11 @@
     "start:client": "ng serve client --hmr -o",
     "start:prod": "node apps/api/main",
     "start:server": "nx serve api",
-    "test": "ng test",
+    "test": "nx test",
     "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'",
     "update": "nx migrate latest",
     "watch:server": "nx build api --watch",
+    "watch:test": "nx test --watch",
     "workspace-generator": "nx workspace-generator"
   },
   "dependencies": {

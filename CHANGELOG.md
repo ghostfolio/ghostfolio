@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Hid unknown exchange in the position overview
+- Refactored the portfolio unit tests to work without database
 
 ## 1.3.0 - 15.05.2021
 
