@@ -228,6 +228,14 @@
     </a>
     <span class="spacer"></span>
     <a
+      *ngIf="hasPermissionForSubscription"
+      i18n
+      mat-flat-button
+      [color]="currentRoute?.startsWith('pricing') ? 'primary' : null"
+      [routerLink]="['/pricing']"
+      >Pricing</a
+    >
+    <a
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
