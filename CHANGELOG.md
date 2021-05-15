@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored the active menu item state by parsing the current url
 - Used a desaturated background color for unknown types in pie charts
+- Renamed the columns _Initial Share_ and _Current Share_ to _Initial Allocation_ and _Current Allocation_ in the positions table
 
 ### Fixed
 

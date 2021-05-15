@@ -188,6 +188,8 @@ describe('Portfolio', () => {
               )
             }
           },
+          // allocationCurrent: 0.9999999559148652,
+          allocationInvestment: 1,
           currency: Currency.USD,
           exchange: UNKNOWN_KEY,
           grossPerformance: 0,
@@ -201,8 +203,6 @@ describe('Portfolio', () => {
           marketState: MarketState.open,
           name: 'Bitcoin USD',
           quantity: 1,
-          // shareCurrent: 0.9999999559148652,
-          shareInvestment: 1,
           symbol: 'BTCUSD',
           transactionCount: 1,
           type: 'Cryptocurrency'
@@ -289,6 +289,8 @@ describe('Portfolio', () => {
               )
             }
           },
+          // allocationCurrent: 1,
+          allocationInvestment: 1,
           currency: Currency.USD,
           exchange: UNKNOWN_KEY,
           // grossPerformance: 0,
@@ -301,8 +303,6 @@ describe('Portfolio', () => {
           // marketPrice: 57973.008,
           name: 'Ethereum USD',
           quantity: 0.2,
-          // shareCurrent: 1,
-          shareInvestment: 1,
           transactionCount: 1,
           symbol: 'ETHUSD',
           type: 'Cryptocurrency'
