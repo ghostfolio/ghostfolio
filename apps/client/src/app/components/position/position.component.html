@@ -35,7 +35,9 @@
         <div class="h6 m-0 text-truncate">{{ position?.name }}</div>
         <div class="d-flex">
           <span>{{ position?.symbol | gfSymbol }}</span>
-          <span *ngIf="position?.exchange" class="ml-2 text-muted"
+          <span
+            *ngIf="position?.exchange && position?.exchange !== unknownKey"
+            class="ml-2 text-muted"
             >({{ position.exchange }})</span
           >
         </div>
