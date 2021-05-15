@@ -8,7 +8,7 @@
       class="d-none d-sm-block"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('home') ? 'primary' : null"
+      [color]="currentRoute === 'home' ? 'primary' : null"
       [routerLink]="['/']"
       >Overview</a
     >
@@ -16,7 +16,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('analysis') ? 'primary' : null"
+      [color]="currentRoute === 'analysis' ? 'primary' : null"
       [routerLink]="['/analysis']"
       >Analysis</a
     >
@@ -24,7 +24,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('report') ? 'primary' : null"
+      [color]="currentRoute === 'report' ? 'primary' : null"
       [routerLink]="['/report']"
       >X-ray</a
     >
@@ -32,7 +32,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('transactions') ? 'primary' : null"
+      [color]="currentRoute === 'transactions' ? 'primary' : null"
       [routerLink]="['/transactions']"
       >Transactions</a
     >
@@ -40,7 +40,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('accounts') ? 'primary' : null"
+      [color]="currentRoute === 'accounts' ? 'primary' : null"
       [routerLink]="['/accounts']"
       >Accounts</a
     >
@@ -49,7 +49,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('admin') ? 'primary' : null"
+      [color]="currentRoute === 'admin' ? 'primary' : null"
       [routerLink]="['/admin']"
       >Admin Control</a
     >
@@ -57,7 +57,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('resources') ? 'primary' : null"
+      [color]="currentRoute === 'resources' ? 'primary' : null"
       [routerLink]="['/resources']"
       >Resources</a
     >
@@ -66,7 +66,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('pricing') ? 'primary' : null"
+      [color]="currentRoute === 'pricing' ? 'primary' : null"
       [routerLink]="['/pricing']"
       >Pricing</a
     >
@@ -74,7 +74,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('about') ? 'primary' : null"
+      [color]="currentRoute === 'about' ? 'primary' : null"
       [routerLink]="['/about']"
       >About</a
     >
@@ -138,7 +138,7 @@
         class="d-block d-sm-none"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute?.startsWith('analysis') }"
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'analysis' }"
         [routerLink]="['/analysis']"
         >Analysis</a
       >
@@ -146,7 +146,7 @@
         class="d-block d-sm-none"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute?.startsWith('report') }"
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'report' }"
         [routerLink]="['/report']"
         >X-ray</a
       >
@@ -155,7 +155,7 @@
         i18n
         mat-menu-item
         [ngClass]="{
-          'font-weight-bold': currentRoute?.startsWith('transactions')
+          'font-weight-bold': currentRoute === 'transactions'
         }"
         [routerLink]="['/transactions']"
         >Transactions</a
@@ -164,7 +164,7 @@
         class="d-block d-sm-none"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute?.startsWith('accounts') }"
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
         [routerLink]="['/accounts']"
         >Accounts</a
       >
@@ -172,7 +172,7 @@
         class="align-items-center d-flex"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute?.startsWith('account') }"
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
         [routerLink]="['/account']"
         >Ghostfolio Account</a
       >
@@ -181,7 +181,7 @@
         class="d-block d-sm-none"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute?.startsWith('admin') }"
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
         [routerLink]="['/admin']"
         >Admin Control</a
       >
@@ -191,7 +191,7 @@
         i18n
         mat-menu-item
         [ngClass]="{
-          'font-weight-bold': currentRoute?.startsWith('resources')
+          'font-weight-bold': currentRoute === 'resources'
         }"
         [routerLink]="['/resources']"
         >Resources</a
@@ -201,7 +201,7 @@
         class="d-block d-sm-none"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute?.startsWith('pricing') }"
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'pricing' }"
         [routerLink]="['/pricing']"
         >Pricing</a
       >
@@ -209,7 +209,7 @@
         class="d-block d-sm-none"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute?.startsWith('about') }"
+        [ngClass]="{ 'font-weight-bold': currentRoute === 'about' }"
         [routerLink]="['/about']"
         >About Ghostfolio</a
       >
@@ -231,7 +231,7 @@
       *ngIf="hasPermissionForSubscription"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('pricing') ? 'primary' : null"
+      [color]="currentRoute === 'pricing' ? 'primary' : null"
       [routerLink]="['/pricing']"
       >Pricing</a
     >
@@ -239,7 +239,7 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute?.startsWith('about') ? 'primary' : null"
+      [color]="currentRoute === 'about' ? 'primary' : null"
       [routerLink]="['/about']"
       >About</a
     >

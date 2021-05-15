@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Refactored the active menu item state by parsing the current url
+
 ### Fixed
 
 - Fixed the link to the pricing page
