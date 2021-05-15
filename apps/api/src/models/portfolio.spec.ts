@@ -25,7 +25,7 @@ jest.mock('../services/data-provider.service', () => {
             BTCUSD: {
               currency: Currency.USD,
               dataSource: DataSource.YAHOO,
-              exchange: 'Other',
+              exchange: UNKNOWN_KEY,
               marketPrice: 57973.008,
               marketState: MarketState.open,
               name: 'Bitcoin USD',
@@ -34,7 +34,7 @@ jest.mock('../services/data-provider.service', () => {
             ETHUSD: {
               currency: Currency.USD,
               dataSource: DataSource.YAHOO,
-              exchange: 'Other',
+              exchange: UNKNOWN_KEY,
               marketPrice: 3915.337,
               marketState: MarketState.open,
               name: 'Ethereum USD',
@@ -62,7 +62,7 @@ jest.mock('../services/exchange-rate-data.service', () => {
     ExchangeRateDataService: jest.fn().mockImplementation(() => {
       return {
         initialize: () => Promise.resolve(),
-        toCurrency: () => Promise.resolve(1)
+        toCurrency: (value: number) => value
       };
     })
   };
@@ -85,11 +85,16 @@ describe('Portfolio', () => {
       providers: [DataProviderService, ExchangeRateDataService, RulesService]
     }).compile();
 
-    dataProviderService = app.get<DataProviderService>(DataProviderService);
-    exchangeRateDataService = app.get<ExchangeRateDataService>(
-      ExchangeRateDataService
+    dataProviderService = new DataProviderService(
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
     );
-    rulesService = app.get<RulesService>(RulesService);
+    exchangeRateDataService = new ExchangeRateDataService(null);
+    rulesService = new RulesService();
 
     await exchangeRateDataService.initialize();
 

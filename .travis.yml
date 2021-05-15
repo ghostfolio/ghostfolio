@@ -7,3 +7,4 @@ before_script:
   - yarn
 script:
   - yarn format:check
+  - yarn test
