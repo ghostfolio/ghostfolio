@@ -8,7 +8,8 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
-import { Subject, Subscription } from 'rxjs';
+import { UNKNOWN_KEY } from '@ghostfolio/helper';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { PositionDetailDialog } from './position-detail-dialog/position-detail-dialog.component';
@@ -27,7 +28,7 @@ export class PositionComponent implements OnDestroy, OnInit {
   @Input() position: PortfolioPosition;
   @Input() range: string;
 
-  public routeQueryParams: Subscription;
+  public unknownKey = UNKNOWN_KEY;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -36,7 +37,7 @@ export class PositionComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.routeQueryParams = route.queryParams
+    route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (
