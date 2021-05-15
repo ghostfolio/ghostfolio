@@ -23,6 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderWithAccount } from '@ghostfolio/api/app/order/interfaces/order-with-account.type';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
+import { format, parse, parseISO } from 'date-fns';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -258,7 +259,21 @@ export class TransactionsTableComponent
       .filter((item) => {
         return item !== undefined;
       })
-      .sort();
+      .sort((a, b) => {
+        const aFirstChar = a.charAt(0);
+        const bFirstChar = b.charAt(0);
+        const isANumber = aFirstChar >= '0' && aFirstChar <= '9';
+        const isBNumber = bFirstChar >= '0' && bFirstChar <= '9';
+
+        // Sort priority: text, followed by numbers
+        if (isANumber && !isBNumber) {
+          return 1;
+        } else if (!isANumber && isBNumber) {
+          return -1;
+        } else {
+          return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
+        }
+      });
   }
 
   private getFilterableValues(
@@ -270,6 +285,7 @@ export class TransactionsTableComponent
     fieldValues.add(transaction.type);
     fieldValues.add(transaction.Account?.name);
     fieldValues.add(transaction.Account?.Platform?.name);
+    fieldValues.add(format(transaction.date, 'yyyy'));
 
     return [...fieldValues].filter((item) => {
       return item !== undefined;
