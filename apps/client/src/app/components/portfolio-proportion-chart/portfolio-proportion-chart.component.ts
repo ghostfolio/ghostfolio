@@ -8,6 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
+import { UNKNOWN_KEY, getCssVariable, getTextColor } from '@ghostfolio/helper';
 import { Currency } from '@prisma/client';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
@@ -38,7 +39,11 @@ export class PortfolioProportionChartComponent
 
   private colorMap: {
     [symbol: string]: string;
-  } = {};
+  } = {
+    [UNKNOWN_KEY]: `rgba(${getTextColor()}, ${getCssVariable(
+      '--palette-foreground-divider-alpha'
+    )})`
+  };
 
   public constructor() {
     Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
@@ -74,10 +79,10 @@ export class PortfolioProportionChartComponent
           };
         }
       } else {
-        if (chartData['Other']) {
-          chartData['Other'].value += this.positions[symbol].value;
+        if (chartData[UNKNOWN_KEY]) {
+          chartData[UNKNOWN_KEY].value += this.positions[symbol].value;
         } else {
-          chartData['Other'] = {
+          chartData[UNKNOWN_KEY] = {
             value: this.positions[symbol].value
           };
         }
@@ -134,7 +139,8 @@ export class PortfolioProportionChartComponent
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const label = context.label;
+                    const label =
+                      context.label === UNKNOWN_KEY ? 'Other' : context.label;
 
                     if (this.isInPercent) {
                       const value = 100 * <number>context.raw;

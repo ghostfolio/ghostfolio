@@ -9,7 +9,11 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/helper';
+import {
+  getBackgroundColor,
+  primaryColorRgb,
+  secondaryColorRgb
+} from '@ghostfolio/helper';
 import {
   Chart,
   Filler,
@@ -62,6 +66,10 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
+  public ngOnDestroy() {
+    this.chart?.destroy();
+  }
+
   private initialize() {
     this.isLoading = true;
     const benchmarkPrices = [];
@@ -76,7 +84,7 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
 
     const canvas = document.getElementById('chartCanvas');
 
-    var gradient = this.chartCanvas?.nativeElement
+    const gradient = this.chartCanvas?.nativeElement
       ?.getContext('2d')
       .createLinearGradient(
         0,
@@ -88,14 +96,7 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
       0,
       `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.01)`
     );
-    gradient.addColorStop(
-      1,
-      getComputedStyle(document.documentElement).getPropertyValue(
-        window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? '--dark-background'
-          : '--light-background'
-      )
-    );
+    gradient.addColorStop(1, getBackgroundColor());
 
     const data = {
       labels,
@@ -180,9 +181,5 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     this.isLoading = false;
-  }
-
-  public ngOnDestroy() {
-    this.chart?.destroy();
   }
 }

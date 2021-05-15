@@ -30,3 +30,5 @@ export const secondaryColorRgb = {
 
 export const DEFAULT_DATE_FORMAT = 'dd.MM.yyyy';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
+
+export const UNKNOWN_KEY = 'UNKNOWN';

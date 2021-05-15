@@ -2,7 +2,12 @@ import {
   PortfolioItem,
   Position
 } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
-import { getToday, getYesterday, resetHours } from '@ghostfolio/helper';
+import {
+  UNKNOWN_KEY,
+  getToday,
+  getYesterday,
+  resetHours
+} from '@ghostfolio/helper';
 import {
   add,
   format,
@@ -227,15 +232,17 @@ export class Portfolio implements PortfolioInterface {
           originalValueOfSymbol *= -1;
         }
 
-        if (accounts[orderOfSymbol.getAccount()?.name || 'Other']?.current) {
+        if (
+          accounts[orderOfSymbol.getAccount()?.name || UNKNOWN_KEY]?.current
+        ) {
           accounts[
-            orderOfSymbol.getAccount()?.name || 'Other'
+            orderOfSymbol.getAccount()?.name || UNKNOWN_KEY
           ].current += currentValueOfSymbol;
           accounts[
-            orderOfSymbol.getAccount()?.name || 'Other'
+            orderOfSymbol.getAccount()?.name || UNKNOWN_KEY
           ].original += originalValueOfSymbol;
         } else {
-          accounts[orderOfSymbol.getAccount()?.name || 'Other'] = {
+          accounts[orderOfSymbol.getAccount()?.name || UNKNOWN_KEY] = {
             current: currentValueOfSymbol,
             original: originalValueOfSymbol
           };

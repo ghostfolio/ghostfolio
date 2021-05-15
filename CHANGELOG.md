@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the active menu item state by parsing the current url
+- Used a desaturated background color for unknown types in pie charts
 
 ### Fixed
 
