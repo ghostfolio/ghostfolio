@@ -1,4 +1,3 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { Portfolio } from '@ghostfolio/api/models/portfolio';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
@@ -9,6 +8,7 @@ import {
   PortfolioItem,
   PortfolioOverview
 } from '@ghostfolio/helper/interfaces';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import { DateRange } from '@ghostfolio/helper/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';

@@ -18,6 +18,7 @@ import {
   hasPermission,
   permissions
 } from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Controller,
   Get,
@@ -34,7 +35,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { RequestWithUser } from '../interfaces/request-with-user.type';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail

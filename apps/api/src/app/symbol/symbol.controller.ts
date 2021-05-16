@@ -1,4 +1,4 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Controller,
   Get,

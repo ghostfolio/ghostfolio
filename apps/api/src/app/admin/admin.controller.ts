@@ -1,4 +1,3 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { AdminData } from '@ghostfolio/helper/interfaces';
 import {
@@ -6,6 +5,7 @@ import {
   hasPermission,
   permissions
 } from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Controller,
   Get,

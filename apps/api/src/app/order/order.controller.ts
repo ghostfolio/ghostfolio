@@ -1,4 +1,3 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import {
@@ -6,6 +5,7 @@ import {
   hasPermission,
   permissions
 } from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Body,
   Controller,

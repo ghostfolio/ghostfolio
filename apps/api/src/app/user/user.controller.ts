@@ -1,10 +1,10 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { User } from '@ghostfolio/helper/interfaces';
 import {
   getPermissions,
   hasPermission,
   permissions
 } from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Body,
   Controller,

@@ -9,6 +9,7 @@ import { PortfolioReportRule } from './portfolio-report-rule.interface';
 import { PortfolioReport } from './portfolio-report.interface';
 import { Position } from './position.interface';
 import { UserSettings } from './user-settings.interface';
+import { UserWithSettings } from './user-with-settings';
 import { User } from './user.interface';
 
 export {
@@ -23,5 +24,6 @@ export {
   PortfolioReportRule,
   Position,
   User,
-  UserSettings
+  UserSettings,
+  UserWithSettings
 };
