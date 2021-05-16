@@ -5,11 +5,10 @@ import {
   PortfolioPerformance,
   PortfolioPosition,
   PortfolioReport,
-  Position
+  Position,
+  UserWithSettings
 } from '@ghostfolio/helper/interfaces';
-import { UserWithSettings } from '@ghostfolio/helper/interfaces';
-import { DateRange } from '@ghostfolio/helper/types';
-import { OrderWithAccount } from '@ghostfolio/helper/types';
+import { DateRange, OrderWithAccount } from '@ghostfolio/helper/types';
 import {
   add,
   format,

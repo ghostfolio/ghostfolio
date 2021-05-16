@@ -8,8 +8,7 @@ import {
   PortfolioItem,
   PortfolioOverview
 } from '@ghostfolio/helper/interfaces';
-import { RequestWithUser } from '@ghostfolio/helper/types';
-import { DateRange } from '@ghostfolio/helper/types';
+import { DateRange, RequestWithUser } from '@ghostfolio/helper/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {

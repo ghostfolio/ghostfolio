@@ -3,10 +3,10 @@ import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/to
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { User } from '@ghostfolio/helper/interfaces';
 import {
   PortfolioItem,
-  PortfolioPosition
+  PortfolioPosition,
+  User
 } from '@ghostfolio/helper/interfaces';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';

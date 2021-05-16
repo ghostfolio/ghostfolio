@@ -11,11 +11,11 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { User } from '@ghostfolio/helper/interfaces';
 import {
   PortfolioOverview,
   PortfolioPerformance,
-  PortfolioPosition
+  PortfolioPosition,
+  User
 } from '@ghostfolio/helper/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
 import { DateRange } from '@ghostfolio/helper/types';

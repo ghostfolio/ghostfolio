@@ -7,9 +7,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import {
   PortfolioItem,
   PortfolioOverview,
-  PortfolioPerformance
-} from '@ghostfolio/helper/interfaces';
-import {
+  PortfolioPerformance,
   PortfolioPosition,
   PortfolioReport
 } from '@ghostfolio/helper/interfaces';
