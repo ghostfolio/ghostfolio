@@ -1,4 +1,4 @@
-import { groupBy } from '@ghostfolio/helper';
+import { groupBy } from '@ghostfolio/helper/helper';
 import { Currency } from '@prisma/client';
 
 import { PortfolioPosition } from '../app/portfolio/interfaces/portfolio-position.interface';

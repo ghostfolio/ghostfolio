@@ -4,7 +4,11 @@ import {
 } from '@ghostfolio/api/helper/object.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
+import {
+  getPermissions,
+  hasPermission,
+  permissions
+} from '@ghostfolio/helper/permissions';
 import {
   Controller,
   Get,

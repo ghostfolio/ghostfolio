@@ -2,12 +2,8 @@ import {
   PortfolioItem,
   Position
 } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
-import {
-  UNKNOWN_KEY,
-  getToday,
-  getYesterday,
-  resetHours
-} from '@ghostfolio/helper';
+import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
+import { getToday, getYesterday, resetHours } from '@ghostfolio/helper/helper';
 import {
   add,
   format,

@@ -2,7 +2,7 @@ import {
   isCrypto,
   isGhostfolioScraperApiSymbol,
   isRakutenRapidApiSymbol
-} from '@ghostfolio/helper';
+} from '@ghostfolio/helper/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
 import { format } from 'date-fns';

@@ -1,4 +1,4 @@
-import { UNKNOWN_KEY } from '@ghostfolio/helper';
+import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
 import { Account, Currency, DataSource } from '@prisma/client';
 
 import { OrderType } from '../../models/order-type';

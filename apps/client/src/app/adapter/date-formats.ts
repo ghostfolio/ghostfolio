@@ -1,7 +1,7 @@
 import {
   DEFAULT_DATE_FORMAT,
   DEFAULT_DATE_FORMAT_MONTH_YEAR
-} from '@ghostfolio/helper';
+} from '@ghostfolio/helper/config';
 
 export const DateFormats = {
   display: {

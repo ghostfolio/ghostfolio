@@ -12,7 +12,7 @@ import { LoginWithAccessTokenDialog } from '@ghostfolio/client/pages/login/login
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { hasPermission, permissions } from '@ghostfolio/helper';
+import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 

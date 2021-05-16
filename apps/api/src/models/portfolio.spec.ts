@@ -5,13 +5,13 @@ import {
   getYesterday
 } from '@ghostfolio/helper';
 import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
+import { format } from 'date-fns';
 
 import { DataProviderService } from '../services/data-provider.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { MarketState } from '../services/interfaces/interfaces';
 import { RulesService } from '../services/rules.service';
 import { Portfolio } from './portfolio';
-import { format } from 'date-fns';
 
 jest.mock('../services/data-provider.service', () => {
   return {

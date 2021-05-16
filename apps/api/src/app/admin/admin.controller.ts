@@ -1,6 +1,10 @@
 import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
+import {
+  getPermissions,
+  hasPermission,
+  permissions
+} from '@ghostfolio/helper/permissions';
 import {
   Controller,
   Get,

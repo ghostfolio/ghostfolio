@@ -9,11 +9,8 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {
-  getBackgroundColor,
-  primaryColorRgb,
-  secondaryColorRgb
-} from '@ghostfolio/helper';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/helper/config';
+import { getBackgroundColor } from '@ghostfolio/helper/helper';
 import {
   Chart,
   Filler,

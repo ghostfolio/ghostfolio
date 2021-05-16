@@ -8,7 +8,8 @@ import {
   ViewChild
 } from '@angular/core';
 import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
-import { UNKNOWN_KEY, getCssVariable, getTextColor } from '@ghostfolio/helper';
+import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
+import { getCssVariable, getTextColor } from '@ghostfolio/helper/helper';
 import { Currency } from '@prisma/client';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';

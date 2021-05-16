@@ -1,10 +1,9 @@
+import { benchmarks, currencyPairs } from '@ghostfolio/helper/config';
 import {
-  benchmarks,
-  currencyPairs,
   getUtc,
   isGhostfolioScraperApiSymbol,
   resetHours
-} from '@ghostfolio/helper';
+} from '@ghostfolio/helper/helper';
 import { Injectable } from '@nestjs/common';
 import {
   differenceInHours,

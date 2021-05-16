@@ -1,4 +1,4 @@
-import { getYesterday } from '@ghostfolio/helper';
+import { getYesterday } from '@ghostfolio/helper/helper';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import * as bent from 'bent';

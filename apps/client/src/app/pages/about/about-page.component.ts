@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { baseCurrency } from '@ghostfolio/helper';
+import { baseCurrency } from '@ghostfolio/helper/config';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

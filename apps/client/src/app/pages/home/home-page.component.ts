@@ -16,7 +16,7 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { hasPermission, permissions } from '@ghostfolio/helper';
+import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

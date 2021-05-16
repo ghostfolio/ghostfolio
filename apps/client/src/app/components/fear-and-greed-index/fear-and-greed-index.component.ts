@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
-import { resolveFearAndGreedIndex } from '@ghostfolio/helper';
+import { resolveFearAndGreedIndex } from '@ghostfolio/helper/helper';
 
 @Component({
   selector: 'gf-fear-and-greed-index',

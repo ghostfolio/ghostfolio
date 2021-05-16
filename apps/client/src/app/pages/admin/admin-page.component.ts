@@ -5,7 +5,7 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper';
+import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper/config';
 import { formatDistanceToNow, isValid, parseISO, sub } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
