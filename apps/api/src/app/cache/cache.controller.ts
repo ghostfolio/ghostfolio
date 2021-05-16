@@ -1,4 +1,4 @@
-import { RequestWithUser } from '@ghostfolio/helper/types';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import { Controller, Inject, Post, UseGuards } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';

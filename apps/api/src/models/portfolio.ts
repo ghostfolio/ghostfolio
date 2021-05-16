@@ -1,5 +1,5 @@
-import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
-import { getToday, getYesterday, resetHours } from '@ghostfolio/helper/helper';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { getToday, getYesterday, resetHours } from '@ghostfolio/common/helper';
 import {
   PortfolioItem,
   PortfolioPerformance,
@@ -7,8 +7,8 @@ import {
   PortfolioReport,
   Position,
   UserWithSettings
-} from '@ghostfolio/helper/interfaces';
-import { DateRange, OrderWithAccount } from '@ghostfolio/helper/types';
+} from '@ghostfolio/common/interfaces';
+import { DateRange, OrderWithAccount } from '@ghostfolio/common/types';
 import {
   add,
   format,

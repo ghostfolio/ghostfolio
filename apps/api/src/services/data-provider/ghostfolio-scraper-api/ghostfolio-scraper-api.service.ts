@@ -1,5 +1,5 @@
-import { getYesterday } from '@ghostfolio/helper/helper';
-import { Granularity } from '@ghostfolio/helper/types';
+import { getYesterday } from '@ghostfolio/common/helper';
+import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import * as bent from 'bent';

@@ -4,7 +4,7 @@ import {
   Input,
   OnInit
 } from '@angular/core';
-import { PortfolioPerformance } from '@ghostfolio/helper/interfaces';
+import { PortfolioPerformance } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 
 @Component({

@@ -1,4 +1,4 @@
-import { getYesterday } from '@ghostfolio/helper/helper';
+import { getYesterday } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
 import { format } from 'date-fns';

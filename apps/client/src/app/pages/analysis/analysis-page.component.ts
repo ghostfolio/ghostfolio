@@ -7,7 +7,7 @@ import {
   PortfolioItem,
   PortfolioPosition,
   User
-} from '@ghostfolio/helper/interfaces';
+} from '@ghostfolio/common/interfaces';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

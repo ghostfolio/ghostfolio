@@ -6,7 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
-import { PortfolioPosition } from '@ghostfolio/helper/interfaces/portfolio-position.interface';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces/portfolio-position.interface';
 
 @Component({
   selector: 'gf-positions',

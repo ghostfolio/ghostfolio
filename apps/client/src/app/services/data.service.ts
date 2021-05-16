@@ -1,5 +1,3 @@
-import {} from '@ghostfolio/helper/interfaces';
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
@@ -24,7 +22,7 @@ import {
   PortfolioPosition,
   PortfolioReport,
   User
-} from '@ghostfolio/helper/interfaces';
+} from '@ghostfolio/common/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
 import { parseISO } from 'date-fns';

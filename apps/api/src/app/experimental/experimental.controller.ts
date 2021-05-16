@@ -1,6 +1,6 @@
-import { baseCurrency, benchmarks } from '@ghostfolio/helper/config';
-import { isApiTokenAuthorized } from '@ghostfolio/helper/permissions';
-import { RequestWithUser } from '@ghostfolio/helper/types';
+import { baseCurrency, benchmarks } from '@ghostfolio/common/config';
+import { isApiTokenAuthorized } from '@ghostfolio/common/permissions';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,

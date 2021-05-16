@@ -1,5 +1,5 @@
-import { groupBy } from '@ghostfolio/helper/helper';
-import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
+import { groupBy } from '@ghostfolio/common/helper';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';

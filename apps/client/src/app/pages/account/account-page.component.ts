@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/helper/config';
-import { Access, User } from '@ghostfolio/helper/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
+import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { Access, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Currency } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

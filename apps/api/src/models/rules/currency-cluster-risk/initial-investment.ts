@@ -1,4 +1,4 @@
-import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';

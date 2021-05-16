@@ -1,9 +1,9 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { locale } from '@ghostfolio/helper/config';
-import { resetHours } from '@ghostfolio/helper/helper';
-import { User as IUser, UserWithSettings } from '@ghostfolio/helper/interfaces';
-import { getPermissions, permissions } from '@ghostfolio/helper/permissions';
+import { locale } from '@ghostfolio/common/config';
+import { resetHours } from '@ghostfolio/common/helper';
+import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
+import { getPermissions, permissions } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User } from '@prisma/client';
 import { add } from 'date-fns';

@@ -1,6 +1,6 @@
-import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
-import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/helper/helper';
-import { Granularity } from '@ghostfolio/helper/types';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/common/helper';
+import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { format } from 'date-fns';

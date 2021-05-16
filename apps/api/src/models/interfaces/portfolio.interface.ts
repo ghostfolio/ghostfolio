@@ -1,4 +1,4 @@
-import { PortfolioItem, Position } from '@ghostfolio/helper/interfaces';
+import { PortfolioItem, Position } from '@ghostfolio/common/interfaces';
 
 import { Order } from '../order';
 

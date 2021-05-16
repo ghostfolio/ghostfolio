@@ -10,8 +10,8 @@ import { LoginWithAccessTokenDialog } from '@ghostfolio/client/pages/login/login
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { InfoItem, User } from '@ghostfolio/helper/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
+import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 

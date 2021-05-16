@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
-import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

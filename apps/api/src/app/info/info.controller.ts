@@ -1,4 +1,4 @@
-import { InfoItem } from '@ghostfolio/helper/interfaces';
+import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Controller, Get } from '@nestjs/common';
 
 import { InfoService } from './info.service';
