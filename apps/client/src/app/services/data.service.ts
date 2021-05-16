@@ -1,3 +1,5 @@
+import {} from '@ghostfolio/helper/interfaces';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
@@ -9,18 +11,20 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
-import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
 import { PortfolioReport } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-report.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
-import { PortfolioPerformance } from '@ghostfolio/helper/interfaces';
-import { InfoItem } from '@ghostfolio/helper/interfaces';
-import { PortfolioItem } from '@ghostfolio/helper/interfaces';
-import { PortfolioOverview } from '@ghostfolio/helper/interfaces';
-import { Access } from '@ghostfolio/helper/interfaces';
+import {
+  Access,
+  InfoItem,
+  PortfolioItem,
+  PortfolioOverview,
+  PortfolioPerformance,
+  PortfolioPosition
+} from '@ghostfolio/helper/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
 import { parseISO } from 'date-fns';

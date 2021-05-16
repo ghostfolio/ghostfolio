@@ -3,6 +3,7 @@ import { InfoItem } from './info-item.interface';
 import { PortfolioItem } from './portfolio-item.interface';
 import { PortfolioOverview } from './portfolio-overview.interface';
 import { PortfolioPerformance } from './portfolio-performance.interface';
+import { PortfolioPosition } from './portfolio-position.interface';
 import { Position } from './position.interface';
 
 export {
@@ -11,5 +12,6 @@ export {
   PortfolioItem,
   PortfolioOverview,
   PortfolioPerformance,
+  PortfolioPosition,
   Position
 };
