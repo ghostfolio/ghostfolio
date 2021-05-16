@@ -1,6 +1,7 @@
-import { Account, Currency } from '@prisma/client';
+import { Access } from '@ghostfolio/api/app/user/interfaces/access.interface';
+import { Account } from '@prisma/client';
 
-import { Access } from './access.interface';
+import { UserSettings } from './user-settings.interface';
 
 export interface User {
   access: Access[];
@@ -13,9 +14,4 @@ export interface User {
     expiresAt: Date;
     type: 'Trial';
   };
-}
-
-export interface UserSettings {
-  baseCurrency: Currency;
-  locale: string;
 }

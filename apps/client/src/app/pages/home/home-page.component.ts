@@ -1,11 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DateRange } from '@ghostfolio/api/app/portfolio/interfaces/date-range.type';
-import { PortfolioOverview } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-overview.interface';
-import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
-import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
-import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { PerformanceChartDialog } from '@ghostfolio/client/components/performance-chart-dialog/performance-chart-dialog.component';
 import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
@@ -16,7 +11,14 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { hasPermission, permissions } from '@ghostfolio/helper';
+import {
+  PortfolioOverview,
+  PortfolioPerformance,
+  PortfolioPosition,
+  User
+} from '@ghostfolio/helper/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
+import { DateRange } from '@ghostfolio/helper/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

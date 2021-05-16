@@ -2,7 +2,8 @@ import {
   isCrypto,
   isGhostfolioScraperApiSymbol,
   isRakutenRapidApiSymbol
-} from '@ghostfolio/helper';
+} from '@ghostfolio/helper/helper';
+import { Granularity } from '@ghostfolio/helper/types';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
 import { format } from 'date-fns';
@@ -13,7 +14,6 @@ import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-
 import { RakutenRapidApiService } from './data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from './data-provider/yahoo-finance/yahoo-finance.service';
 import { DataProviderInterface } from './interfaces/data-provider.interface';
-import { Granularity } from './interfaces/granularity.type';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse

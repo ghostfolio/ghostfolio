@@ -1,4 +1,5 @@
-import { getToday, getYesterday } from '@ghostfolio/helper';
+import { getToday, getYesterday } from '@ghostfolio/helper/helper';
+import { Granularity } from '@ghostfolio/helper/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
@@ -6,7 +7,6 @@ import { format, subMonths, subWeeks, subYears } from 'date-fns';
 
 import { ConfigurationService } from '../../configuration.service';
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
-import { Granularity } from '../../interfaces/granularity.type';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,

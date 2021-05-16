@@ -1,11 +1,11 @@
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { OrderWithAccount } from '@ghostfolio/helper/types';
 import { Injectable } from '@nestjs/common';
 import { Order, Prisma } from '@prisma/client';
 
 import { CacheService } from '../cache/cache.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
-import { OrderWithAccount } from './interfaces/order-with-account.type';
 
 @Injectable()
 export class OrderService {

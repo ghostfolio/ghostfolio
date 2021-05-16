@@ -1,8 +1,4 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpErrorResponse,
-  HttpEvent
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpEvent } from '@angular/common/http';
 import {
   HttpHandler,
   HttpInterceptor,
@@ -11,7 +7,6 @@ import {
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 import { ImpersonationStorageService } from '../services/impersonation-storage.service';
 import { TokenStorageService } from '../services/token-storage.service';

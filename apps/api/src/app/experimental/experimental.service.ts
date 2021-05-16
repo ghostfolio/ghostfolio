@@ -3,11 +3,11 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider.serv
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { OrderWithAccount } from '@ghostfolio/helper/types';
 import { Injectable } from '@nestjs/common';
 import { Currency, Type } from '@prisma/client';
 import { parseISO } from 'date-fns';
 
-import { OrderWithAccount } from '../order/interfaces/order-with-account.type';
 import { CreateOrderDto } from './create-order.dto';
 import { Data } from './interfaces/data.interface';
 

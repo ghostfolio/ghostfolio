@@ -1,10 +1,10 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
+import { Access } from '@ghostfolio/helper/interfaces';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 import { AccessService } from './access.service';
-import { Access } from './interfaces/access.interface';
 
 @Controller('access')
 export class AccessController {

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { PortfolioReportRule } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-report.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { PortfolioReportRule } from '@ghostfolio/helper/interfaces';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

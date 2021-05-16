@@ -1,9 +1,9 @@
+import { Granularity } from '@ghostfolio/helper/types';
 import { Injectable } from '@nestjs/common';
 import { isAfter, isBefore, parse } from 'date-fns';
 
 import { ConfigurationService } from '../../configuration.service';
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
-import { Granularity } from '../../interfaces/granularity.type';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse

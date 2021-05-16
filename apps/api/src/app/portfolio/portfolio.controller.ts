@@ -4,7 +4,19 @@ import {
 } from '@ghostfolio/api/helper/object.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
+import {
+  PortfolioItem,
+  PortfolioOverview,
+  PortfolioPerformance,
+  PortfolioPosition,
+  PortfolioReport
+} from '@ghostfolio/helper/interfaces';
+import {
+  getPermissions,
+  hasPermission,
+  permissions
+} from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Controller,
   Get,
@@ -21,16 +33,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { RequestWithUser } from '../interfaces/request-with-user.type';
-import { PortfolioItem } from './interfaces/portfolio-item.interface';
-import { PortfolioOverview } from './interfaces/portfolio-overview.interface';
-import { PortfolioPerformance } from './interfaces/portfolio-performance.interface';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import { PortfolioPosition } from './interfaces/portfolio-position.interface';
-import { PortfolioReport } from './interfaces/portfolio-report.interface';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')

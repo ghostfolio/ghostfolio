@@ -1,7 +1,11 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
+import {
+  getPermissions,
+  hasPermission,
+  permissions
+} from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Body,
   Controller,
@@ -17,7 +21,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Account as AccountModel, Order } from '@prisma/client';
+import { Account as AccountModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';

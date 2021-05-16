@@ -1,16 +1,12 @@
-import {
-  UNKNOWN_KEY,
-  isCrypto,
-  isCurrency,
-  parseCurrency
-} from '@ghostfolio/helper';
+import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
+import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/helper/helper';
+import { Granularity } from '@ghostfolio/helper/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
 
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
-import { Granularity } from '../../interfaces/granularity.type';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,

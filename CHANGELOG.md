@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hid unknown exchange in the position overview
 - Refactored the portfolio unit tests to work without database
+- Moved shared interfaces to `@ghostfolio/helper/interfaces`
+- Moved shared types to `@ghostfolio/helper/types`
 
 ## 1.3.0 - 15.05.2021
 

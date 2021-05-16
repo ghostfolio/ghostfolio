@@ -1,26 +1,30 @@
+import {} from '@ghostfolio/helper/interfaces';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Access } from '@ghostfolio/api/app/access/interfaces/access.interface';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
-import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
-import { PortfolioOverview } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-overview.interface';
-import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
-import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
-import { PortfolioReport } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-report.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
-import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
+import {
+  Access,
+  AdminData,
+  InfoItem,
+  PortfolioItem,
+  PortfolioOverview,
+  PortfolioPerformance,
+  PortfolioPosition,
+  PortfolioReport,
+  User
+} from '@ghostfolio/helper/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
 import { parseISO } from 'date-fns';

@@ -1,11 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { permissions } from '@ghostfolio/helper';
+import { InfoItem } from '@ghostfolio/helper/interfaces';
+import { permissions } from '@ghostfolio/helper/permissions';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Currency } from '@prisma/client';
-
-import { InfoItem } from './interfaces/info-item.interface';
 
 @Injectable()
 export class InfoService {

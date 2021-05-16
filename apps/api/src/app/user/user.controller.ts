@@ -1,5 +1,10 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
-import { getPermissions, hasPermission, permissions } from '@ghostfolio/helper';
+import { User } from '@ghostfolio/helper/interfaces';
+import {
+  getPermissions,
+  hasPermission,
+  permissions
+} from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Body,
   Controller,
@@ -20,7 +25,6 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { UserItem } from './interfaces/user-item.interface';
-import { User } from './interfaces/user.interface';
 import { UpdateUserSettingsDto } from './update-user-settings.dto';
 import { UserService } from './user.service';
 

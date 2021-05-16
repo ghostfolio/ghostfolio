@@ -1,13 +1,14 @@
+import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
+import { getToday, getYesterday, resetHours } from '@ghostfolio/helper/helper';
 import {
   PortfolioItem,
-  Position
-} from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
-import {
-  UNKNOWN_KEY,
-  getToday,
-  getYesterday,
-  resetHours
-} from '@ghostfolio/helper';
+  PortfolioPerformance,
+  PortfolioPosition,
+  PortfolioReport,
+  Position,
+  UserWithSettings
+} from '@ghostfolio/helper/interfaces';
+import { DateRange, OrderWithAccount } from '@ghostfolio/helper/types';
 import {
   add,
   format,
@@ -27,12 +28,6 @@ import {
 import { cloneDeep, isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 
-import { UserWithSettings } from '../app/interfaces/user-with-settings';
-import { OrderWithAccount } from '../app/order/interfaces/order-with-account.type';
-import { DateRange } from '../app/portfolio/interfaces/date-range.type';
-import { PortfolioPerformance } from '../app/portfolio/interfaces/portfolio-performance.interface';
-import { PortfolioPosition } from '../app/portfolio/interfaces/portfolio-position.interface';
-import { PortfolioReport } from '../app/portfolio/interfaces/portfolio-report.interface';
 import { DataProviderService } from '../services/data-provider.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { IOrder } from '../services/interfaces/interfaces';

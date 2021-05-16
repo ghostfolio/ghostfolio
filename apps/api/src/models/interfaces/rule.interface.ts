@@ -1,4 +1,4 @@
-import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
+import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
 
 import { EvaluationResult } from './evaluation-result.interface';
 

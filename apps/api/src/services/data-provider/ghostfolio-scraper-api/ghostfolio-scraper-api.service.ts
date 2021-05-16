@@ -1,4 +1,5 @@
-import { getYesterday } from '@ghostfolio/helper';
+import { getYesterday } from '@ghostfolio/helper/helper';
+import { Granularity } from '@ghostfolio/helper/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
@@ -6,7 +7,6 @@ import * as cheerio from 'cheerio';
 import { format } from 'date-fns';
 
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
-import { Granularity } from '../../interfaces/granularity.type';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,

@@ -1,9 +1,6 @@
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
-import {
-  baseCurrency,
-  benchmarks,
-  isApiTokenAuthorized
-} from '@ghostfolio/helper';
+import { baseCurrency, benchmarks } from '@ghostfolio/helper/config';
+import { isApiTokenAuthorized } from '@ghostfolio/helper/permissions';
+import { RequestWithUser } from '@ghostfolio/helper/types';
 import {
   Body,
   Controller,

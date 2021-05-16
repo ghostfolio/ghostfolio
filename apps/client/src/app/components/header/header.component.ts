@@ -6,13 +6,12 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
-import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/pages/login/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { hasPermission, permissions } from '@ghostfolio/helper';
+import { InfoItem, User } from '@ghostfolio/helper/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/helper';
+import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/helper/config';
 
 @Pipe({ name: 'gfSymbol' })
 export class SymbolPipe implements PipeTransform {
