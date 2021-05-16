@@ -7,6 +7,8 @@ import { PortfolioPosition } from './portfolio-position.interface';
 import { PortfolioReportRule } from './portfolio-report-rule.interface';
 import { PortfolioReport } from './portfolio-report.interface';
 import { Position } from './position.interface';
+import { UserSettings } from './user-settings.interface';
+import { User } from './user.interface';
 
 export {
   Access,
@@ -17,5 +19,7 @@ export {
   PortfolioPosition,
   PortfolioReport,
   PortfolioReportRule,
-  Position
+  Position,
+  User,
+  UserSettings
 };

@@ -3,6 +3,8 @@ import { getToday, getYesterday, resetHours } from '@ghostfolio/helper/helper';
 import {
   PortfolioItem,
   PortfolioPerformance,
+  PortfolioPosition,
+  PortfolioReport,
   Position
 } from '@ghostfolio/helper/interfaces';
 import {
@@ -27,8 +29,6 @@ import * as roundTo from 'round-to';
 import { UserWithSettings } from '../app/interfaces/user-with-settings';
 import { OrderWithAccount } from '../app/order/interfaces/order-with-account.type';
 import { DateRange } from '../app/portfolio/interfaces/date-range.type';
-import { PortfolioPosition } from '../app/portfolio/interfaces/portfolio-position.interface';
-import { PortfolioReport } from '../app/portfolio/interfaces/portfolio-report.interface';
 import { DataProviderService } from '../services/data-provider.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { IOrder } from '../services/interfaces/interfaces';

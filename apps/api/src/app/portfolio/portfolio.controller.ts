@@ -10,6 +10,10 @@ import {
   PortfolioPerformance
 } from '@ghostfolio/helper/interfaces';
 import {
+  PortfolioPosition,
+  PortfolioReport
+} from '@ghostfolio/helper/interfaces';
+import {
   getPermissions,
   hasPermission,
   permissions
@@ -35,8 +39,6 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import { PortfolioPosition } from './interfaces/portfolio-position.interface';
-import { PortfolioReport } from './interfaces/portfolio-report.interface';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')

@@ -14,7 +14,6 @@ import {
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
-import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import {
   Access,
@@ -23,7 +22,8 @@ import {
   PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,
-  PortfolioReport
+  PortfolioReport,
+  User
 } from '@ghostfolio/helper/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';

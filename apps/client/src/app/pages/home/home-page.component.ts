@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateRange } from '@ghostfolio/api/app/portfolio/interfaces/date-range.type';
-import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { PerformanceChartDialog } from '@ghostfolio/client/components/performance-chart-dialog/performance-chart-dialog.component';
 import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
@@ -13,6 +12,7 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { User } from '@ghostfolio/helper/interfaces';
 import {
   PortfolioOverview,
   PortfolioPerformance,

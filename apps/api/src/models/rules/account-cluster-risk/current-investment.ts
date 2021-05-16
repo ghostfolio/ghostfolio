@@ -1,5 +1,5 @@
-import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
 
 import { Rule } from '../../rule';
 

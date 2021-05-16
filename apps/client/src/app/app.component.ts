@@ -6,8 +6,8 @@ import {
   OnInit
 } from '@angular/core';
 import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
-import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { primaryColorHex, secondaryColorHex } from '@ghostfolio/helper/config';
+import { User } from '@ghostfolio/helper/interfaces';
 import { InfoItem } from '@ghostfolio/helper/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
