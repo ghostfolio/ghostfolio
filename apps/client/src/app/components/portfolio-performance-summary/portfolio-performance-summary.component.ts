@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
+import { PortfolioPerformance } from '@ghostfolio/helper/interfaces';
 import { Currency } from '@prisma/client';
 import { CountUp } from 'countup.js';
 import { isNumber } from 'lodash';

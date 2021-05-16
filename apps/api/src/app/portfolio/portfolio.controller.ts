@@ -5,6 +5,11 @@ import {
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import {
+  PortfolioItem,
+  PortfolioOverview,
+  PortfolioPerformance
+} from '@ghostfolio/helper/interfaces';
+import {
   getPermissions,
   hasPermission,
   permissions
@@ -26,9 +31,6 @@ import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { RequestWithUser } from '../interfaces/request-with-user.type';
-import { PortfolioItem } from './interfaces/portfolio-item.interface';
-import { PortfolioOverview } from './interfaces/portfolio-overview.interface';
-import { PortfolioPerformance } from './interfaces/portfolio-performance.interface';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail

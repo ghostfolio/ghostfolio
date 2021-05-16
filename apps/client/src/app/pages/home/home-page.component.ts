@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DateRange } from '@ghostfolio/api/app/portfolio/interfaces/date-range.type';
-import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
 import { PortfolioPosition } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
@@ -15,6 +14,7 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { PortfolioPerformance } from '@ghostfolio/helper/interfaces';
 import { PortfolioOverview } from '@ghostfolio/helper/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
 import { DeviceDetectorService } from 'ngx-device-detector';

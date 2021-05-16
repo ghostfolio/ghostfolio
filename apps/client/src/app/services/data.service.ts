@@ -5,7 +5,6 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
@@ -17,6 +16,7 @@ import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.in
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
+import { PortfolioPerformance } from '@ghostfolio/helper/interfaces';
 import { InfoItem } from '@ghostfolio/helper/interfaces';
 import { PortfolioItem } from '@ghostfolio/helper/interfaces';
 import { PortfolioOverview } from '@ghostfolio/helper/interfaces';

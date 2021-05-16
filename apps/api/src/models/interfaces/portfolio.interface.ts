@@ -1,7 +1,4 @@
-import {
-  PortfolioItem,
-  Position
-} from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
+import { PortfolioItem, Position } from '@ghostfolio/helper/interfaces';
 
 import { Order } from '../order';
 

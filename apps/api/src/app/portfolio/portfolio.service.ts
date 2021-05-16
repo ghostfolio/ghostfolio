@@ -5,6 +5,10 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
+import {
+  PortfolioItem,
+  PortfolioOverview
+} from '@ghostfolio/helper/interfaces';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
@@ -27,8 +31,6 @@ import { OrderService } from '../order/order.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { UserService } from '../user/user.service';
 import { DateRange } from './interfaces/date-range.type';
-import { PortfolioItem } from './interfaces/portfolio-item.interface';
-import { PortfolioOverview } from './interfaces/portfolio-overview.interface';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
