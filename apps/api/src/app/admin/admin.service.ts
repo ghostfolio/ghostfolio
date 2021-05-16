@@ -1,9 +1,8 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { AdminData } from '@ghostfolio/helper/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
-
-import { AdminData } from './interfaces/admin-data.interface';
 
 @Injectable()
 export class AdminService {

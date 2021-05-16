@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import {
@@ -17,6 +16,7 @@ import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interfac
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import {
   Access,
+  AdminData,
   InfoItem,
   PortfolioItem,
   PortfolioOverview,

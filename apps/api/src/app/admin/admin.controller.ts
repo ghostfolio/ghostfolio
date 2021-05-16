@@ -1,5 +1,6 @@
 import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { AdminData } from '@ghostfolio/helper/interfaces';
 import {
   getPermissions,
   hasPermission,
@@ -18,7 +19,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
-import { AdminData } from './interfaces/admin-data.interface';
 
 @Controller('admin')
 export class AdminController {

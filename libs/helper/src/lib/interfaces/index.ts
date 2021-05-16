@@ -1,4 +1,5 @@
 import { Access } from './access.interface';
+import { AdminData } from './admin-data.interface';
 import { InfoItem } from './info-item.interface';
 import { PortfolioItem } from './portfolio-item.interface';
 import { PortfolioOverview } from './portfolio-overview.interface';
@@ -12,6 +13,7 @@ import { User } from './user.interface';
 
 export {
   Access,
+  AdminData,
   InfoItem,
   PortfolioItem,
   PortfolioOverview,
