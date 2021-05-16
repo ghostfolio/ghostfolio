@@ -1,4 +1,5 @@
-import { Granularity } from './granularity.type';
+import { Granularity } from '@ghostfolio/helper/types';
+
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
