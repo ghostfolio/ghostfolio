@@ -8,6 +8,7 @@ import {
   Position
 } from '@ghostfolio/helper/interfaces';
 import { DateRange } from '@ghostfolio/helper/types';
+import { OrderWithAccount } from '@ghostfolio/helper/types';
 import {
   add,
   format,
@@ -28,7 +29,6 @@ import { cloneDeep, isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 
 import { UserWithSettings } from '../app/interfaces/user-with-settings';
-import { OrderWithAccount } from '../app/order/interfaces/order-with-account.type';
 import { DataProviderService } from '../services/data-provider.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { IOrder } from '../services/interfaces/interfaces';
