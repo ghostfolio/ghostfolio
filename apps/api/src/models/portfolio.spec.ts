@@ -17,6 +17,7 @@ jest.mock('../services/data-provider.service', () => {
   return {
     DataProviderService: jest.fn().mockImplementation(() => {
       const today = format(new Date(), 'yyyy-MM-dd');
+      const yesterday = format(getYesterday(), 'yyyy-MM-dd');
 
       return {
         get: () => {
@@ -44,9 +45,11 @@ jest.mock('../services/data-provider.service', () => {
         getHistorical: () => {
           return Promise.resolve({
             BTCUSD: {
+              [yesterday]: 56710.122,
               [today]: 57973.008
             },
             ETHUSD: {
+              [yesterday]: 3641.984,
               [today]: 3915.337
             }
           });
@@ -214,7 +217,7 @@ describe('Portfolio', () => {
               )
             }
           },
-          // allocationCurrent: 0.9999999559148652,
+          allocationCurrent: 1,
           allocationInvestment: 1,
           currency: Currency.USD,
           exchange: UNKNOWN_KEY,
@@ -225,7 +228,7 @@ describe('Portfolio', () => {
             Currency.USD,
             baseCurrency
           ),
-          // marketPrice: 57973.008,
+          marketPrice: 57973.008,
           marketState: MarketState.open,
           name: 'Bitcoin USD',
           quantity: 1,
@@ -326,7 +329,7 @@ describe('Portfolio', () => {
             Currency.USD,
             baseCurrency
           ),
-          // marketPrice: 57973.008,
+          marketPrice: 3915.337,
           name: 'Ethereum USD',
           quantity: 0.2,
           transactionCount: 1,
@@ -357,7 +360,7 @@ describe('Portfolio', () => {
             baseCurrency
           ),
           investmentInOriginalCurrency: 0.2 * 991.49,
-          // marketPrice: 0,
+          // marketPrice: 3915.337,
           quantity: 0.2
         }
       });
@@ -433,7 +436,7 @@ describe('Portfolio', () => {
               baseCurrency
             ),
           investmentInOriginalCurrency: 0.2 * 991.49 + 0.3 * 1050,
-          // marketPrice: 0,
+          // marketPrice: 3641.984,
           quantity: 0.5
         }
       });
@@ -582,8 +585,7 @@ describe('Portfolio', () => {
         }
       ]);
 
-      // TODO: Fix
-      /*expect(portfolio.getCommittedFunds()).toEqual(
+      expect(portfolio.getCommittedFunds()).toEqual(
         exchangeRateDataService.toCurrency(
           0.2 * 991.49,
           Currency.USD,
@@ -599,7 +601,7 @@ describe('Portfolio', () => {
             Currency.USD,
             baseCurrency
           )
-      );*/
+      );
 
       expect(portfolio.getFees()).toEqual(
         exchangeRateDataService.toCurrency(3, Currency.USD, baseCurrency)
@@ -611,12 +613,11 @@ describe('Portfolio', () => {
             (0.2 * 991.49 - 0.1 * 1050 + 0.2 * 1050) / (0.2 - 0.1 + 0.2),
           currency: Currency.USD,
           firstBuyDate: '2018-01-05T00:00:00.000Z',
-          // TODO: Fix
-          /*investment: exchangeRateDataService.toCurrency(
+          investment: exchangeRateDataService.toCurrency(
             0.2 * 991.49 - 0.1 * 1050 + 0.2 * 1050,
             Currency.USD,
             baseCurrency
-          ),*/
+          ),
           investmentInOriginalCurrency: 0.2 * 991.49 - 0.1 * 1050 + 0.2 * 1050,
           // marketPrice: 0,
           quantity: 0.2 - 0.1 + 0.2
