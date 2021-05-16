@@ -9,6 +9,7 @@ import {
   PortfolioItem,
   PortfolioOverview
 } from '@ghostfolio/helper/interfaces';
+import { DateRange } from '@ghostfolio/helper/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
@@ -30,7 +31,6 @@ import * as roundTo from 'round-to';
 import { OrderService } from '../order/order.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { UserService } from '../user/user.service';
-import { DateRange } from './interfaces/date-range.type';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
