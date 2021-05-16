@@ -1,4 +1,4 @@
-import { Position } from '@ghostfolio/helper/interfaces';
+import { Position } from '@ghostfolio/common/interfaces';
 
 export interface PortfolioItem {
   date: string;

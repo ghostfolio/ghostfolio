@@ -6,8 +6,8 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { User } from '@ghostfolio/helper/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
+import { User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Account as AccountModel, AccountType } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';

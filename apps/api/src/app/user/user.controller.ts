@@ -1,10 +1,10 @@
-import { User } from '@ghostfolio/helper/interfaces';
+import { User } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasPermission,
   permissions
-} from '@ghostfolio/helper/permissions';
-import { RequestWithUser } from '@ghostfolio/helper/types';
+} from '@ghostfolio/common/permissions';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,

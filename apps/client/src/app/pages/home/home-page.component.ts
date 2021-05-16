@@ -16,9 +16,9 @@ import {
   PortfolioPerformance,
   PortfolioPosition,
   User
-} from '@ghostfolio/helper/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/helper/permissions';
-import { DateRange } from '@ghostfolio/helper/types';
+} from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

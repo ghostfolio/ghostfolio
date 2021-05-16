@@ -1,4 +1,4 @@
-import { Granularity } from '@ghostfolio/helper/types';
+import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { isAfter, isBefore, parse } from 'date-fns';
 

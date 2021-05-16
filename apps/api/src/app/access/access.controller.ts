@@ -1,5 +1,5 @@
-import { Access } from '@ghostfolio/helper/interfaces';
-import { RequestWithUser } from '@ghostfolio/helper/types';
+import { Access } from '@ghostfolio/common/interfaces';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';

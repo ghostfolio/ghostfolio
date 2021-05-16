@@ -1,5 +1,5 @@
-import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/helper/config';
-import { getUtc, getYesterday } from '@ghostfolio/helper/helper';
+import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
+import { getUtc, getYesterday } from '@ghostfolio/common/helper';
 import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
 import { format } from 'date-fns';
 

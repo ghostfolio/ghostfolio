@@ -13,7 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

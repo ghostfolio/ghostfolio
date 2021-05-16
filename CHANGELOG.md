@@ -16,8 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed _Ghostfolio Account_ to _My Ghostfolio_
 - Hid unknown exchange in the position overview
 - Refactored the portfolio unit tests to work without database
-- Moved shared interfaces to `@ghostfolio/helper/interfaces`
-- Moved shared types to `@ghostfolio/helper/types`
+- Renamed shared helper to `@ghostfolio/common/helper`
+- Moved shared interfaces to `@ghostfolio/common/interfaces`
+- Moved shared types to `@ghostfolio/common/types`
 
 ## 1.3.0 - 15.05.2021
 

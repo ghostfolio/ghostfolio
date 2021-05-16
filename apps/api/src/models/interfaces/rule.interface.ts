@@ -1,4 +1,4 @@
-import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 import { EvaluationResult } from './evaluation-result.interface';
 

@@ -2,8 +2,8 @@ import {
   isCrypto,
   isGhostfolioScraperApiSymbol,
   isRakutenRapidApiSymbol
-} from '@ghostfolio/helper/helper';
-import { Granularity } from '@ghostfolio/helper/types';
+} from '@ghostfolio/common/helper';
+import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
 import { format } from 'date-fns';

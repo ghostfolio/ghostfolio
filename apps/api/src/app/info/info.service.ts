@@ -1,7 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { InfoItem } from '@ghostfolio/helper/interfaces';
-import { permissions } from '@ghostfolio/helper/permissions';
+import { InfoItem } from '@ghostfolio/common/interfaces';
+import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Currency } from '@prisma/client';

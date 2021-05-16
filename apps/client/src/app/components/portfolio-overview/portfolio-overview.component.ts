@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
-import { PortfolioOverview } from '@ghostfolio/helper/interfaces';
+import { PortfolioOverview } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 
 @Component({

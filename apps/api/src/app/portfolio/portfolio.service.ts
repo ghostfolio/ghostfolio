@@ -7,8 +7,8 @@ import { RulesService } from '@ghostfolio/api/services/rules.service';
 import {
   PortfolioItem,
   PortfolioOverview
-} from '@ghostfolio/helper/interfaces';
-import { DateRange, RequestWithUser } from '@ghostfolio/helper/types';
+} from '@ghostfolio/common/interfaces';
+import { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {

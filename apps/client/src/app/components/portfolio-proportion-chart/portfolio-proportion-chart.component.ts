@@ -7,9 +7,9 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { UNKNOWN_KEY } from '@ghostfolio/helper/config';
-import { getCssVariable, getTextColor } from '@ghostfolio/helper/helper';
-import { PortfolioPosition } from '@ghostfolio/helper/interfaces';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { getCssVariable, getTextColor } from '@ghostfolio/common/helper';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
