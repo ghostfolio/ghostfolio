@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { PortfolioReportRule } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-report.interface';
+import { PortfolioReportRule } from '@ghostfolio/helper/interfaces';
 
 @Component({
   selector: 'gf-rules',

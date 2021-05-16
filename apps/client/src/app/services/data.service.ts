@@ -11,7 +11,6 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
-import { PortfolioReport } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-report.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -23,7 +22,8 @@ import {
   PortfolioItem,
   PortfolioOverview,
   PortfolioPerformance,
-  PortfolioPosition
+  PortfolioPosition,
+  PortfolioReport
 } from '@ghostfolio/helper/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
