@@ -23,6 +23,9 @@ import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
+import { parseISO } from 'date-fns';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -81,8 +84,16 @@ export class DataService {
     return this.http.get<LookupItem[]>(`/api/symbol/lookup?query=${aQuery}`);
   }
 
-  public fetchOrders() {
-    return this.http.get<OrderModel[]>('/api/order');
+  public fetchOrders(): Observable<OrderModel[]> {
+    return this.http.get<any[]>('/api/order').pipe(
+      map((data) => {
+        for (const item of data) {
+          item.createdAt = parseISO(item.createdAt);
+          item.date = parseISO(item.date);
+        }
+        return data;
+      })
+    );
   }
 
   public fetchPortfolio() {

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added filtering by year in the transaction filtering component
+
 ### Changed
 
 - Hid unknown exchange in the position overview
