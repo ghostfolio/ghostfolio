@@ -1,7 +1,7 @@
+import { InfoItem } from '@ghostfolio/helper/interfaces';
 import { Controller, Get } from '@nestjs/common';
 
 import { InfoService } from './info.service';
-import { InfoItem } from './interfaces/info-item.interface';
 
 @Controller('info')
 export class InfoController {

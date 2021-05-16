@@ -3,11 +3,8 @@ import { Injectable } from '@angular/core';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { AdminData } from '@ghostfolio/api/app/admin/interfaces/admin-data.interface';
-import { InfoItem } from '@ghostfolio/api/app/info/interfaces/info-item.interface';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-item.interface';
-import { PortfolioOverview } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-overview.interface';
 import { PortfolioPerformance } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-performance.interface';
 import {
   HistoricalDataItem,
@@ -20,6 +17,9 @@ import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.in
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { User } from '@ghostfolio/api/app/user/interfaces/user.interface';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
+import { InfoItem } from '@ghostfolio/helper/interfaces';
+import { PortfolioItem } from '@ghostfolio/helper/interfaces';
+import { PortfolioOverview } from '@ghostfolio/helper/interfaces';
 import { Access } from '@ghostfolio/helper/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
