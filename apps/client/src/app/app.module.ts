@@ -22,7 +22,7 @@ import { AppComponent } from './app.component';
 import { GfHeaderModule } from './components/header/header.module';
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';
-import { LanguageManager } from './core/language-manager.service';
+import { LanguageService } from './core/language.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -46,11 +46,11 @@ import { LanguageManager } from './core/language-manager.service';
   providers: [
     authInterceptorProviders,
     httpResponseInterceptorProviders,
-    LanguageManager,
+    LanguageService,
     {
       provide: DateAdapter,
       useClass: CustomDateAdapter,
-      deps: [LanguageManager, MAT_DATE_LOCALE, Platform]
+      deps: [LanguageService, MAT_DATE_LOCALE, Platform]
     },
     { provide: MAT_DATE_FORMATS, useValue: DateFormats }
   ],
