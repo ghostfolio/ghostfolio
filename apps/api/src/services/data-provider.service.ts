@@ -1,3 +1,4 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import {
   isCrypto,
   isGhostfolioScraperApiSymbol,
@@ -5,7 +6,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { MarketData } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 
 import { ConfigurationService } from './configuration.service';
@@ -183,5 +184,23 @@ export class DataProviderService implements DataProviderInterface {
     }
 
     return dataOfYahoo;
+  }
+
+  public async search(aSymbol: string) {
+    let results: { items: LookupItem[] } = { items: [] };
+
+    switch (this.configurationService.get('DATA_SOURCES')[0]) {
+      case DataSource.ALPHA_VANTAGE:
+        results = await this.alphaVantageService.search(aSymbol);
+        break;
+      case DataSource.YAHOO:
+        results = await this.yahooFinanceService.search(aSymbol);
+        break;
+      default:
+        console.error('No data provider has been found.');
+        throw new Error('No data provider has been found.');
+    }
+
+    return results;
   }
 }

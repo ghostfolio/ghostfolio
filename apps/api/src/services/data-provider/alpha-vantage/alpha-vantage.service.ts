@@ -1,5 +1,7 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import { isAfter, isBefore, parse } from 'date-fns';
 
 import { ConfigurationService } from '../../configuration.service';
@@ -77,7 +79,17 @@ export class AlphaVantageService implements DataProviderInterface {
     }
   }
 
-  public search(aSymbol: string) {
-    return this.alphaVantage.data.search(aSymbol);
+  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+    const result = await this.alphaVantage.data.search(aSymbol);
+
+    return {
+      items: result?.bestMatches?.map((bestMatch) => {
+        return {
+          dataSource: DataSource.ALPHA_VANTAGE,
+          name: bestMatch['2. name'],
+          symbol: bestMatch['1. symbol']
+        };
+      })
+    };
   }
 }

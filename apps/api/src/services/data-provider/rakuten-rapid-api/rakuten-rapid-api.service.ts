@@ -117,6 +117,14 @@ export class RakutenRapidApiService implements DataProviderInterface {
     return {};
   }
 
+  public async search(aSymbol: string) {
+    return { items: [] };
+  }
+
+  public setPrisma(aPrismaService: PrismaService) {
+    this.prisma = aPrismaService;
+  }
+
   private async getFearAndGreedIndex(): Promise<{
     now: { value: number; valueText: string };
     previousClose: { value: number; valueText: string };
@@ -146,9 +154,5 @@ export class RakutenRapidApiService implements DataProviderInterface {
 
       return undefined;
     }
-  }
-
-  public setPrisma(aPrismaService: PrismaService) {
-    this.prisma = aPrismaService;
   }
 }
