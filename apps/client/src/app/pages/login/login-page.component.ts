@@ -37,9 +37,6 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
-    // Remove all tokens (e.g. impersonationId)
-    window.localStorage.clear();
-
     this.dataService.fetchInfo().subscribe(({ demoAuthToken }) => {
       this.demoAuthToken = demoAuthToken;
 

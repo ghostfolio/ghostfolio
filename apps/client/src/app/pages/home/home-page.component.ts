@@ -68,7 +68,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService
   ) {
-    this.routeQueryParams = route.queryParams
+    this.routeQueryParams = this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['performanceChartDialog']) {

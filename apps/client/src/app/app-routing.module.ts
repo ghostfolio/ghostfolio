@@ -82,7 +82,7 @@ const routes: Routes = [
     // wildcard, if requested url doesn't match any paths for routes defined
     // earlier
     path: '**',
-    redirectTo: '/home',
+    redirectTo: 'home',
     pathMatch: 'full'
   }
 ];

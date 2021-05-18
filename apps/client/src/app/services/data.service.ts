@@ -23,11 +23,14 @@ import {
   PortfolioReport,
   User
 } from '@ghostfolio/common/interfaces';
+import { permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { SettingsStorageService } from './settings-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +38,10 @@ import { map } from 'rxjs/operators';
 export class DataService {
   private info: InfoItem;
 
-  public constructor(private http: HttpClient) {}
+  public constructor(
+    private http: HttpClient,
+    private settingsStorageService: SettingsStorageService
+  ) {}
 
   public fetchAccounts() {
     return this.http.get<AccountModel[]>('/api/account');
@@ -75,7 +81,20 @@ export class DataService {
       }
     */
 
-    return this.http.get<InfoItem>('/api/info');
+    return this.http.get<InfoItem>('/api/info').pipe(
+      map((data) => {
+        if (
+          this.settingsStorageService.getSetting('utm_source') ===
+          'trusted-web-activity'
+        ) {
+          data.globalPermissions = data.globalPermissions.filter(
+            (permission) => permission !== permissions.enableSubscription
+          );
+        }
+
+        return data;
+      })
+    );
   }
 
   public fetchSymbolItem(aSymbol: string) {
