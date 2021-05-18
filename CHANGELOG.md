@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed _Ghostfolio Account_ to _My Ghostfolio_
 - Hid unknown exchange in the position overview
+- Disable the base currency selector for the demo user
 - Refactored the portfolio unit tests to work without database
 - Renamed shared helper to `@ghostfolio/common/helper`
 - Moved shared interfaces to `@ghostfolio/common/interfaces`

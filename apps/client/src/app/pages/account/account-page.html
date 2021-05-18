@@ -35,6 +35,7 @@
                   <mat-label i18n>Base Currency</mat-label>
                   <mat-select
                     name="baseCurrency"
+                    [disabled]="!hasPermissionToUpdateUserSettings"
                     [value]="user.settings.baseCurrency"
                     (selectionChange)="onChangeBaseCurrency($event)"
                   >

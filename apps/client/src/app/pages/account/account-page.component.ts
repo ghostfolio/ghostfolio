@@ -19,6 +19,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public currencies: Currency[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public hasPermissionForSubscription: boolean;
+  public hasPermissionToUpdateUserSettings: boolean;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -49,6 +50,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.dataService.fetchUser().subscribe((user) => {
           this.user = user;
+
+          this.hasPermissionToUpdateUserSettings = hasPermission(
+            this.user.permissions,
+            permissions.updateUserSettings
+          );
 
           this.cd.markForCheck();
         });
