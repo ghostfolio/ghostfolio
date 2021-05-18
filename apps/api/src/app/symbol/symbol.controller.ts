@@ -28,7 +28,9 @@ export class SymbolController {
    */
   @Get('lookup')
   @UseGuards(AuthGuard('jwt'))
-  public async lookupSymbol(@Query() { query }): Promise<LookupItem[]> {
+  public async lookupSymbol(
+    @Query() { query }
+  ): Promise<{ items: LookupItem[] }> {
     try {
       return this.symbolService.lookup(query);
     } catch {

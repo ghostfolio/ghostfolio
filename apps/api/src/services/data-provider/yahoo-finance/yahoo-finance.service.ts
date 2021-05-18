@@ -24,6 +24,8 @@ import {
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
+  private yahooFinanceHostname = 'https://query1.finance.yahoo.com';
+
   public constructor() {}
 
   public async get(
@@ -143,15 +145,15 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const get = bent(
-        `https://query1.finance.yahoo.com/v1/finance/search?q=${aSymbol}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
+        `${this.yahooFinanceHostname}/v1/finance/search?q=${aSymbol}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
         'GET',
         'json',
         200
       );
 
       const result = await get();
-      items = result?.quotes
-        ?.filter((quote) => {
+      items = result.quotes
+        .filter((quote) => {
           return quote.isYahooFinance;
         })
         .filter(({ quoteType }) => {
