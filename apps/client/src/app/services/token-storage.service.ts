@@ -27,7 +27,13 @@ export class TokenStorageService {
   }
 
   public signOut(): void {
+    const utmSource = window.localStorage.getItem('utm_source');
+
     window.localStorage.clear();
+
+    if (utmSource) {
+      window.localStorage.setItem('utm_source', utmSource);
+    }
 
     this.hasTokenChangeSubject.next();
   }
