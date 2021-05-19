@@ -37,7 +37,9 @@ export class ExperimentalController {
       );
     }
 
-    return benchmarks;
+    return benchmarks.map(({ symbol }) => {
+      return symbol;
+    });
   }
 
   @Get('benchmarks/:symbol')

@@ -2,7 +2,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { Order, Prisma } from '@prisma/client';
+import { DataSource, Order, Prisma } from '@prisma/client';
 
 import { CacheService } from '../cache/cache.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
@@ -53,6 +53,7 @@ export class OrderService {
     // Gather symbol data of order in the background
     this.dataGatheringService.gatherSymbols([
       {
+        dataSource: data.dataSource,
         date: <Date>data.date,
         symbol: data.symbol
       }
@@ -90,6 +91,7 @@ export class OrderService {
     // Gather symbol data of order in the background
     this.dataGatheringService.gatherSymbols([
       {
+        dataSource: <DataSource>data.dataSource,
         date: <Date>data.date,
         symbol: <string>data.symbol
       }

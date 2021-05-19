@@ -11,6 +11,7 @@ import {
 import { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
+import { DataSource } from '@prisma/client';
 import {
   add,
   format,
@@ -289,7 +290,7 @@ export class PortfolioService {
 
       if (isEmpty(historicalData)) {
         historicalData = await this.dataProviderService.getHistoricalRaw(
-          [aSymbol],
+          [{ dataSource: DataSource.YAHOO, symbol: aSymbol }],
           portfolio.getMinDate(),
           new Date()
         );

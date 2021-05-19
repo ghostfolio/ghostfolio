@@ -16,6 +16,7 @@ import { RakutenRapidApiService } from './data-provider/rakuten-rapid-api/rakute
 import { YahooFinanceService } from './data-provider/yahoo-finance/yahoo-finance.service';
 import { DataProviderInterface } from './interfaces/data-provider.interface';
 import {
+  IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from './interfaces/interfaces';
@@ -121,69 +122,71 @@ export class DataProviderService implements DataProviderInterface {
   }
 
   public async getHistoricalRaw(
-    aSymbols: string[],
+    aDataGatheringItems: IDataGatheringItem[],
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    const filteredSymbols = aSymbols.filter((symbol) => {
-      return !isGhostfolioScraperApiSymbol(symbol);
-    });
+    const result: {
+      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    } = {};
 
-    const dataOfYahoo = await this.yahooFinanceService.getHistorical(
-      filteredSymbols,
-      undefined,
-      from,
-      to
-    );
-
-    if (aSymbols.length === 1) {
-      const symbol = aSymbols[0];
-
-      if (
-        isCrypto(symbol) &&
-        this.configurationService.get('ALPHA_VANTAGE_API_KEY')
-      ) {
-        // Merge data from Yahoo with data from Alpha Vantage
-        const dataOfAlphaVantage = await this.alphaVantageService.getHistorical(
-          [symbol],
-          undefined,
-          from,
-          to
-        );
-
-        return {
-          [symbol]: {
-            ...dataOfYahoo[symbol],
-            ...dataOfAlphaVantage[symbol]
+    for (const { dataSource, symbol } of aDataGatheringItems) {
+      switch (dataSource) {
+        case DataSource.ALPHA_VANTAGE: {
+          if (this.configurationService.get('ALPHA_VANTAGE_API_KEY')) {
+            const data = await this.alphaVantageService.getHistorical(
+              [symbol],
+              undefined,
+              from,
+              to
+            );
+            result[symbol] = data?.[symbol];
           }
-        };
-      } else if (isGhostfolioScraperApiSymbol(symbol)) {
-        const dataOfGhostfolioScraperApi = await this.ghostfolioScraperApiService.getHistorical(
-          [symbol],
-          undefined,
-          from,
-          to
-        );
-
-        return dataOfGhostfolioScraperApi;
-      } else if (
-        isRakutenRapidApiSymbol(symbol) &&
-        this.configurationService.get('RAKUTEN_RAPID_API_KEY')
-      ) {
-        const dataOfRakutenRapidApi = await this.rakutenRapidApiService.getHistorical(
-          [symbol],
-          undefined,
-          from,
-          to
-        );
-
-        return dataOfRakutenRapidApi;
+          break;
+        }
+        case DataSource.GHOSTFOLIO: {
+          if (isGhostfolioScraperApiSymbol(symbol)) {
+            const data = await this.ghostfolioScraperApiService.getHistorical(
+              [symbol],
+              undefined,
+              from,
+              to
+            );
+            result[symbol] = data?.[symbol];
+          }
+          break;
+        }
+        case DataSource.RAKUTEN: {
+          if (
+            isRakutenRapidApiSymbol(symbol) &&
+            this.configurationService.get('RAKUTEN_RAPID_API_KEY')
+          ) {
+            const data = await this.rakutenRapidApiService.getHistorical(
+              [symbol],
+              undefined,
+              from,
+              to
+            );
+            result[symbol] = data?.[symbol];
+          }
+          break;
+        }
+        case DataSource.YAHOO: {
+          const data = await this.yahooFinanceService.getHistorical(
+            [symbol],
+            undefined,
+            from,
+            to
+          );
+          result[symbol] = data?.[symbol];
+          break;
+        }
       }
     }
 
-    return dataOfYahoo;
+    return result;
   }
 
   public async search(aSymbol: string) {
