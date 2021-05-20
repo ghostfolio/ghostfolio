@@ -187,20 +187,17 @@ export class DataProviderService implements DataProviderInterface {
   }
 
   public async search(aSymbol: string) {
-    let results: { items: LookupItem[] } = { items: [] };
+    return this.getDataProvider().search(aSymbol);
+  }
 
+  private getDataProvider() {
     switch (this.configurationService.get('DATA_SOURCES')[0]) {
       case DataSource.ALPHA_VANTAGE:
-        results = await this.alphaVantageService.search(aSymbol);
-        break;
+        return this.alphaVantageService;
       case DataSource.YAHOO:
-        results = await this.yahooFinanceService.search(aSymbol);
-        break;
+        return this.yahooFinanceService;
       default:
-        console.error('No data provider has been found.');
         throw new Error('No data provider has been found.');
     }
-
-    return results;
   }
 }

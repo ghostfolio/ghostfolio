@@ -25,11 +25,10 @@ export class SymbolService {
     };
   }
 
-  public async lookup(aQuery = ''): Promise<{ items: LookupItem[] }> {
-    const query = aQuery.toLowerCase();
+  public async lookup(aQuery: string): Promise<{ items: LookupItem[] }> {
     const results: { items: LookupItem[] } = { items: [] };
 
-    if (!query) {
+    if (!aQuery) {
       return results;
     }
 
@@ -40,7 +39,7 @@ export class SymbolService {
       // Add custom symbols
       const scraperConfigurations = await this.ghostfolioScraperApiService.getScraperConfigurations();
       scraperConfigurations.forEach((scraperConfiguration) => {
-        if (scraperConfiguration.name.toLowerCase().startsWith(query)) {
+        if (scraperConfiguration.name.toLowerCase().startsWith(aQuery)) {
           results.items.push({
             dataSource: DataSource.GHOSTFOLIO,
             name: scraperConfiguration.name,
