@@ -30,7 +30,7 @@
           <div class="d-flex mt-4 py-1">
             <div class="pt-4 w-50" i18n>Settings</div>
             <div class="w-50">
-              <form #addTransactionForm="ngForm">
+              <form #changeBaseCurrencyForm="ngForm">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label i18n>Base Currency</mat-label>
                   <mat-select
@@ -44,6 +44,20 @@
                       [value]="currency"
                       >{{ currency }}</mat-option
                     >
+                  </mat-select>
+                </mat-form-field>
+              </form>
+              <form #changeModeForm="ngForm">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label i18n>Mode</mat-label>
+                  <mat-select
+                    name="baseCurrency"
+                    [disabled]="!hasPermissionToUpdateUserSettings"
+                    [value]="user.settings.mode"
+                    (selectionChange)="onChangeMode($event)"
+                  >
+                    <mat-option value="DEFAULT">Default</mat-option>
+                    <mat-option value="ZEN">Zen</mat-option>
                   </mat-select>
                 </mat-form-field>
               </form>

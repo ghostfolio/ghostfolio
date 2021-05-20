@@ -51,6 +51,8 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         this.dataService.fetchUser().subscribe((user) => {
           this.user = user;
 
+          this.user.settings.mode = 'ZEN';
+
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
             permissions.updateUserSettings
@@ -79,6 +81,19 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.cd.markForCheck();
         });
       });
+  }
+
+  public onChangeMode({ value: mode }: { value: Currency }) {
+    /*this.dataService
+      .putUserSettings({ currency })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.dataService.fetchUser().subscribe((user) => {
+          this.user = user;
+
+          this.cd.markForCheck();
+        });
+      });*/
   }
 
   public ngOnDestroy() {
