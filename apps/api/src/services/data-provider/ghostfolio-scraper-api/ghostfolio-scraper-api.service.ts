@@ -117,6 +117,10 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return [];
   }
 
+  public async search(aSymbol: string) {
+    return { items: [] };
+  }
+
   private extractNumberFromString(aString: string): number {
     try {
       const [numberString] = aString.match(

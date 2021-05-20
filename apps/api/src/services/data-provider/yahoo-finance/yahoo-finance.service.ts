@@ -1,8 +1,10 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
+import * as bent from 'bent';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
 
@@ -22,6 +24,8 @@ import {
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
+  private yahooFinanceHostname = 'https://query1.finance.yahoo.com';
+
   public constructor() {}
 
   public async get(
@@ -134,6 +138,49 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return {};
     }
+  }
+
+  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+    let items = [];
+
+    try {
+      const get = bent(
+        `${this.yahooFinanceHostname}/v1/finance/search?q=${aSymbol}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
+        'GET',
+        'json',
+        200
+      );
+
+      const result = await get();
+      items = result.quotes
+        .filter((quote) => {
+          return quote.isYahooFinance;
+        })
+        .filter(({ quoteType }) => {
+          return (
+            quoteType === 'CRYPTOCURRENCY' ||
+            quoteType === 'EQUITY' ||
+            quoteType === 'ETF'
+          );
+        })
+        .filter(({ quoteType, symbol }) => {
+          if (quoteType === 'CRYPTOCURRENCY') {
+            // Only allow cryptocurrencies in USD
+            return symbol.includes('USD');
+          }
+
+          return true;
+        })
+        .map(({ longname, shortname, symbol }) => {
+          return {
+            dataSource: DataSource.YAHOO,
+            name: longname || shortname,
+            symbol: convertFromYahooSymbol(symbol)
+          };
+        });
+    } catch {}
+
+    return { items };
   }
 
   /**

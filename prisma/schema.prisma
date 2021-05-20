@@ -127,6 +127,7 @@ enum Currency {
 }
 
 enum DataSource {
+  ALPHA_VANTAGE
   GHOSTFOLIO
   RAKUTEN
   YAHOO

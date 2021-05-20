@@ -1,3 +1,4 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { Granularity } from '@ghostfolio/common/types';
 
 import {
@@ -16,4 +17,6 @@ export interface DataProviderInterface {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }>;
+
+  search(aSymbol: string): Promise<{ items: LookupItem[] }>;
 }

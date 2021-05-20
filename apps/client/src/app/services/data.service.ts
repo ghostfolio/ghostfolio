@@ -102,7 +102,13 @@ export class DataService {
   }
 
   public fetchSymbols(aQuery: string) {
-    return this.http.get<LookupItem[]>(`/api/symbol/lookup?query=${aQuery}`);
+    return this.http
+      .get<{ items: LookupItem[] }>(`/api/symbol/lookup?query=${aQuery}`)
+      .pipe(
+        map((respose) => {
+          return respose.items;
+        })
+      );
   }
 
   public fetchOrders(): Observable<OrderModel[]> {
