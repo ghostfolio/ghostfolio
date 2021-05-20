@@ -108,7 +108,7 @@ export class AdminService {
         createdAt: true,
         id: true
       },
-      take: 20,
+      take: 30,
       where: {
         NOT: {
           Analytics: null

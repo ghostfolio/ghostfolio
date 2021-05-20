@@ -73,26 +73,40 @@
         <table class="gf-table">
           <thead>
             <tr class="mat-header-row">
+              <th class="mat-header-cell px-1 py-2 text-center" i18n>#</th>
               <th class="mat-header-cell px-1 py-2" i18n>User</th>
-              <th class="mat-header-cell px-1 py-2" i18n>Registration Date</th>
-              <th class="mat-header-cell px-1 py-2" i18n>Accounts</th>
-              <th class="mat-header-cell px-1 py-2" i18n>Transactions</th>
-              <th class="mat-header-cell px-1 py-2" i18n>Engagement</th>
+              <th class="mat-header-cell px-1 py-2 text-center" i18n>
+                Registration Date
+              </th>
+              <th class="mat-header-cell px-1 py-2 text-center" i18n>
+                Accounts
+              </th>
+              <th class="mat-header-cell px-1 py-2 text-center" i18n>
+                Transactions
+              </th>
+              <th class="mat-header-cell px-1 py-2 text-center" i18n>
+                Engagement
+              </th>
               <th class="mat-header-cell px-1 py-2" i18n>Last Activitiy</th>
               <th class="mat-header-cell px-1 py-2"></th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let userItem of users" class="mat-row">
+            <tr *ngFor="let userItem of users; let i = index" class="mat-row">
+              <td class="mat-cell px-1 py-2 text-right">{{ i + 1 }}</td>
               <td class="mat-cell px-1 py-2">
                 {{ userItem.alias || userItem.id }}
               </td>
-              <td class="mat-cell px-1 py-2">
+              <td class="mat-cell px-1 py-2 text-right">
                 {{ userItem.createdAt | date: defaultDateFormat }}
               </td>
-              <td class="mat-cell px-1 py-2">{{ userItem._count?.Account }}</td>
-              <td class="mat-cell px-1 py-2">{{ userItem._count?.Order }}</td>
-              <td class="mat-cell px-1 py-2">
+              <td class="mat-cell px-1 py-2 text-right">
+                {{ userItem._count?.Account }}
+              </td>
+              <td class="mat-cell px-1 py-2 text-right">
+                {{ userItem._count?.Order }}
+              </td>
+              <td class="mat-cell px-1 py-2 text-right">
                 {{ userItem.Analytics?.activityCount }}
               </td>
               <td class="mat-cell px-1 py-2">
