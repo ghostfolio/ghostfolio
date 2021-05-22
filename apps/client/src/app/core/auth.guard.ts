@@ -45,12 +45,12 @@ export class AuthGuard implements CanActivate {
         )
         .subscribe((user) => {
           if (
-            state.url === '/home' &&
+            state.url.startsWith('/home') &&
             user.settings.viewMode === ViewMode.ZEN
           ) {
             this.router.navigate(['/zen']);
             resolve(false);
-          } else if (state.url === '/start') {
+          } else if (state.url.startsWith('/start')) {
             if (user.settings.viewMode === ViewMode.ZEN) {
               this.router.navigate(['/zen']);
             } else {
@@ -59,7 +59,7 @@ export class AuthGuard implements CanActivate {
 
             resolve(false);
           } else if (
-            state.url === '/zen' &&
+            state.url.startsWith('/zen') &&
             user.settings.viewMode === ViewMode.DEFAULT
           ) {
             this.router.navigate(['/home']);
