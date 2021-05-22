@@ -74,13 +74,6 @@ export class DataService {
   }
 
   public fetchInfo() {
-    /*
-      if (this.info) {
-        // TODO: Cache info
-        return of(this.info);
-      }
-    */
-
     return this.http.get<InfoItem>('/api/info').pipe(
       map((data) => {
         if (
@@ -152,10 +145,6 @@ export class DataService {
     return this.http.get<PortfolioPositionDetail>(
       `/api/portfolio/position/${aSymbol}`
     );
-  }
-
-  public fetchUser() {
-    return this.http.get<User>('/api/user');
   }
 
   public loginAnonymous(accessToken: string) {

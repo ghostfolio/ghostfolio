@@ -17,6 +17,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { DataService } from './services/data.service';
 import { TokenStorageService } from './services/token-storage.service';
+import { UserService } from './services/user/user.service';
 
 @Component({
   selector: 'gf-root',
@@ -42,7 +43,8 @@ export class AppComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private materialCssVarsService: MaterialCssVarsService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.initializeTheme();
     this.user = undefined;
@@ -71,7 +73,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.isLoggedIn = !!this.tokenStorageService.getToken();
 
         if (this.isLoggedIn) {
-          this.dataService.fetchUser().subscribe((user) => {
+          this.userService.get().subscribe((user) => {
             this.user = user;
 
             this.canCreateAccount = hasPermission(
@@ -89,6 +91,13 @@ export class AppComponent implements OnDestroy, OnInit {
 
   public onCreateAccount() {
     this.tokenStorageService.signOut();
+    window.location.reload();
+  }
+
+  public onSignOut() {
+    this.tokenStorageService.signOut();
+    this.userService.remove();
+
     window.location.reload();
   }
 

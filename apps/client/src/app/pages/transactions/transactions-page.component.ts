@@ -6,6 +6,7 @@ import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
@@ -42,7 +43,8 @@ export class TransactionsPageComponent implements OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -79,8 +81,9 @@ export class TransactionsPageComponent implements OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
+        this.userService.get().subscribe((user) => {
           this.user = user;
+
           this.hasPermissionToCreateOrder = hasPermission(
             user.permissions,
             permissions.createOrder

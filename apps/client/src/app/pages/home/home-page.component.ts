@@ -11,6 +11,7 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PortfolioOverview,
   PortfolioPerformance,
@@ -66,7 +67,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.routeQueryParams = this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -80,8 +82,9 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
+        this.userService.get().subscribe((user) => {
           this.user = user;
+
           this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
             user.permissions,
             permissions.accessFearAndGreedIndex

@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
-  OnChanges
+  OnChanges,
+  Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -25,6 +27,8 @@ export class HeaderComponent implements OnChanges {
   @Input() currentRoute: string;
   @Input() info: InfoItem;
   @Input() user: User;
+
+  @Output() signOut = new EventEmitter<void>();
 
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
@@ -75,8 +79,7 @@ export class HeaderComponent implements OnChanges {
   }
 
   public onSignOut() {
-    this.tokenStorageService.signOut();
-    window.location.reload();
+    this.signOut.next();
   }
 
   public openLoginDialog(): void {

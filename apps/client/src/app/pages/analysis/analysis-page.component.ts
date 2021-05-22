@@ -3,6 +3,7 @@ import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/to
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PortfolioItem,
   PortfolioPosition,
@@ -44,7 +45,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {}
 
   /**
@@ -83,7 +85,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
+        this.userService.get().subscribe((user) => {
           this.user = user;
 
           this.cd.markForCheck();

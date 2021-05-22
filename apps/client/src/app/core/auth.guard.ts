@@ -11,13 +11,15 @@ import { catchError } from 'rxjs/operators';
 
 import { DataService } from '../services/data.service';
 import { SettingsStorageService } from '../services/settings-storage.service';
+import { UserService } from '../services/user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(
     private dataService: DataService,
     private router: Router,
-    private settingsStorageService: SettingsStorageService
+    private settingsStorageService: SettingsStorageService,
+    private userService: UserService
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -29,8 +31,8 @@ export class AuthGuard implements CanActivate {
     }
 
     return new Promise<boolean>((resolve) => {
-      this.dataService
-        .fetchUser()
+      this.userService
+        .get()
         .pipe(
           catchError(() => {
             if (state.url !== '/start') {
