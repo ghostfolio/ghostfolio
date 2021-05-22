@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hid footer on mobile (except on landing page)
 
+### Fixed
+
+- Fixed the internal navigation of the _Zen Mode_ in combination with a query parameter
+
 ## 1.6.0 - 22.05.2021
 
 ### Added
