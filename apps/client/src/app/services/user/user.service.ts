@@ -16,7 +16,7 @@ export class UserService extends ObservableStore<UserStoreState> {
   public constructor(private http: HttpClient) {
     super({ trackStateHistory: true });
 
-    this.setState({ user: null }, 'INIT_STATE');
+    this.setState({ user: undefined }, 'INIT_STATE');
   }
 
   public get() {

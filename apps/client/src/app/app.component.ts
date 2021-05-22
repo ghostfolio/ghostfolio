@@ -31,7 +31,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public currentYear = new Date().getFullYear();
   public deviceType: string;
   public info: InfoItem;
-  public isLoggedIn = false;
   public user: User;
   public version = environment.version;
 
@@ -76,9 +75,12 @@ export class AppComponent implements OnDestroy, OnInit {
             this.user.permissions,
             permissions.createUserAccount
           );
-
-          this.cd.markForCheck();
+        } else if (!this.tokenStorageService.getToken()) {
+          // User has not been logged in
+          this.user = null;
         }
+
+        this.cd.markForCheck();
       });
   }
 
