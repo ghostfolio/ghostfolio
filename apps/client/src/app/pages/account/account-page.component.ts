@@ -68,9 +68,14 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.update();
   }
 
-  public onChangeBaseCurrency({ value: currency }: { value: Currency }) {
+  public onChangeUserSettings(aKey: string, aValue: string) {
+    const settings = { ...this.user.settings, [aKey]: aValue };
+
     this.dataService
-      .putUserSettings({ currency })
+      .putUserSettings({
+        baseCurrency: settings?.baseCurrency,
+        viewMode: settings?.viewMode
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.dataService.fetchUser().subscribe((user) => {

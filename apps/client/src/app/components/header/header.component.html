@@ -8,11 +8,14 @@
       class="d-none d-sm-block"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'home' ? 'primary' : null"
+      [color]="
+        currentRoute === 'home' || currentRoute === 'zen' ? 'primary' : null
+      "
       [routerLink]="['/']"
       >Overview</a
     >
     <a
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
@@ -21,6 +24,7 @@
       >Analysis</a
     >
     <a
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button

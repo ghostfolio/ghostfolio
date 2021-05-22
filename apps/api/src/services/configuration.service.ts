@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import { bool, cleanEnv, json, num, port, str } from 'envalid';
 
 import { Environment } from './interfaces/environment.interface';
-import { DataSource } from '.prisma/client';
 
 @Injectable()
 export class ConfigurationService {

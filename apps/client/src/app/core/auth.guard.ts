@@ -5,16 +5,19 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
+import { ViewMode } from '@prisma/client';
+import { EMPTY } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
+import { DataService } from '../services/data.service';
 import { SettingsStorageService } from '../services/settings-storage.service';
-import { TokenStorageService } from '../services/token-storage.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
   constructor(
+    private dataService: DataService,
     private router: Router,
-    private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    private settingsStorageService: SettingsStorageService
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
@@ -25,23 +28,46 @@ export class AuthGuard implements CanActivate {
       );
     }
 
-    const isLoggedIn = !!this.tokenStorageService.getToken();
+    return new Promise<boolean>((resolve) => {
+      this.dataService
+        .fetchUser()
+        .pipe(
+          catchError(() => {
+            if (state.url !== '/start') {
+              this.router.navigate(['/start']);
+              resolve(false);
+              return EMPTY;
+            }
 
-    if (isLoggedIn) {
-      if (state.url === '/start') {
-        this.router.navigate(['/home']);
-        return false;
-      }
+            resolve(true);
+            return EMPTY;
+          })
+        )
+        .subscribe((user) => {
+          if (
+            state.url === '/home' &&
+            user.settings.viewMode === ViewMode.ZEN
+          ) {
+            this.router.navigate(['/zen']);
+            resolve(false);
+          } else if (state.url === '/start') {
+            if (user.settings.viewMode === ViewMode.ZEN) {
+              this.router.navigate(['/zen']);
+            } else {
+              this.router.navigate(['/home']);
+            }
 
-      return true;
-    }
+            resolve(false);
+          } else if (
+            state.url === '/zen' &&
+            user.settings.viewMode === ViewMode.DEFAULT
+          ) {
+            this.router.navigate(['/home']);
+            resolve(false);
+          }
 
-    // Not logged in
-    if (state.url !== '/start') {
-      this.router.navigate(['/start']);
-      return false;
-    }
-
-    return true;
+          resolve(true);
+        });
+    });
   }
 }

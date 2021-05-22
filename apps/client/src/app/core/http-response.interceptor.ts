@@ -79,7 +79,6 @@ export class HttpResponseInterceptor implements HttpInterceptor {
           }
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
           this.tokenStorageService.signOut();
-          this.router.navigate(['start']);
         }
 
         return throwError('');

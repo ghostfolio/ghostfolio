@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="row">
+    <div class="chart-container col mr-3">
+      <gf-line-chart
+        symbol="Performance"
+        [historicalDataItems]="historicalDataItems"
+        [showLoader]="false"
+        [showXAxis]="false"
+        [showYAxis]="false"
+      ></gf-line-chart>
+    </div>
+  </div>
+  <div class="overview-container row mb-5 mt-1">
+    <div class="col">
+      <gf-portfolio-performance-summary
+        class="pb-4"
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [isLoading]="isLoadingPerformance"
+        [locale]="user?.settings?.locale"
+        [performance]="performance"
+        [showDetails]="!hasImpersonationId || hasPermissionToReadForeignPortfolio"
+      ></gf-portfolio-performance-summary>
+    </div>
+  </div>
+</div>

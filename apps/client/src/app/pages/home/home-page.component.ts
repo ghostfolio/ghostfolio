@@ -132,6 +132,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
     this.update();
   }
 
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   private openDialog(): void {
     const dialogRef = this.dialog.open(PerformanceChartDialog, {
       autoFocus: false,
@@ -194,10 +199,5 @@ export class HomePageComponent implements OnDestroy, OnInit {
       });
 
     this.cd.markForCheck();
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

@@ -92,10 +92,11 @@ model Property {
 }
 
 model Settings {
-  currency  Currency
-  updatedAt DateTime @updatedAt
-  User      User     @relation(fields: [userId], references: [id])
-  userId    String   @id
+  currency  Currency?
+  viewMode  ViewMode?
+  updatedAt DateTime  @updatedAt
+  User      User      @relation(fields: [userId], references: [id])
+  userId    String    @id
 }
 
 model User {
@@ -131,6 +132,11 @@ enum DataSource {
   GHOSTFOLIO
   RAKUTEN
   YAHOO
+}
+
+enum ViewMode {
+  DEFAULT
+  ZEN
 }
 
 enum Provider {
