@@ -5,7 +5,7 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { DisplayMode } from '@prisma/client';
+import { ViewMode } from '@prisma/client';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -46,12 +46,12 @@ export class AuthGuard implements CanActivate {
         .subscribe((user) => {
           if (
             state.url === '/home' &&
-            user.settings.displayMode === DisplayMode.ZEN
+            user.settings.viewMode === ViewMode.ZEN
           ) {
             this.router.navigate(['/zen']);
             resolve(false);
           } else if (state.url === '/start') {
-            if (user.settings.displayMode === DisplayMode.ZEN) {
+            if (user.settings.viewMode === ViewMode.ZEN) {
               this.router.navigate(['/zen']);
             } else {
               this.router.navigate(['/home']);
@@ -60,7 +60,7 @@ export class AuthGuard implements CanActivate {
             resolve(false);
           } else if (
             state.url === '/zen' &&
-            user.settings.displayMode === DisplayMode.DEFAULT
+            user.settings.viewMode === ViewMode.DEFAULT
           ) {
             this.router.navigate(['/home']);
             resolve(false);

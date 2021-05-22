@@ -47,12 +47,12 @@
                   </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label i18n>Display Mode</mat-label>
+                  <mat-label i18n>View Mode</mat-label>
                   <mat-select
-                    name="displayMode"
+                    name="viewMode"
                     [disabled]="!hasPermissionToUpdateUserSettings"
-                    [value]="user.settings.displayMode"
-                    (selectionChange)="onChangeUserSettings('displayMode', $event.value)"
+                    [value]="user.settings.viewMode"
+                    (selectionChange)="onChangeUserSettings('viewMode', $event.value)"
                   >
                     <mat-option value="DEFAULT">Default</mat-option>
                     <mat-option value="ZEN">Zen</mat-option>

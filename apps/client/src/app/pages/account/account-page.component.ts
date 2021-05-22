@@ -74,7 +74,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.dataService
       .putUserSettings({
         baseCurrency: settings?.baseCurrency,
-        displayMode: settings?.displayMode
+        viewMode: settings?.viewMode
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {

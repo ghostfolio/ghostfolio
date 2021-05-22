@@ -5,7 +5,7 @@ import { resetHours } from '@ghostfolio/common/helper';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
 import { getPermissions, permissions } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
-import { Currency, DisplayMode, Prisma, Provider, User } from '@prisma/client';
+import { Currency, Prisma, Provider, User, ViewMode } from '@prisma/client';
 import { add } from 'date-fns';
 
 const crypto = require('crypto');
@@ -54,7 +54,7 @@ export class UserService {
       settings: {
         locale,
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
-        displayMode: Settings.displayMode ?? DisplayMode.DEFAULT
+        viewMode: Settings.viewMode ?? ViewMode.DEFAULT
       },
       subscription: {
         expiresAt: resetHours(add(new Date(), { days: 7 })),
@@ -80,9 +80,9 @@ export class UserService {
       // Set default settings if needed
       user.Settings = {
         currency: UserService.DEFAULT_CURRENCY,
-        displayMode: DisplayMode.DEFAULT,
         updatedAt: new Date(),
-        userId: user?.id
+        userId: user?.id,
+        viewMode: ViewMode.DEFAULT
       };
     }
 
@@ -189,26 +189,26 @@ export class UserService {
 
   public async updateUserSettings({
     currency,
-    displayMode,
-    userId
+    userId,
+    viewMode
   }: {
     currency?: Currency;
-    displayMode?: DisplayMode;
     userId: string;
+    viewMode?: ViewMode;
   }) {
     await this.prisma.settings.upsert({
       create: {
         currency,
-        displayMode,
         User: {
           connect: {
             id: userId
           }
-        }
+        },
+        viewMode
       },
       update: {
         currency,
-        displayMode
+        viewMode
       },
       where: {
         userId: userId
