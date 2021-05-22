@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
@@ -31,7 +30,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public constructor(
     private cd: ChangeDetectorRef,
     private dataService: DataService,
-    private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
     this.dataService
@@ -46,23 +44,19 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         );
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService
-          .get()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
-            this.hasPermissionToUpdateUserSettings = hasPermission(
-              this.user.permissions,
-              permissions.updateUserSettings
-            );
+          this.hasPermissionToUpdateUserSettings = hasPermission(
+            this.user.permissions,
+            permissions.updateUserSettings
+          );
 
-            this.cd.markForCheck();
-          });
+          this.cd.markForCheck();
+        }
       });
   }
 

@@ -10,7 +10,6 @@ import {
   RANGE,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PortfolioOverview,
@@ -67,7 +66,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
     this.routeQueryParams = this.route.queryParams
@@ -78,39 +76,35 @@ export class HomePageComponent implements OnDestroy, OnInit {
         }
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService
-          .get()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
-            this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-              user.permissions,
-              permissions.accessFearAndGreedIndex
-            );
+          this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+            this.user.permissions,
+            permissions.accessFearAndGreedIndex
+          );
 
-            if (this.hasPermissionToAccessFearAndGreedIndex) {
-              this.dataService
-                .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
-                .pipe(takeUntil(this.unsubscribeSubject))
-                .subscribe(({ marketPrice }) => {
-                  this.fearAndGreedIndex = marketPrice;
+          if (this.hasPermissionToAccessFearAndGreedIndex) {
+            this.dataService
+              .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe(({ marketPrice }) => {
+                this.fearAndGreedIndex = marketPrice;
 
-                  this.cd.markForCheck();
-                });
-            }
+                this.cd.markForCheck();
+              });
+          }
 
-            this.hasPermissionToReadForeignPortfolio = hasPermission(
-              user.permissions,
-              permissions.readForeignPortfolio
-            );
+          this.hasPermissionToReadForeignPortfolio = hasPermission(
+            this.user.permissions,
+            permissions.readForeignPortfolio
+          );
 
-            this.cd.markForCheck();
-          });
+          this.cd.markForCheck();
+        }
       });
   }
 

@@ -66,28 +66,18 @@ export class AppComponent implements OnDestroy, OnInit {
         this.currentRoute = urlSegments[0].path;
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.isLoggedIn = !!this.tokenStorageService.getToken();
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
-        if (this.isLoggedIn) {
-          this.userService
-            .get()
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe((user) => {
-              this.user = user;
+          this.canCreateAccount = hasPermission(
+            this.user.permissions,
+            permissions.createUserAccount
+          );
 
-              this.canCreateAccount = hasPermission(
-                this.user.permissions,
-                permissions.createUserAccount
-              );
-
-              this.cd.markForCheck();
-            });
-        } else {
-          this.user = null;
+          this.cd.markForCheck();
         }
       });
   }

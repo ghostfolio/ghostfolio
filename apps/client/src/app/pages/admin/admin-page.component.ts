@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { AdminData, User } from '@ghostfolio/common/interfaces';
@@ -35,7 +34,6 @@ export class AdminPageComponent implements OnInit {
     private cacheService: CacheService,
     private cd: ChangeDetectorRef,
     private dataService: DataService,
-    private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {}
 
@@ -45,16 +43,12 @@ export class AdminPageComponent implements OnInit {
   public ngOnInit() {
     this.fetchAdminData();
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService
-          .get()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
-          });
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+        }
       });
   }
 
