@@ -1,6 +1,13 @@
 import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
 import { getUtc, getYesterday } from '@ghostfolio/common/helper';
-import { AccountType, Currency, DataSource, Role, Type } from '@prisma/client';
+import {
+  AccountType,
+  Currency,
+  DataSource,
+  Role,
+  Type,
+  ViewMode
+} from '@prisma/client';
 import { format } from 'date-fns';
 
 import { DataProviderService } from '../services/data-provider.service';
@@ -120,7 +127,8 @@ describe('Portfolio', () => {
       Settings: {
         currency: Currency.CHF,
         updatedAt: new Date(),
-        userId: USER_ID
+        userId: USER_ID,
+        viewMode: ViewMode.DEFAULT
       },
       thirdPartyId: null,
       updatedAt: new Date()
