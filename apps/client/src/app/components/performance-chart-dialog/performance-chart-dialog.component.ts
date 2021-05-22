@@ -46,7 +46,7 @@ export class PerformanceChartDialog {
 
         this.historicalDataItems = this.data.historicalDataItems;
 
-        this.historicalDataItems.forEach((historicalDataItem) => {
+        this.historicalDataItems?.forEach((historicalDataItem) => {
           const benchmarkItem = historicalData.find((item) => {
             return item.date === historicalDataItem.date;
           });
