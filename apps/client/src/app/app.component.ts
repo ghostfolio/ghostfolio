@@ -10,6 +10,7 @@ import { primaryColorHex, secondaryColorHex } from '@ghostfolio/common/config';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
@@ -27,6 +28,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentYear = new Date().getFullYear();
+  public deviceType: string;
   public info: InfoItem;
   public isLoggedIn = false;
   public user: User;
@@ -37,6 +39,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public constructor(
     private cd: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private materialCssVarsService: MaterialCssVarsService,
     private router: Router,
     private tokenStorageService: TokenStorageService
@@ -46,6 +49,8 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.dataService.fetchInfo().subscribe((info) => {
       this.info = info;
     });

@@ -25,7 +25,10 @@
   <router-outlet></router-outlet>
 </main>
 
-<footer class="footer d-flex justify-content-center position-absolute w-100">
+<footer
+  *ngIf="currentRoute === 'start' || deviceType !== 'mobile'"
+  class="footer d-flex justify-content-center position-absolute w-100"
+>
   <div class="container text-center">
     <div>
       © {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
