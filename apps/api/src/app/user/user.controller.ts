@@ -93,7 +93,8 @@ export class UserController {
     }
 
     return await this.userService.updateUserSettings({
-      currency: data.currency,
+      currency: data.baseCurrency,
+      displayMode: data.displayMode,
       userId: this.request.user.id
     });
   }

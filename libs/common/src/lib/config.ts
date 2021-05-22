@@ -1,4 +1,4 @@
-import { Currency } from '.prisma/client';
+import { Currency } from '@prisma/client';
 
 export const baseCurrency = Currency.CHF;
 
