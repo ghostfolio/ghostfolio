@@ -82,32 +82,35 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.get().subscribe((user) => {
-          this.user = user;
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
 
-          this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-            user.permissions,
-            permissions.accessFearAndGreedIndex
-          );
+            this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+              user.permissions,
+              permissions.accessFearAndGreedIndex
+            );
 
-          if (this.hasPermissionToAccessFearAndGreedIndex) {
-            this.dataService
-              .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
-              .pipe(takeUntil(this.unsubscribeSubject))
-              .subscribe(({ marketPrice }) => {
-                this.fearAndGreedIndex = marketPrice;
+            if (this.hasPermissionToAccessFearAndGreedIndex) {
+              this.dataService
+                .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe(({ marketPrice }) => {
+                  this.fearAndGreedIndex = marketPrice;
 
-                this.cd.markForCheck();
-              });
-          }
+                  this.cd.markForCheck();
+                });
+            }
 
-          this.hasPermissionToReadForeignPortfolio = hasPermission(
-            user.permissions,
-            permissions.readForeignPortfolio
-          );
+            this.hasPermissionToReadForeignPortfolio = hasPermission(
+              user.permissions,
+              permissions.readForeignPortfolio
+            );
 
-          this.cd.markForCheck();
-        });
+            this.cd.markForCheck();
+          });
       });
   }
 

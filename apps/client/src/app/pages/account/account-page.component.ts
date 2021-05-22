@@ -50,16 +50,19 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.get().subscribe((user) => {
-          this.user = user;
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
 
-          this.hasPermissionToUpdateUserSettings = hasPermission(
-            this.user.permissions,
-            permissions.updateUserSettings
-          );
+            this.hasPermissionToUpdateUserSettings = hasPermission(
+              this.user.permissions,
+              permissions.updateUserSettings
+            );
 
-          this.cd.markForCheck();
-        });
+            this.cd.markForCheck();
+          });
       });
   }
 
@@ -82,11 +85,14 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.userService.remove();
 
-        this.userService.get().subscribe((user) => {
-          this.user = user;
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
 
-          this.cd.markForCheck();
-        });
+            this.cd.markForCheck();
+          });
       });
   }
 

@@ -73,16 +73,19 @@ export class AppComponent implements OnDestroy, OnInit {
         this.isLoggedIn = !!this.tokenStorageService.getToken();
 
         if (this.isLoggedIn) {
-          this.userService.get().subscribe((user) => {
-            this.user = user;
+          this.userService
+            .get()
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe((user) => {
+              this.user = user;
 
-            this.canCreateAccount = hasPermission(
-              this.user.permissions,
-              permissions.createUserAccount
-            );
+              this.canCreateAccount = hasPermission(
+                this.user.permissions,
+                permissions.createUserAccount
+              );
 
-            this.cd.markForCheck();
-          });
+              this.cd.markForCheck();
+            });
         } else {
           this.user = null;
         }

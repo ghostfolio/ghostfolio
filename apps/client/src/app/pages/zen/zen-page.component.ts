@@ -43,16 +43,19 @@ export class ZenPageComponent implements OnDestroy, OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.get().subscribe((user) => {
-          this.user = user;
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
 
-          this.hasPermissionToReadForeignPortfolio = hasPermission(
-            user.permissions,
-            permissions.readForeignPortfolio
-          );
+            this.hasPermissionToReadForeignPortfolio = hasPermission(
+              user.permissions,
+              permissions.readForeignPortfolio
+            );
 
-          this.cd.markForCheck();
-        });
+            this.cd.markForCheck();
+          });
       });
   }
 

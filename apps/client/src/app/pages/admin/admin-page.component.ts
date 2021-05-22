@@ -49,9 +49,12 @@ export class AdminPageComponent implements OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.get().subscribe((user) => {
-          this.user = user;
-        });
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+          });
       });
   }
 

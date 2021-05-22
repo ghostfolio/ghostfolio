@@ -81,20 +81,23 @@ export class AccountsPageComponent implements OnInit {
       .onChangeHasToken()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.get().subscribe((user) => {
-          this.user = user;
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
 
-          this.hasPermissionToCreateAccount = hasPermission(
-            user.permissions,
-            permissions.createAccount
-          );
-          this.hasPermissionToDeleteAccount = hasPermission(
-            user.permissions,
-            permissions.deleteAccount
-          );
+            this.hasPermissionToCreateAccount = hasPermission(
+              user.permissions,
+              permissions.createAccount
+            );
+            this.hasPermissionToDeleteAccount = hasPermission(
+              user.permissions,
+              permissions.deleteAccount
+            );
 
-          this.cd.markForCheck();
-        });
+            this.cd.markForCheck();
+          });
       });
 
     this.fetchAccounts();
