@@ -7,7 +7,7 @@ import {
 } from './interfaces';
 
 export interface DataProviderInterface {
-  hasHistoricalData(symbol: string): boolean;
+  canHandle(symbol: string): boolean;
 
   get(aSymbols: string[]): Promise<{ [symbol: string]: IDataProviderResponse }>;
 

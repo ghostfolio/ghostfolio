@@ -24,7 +24,7 @@ export class AlphaVantageService implements DataProviderInterface {
     });
   }
 
-  public hasHistoricalData(symbol: string) {
+  public canHandle(symbol: string) {
     return this.configurationService.get('ALPHA_VANTAGE_API_KEY');
   }
 

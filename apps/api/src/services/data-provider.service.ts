@@ -136,7 +136,7 @@ export class DataProviderService implements DataProviderInterface {
     }>[] = [];
     for (const { dataSource, symbol } of aDataGatheringItems) {
       const dataProvider = this.getDataProvider(dataSource);
-      if (dataProvider.hasHistoricalData(symbol)) {
+      if (dataProvider.canHandle(symbol)) {
         promises.push(
           dataProvider
             .getHistorical([symbol], undefined, from, to)

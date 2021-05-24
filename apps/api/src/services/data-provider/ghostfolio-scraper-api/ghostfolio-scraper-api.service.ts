@@ -24,7 +24,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
 
   public constructor(private prisma: PrismaService) {}
 
-  public hasHistoricalData(symbol: string) {
+  public canHandle(symbol: string) {
     return isGhostfolioScraperApiSymbol(symbol);
   }
 

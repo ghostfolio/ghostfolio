@@ -28,6 +28,13 @@ export class RakutenRapidApiService implements DataProviderInterface {
     private readonly configurationService: ConfigurationService
   ) {}
 
+  public canHandle(symbol: string) {
+    return (
+      isRakutenRapidApiSymbol(symbol) &&
+      this.configurationService.get('RAKUTEN_RAPID_API_KEY')
+    );
+  }
+
   public async get(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
@@ -56,13 +63,6 @@ export class RakutenRapidApiService implements DataProviderInterface {
     }
 
     return {};
-  }
-
-  public hasHistoricalData(symbol: string) {
-    return (
-      isRakutenRapidApiSymbol(symbol) &&
-      this.configurationService.get('RAKUTEN_RAPID_API_KEY')
-    );
   }
 
   public async getHistorical(
