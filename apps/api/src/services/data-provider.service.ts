@@ -1,6 +1,4 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import {
-  isCrypto,
   isGhostfolioScraperApiSymbol,
   isRakutenRapidApiSymbol
 } from '@ghostfolio/common/helper';
