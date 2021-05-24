@@ -16,7 +16,7 @@ export class ShowAccessTokenDialog {
   public isAgreeButtonDisabled = true;
 
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -26,7 +26,7 @@ export class ShowAccessTokenDialog {
     setTimeout(() => {
       this.isAgreeButtonDisabled = false;
 
-      this.cd.markForCheck();
+      this.changeDetectorRef.markForCheck();
     }, 1500);
   }
 }

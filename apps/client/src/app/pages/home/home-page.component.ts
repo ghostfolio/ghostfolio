@@ -58,7 +58,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
@@ -94,7 +94,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
               .subscribe(({ marketPrice }) => {
                 this.fearAndGreedIndex = marketPrice;
 
-                this.cd.markForCheck();
+                this.changeDetectorRef.markForCheck();
               });
           }
 
@@ -103,7 +103,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
             permissions.readForeignPortfolio
           );
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
@@ -169,7 +169,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
           };
         });
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService
@@ -178,14 +178,14 @@ export class HomePageComponent implements OnDestroy, OnInit {
         this.performance = response;
         this.isLoadingPerformance = false;
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService.fetchPortfolioOverview().subscribe((response) => {
       this.overview = response;
       this.isLoadingOverview = false;
 
-      this.cd.markForCheck();
+      this.changeDetectorRef.markForCheck();
     });
 
     this.dataService
@@ -195,9 +195,9 @@ export class HomePageComponent implements OnDestroy, OnInit {
         this.hasPositions =
           this.positions && Object.keys(this.positions).length > 0;
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
-    this.cd.markForCheck();
+    this.changeDetectorRef.markForCheck();
   }
 }

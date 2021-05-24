@@ -26,7 +26,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private dialog: MatDialog,
     private router: Router,
@@ -42,7 +42,7 @@ export class LoginPageComponent implements OnDestroy, OnInit {
 
       this.initializeLineChart();
 
-      this.cd.markForCheck();
+      this.changeDetectorRef.markForCheck();
     });
   }
 

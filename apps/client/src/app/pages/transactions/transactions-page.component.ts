@@ -35,7 +35,7 @@ export class TransactionsPageComponent implements OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
@@ -90,7 +90,7 @@ export class TransactionsPageComponent implements OnInit {
             permissions.deleteOrder
           );
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       });
 
@@ -105,7 +105,7 @@ export class TransactionsPageComponent implements OnInit {
         this.router.navigate([], { queryParams: { createDialog: true } });
       }
 
-      this.cd.markForCheck();
+      this.changeDetectorRef.markForCheck();
     });
   }
 

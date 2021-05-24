@@ -42,7 +42,7 @@ export class CreateOrUpdateTransactionDialog {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<CreateOrUpdateTransactionDialog>,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTransactionDialogParams
@@ -73,7 +73,7 @@ export class CreateOrUpdateTransactionDialog {
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(({ marketPrice }) => {
           this.currentMarketPrice = marketPrice;
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         });
     }
   }
@@ -100,7 +100,7 @@ export class CreateOrUpdateTransactionDialog {
 
         this.isLoading = false;
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
   }
 

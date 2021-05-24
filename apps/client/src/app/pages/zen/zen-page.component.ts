@@ -31,7 +31,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
@@ -48,7 +48,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
             permissions.readForeignPortfolio
           );
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
@@ -86,7 +86,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
           };
         });
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService
@@ -95,9 +95,9 @@ export class ZenPageComponent implements OnDestroy, OnInit {
         this.performance = response;
         this.isLoadingPerformance = false;
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
-    this.cd.markForCheck();
+    this.changeDetectorRef.markForCheck();
   }
 }

@@ -32,7 +32,7 @@ export class AdminPageComponent implements OnInit {
   public constructor(
     private adminService: AdminService,
     private cacheService: CacheService,
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private userService: UserService
   ) {}
@@ -139,7 +139,7 @@ export class AdminPageComponent implements OnInit {
           this.transactionCount = transactionCount;
           this.userCount = userCount;
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       );
   }

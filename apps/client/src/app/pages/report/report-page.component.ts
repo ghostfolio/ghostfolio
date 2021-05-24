@@ -20,7 +20,7 @@ export class ReportPageComponent implements OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService
   ) {}
 
@@ -38,7 +38,7 @@ export class ReportPageComponent implements OnInit {
           portfolioReport.rules['currencyClusterRisk'] || null;
         this.feeRules = portfolioReport.rules['fees'] || null;
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
   }
 

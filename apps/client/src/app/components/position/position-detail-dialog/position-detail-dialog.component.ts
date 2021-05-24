@@ -34,7 +34,7 @@ export class PositionDetailDialog {
   public transactionCount: number;
 
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<PositionDetailDialog>,
     @Inject(MAT_DIALOG_DATA) public data: PositionDetailDialogParams
@@ -127,7 +127,7 @@ export class PositionDetailDialog {
             this.benchmarkDataItems[0].value = this.averagePrice;
           }
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       );
   }

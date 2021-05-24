@@ -37,7 +37,7 @@ export class AppComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private materialCssVarsService: MaterialCssVarsService,
@@ -80,7 +80,7 @@ export class AppComponent implements OnDestroy, OnInit {
           this.user = null;
         }
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
   }
 
