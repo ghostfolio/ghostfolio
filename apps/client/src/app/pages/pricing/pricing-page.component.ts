@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { baseCurrency } from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
@@ -23,27 +22,22 @@ export class PricingPageComponent implements OnInit {
    */
   public constructor(
     private cd: ChangeDetectorRef,
-    private dataService: DataService,
-    private tokenStorageService: TokenStorageService
+    private userService: UserService
   ) {}
 
   /**
    * Initializes the controller
    */
   public ngOnInit() {
-    this.isLoggedIn = !!this.tokenStorageService.getToken();
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
-    if (this.isLoggedIn)
-      this.tokenStorageService
-        .onChangeHasToken()
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(() => {
-          this.dataService.fetchUser().subscribe((user) => {
-            this.user = user;
-
-            this.cd.markForCheck();
-          });
-        });
+          this.cd.markForCheck();
+        }
+      });
   }
 
   public ngOnDestroy() {

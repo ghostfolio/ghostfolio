@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { PortfolioPerformance, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
@@ -35,22 +35,21 @@ export class ZenPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
-    private tokenStorageService: TokenStorageService
+    private userService: UserService
   ) {
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
-          this.user = user;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
           this.hasPermissionToReadForeignPortfolio = hasPermission(
-            user.permissions,
+            this.user.permissions,
             permissions.readForeignPortfolio
           );
 
           this.cd.markForCheck();
-        });
+        }
       });
   }
 

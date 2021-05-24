@@ -10,7 +10,7 @@ import {
   RANGE,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PortfolioOverview,
   PortfolioPerformance,
@@ -66,7 +66,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    private userService: UserService
   ) {
     this.routeQueryParams = this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -76,14 +76,14 @@ export class HomePageComponent implements OnDestroy, OnInit {
         }
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
-          this.user = user;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
           this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-            user.permissions,
+            this.user.permissions,
             permissions.accessFearAndGreedIndex
           );
 
@@ -99,12 +99,12 @@ export class HomePageComponent implements OnDestroy, OnInit {
           }
 
           this.hasPermissionToReadForeignPortfolio = hasPermission(
-            user.permissions,
+            this.user.permissions,
             permissions.readForeignPortfolio
           );
 
           this.cd.markForCheck();
-        });
+        }
       });
   }
 

@@ -17,6 +17,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { DataService } from './services/data.service';
 import { TokenStorageService } from './services/token-storage.service';
+import { UserService } from './services/user/user.service';
 
 @Component({
   selector: 'gf-root',
@@ -30,7 +31,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public currentYear = new Date().getFullYear();
   public deviceType: string;
   public info: InfoItem;
-  public isLoggedIn = false;
   public user: User;
   public version = environment.version;
 
@@ -42,7 +42,8 @@ export class AppComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private materialCssVarsService: MaterialCssVarsService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.initializeTheme();
     this.user = undefined;
@@ -64,31 +65,34 @@ export class AppComponent implements OnDestroy, OnInit {
         this.currentRoute = urlSegments[0].path;
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.isLoggedIn = !!this.tokenStorageService.getToken();
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
-        if (this.isLoggedIn) {
-          this.dataService.fetchUser().subscribe((user) => {
-            this.user = user;
-
-            this.canCreateAccount = hasPermission(
-              this.user.permissions,
-              permissions.createUserAccount
-            );
-
-            this.cd.markForCheck();
-          });
-        } else {
+          this.canCreateAccount = hasPermission(
+            this.user.permissions,
+            permissions.createUserAccount
+          );
+        } else if (!this.tokenStorageService.getToken()) {
+          // User has not been logged in
           this.user = null;
         }
+
+        this.cd.markForCheck();
       });
   }
 
   public onCreateAccount() {
     this.tokenStorageService.signOut();
+    window.location.reload();
+  }
+
+  public onSignOut() {
+    this.tokenStorageService.signOut();
+    this.userService.remove();
+
     window.location.reload();
   }
 

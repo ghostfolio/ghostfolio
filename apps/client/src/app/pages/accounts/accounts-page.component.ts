@@ -5,7 +5,7 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Account as AccountModel, AccountType } from '@prisma/client';
@@ -42,7 +42,7 @@ export class AccountsPageComponent implements OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -75,23 +75,23 @@ export class AccountsPageComponent implements OnInit {
         this.hasImpersonationId = !!aId;
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
-          this.user = user;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
           this.hasPermissionToCreateAccount = hasPermission(
-            user.permissions,
+            this.user.permissions,
             permissions.createAccount
           );
           this.hasPermissionToDeleteAccount = hasPermission(
-            user.permissions,
+            this.user.permissions,
             permissions.deleteAccount
           );
 
           this.cd.markForCheck();
-        });
+        }
       });
 
     this.fetchAccounts();

@@ -5,7 +5,7 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
@@ -42,7 +42,7 @@ export class TransactionsPageComponent implements OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -75,23 +75,23 @@ export class TransactionsPageComponent implements OnInit {
         this.hasImpersonationId = !!aId;
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
-          this.user = user;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
           this.hasPermissionToCreateOrder = hasPermission(
-            user.permissions,
+            this.user.permissions,
             permissions.createOrder
           );
           this.hasPermissionToDeleteOrder = hasPermission(
-            user.permissions,
+            this.user.permissions,
             permissions.deleteOrder
           );
 
           this.cd.markForCheck();
-        });
+        }
       });
 
     this.fetchOrders();

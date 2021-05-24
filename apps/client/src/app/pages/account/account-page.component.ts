@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -30,7 +30,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public constructor(
     private cd: ChangeDetectorRef,
     private dataService: DataService,
-    private tokenStorageService: TokenStorageService
+    private userService: UserService
   ) {
     this.dataService
       .fetchInfo()
@@ -44,12 +44,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         );
       });
 
-    this.tokenStorageService
-      .onChangeHasToken()
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
-          this.user = user;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
@@ -57,7 +56,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           );
 
           this.cd.markForCheck();
-        });
+        }
       });
   }
 
@@ -78,11 +77,16 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.dataService.fetchUser().subscribe((user) => {
-          this.user = user;
+        this.userService.remove();
 
-          this.cd.markForCheck();
-        });
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.cd.markForCheck();
+          });
       });
   }
 

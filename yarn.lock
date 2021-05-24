@@ -1396,6 +1396,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@codewithdan/observable-store@2.2.11":
+  version "2.2.11"
+  resolved "https://registry.yarnpkg.com/@codewithdan/observable-store/-/observable-store-2.2.11.tgz#f5a168e86a2fa185a50ca40a1e838aa5e5fb007d"
+  integrity sha512-6CfqLJUqV0SwS4yE+9vciqxHUJ6CqIptSXXzFw80MonCDoVJvCJ/xhKfs7VZqJ4jDtEu/7ILvovFtZdLg9fiAg==
+
 "@ctrl/tinycolor@^2.6.0":
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-2.6.1.tgz#0e78cc836a1fd997a9a22fa1c26c555411882160"

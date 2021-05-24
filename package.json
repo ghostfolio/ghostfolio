@@ -55,6 +55,7 @@
     "@angular/platform-browser": "11.2.4",
     "@angular/platform-browser-dynamic": "11.2.4",
     "@angular/router": "11.2.4",
+    "@codewithdan/observable-store": "2.2.11",
     "@nestjs/common": "7.6.5",
     "@nestjs/config": "0.6.1",
     "@nestjs/core": "7.6.5",
