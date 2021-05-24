@@ -1,4 +1,8 @@
-import { getToday, getYesterday } from '@ghostfolio/common/helper';
+import {
+  getToday,
+  getYesterday,
+  isRakutenRapidApiSymbol
+} from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -52,6 +56,13 @@ export class RakutenRapidApiService implements DataProviderInterface {
     }
 
     return {};
+  }
+
+  public hasHistoricalData(symbol: string) {
+    return (
+      isRakutenRapidApiSymbol(symbol) &&
+      this.configurationService.get('RAKUTEN_RAPID_API_KEY')
+    );
   }
 
   public async getHistorical(

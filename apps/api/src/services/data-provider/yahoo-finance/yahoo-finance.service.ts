@@ -90,6 +90,10 @@ export class YahooFinanceService implements DataProviderInterface {
     }
   }
 
+  public hasHistoricalData(symbol: string) {
+    return true;
+  }
+
   public async getHistorical(
     aSymbols: string[],
     aGranularity: Granularity = 'day',

@@ -133,56 +133,15 @@ export class DataProviderService implements DataProviderInterface {
     } = {};
 
     for (const { dataSource, symbol } of aDataGatheringItems) {
-      switch (dataSource) {
-        case DataSource.ALPHA_VANTAGE: {
-          if (this.configurationService.get('ALPHA_VANTAGE_API_KEY')) {
-            const data = await this.alphaVantageService.getHistorical(
-              [symbol],
-              undefined,
-              from,
-              to
-            );
-            result[symbol] = data?.[symbol];
-          }
-          break;
-        }
-        case DataSource.GHOSTFOLIO: {
-          if (isGhostfolioScraperApiSymbol(symbol)) {
-            const data = await this.ghostfolioScraperApiService.getHistorical(
-              [symbol],
-              undefined,
-              from,
-              to
-            );
-            result[symbol] = data?.[symbol];
-          }
-          break;
-        }
-        case DataSource.RAKUTEN: {
-          if (
-            isRakutenRapidApiSymbol(symbol) &&
-            this.configurationService.get('RAKUTEN_RAPID_API_KEY')
-          ) {
-            const data = await this.rakutenRapidApiService.getHistorical(
-              [symbol],
-              undefined,
-              from,
-              to
-            );
-            result[symbol] = data?.[symbol];
-          }
-          break;
-        }
-        case DataSource.YAHOO: {
-          const data = await this.yahooFinanceService.getHistorical(
-            [symbol],
-            undefined,
-            from,
-            to
-          );
-          result[symbol] = data?.[symbol];
-          break;
-        }
+      const dataProvider = this.getDataProvider(dataSource);
+      if (dataProvider.hasHistoricalData(symbol)) {
+        const data = await dataProvider.getHistorical(
+          [symbol],
+          undefined,
+          from,
+          to
+        );
+        result[symbol] = data?.[symbol];
       }
     }
 
@@ -190,15 +149,21 @@ export class DataProviderService implements DataProviderInterface {
   }
 
   public async search(aSymbol: string) {
-    return this.getDataProvider().search(aSymbol);
+    return this.getDataProvider(
+      this.configurationService.get('DATA_SOURCES')[0]
+    ).search(aSymbol);
   }
 
-  private getDataProvider() {
-    switch (this.configurationService.get('DATA_SOURCES')[0]) {
+  private getDataProvider(providerName: DataSource) {
+    switch (providerName) {
       case DataSource.ALPHA_VANTAGE:
         return this.alphaVantageService;
       case DataSource.YAHOO:
         return this.yahooFinanceService;
+      case DataSource.RAKUTEN:
+        return this.rakutenRapidApiService;
+      case DataSource.GHOSTFOLIO:
+        return this.ghostfolioScraperApiService;
       default:
         throw new Error('No data provider has been found.');
     }
