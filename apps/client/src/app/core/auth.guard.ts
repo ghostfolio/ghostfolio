@@ -9,14 +9,14 @@ import { ViewMode } from '@prisma/client';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { DataService } from '../services/data.service';
 import { SettingsStorageService } from '../services/settings-storage.service';
 import { UserService } from '../services/user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
+  private static PUBLIC_PAGE_ROUTES = ['/about', '/pricing', '/resources'];
+
   constructor(
-    private dataService: DataService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private userService: UserService
@@ -35,7 +35,10 @@ export class AuthGuard implements CanActivate {
         .get()
         .pipe(
           catchError(() => {
-            if (state.url !== '/start') {
+            if (AuthGuard.PUBLIC_PAGE_ROUTES.includes(state.url)) {
+              resolve(true);
+              return EMPTY;
+            } else if (state.url !== '/start') {
               this.router.navigate(['/start']);
               resolve(false);
               return EMPTY;
