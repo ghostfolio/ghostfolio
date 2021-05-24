@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced a user service implemented as an observable store (single source of truth for state)
 
+### Fixed
+
+- Fixed the performance chart by considering the investment
+
 ## 1.7.0 - 22.05.2021
 
 ### Changed
