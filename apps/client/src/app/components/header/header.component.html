@@ -19,18 +19,15 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'analysis' ? 'primary' : null"
-      [routerLink]="['/analysis']"
-      >Analysis</a
-    >
-    <a
-      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [color]="currentRoute === 'report' ? 'primary' : null"
-      [routerLink]="['/report']"
-      >X-ray</a
+      [color]="
+        currentRoute === 'analysis' ||
+        currentRoute === 'report' ||
+        currentRoute === 'tools'
+          ? 'primary'
+          : null
+      "
+      [routerLink]="['/tools']"
+      >Tools</a
     >
     <a
       class="d-none d-sm-block mx-1"
@@ -142,17 +139,14 @@
         class="d-block d-sm-none"
         i18n
         mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute === 'analysis' }"
-        [routerLink]="['/analysis']"
-        >Analysis</a
-      >
-      <a
-        class="d-block d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute === 'report' }"
-        [routerLink]="['/report']"
-        >X-ray</a
+        [ngClass]="{
+          'font-weight-bold':
+            currentRoute === 'analysis' ||
+            currentRoute === 'report' ||
+            currentRoute === 'tools'
+        }"
+        [routerLink]="['/tools']"
+        >Tools</a
       >
       <a
         class="d-block d-sm-none"

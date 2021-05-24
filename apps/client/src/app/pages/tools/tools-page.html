@@ -1,0 +1,33 @@
+<div class="container">
+  <h3 class="d-flex justify-content-center mb-3" i18n>Tools</h3>
+  <div class="row">
+    <div class="col-xs-12 col-md-6">
+      <mat-card class="mb-3">
+        <h4 i18n>Analysis</h4>
+        <p class="mb-0">
+          Ghostfolio Analysis shows your positions and visualizes your
+          portfolio.
+        </p>
+        <p class="text-right">
+          <button color="primary" i18n mat-button [routerLink]="['/analysis']">
+            Open Analysis →
+          </button>
+        </p>
+      </mat-card>
+    </div>
+    <div class="col-xs-12 col-md-6">
+      <mat-card class="mb-3">
+        <h4 i18n>X-ray</h4>
+        <p class="mb-0">
+          Ghostfolio X-ray uses static analysis to identify potential issues and
+          risks in your portfolio.
+        </p>
+        <p class="text-right">
+          <button color="primary" i18n mat-button [routerLink]="['/report']">
+            Open X-ray →
+          </button>
+        </p>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -72,6 +72,11 @@ const routes: Routes = [
       import('./pages/login/login-page.module').then((m) => m.LoginPageModule)
   },
   {
+    path: 'tools',
+    loadChildren: () =>
+      import('./pages/tools/tools-page.module').then((m) => m.ToolsPageModule)
+  },
+  {
     path: 'transactions',
     loadChildren: () =>
       import('./pages/transactions/transactions-page.module').then(

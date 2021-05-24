@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a section for _Analysis_, _X-ray_ and upcoming tools
+
 ### Changed
 
 - Introduced a user service implemented as an observable store (single source of truth for state)
