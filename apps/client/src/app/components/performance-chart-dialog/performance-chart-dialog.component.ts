@@ -28,7 +28,7 @@ export class PerformanceChartDialog {
   public title: string;
 
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<PerformanceChartDialog>,
     @Inject(MAT_DIALOG_DATA) public data: PositionDetailDialogParams
@@ -75,7 +75,7 @@ export class PerformanceChartDialog {
           }
         });
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.title = `Performance vs. ${this.benchmarkLabel}`;

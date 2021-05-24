@@ -25,7 +25,7 @@ export class AboutPageComponent implements OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private userService: UserService
   ) {}
 
@@ -39,7 +39,7 @@ export class AboutPageComponent implements OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       });
   }

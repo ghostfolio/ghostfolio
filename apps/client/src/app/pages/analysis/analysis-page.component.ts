@@ -40,7 +40,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
@@ -66,7 +66,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .subscribe((response) => {
         this.portfolioItems = response;
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService
@@ -76,7 +76,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.portfolioPositions = response;
         this.initializeAnalysisData(this.portfolioPositions, this.period);
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.userService.stateChanged
@@ -85,7 +85,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       });
   }

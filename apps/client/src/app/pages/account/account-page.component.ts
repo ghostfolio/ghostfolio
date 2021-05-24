@@ -28,7 +28,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
    * @constructor
    */
   public constructor(
-    private cd: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private userService: UserService
   ) {
@@ -55,7 +55,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
             permissions.updateUserSettings
           );
 
-          this.cd.markForCheck();
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
@@ -85,7 +85,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           .subscribe((user) => {
             this.user = user;
 
-            this.cd.markForCheck();
+            this.changeDetectorRef.markForCheck();
           });
       });
   }
@@ -102,7 +102,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .subscribe((response) => {
         this.accesses = response;
 
-        this.cd.markForCheck();
+        this.changeDetectorRef.markForCheck();
       });
   }
 }
