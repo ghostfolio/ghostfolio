@@ -158,8 +158,8 @@ export class PortfolioService {
         return {
           date: format(parseISO(portfolioItem.date), 'yyyy-MM-dd'),
           grossPerformancePercent: portfolioItem.grossPerformancePercent,
-          marketPrice: portfolioItem.value || null,
-          value: portfolioItem.value || null
+          marketPrice: portfolioItem.value ?? null,
+          value: portfolioItem.value - portfolioItem.investment ?? null
         };
       });
   }
