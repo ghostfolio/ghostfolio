@@ -7,16 +7,15 @@
     <a href="https://ghostfol.io"><strong>Live Demo</strong></a>
   </p>
   <p>
+    <img src="https://img.shields.io/badge/contributions-welcome-orange.svg?style=flat-square"/>
     <a href="https://travis-ci.org/github/ghostfolio/ghostfolio" rel="nofollow">
-      <img src="https://travis-ci.org/ghostfolio/ghostfolio.svg?branch=main" alt="Build Status"/>
-    </a>
+      <img src="https://travis-ci.org/ghostfolio/ghostfolio.svg?branch=main" alt="Build Status"/></a>
     <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
-      <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"/>
-    </a>
+      <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"/></a>
   </p>
 </div>
 
-**Ghostfolio** is an open source portfolio tracker. The software empowers busy folks to have a sharp look of their financial assets and to make solid, data-driven investment decisions by evaluating automated static portfolio analysis rules.
+**Ghostfolio** is an open source portfolio tracker based on web technology. The software empowers busy folks to have a sharp look of their financial assets and to make solid, data-driven investment decisions by evaluating automated static portfolio analysis rules.
 
 ## Why Ghostfolio?
 
@@ -43,10 +42,13 @@ Ghostfolio is for you if you are...
 ## Features
 
 - ✅ Create, update and delete transactions
+- ✅ Multi account management
 - ✅ Portfolio performance (`Today`, `YTD`, `1Y`, `5Y`, `Max`)
 - ✅ Various charts
 - ✅ Static analysis to identify potential risks in your portfolio
 - ✅ Dark Mode
+- ✅ Zen Mode
+- ✅ Mobile-first design
 
 ## Technology Stack
 
@@ -54,11 +56,11 @@ Ghostfolio is a modern web application written in [TypeScript](https://www.types
 
 ### Backend
 
-The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://www.postgresql.org) as a database and [Redis](https://redis.io) for caching.
+The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://www.postgresql.org) as a database together with [Prisma](https://www.prisma.io) and [Redis](https://redis.io) for caching.
 
 ### Frontend
 
-The frontend is built with [Angular](https://angular.io).
+The frontend is built with [Angular](https://angular.io) and uses [Angular Material](https://material.angular.io) with utility classes from [Bootstrap](https://getbootstrap.com).
 
 ## Getting Started
 
