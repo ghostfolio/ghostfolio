@@ -132,17 +132,24 @@ export class DataProviderService implements DataProviderInterface {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
 
+    const promises: Promise<{
+      data: { [date: string]: IDataProviderHistoricalResponse };
+      symbol: string;
+    }>[] = [];
     for (const { dataSource, symbol } of aDataGatheringItems) {
       const dataProvider = this.getDataProvider(dataSource);
       if (dataProvider.hasHistoricalData(symbol)) {
-        const data = await dataProvider.getHistorical(
-          [symbol],
-          undefined,
-          from,
-          to
+        promises.push(
+          dataProvider
+            .getHistorical([symbol], undefined, from, to)
+            .then((data) => ({ data: data?.[symbol], symbol }))
         );
-        result[symbol] = data?.[symbol];
       }
+    }
+
+    const allData = await Promise.all(promises);
+    for (const { data, symbol } of allData) {
+      result[symbol] = data;
     }
 
     return result;
