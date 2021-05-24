@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the performance chart by considering the investment
+- Fixed missing header of public pages (_About_, _Pricing_, _Resources_)
 
 ## 1.7.0 - 22.05.2021
 
