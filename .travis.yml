@@ -8,3 +8,4 @@ before_script:
 script:
   - yarn format:check
   - yarn test
+  - yarn build:all
