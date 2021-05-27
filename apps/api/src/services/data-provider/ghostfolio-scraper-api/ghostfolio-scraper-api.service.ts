@@ -1,4 +1,7 @@
-import { getYesterday } from '@ghostfolio/common/helper';
+import {
+  getYesterday,
+  isGhostfolioScraperApiSymbol
+} from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -20,6 +23,10 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
   public constructor(private prisma: PrismaService) {}
+
+  public canHandle(symbol: string) {
+    return isGhostfolioScraperApiSymbol(symbol);
+  }
 
   public async get(
     aSymbols: string[]

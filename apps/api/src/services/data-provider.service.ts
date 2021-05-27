@@ -1,6 +1,4 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import {
-  isCrypto,
   isGhostfolioScraperApiSymbol,
   isRakutenRapidApiSymbol
 } from '@ghostfolio/common/helper';
@@ -16,6 +14,7 @@ import { RakutenRapidApiService } from './data-provider/rakuten-rapid-api/rakute
 import { YahooFinanceService } from './data-provider/yahoo-finance/yahoo-finance.service';
 import { DataProviderInterface } from './interfaces/data-provider.interface';
 import {
+  IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from './interfaces/interfaces';
@@ -121,79 +120,53 @@ export class DataProviderService implements DataProviderInterface {
   }
 
   public async getHistoricalRaw(
-    aSymbols: string[],
+    aDataGatheringItems: IDataGatheringItem[],
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    const filteredSymbols = aSymbols.filter((symbol) => {
-      return !isGhostfolioScraperApiSymbol(symbol);
-    });
+    const result: {
+      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    } = {};
 
-    const dataOfYahoo = await this.yahooFinanceService.getHistorical(
-      filteredSymbols,
-      undefined,
-      from,
-      to
-    );
-
-    if (aSymbols.length === 1) {
-      const symbol = aSymbols[0];
-
-      if (
-        isCrypto(symbol) &&
-        this.configurationService.get('ALPHA_VANTAGE_API_KEY')
-      ) {
-        // Merge data from Yahoo with data from Alpha Vantage
-        const dataOfAlphaVantage = await this.alphaVantageService.getHistorical(
-          [symbol],
-          undefined,
-          from,
-          to
+    const promises: Promise<{
+      data: { [date: string]: IDataProviderHistoricalResponse };
+      symbol: string;
+    }>[] = [];
+    for (const { dataSource, symbol } of aDataGatheringItems) {
+      const dataProvider = this.getDataProvider(dataSource);
+      if (dataProvider.canHandle(symbol)) {
+        promises.push(
+          dataProvider
+            .getHistorical([symbol], undefined, from, to)
+            .then((data) => ({ data: data?.[symbol], symbol }))
         );
-
-        return {
-          [symbol]: {
-            ...dataOfYahoo[symbol],
-            ...dataOfAlphaVantage[symbol]
-          }
-        };
-      } else if (isGhostfolioScraperApiSymbol(symbol)) {
-        const dataOfGhostfolioScraperApi = await this.ghostfolioScraperApiService.getHistorical(
-          [symbol],
-          undefined,
-          from,
-          to
-        );
-
-        return dataOfGhostfolioScraperApi;
-      } else if (
-        isRakutenRapidApiSymbol(symbol) &&
-        this.configurationService.get('RAKUTEN_RAPID_API_KEY')
-      ) {
-        const dataOfRakutenRapidApi = await this.rakutenRapidApiService.getHistorical(
-          [symbol],
-          undefined,
-          from,
-          to
-        );
-
-        return dataOfRakutenRapidApi;
       }
     }
 
-    return dataOfYahoo;
+    const allData = await Promise.all(promises);
+    for (const { data, symbol } of allData) {
+      result[symbol] = data;
+    }
+
+    return result;
   }
 
   public async search(aSymbol: string) {
-    return this.getDataProvider().search(aSymbol);
+    return this.getDataProvider(
+      this.configurationService.get('DATA_SOURCES')[0]
+    ).search(aSymbol);
   }
 
-  private getDataProvider() {
-    switch (this.configurationService.get('DATA_SOURCES')[0]) {
+  private getDataProvider(providerName: DataSource) {
+    switch (providerName) {
       case DataSource.ALPHA_VANTAGE:
         return this.alphaVantageService;
+      case DataSource.GHOSTFOLIO:
+        return this.ghostfolioScraperApiService;
+      case DataSource.RAKUTEN:
+        return this.rakutenRapidApiService;
       case DataSource.YAHOO:
         return this.yahooFinanceService;
       default:

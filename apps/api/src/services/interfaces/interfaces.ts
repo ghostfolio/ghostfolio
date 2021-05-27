@@ -65,6 +65,12 @@ export interface IDataProviderResponse {
   url?: string;
 }
 
+export interface IDataGatheringItem {
+  dataSource: DataSource;
+  date?: Date;
+  symbol: string;
+}
+
 export type Industry = typeof Industry[keyof typeof Industry];
 
 export type MarketState = typeof MarketState[keyof typeof MarketState];

@@ -5,6 +5,7 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import {
   differenceInHours,
   format,
@@ -18,6 +19,7 @@ import {
 import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider.service';
 import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
+import { IDataGatheringItem } from './interfaces/interfaces';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
@@ -115,15 +117,13 @@ export class DataGatheringService {
     }
   }
 
-  public async gatherSymbols(
-    aSymbolsWithStartDate: { date: Date; symbol: string }[]
-  ) {
+  public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
     let hasError = false;
 
-    for (const { date, symbol } of aSymbolsWithStartDate) {
+    for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
       try {
         const historicalData = await this.dataProviderService.getHistoricalRaw(
-          [symbol],
+          [{ dataSource, symbol }],
           date,
           new Date()
         );
@@ -184,20 +184,24 @@ export class DataGatheringService {
     }
   }
 
-  public async getCustomSymbolsToGather(startDate?: Date) {
+  public async getCustomSymbolsToGather(
+    startDate?: Date
+  ): Promise<IDataGatheringItem[]> {
     const scraperConfigurations = await this.ghostfolioScraperApi.getScraperConfigurations();
 
     return scraperConfigurations.map((scraperConfiguration) => {
       return {
+        dataSource: DataSource.GHOSTFOLIO,
         date: startDate,
         symbol: scraperConfiguration.symbol
       };
     });
   }
 
-  private getBenchmarksToGather(startDate: Date) {
-    const benchmarksToGather = benchmarks.map((symbol) => {
+  private getBenchmarksToGather(startDate: Date): IDataGatheringItem[] {
+    const benchmarksToGather = benchmarks.map(({ dataSource, symbol }) => {
       return {
+        dataSource,
         symbol,
         date: startDate
       };
@@ -205,6 +209,7 @@ export class DataGatheringService {
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       benchmarksToGather.push({
+        dataSource: DataSource.RAKUTEN,
         date: startDate,
         symbol: 'GF.FEAR_AND_GREED_INDEX'
       });
@@ -213,16 +218,16 @@ export class DataGatheringService {
     return benchmarksToGather;
   }
 
-  private async getSymbols7D(): Promise<{ date: Date; symbol: string }[]> {
+  private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
     const distinctOrders = await this.prisma.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
-      select: { symbol: true }
+      select: { dataSource: true, symbol: true }
     });
 
-    const distinctOrdersWithDate = distinctOrders
+    const distinctOrdersWithDate: IDataGatheringItem[] = distinctOrders
       .filter((distinctOrder) => {
         return !isGhostfolioScraperApiSymbol(distinctOrder.symbol);
       })
@@ -233,12 +238,15 @@ export class DataGatheringService {
         };
       });
 
-    const currencyPairsToGather = currencyPairs.map((symbol) => {
-      return {
-        symbol,
-        date: startDate
-      };
-    });
+    const currencyPairsToGather = currencyPairs.map(
+      ({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol,
+          date: startDate
+        };
+      }
+    );
 
     const customSymbolsToGather = await this.getCustomSymbolsToGather(
       startDate
@@ -252,24 +260,27 @@ export class DataGatheringService {
     ];
   }
 
-  private async getSymbolsMax() {
+  private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
     const startDate = new Date(getUtc('2015-01-01'));
 
     const customSymbolsToGather = await this.getCustomSymbolsToGather(
       startDate
     );
 
-    const currencyPairsToGather = currencyPairs.map((symbol) => {
-      return {
-        symbol,
-        date: startDate
-      };
-    });
+    const currencyPairsToGather = currencyPairs.map(
+      ({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol,
+          date: startDate
+        };
+      }
+    );
 
     const distinctOrders = await this.prisma.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ date: 'asc' }],
-      select: { date: true, symbol: true }
+      select: { dataSource: true, date: true, symbol: true }
     });
 
     return [
