@@ -31,7 +31,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
   public canHandle(symbol: string) {
     return (
       isRakutenRapidApiSymbol(symbol) &&
-      this.configurationService.get('RAKUTEN_RAPID_API_KEY')
+      !!this.configurationService.get('RAKUTEN_RAPID_API_KEY')
     );
   }
 

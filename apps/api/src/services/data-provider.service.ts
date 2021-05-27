@@ -12,7 +12,6 @@ import { AlphaVantageService } from './data-provider/alpha-vantage/alpha-vantage
 import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from './data-provider/yahoo-finance/yahoo-finance.service';
-import { DataProviderInterface } from './interfaces/data-provider.interface';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse,
@@ -21,7 +20,7 @@ import {
 import { PrismaService } from './prisma.service';
 
 @Injectable()
-export class DataProviderService implements DataProviderInterface {
+export class DataProviderService {
   public constructor(
     private readonly alphaVantageService: AlphaVantageService,
     private readonly configurationService: ConfigurationService,
@@ -155,7 +154,7 @@ export class DataProviderService implements DataProviderInterface {
 
   public async search(aSymbol: string) {
     return this.getDataProvider(
-      this.configurationService.get('DATA_SOURCES')[0]
+      <DataSource>this.configurationService.get('DATA_SOURCES')[0]
     ).search(aSymbol);
   }
 

@@ -25,7 +25,7 @@ export class AlphaVantageService implements DataProviderInterface {
   }
 
   public canHandle(symbol: string) {
-    return this.configurationService.get('ALPHA_VANTAGE_API_KEY');
+    return !!this.configurationService.get('ALPHA_VANTAGE_API_KEY');
   }
 
   public async get(
