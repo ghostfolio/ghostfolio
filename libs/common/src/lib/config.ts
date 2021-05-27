@@ -1,5 +1,5 @@
-import { Currency } from '@prisma/client';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { Currency } from '@prisma/client';
 import { DataSource } from '@prisma/client';
 
 export const baseCurrency = Currency.CHF;
