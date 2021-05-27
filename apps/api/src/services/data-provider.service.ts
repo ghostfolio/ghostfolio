@@ -163,12 +163,12 @@ export class DataProviderService implements DataProviderInterface {
     switch (providerName) {
       case DataSource.ALPHA_VANTAGE:
         return this.alphaVantageService;
-      case DataSource.YAHOO:
-        return this.yahooFinanceService;
-      case DataSource.RAKUTEN:
-        return this.rakutenRapidApiService;
       case DataSource.GHOSTFOLIO:
         return this.ghostfolioScraperApiService;
+      case DataSource.RAKUTEN:
+        return this.rakutenRapidApiService;
+      case DataSource.YAHOO:
+        return this.yahooFinanceService;
       default:
         throw new Error('No data provider has been found.');
     }
