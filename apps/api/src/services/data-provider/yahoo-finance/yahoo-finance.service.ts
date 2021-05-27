@@ -28,6 +28,10 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public constructor() {}
 
+  public canHandle(symbol: string) {
+    return true;
+  }
+
   public async get(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
