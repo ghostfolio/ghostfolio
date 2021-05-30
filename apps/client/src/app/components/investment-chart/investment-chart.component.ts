@@ -36,10 +36,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
 
   public constructor() {
     Chart.register(
+      LinearScale,
       LineController,
       LineElement,
       PointElement,
-      LinearScale,
       TimeScale
     );
   }
@@ -95,7 +95,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
             responsive: true,
             scales: {
               x: {
-                display: false,
+                display: true,
                 grid: {
                   display: false
                 },
