@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Respected the data source attribute of the transactions model in the data management for historical data
 
+### Fixed
+
+- Fixed the sorting in various tables
+
 ## 1.8.0 - 24.05.2021
 
 ### Added

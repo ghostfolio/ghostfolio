@@ -9,10 +9,8 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 
@@ -41,11 +39,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  public constructor() {}
 
   public ngOnInit() {}
 
