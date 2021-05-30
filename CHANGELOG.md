@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the year labels to the investment chart on the x-axis
+
 ### Changed
 
 - Respected the data source attribute of the transactions model in the data management for historical data
