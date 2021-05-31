@@ -2,101 +2,192 @@
   <div class="row">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>Pricing Plans</h3>
+      <p>
+        Our official
+        <strong>Ghostfolio</strong> cloud offering is the easiest way to get
+        started. Due to the time it saves, this will be the best option for most
+        people. The revenue is used for covering the hosting costs.
+      </p>
+      <p class="mb-5">
+        If you prefer to run <strong>Ghostfolio</strong> on your own
+        infrastructure, please find the source code and further instructions on
+        <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
+      </p>
       <div class="row">
-        <div class="col-xs-12 col-md-6">
-          <mat-card class="mb-3">
-            <h4 i18n>Open Source</h4>
-            <p>Host your <strong>Ghostfolio</strong> instance by yourself.</p>
-            <ul class="list-unstyled mb-3">
-              <li class="align-items-center d-flex mb-1">
-                <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
-                ></ion-icon>
-                <span>Portfolio Performance</span>
-              </li>
-              <li class="align-items-center d-flex mb-1">
-                <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
-                ></ion-icon>
-                <span>Portfolio Summary</span>
-              </li>
-              <li class="align-items-center d-flex mb-1">
-                <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
-                ></ion-icon>
-                <span>Unlimited Transactions</span>
-              </li>
-              <li class="align-items-center d-flex mb-1">
-                <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
-                ></ion-icon>
-                <span>Advanced Insights</span>
-              </li>
-            </ul>
-            <p class="h5 text-right">
-              <span>Free</span>
-            </p>
+        <div class="col-xs-12 col-md-4 mb-3">
+          <mat-card class="d-flex flex-column h-100">
+            <div class="flex-grow-1">
+              <h4 i18n>Open Source</h4>
+              <p>
+                For tech-savvy investors who prefer to run
+                <strong>Ghostfolio</strong> on their own infrastructure.
+              </p>
+              <ul class="list-unstyled mb-3">
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Unlimited Transactions</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Portfolio Performance</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Zen Mode</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Portfolio Summary</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Advanced Insights</span>
+                </li>
+              </ul>
+            </div>
+            <p>Self-hosted.</p>
+            <p class="h5 text-right">Free</p>
           </mat-card>
         </div>
-        <div class="col-xs-12 col-md-6">
+        <div class="col-xs-12 col-md-4 mb-3">
           <mat-card
-            class="mb-3"
-            [ngClass]="{ 'active': user?.subscription?.type === 'Trial' }"
+            class="d-flex flex-column h-100"
+            [ngClass]="{ 'active': user?.subscription?.type === 'Basic' }"
           >
-            <h4 class="align-items-center d-flex" i18n>
-              Diamond
-              <ion-icon
-                class="ml-1 text-muted"
-                name="diamond-outline"
-              ></ion-icon>
-            </h4>
-            <p>
-              Get a fully managed <strong>Ghostfolio</strong> cloud offering.
-            </p>
-            <ul class="list-unstyled mb-3">
-              <li class="align-items-center d-flex mb-1">
+            <div class="flex-grow-1">
+              <h4 class="align-items-center d-flex" i18n>Basic</h4>
+              <p>
+                For new investors who are just getting started with trading.
+              </p>
+              <ul class="list-unstyled mb-3">
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Unlimited Transactions</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Portfolio Performance</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Zen Mode</span>
+                </li>
+                <li>
+                  <ion-icon
+                    class="invisible"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                </li>
+                <li>
+                  <ion-icon
+                    class="invisible"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                </li>
+              </ul>
+            </div>
+            <p>Fully managed <strong>Ghostfolio</strong> cloud offering.</p>
+            <p class="h5 text-right">Free</p>
+          </mat-card>
+        </div>
+        <div class="col-xs-12 col-md-4 mb-3">
+          <mat-card
+            class="d-flex flex-column h-100"
+            [ngClass]="{ 'active': user?.subscription?.type === 'Premium' }"
+          >
+            <div class="flex-grow-1">
+              <h4 class="align-items-center d-flex" i18n>
+                Premium
                 <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
+                  class="ml-1 text-muted"
+                  name="diamond-outline"
                 ></ion-icon>
-                <span>Portfolio Performance</span>
-              </li>
-              <li class="align-items-center d-flex mb-1">
-                <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
-                ></ion-icon>
-                <span>Portfolio Summary</span>
-              </li>
-              <li class="align-items-center d-flex mb-1">
-                <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
-                ></ion-icon>
-                <span>Unlimited Transactions</span>
-              </li>
-              <li class="align-items-center d-flex mb-1">
-                <ion-icon
-                  class="mr-1 text-muted"
-                  name="checkmark-circle-outline"
-                ></ion-icon>
-                <span>Advanced Insights</span>
-              </li>
-            </ul>
+              </h4>
+              <p>
+                For ambitious investors who need the full picture of their
+                financial assets.
+              </p>
+              <ul class="list-unstyled mb-3">
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Unlimited Transactions</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Portfolio Performance</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Zen Mode</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Portfolio Summary</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1 text-muted"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span>Advanced Insights</span>
+                </li>
+              </ul>
+            </div>
+            <p>Fully managed <strong>Ghostfolio</strong> cloud offering.</p>
             <p class="h5 text-right">
               <span class="font-weight-normal"
                 >{{ user?.settings.baseCurrency || baseCurrency }}
-                <strong>2.99</strong>
+                <strong>0.00</strong>
                 <del class="ml-1 text-muted">3.99</del> / Month</span
               >
             </p>
           </mat-card>
         </div>
       </div>
+    </div>
+  </div>
+  <div *ngIf="!user" class="row">
+    <div class="col mt-3 text-center">
+      <a color="primary" i18n mat-flat-button [routerLink]="['/start']">
+        Create Account
+      </a>
+      <p class="text-muted"><small>It's free</small></p>
     </div>
   </div>
 </div>

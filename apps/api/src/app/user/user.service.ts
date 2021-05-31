@@ -58,7 +58,7 @@ export class UserService {
       },
       subscription: {
         expiresAt: resetHours(add(new Date(), { days: 7 })),
-        type: 'Trial'
+        type: 'Premium'
       }
     };
   }
