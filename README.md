@@ -7,7 +7,7 @@
     <a href="https://ghostfol.io"><strong>Live Demo</strong></a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/contributions-welcome-orange.svg?style=flat-square"/>
+    <img src="https://img.shields.io/badge/contributions-welcome-orange.svg"/>
     <a href="https://travis-ci.org/github/ghostfolio/ghostfolio" rel="nofollow">
       <img src="https://travis-ci.org/ghostfolio/ghostfolio.svg?branch=main" alt="Build Status"/></a>
     <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
