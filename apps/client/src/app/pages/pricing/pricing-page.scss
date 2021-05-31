@@ -2,6 +2,15 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
+  a {
+    color: rgba(var(--palette-primary-500), 1);
+    font-weight: bold;
+
+    &:hover {
+      color: rgba(var(--palette-primary-300), 1);
+    }
+  }
+
   .mat-card {
     &.active {
       border-color: rgba(var(--palette-primary-500), 1);
@@ -11,4 +20,8 @@
 
 :host-context(.is-dark-theme) {
   color: rgb(var(--light-primary-text));
+
+  a {
+    color: rgb(var(--light-primary-text));
+  }
 }
