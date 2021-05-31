@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Respected the data source attribute of the transactions model in the data management for historical data
 - Prettified the generic scraper symbols in the transaction filtering component
+- Changed to the strict mode of distance formatting between two given dates
 
 ### Fixed
 
