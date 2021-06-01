@@ -57,10 +57,8 @@ export class TransactionsTableComponent
   public dataSource: MatTableDataSource<OrderWithAccount> = new MatTableDataSource();
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public displayedColumns = [];
-  public filteredTransactions$: Subject<string[]> = new BehaviorSubject([]);
-  public filteredTransactions: Observable<
-    string[]
-  > = this.filteredTransactions$.asObservable();
+  public filters$: Subject<string[]> = new BehaviorSubject([]);
+  public filters: Observable<string[]> = this.filters$.asObservable();
   public isLoading = true;
   public placeholder = '';
   public routeQueryParams: Subscription;
@@ -68,7 +66,7 @@ export class TransactionsTableComponent
   public searchKeywords: string[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  private allFilteredTransactions: string[];
+  private allFilters: string[];
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -90,13 +88,13 @@ export class TransactionsTableComponent
     this.searchControl.valueChanges.subscribe((keyword) => {
       if (keyword) {
         const filterValue = keyword.toLowerCase();
-        this.filteredTransactions$.next(
-          this.allFilteredTransactions.filter(
+        this.filters$.next(
+          this.allFilters.filter(
             (filter) => filter.toLowerCase().indexOf(filterValue) === 0
           )
         );
       } else {
-        this.filteredTransactions$.next(this.allFilteredTransactions);
+        this.filters$.next(this.allFilters);
       }
     });
   }
@@ -239,13 +237,13 @@ export class TransactionsTableComponent
     this.placeholder =
       lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
 
-    this.allFilteredTransactions = this.getSearchableFieldValues(
-      this.transactions
-    ).filter((item) => {
-      return !lowercaseSearchKeywords.includes(item.trim().toLowerCase());
-    });
+    this.allFilters = this.getSearchableFieldValues(this.transactions).filter(
+      (item) => {
+        return !lowercaseSearchKeywords.includes(item.trim().toLowerCase());
+      }
+    );
 
-    this.filteredTransactions$.next(this.allFilteredTransactions);
+    this.filters$.next(this.allFilters);
   }
 
   private getSearchableFieldValues(transactions: OrderWithAccount[]): string[] {

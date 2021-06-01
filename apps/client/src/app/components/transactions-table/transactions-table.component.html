@@ -8,7 +8,7 @@
       [removable]="true"
       (removed)="removeKeyword(searchKeyword)"
     >
-      {{ searchKeyword }}
+      {{ searchKeyword | gfSymbol }}
       <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
     </mat-chip>
     <input
@@ -26,11 +26,8 @@
     #autocomplete="matAutocomplete"
     (optionSelected)="keywordSelected($event)"
   >
-    <mat-option
-      *ngFor="let transaction of filteredTransactions | async"
-      [value]="transaction"
-    >
-      {{ transaction }}
+    <mat-option *ngFor="let filter of filters | async" [value]="filter">
+      {{ filter | gfSymbol }}
     </mat-option>
   </mat-autocomplete>
 </mat-form-field>

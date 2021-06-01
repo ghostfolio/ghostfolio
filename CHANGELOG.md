@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Respected the data source attribute of the transactions model in the data management for historical data
+- Prettified the generic scraper symbols in the transaction filtering component
 
 ### Fixed
 
