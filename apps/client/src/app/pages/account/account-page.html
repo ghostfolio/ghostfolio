@@ -15,13 +15,13 @@
             <div class="w-50" i18n>Alias</div>
             <div class="w-50">{{ user.alias }}</div>
           </div>
-          <div *ngIf="hasPermissionForSubscription" class="d-flex py-1">
+          <div *ngIf="user?.subscription" class="d-flex py-1">
             <div class="w-50" i18n>Membership</div>
             <div class="w-50">
               <div class="align-items-center d-flex mb-1">
-                {{ user?.subscription?.type }}
+                {{ user.subscription.type }}
               </div>
-              <div>
+              <div *ngIf="user.subscription.expiresAt">
                 Valid until {{ user.subscription.expiresAt | date:
                 defaultDateFormat }}
               </div>

@@ -18,7 +18,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public baseCurrency: Currency;
   public currencies: Currency[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
-  public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public user: User;
 
@@ -35,13 +34,8 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchInfo()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currencies, globalPermissions }) => {
+      .subscribe(({ currencies }) => {
         this.currencies = currencies;
-
-        this.hasPermissionForSubscription = hasPermission(
-          globalPermissions,
-          permissions.enableSubscription
-        );
       });
 
     this.userService.stateChanged
