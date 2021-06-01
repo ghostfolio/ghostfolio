@@ -1,24 +1,13 @@
-<table
-  class="gf-table w-100"
-  matSort
-  matSortActive="account"
-  matSortDirection="desc"
-  mat-table
-  [dataSource]="dataSource"
->
+<table class="gf-table w-100" mat-table [dataSource]="dataSource">
   <ng-container matColumnDef="account">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-      Name
-    </th>
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Name</th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       {{ element.name }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="platform">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-      Platform
-    </th>
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Platform</th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <div class="d-flex">
         <gf-symbol-icon
@@ -60,7 +49,7 @@
   </ng-container>
 
   <ng-container matColumnDef="transactions">
-    <th *matHeaderCellDef i18n mat-header-cell mat-sort-header>Transactions</th>
+    <th *matHeaderCellDef i18n mat-header-cell>Transactions</th>
     <td *matCellDef="let element" mat-cell>
       {{ element.Order?.length }}
     </td>
