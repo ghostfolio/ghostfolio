@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Respected the data source attribute of the transactions model in the data management for historical data
-- Extended the pricing page
+- Extended the pricing page and aligned with the subscription model
 
 ## 1.8.0 - 24.05.2021
 
