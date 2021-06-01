@@ -315,18 +315,6 @@ export class PortfolioController {
       impersonationUserId || this.request.user.id
     );
 
-    let report = await portfolio.getReport();
-
-    if (
-      impersonationId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
-      // TODO: Filter out absolute numbers
-    }
-
-    return report;
+    return await portfolio.getReport();
   }
 }

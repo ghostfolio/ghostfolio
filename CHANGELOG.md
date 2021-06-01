@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the sorting in various tables
+- Made the order of the rules in the _X-ray_ section consistent
 
 ## 1.8.0 - 24.05.2021
 

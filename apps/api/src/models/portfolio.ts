@@ -402,10 +402,10 @@ export class Portfolio implements PortfolioInterface {
         accountClusterRisk: await this.rulesService.evaluate(
           this,
           [
-            new AccountClusterRiskCurrentInvestment(
+            new AccountClusterRiskInitialInvestment(
               this.exchangeRateDataService
             ),
-            new AccountClusterRiskInitialInvestment(
+            new AccountClusterRiskCurrentInvestment(
               this.exchangeRateDataService
             ),
             new AccountClusterRiskSingleAccount(this.exchangeRateDataService)
