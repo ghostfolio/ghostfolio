@@ -136,6 +136,7 @@
         <hr class="m-0" />
       </ng-container>
       <a
+        *ngIf="user?.settings?.viewMode === 'DEFAULT'"
         class="d-block d-sm-none"
         i18n
         mat-menu-item

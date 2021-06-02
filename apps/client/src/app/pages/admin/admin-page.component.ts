@@ -76,16 +76,11 @@ export class AdminPageComponent implements OnInit {
 
   public formatDistanceToNow(aDateString: string) {
     if (aDateString) {
-      const distanceString = formatDistanceToNowStrict(
-        sub(parseISO(aDateString), { seconds: 10 }),
-        {
-          addSuffix: true
-        }
-      );
+      const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
+        addSuffix: true
+      });
 
-      return distanceString === 'less than a minute ago'
-        ? 'just now'
-        : distanceString;
+      return distanceString === '0 seconds ago' ? 'just now' : distanceString;
     }
 
     return '';

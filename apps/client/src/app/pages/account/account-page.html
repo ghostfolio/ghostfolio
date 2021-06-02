@@ -25,6 +25,11 @@
                 Valid until {{ user.subscription.expiresAt | date:
                 defaultDateFormat }}
               </div>
+              <div *ngIf="!user.subscription.expiresAt">
+                <button color="primary" disabled i18n mat-flat-button>
+                  Upgrade
+                </button>
+              </div>
             </div>
           </div>
           <div class="d-flex mt-4 py-1">
