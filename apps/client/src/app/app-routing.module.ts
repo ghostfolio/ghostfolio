@@ -29,13 +29,6 @@ const routes: Routes = [
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
   {
-    path: 'analysis',
-    loadChildren: () =>
-      import('./pages/analysis/analysis-page.module').then(
-        (m) => m.AnalysisPageModule
-      )
-  },
-  {
     path: 'auth',
     loadChildren: () =>
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
@@ -50,13 +43,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule
-      )
-  },
-  {
-    path: 'report',
-    loadChildren: () =>
-      import('./pages/report/report-page.module').then(
-        (m) => m.ReportPageModule
       )
   },
   {
@@ -75,6 +61,20 @@ const routes: Routes = [
     path: 'tools',
     loadChildren: () =>
       import('./pages/tools/tools-page.module').then((m) => m.ToolsPageModule)
+  },
+  {
+    path: 'tools/analysis',
+    loadChildren: () =>
+      import('./pages/tools/analysis/analysis-page.module').then(
+        (m) => m.AnalysisPageModule
+      )
+  },
+  {
+    path: 'tools/report',
+    loadChildren: () =>
+      import('./pages/tools/report/report-page.module').then(
+        (m) => m.ReportPageModule
+      )
   },
   {
     path: 'transactions',
