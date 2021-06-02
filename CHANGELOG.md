@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the tools to a sub path (`/tools`)
+- Extended the pricing page and aligned with the subscription model
 
 ## 1.9.0 - 01.06.2021
 

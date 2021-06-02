@@ -12,6 +12,6 @@ export interface User {
   settings: UserSettings;
   subscription: {
     expiresAt: Date;
-    type: 'Trial';
+    type: 'Basic' | 'Premium';
   };
 }

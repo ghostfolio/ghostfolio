@@ -4,9 +4,10 @@ import { locale } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
 import { getPermissions, permissions } from '@ghostfolio/common/permissions';
+import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User, ViewMode } from '@prisma/client';
-import { add } from 'date-fns';
+import { add, isBefore } from 'date-fns';
 
 const crypto = require('crypto');
 
@@ -24,7 +25,8 @@ export class UserService {
     alias,
     id,
     role,
-    Settings
+    Settings,
+    subscription
   }: UserWithSettings): Promise<IUser> {
     const access = await this.prisma.access.findMany({
       include: {
@@ -43,6 +45,7 @@ export class UserService {
     return {
       alias,
       id,
+      subscription,
       access: access.map((accessItem) => {
         return {
           alias: accessItem.User.alias,
@@ -54,11 +57,7 @@ export class UserService {
       settings: {
         locale,
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
-        viewMode: Settings.viewMode ?? ViewMode.DEFAULT
-      },
-      subscription: {
-        expiresAt: resetHours(add(new Date(), { days: 7 })),
-        type: 'Trial'
+        viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
       }
     };
   }
@@ -66,24 +65,47 @@ export class UserService {
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
-    const user = await this.prisma.user.findUnique({
-      include: { Account: true, Settings: true },
+    const userFromDatabase = await this.prisma.user.findUnique({
+      include: { Account: true, Settings: true, Subscription: true },
       where: userWhereUniqueInput
     });
 
-    if (user?.Settings) {
-      if (!user.Settings.currency) {
+    const user: UserWithSettings = userFromDatabase;
+
+    if (userFromDatabase?.Settings) {
+      if (!userFromDatabase.Settings.currency) {
         // Set default currency if needed
-        user.Settings.currency = UserService.DEFAULT_CURRENCY;
+        userFromDatabase.Settings.currency = UserService.DEFAULT_CURRENCY;
       }
-    } else if (user) {
+    } else if (userFromDatabase) {
       // Set default settings if needed
-      user.Settings = {
+      userFromDatabase.Settings = {
         currency: UserService.DEFAULT_CURRENCY,
         updatedAt: new Date(),
-        userId: user?.id,
+        userId: userFromDatabase?.id,
         viewMode: ViewMode.DEFAULT
       };
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      if (userFromDatabase?.Subscription?.length > 0) {
+        const latestSubscription = userFromDatabase.Subscription.reduce(
+          (a, b) => {
+            return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
+          }
+        );
+
+        user.subscription = {
+          expiresAt: latestSubscription.expiresAt,
+          type: isBefore(new Date(), latestSubscription.expiresAt)
+            ? SubscriptionType.Premium
+            : SubscriptionType.Basic
+        };
+      } else {
+        user.subscription = {
+          type: SubscriptionType.Basic
+        };
+      }
     }
 
     return user;
