@@ -11,7 +11,7 @@ export interface User {
   permissions: string[];
   settings: UserSettings;
   subscription: {
-    expiresAt: Date;
+    expiresAt?: Date;
     type: 'Basic' | 'Premium';
   };
 }
