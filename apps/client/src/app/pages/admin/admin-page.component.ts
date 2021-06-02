@@ -5,7 +5,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { AdminData, User } from '@ghostfolio/common/interfaces';
-import { formatDistanceToNowStrict, isValid, parseISO, sub } from 'date-fns';
+import { formatDistanceToNowStrict, isValid, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -76,16 +76,11 @@ export class AdminPageComponent implements OnInit {
 
   public formatDistanceToNow(aDateString: string) {
     if (aDateString) {
-      const distanceString = formatDistanceToNowStrict(
-        sub(parseISO(aDateString), { seconds: 10 }),
-        {
-          addSuffix: true
-        }
-      );
+      const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
+        addSuffix: true
+      });
 
-      return distanceString === 'less than a minute ago'
-        ? 'just now'
-        : distanceString;
+      return distanceString === '0 seconds ago' ? 'just now' : distanceString;
     }
 
     return '';

@@ -126,14 +126,16 @@ ngx-skeleton-loader {
   }
 }
 
-.mat-card-header-text {
-  margin: 0 !important;
+.mat-card {
+  &:not([class*='mat-elevation-z']) {
+    border: 1px solid
+      rgba(var(--dark-primary-text), var(--palette-foreground-divider-alpha));
+    box-shadow: none;
+  }
 }
 
-.mat-card:not([class*='mat-elevation-z']) {
-  border: 1px solid
-    rgba(var(--dark-primary-text), var(--palette-foreground-divider-alpha));
-  box-shadow: none;
+.mat-card-header-text {
+  margin: 0 !important;
 }
 
 .mat-row {
