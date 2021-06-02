@@ -99,21 +99,33 @@ model Settings {
   userId    String    @id
 }
 
+model Subscription {
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  id        String   @default(uuid())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@id([id, userId])
+}
+
 model User {
-  Access       Access[]   @relation("accessGet")
-  AccessGive   Access[]   @relation(name: "accessGive")
+  Access       Access[]       @relation("accessGet")
+  AccessGive   Access[]       @relation(name: "accessGive")
   accessToken  String?
   Account      Account[]
   alias        String?
   Analytics    Analytics?
-  createdAt    DateTime   @default(now())
-  id           String     @id @default(uuid())
+  createdAt    DateTime       @default(now())
+  id           String         @id @default(uuid())
   Order        Order[]
   provider     Provider?
-  role         Role       @default(USER)
+  role         Role           @default(USER)
   Settings     Settings?
+  Subscription Subscription[]
   thirdPartyId String?
-  updatedAt    DateTime   @updatedAt
+  updatedAt    DateTime       @updatedAt
 }
 
 enum AccountType {
