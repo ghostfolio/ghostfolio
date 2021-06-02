@@ -5,7 +5,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { AdminData, User } from '@ghostfolio/common/interfaces';
-import { formatDistanceToNowStrict, isValid, parseISO, sub } from 'date-fns';
+import { formatDistanceToNowStrict, isValid, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
