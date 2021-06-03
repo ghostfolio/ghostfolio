@@ -20,6 +20,7 @@ import {
   getYear,
   isAfter,
   isSameDay,
+  parse,
   parseISO,
   setDate,
   setMonth,
@@ -215,6 +216,8 @@ export class PortfolioService {
         transactionCount
       } = portfolio.getPositions(new Date())[aSymbol];
 
+      const orders = portfolio.getOrders(aSymbol);
+
       const historicalData = await this.dataProviderService.getHistorical(
         [aSymbol],
         'day',
@@ -227,6 +230,7 @@ export class PortfolioService {
       }
 
       const historicalDataArray: HistoricalDataItem[] = [];
+      let currentAveragePrice: number;
       let maxPrice = marketPrice;
       let minPrice = marketPrice;
 
@@ -234,9 +238,24 @@ export class PortfolioService {
         for (const [date, { marketPrice }] of Object.entries(
           historicalData[aSymbol]
         )) {
+          const currentDate = parse(date, 'yyyy-MM-dd', new Date());
+          if (
+            isSameDay(currentDate, parseISO(orders[0]?.getDate())) ||
+            isAfter(currentDate, parseISO(orders[0]?.getDate()))
+          ) {
+            // Get snapshot of first day of month
+            const snapshot = portfolio.get(setDate(currentDate, 1))[0]
+              .positions[aSymbol];
+            orders.shift();
+
+            if (snapshot?.averagePrice) {
+              currentAveragePrice = snapshot?.averagePrice;
+            }
+          }
+
           historicalDataArray.push({
-            averagePrice,
             date,
+            averagePrice: currentAveragePrice,
             value: marketPrice
           });
 
