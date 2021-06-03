@@ -80,7 +80,10 @@ export class AdminPageComponent implements OnInit {
         addSuffix: true
       });
 
-      return distanceString === '0 seconds ago' ? 'just now' : distanceString;
+      return distanceString === 'in 0 seconds' ||
+        distanceString === '0 seconds ago'
+        ? 'just now'
+        : distanceString;
     }
 
     return '';
