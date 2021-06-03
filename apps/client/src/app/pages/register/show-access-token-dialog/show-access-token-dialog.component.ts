@@ -7,7 +7,7 @@ import {
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'show-access-token-dialog',
+  selector: 'gf-show-access-token-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./show-access-token-dialog.scss'],
   templateUrl: 'show-access-token-dialog.html'

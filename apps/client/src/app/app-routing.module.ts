@@ -46,6 +46,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'register',
+    loadChildren: () =>
+      import('./pages/register/register-page.module').then(
+        (m) => m.RegisterPageModule
+      )
+  },
+  {
     path: 'resources',
     loadChildren: () =>
       import('./pages/resources/resources-page.module').then(
@@ -55,7 +62,9 @@ const routes: Routes = [
   {
     path: 'start',
     loadChildren: () =>
-      import('./pages/login/login-page.module').then((m) => m.LoginPageModule)
+      import('./pages/landing/landing-page.module').then(
+        (m) => m.LandingPageModule
+      )
   },
   {
     path: 'tools',

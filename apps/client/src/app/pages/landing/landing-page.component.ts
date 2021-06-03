@@ -1,21 +1,17 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
-import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
 
 @Component({
-  selector: 'gf-login-page',
-  templateUrl: './login-page.html',
-  styleUrls: ['./login-page.scss']
+  selector: 'gf-landing-page',
+  templateUrl: './landing-page.html',
+  styleUrls: ['./landing-page.scss']
 })
-export class LoginPageComponent implements OnDestroy, OnInit {
+export class LandingPageComponent implements OnDestroy, OnInit {
   public currentYear = format(new Date(), 'yyyy');
   public demoAuthToken: string;
   public historicalDataItems: LineChartItem[];
@@ -28,7 +24,6 @@ export class LoginPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    private dialog: MatDialog,
     private router: Router,
     private tokenStorageService: TokenStorageService
   ) {}
@@ -44,15 +39,6 @@ export class LoginPageComponent implements OnDestroy, OnInit {
 
       this.changeDetectorRef.markForCheck();
     });
-  }
-
-  public async createAccount() {
-    this.dataService
-      .postUser()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ accessToken, authToken }) => {
-        this.openShowAccessTokenDialog(accessToken, authToken);
-      });
   }
 
   public initializeLineChart() {
@@ -266,28 +252,6 @@ export class LoginPageComponent implements OnDestroy, OnInit {
         value: 86666.03082624623
       }
     ];
-  }
-
-  public openShowAccessTokenDialog(
-    accessToken: string,
-    authToken: string
-  ): void {
-    const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
-      data: {
-        accessToken,
-        authToken
-      },
-      disableClose: true,
-      width: '30rem'
-    });
-
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data?.authToken) {
-        this.tokenStorageService.saveToken(authToken);
-
-        this.router.navigate(['/']);
-      }
-    });
   }
 
   public setToken(aToken: string) {
