@@ -18,7 +18,7 @@
     "database:format-schema": "prisma format",
     "database:generate-typings": "prisma generate",
     "database:gui": "prisma studio",
-    "database:push": "prisma db push --preview-feature",
+    "database:push": "prisma db push",
     "database:seed": "prisma db seed --preview-feature",
     "dep-graph": "nx dep-graph",
     "e2e": "ng e2e",
