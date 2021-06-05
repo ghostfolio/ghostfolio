@@ -8,8 +8,10 @@ import {
   Position,
   UserWithSettings
 } from '@ghostfolio/common/interfaces';
+import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { DateRange, OrderWithAccount } from '@ghostfolio/common/types';
 import { Prisma } from '@prisma/client';
+import { continents, countries } from 'countries-list';
 import {
   add,
   format,
@@ -207,7 +209,7 @@ export class Portfolio implements PortfolioInterface {
 
     symbols.forEach((symbol) => {
       const accounts: PortfolioPosition['accounts'] = {};
-      let countries: Prisma.JsonArray;
+      let countriesOfSymbol: Country[];
       const [portfolioItem] = portfolioItems;
 
       const ordersBySymbol = this.getOrders().filter((order) => {
@@ -248,9 +250,20 @@ export class Portfolio implements PortfolioInterface {
           };
         }
 
-        countries =
+        countriesOfSymbol = (
           (orderOfSymbol.getSymbolProfile()?.countries as Prisma.JsonArray) ??
-          [];
+          []
+        ).map((country) => {
+          const { code, weight } = country as Prisma.JsonObject;
+
+          return {
+            code: code as string,
+            continent:
+              continents[countries[code as string]?.continent] ?? UNKNOWN_KEY,
+            name: countries[code as string]?.name ?? UNKNOWN_KEY,
+            weight: weight as number
+          };
+        });
       });
 
       let now = portfolioItemsNow.positions[symbol].marketPrice;
@@ -288,7 +301,6 @@ export class Portfolio implements PortfolioInterface {
       details[symbol] = {
         ...data[symbol],
         accounts,
-        countries,
         symbol,
         allocationCurrent:
           this.exchangeRateDataService.toCurrency(
@@ -298,6 +310,7 @@ export class Portfolio implements PortfolioInterface {
           ) / value,
         allocationInvestment:
           portfolioItem.positions[symbol].investment / investment,
+        countries: countriesOfSymbol,
         grossPerformance: roundTo(
           portfolioItemsNow.positions[symbol].quantity * (now - before),
           2
