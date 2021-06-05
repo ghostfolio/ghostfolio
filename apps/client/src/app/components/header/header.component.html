@@ -8,9 +8,11 @@
       class="d-none d-sm-block"
       i18n
       mat-flat-button
-      [color]="
-        currentRoute === 'home' || currentRoute === 'zen' ? 'primary' : null
-      "
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'home' || currentRoute === 'zen',
+        'text-decoration-underline':
+          currentRoute === 'home' || currentRoute === 'zen'
+      }"
       [routerLink]="['/']"
       >Overview</a
     >
@@ -19,13 +21,16 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="
-        currentRoute === 'analysis' ||
-        currentRoute === 'report' ||
-        currentRoute === 'tools'
-          ? 'primary'
-          : null
-      "
+      [ngClass]="{
+        'font-weight-bold':
+          currentRoute === 'analysis' ||
+          currentRoute === 'report' ||
+          currentRoute === 'tools',
+        'text-decoration-underline':
+          currentRoute === 'analysis' ||
+          currentRoute === 'report' ||
+          currentRoute === 'tools'
+      }"
       [routerLink]="['/tools']"
       >Tools</a
     >
@@ -33,7 +38,10 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'transactions' ? 'primary' : null"
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'transactions',
+        'text-decoration-underline': currentRoute === 'transactions'
+      }"
       [routerLink]="['/transactions']"
       >Transactions</a
     >
@@ -41,7 +49,10 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'accounts' ? 'primary' : null"
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'accounts',
+        'text-decoration-underline': currentRoute === 'accounts'
+      }"
       [routerLink]="['/accounts']"
       >Accounts</a
     >
@@ -50,7 +61,10 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'admin' ? 'primary' : null"
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'admin',
+        'text-decoration-underline': currentRoute === 'admin'
+      }"
       [routerLink]="['/admin']"
       >Admin Control</a
     >
@@ -58,7 +72,10 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'resources' ? 'primary' : null"
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'resources',
+        'text-decoration-underline': currentRoute === 'resources'
+      }"
       [routerLink]="['/resources']"
       >Resources</a
     >
@@ -67,7 +84,10 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'pricing' ? 'primary' : null"
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'pricing',
+        'text-decoration-underline': currentRoute === 'pricing'
+      }"
       [routerLink]="['/pricing']"
       >Pricing</a
     >
@@ -75,7 +95,10 @@
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'about' ? 'primary' : null"
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'about',
+        'text-decoration-underline': currentRoute === 'about'
+      }"
       [routerLink]="['/about']"
       >About</a
     >
@@ -227,27 +250,43 @@
     </a>
     <span class="spacer"></span>
     <a
-      *ngIf="hasPermissionForSubscription"
-      i18n
-      mat-flat-button
-      [color]="currentRoute === 'pricing' ? 'primary' : null"
-      [routerLink]="['/pricing']"
-      >Pricing</a
-    >
-    <a
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
-      [color]="currentRoute === 'about' ? 'primary' : null"
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'about',
+        'text-decoration-underline': currentRoute === 'about'
+      }"
       [routerLink]="['/about']"
       >About</a
     >
     <a
-      class="d-none d-sm-block mx-1"
+      *ngIf="hasPermissionForSubscription"
+      i18n
+      mat-flat-button
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'pricing',
+        'text-decoration-underline': currentRoute === 'pricing'
+      }"
+      [routerLink]="['/pricing']"
+      >Pricing</a
+    >
+    <a
+      class="d-none d-sm-block mx-1 no-min-width px-1"
       href="https://github.com/ghostfolio/ghostfolio"
       mat-flat-button
-      >GitHub</a
-    >
-    <button i18n mat-flat-button (click)="openLoginDialog()">Sign in</button>
+      ><ion-icon name="logo-github"></ion-icon
+    ></a>
+    <button class="mx-1" i18n mat-flat-button (click)="openLoginDialog()">
+      Sign In
+    </button>
+    <a
+      class="d-none d-sm-block"
+      color="primary"
+      i18n
+      mat-flat-button
+      [routerLink]="['/register']"
+      >Get Started
+    </a>
   </ng-container>
 </mat-toolbar>

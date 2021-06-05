@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'login-with-access-token-dialog',
+  selector: 'gf-login-with-access-token-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./login-with-access-token-dialog.scss'],
   templateUrl: 'login-with-access-token-dialog.html'

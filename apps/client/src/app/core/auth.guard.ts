@@ -14,7 +14,12 @@ import { UserService } from '../services/user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-  private static PUBLIC_PAGE_ROUTES = ['/about', '/pricing', '/resources'];
+  private static PUBLIC_PAGE_ROUTES = [
+    '/about',
+    '/pricing',
+    '/register',
+    '/resources'
+  ];
 
   constructor(
     private router: Router,

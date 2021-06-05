@@ -13,16 +13,16 @@
       class="align-items-center col d-flex justify-content-center position-relative"
     >
       <div class="py-5 text-center">
-        <button
+        <a
           class="d-inline-block"
           color="primary"
           i18n
           mat-flat-button
           [disabled]="!demoAuthToken"
-          (click)="createAccount()"
+          [routerLink]="['/register']"
         >
-          Create Account
-        </button>
+          Get Started
+        </a>
         <div class="d-inline-block mx-3 text-muted" i18n>or</div>
         <button
           class="d-inline-block"
@@ -135,15 +135,15 @@
         Join now or check out the example account
       </p>
       <div class="py-2 text-center">
-        <button
+        <a
           color="primary"
           i18n
           mat-flat-button
           [disabled]="!demoAuthToken"
-          (click)="createAccount()"
+          [routerLink]="['/register']"
         >
-          Create Account
-        </button>
+          Get Started
+        </a>
         <div class="d-inline-block mx-3 text-muted" i18n>or</div>
         <button
           class="d-inline-block"

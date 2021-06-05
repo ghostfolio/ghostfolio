@@ -12,13 +12,15 @@
   <div *ngIf="canCreateAccount" class="container create-account-container">
     <div class="row mb-5">
       <div class="col-md-6 offset-md-3">
-        <div
-          class="create-account-box p-2 text-center"
-          (click)="onCreateAccount()"
+        <a [routerLink]="['/']">
+          <mat-card
+            class="create-account-box p-2 text-center"
+            (click)="onCreateAccount()"
+          >
+            <div class="mt-1" i18n>You are using the Live Demo.</div>
+            <button mat-button color="primary" i18n>Create Account</button>
+          </mat-card></a
         >
-          <div class="mt-1" i18n>You are using the Live Demo.</div>
-          <button mat-button color="primary" i18n>Create Account</button>
-        </div>
       </div>
     </div>
   </div>

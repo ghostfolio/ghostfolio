@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3 text-center" i18n>
+        Create your Ghostfolio account
+      </h3>
+      <mat-card class="mb-4">
+        <mat-card-content class="text-center">
+          <button
+            class="d-inline-block"
+            color="primary"
+            i18n
+            mat-flat-button
+            [disabled]="!demoAuthToken"
+            (click)="createAccount()"
+          >
+            Create Account
+          </button>
+          <ng-container *ngIf="hasPermissionForSocialLogin">
+            <div class="my-3 text-muted" i18n>or</div>
+            <a color="accent" href="/api/auth/google" mat-flat-button
+              ><ion-icon class="mr-1" name="logo-google"></ion-icon
+              ><span i18n>Continue with Google</span></a
+            >
+          </ng-container>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

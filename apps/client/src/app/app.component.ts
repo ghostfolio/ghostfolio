@@ -68,17 +68,12 @@ export class AppComponent implements OnDestroy, OnInit {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
+        this.user = state.user;
 
-          this.canCreateAccount = hasPermission(
-            this.user.permissions,
-            permissions.createUserAccount
-          );
-        } else if (!this.tokenStorageService.getToken()) {
-          // User has not been logged in
-          this.user = null;
-        }
+        this.canCreateAccount = hasPermission(
+          this.user?.permissions,
+          permissions.createUserAccount
+        );
 
         this.changeDetectorRef.markForCheck();
       });
@@ -86,7 +81,6 @@ export class AppComponent implements OnDestroy, OnInit {
 
   public onCreateAccount() {
     this.tokenStorageService.signOut();
-    window.location.reload();
   }
 
   public onSignOut() {
