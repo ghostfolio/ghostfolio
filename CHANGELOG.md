@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the buttons to links (`<a>`) on the tools page
+- Upgraded `prisma` from version `2.20.1` to `2.24.1`
 
 ## 1.10.1 - 02.06.2021
 
