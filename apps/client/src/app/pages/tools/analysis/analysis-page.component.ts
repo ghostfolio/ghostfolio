@@ -3,11 +3,13 @@ import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/to
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   PortfolioItem,
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { Prisma } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,6 +22,9 @@ import { takeUntil } from 'rxjs/operators';
 export class AnalysisPageComponent implements OnDestroy, OnInit {
   public accounts: {
     [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
+  };
+  public countries: {
+    [key: string]: { name: string; value: number };
   };
   public deviceType: string;
   public period = 'current';
@@ -97,6 +102,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     aPeriod: string
   ) {
     this.accounts = {};
+    this.countries = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      }
+    };
     this.positions = {};
     this.positionsArray = [];
 
@@ -122,10 +133,35 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             aPeriod === 'original' ? original : current;
         } else {
           this.accounts[account] = {
-            value: aPeriod === 'original' ? original : current,
-            name: account
+            name: account,
+            value: aPeriod === 'original' ? original : current
           };
         }
+      }
+
+      if (position.countries.length > 0) {
+        for (const country of position.countries) {
+          const { key, weight } = country as Prisma.JsonObject;
+
+          if (this.countries[<string>key]?.value) {
+            this.countries[<string>key].value +=
+              <number>weight * position.value;
+          } else {
+            this.countries[<string>key] = {
+              name: <string>key,
+              value:
+                <number>weight *
+                (aPeriod === 'original'
+                  ? this.portfolioPositions[symbol].investment
+                  : this.portfolioPositions[symbol].value)
+            };
+          }
+        }
+      } else {
+        this.countries[UNKNOWN_KEY].value +=
+          aPeriod === 'original'
+            ? this.portfolioPositions[symbol].investment
+            : this.portfolioPositions[symbol].value;
       }
     }
   }

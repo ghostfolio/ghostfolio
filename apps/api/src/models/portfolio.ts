@@ -9,6 +9,7 @@ import {
   UserWithSettings
 } from '@ghostfolio/common/interfaces';
 import { DateRange, OrderWithAccount } from '@ghostfolio/common/types';
+import { Prisma } from '@prisma/client';
 import {
   add,
   format,
@@ -127,6 +128,7 @@ export class Portfolio implements PortfolioInterface {
         id,
         quantity,
         symbol,
+        symbolProfile,
         type,
         unitPrice
       }) => {
@@ -139,6 +141,7 @@ export class Portfolio implements PortfolioInterface {
             id,
             quantity,
             symbol,
+            symbolProfile,
             type,
             unitPrice
           })
@@ -204,6 +207,7 @@ export class Portfolio implements PortfolioInterface {
 
     symbols.forEach((symbol) => {
       const accounts: PortfolioPosition['accounts'] = {};
+      let countries: Prisma.JsonArray;
       const [portfolioItem] = portfolioItems;
 
       const ordersBySymbol = this.getOrders().filter((order) => {
@@ -243,6 +247,10 @@ export class Portfolio implements PortfolioInterface {
             original: originalValueOfSymbol
           };
         }
+
+        countries =
+          (orderOfSymbol.getSymbolProfile()?.countries as Prisma.JsonArray) ??
+          [];
       });
 
       let now = portfolioItemsNow.positions[symbol].marketPrice;
@@ -280,6 +288,7 @@ export class Portfolio implements PortfolioInterface {
       details[symbol] = {
         ...data[symbol],
         accounts,
+        countries,
         symbol,
         allocationCurrent:
           this.exchangeRateDataService.toCurrency(
@@ -296,7 +305,12 @@ export class Portfolio implements PortfolioInterface {
         grossPerformancePercent: roundTo((now - before) / before, 4),
         investment: portfolioItem.positions[symbol].investment,
         quantity: portfolioItem.positions[symbol].quantity,
-        transactionCount: portfolioItem.positions[symbol].transactionCount
+        transactionCount: portfolioItem.positions[symbol].transactionCount,
+        value: this.exchangeRateDataService.toCurrency(
+          portfolioItem.positions[symbol].quantity * now,
+          data[symbol]?.currency,
+          this.user.Settings.currency
+        )
       };
     });
 
@@ -544,6 +558,7 @@ export class Portfolio implements PortfolioInterface {
           fee: order.fee,
           quantity: order.quantity,
           symbol: order.symbol,
+          symbolProfile: order.SymbolProfile,
           type: <OrderType>order.type,
           unitPrice: order.unitPrice
         })

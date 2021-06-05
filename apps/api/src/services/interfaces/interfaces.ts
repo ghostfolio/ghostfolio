@@ -1,5 +1,5 @@
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { Account, Currency, DataSource } from '@prisma/client';
+import { Account, Currency, DataSource, SymbolProfile } from '@prisma/client';
 
 import { OrderType } from '../../models/order-type';
 
@@ -41,6 +41,7 @@ export interface IOrder {
   id?: string;
   quantity: number;
   symbol: string;
+  symbolProfile: SymbolProfile;
   type: OrderType;
   unitPrice: number;
 }
