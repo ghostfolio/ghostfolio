@@ -486,7 +486,13 @@ export class Portfolio implements PortfolioInterface {
       .reduce((previous, current) => previous + current, 0);
   }
 
-  public getOrders() {
+  public getOrders(aSymbol?: string) {
+    if (aSymbol) {
+      return this.orders.filter((order) => {
+        return order.getSymbol() === aSymbol;
+      });
+    }
+
     return this.orders;
   }
 
