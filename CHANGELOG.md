@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a symbol profile model with additional data
-- Added a new pie charts: Positions by continent and country
+- Added new pie charts: Positions by continent and country
 
 ## 1.11.0 - 05.06.2021
 
