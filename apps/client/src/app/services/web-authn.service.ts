@@ -7,8 +7,8 @@ import {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON
 } from '@ghostfolio/api/app/auth/interfaces/simplewebauthn';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class WebAuthnService {
   private static readonly WEB_AUTH_N_DEVICE_ID = 'WEB_AUTH_N_DEVICE_ID';
 
   public constructor(
-    private dataService: DataService,
+    private userService: UserService,
     private settingsStorageService: SettingsStorageService,
     private http: HttpClient,
   ) {
@@ -39,7 +39,7 @@ export class WebAuthnService {
       credential: attResp,
       deviceName: deviceName,
     }).pipe(tap(authDevice =>
-      this.dataService.fetchUser().subscribe((user) => {
+      this.userService.get().subscribe((user) => {
         this.settingsStorageService.setSetting(WebAuthnService.WEB_AUTH_N_DEVICE_ID, authDevice.id);
         this.settingsStorageService.setSetting(WebAuthnService.WEB_AUTH_N_USER_ID, user.id);
       })

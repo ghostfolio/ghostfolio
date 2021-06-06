@@ -34,13 +34,6 @@ const routes: Routes = [
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
   },
   {
-    path: 'analysis',
-    loadChildren: () =>
-      import('./pages/analysis/analysis-page.module').then(
-        (m) => m.AnalysisPageModule
-      )
-  },
-  {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)

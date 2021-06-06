@@ -11,7 +11,6 @@ import { AccountPageComponent } from './account-page.component';
 import { GfAuthDeviceSettingsModule } from '@ghostfolio/client/components/auth-device-settings/auth-device-settings.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
 import { AuthDeviceDialog } from '@ghostfolio/client/pages/account/auth-device-dialog/auth-device-dialog.component';
 
 @NgModule({

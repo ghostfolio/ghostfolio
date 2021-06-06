@@ -14,12 +14,12 @@ import {
   VerifyAttestationResponseOpts
 } from '@simplewebauthn/server';
 import { REQUEST } from '@nestjs/core';
-import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
 import { AssertionCredentialJSON, AttestationCredentialJSON } from './interfaces/simplewebauthn';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import base64url from 'base64url';
 import { JwtService } from '@nestjs/jwt';
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
+import { RequestWithUser } from '@ghostfolio/common/types';
 
 @Injectable()
 export class WebAuthService {

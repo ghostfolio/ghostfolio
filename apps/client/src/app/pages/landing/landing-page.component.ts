@@ -256,39 +256,6 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     ];
   }
 
-  public openShowAccessTokenDialog(
-    accessToken: string,
-    authToken: string
-  ): void {
-    if(this.webAuthnService.isEnabled()){
-      this.webAuthnService.verifyWebAuthn().subscribe((data) => {
-        if (data?.authToken) {
-          this.tokenStorageService.saveToken(authToken);
-
-          this.router.navigate(['/']);
-        }
-      });
-      return;
-    }
-
-    const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
-      data: {
-        accessToken,
-        authToken
-      },
-      disableClose: true,
-      width: '30rem'
-    });
-
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data?.authToken) {
-        this.tokenStorageService.saveToken(authToken);
-
-        this.router.navigate(['/']);
-      }
-    });
-  }
-
   public setToken(aToken: string) {
     this.tokenStorageService.saveToken(aToken);
 
