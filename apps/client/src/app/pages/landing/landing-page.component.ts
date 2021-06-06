@@ -5,6 +5,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 @Component({
   selector: 'gf-landing-page',
@@ -25,7 +26,8 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private webAuthnService: WebAuthnService,
   ) {}
 
   /**
@@ -252,6 +254,39 @@ export class LandingPageComponent implements OnDestroy, OnInit {
         value: 86666.03082624623
       }
     ];
+  }
+
+  public openShowAccessTokenDialog(
+    accessToken: string,
+    authToken: string
+  ): void {
+    if(this.webAuthnService.isEnabled()){
+      this.webAuthnService.verifyWebAuthn().subscribe((data) => {
+        if (data?.authToken) {
+          this.tokenStorageService.saveToken(authToken);
+
+          this.router.navigate(['/']);
+        }
+      });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
+      data: {
+        accessToken,
+        authToken
+      },
+      disableClose: true,
+      width: '30rem'
+    });
+
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data?.authToken) {
+        this.tokenStorageService.saveToken(authToken);
+
+        this.router.navigate(['/']);
+      }
+    });
   }
 
   public setToken(aToken: string) {

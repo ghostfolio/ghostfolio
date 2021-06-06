@@ -8,11 +8,12 @@ import { MatSort } from '@angular/material/sort';
   selector: 'gf-auth-device-settings',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './auth-device-settings.component.html',
-  styleUrls: ['./auth-device-settings.component.css']
+  styleUrls: ['./auth-device-settings.component.scss']
 })
 export class AuthDeviceSettingsComponent implements OnInit, OnChanges {
 
   @Input() authDevices: AuthDeviceDto[];
+  @Input() currentDeviceId: string;
 
   @Output() authDeviceDeleted = new EventEmitter<string>();
   @Output() authDeviceToUpdate = new EventEmitter<AuthDeviceDto>();
@@ -25,9 +26,9 @@ export class AuthDeviceSettingsComponent implements OnInit, OnChanges {
   public isLoading = true;
   public pageSize = 7;
 
-  constructor() { }
+  public constructor() { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
   }
 
   public ngOnChanges() {

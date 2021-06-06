@@ -174,4 +174,16 @@ export class DataService {
   public putUserSettings(aData: UpdateUserSettingsDto) {
     return this.http.put<User>(`/api/user/settings`, aData);
   }
+
+  public fetchAuthDevices() {
+    return this.http.get<AuthDeviceDto[]>('/api/auth-device');
+  }
+
+  public updateAuthDevice(aAuthDevice: AuthDeviceDto) {
+    return this.http.put<AuthDeviceDto>(`/api/auth-device/${aAuthDevice.id}`, aAuthDevice);
+  }
+
+  public deleteAuthDevice(aId: string) {
+    return this.http.delete<AuthDeviceDto>(`/api/auth-device/${aId}`);
+  }
 }

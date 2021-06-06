@@ -76,4 +76,36 @@
       <gf-access-table [accesses]="accesses"></gf-access-table>
     </div>
   </div>
+  <div class='row'>
+    <div class='col'>
+      <h3 class='mb-3 text-center' i18n>WebAuthn devices</h3>
+      <mat-card class='mb-3'>
+        <mat-card-content>
+          <div class='row mb-3'>
+            <div class='col'>
+              <gf-auth-device-settings [authDevices]='authDevices$ | async'
+                                       [currentDeviceId]="webAuthnService.getCurrentDeviceId()"
+                                       (authDeviceDeleted)='deleteAuthDevice($event)'
+                                       (authDeviceToUpdate)='updateAuthDevice($event)'
+              ></gf-auth-device-settings>
+            </div>
+          </div>
+          <div class='row mb-3'>
+            <div class='col'>
+              <button
+                class='d-inline-block'
+                color='primary'
+                i18n
+                mat-flat-button
+                (click)='startWebAuthn()'
+              >
+                Add current device
+              </button>
+            </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>

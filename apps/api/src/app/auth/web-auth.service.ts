@@ -1,6 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
-
 import { UserService } from '../user/user.service';
 import {
   generateAssertionOptions,
@@ -16,23 +15,21 @@ import {
 } from '@simplewebauthn/server';
 import { REQUEST } from '@nestjs/core';
 import { RequestWithUser } from '@ghostfolio/api/app/interfaces/request-with-user.type';
-// TODO fix type compilation error
-// import { AttestationCredentialJSON } from '@simplewebauthn/typescript-types';
+import { AssertionCredentialJSON, AttestationCredentialJSON } from './interfaces/simplewebauthn';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import base64url from 'base64url';
+import { JwtService } from '@nestjs/jwt';
+import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 
 @Injectable()
 export class WebAuthService {
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly userService: UserService,
     private readonly deviceService: AuthDeviceService,
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
   ) {}
-
-  get rpName() {
-    return this.configurationService.get('WEB_AUTH_RP_NAME');
-  }
 
   get rpID() {
     return this.configurationService.get('WEB_AUTH_RP_ID');
@@ -47,7 +44,7 @@ export class WebAuthService {
     const devices = await this.deviceService.authDevices({where: {userId: user.id}});
 
     const opts: GenerateAttestationOptionsOpts = {
-      rpName: this.rpName,
+      rpName: 'Ghostfolio',
       rpID: this.rpID,
       userID: user.id,
       userName: user.alias,
@@ -92,7 +89,7 @@ export class WebAuthService {
     return options;
   }
 
-  public async verifyAttestation(body: any){
+  public async verifyAttestation(deviceName: string, credential: AttestationCredentialJSON): Promise<AuthDeviceDto> {
 
     const user = this.request.user;
     const expectedChallenge = user.authChallenge;
@@ -100,7 +97,7 @@ export class WebAuthService {
     let verification: VerifiedAttestation;
     try {
       const opts: VerifyAttestationResponseOpts = {
-        credential: body,
+        credential,
         expectedChallenge,
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID,
@@ -108,7 +105,7 @@ export class WebAuthService {
       verification = await verifyAttestationResponse(opts);
     } catch (error) {
       console.error(error);
-      return new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message);
     }
 
     const { verified, attestationInfo } = verification;
@@ -117,28 +114,37 @@ export class WebAuthService {
     if (verified && attestationInfo) {
       const { credentialPublicKey, credentialID, counter } = attestationInfo;
 
-      const existingDevice = devices.find(device => device.credentialId === credentialID);
+      let existingDevice = devices.find(device => device.credentialId === credentialID);
 
       if (!existingDevice) {
         /**
          * Add the returned device to the user's list of devices
          */
-        await this.deviceService.createAuthDevice({
+        existingDevice = await this.deviceService.createAuthDevice({
           credentialPublicKey,
           credentialId: credentialID,
           counter,
-          name: body.deviceName,
+          name: deviceName,
           User: { connect: { id: user.id } }
         })
       }
+
+      return {
+        createdAt: existingDevice.createdAt.toISOString(),
+        id: existingDevice.id,
+        name: existingDevice.name
+      };
     }
 
-    return { verified };
+    throw new InternalServerErrorException('An unknown error occurred');
   }
 
-  public async generateAssertionOptions(){
-    const user = this.request.user;
-    const devices = await this.deviceService.authDevices({where: {userId: user.id}});
+  public async generateAssertionOptions(userId: string){
+    const devices = await this.deviceService.authDevices({where: {userId: userId}});
+
+    if(devices.length === 0){
+      throw new Error('No registered auth devices found.')
+    }
 
     const opts: GenerateAssertionOptionsOpts = {
       timeout: 60000,
@@ -166,29 +172,29 @@ export class WebAuthService {
         authChallenge: options.challenge,
       },
       where: {
-        id: user.id,
+        id: userId,
       }
     })
 
     return options;
   }
 
-  public async verifyAssertion(body: any){
+  public async verifyAssertion(userId: string, credential: AssertionCredentialJSON){
 
-    const user = this.request.user;
+    const user = await this.userService.user({ id: userId });
 
-    const bodyCredIDBuffer = base64url.toBuffer(body.rawId);
+    const bodyCredIDBuffer = base64url.toBuffer(credential.rawId);
     const devices = await this.deviceService.authDevices({where: {credentialId: bodyCredIDBuffer}});
 
     if (devices.length !== 1) {
-      throw new InternalServerErrorException(`Could not find authenticator matching ${body.id}`);
+      throw new InternalServerErrorException(`Could not find authenticator matching ${credential.id}`);
     }
     const authenticator = devices[0];
 
     let verification: VerifiedAssertion;
     try {
       const opts: VerifyAssertionResponseOpts = {
-        credential: body,
+        credential,
         expectedChallenge: `${user.authChallenge}`,
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID,
@@ -214,8 +220,12 @@ export class WebAuthService {
         data: authenticator,
         where: {id_userId: { id: authenticator.id, userId: user.id}}
       })
+
+      return this.jwtService.sign({
+        id: user.id
+      });
     }
 
-    return { verified };
+    throw new Error();
   }
 }

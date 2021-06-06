@@ -15,8 +15,8 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
   ],
   providers: [
     AuthDeviceService,
-    PrismaService,
     ConfigurationService,
+    PrismaService,
   ]
 })
 export class AuthDeviceModule {}

@@ -17,7 +17,7 @@ export class AuthDeviceController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  public async deleteAuthDevice(@Param('id') id: string): Promise<AuthDeviceDto> {
+  public async deleteAuthDevice(@Param('id') id: string): Promise<void> {
     if (
       !hasPermission(
         getPermissions(this.request.user.role),
@@ -30,7 +30,7 @@ export class AuthDeviceController {
       );
     }
 
-    const deletedAuthDevice = await this.authDeviceService.deleteAuthDevice(
+    await this.authDeviceService.deleteAuthDevice(
       {
         id_userId: {
           id,
@@ -38,11 +38,6 @@ export class AuthDeviceController {
         }
       }
     );
-    return {
-      id: deletedAuthDevice.id,
-      createdAt: deletedAuthDevice.createdAt.toISOString(),
-      name: deletedAuthDevice.name
-    };
   }
 
   @Put(':id')
@@ -92,15 +87,14 @@ export class AuthDeviceController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   public async getAllAuthDevices(): Promise<AuthDeviceDto[]> {
-
     const authDevices = await this.authDeviceService.authDevices({
       orderBy: { createdAt: 'desc' },
       where: { userId: this.request.user.id }
     });
 
     return authDevices.map(authDevice => ({
-      id: authDevice.id,
       createdAt: authDevice.createdAt.toISOString(),
+      id: authDevice.id,
       name: authDevice.name
     }));
   }

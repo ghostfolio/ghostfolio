@@ -11,23 +11,23 @@ export class TokenStorageService {
   public constructor(private userService: UserService) {}
 
   public getToken(): string {
-    return window.localStorage.getItem(TOKEN_KEY);
+    return window.sessionStorage.getItem(TOKEN_KEY);
   }
 
   public saveToken(token: string): void {
-    window.localStorage.removeItem(TOKEN_KEY);
-    window.localStorage.setItem(TOKEN_KEY, token);
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.setItem(TOKEN_KEY, token);
   }
 
   public signOut(): void {
-    const utmSource = window.localStorage.getItem('utm_source');
+    const utmSource = window.sessionStorage.getItem('utm_source');
 
-    window.localStorage.clear();
+    window.sessionStorage.clear();
 
     this.userService.remove();
 
     if (utmSource) {
-      window.localStorage.setItem('utm_source', utmSource);
+      window.sessionStorage.setItem('utm_source', utmSource);
     }
   }
 }

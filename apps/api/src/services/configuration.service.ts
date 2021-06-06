@@ -28,7 +28,6 @@ export class ConfigurationService {
       REDIS_PORT: port({ default: 6379 }),
       ROOT_URL: str({ default: 'http://localhost:4200' }),
       WEB_AUTH_RP_ID: host({ default: 'localhost' }),
-      WEB_AUTH_RP_NAME: str({ default: 'Ghostfolio' }),
     });
   }
 

@@ -1,3 +1,4 @@
+import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,6 +17,7 @@ import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 @Component({
   selector: 'gf-header',
@@ -42,7 +44,8 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private webAuthnService: WebAuthnService,
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -83,6 +86,13 @@ export class HeaderComponent implements OnChanges {
   }
 
   public openLoginDialog(): void {
+    if(this.webAuthnService.isEnabled()){
+      this.webAuthnService.verifyWebAuthn().subscribe(({ authToken }) => {
+        this.setToken(authToken);
+      });
+      return;
+    }
+
     const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
       autoFocus: false,
       data: {

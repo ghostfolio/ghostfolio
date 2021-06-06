@@ -1,28 +1,17 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  Param, Post,
-  Req,
-  Res,
-  UseGuards
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { AuthService } from './auth.service';
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
-// TODO fix type compilation error
-// import { AttestationCredentialJSON } from '@simplewebauthn/typescript-types';
+import { AssertionCredentialJSON, AttestationCredentialJSON } from './interfaces/simplewebauthn';
 
 @Controller('auth')
 export class AuthController {
   public constructor(
     private readonly authService: AuthService,
+    private readonly configurationService: ConfigurationService,
     private readonly webAuthService: WebAuthService,
-    private readonly configurationService: ConfigurationService
   ) {}
 
   @Get('anonymous/:accessToken')
@@ -67,19 +56,25 @@ export class AuthController {
 
   @Post('webauthn/verify-attestation')
   @UseGuards(AuthGuard('jwt'))
-  public async verifyAttestation(@Body() body: any) {
-    return this.webAuthService.verifyAttestation(body);
+  public async verifyAttestation(@Body() body: { deviceName: string, credential: AttestationCredentialJSON }) {
+    return this.webAuthService.verifyAttestation(body.deviceName, body.credential);
   }
 
-  @Get('webauthn/generate-assertion-options')
-  @UseGuards(AuthGuard('jwt'))
-  public async generateAssertionOptions() {
-    return this.webAuthService.generateAssertionOptions();
+  @Post('webauthn/generate-assertion-options')
+  public async generateAssertionOptions(@Body() body: { userId: string }) {
+    return this.webAuthService.generateAssertionOptions(body.userId);
   }
 
   @Post('webauthn/verify-assertion')
-  @UseGuards(AuthGuard('jwt'))
-  public async verifyAssertion(@Body() body: any) {
-    return this.webAuthService.verifyAssertion(body);
+  public async verifyAssertion(@Body() body: { userId: string, credential: AssertionCredentialJSON }) {
+    try {
+      const authToken = await this.webAuthService.verifyAssertion(body.userId, body.credential);
+      return { authToken };
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
   }
 }

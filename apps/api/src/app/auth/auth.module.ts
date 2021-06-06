@@ -20,6 +20,7 @@ import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
     })
   ],
   providers: [
+    AuthDeviceService,
     AuthService,
     ConfigurationService,
     GoogleStrategy,
@@ -27,7 +28,6 @@ import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
     PrismaService,
     UserService,
     WebAuthService,
-    AuthDeviceService,
   ]
 })
 export class AuthModule {}

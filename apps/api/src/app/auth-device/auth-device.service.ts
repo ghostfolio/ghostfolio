@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { AuthDevice, Order, Prisma } from '@prisma/client';
+import { AuthDevice, Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthDeviceService {
@@ -40,7 +40,6 @@ export class AuthDeviceService {
   public async createAuthDevice(
     data: Prisma.AuthDeviceCreateInput
   ): Promise<AuthDevice> {
-
     return this.prisma.authDevice.create({
       data
     });
@@ -48,8 +47,8 @@ export class AuthDeviceService {
 
   public async updateAuthDevice(
     params: {
-      where: Prisma.AuthDeviceWhereUniqueInput;
       data: Prisma.AuthDeviceUpdateInput;
+      where: Prisma.AuthDeviceWhereUniqueInput;
     },
   ): Promise<AuthDevice> {
     const { data, where } = params;

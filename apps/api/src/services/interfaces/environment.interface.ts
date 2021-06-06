@@ -19,5 +19,4 @@ export interface Environment extends CleanedEnvAccessors {
   REDIS_PORT: number;
   ROOT_URL: string;
   WEB_AUTH_RP_ID: string;
-  WEB_AUTH_RP_NAME: string;
 }
