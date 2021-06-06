@@ -44,6 +44,7 @@ export class ExperimentalService {
         fee: 0,
         id: undefined,
         platformId: undefined,
+        symbolProfileId: undefined,
         type: Type.BUY,
         updatedAt: undefined,
         userId: undefined

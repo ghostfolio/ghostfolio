@@ -79,6 +79,7 @@
     "cheerio": "1.0.0-rc.6",
     "class-transformer": "0.3.2",
     "class-validator": "0.13.1",
+    "countries-list": "2.6.1",
     "countup.js": "2.0.7",
     "cryptocurrencies": "7.0.0",
     "date-fns": "2.19.0",

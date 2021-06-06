@@ -3,6 +3,7 @@ import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/to
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   PortfolioItem,
   PortfolioPosition,
@@ -20,6 +21,12 @@ import { takeUntil } from 'rxjs/operators';
 export class AnalysisPageComponent implements OnDestroy, OnInit {
   public accounts: {
     [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
+  };
+  public continents: {
+    [code: string]: { name: string; value: number };
+  };
+  public countries: {
+    [code: string]: { name: string; value: number };
   };
   public deviceType: string;
   public period = 'current';
@@ -97,6 +104,18 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     aPeriod: string
   ) {
     this.accounts = {};
+    this.continents = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      }
+    };
+    this.countries = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      }
+    };
     this.positions = {};
     this.positionsArray = [];
 
@@ -122,10 +141,52 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             aPeriod === 'original' ? original : current;
         } else {
           this.accounts[account] = {
-            value: aPeriod === 'original' ? original : current,
-            name: account
+            name: account,
+            value: aPeriod === 'original' ? original : current
           };
         }
+      }
+
+      if (position.countries.length > 0) {
+        for (const country of position.countries) {
+          const { code, continent, name, weight } = country;
+
+          if (this.continents[continent]?.value) {
+            this.continents[continent].value += weight * position.value;
+          } else {
+            this.continents[continent] = {
+              name: continent,
+              value:
+                weight *
+                (aPeriod === 'original'
+                  ? this.portfolioPositions[symbol].investment
+                  : this.portfolioPositions[symbol].value)
+            };
+          }
+
+          if (this.countries[code]?.value) {
+            this.countries[code].value += weight * position.value;
+          } else {
+            this.countries[code] = {
+              name,
+              value:
+                weight *
+                (aPeriod === 'original'
+                  ? this.portfolioPositions[symbol].investment
+                  : this.portfolioPositions[symbol].value)
+            };
+          }
+        }
+      } else {
+        this.continents[UNKNOWN_KEY].value +=
+          aPeriod === 'original'
+            ? this.portfolioPositions[symbol].investment
+            : this.portfolioPositions[symbol].value;
+
+        this.countries[UNKNOWN_KEY].value +=
+          aPeriod === 'original'
+            ? this.portfolioPositions[symbol].investment
+            : this.portfolioPositions[symbol].value;
       }
     }
   }

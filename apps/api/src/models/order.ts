@@ -1,4 +1,4 @@
-import { Account, Currency, Platform } from '@prisma/client';
+import { Account, Currency, Platform, SymbolProfile } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IOrder } from '../services/interfaces/interfaces';
@@ -12,6 +12,7 @@ export class Order {
   private id: string;
   private quantity: number;
   private symbol: string;
+  private symbolProfile: SymbolProfile;
   private total: number;
   private type: OrderType;
   private unitPrice: number;
@@ -24,6 +25,7 @@ export class Order {
     this.id = data.id || uuidv4();
     this.quantity = data.quantity;
     this.symbol = data.symbol;
+    this.symbolProfile = data.symbolProfile;
     this.type = data.type;
     this.unitPrice = data.unitPrice;
 
@@ -56,6 +58,10 @@ export class Order {
 
   public getSymbol() {
     return this.symbol;
+  }
+
+  getSymbolProfile() {
+    return this.symbolProfile;
   }
 
   public getTotal() {

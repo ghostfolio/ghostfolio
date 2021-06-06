@@ -8,7 +8,10 @@ import {
   Position,
   UserWithSettings
 } from '@ghostfolio/common/interfaces';
+import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { DateRange, OrderWithAccount } from '@ghostfolio/common/types';
+import { Prisma } from '@prisma/client';
+import { continents, countries } from 'countries-list';
 import {
   add,
   format,
@@ -127,6 +130,7 @@ export class Portfolio implements PortfolioInterface {
         id,
         quantity,
         symbol,
+        symbolProfile,
         type,
         unitPrice
       }) => {
@@ -139,6 +143,7 @@ export class Portfolio implements PortfolioInterface {
             id,
             quantity,
             symbol,
+            symbolProfile,
             type,
             unitPrice
           })
@@ -204,6 +209,7 @@ export class Portfolio implements PortfolioInterface {
 
     symbols.forEach((symbol) => {
       const accounts: PortfolioPosition['accounts'] = {};
+      let countriesOfSymbol: Country[];
       const [portfolioItem] = portfolioItems;
 
       const ordersBySymbol = this.getOrders().filter((order) => {
@@ -243,6 +249,21 @@ export class Portfolio implements PortfolioInterface {
             original: originalValueOfSymbol
           };
         }
+
+        countriesOfSymbol = (
+          (orderOfSymbol.getSymbolProfile()?.countries as Prisma.JsonArray) ??
+          []
+        ).map((country) => {
+          const { code, weight } = country as Prisma.JsonObject;
+
+          return {
+            code: code as string,
+            continent:
+              continents[countries[code as string]?.continent] ?? UNKNOWN_KEY,
+            name: countries[code as string]?.name ?? UNKNOWN_KEY,
+            weight: weight as number
+          };
+        });
       });
 
       let now = portfolioItemsNow.positions[symbol].marketPrice;
@@ -289,6 +310,7 @@ export class Portfolio implements PortfolioInterface {
           ) / value,
         allocationInvestment:
           portfolioItem.positions[symbol].investment / investment,
+        countries: countriesOfSymbol,
         grossPerformance: roundTo(
           portfolioItemsNow.positions[symbol].quantity * (now - before),
           2
@@ -296,7 +318,12 @@ export class Portfolio implements PortfolioInterface {
         grossPerformancePercent: roundTo((now - before) / before, 4),
         investment: portfolioItem.positions[symbol].investment,
         quantity: portfolioItem.positions[symbol].quantity,
-        transactionCount: portfolioItem.positions[symbol].transactionCount
+        transactionCount: portfolioItem.positions[symbol].transactionCount,
+        value: this.exchangeRateDataService.toCurrency(
+          portfolioItem.positions[symbol].quantity * now,
+          data[symbol]?.currency,
+          this.user.Settings.currency
+        )
       };
     });
 
@@ -544,6 +571,7 @@ export class Portfolio implements PortfolioInterface {
           fee: order.fee,
           quantity: order.quantity,
           symbol: order.symbol,
+          symbolProfile: order.SymbolProfile,
           type: <OrderType>order.type,
           unitPrice: order.unitPrice
         })

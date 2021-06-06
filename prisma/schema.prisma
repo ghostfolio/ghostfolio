@@ -59,22 +59,24 @@ model MarketData {
 }
 
 model Order {
-  Account       Account?   @relation(fields: [accountId, accountUserId], references: [id, userId])
-  accountId     String?
-  accountUserId String?
-  createdAt     DateTime   @default(now())
-  currency      Currency
-  dataSource    DataSource @default(YAHOO)
-  date          DateTime
-  fee           Float
-  id            String     @default(uuid())
-  quantity      Float
-  symbol        String
-  type          Type
-  unitPrice     Float
-  updatedAt     DateTime   @updatedAt
-  User          User       @relation(fields: [userId], references: [id])
-  userId        String
+  Account         Account?       @relation(fields: [accountId, accountUserId], references: [id, userId])
+  accountId       String?
+  accountUserId   String?
+  createdAt       DateTime       @default(now())
+  currency        Currency
+  dataSource      DataSource     @default(YAHOO)
+  date            DateTime
+  fee             Float
+  id              String         @default(uuid())
+  quantity        Float
+  symbol          String
+  SymbolProfile   SymbolProfile? @relation(fields: [symbolProfileId], references: [id])
+  symbolProfileId String?
+  type            Type
+  unitPrice       Float
+  updatedAt       DateTime       @updatedAt
+  User            User           @relation(fields: [userId], references: [id])
+  userId          String
 
   @@id([id, userId])
 }
@@ -97,6 +99,19 @@ model Settings {
   updatedAt DateTime  @updatedAt
   User      User      @relation(fields: [userId], references: [id])
   userId    String    @id
+}
+
+model SymbolProfile {
+  countries  Json?
+  createdAt  DateTime   @default(now())
+  dataSource DataSource
+  id         String     @id @default(uuid())
+  name       String?
+  Order      Order[]
+  updatedAt  DateTime   @updatedAt
+  symbol     String
+
+  @@unique([dataSource, symbol])
 }
 
 model Subscription {

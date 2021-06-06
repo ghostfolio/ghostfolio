@@ -76,7 +76,8 @@ export class PortfolioService {
       // Get portfolio from database
       const orders = await this.orderService.orders({
         include: {
-          Account: true
+          Account: true,
+          SymbolProfile: true
         },
         orderBy: { date: 'asc' },
         where: { userId: aUserId }
