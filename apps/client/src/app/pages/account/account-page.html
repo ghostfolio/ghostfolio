@@ -98,6 +98,7 @@
                 i18n
                 mat-flat-button
                 (click)='startWebAuthn()'
+                [disabled]="webAuthnService.isEnabled()"
               >
                 Add current device
               </button>
