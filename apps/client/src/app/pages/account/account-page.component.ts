@@ -37,7 +37,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private dataService: DataService,
     private userService: UserService,
-    public webAuthnService: WebAuthnService,
+    public webAuthnService: WebAuthnService
   ) {
     this.dataService
       .fetchInfo()
@@ -100,17 +100,23 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   }
 
   public startWebAuthn() {
-    this.webAuthnService.startWebAuthn()
+    this.webAuthnService
+      .startWebAuthn()
       .pipe(
-        switchMap(attResp => {
+        switchMap((attResp) => {
           const dialogRef = this.dialog.open(AuthDeviceDialog, {
             data: {
               authDevice: {}
             }
           });
-          return dialogRef.afterClosed().pipe(switchMap(data => {
-            return this.webAuthnService.verifyAttestation(attResp, data.authDevice.name)
-          }));
+          return dialogRef.afterClosed().pipe(
+            switchMap((data) => {
+              return this.webAuthnService.verifyAttestation(
+                attResp,
+                data.authDevice.name
+              );
+            })
+          );
         })
       )
       .subscribe(() => {
@@ -133,10 +139,13 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       }
     });
 
-    dialogRef.afterClosed()
+    dialogRef
+      .afterClosed()
       .pipe(
         filter(isNonNull),
-        switchMap(data => this.webAuthnService.updateAuthDevice(data.authDevice))
+        switchMap((data) =>
+          this.webAuthnService.updateAuthDevice(data.authDevice)
+        )
       )
       .subscribe({
         next: () => {
@@ -149,7 +158,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.webAuthnService
       .fetchAuthDevices()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(authDevices => {
+      .subscribe((authDevices) => {
         this.authDevices$.next(authDevices);
       });
   }

@@ -5,12 +5,10 @@ import { AuthDevice, Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthDeviceService {
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private prisma: PrismaService
-  ) {
-  }
+  ) {}
 
   public async authDevice(
     where: Prisma.AuthDeviceWhereUniqueInput
@@ -45,12 +43,10 @@ export class AuthDeviceService {
     });
   }
 
-  public async updateAuthDevice(
-    params: {
-      data: Prisma.AuthDeviceUpdateInput;
-      where: Prisma.AuthDeviceWhereUniqueInput;
-    },
-  ): Promise<AuthDevice> {
+  public async updateAuthDevice(params: {
+    data: Prisma.AuthDeviceUpdateInput;
+    where: Prisma.AuthDeviceWhereUniqueInput;
+  }): Promise<AuthDevice> {
     const { data, where } = params;
 
     return this.prisma.authDevice.update({
@@ -60,7 +56,7 @@ export class AuthDeviceService {
   }
 
   public async deleteAuthDevice(
-    where: Prisma.AuthDeviceWhereUniqueInput,
+    where: Prisma.AuthDeviceWhereUniqueInput
   ): Promise<AuthDevice> {
     return this.prisma.authDevice.delete({
       where

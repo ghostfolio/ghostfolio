@@ -44,7 +44,7 @@ export class HeaderComponent implements OnChanges {
     private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
     private tokenStorageService: TokenStorageService,
-    private webAuthnService: WebAuthnService,
+    private webAuthnService: WebAuthnService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -85,7 +85,7 @@ export class HeaderComponent implements OnChanges {
   }
 
   public openLoginDialog(): void {
-    if(this.webAuthnService.isEnabled()){
+    if (this.webAuthnService.isEnabled()) {
       this.webAuthnService.verifyWebAuthn().subscribe(({ authToken }) => {
         this.setToken(authToken, false);
       });

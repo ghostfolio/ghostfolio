@@ -1,5 +1,9 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import {
   generateAssertionOptions,
@@ -14,7 +18,10 @@ import {
   VerifyAttestationResponseOpts
 } from '@simplewebauthn/server';
 import { REQUEST } from '@nestjs/core';
-import { AssertionCredentialJSON, AttestationCredentialJSON } from './interfaces/simplewebauthn';
+import {
+  AssertionCredentialJSON,
+  AttestationCredentialJSON
+} from './interfaces/simplewebauthn';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import base64url from 'base64url';
 import { JwtService } from '@nestjs/jwt';
@@ -28,7 +35,7 @@ export class WebAuthService {
     private readonly deviceService: AuthDeviceService,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   get rpID() {
@@ -41,7 +48,9 @@ export class WebAuthService {
 
   public async generateAttestationOptions() {
     const user = this.request.user;
-    const devices = await this.deviceService.authDevices({where: {userId: user.id}});
+    const devices = await this.deviceService.authDevices({
+      where: { userId: user.id }
+    });
 
     const opts: GenerateAttestationOptionsOpts = {
       rpName: 'Ghostfolio',
@@ -56,10 +65,10 @@ export class WebAuthService {
        * the browser if it's asked to perform an attestation when one of these ID's already resides
        * on it.
        */
-      excludeCredentials: devices.map(device => ({
+      excludeCredentials: devices.map((device) => ({
         id: device.credentialId,
         type: 'public-key',
-        transports: ['usb', 'ble', 'nfc', 'internal'],
+        transports: ['usb', 'ble', 'nfc', 'internal']
       })),
       /**
        * The optional authenticatorSelection property allows for specifying more constraints around
@@ -67,8 +76,8 @@ export class WebAuthService {
        */
       authenticatorSelection: {
         userVerification: 'preferred',
-        requireResidentKey: false,
-      },
+        requireResidentKey: false
+      }
     };
 
     const options = generateAttestationOptions(opts);
@@ -79,18 +88,20 @@ export class WebAuthService {
      */
     await this.userService.updateUser({
       data: {
-        authChallenge: options.challenge,
+        authChallenge: options.challenge
       },
       where: {
-        id: user.id,
+        id: user.id
       }
-    })
+    });
 
     return options;
   }
 
-  public async verifyAttestation(deviceName: string, credential: AttestationCredentialJSON): Promise<AuthDeviceDto> {
-
+  public async verifyAttestation(
+    deviceName: string,
+    credential: AttestationCredentialJSON
+  ): Promise<AuthDeviceDto> {
     const user = this.request.user;
     const expectedChallenge = user.authChallenge;
 
@@ -100,7 +111,7 @@ export class WebAuthService {
         credential,
         expectedChallenge,
         expectedOrigin: this.expectedOrigin,
-        expectedRPID: this.rpID,
+        expectedRPID: this.rpID
       };
       verification = await verifyAttestationResponse(opts);
     } catch (error) {
@@ -110,11 +121,15 @@ export class WebAuthService {
 
     const { verified, attestationInfo } = verification;
 
-    const devices = await this.deviceService.authDevices({where: {userId: user.id}});
+    const devices = await this.deviceService.authDevices({
+      where: { userId: user.id }
+    });
     if (verified && attestationInfo) {
       const { credentialPublicKey, credentialID, counter } = attestationInfo;
 
-      let existingDevice = devices.find(device => device.credentialId === credentialID);
+      let existingDevice = devices.find(
+        (device) => device.credentialId === credentialID
+      );
 
       if (!existingDevice) {
         /**
@@ -126,7 +141,7 @@ export class WebAuthService {
           counter,
           name: deviceName,
           User: { connect: { id: user.id } }
-        })
+        });
       }
 
       return {
@@ -139,26 +154,28 @@ export class WebAuthService {
     throw new InternalServerErrorException('An unknown error occurred');
   }
 
-  public async generateAssertionOptions(userId: string){
-    const devices = await this.deviceService.authDevices({where: {userId: userId}});
+  public async generateAssertionOptions(userId: string) {
+    const devices = await this.deviceService.authDevices({
+      where: { userId: userId }
+    });
 
-    if(devices.length === 0){
-      throw new Error('No registered auth devices found.')
+    if (devices.length === 0) {
+      throw new Error('No registered auth devices found.');
     }
 
     const opts: GenerateAssertionOptionsOpts = {
       timeout: 60000,
-      allowCredentials: devices.map(dev => ({
+      allowCredentials: devices.map((dev) => ({
         id: dev.credentialId,
         type: 'public-key',
-        transports: ['usb', 'ble', 'nfc', 'internal'],
+        transports: ['usb', 'ble', 'nfc', 'internal']
       })),
       /**
        * This optional value controls whether or not the authenticator needs be able to uniquely
        * identify the user interacting with it (via built-in PIN pad, fingerprint scanner, etc...)
        */
       userVerification: 'preferred',
-      rpID: this.rpID,
+      rpID: this.rpID
     };
 
     const options = generateAssertionOptions(opts);
@@ -169,25 +186,31 @@ export class WebAuthService {
      */
     await this.userService.updateUser({
       data: {
-        authChallenge: options.challenge,
+        authChallenge: options.challenge
       },
       where: {
-        id: userId,
+        id: userId
       }
-    })
+    });
 
     return options;
   }
 
-  public async verifyAssertion(userId: string, credential: AssertionCredentialJSON){
-
+  public async verifyAssertion(
+    userId: string,
+    credential: AssertionCredentialJSON
+  ) {
     const user = await this.userService.user({ id: userId });
 
     const bodyCredIDBuffer = base64url.toBuffer(credential.rawId);
-    const devices = await this.deviceService.authDevices({where: {credentialId: bodyCredIDBuffer}});
+    const devices = await this.deviceService.authDevices({
+      where: { credentialId: bodyCredIDBuffer }
+    });
 
     if (devices.length !== 1) {
-      throw new InternalServerErrorException(`Could not find authenticator matching ${credential.id}`);
+      throw new InternalServerErrorException(
+        `Could not find authenticator matching ${credential.id}`
+      );
     }
     const authenticator = devices[0];
 
@@ -201,8 +224,8 @@ export class WebAuthService {
         authenticator: {
           credentialID: authenticator.credentialId,
           credentialPublicKey: authenticator.credentialPublicKey,
-          counter: authenticator.counter,
-        },
+          counter: authenticator.counter
+        }
       };
       verification = verifyAssertionResponse(opts);
     } catch (error) {
@@ -218,8 +241,8 @@ export class WebAuthService {
 
       await this.deviceService.updateAuthDevice({
         data: authenticator,
-        where: {id_userId: { id: authenticator.id, userId: user.id}}
-      })
+        where: { id_userId: { id: authenticator.id, userId: user.id } }
+      });
 
       return this.jwtService.sign({
         id: user.id

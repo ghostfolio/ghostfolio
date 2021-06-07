@@ -27,7 +27,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private router: Router,
     private tokenStorageService: TokenStorageService,
-    private webAuthnService: WebAuthnService,
+    private webAuthnService: WebAuthnService
   ) {}
 
   /**

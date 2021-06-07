@@ -11,7 +11,10 @@ export class TokenStorageService {
   public constructor(private userService: UserService) {}
 
   public getToken(): string {
-    return window.localStorage.getItem(TOKEN_KEY) || window.sessionStorage.getItem(TOKEN_KEY);
+    return (
+      window.localStorage.getItem(TOKEN_KEY) ||
+      window.sessionStorage.getItem(TOKEN_KEY)
+    );
   }
 
   public saveToken(token: string, staySignedIn: boolean = false): void {

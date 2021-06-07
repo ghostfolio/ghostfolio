@@ -27,7 +27,7 @@ import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
     JwtStrategy,
     PrismaService,
     UserService,
-    WebAuthService,
+    WebAuthService
   ]
 })
 export class AuthModule {}

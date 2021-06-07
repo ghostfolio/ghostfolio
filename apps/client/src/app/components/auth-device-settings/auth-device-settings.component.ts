@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -11,7 +20,6 @@ import { MatSort } from '@angular/material/sort';
   styleUrls: ['./auth-device-settings.component.scss']
 })
 export class AuthDeviceSettingsComponent implements OnInit, OnChanges {
-
   @Input() authDevices: AuthDeviceDto[];
   @Input() currentDeviceId: string;
 
@@ -26,17 +34,12 @@ export class AuthDeviceSettingsComponent implements OnInit, OnChanges {
   public isLoading = true;
   public pageSize = 7;
 
-  public constructor() { }
+  public constructor() {}
 
-  public ngOnInit(): void {
-  }
+  public ngOnInit(): void {}
 
   public ngOnChanges() {
-    this.displayedColumns = [
-      'name',
-      'createdAt',
-      'actions',
-    ];
+    this.displayedColumns = ['name', 'createdAt', 'actions'];
 
     this.isLoading = true;
 
@@ -50,7 +53,9 @@ export class AuthDeviceSettingsComponent implements OnInit, OnChanges {
   }
 
   public onDeleteAuthDevice(aId: string) {
-    const confirmation = confirm('Do you really want to remove this authenticator?');
+    const confirmation = confirm(
+      'Do you really want to remove this authenticator?'
+    );
 
     if (confirmation) {
       this.authDeviceDeleted.emit(aId);

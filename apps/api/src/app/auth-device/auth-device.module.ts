@@ -13,10 +13,6 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
       signOptions: { expiresIn: '180 days' }
     })
   ],
-  providers: [
-    AuthDeviceService,
-    ConfigurationService,
-    PrismaService,
-  ]
+  providers: [AuthDeviceService, ConfigurationService, PrismaService]
 })
 export class AuthDeviceModule {}

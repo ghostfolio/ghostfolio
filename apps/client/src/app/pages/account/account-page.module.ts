@@ -14,10 +14,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { AuthDeviceDialog } from '@ghostfolio/client/pages/account/auth-device-dialog/auth-device-dialog.component';
 
 @NgModule({
-  declarations: [
-    AuthDeviceDialog,
-    AccountPageComponent,
-  ],
+  declarations: [AuthDeviceDialog, AccountPageComponent],
   exports: [],
   imports: [
     AccountPageRoutingModule,
@@ -31,7 +28,7 @@ import { AuthDeviceDialog } from '@ghostfolio/client/pages/account/auth-device-d
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: []
 })

@@ -5,14 +5,21 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
-        <input matInput name="name" required [(ngModel)]="data.authDevice.name" />
+        <input
+          matInput
+          name="name"
+          required
+          [(ngModel)]="data.authDevice.name"
+        />
       </mat-form-field>
     </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
-    <button type='button' i18n mat-button (click)="dialogRef.close()">Cancel</button>
+    <button type="button" i18n mat-button (click)="dialogRef.close()">
+      Cancel
+    </button>
     <button
-      type='submit'
+      type="submit"
       color="primary"
       i18n
       mat-flat-button

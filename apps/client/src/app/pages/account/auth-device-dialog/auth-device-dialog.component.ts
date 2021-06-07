@@ -8,14 +8,10 @@ import { AuthDeviceDialogParams } from '@ghostfolio/api/app/auth/interfaces/inte
   styleUrls: ['./auth-device-dialog.component.css']
 })
 export class AuthDeviceDialog implements OnInit {
-
   public constructor(
     public dialogRef: MatDialogRef<AuthDeviceDialog>,
     @Inject(MAT_DIALOG_DATA) public data: AuthDeviceDialogParams
-  ) {
-  }
+  ) {}
 
-  public ngOnInit(): void {
-  }
-
+  public ngOnInit(): void {}
 }
