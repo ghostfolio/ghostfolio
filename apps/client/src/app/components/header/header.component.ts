@@ -87,7 +87,7 @@ export class HeaderComponent implements OnChanges {
   public openLoginDialog(): void {
     if(this.webAuthnService.isEnabled()){
       this.webAuthnService.verifyWebAuthn().subscribe(({ authToken }) => {
-        this.setToken(authToken);
+        this.setToken(authToken, false);
       });
       return;
     }
@@ -114,14 +114,14 @@ export class HeaderComponent implements OnChanges {
             takeUntil(this.unsubscribeSubject)
           )
           .subscribe(({ authToken }) => {
-            this.setToken(authToken);
+            this.setToken(authToken, data.staySignedIn);
           });
       }
     });
   }
 
-  public setToken(aToken: string) {
-    this.tokenStorageService.saveToken(aToken);
+  public setToken(aToken: string, staySignedIn: boolean) {
+    this.tokenStorageService.saveToken(aToken, staySignedIn);
 
     this.router.navigate(['/']);
   }

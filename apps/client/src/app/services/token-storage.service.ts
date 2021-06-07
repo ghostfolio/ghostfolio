@@ -11,11 +11,13 @@ export class TokenStorageService {
   public constructor(private userService: UserService) {}
 
   public getToken(): string {
-    return window.sessionStorage.getItem(TOKEN_KEY);
+    return window.localStorage.getItem(TOKEN_KEY) || window.sessionStorage.getItem(TOKEN_KEY);
   }
 
-  public saveToken(token: string): void {
-    window.sessionStorage.removeItem(TOKEN_KEY);
+  public saveToken(token: string, staySignedIn: boolean = false): void {
+    if (staySignedIn) {
+      window.localStorage.setItem(TOKEN_KEY, token);
+    }
     window.sessionStorage.setItem(TOKEN_KEY, token);
   }
 
@@ -23,6 +25,7 @@ export class TokenStorageService {
     const utmSource = window.sessionStorage.getItem('utm_source');
 
     window.sessionStorage.clear();
+    window.localStorage.removeItem(TOKEN_KEY);
 
     this.userService.remove();
 
