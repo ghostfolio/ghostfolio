@@ -7,7 +7,6 @@ import {
   OnInit
 } from '@angular/core';
 import { primaryColorHex } from '@ghostfolio/common/config';
-
 import svgMap from 'svgmap';
 
 @Component({
