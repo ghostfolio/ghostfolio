@@ -1,0 +1,19 @@
+:host {
+  display: block;
+
+  .svg-map-container {
+    aspect-ratio: 16 / 9;
+  }
+
+  // @import '~svgmap/dist/svgMap.min.css';
+
+  ::ng-deep {
+    .svgMap-map-wrapper {
+      background: transparent;
+
+      .svgMap-map-controls-wrapper {
+        display: none;
+      }
+    }
+  }
+}
