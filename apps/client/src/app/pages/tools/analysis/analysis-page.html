@@ -214,6 +214,15 @@
   <div class="row world-map-chart">
     <div class="col-lg">
       <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>Heat Map</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
         <mat-card-content>
           <gf-world-map-chart
             [baseCurrency]="user?.settings?.baseCurrency"
