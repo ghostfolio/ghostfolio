@@ -211,11 +211,14 @@
       </mat-card>
     </div>
   </div>
-  <div class="row">
+  <div class="row world-map-chart">
     <div class="col-lg">
       <mat-card class="mb-3">
         <mat-card-content>
-          <gf-world-map-chart [countries]="countries"></gf-world-map-chart>
+          <gf-world-map-chart
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [countries]="countries"
+          ></gf-world-map-chart>
         </mat-card-content>
       </mat-card>
     </div>

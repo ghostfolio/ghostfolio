@@ -1,13 +1,14 @@
 :host {
   display: block;
-
-  .svg-map-container {
-    aspect-ratio: 16 / 9;
-  }
+  height: 100%;
 
   // @import '~svgmap/dist/svgMap.min.css';
 
   ::ng-deep {
+    .loader {
+      height: 100% !important;
+    }
+
     .svgMap-map-wrapper {
       background: transparent;
 
