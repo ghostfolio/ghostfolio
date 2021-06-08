@@ -2,9 +2,9 @@
   display: block;
   height: 100%;
 
-  // @import '~svgmap/dist/svgMap.min.css';
-
   ::ng-deep {
+    @import '~svgmap/dist/svgMap';
+
     .loader {
       height: 100% !important;
     }
