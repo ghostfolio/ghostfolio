@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  height: 100%;
+
+  ::ng-deep {
+    .loader {
+      height: 100% !important;
+    }
+
+    .svgMap-map-wrapper {
+      background: transparent;
+
+      .svgMap-map-controls-wrapper {
+        display: none;
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .svgMap-tooltip {
+    background: var(--dark-background);
+  }
+}

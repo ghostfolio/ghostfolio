@@ -6,6 +6,7 @@ import { PortfolioPositionsChartModule } from '@ghostfolio/client/components/por
 import { PortfolioProportionChartModule } from '@ghostfolio/client/components/portfolio-proportion-chart/portfolio-proportion-chart.module';
 import { GfPositionsTableModule } from '@ghostfolio/client/components/positions-table/positions-table.module';
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
+import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 
 import { AnalysisPageRoutingModule } from './analysis-page-routing.module';
 import { AnalysisPageComponent } from './analysis-page.component';
@@ -19,6 +20,7 @@ import { AnalysisPageComponent } from './analysis-page.component';
     GfInvestmentChartModule,
     GfPositionsTableModule,
     GfToggleModule,
+    GfWorldMapChartModule,
     MatCardModule,
     PortfolioPositionsChartModule,
     PortfolioProportionChartModule

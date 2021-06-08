@@ -7,6 +7,14 @@
     }
   }
 
+  .world-map-chart {
+    .mat-card {
+      .mat-card-content {
+        aspect-ratio: 16 / 9;
+      }
+    }
+  }
+
   .mat-card {
     .mat-card-header {
       ::ng-deep {
