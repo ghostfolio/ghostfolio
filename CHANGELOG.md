@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-- Added a world map to visualize positions by country
+- Added a global heat map to visualize positions by country
 
 ## 1.12.0 - 06.06.2021
 
