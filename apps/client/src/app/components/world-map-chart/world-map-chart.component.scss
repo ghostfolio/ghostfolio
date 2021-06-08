@@ -18,3 +18,9 @@
     }
   }
 }
+
+:host-context(.is-dark-theme) {
+  .svgMap-tooltip {
+    background: var(--dark-background);
+  }
+}
