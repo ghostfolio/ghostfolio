@@ -10,6 +10,10 @@
     .svgMap-map-wrapper {
       background: transparent;
 
+      .svgMap-country {
+        stroke: #e5e5e5;
+      }
+
       .svgMap-map-controls-wrapper {
         display: none;
       }
@@ -18,7 +22,11 @@
 }
 
 :host-context(.is-dark-theme) {
-  .svgMap-tooltip {
-    background: var(--dark-background);
+  ::ng-deep {
+    .svgMap-map-wrapper {
+      .svgMap-country {
+        stroke: #414141;
+      }
+    }
   }
 }

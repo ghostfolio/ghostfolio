@@ -81,6 +81,14 @@ body {
         color: rgba(var(--dark-primary-text)) !important;
       }
     }
+
+    .svgMap-tooltip {
+      background: var(--dark-background);
+
+      .svgMap-tooltip-content table td span {
+        color: rgba(var(--light-primary-text));
+      }
+    }
   }
 }
 
@@ -154,6 +162,14 @@ ngx-skeleton-loader {
 
 .no-min-width {
   min-width: unset !important;
+}
+
+.svgMap-tooltip {
+  border-bottom: none;
+
+  .svgMap-tooltip-pointer {
+    display: none;
+  }
 }
 
 .text-decoration-underline {
