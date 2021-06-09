@@ -7,8 +7,6 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { primaryColorHex } from '@ghostfolio/common/config';
-import { getCssVariable, getTextColor } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
 import svgMap from 'svgmap';
 
@@ -31,6 +29,8 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
 
   public ngOnChanges() {
     if (this.countries) {
+      this.isLoading = true;
+
       this.destroySvgMap();
 
       this.initialize();
@@ -43,11 +43,9 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
 
   private initialize() {
     this.svgMapElement = new svgMap({
-      colorMax: primaryColorHex,
-      colorMin: '#d3f4f3',
-      colorNoData: `rgba(${getTextColor()}, ${getCssVariable(
-        '--palette-foreground-divider-alpha'
-      )})`,
+      colorMax: '#22bdb9',
+      colorMin: '#c3f1f0',
+      colorNoData: 'transparent',
       data: {
         applyData: 'value',
         data: {
