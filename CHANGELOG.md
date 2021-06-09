@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a connect or create symbol profile model logic on creating a new transaction
+
 ### Changed
 
 - Improved the global heat map to visualize investments by country
