@@ -145,6 +145,12 @@ async function main() {
         symbol: 'AMZN'
       },
       {
+        countries: null,
+        dataSource: DataSource.YAHOO,
+        id: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e',
+        symbol: 'BTCUSD'
+      },
+      {
         countries: [{ code: 'US', weight: 1 }],
         dataSource: DataSource.YAHOO,
         id: 'd1ee9681-fb21-4f99-a3b7-afd4fc04df2e',
@@ -191,6 +197,7 @@ async function main() {
         id: 'a1c5d73a-8631-44e5-ac44-356827a5212c',
         quantity: 0.5614682,
         symbol: 'BTCUSD',
+        symbolProfileId: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e',
         type: Type.BUY,
         unitPrice: 3562.089535970158,
         userId: userDemo.id
