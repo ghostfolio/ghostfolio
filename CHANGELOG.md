@@ -27,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the global heat map to visualize investments by country
 
+### Fixed
+
+- Fixed the last activity column of users in the admin control panel
+
 ## 1.13.0 - 08.06.2021
 
 ### Added
