@@ -88,12 +88,14 @@ Please make sure you have completed the instructions from [_Setup_](#Setup)
 
 ### Start server
 
-- Debug: Run `yarn watch:server` and click "Launch Program" in _Visual Studio Code_
-- Serve: Run `yarn start:server`
+<ol type="a">
+  <li>Debug: Run <code>yarn watch:server</code> and click "Launch Program" in <i>Visual Studio Code</i></li>
+  <li>Serve: Run <code>yarn start:server</code></li>
+</ol>
 
 ### Start client
 
-- Run `yarn start:client`
+Run `yarn start:client`
 
 ## Testing
 
