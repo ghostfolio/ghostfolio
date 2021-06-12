@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a counter column to the transactions table
+- Added a label to indicate the default account in the accounts table
+
 ### Changed
 
 - Cleaned up the analysis page with an unused chart module
+- Improved the cell alignment in the users table of the admin control panel
 
 ## 1.14.0 - 09.06.2021
 
@@ -106,11 +112,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added an index in the user table of the admin control panel
+- Added an index in the users table of the admin control panel
 
 ### Changed
 
-- Improved the alignment in the user table of the admin control panel
+- Improved the alignment in the users table of the admin control panel
 
 ## 1.5.0 - 22.05.2021
 
@@ -242,7 +248,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the user table styling of the admin control panel
+- Improved the users table styling of the admin control panel
 - Improved the background colors in the dark mode
 
 ## 0.92.0 - 25.04.2021
@@ -250,7 +256,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Prepared further for multi accounts support: store account for new transactions
-- Added a horizontal scrollbar to the user table of the admin control panel
+- Added a horizontal scrollbar to the users table of the admin control panel
 
 ### Fixed
 
@@ -277,7 +283,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the user table of the admin control panel
+- Improved the users table of the admin control panel
 
 ## 0.89.0 - 21.04.2021
 
@@ -308,7 +314,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue in the user table of the admin control panel with missing data
+- Fixed an issue in the users table of the admin control panel with missing data
 
 ## 0.86.1 - 18.04.2021
 
@@ -323,7 +329,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the about page for the new license
 - Optimized the data management for historical data
 - Optimized the exchange rate service
-- Improved the user table of the admin control panel
+- Improved the users table of the admin control panel
 
 ### Fixed
 
