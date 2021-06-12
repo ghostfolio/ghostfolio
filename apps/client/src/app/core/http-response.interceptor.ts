@@ -2,12 +2,10 @@ import {
   HTTP_INTERCEPTORS,
   HttpErrorResponse,
   HttpEvent,
-  HttpResponse
-} from '@angular/common/http';
-import {
   HttpHandler,
   HttpInterceptor,
-  HttpRequest
+  HttpRequest,
+  HttpResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
@@ -21,6 +19,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { TokenStorageService } from '../services/token-storage.service';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
@@ -29,7 +28,8 @@ export class HttpResponseInterceptor implements HttpInterceptor {
   public constructor(
     private router: Router,
     private tokenStorageService: TokenStorageService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private webAuthnService: WebAuthnService
   ) {}
 
   public intercept(
@@ -78,7 +78,14 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             });
           }
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
-          this.tokenStorageService.signOut();
+          if (this.webAuthnService.isEnabled()) {
+            this.webAuthnService.login().subscribe(({ authToken }) => {
+              this.tokenStorageService.saveToken(authToken, false);
+              window.location.reload();
+            });
+          } else {
+            this.tokenStorageService.signOut();
+          }
         }
 
         return throwError('');

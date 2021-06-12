@@ -85,13 +85,6 @@ export class HeaderComponent implements OnChanges {
   }
 
   public openLoginDialog(): void {
-    if (this.webAuthnService.isEnabled()) {
-      this.webAuthnService.verifyWebAuthn().subscribe(({ authToken }) => {
-        this.setToken(authToken, false);
-      });
-      return;
-    }
-
     const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
       autoFocus: false,
       data: {

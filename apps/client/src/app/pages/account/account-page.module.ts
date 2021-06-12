@@ -8,19 +8,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
 import { AccountPageRoutingModule } from './account-page-routing.module';
 import { AccountPageComponent } from './account-page.component';
-import { GfAuthDeviceSettingsModule } from '@ghostfolio/client/components/auth-device-settings/auth-device-settings.module';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AuthDeviceDialog } from '@ghostfolio/client/pages/account/auth-device-dialog/auth-device-dialog.component';
 
 @NgModule({
-  declarations: [AuthDeviceDialog, AccountPageComponent],
+  declarations: [AccountPageComponent],
   exports: [],
   imports: [
     AccountPageRoutingModule,
     CommonModule,
     FormsModule,
-    GfAuthDeviceSettingsModule,
     GfPortfolioAccessTableModule,
     MatButtonModule,
     MatCardModule,

@@ -52,13 +52,10 @@ model AuthDevice {
   credentialId        Bytes
   credentialPublicKey Bytes
   counter             Int
-  id                  String   @default(uuid())
-  name                String
+  id                  String   @id @default(uuid())
   updatedAt           DateTime @updatedAt
   User                User     @relation(fields: [userId], references: [id])
   userId              String
-
-  @@id([id, userId])
 }
 
 model MarketData {

@@ -23,7 +23,6 @@ import {
   AttestationCredentialJSON
 } from './interfaces/simplewebauthn';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
-import base64url from 'base64url';
 import { JwtService } from '@nestjs/jwt';
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import { RequestWithUser } from '@ghostfolio/common/types';
@@ -48,9 +47,6 @@ export class WebAuthService {
 
   public async generateAttestationOptions() {
     const user = this.request.user;
-    const devices = await this.deviceService.authDevices({
-      where: { userId: user.id }
-    });
 
     const opts: GenerateAttestationOptionsOpts = {
       rpName: 'Ghostfolio',
@@ -59,21 +55,6 @@ export class WebAuthService {
       userName: user.alias,
       timeout: 60000,
       attestationType: 'indirect',
-      /**
-       * Passing in a user's list of already-registered authenticator IDs here prevents users from
-       * registering the same device multiple times. The authenticator will simply throw an error in
-       * the browser if it's asked to perform an attestation when one of these ID's already resides
-       * on it.
-       */
-      excludeCredentials: devices.map((device) => ({
-        id: device.credentialId,
-        type: 'public-key',
-        transports: ['usb', 'ble', 'nfc', 'internal']
-      })),
-      /**
-       * The optional authenticatorSelection property allows for specifying more constraints around
-       * the types of authenticators that users to can use for attestation
-       */
       authenticatorSelection: {
         userVerification: 'preferred',
         requireResidentKey: false
@@ -82,10 +63,6 @@ export class WebAuthService {
 
     const options = generateAttestationOptions(opts);
 
-    /**
-     * The server needs to temporarily remember this value for verification, so don't lose it until
-     * after you verify an authenticator response.
-     */
     await this.userService.updateUser({
       data: {
         authChallenge: options.challenge
@@ -139,57 +116,47 @@ export class WebAuthService {
           credentialPublicKey,
           credentialId: credentialID,
           counter,
-          name: deviceName,
           User: { connect: { id: user.id } }
         });
       }
 
       return {
         createdAt: existingDevice.createdAt.toISOString(),
-        id: existingDevice.id,
-        name: existingDevice.name
+        id: existingDevice.id
       };
     }
 
     throw new InternalServerErrorException('An unknown error occurred');
   }
 
-  public async generateAssertionOptions(userId: string) {
-    const devices = await this.deviceService.authDevices({
-      where: { userId: userId }
-    });
+  public async generateAssertionOptions(deviceId: string) {
+    const device = await this.deviceService.authDevice({ id: deviceId });
 
-    if (devices.length === 0) {
-      throw new Error('No registered auth devices found.');
+    if (!device) {
+      throw new Error('Device not found');
     }
 
     const opts: GenerateAssertionOptionsOpts = {
       timeout: 60000,
-      allowCredentials: devices.map((dev) => ({
-        id: dev.credentialId,
-        type: 'public-key',
-        transports: ['usb', 'ble', 'nfc', 'internal']
-      })),
-      /**
-       * This optional value controls whether or not the authenticator needs be able to uniquely
-       * identify the user interacting with it (via built-in PIN pad, fingerprint scanner, etc...)
-       */
+      allowCredentials: [
+        {
+          id: device.credentialId,
+          type: 'public-key',
+          transports: ['usb', 'ble', 'nfc', 'internal']
+        }
+      ],
       userVerification: 'preferred',
       rpID: this.rpID
     };
 
     const options = generateAssertionOptions(opts);
 
-    /**
-     * The server needs to temporarily remember this value for verification, so don't lose it until
-     * after you verify an authenticator response.
-     */
     await this.userService.updateUser({
       data: {
         authChallenge: options.challenge
       },
       where: {
-        id: userId
+        id: device.userId
       }
     });
 
@@ -197,22 +164,16 @@ export class WebAuthService {
   }
 
   public async verifyAssertion(
-    userId: string,
+    deviceId: string,
     credential: AssertionCredentialJSON
   ) {
-    const user = await this.userService.user({ id: userId });
+    const device = await this.deviceService.authDevice({ id: deviceId });
 
-    const bodyCredIDBuffer = base64url.toBuffer(credential.rawId);
-    const devices = await this.deviceService.authDevices({
-      where: { credentialId: bodyCredIDBuffer }
-    });
-
-    if (devices.length !== 1) {
-      throw new InternalServerErrorException(
-        `Could not find authenticator matching ${credential.id}`
-      );
+    if (!device) {
+      throw new Error('Device not found');
     }
-    const authenticator = devices[0];
+
+    const user = await this.userService.user({ id: device.userId });
 
     let verification: VerifiedAssertion;
     try {
@@ -222,9 +183,9 @@ export class WebAuthService {
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID,
         authenticator: {
-          credentialID: authenticator.credentialId,
-          credentialPublicKey: authenticator.credentialPublicKey,
-          counter: authenticator.counter
+          credentialID: device.credentialId,
+          credentialPublicKey: device.credentialPublicKey,
+          counter: device.counter
         }
       };
       verification = verifyAssertionResponse(opts);
@@ -236,12 +197,11 @@ export class WebAuthService {
     const { verified, assertionInfo } = verification;
 
     if (verified) {
-      // Update the authenticator's counter in the DB to the newest count in the assertion
-      authenticator.counter = assertionInfo.newCounter;
+      device.counter = assertionInfo.newCounter;
 
       await this.deviceService.updateAuthDevice({
-        data: authenticator,
-        where: { id_userId: { id: authenticator.id, userId: user.id } }
+        data: device,
+        where: { id: device.id }
       });
 
       return this.jwtService.sign({

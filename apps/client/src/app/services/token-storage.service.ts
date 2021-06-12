@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { UserService } from './user/user.service';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 const TOKEN_KEY = 'auth-token';
 
@@ -8,12 +9,15 @@ const TOKEN_KEY = 'auth-token';
   providedIn: 'root'
 })
 export class TokenStorageService {
-  public constructor(private userService: UserService) {}
+  public constructor(
+    private userService: UserService,
+    private webAuthnService: WebAuthnService
+  ) {}
 
   public getToken(): string {
     return (
-      window.localStorage.getItem(TOKEN_KEY) ||
-      window.sessionStorage.getItem(TOKEN_KEY)
+      window.sessionStorage.getItem(TOKEN_KEY) ||
+      window.localStorage.getItem(TOKEN_KEY)
     );
   }
 
@@ -25,15 +29,19 @@ export class TokenStorageService {
   }
 
   public signOut(): void {
-    const utmSource = window.sessionStorage.getItem('utm_source');
+    const utmSource = window.localStorage.getItem('utm_source');
 
+    if (this.webAuthnService.isEnabled()) {
+      this.webAuthnService.deregister().subscribe();
+    }
+
+    window.localStorage.clear();
     window.sessionStorage.clear();
-    window.localStorage.removeItem(TOKEN_KEY);
 
     this.userService.remove();
 
     if (utmSource) {
-      window.sessionStorage.setItem('utm_source', utmSource);
+      window.localStorage.setItem('utm_source', utmSource);
     }
   }
 }

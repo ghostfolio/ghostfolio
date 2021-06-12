@@ -79,17 +79,17 @@ export class AuthController {
   }
 
   @Post('webauthn/generate-assertion-options')
-  public async generateAssertionOptions(@Body() body: { userId: string }) {
-    return this.webAuthService.generateAssertionOptions(body.userId);
+  public async generateAssertionOptions(@Body() body: { deviceId: string }) {
+    return this.webAuthService.generateAssertionOptions(body.deviceId);
   }
 
   @Post('webauthn/verify-assertion')
   public async verifyAssertion(
-    @Body() body: { userId: string; credential: AssertionCredentialJSON }
+    @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
   ) {
     try {
       const authToken = await this.webAuthService.verifyAssertion(
-        body.userId,
+        body.deviceId,
         body.credential
       );
       return { authToken };

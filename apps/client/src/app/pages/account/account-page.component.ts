@@ -5,11 +5,8 @@ import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Currency } from '@prisma/client';
-import { ReplaySubject, Subject } from 'rxjs';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
-import { AuthDeviceDialog } from '@ghostfolio/client/pages/account/auth-device-dialog/auth-device-dialog.component';
-import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
-import { isNonNull } from '@ghostfolio/client/util/rxjs.util';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
@@ -25,7 +22,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public hasPermissionToUpdateUserSettings: boolean;
   public user: User;
-  public authDevices$: ReplaySubject<AuthDeviceDto[]> = new ReplaySubject(1);
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -60,8 +56,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
-
-    this.fetchAuthDevices();
   }
 
   /**
@@ -99,68 +93,16 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  public startWebAuthn() {
+  public registerDevice() {
     this.webAuthnService
-      .startWebAuthn()
-      .pipe(
-        switchMap((attResp) => {
-          const dialogRef = this.dialog.open(AuthDeviceDialog, {
-            data: {
-              authDevice: {}
-            }
-          });
-          return dialogRef.afterClosed().pipe(
-            switchMap((data) => {
-              return this.webAuthnService.verifyAttestation(
-                attResp,
-                data.authDevice.name
-              );
-            })
-          );
-        })
-      )
-      .subscribe(() => {
-        this.fetchAuthDevices();
-      });
+      .register()
+      .subscribe(() => this.changeDetectorRef.markForCheck());
   }
 
-  public deleteAuthDevice(aId: string) {
-    this.webAuthnService.deleteAuthDevice(aId).subscribe({
-      next: () => {
-        this.fetchAuthDevices();
-      }
-    });
-  }
-
-  public updateAuthDevice(aAuthDevice: AuthDeviceDto) {
-    const dialogRef = this.dialog.open(AuthDeviceDialog, {
-      data: {
-        authDevice: aAuthDevice
-      }
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(
-        filter(isNonNull),
-        switchMap((data) =>
-          this.webAuthnService.updateAuthDevice(data.authDevice)
-        )
-      )
-      .subscribe({
-        next: () => {
-          this.fetchAuthDevices();
-        }
-      });
-  }
-
-  private fetchAuthDevices() {
+  public deregisterDevice() {
     this.webAuthnService
-      .fetchAuthDevices()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((authDevices) => {
-        this.authDevices$.next(authDevices);
-      });
+      .deregister()
+      .subscribe(() => this.changeDetectorRef.markForCheck());
   }
 
   private update() {

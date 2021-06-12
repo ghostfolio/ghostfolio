@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { startAssertion, startAttestation } from '@simplewebauthn/browser';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import {
@@ -8,22 +8,28 @@ import {
   PublicKeyCredentialRequestOptionsJSON
 } from '@ghostfolio/api/app/auth/interfaces/simplewebauthn';
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebAuthnService {
-  private static readonly WEB_AUTH_N_USER_ID = 'WEB_AUTH_N_USER_ID';
   private static readonly WEB_AUTH_N_DEVICE_ID = 'WEB_AUTH_N_DEVICE_ID';
 
   public constructor(
-    private userService: UserService,
-    private settingsStorageService: SettingsStorageService,
-    private http: HttpClient
+    private http: HttpClient,
+    private settingsStorageService: SettingsStorageService
   ) {}
 
-  public startWebAuthn() {
+  public isSupported() {
+    return typeof PublicKeyCredential !== 'undefined';
+  }
+
+  public isEnabled() {
+    return !!this.getDeviceId();
+  }
+
+  public register() {
     return this.http
       .get<PublicKeyCredentialCreationOptionsJSON>(
         `/api/auth/webauthn/generate-attestation-options`,
@@ -32,40 +38,45 @@ export class WebAuthnService {
       .pipe(
         switchMap((attOps) => {
           return startAttestation(attOps);
-        })
-      );
-  }
-
-  public verifyAttestation(attResp, deviceName) {
-    return this.http
-      .post<AuthDeviceDto>(`/api/auth/webauthn/verify-attestation`, {
-        credential: attResp,
-        deviceName: deviceName
-      })
-      .pipe(
+        }),
+        switchMap((attResp) => {
+          return this.http.post<AuthDeviceDto>(
+            `/api/auth/webauthn/verify-attestation`,
+            {
+              credential: attResp
+            }
+          );
+        }),
         tap((authDevice) =>
-          this.userService.get().subscribe((user) => {
-            this.settingsStorageService.setSetting(
-              WebAuthnService.WEB_AUTH_N_DEVICE_ID,
-              authDevice.id
-            );
-            this.settingsStorageService.setSetting(
-              WebAuthnService.WEB_AUTH_N_USER_ID,
-              user.id
-            );
-          })
+          this.settingsStorageService.setSetting(
+            WebAuthnService.WEB_AUTH_N_DEVICE_ID,
+            authDevice.id
+          )
         )
       );
   }
 
-  public verifyWebAuthn() {
-    const userId = this.settingsStorageService.getSetting(
-      WebAuthnService.WEB_AUTH_N_USER_ID
+  public deregister() {
+    const deviceId = this.getDeviceId();
+    return this.http.delete<AuthDeviceDto>(`/api/auth-device/${deviceId}`).pipe(
+      catchError((e) => {
+        console.warn(`Could not deregister device ${deviceId}`, e);
+        return of(null);
+      }),
+      tap(() =>
+        this.settingsStorageService.removeSetting(
+          WebAuthnService.WEB_AUTH_N_DEVICE_ID
+        )
+      )
     );
+  }
+
+  public login() {
+    const deviceId = this.getDeviceId();
     return this.http
       .post<PublicKeyCredentialRequestOptionsJSON>(
         `/api/auth/webauthn/generate-assertion-options`,
-        { userId }
+        { deviceId }
       )
       .pipe(
         switchMap(startAssertion),
@@ -74,48 +85,16 @@ export class WebAuthnService {
             `/api/auth/webauthn/verify-assertion`,
             {
               credential: assertionResponse,
-              userId
+              deviceId
             }
           );
         })
       );
   }
 
-  public getCurrentDeviceId() {
+  private getDeviceId() {
     return this.settingsStorageService.getSetting(
       WebAuthnService.WEB_AUTH_N_DEVICE_ID
-    );
-  }
-
-  public isEnabled() {
-    return !!this.settingsStorageService.getSetting(
-      WebAuthnService.WEB_AUTH_N_DEVICE_ID
-    );
-  }
-
-  public fetchAuthDevices() {
-    return this.http.get<AuthDeviceDto[]>('/api/auth-device');
-  }
-
-  public updateAuthDevice(aAuthDevice: AuthDeviceDto) {
-    return this.http.put<AuthDeviceDto>(
-      `/api/auth-device/${aAuthDevice.id}`,
-      aAuthDevice
-    );
-  }
-
-  public deleteAuthDevice(aId: string) {
-    return this.http.delete<AuthDeviceDto>(`/api/auth-device/${aId}`).pipe(
-      tap(() => {
-        if (aId === this.getCurrentDeviceId()) {
-          this.settingsStorageService.removeSetting(
-            WebAuthnService.WEB_AUTH_N_DEVICE_ID
-          );
-          this.settingsStorageService.removeSetting(
-            WebAuthnService.WEB_AUTH_N_USER_ID
-          );
-        }
-      })
     );
   }
 }
