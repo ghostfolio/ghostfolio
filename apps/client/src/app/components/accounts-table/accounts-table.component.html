@@ -3,6 +3,11 @@
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Name</th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       {{ element.name }}
+      <span
+        *ngIf="element.isDefault"
+        class="d-lg-inline-block d-none text-muted"
+        >(Default)</span
+      >
     </td>
   </ng-container>
 
@@ -49,8 +54,10 @@
   </ng-container>
 
   <ng-container matColumnDef="transactions">
-    <th *matHeaderCellDef i18n mat-header-cell>Transactions</th>
-    <td *matCellDef="let element" mat-cell>
+    <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+      Transactions
+    </th>
+    <td *matCellDef="let element" class="text-right" mat-cell>
       {{ element.Order?.length }}
     </td>
   </ng-container>
