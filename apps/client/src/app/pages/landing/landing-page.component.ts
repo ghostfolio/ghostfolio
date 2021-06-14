@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 
@@ -25,7 +26,8 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private webAuthnService: WebAuthnService
   ) {}
 
   /**

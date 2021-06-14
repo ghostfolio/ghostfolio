@@ -120,6 +120,7 @@ describe('Portfolio', () => {
         }
       ],
       alias: 'Test',
+      authChallenge: null,
       createdAt: new Date(),
       id: USER_ID,
       provider: null,

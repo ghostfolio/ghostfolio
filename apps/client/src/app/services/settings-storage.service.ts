@@ -15,4 +15,8 @@ export class SettingsStorageService {
   public setSetting(aKey: string, aValue: string) {
     window.localStorage.setItem(aKey, aValue);
   }
+
+  public removeSetting(aKey: string): void {
+    return window.localStorage.removeItem(aKey);
+  }
 }

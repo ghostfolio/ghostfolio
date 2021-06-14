@@ -11,12 +11,14 @@ export const permissions = {
   createOrder: 'createOrder',
   createUserAccount: 'createUserAccount',
   deleteAccount: 'deleteAcccount',
+  deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
   deleteUser: 'deleteUser',
   enableSocialLogin: 'enableSocialLogin',
   enableSubscription: 'enableSubscription',
   readForeignPortfolio: 'readForeignPortfolio',
   updateAccount: 'updateAccount',
+  updateAuthDevice: 'updateAuthDevice',
   updateOrder: 'updateOrder',
   updateUserSettings: 'updateUserSettings'
 };
@@ -36,10 +38,12 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createAccount,
         permissions.createOrder,
         permissions.deleteAccount,
+        permissions.deleteAuthDevice,
         permissions.deleteOrder,
         permissions.deleteUser,
         permissions.readForeignPortfolio,
         permissions.updateAccount,
+        permissions.updateAuthDevice,
         permissions.updateOrder,
         permissions.updateUserSettings
       ];
@@ -52,8 +56,10 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createAccount,
         permissions.createOrder,
         permissions.deleteAccount,
+        permissions.deleteAuthDevice,
         permissions.deleteOrder,
         permissions.updateAccount,
+        permissions.updateAuthDevice,
         permissions.updateOrder,
         permissions.updateUserSettings
       ];

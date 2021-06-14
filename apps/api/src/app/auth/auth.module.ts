@@ -1,3 +1,5 @@
+import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
+import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Module } from '@nestjs/common';
@@ -18,12 +20,14 @@ import { JwtStrategy } from './jwt.strategy';
     })
   ],
   providers: [
+    AuthDeviceService,
     AuthService,
     ConfigurationService,
     GoogleStrategy,
     JwtStrategy,
     PrismaService,
-    UserService
+    UserService,
+    WebAuthService
   ]
 })
 export class AuthModule {}

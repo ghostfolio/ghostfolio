@@ -47,6 +47,17 @@ model Analytics {
   userId        String   @id
 }
 
+model AuthDevice {
+  createdAt           DateTime @default(now())
+  credentialId        Bytes
+  credentialPublicKey Bytes
+  counter             Int
+  id                  String   @id @default(uuid())
+  updatedAt           DateTime @updatedAt
+  User                User     @relation(fields: [userId], references: [id])
+  userId              String
+}
+
 model MarketData {
   createdAt   DateTime @default(now())
   date        DateTime
@@ -126,21 +137,23 @@ model Subscription {
 }
 
 model User {
-  Access       Access[]       @relation("accessGet")
-  AccessGive   Access[]       @relation(name: "accessGive")
-  accessToken  String?
-  Account      Account[]
-  alias        String?
-  Analytics    Analytics?
-  createdAt    DateTime       @default(now())
-  id           String         @id @default(uuid())
-  Order        Order[]
-  provider     Provider?
-  role         Role           @default(USER)
-  Settings     Settings?
-  Subscription Subscription[]
-  thirdPartyId String?
-  updatedAt    DateTime       @updatedAt
+  Access        Access[]       @relation("accessGet")
+  AccessGive    Access[]       @relation(name: "accessGive")
+  accessToken   String?
+  Account       Account[]
+  alias         String?
+  Analytics     Analytics?
+  authChallenge String?
+  AuthDevice    AuthDevice[]
+  createdAt     DateTime       @default(now())
+  id            String         @id @default(uuid())
+  Order         Order[]
+  provider      Provider?
+  role          Role           @default(USER)
+  Settings      Settings?
+  Subscription  Subscription[]
+  thirdPartyId  String?
+  updatedAt     DateTime       @updatedAt
 }
 
 enum AccountType {

@@ -1,5 +1,6 @@
 import { join } from 'path';
 
+import { AuthDeviceModule } from '@ghostfolio/api/app/auth-device/auth-device.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -34,6 +35,7 @@ import { UserModule } from './user/user.module';
     AdminModule,
     AccessModule,
     AccountModule,
+    AuthDeviceModule,
     AuthModule,
     CacheModule,
     ConfigModule.forRoot(),

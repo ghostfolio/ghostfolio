@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import { bool, cleanEnv, json, num, port, str } from 'envalid';
+import { bool, cleanEnv, host, json, num, port, str } from 'envalid';
 
 import { Environment } from './interfaces/environment.interface';
 
@@ -26,7 +26,8 @@ export class ConfigurationService {
       RAKUTEN_RAPID_API_KEY: str({ default: '' }),
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PORT: port({ default: 6379 }),
-      ROOT_URL: str({ default: 'http://localhost:4200' })
+      ROOT_URL: str({ default: 'http://localhost:4200' }),
+      WEB_AUTH_RP_ID: host({ default: 'localhost' })
     });
   }
 

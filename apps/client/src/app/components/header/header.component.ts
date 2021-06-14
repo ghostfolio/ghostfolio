@@ -12,6 +12,7 @@ import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { EMPTY, Subject } from 'rxjs';
@@ -42,7 +43,8 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private webAuthnService: WebAuthnService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -87,7 +89,8 @@ export class HeaderComponent implements OnChanges {
       autoFocus: false,
       data: {
         accessToken: '',
-        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin
+        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
+        title: 'Sign in'
       },
       width: '30rem'
     });
@@ -105,14 +108,14 @@ export class HeaderComponent implements OnChanges {
             takeUntil(this.unsubscribeSubject)
           )
           .subscribe(({ authToken }) => {
-            this.setToken(authToken);
+            this.setToken(authToken, data.staySignedIn);
           });
       }
     });
   }
 
-  public setToken(aToken: string) {
-    this.tokenStorageService.saveToken(aToken);
+  public setToken(aToken: string, staySignedIn: boolean) {
+    this.tokenStorageService.saveToken(aToken, staySignedIn);
 
     this.router.navigate(['/']);
   }

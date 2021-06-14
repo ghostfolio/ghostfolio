@@ -1,4 +1,9 @@
-<h1 mat-dialog-title i18n>Sign in</h1>
+<gf-dialog-header
+  mat-dialog-title
+  [title]="data.title"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-header>
+
 <div mat-dialog-content>
   <div>
     <ng-container *ngIf="data.hasPermissionToUseSocialLogin">
@@ -21,15 +26,21 @@
     </mat-form-field>
   </div>
 </div>
-<div class="float-right" mat-dialog-actions>
-  <button i18n mat-flat-button [mat-dialog-close]="undefined">Cancel</button>
-  <button
-    color="primary"
-    i18n
-    mat-flat-button
-    [disabled]="!data.accessToken"
-    [mat-dialog-close]="data"
-  >
-    Sign in
-  </button>
+<div mat-dialog-actions>
+  <div class="flex-grow-1">
+    <mat-checkbox i18n [(ngModel)]="data.staySignedIn"
+      >Stay signed in</mat-checkbox
+    >
+  </div>
+  <div>
+    <button
+      color="primary"
+      i18n
+      mat-flat-button
+      [disabled]="!data.accessToken"
+      [mat-dialog-close]="data"
+    >
+      Sign in
+    </button>
+  </div>
 </div>

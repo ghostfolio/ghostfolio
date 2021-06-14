@@ -66,6 +66,16 @@
               </form>
             </div>
           </div>
+          <div class="align-items-center d-flex mt-4 py-1">
+            <div class="w-50" i18n>Sign in with fingerprint</div>
+            <div class="w-50">
+              <mat-slide-toggle
+                #toggleSignInWithFingerprintEnabledElement
+                color="primary"
+                (change)="onSignInWithFingerprintChange($event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

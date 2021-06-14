@@ -1,9 +1,12 @@
+import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   Param,
+  Post,
   Req,
   Res,
   UseGuards
@@ -12,12 +15,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
+import {
+  AssertionCredentialJSON,
+  AttestationCredentialJSON
+} from './interfaces/simplewebauthn';
 
 @Controller('auth')
 export class AuthController {
   public constructor(
     private readonly authService: AuthService,
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly webAuthService: WebAuthService
   ) {}
 
   @Get('anonymous/:accessToken')
@@ -51,6 +59,46 @@ export class AuthController {
       res.redirect(`${this.configurationService.get('ROOT_URL')}/auth/${jwt}`);
     } else {
       res.redirect(`${this.configurationService.get('ROOT_URL')}/auth`);
+    }
+  }
+
+  @Get('webauthn/generate-attestation-options')
+  @UseGuards(AuthGuard('jwt'))
+  public async generateAttestationOptions() {
+    return this.webAuthService.generateAttestationOptions();
+  }
+
+  @Post('webauthn/verify-attestation')
+  @UseGuards(AuthGuard('jwt'))
+  public async verifyAttestation(
+    @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
+  ) {
+    return this.webAuthService.verifyAttestation(
+      body.deviceName,
+      body.credential
+    );
+  }
+
+  @Post('webauthn/generate-assertion-options')
+  public async generateAssertionOptions(@Body() body: { deviceId: string }) {
+    return this.webAuthService.generateAssertionOptions(body.deviceId);
+  }
+
+  @Post('webauthn/verify-assertion')
+  public async verifyAssertion(
+    @Body() body: { deviceId: string; credential: AssertionCredentialJSON }
+  ) {
+    try {
+      const authToken = await this.webAuthService.verifyAssertion(
+        body.deviceId,
+        body.credential
+      );
+      return { authToken };
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
     }
   }
 }
