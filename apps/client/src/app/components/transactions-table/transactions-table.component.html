@@ -40,6 +40,16 @@
   mat-table
   [dataSource]="dataSource"
 >
+  <ng-container matColumnDef="count">
+    <th *matHeaderCellDef class="px-1 text-right" i18n mat-header-cell>#</th>
+    <td
+      *matCellDef="let element; let i = index"
+      class="px-1 text-right"
+      mat-cell
+    >
+      {{ dataSource.data.length - i }}
+    </td>
+  </ng-container>
   <ng-container matColumnDef="date">
     <th
       *matHeaderCellDef

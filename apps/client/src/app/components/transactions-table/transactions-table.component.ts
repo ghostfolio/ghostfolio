@@ -133,6 +133,7 @@ export class TransactionsTableComponent
 
   public ngOnChanges() {
     this.displayedColumns = [
+      'count',
       'date',
       'type',
       'symbol',
