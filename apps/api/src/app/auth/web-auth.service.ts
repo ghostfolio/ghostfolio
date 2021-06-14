@@ -58,8 +58,8 @@ export class WebAuthService {
       attestationType: 'indirect',
       authenticatorSelection: {
         authenticatorAttachment: 'platform',
-        userVerification: 'required',
-        requireResidentKey: false
+        requireResidentKey: false,
+        userVerification: 'required'
       }
     };
 

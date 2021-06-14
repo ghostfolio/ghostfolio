@@ -93,16 +93,16 @@ const routes: Routes = [
       )
   },
   {
-    path: 'zen',
-    loadChildren: () =>
-      import('./pages/zen/zen-page.module').then((m) => m.ZenPageModule)
-  },
-  {
     path: 'webauthn',
     loadChildren: () =>
       import('./pages/webauthn/webauthn-page.module').then(
         (m) => m.WebauthnPageModule
       )
+  },
+  {
+    path: 'zen',
+    loadChildren: () =>
+      import('./pages/zen/zen-page.module').then((m) => m.ZenPageModule)
   },
   {
     // wildcard, if requested url doesn't match any paths for routes defined

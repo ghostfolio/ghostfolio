@@ -1,9 +1,4 @@
 <mat-toolbar class="p-0">
-  <ng-container *ngIf="!user">
-    <a [routerLink]="['/']" class="no-min-width px-2" mat-button>
-      <gf-logo></gf-logo>
-    </a>
-  </ng-container>
   <ng-container *ngIf="user">
     <a [routerLink]="['/']" class="no-min-width px-2" mat-button>
       <gf-logo></gf-logo>

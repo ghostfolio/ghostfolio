@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'gf-webauthn-page',
@@ -18,14 +18,14 @@ export class WebauthnPageComponent implements OnInit {
     private webAuthnService: WebAuthnService
   ) {}
 
-  ngOnInit(): void {
+  public ngOnInit() {
     this.signIn();
   }
 
   public deregisterDevice() {
-    this.webAuthnService
-      .deregister()
-      .subscribe(() => this.router.navigate(['']));
+    this.webAuthnService.deregister().subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 
   public signIn() {
@@ -34,7 +34,7 @@ export class WebauthnPageComponent implements OnInit {
     this.webAuthnService.login().subscribe(
       ({ authToken }) => {
         this.tokenStorageService.saveToken(authToken, false);
-        this.router.navigate(['']);
+        this.router.navigate(['/']);
       },
       (error) => {
         console.error(error);
