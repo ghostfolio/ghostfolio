@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a counter column to the transactions table
 - Added a label to indicate the default account in the accounts table
+- Added an option to limit the items in pie charts
 
 ### Changed
 
@@ -26,7 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a connect or create symbol profile model logic on creating a new transaction
-- Added an option to limit the items in pie charts
 
 ### Changed
 
