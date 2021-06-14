@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cleaned up the analysis page with an unused chart module
 - Improved the cell alignment in the users table of the admin control panel
 
+### Fixed
+
+- Fixed the last activity column of users in the admin control panel
+
 ## 1.14.0 - 09.06.2021
 
 ### Added
@@ -26,10 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the global heat map to visualize investments by country
-
-### Fixed
-
-- Fixed the last activity column of users in the admin control panel
 
 ## 1.13.0 - 08.06.2021
 
