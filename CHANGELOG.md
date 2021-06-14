@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `eslint` and `prettier` dependencies
+- Upgraded `date-fns` from version `2.19.0` to `2.22.1`
 
 ## 1.16.0 - 14.06.2021
 
