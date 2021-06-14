@@ -29,6 +29,7 @@ export class PortfolioProportionChartComponent
   @Input() isInPercent: boolean;
   @Input() key: string;
   @Input() locale: string;
+  @Input() maxItems?: number;
   @Input() positions: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & { value: number };
   };
@@ -90,11 +91,39 @@ export class PortfolioProportionChartComponent
       }
     });
 
-    const chartDataSorted = Object.entries(chartData)
+    let chartDataSorted = Object.entries(chartData)
       .sort((a, b) => {
         return a[1].value - b[1].value;
       })
       .reverse();
+
+    if (this.maxItems && chartDataSorted.length > this.maxItems) {
+      // Add surplus items to unknown group
+      const rest = chartDataSorted.splice(
+        this.maxItems,
+        chartDataSorted.length - 1
+      );
+
+      let unknownItem = chartDataSorted.find((charDataItem) => {
+        return charDataItem[0] === UNKNOWN_KEY;
+      });
+
+      if (!unknownItem) {
+        const index = chartDataSorted.push([UNKNOWN_KEY, { value: 0 }]);
+        unknownItem = chartDataSorted[index];
+      }
+
+      rest.forEach((restItem) => {
+        unknownItem[1] = { value: unknownItem[1].value + restItem[1].value };
+      });
+
+      // Sort data again
+      chartDataSorted = chartDataSorted
+        .sort((a, b) => {
+          return a[1].value - b[1].value;
+        })
+        .reverse();
+    }
 
     chartDataSorted.forEach(([symbol, item], index) => {
       if (this.colorMap[symbol]) {
