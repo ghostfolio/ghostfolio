@@ -72,6 +72,7 @@
               <mat-slide-toggle
                 #toggleSignInWithFingerprintEnabledElement
                 color="primary"
+                [disabled]="!hasPermissionToUpdateUserSettings"
                 (change)="onSignInWithFingerprintChange($event)"
               ></mat-slide-toggle>
             </div>
