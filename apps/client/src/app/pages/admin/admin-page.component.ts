@@ -5,7 +5,12 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { AdminData, User } from '@ghostfolio/common/interfaces';
-import { formatDistanceToNowStrict, isValid, parseISO } from 'date-fns';
+import {
+  differenceInSeconds,
+  formatDistanceToNowStrict,
+  isValid,
+  parseISO
+} from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -80,8 +85,8 @@ export class AdminPageComponent implements OnInit {
         addSuffix: true
       });
 
-      return distanceString === 'in 0 seconds' ||
-        distanceString === '0 seconds ago'
+      return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
+        60
         ? 'just now'
         : distanceString;
     }
