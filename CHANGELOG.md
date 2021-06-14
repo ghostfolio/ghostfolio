@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Disable the sign in with fingerprint selector for the demo user
 - Upgraded `chart.js` from version `3.2.1` to `3.3.2`
-- Upgraded `eslint` and `prettier` dependencies
 - Upgraded `date-fns` from version `2.19.0` to `2.22.1`
+- Upgraded `eslint` and `prettier` dependencies
 
 ## 1.16.0 - 14.06.2021
 
