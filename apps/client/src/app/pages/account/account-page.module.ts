@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
 
 import { AccountPageRoutingModule } from './account-page-routing.module';
@@ -26,6 +27,7 @@ import { AccountPageComponent } from './account-page.component';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSlideToggleModule,
     ReactiveFormsModule
   ],
   providers: []

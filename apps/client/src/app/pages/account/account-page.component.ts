@@ -1,5 +1,14 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import {
+  MatSlideToggle,
+  MatSlideToggleChange
+} from '@angular/material/slide-toggle';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
@@ -7,8 +16,8 @@ import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Currency } from '@prisma/client';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-account-page',
@@ -16,6 +25,9 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./account-page.scss']
 })
 export class AccountPageComponent implements OnDestroy, OnInit {
+  @ViewChild('toggleSignInWithFingerprintEnabledElement')
+  signInWithFingerprintElement: MatSlideToggle;
+
   public accesses: Access[];
   public baseCurrency: Currency;
   public currencies: Currency[] = [];
@@ -30,7 +42,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
    */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private dialog: MatDialog,
     private dataService: DataService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
@@ -88,21 +99,55 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
+    if (aEvent.checked) {
+      this.registerDevice();
+    } else {
+      const confirmation = confirm(
+        'Do you really want to remove this sign in method?'
+      );
+
+      if (confirmation) {
+        this.deregisterDevice();
+      } else {
+        this.update();
+      }
+    }
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
 
-  public registerDevice() {
-    this.webAuthnService
-      .register()
-      .subscribe(() => this.changeDetectorRef.markForCheck());
-  }
-
-  public deregisterDevice() {
+  private deregisterDevice() {
     this.webAuthnService
       .deregister()
-      .subscribe(() => this.changeDetectorRef.markForCheck());
+      .pipe(
+        catchError(() => {
+          this.update();
+
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.update();
+      });
+  }
+
+  private registerDevice() {
+    this.webAuthnService
+      .register()
+      .pipe(
+        catchError(() => {
+          this.update();
+
+          return EMPTY;
+        })
+      )
+      .subscribe(() => {
+        this.update();
+      });
   }
 
   private update() {
@@ -111,6 +156,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.accesses = response;
+
+        if (this.signInWithFingerprintElement) {
+          this.signInWithFingerprintElement.checked =
+            this.webAuthnService.isEnabled() ?? false;
+        }
 
         this.changeDetectorRef.markForCheck();
       });

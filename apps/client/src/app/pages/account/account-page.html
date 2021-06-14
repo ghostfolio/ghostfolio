@@ -66,29 +66,14 @@
               </form>
             </div>
           </div>
-          <div class="d-flex mt-4 py-1">
-            <div class="pt-4 w-50" i18n>Authenticator</div>
+          <div class="align-items-center d-flex mt-4 py-1">
+            <div class="w-50" i18n>Sign in with fingerprint</div>
             <div class="w-50">
-              <button
-                *ngIf="!webAuthnService.isEnabled()"
-                class="d-inline-block"
+              <mat-slide-toggle
+                #toggleSignInWithFingerprintEnabledElement
                 color="primary"
-                i18n
-                mat-flat-button
-                (click)="registerDevice()"
-              >
-                Setup
-              </button>
-              <button
-                *ngIf="webAuthnService.isEnabled()"
-                class="d-inline-block"
-                color="primary"
-                i18n
-                mat-flat-button
-                (click)="deregisterDevice()"
-              >
-                Remove
-              </button>
+                (change)="onSignInWithFingerprintChange($event)"
+              ></mat-slide-toggle>
             </div>
           </div>
         </mat-card-content>

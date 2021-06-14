@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+import { GfDialogHeaderModule } from '../dialog-header/dialog-header.module';
 import { LoginWithAccessTokenDialog } from './login-with-access-token-dialog.component';
 
 @NgModule({
@@ -16,6 +17,7 @@ import { LoginWithAccessTokenDialog } from './login-with-access-token-dialog.com
   imports: [
     CommonModule,
     FormsModule,
+    GfDialogHeaderModule,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,

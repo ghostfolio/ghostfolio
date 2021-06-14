@@ -89,7 +89,8 @@ export class HeaderComponent implements OnChanges {
       autoFocus: false,
       data: {
         accessToken: '',
-        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin
+        hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
+        title: 'Sign in'
       },
       width: '30rem'
     });

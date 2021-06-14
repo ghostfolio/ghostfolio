@@ -36,6 +36,10 @@ export class WebAuthnService {
         {}
       )
       .pipe(
+        catchError((error) => {
+          console.warn('Could not register device', error);
+          return of(null);
+        }),
         switchMap((attOps) => {
           return startAttestation(attOps);
         }),
@@ -59,8 +63,8 @@ export class WebAuthnService {
   public deregister() {
     const deviceId = this.getDeviceId();
     return this.http.delete<AuthDeviceDto>(`/api/auth-device/${deviceId}`).pipe(
-      catchError((e) => {
-        console.warn(`Could not deregister device ${deviceId}`, e);
+      catchError((error) => {
+        console.warn(`Could not deregister device ${deviceId}`, error);
         return of(null);
       }),
       tap(() =>
