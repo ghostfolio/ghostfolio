@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 export const RANGE = 'range';
+export const STAY_SIGNED_IN = 'staySignedIn';
 
 @Injectable({
   providedIn: 'root'

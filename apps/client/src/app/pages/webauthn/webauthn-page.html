@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row">
+    <div *ngIf="!hasError" class="col d-flex justify-content-center">
+      <mat-spinner [diameter]="20"></mat-spinner>
+    </div>
+    <div
+      *ngIf="hasError"
+      class="align-items-center col d-flex flex-column justify-content-center"
+    >
+      <h3 class="d-flex justify-content-center" i18n>
+        Oops, authentication failed
+      </h3>
+      <button
+        (click)="signIn()"
+        class="my-4"
+        color="primary"
+        i18n
+        mat-flat-button
+      >
+        Try again
+      </button>
+      <button (click)="deregisterDevice()" i18n mat-flat-button>
+        Go back to Home Page
+      </button>
+    </div>
+  </div>
+</div>

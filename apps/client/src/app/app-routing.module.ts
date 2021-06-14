@@ -93,6 +93,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'webauthn',
+    loadChildren: () =>
+      import('./pages/webauthn/webauthn-page.module').then(
+        (m) => m.WebauthnPageModule
+      )
+  },
+  {
     path: 'zen',
     loadChildren: () =>
       import('./pages/zen/zen-page.module').then((m) => m.ZenPageModule)

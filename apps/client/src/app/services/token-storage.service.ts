@@ -21,7 +21,7 @@ export class TokenStorageService {
     );
   }
 
-  public saveToken(token: string, staySignedIn: boolean = false): void {
+  public saveToken(token: string, staySignedIn = false): void {
     if (staySignedIn) {
       window.localStorage.setItem(TOKEN_KEY, token);
     }

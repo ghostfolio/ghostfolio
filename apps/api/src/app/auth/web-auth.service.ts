@@ -57,8 +57,9 @@ export class WebAuthService {
       timeout: 60000,
       attestationType: 'indirect',
       authenticatorSelection: {
-        userVerification: 'preferred',
-        requireResidentKey: false
+        authenticatorAttachment: 'platform',
+        requireResidentKey: false,
+        userVerification: 'required'
       }
     };
 
@@ -143,7 +144,7 @@ export class WebAuthService {
         {
           id: device.credentialId,
           type: 'public-key',
-          transports: ['usb', 'ble', 'nfc', 'internal']
+          transports: ['internal']
         }
       ],
       userVerification: 'preferred',

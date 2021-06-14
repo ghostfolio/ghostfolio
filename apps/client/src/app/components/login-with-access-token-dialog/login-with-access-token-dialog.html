@@ -28,7 +28,7 @@
 </div>
 <div mat-dialog-actions>
   <div class="flex-grow-1">
-    <mat-checkbox i18n [(ngModel)]="data.staySignedIn"
+    <mat-checkbox i18n (change)="onChangeStaySignedIn($event)"
       >Stay signed in</mat-checkbox
     >
   </div>
