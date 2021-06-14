@@ -78,17 +78,11 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
 
     dialogRef.afterClosed().subscribe((data) => {
       if (data?.authToken) {
-        this.tokenStorageService.saveToken(authToken);
+        this.tokenStorageService.saveToken(authToken, true);
 
         this.router.navigate(['/']);
       }
     });
-  }
-
-  public setToken(aToken: string) {
-    this.tokenStorageService.saveToken(aToken);
-
-    this.router.navigate(['/']);
   }
 
   public ngOnDestroy() {

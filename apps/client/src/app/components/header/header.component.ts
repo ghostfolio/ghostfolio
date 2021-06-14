@@ -11,6 +11,10 @@ import { Router } from '@angular/router';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import {
+  STAY_SIGNED_IN,
+  SettingsStorageService
+} from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
@@ -43,8 +47,8 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
-    private tokenStorageService: TokenStorageService,
-    private webAuthnService: WebAuthnService
+    private settingsStorageService: SettingsStorageService,
+    private tokenStorageService: TokenStorageService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -108,14 +112,17 @@ export class HeaderComponent implements OnChanges {
             takeUntil(this.unsubscribeSubject)
           )
           .subscribe(({ authToken }) => {
-            this.setToken(authToken, data.staySignedIn);
+            this.setToken(authToken);
           });
       }
     });
   }
 
-  public setToken(aToken: string, staySignedIn: boolean) {
-    this.tokenStorageService.saveToken(aToken, staySignedIn);
+  public setToken(aToken: string) {
+    this.tokenStorageService.saveToken(
+      aToken,
+      this.settingsStorageService.getSetting(STAY_SIGNED_IN) === 'true'
+    );
 
     this.router.navigate(['/']);
   }

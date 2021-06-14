@@ -26,8 +26,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private router: Router,
-    private tokenStorageService: TokenStorageService,
-    private webAuthnService: WebAuthnService
+    private tokenStorageService: TokenStorageService
   ) {}
 
   /**
@@ -257,7 +256,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   }
 
   public setToken(aToken: string) {
-    this.tokenStorageService.saveToken(aToken);
+    this.tokenStorageService.saveToken(aToken, true);
 
     this.router.navigate(['/']);
   }
