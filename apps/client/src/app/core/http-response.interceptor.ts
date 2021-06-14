@@ -79,10 +79,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
           }
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
           if (this.webAuthnService.isEnabled()) {
-            this.webAuthnService.login().subscribe(({ authToken }) => {
-              this.tokenStorageService.saveToken(authToken, false);
-              window.location.reload();
-            });
+            this.router.navigate(['/webauthn']);
           } else {
             this.tokenStorageService.signOut();
           }

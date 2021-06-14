@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row mt-5">
+    <div *ngIf="!hasError" class="col d-flex justify-content-center">
+      <mat-spinner [diameter]="100"></mat-spinner>
+    </div>
+    <div *ngIf="hasError" class="col d-flex flex-column justify-content-center">
+      <h3 class="d-flex justify-content-center mb-3" i18n>
+        Authentication failed
+      </h3>
+      <button
+        (click)="signIn()"
+        class="mb-3"
+        mat-flat-button
+        color="primary"
+        i18n
+      >
+        Try again
+      </button>
+      <button (click)="deregisterDevice()" mat-flat-button i18n>
+        Forget fingerprint sign in
+      </button>
+    </div>
+  </div>
+</div>

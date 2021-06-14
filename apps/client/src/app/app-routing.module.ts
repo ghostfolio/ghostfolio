@@ -98,6 +98,13 @@ const routes: Routes = [
       import('./pages/zen/zen-page.module').then((m) => m.ZenPageModule)
   },
   {
+    path: 'webauthn',
+    loadChildren: () =>
+      import('./pages/webauthn/webauthn-page.module').then(
+        (m) => m.WebauthnPageModule
+      )
+  },
+  {
     // wildcard, if requested url doesn't match any paths for routes defined
     // earlier
     path: '**',
