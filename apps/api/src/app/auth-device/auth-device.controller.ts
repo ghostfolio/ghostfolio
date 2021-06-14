@@ -1,3 +1,10 @@
+import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
+import {
+  getPermissions,
+  hasPermission,
+  permissions
+} from '@ghostfolio/common/permissions';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
   Delete,
@@ -8,14 +15,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
-import { RequestWithUser } from '@ghostfolio/common/types';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Controller('auth-device')
 export class AuthDeviceController {

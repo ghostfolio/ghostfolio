@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 import { UserService } from './user/user.service';
-import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 const TOKEN_KEY = 'auth-token';
 

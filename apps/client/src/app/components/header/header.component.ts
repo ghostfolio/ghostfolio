@@ -12,11 +12,11 @@ import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
-import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 @Component({
   selector: 'gf-header',

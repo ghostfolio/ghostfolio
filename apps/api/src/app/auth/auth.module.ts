@@ -1,3 +1,5 @@
+import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
+import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Module } from '@nestjs/common';
@@ -8,8 +10,6 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
-import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
-import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 
 @Module({
   controllers: [AuthController],

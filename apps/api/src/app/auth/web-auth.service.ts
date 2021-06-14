@@ -1,31 +1,32 @@
+import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
+import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Inject,
   Injectable,
   InternalServerErrorException
 } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { REQUEST } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import {
-  generateAssertionOptions,
   GenerateAssertionOptionsOpts,
-  generateAttestationOptions,
   GenerateAttestationOptionsOpts,
   VerifiedAssertion,
   VerifiedAttestation,
-  verifyAssertionResponse,
   VerifyAssertionResponseOpts,
-  verifyAttestationResponse,
-  VerifyAttestationResponseOpts
+  VerifyAttestationResponseOpts,
+  generateAssertionOptions,
+  generateAttestationOptions,
+  verifyAssertionResponse,
+  verifyAttestationResponse
 } from '@simplewebauthn/server';
-import { REQUEST } from '@nestjs/core';
+
+import { UserService } from '../user/user.service';
 import {
   AssertionCredentialJSON,
   AttestationCredentialJSON
 } from './interfaces/simplewebauthn';
-import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
-import { JwtService } from '@nestjs/jwt';
-import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
-import { RequestWithUser } from '@ghostfolio/common/types';
 
 @Injectable()
 export class WebAuthService {

@@ -1,5 +1,6 @@
 import { join } from 'path';
 
+import { AuthDeviceModule } from '@ghostfolio/api/app/auth-device/auth-device.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -28,7 +29,6 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
-import { AuthDeviceModule } from '@ghostfolio/api/app/auth-device/auth-device.module';
 
 @Module({
   imports: [

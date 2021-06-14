@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
-import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 @Component({
   selector: 'gf-landing-page',

@@ -1,3 +1,4 @@
+import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import {
   Body,
@@ -11,9 +12,9 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
 import { AuthService } from './auth.service';
-import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import {
   AssertionCredentialJSON,
   AttestationCredentialJSON

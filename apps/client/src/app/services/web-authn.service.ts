@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, switchMap, tap } from 'rxjs/operators';
-import { startAssertion, startAttestation } from '@simplewebauthn/browser';
-import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
+import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON
 } from '@ghostfolio/api/app/auth/interfaces/simplewebauthn';
-import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
+import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
+import { startAssertion, startAttestation } from '@simplewebauthn/browser';
 import { of } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

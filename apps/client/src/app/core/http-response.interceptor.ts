@@ -14,12 +14,12 @@ import {
   TextOnlySnackBar
 } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { StatusCodes } from 'http-status-codes';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { TokenStorageService } from '../services/token-storage.service';
-import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
