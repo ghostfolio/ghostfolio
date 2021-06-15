@@ -86,7 +86,6 @@
             "main": "apps/client/src/main.ts",
             "polyfills": "apps/client/src/polyfills.ts",
             "tsConfig": "apps/client/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "apps/client/src/assets",
               {
@@ -121,7 +120,13 @@
               }
             ],
             "styles": ["apps/client/src/styles.scss"],
-            "scripts": ["node_modules/marked/lib/marked.js"]
+            "scripts": ["node_modules/marked/lib/marked.js"],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -152,7 +157,8 @@
               ]
             }
           },
-          "outputs": ["{options.outputPath}"]
+          "outputs": ["{options.outputPath}"],
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
