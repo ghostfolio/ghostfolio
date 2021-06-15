@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `chart.js` from version `3.2.1` to `3.3.2`
 - Upgraded `date-fns` from version `2.19.0` to `2.22.1`
 - Upgraded `eslint` and `prettier` dependencies
+- Upgraded `rxjs` from version `6.6.7` to `7.1.0`
 
 ## 1.16.0 - 14.06.2021
 
