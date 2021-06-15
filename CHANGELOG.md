@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the error page of the sign in with fingerprint
 - Disable the sign in with fingerprint selector for the demo user
+- Upgraded `angular` from version `11.2.4` to `12.0.4`
 - Upgraded `chart.js` from version `3.2.1` to `3.3.2`
 - Upgraded `date-fns` from version `2.19.0` to `2.22.1`
 - Upgraded `eslint` and `prettier` dependencies
