@@ -3368,10 +3368,10 @@ alphavantage@2.2.0:
   dependencies:
     cross-fetch "^3.0.5"
 
-angular-material-css-vars@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/angular-material-css-vars/-/angular-material-css-vars-1.1.2.tgz#911d4353283a4b796c9a37e628d5baa55d80fdb5"
-  integrity sha512-+F4+/lVtevVEYin6OrS6avmnVZ4OlLDbD+rQn8ozREO/hSTXvSDeYSQaCVz1yY5liJ+7V4sr8r+UAkIwoZ4fMw==
+angular-material-css-vars@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/angular-material-css-vars/-/angular-material-css-vars-1.2.0.tgz#edfa6dba8a862a250fb909112ebf588a1b0bd868"
+  integrity sha512-n1QApHYOPjdSNVQROltWCk7gP/eSNh227EB4T8toAS2pNWEYVO2hCm/Vsg4VmhyGXyEhrnYfJJoUUok/jWjJSA==
   dependencies:
     "@ctrl/tinycolor" "^2.6.0"
     tslib "^2.0.0"
@@ -5833,7 +5833,7 @@ emoji-regex@^8.0.0:
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
 
-emoji-toolkit@^6.0.1:
+emoji-toolkit@^6.5.0:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/emoji-toolkit/-/emoji-toolkit-6.5.1.tgz#6fbb0877a92db509b7bf3e3c681e15a264bfd03a"
   integrity sha512-oY5E81cXvRUxXkbVgOI8NxYHKF5FeWfJhFCIYUKhbVfSmdCH8+bmJzgDdhufExa7t1+WEzpUFdHwYxJTXS90vQ==
@@ -9596,24 +9596,24 @@ neo-async@^2.5.0, neo-async@^2.6.1, neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ngx-device-detector@2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-2.0.6.tgz#10754ad7acf53dc2989bfb4936ab018464de6a31"
-  integrity sha512-ltxY19jYl0GzdU/jSOaa3RVrdA9ER7KTZJA/Milp7DyXhhaSymCB8CttnydAmj8gj3AeMi7j3u2bGsycJbDKnA==
+ngx-device-detector@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-2.1.1.tgz#a22a9477f382d02edf28786c5609878a57d2834f"
+  integrity sha512-eTuQLAmc2XRRbxDnO9h1QVV0piSyPjstXT5G8fo1rvXy7Ly3MAiniEM2WvTiN7FjtY/VdhEeuBmu/ErSm5cLJg==
   dependencies:
     tslib "^2.0.0"
 
-ngx-markdown@11.1.2:
-  version "11.1.2"
-  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-11.1.2.tgz#9d5659e9d5eb89a41aa487cee4f5a74b9c33c14b"
-  integrity sha512-T+FA8K2iN7VADx7hO4ytYhRnMJjyVNPHJizrtmVFpjhRcsOTCwCmM4e1qpx1XjxSEliN9Z3mux3a+IPM4jH6+Q==
+ngx-markdown@12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-12.0.1.tgz#94345e99176533c17396f93e97ff5dc172d8ebcc"
+  integrity sha512-vMp9SyqmVQZCX374MiCV4sRR1SIv5m3xR2HZ39b3+6/BGjAb46mb4wRXKdIxYUoPba7NYZ8GAt5moUCyVZcCyA==
   dependencies:
     "@types/marked" "^2.0.0"
-    emoji-toolkit "^6.0.1"
+    emoji-toolkit "^6.5.0"
     katex "^0.13.0"
     marked "^2.0.0"
     prismjs "^1.23.0"
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
 ngx-skeleton-loader@2.9.1:
   version "2.9.1"
@@ -14088,14 +14088,14 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zone.js@0.11.4:
+zone.js@~0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.10.3.tgz#3e5e4da03c607c9dcd92e37dd35687a14a140c16"
+  integrity sha512-LXVLVEq0NNOqK/fLJo3d0kfzd4sxwn2/h67/02pjCjfKDxgx1i9QqpvtHD8CrBnSSwMw5+dy11O7FRX5mkO7Cg==
+
+zone.js@~0.11.4:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.11.4.tgz#0f70dcf6aba80f698af5735cbb257969396e8025"
   integrity sha512-DDh2Ab+A/B+9mJyajPjHFPWfYU1H+pdun4wnnk0OcQTNjem1XQSZ2CDW+rfZEUDjv5M19SBqAkjZi0x5wuB5Qw==
   dependencies:
     tslib "^2.0.0"
-
-zone.js@~0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.10.3.tgz#3e5e4da03c607c9dcd92e37dd35687a14a140c16"
-  integrity sha512-LXVLVEq0NNOqK/fLJo3d0kfzd4sxwn2/h67/02pjCjfKDxgx1i9QqpvtHD8CrBnSSwMw5+dy11O7FRX5mkO7Cg==
