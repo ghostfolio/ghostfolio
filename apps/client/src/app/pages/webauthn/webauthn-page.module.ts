@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { GfLogoModule } from '@ghostfolio/client/components/logo/logo.module';
 import { WebauthnPageComponent } from '@ghostfolio/client/pages/webauthn/webauthn-page.component';
 
 import { WebauthnPageRoutingModule } from './webauthn-page-routing.module';
@@ -11,6 +12,7 @@ import { WebauthnPageRoutingModule } from './webauthn-page-routing.module';
   exports: [],
   imports: [
     CommonModule,
+    GfLogoModule,
     MatButtonModule,
     MatProgressSpinnerModule,
     WebauthnPageRoutingModule
