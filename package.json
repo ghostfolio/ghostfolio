@@ -98,7 +98,7 @@
     "prisma": "2.24.1",
     "reflect-metadata": "0.1.13",
     "round-to": "5.0.0",
-    "rxjs": "6.6.7",
+    "rxjs": "7.1.0",
     "svgmap": "2.1.1",
     "uuid": "8.3.2",
     "yahoo-finance": "0.3.6",
