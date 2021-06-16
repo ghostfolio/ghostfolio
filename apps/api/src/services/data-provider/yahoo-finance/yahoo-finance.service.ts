@@ -12,9 +12,7 @@ import { DataProviderInterface } from '../../interfaces/data-provider.interface'
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
-  Industry,
   MarketState,
-  Sector,
   Type
 } from '../../interfaces/interfaces';
 import {
@@ -69,16 +67,6 @@ export class YahooFinanceService implements DataProviderInterface {
           name: value.price?.longName || value.price?.shortName || symbol,
           type: this.parseType(this.getType(symbol, value))
         };
-
-        const industry = this.parseIndustry(value.summaryProfile?.industry);
-        if (industry) {
-          response[symbol].industry = industry;
-        }
-
-        const sector = this.parseSector(value.summaryProfile?.sector);
-        if (sector) {
-          response[symbol].sector = sector;
-        }
 
         const url = value.summaryProfile?.website;
         if (url) {
@@ -228,55 +216,6 @@ export class YahooFinanceService implements DataProviderInterface {
     return aString;
   }
 
-  private parseIndustry(aString: string): Industry {
-    if (aString === undefined) {
-      return undefined;
-    }
-
-    if (aString?.toLowerCase() === 'auto manufacturers') {
-      return Industry.Automotive;
-    } else if (aString?.toLowerCase() === 'biotechnology') {
-      return Industry.Biotechnology;
-    } else if (
-      aString?.toLowerCase() === 'drug manufacturers—specialty & generic'
-    ) {
-      return Industry.Pharmaceutical;
-    } else if (
-      aString?.toLowerCase() === 'internet content & information' ||
-      aString?.toLowerCase() === 'internet retail'
-    ) {
-      return Industry.Internet;
-    } else if (aString?.toLowerCase() === 'packaged foods') {
-      return Industry.Food;
-    } else if (aString?.toLowerCase() === 'software—application') {
-      return Industry.Software;
-    }
-
-    return Industry.Unknown;
-  }
-
-  private parseSector(aString: string): Sector {
-    if (aString === undefined) {
-      return undefined;
-    }
-
-    if (
-      aString?.toLowerCase() === 'consumer cyclical' ||
-      aString?.toLowerCase() === 'consumer defensive'
-    ) {
-      return Sector.Consumer;
-    } else if (aString?.toLowerCase() === 'healthcare') {
-      return Sector.Healthcare;
-    } else if (
-      aString?.toLowerCase() === 'communication services' ||
-      aString?.toLowerCase() === 'technology'
-    ) {
-      return Sector.Technology;
-    }
-
-    return Sector.Unknown;
-  }
-
   private parseType(aString: string): Type {
     if (aString?.toLowerCase() === 'cryptocurrency') {
       return Type.Cryptocurrency;
@@ -291,6 +230,6 @@ export class YahooFinanceService implements DataProviderInterface {
 }
 
 export const convertFromYahooSymbol = (aSymbol: string) => {
-  let symbol = aSymbol.replace('-', '');
+  const symbol = aSymbol.replace('-', '');
   return symbol.replace('=X', '');
 };

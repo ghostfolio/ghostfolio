@@ -142,18 +142,21 @@ async function main() {
         countries: [{ code: 'US', weight: 1 }],
         dataSource: DataSource.YAHOO,
         id: '2bd26362-136e-411c-b578-334084b4cdcc',
+        sectors: [{ name: 'Consumer Cyclical', weight: 1 }],
         symbol: 'AMZN'
       },
       {
         countries: null,
         dataSource: DataSource.YAHOO,
         id: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e',
+        sectors: null,
         symbol: 'BTCUSD'
       },
       {
         countries: [{ code: 'US', weight: 1 }],
         dataSource: DataSource.YAHOO,
         id: 'd1ee9681-fb21-4f99-a3b7-afd4fc04df2e',
+        sectors: [{ name: 'Consumer Cyclical', weight: 1 }],
         symbol: 'TSLA'
       },
       {
@@ -164,6 +167,21 @@ async function main() {
         ],
         dataSource: DataSource.YAHOO,
         id: '7d9c8540-061e-4e7e-b019-0d0f4a84e796',
+        sectors: [
+          { name: 'Technology', weight: 0.31393799999999955 },
+          { name: 'Consumer Cyclical', weight: 0.149224 },
+          { name: 'Financials', weight: 0.11716100000000002 },
+          { name: 'Healthcare', weight: 0.13285199999999994 },
+          { name: 'Consumer Staples', weight: 0.053919000000000016 },
+          { name: 'Energy', weight: 0.025529999999999997 },
+          { name: 'Telecommunications', weight: 0.012579 },
+          { name: 'Industrials', weight: 0.09526399999999995 },
+          { name: 'Utilities', weight: 0.024791999999999988 },
+          { name: 'Materials', weight: 0.027664 },
+          { name: 'Real Estate', weight: 0.03239999999999998 },
+          { name: 'Communication', weight: 0.0036139999999999996 },
+          { name: 'Other', weight: 0.000218 }
+        ],
         symbol: 'VTI'
       }
     ],

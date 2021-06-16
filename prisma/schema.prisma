@@ -120,6 +120,7 @@ model SymbolProfile {
   name       String?
   Order      Order[]
   updatedAt  DateTime   @updatedAt
+  sectors    Json?
   symbol     String
 
   @@unique([dataSource, symbol])
