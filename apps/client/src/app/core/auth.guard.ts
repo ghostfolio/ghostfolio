@@ -40,7 +40,10 @@ export class AuthGuard implements CanActivate {
         .get()
         .pipe(
           catchError(() => {
-            if (AuthGuard.PUBLIC_PAGE_ROUTES.includes(state.url)) {
+            if (route.queryParams?.utm_source) {
+              this.router.navigate(['/register']);
+              resolve(false);
+            } else if (AuthGuard.PUBLIC_PAGE_ROUTES.includes(state.url)) {
               resolve(true);
               return EMPTY;
             } else if (state.url !== '/start') {

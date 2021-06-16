@@ -1,34 +1,36 @@
 <div class="container">
   <div class="row">
-    <div
-      class="align-items-center d-flex flex-column justify-content-center mb-4 w-100"
-    >
-      <gf-logo size="medium"></gf-logo>
-    </div>
-
-    <div *ngIf="!hasError" class="col d-flex justify-content-center">
-      <mat-spinner [diameter]="20"></mat-spinner>
-    </div>
-    <div
-      *ngIf="hasError"
-      class="align-items-center col d-flex flex-column justify-content-center"
-    >
-      <h1 class="d-flex h5 justify-content-center mb-0 text-center" i18n>
-        Oops, authentication has failed.
-      </h1>
-      <button
-        class="mb-3 mt-4"
-        color="primary"
-        i18n
-        mat-flat-button
-        (click)="signIn()"
+    <div class="col">
+      <div
+        class="align-items-center d-flex flex-column justify-content-center mb-4 w-100"
       >
-        Try again
-      </button>
-      <div class="text-muted" i18n>or</div>
-      <button class="mt-1" i18n mat-flat-button (click)="deregisterDevice()">
-        Go back to Home Page
-      </button>
+        <gf-logo size="medium"></gf-logo>
+      </div>
+
+      <div *ngIf="!hasError" class="col d-flex justify-content-center">
+        <mat-spinner [diameter]="20"></mat-spinner>
+      </div>
+      <div
+        *ngIf="hasError"
+        class="align-items-center col d-flex flex-column justify-content-center"
+      >
+        <h1 class="d-flex h5 justify-content-center mb-0 text-center" i18n>
+          Oops, authentication has failed.
+        </h1>
+        <button
+          class="mb-3 mt-4"
+          color="primary"
+          i18n
+          mat-flat-button
+          (click)="signIn()"
+        >
+          Try again
+        </button>
+        <div class="text-muted" i18n>or</div>
+        <button class="mt-1" i18n mat-flat-button (click)="deregisterDevice()">
+          Go back to Home Page
+        </button>
+      </div>
     </div>
   </div>
 </div>
