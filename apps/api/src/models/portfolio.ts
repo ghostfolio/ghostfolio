@@ -9,6 +9,7 @@ import {
   UserWithSettings
 } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
+import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { DateRange, OrderWithAccount } from '@ghostfolio/common/types';
 import { Prisma } from '@prisma/client';
 import { continents, countries } from 'countries-list';
@@ -210,6 +211,7 @@ export class Portfolio implements PortfolioInterface {
     symbols.forEach((symbol) => {
       const accounts: PortfolioPosition['accounts'] = {};
       let countriesOfSymbol: Country[];
+      let sectorsOfSymbol: Sector[];
       const [portfolioItem] = portfolioItems;
 
       const ordersBySymbol = this.getOrders().filter((order) => {
@@ -261,6 +263,17 @@ export class Portfolio implements PortfolioInterface {
             continent:
               continents[countries[code as string]?.continent] ?? UNKNOWN_KEY,
             name: countries[code as string]?.name ?? UNKNOWN_KEY,
+            weight: weight as number
+          };
+        });
+
+        sectorsOfSymbol = (
+          (orderOfSymbol.getSymbolProfile()?.sectors as Prisma.JsonArray) ?? []
+        ).map((sector) => {
+          const { name, weight } = sector as Prisma.JsonObject;
+
+          return {
+            name: (name as string) ?? UNKNOWN_KEY,
             weight: weight as number
           };
         });
@@ -318,6 +331,7 @@ export class Portfolio implements PortfolioInterface {
         grossPerformancePercent: roundTo((now - before) / before, 4),
         investment: portfolioItem.positions[symbol].investment,
         quantity: portfolioItem.positions[symbol].quantity,
+        sectors: sectorsOfSymbol,
         transactionCount: portfolioItem.positions[symbol].transactionCount,
         value: this.exchangeRateDataService.toCurrency(
           portfolioItem.positions[symbol].quantity * now,

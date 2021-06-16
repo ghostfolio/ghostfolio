@@ -9,6 +9,7 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -39,6 +40,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public portfolioPositions: { [symbol: string]: PortfolioPosition };
   public positions: { [symbol: string]: any };
   public positionsArray: PortfolioPosition[];
+  public sectors: {
+    [name: string]: { name: string; value: number };
+  };
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -118,13 +122,17 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     };
     this.positions = {};
     this.positionsArray = [];
+    this.sectors = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      }
+    };
 
     for (const [symbol, position] of Object.entries(aPortfolioPositions)) {
       this.positions[symbol] = {
         currency: position.currency,
         exchange: position.exchange,
-        industry: position.industry,
-        sector: position.sector,
         type: position.type,
         value:
           aPeriod === 'original'
@@ -184,6 +192,30 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             : this.portfolioPositions[symbol].value;
 
         this.countries[UNKNOWN_KEY].value +=
+          aPeriod === 'original'
+            ? this.portfolioPositions[symbol].investment
+            : this.portfolioPositions[symbol].value;
+      }
+
+      if (position.sectors.length > 0) {
+        for (const sector of position.sectors) {
+          const { name, weight } = sector;
+
+          if (this.sectors[name]?.value) {
+            this.sectors[name].value += weight * position.value;
+          } else {
+            this.sectors[name] = {
+              name,
+              value:
+                weight *
+                (aPeriod === 'original'
+                  ? this.portfolioPositions[symbol].investment
+                  : this.portfolioPositions[symbol].value)
+            };
+          }
+        }
+      } else {
+        this.sectors[UNKNOWN_KEY].value +=
           aPeriod === 'original'
             ? this.portfolioPositions[symbol].investment
             : this.portfolioPositions[symbol].value;

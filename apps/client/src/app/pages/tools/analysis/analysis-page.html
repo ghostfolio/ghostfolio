@@ -61,52 +61,6 @@
     <div class="col-md-6">
       <mat-card class="mb-3">
         <mat-card-header class="w-100">
-          <mat-card-title i18n>By Sector</mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
-        </mat-card-header>
-        <mat-card-content>
-          <gf-portfolio-proportion-chart
-            key="sector"
-            [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="true"
-            [locale]="user?.settings?.locale"
-            [maxItems]="10"
-            [positions]="positions"
-          ></gf-portfolio-proportion-chart>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-6">
-      <mat-card class="mb-3">
-        <mat-card-header class="w-100">
-          <mat-card-title i18n>By Industry</mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
-        </mat-card-header>
-        <mat-card-content>
-          <gf-portfolio-proportion-chart
-            key="industry"
-            [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="true"
-            [locale]="user?.settings?.locale"
-            [maxItems]="10"
-            [positions]="positions"
-          ></gf-portfolio-proportion-chart>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-6">
-      <mat-card class="mb-3">
-        <mat-card-header class="w-100">
           <mat-card-title i18n>By Currency</mat-card-title>
           <gf-toggle
             [defaultValue]="period"
@@ -144,6 +98,29 @@
             [isInPercent]="true"
             [locale]="user?.settings?.locale"
             [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
+          <mat-card-title i18n>By Sector</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            key="name"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="false"
+            [locale]="user?.settings?.locale"
+            [maxItems]="10"
+            [positions]="sectors"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
