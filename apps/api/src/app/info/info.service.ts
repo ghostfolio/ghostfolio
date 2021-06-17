@@ -5,6 +5,8 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Currency } from '@prisma/client';
+import * as bent from 'bent';
+import { subDays } from 'date-fns';
 
 @Injectable()
 export class InfoService {
@@ -28,6 +30,10 @@ export class InfoService {
       globalPermissions.push(permissions.enableSocialLogin);
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
+      globalPermissions.push(permissions.enableStatistics);
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       globalPermissions.push(permissions.enableSubscription);
     }
@@ -37,7 +43,8 @@ export class InfoService {
       platforms,
       currencies: Object.values(Currency),
       demoAuthToken: this.getDemoAuthToken(),
-      lastDataGathering: await this.getLastDataGathering()
+      lastDataGathering: await this.getLastDataGathering(),
+      statistics: await this.getStatistics()
     };
   }
 
@@ -53,5 +60,68 @@ export class InfoService {
     });
 
     return lastDataGathering?.value ? new Date(lastDataGathering.value) : null;
+  }
+
+  private async getStatistics() {
+    if (!this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
+      return undefined;
+    }
+
+    const activeUsers1d = await this.countActiveUsers(1);
+    const activeUsers30d = await this.countActiveUsers(30);
+    const gitHubStargazers = await this.countGitHubStargazers();
+
+    return {
+      activeUsers1d,
+      activeUsers30d,
+      gitHubStargazers
+    };
+  }
+
+  private async countActiveUsers(aDays: number) {
+    return await this.prisma.user.count({
+      orderBy: {
+        Analytics: {
+          updatedAt: 'desc'
+        }
+      },
+      where: {
+        AND: [
+          {
+            NOT: {
+              Analytics: null
+            }
+          },
+          {
+            Analytics: {
+              updatedAt: {
+                gt: subDays(new Date(), aDays)
+              }
+            }
+          }
+        ]
+      }
+    });
+  }
+
+  private async countGitHubStargazers(): Promise<number> {
+    try {
+      const get = bent(
+        `https://api.github.com/repos/ghostfolio/ghostfolio`,
+        'GET',
+        'json',
+        200,
+        {
+          'User-Agent': 'request'
+        }
+      );
+
+      const { stargazers_count } = await get();
+      return stargazers_count;
+    } catch (error) {
+      console.error(error);
+
+      return undefined;
+    }
   }
 }

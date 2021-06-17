@@ -60,6 +60,40 @@
     </div>
   </div>
 
+  <div *ngIf="hasPermissionForStatistics" class="mb-5 row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>Ghostfolio in Numbers</h3>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-xs-12 col-md-4">
+              <h3 class="mb-0" [hidden]="!statistics?.activeUsers1d">
+                {{ statistics?.activeUsers1d ?? '-' }}
+              </h3>
+              <div class="h6 mb-0">
+                Active Users <small class="text-muted">(Last 24 hours)</small>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-4">
+              <h3 class="mb-0" [hidden]="!statistics?.activeUsers30d">
+                {{ statistics?.activeUsers30d ?? '-' }}
+              </h3>
+              <div class="h6 m-b0">
+                Active Users <small class="text-muted">(Last 30 days)</small>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-4">
+              <h3 class="mb-0" [hidden]="!statistics?.gitHubStargazers">
+                {{ statistics?.gitHubStargazers ?? '-' }}
+              </h3>
+              <div class="h6 mb-0">Stars on GitHub</div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
   <div class="mb-5 row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Changelog</h3>
