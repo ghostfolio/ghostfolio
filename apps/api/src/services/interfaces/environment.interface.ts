@@ -8,6 +8,7 @@ export interface Environment extends CleanedEnvAccessors {
   ENABLE_FEATURE_CUSTOM_SYMBOLS: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
   ENABLE_FEATURE_SOCIAL_LOGIN: boolean;
+  ENABLE_FEATURE_STATISTICS: boolean;
   ENABLE_FEATURE_SUBSCRIPTION: boolean;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_SECRET: string;

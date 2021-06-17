@@ -1,5 +1,7 @@
 import { Currency } from '@prisma/client';
 
+import { Statistics } from './statistics.interface';
+
 export interface InfoItem {
   currencies: Currency[];
   demoAuthToken: string;
@@ -10,4 +12,5 @@ export interface InfoItem {
     type: string;
   };
   platforms: { id: string; name: string }[];
+  statistics: Statistics;
 }
