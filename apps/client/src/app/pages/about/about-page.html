@@ -2,7 +2,7 @@
   <div class="mb-5 row">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>About Ghostfolio</h3>
-      <mat-card class="mb-3">
+      <mat-card>
         <mat-card-content>
           <p>
             <strong>Ghostfolio</strong> is open source software which empowers
@@ -17,21 +17,13 @@
           </p>
           <p>
             If you encounter a bug or would like to suggest an improvement or a
-            new feature, please open an issue at
-            <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>, tweet
-            to <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a> or
-            send an e-mail to
-            <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a>.
+            new feature, please tweet to
+            <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a>, send an
+            e-mail to <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a> or open
+            an issue at
+            <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
           </p>
           <p class="text-center">
-            <a
-              class="mx-2"
-              href="https://github.com/ghostfolio/ghostfolio"
-              mat-icon-button
-              title="Find Ghostfolio on GitHub"
-            >
-              <ion-icon name="logo-github" size="large"></ion-icon>
-            </a>
             <a
               class="mx-2"
               href="https://twitter.com/ghostfolio_"
@@ -48,6 +40,14 @@
             >
               <ion-icon name="mail" size="large"></ion-icon>
             </a>
+            <a
+              class="mx-2"
+              href="https://github.com/ghostfolio/ghostfolio"
+              mat-icon-button
+              title="Find Ghostfolio on GitHub"
+            >
+              <ion-icon name="logo-github" size="large"></ion-icon>
+            </a>
           </p>
           <div class="d-flex justify-content-center">
             <div
@@ -63,10 +63,10 @@
   <div *ngIf="hasPermissionForStatistics" class="mb-5 row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Ghostfolio in Numbers</h3>
-      <mat-card class="mb-3">
+      <mat-card>
         <mat-card-content>
           <div class="row">
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-12 col-md-4 my-2">
               <h3 class="mb-0" [hidden]="!statistics?.activeUsers1d">
                 {{ statistics?.activeUsers1d ?? '-' }}
               </h3>
@@ -74,15 +74,15 @@
                 Active Users <small class="text-muted">(Last 24 hours)</small>
               </div>
             </div>
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-12 col-md-4 my-2">
               <h3 class="mb-0" [hidden]="!statistics?.activeUsers30d">
                 {{ statistics?.activeUsers30d ?? '-' }}
               </h3>
-              <div class="h6 m-b0">
+              <div class="h6 mb-0">
                 Active Users <small class="text-muted">(Last 30 days)</small>
               </div>
             </div>
-            <div class="col-xs-12 col-md-4">
+            <div class="col-xs-12 col-md-4 my-2">
               <h3 class="mb-0" [hidden]="!statistics?.gitHubStargazers">
                 {{ statistics?.gitHubStargazers ?? '-' }}
               </h3>
@@ -97,7 +97,7 @@
   <div class="mb-5 row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Changelog</h3>
-      <mat-card class="changelog mb-3">
+      <mat-card class="changelog">
         <mat-card-content>
           <markdown [src]="'CHANGELOG.md'"></markdown>
         </mat-card-content>
@@ -108,7 +108,7 @@
   <div class="row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>License</h3>
-      <mat-card class="mb-3">
+      <mat-card>
         <mat-card-content>
           <markdown [src]="'LICENSE'"></markdown>
         </mat-card-content>
