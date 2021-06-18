@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up _Stripe_ for subscriptions
 
+### Changed
+
+- Improved the style of the _Ghostfolio in Numbers_ section
+
 ## 1.19.0 - 17.06.2021
 
 ### Added
