@@ -15,7 +15,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialCssVarsModule } from 'angular-material-css-vars';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { NgxStripeModule } from 'ngx-stripe';
 
+import { environment } from '../environments/environment';
 import { CustomDateAdapter } from './adapter/custom-date-adapter';
 import { DateFormats } from './adapter/date-formats';
 import { AppRoutingModule } from './app-routing.module';
@@ -43,7 +45,8 @@ import { LanguageService } from './core/language.service';
     }),
     MatNativeDateModule,
     MatSnackBarModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    NgxStripeModule.forRoot(environment.stripePublicKey)
   ],
   providers: [
     authInterceptorProviders,

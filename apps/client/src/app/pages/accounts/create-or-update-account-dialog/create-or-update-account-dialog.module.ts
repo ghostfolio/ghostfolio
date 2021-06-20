@@ -24,4 +24,4 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
   ],
   providers: []
 })
-export class CreateOrUpdateAccountDialogModule {}
+export class GfCreateOrUpdateAccountDialogModule {}

@@ -6,7 +6,7 @@ import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-ta
 
 import { AccountsPageRoutingModule } from './accounts-page-routing.module';
 import { AccountsPageComponent } from './accounts-page.component';
-import { CreateOrUpdateAccountDialogModule } from './create-or-update-account-dialog/create-or-update-account-dialog.module';
+import { GfCreateOrUpdateAccountDialogModule } from './create-or-update-account-dialog/create-or-update-account-dialog.module';
 
 @NgModule({
   declarations: [AccountsPageComponent],
@@ -14,8 +14,8 @@ import { CreateOrUpdateAccountDialogModule } from './create-or-update-account-di
   imports: [
     AccountsPageRoutingModule,
     CommonModule,
-    CreateOrUpdateAccountDialogModule,
     GfAccountsTableModule,
+    GfCreateOrUpdateAccountDialogModule,
     MatButtonModule,
     RouterModule
   ],

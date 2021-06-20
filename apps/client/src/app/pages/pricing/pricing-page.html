@@ -176,16 +176,23 @@
               </ul>
             </div>
             <p>Fully managed <strong>Ghostfolio</strong> cloud offering.</p>
-            <p class="h5 text-right">
+            <p class="h5 text-right" [hidden]="!price">
               <span class="font-weight-normal"
                 >{{ user?.settings.baseCurrency || baseCurrency }}
-                <strong>0.00</strong>
-                <del class="ml-1 text-muted">3.99</del> / Month</span
+                <strong>{{ price }}</strong>
+                per year</span
               >
             </p>
           </mat-card>
         </div>
       </div>
+    </div>
+  </div>
+  <div *ngIf="user?.subscription?.type === 'Basic'" class="row">
+    <div class="col mt-3 text-center">
+      <a color="primary" i18n mat-flat-button [routerLink]="['/account']">
+        Upgrade Plan
+      </a>
     </div>
   </div>
   <div *ngIf="!user" class="row">

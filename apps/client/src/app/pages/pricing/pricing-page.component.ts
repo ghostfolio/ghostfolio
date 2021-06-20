@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { baseCurrency } from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
@@ -13,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 export class PricingPageComponent implements OnInit {
   public baseCurrency = baseCurrency;
   public isLoggedIn: boolean;
+  public price: number;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -22,8 +24,18 @@ export class PricingPageComponent implements OnInit {
    */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
     private userService: UserService
-  ) {}
+  ) {
+    this.dataService
+      .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ subscriptions }) => {
+        this.price = subscriptions?.[0]?.price;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
 
   /**
    * Initializes the controller

@@ -43,6 +43,12 @@ export class DataService {
     private settingsStorageService: SettingsStorageService
   ) {}
 
+  public createCheckoutSession(priceId) {
+    return this.http.post('/api/subscription/stripe/checkout-session/create', {
+      priceId
+    });
+  }
+
   public fetchAccounts() {
     return this.http.get<AccountModel[]>('/api/account');
   }

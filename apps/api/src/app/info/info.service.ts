@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
+import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
 import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -44,37 +45,8 @@ export class InfoService {
       currencies: Object.values(Currency),
       demoAuthToken: this.getDemoAuthToken(),
       lastDataGathering: await this.getLastDataGathering(),
-      statistics: await this.getStatistics()
-    };
-  }
-
-  private getDemoAuthToken() {
-    return this.jwtService.sign({
-      id: InfoService.DEMO_USER_ID
-    });
-  }
-
-  private async getLastDataGathering() {
-    const lastDataGathering = await this.prisma.property.findUnique({
-      where: { key: 'LAST_DATA_GATHERING' }
-    });
-
-    return lastDataGathering?.value ? new Date(lastDataGathering.value) : null;
-  }
-
-  private async getStatistics() {
-    if (!this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
-      return undefined;
-    }
-
-    const activeUsers1d = await this.countActiveUsers(1);
-    const activeUsers30d = await this.countActiveUsers(30);
-    const gitHubStargazers = await this.countGitHubStargazers();
-
-    return {
-      activeUsers1d,
-      activeUsers30d,
-      gitHubStargazers
+      statistics: await this.getStatistics(),
+      subscriptions: await this.getSubscriptions()
     };
   }
 
@@ -123,5 +95,51 @@ export class InfoService {
 
       return undefined;
     }
+  }
+
+  private getDemoAuthToken() {
+    return this.jwtService.sign({
+      id: InfoService.DEMO_USER_ID
+    });
+  }
+
+  private async getLastDataGathering() {
+    const lastDataGathering = await this.prisma.property.findUnique({
+      where: { key: 'LAST_DATA_GATHERING' }
+    });
+
+    return lastDataGathering?.value ? new Date(lastDataGathering.value) : null;
+  }
+
+  private async getStatistics() {
+    if (!this.configurationService.get('ENABLE_FEATURE_STATISTICS')) {
+      return undefined;
+    }
+
+    const activeUsers1d = await this.countActiveUsers(1);
+    const activeUsers30d = await this.countActiveUsers(30);
+    const gitHubStargazers = await this.countGitHubStargazers();
+
+    return {
+      activeUsers1d,
+      activeUsers30d,
+      gitHubStargazers
+    };
+  }
+
+  private async getSubscriptions(): Promise<Subscription[]> {
+    if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      return undefined;
+    }
+
+    const stripeConfig = await this.prisma.property.findUnique({
+      where: { key: 'STRIPE_CONFIG' }
+    });
+
+    if (stripeConfig) {
+      return [JSON.parse(stripeConfig.value)];
+    }
+
+    return [];
   }
 }

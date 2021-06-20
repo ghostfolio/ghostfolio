@@ -27,6 +27,7 @@ import { InfoModule } from './info/info.module';
 import { OrderModule } from './order/order.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
 
@@ -59,6 +60,7 @@ import { UserModule } from './user/user.module';
       rootPath: join(__dirname, '..', 'client'),
       exclude: ['/api*']
     }),
+    SubscriptionModule,
     SymbolModule,
     UserModule
   ],
