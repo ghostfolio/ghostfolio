@@ -34,11 +34,14 @@ export class SubscriptionController {
     res.redirect(`${this.configurationService.get('ROOT_URL')}/account`);
   }
 
-  @Post('stripe/checkout-session/create')
+  @Post('stripe/checkout-session')
   @UseGuards(AuthGuard('jwt'))
-  public async createCheckoutSession(@Body() { priceId }: { priceId: string }) {
+  public async createCheckoutSession(
+    @Body() { couponId, priceId }: { couponId: string; priceId: string }
+  ) {
     try {
       return await this.subscriptionService.createCheckoutSession({
+        couponId,
         priceId,
         userId: this.request.user.id
       });

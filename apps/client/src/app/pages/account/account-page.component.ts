@@ -31,8 +31,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
   public accesses: Access[];
   public baseCurrency: Currency;
+  public coupon: number;
+  public couponId: string;
   public currencies: Currency[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
@@ -54,9 +57,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .fetchInfo()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ currencies, subscriptions }) => {
+        this.coupon = subscriptions?.[0]?.coupon;
+        this.couponId = subscriptions?.[0]?.couponId;
         this.currencies = currencies;
-        this.price = subscriptions?.[0].price;
-        this.priceId = subscriptions?.[0].priceId;
+        this.price = subscriptions?.[0]?.price;
+        this.priceId = subscriptions?.[0]?.priceId;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -70,6 +75,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
             permissions.updateUserSettings
+          );
+
+          this.hasPermissionToUpdateViewMode = hasPermission(
+            this.user.permissions,
+            permissions.updateViewMode
           );
 
           this.changeDetectorRef.markForCheck();
@@ -107,9 +117,9 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCheckout(priceId: string) {
+  public onCheckout() {
     this.dataService
-      .createCheckoutSession(priceId)
+      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
       .pipe(
         switchMap(({ sessionId }: { sessionId: string }) => {
           return this.stripeService.redirectToCheckout({

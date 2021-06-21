@@ -21,13 +21,15 @@ export class SubscriptionService {
   }
 
   public async createCheckoutSession({
+    couponId,
     priceId,
     userId
   }: {
+    couponId?: string;
     priceId: string;
     userId: string;
   }) {
-    const session = await this.stripe.checkout.sessions.create({
+    const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
       cancel_url: `${this.configurationService.get('ROOT_URL')}/account`,
       client_reference_id: userId,
       line_items: [
@@ -44,7 +46,19 @@ export class SubscriptionService {
       success_url: `${this.configurationService.get(
         'ROOT_URL'
       )}/api/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
-    });
+    };
+
+    if (couponId) {
+      checkoutSessionCreateParams.discounts = [
+        {
+          coupon: couponId
+        }
+      ];
+    }
+
+    const session = await this.stripe.checkout.sessions.create(
+      checkoutSessionCreateParams
+    );
 
     return {
       sessionId: session.id

@@ -179,8 +179,14 @@
             <p class="h5 text-right" [hidden]="!price">
               <span class="font-weight-normal"
                 >{{ user?.settings.baseCurrency || baseCurrency }}
-                <strong>{{ price }}</strong>
-                per year</span
+                <ng-container *ngIf="coupon"
+                  ><strong>{{ price - coupon }} </strong>
+                  <del>{{ user.settings.baseCurrency }} {{ price }}</del>
+                </ng-container>
+                <ng-container *ngIf="!coupon"
+                  ><strong>{{ price }}</strong></ng-container
+                >
+                <span i18n> per year</span></span
               >
             </p>
           </mat-card>

@@ -13,6 +13,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class PricingPageComponent implements OnInit {
   public baseCurrency = baseCurrency;
+  public coupon: number;
   public isLoggedIn: boolean;
   public price: number;
   public user: User;
@@ -31,6 +32,7 @@ export class PricingPageComponent implements OnInit {
       .fetchInfo()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ subscriptions }) => {
+        this.coupon = this.price = subscriptions?.[0]?.coupon;
         this.price = subscriptions?.[0]?.price;
 
         this.changeDetectorRef.markForCheck();
