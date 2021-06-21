@@ -7,6 +7,7 @@ import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User, ViewMode } from '@prisma/client';
 import { isBefore } from 'date-fns';
+
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 
 const crypto = require('crypto');
