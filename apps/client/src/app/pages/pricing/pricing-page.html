@@ -181,7 +181,10 @@
                 >{{ user?.settings.baseCurrency || baseCurrency }}
                 <ng-container *ngIf="coupon"
                   ><strong>{{ price - coupon }} </strong>
-                  <del>{{ user.settings.baseCurrency }} {{ price }}</del>
+                  <del
+                    >{{ user?.settings.baseCurrency || baseCurrency }} {{ price
+                    }}</del
+                  >
                 </ng-container>
                 <ng-container *ngIf="!coupon"
                   ><strong>{{ price }}</strong></ng-container
