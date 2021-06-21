@@ -16,8 +16,9 @@ import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Currency } from '@prisma/client';
+import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-account-page',
@@ -30,9 +31,14 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
   public accesses: Access[];
   public baseCurrency: Currency;
+  public coupon: number;
+  public couponId: string;
   public currencies: Currency[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public price: number;
+  public priceId: string;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -43,14 +49,21 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private stripeService: StripeService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
     this.dataService
       .fetchInfo()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currencies }) => {
+      .subscribe(({ currencies, subscriptions }) => {
+        this.coupon = subscriptions?.[0]?.coupon;
+        this.couponId = subscriptions?.[0]?.couponId;
         this.currencies = currencies;
+        this.price = subscriptions?.[0]?.price;
+        this.priceId = subscriptions?.[0]?.priceId;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.userService.stateChanged
@@ -62,6 +75,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
             permissions.updateUserSettings
+          );
+
+          this.hasPermissionToUpdateViewMode = hasPermission(
+            this.user.permissions,
+            permissions.updateViewMode
           );
 
           this.changeDetectorRef.markForCheck();
@@ -96,6 +114,23 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
             this.changeDetectorRef.markForCheck();
           });
+      });
+  }
+
+  public onCheckout() {
+    this.dataService
+      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
+      .pipe(
+        switchMap(({ sessionId }: { sessionId: string }) => {
+          return this.stripeService.redirectToCheckout({
+            sessionId
+          });
+        })
+      )
+      .subscribe((result) => {
+        if (result.error) {
+          alert(result.error.message);
+        }
       });
   }
 

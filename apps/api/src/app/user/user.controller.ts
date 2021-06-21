@@ -25,6 +25,7 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { UserItem } from './interfaces/user-item.interface';
+import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 import { UpdateUserSettingsDto } from './update-user-settings.dto';
 import { UserService } from './user.service';
 
@@ -92,10 +93,20 @@ export class UserController {
       );
     }
 
-    return await this.userService.updateUserSettings({
+    const userSettings: UserSettingsParams = {
       currency: data.baseCurrency,
-      userId: this.request.user.id,
-      viewMode: data.viewMode
-    });
+      userId: this.request.user.id
+    };
+
+    if (
+      hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.updateViewMode
+      )
+    ) {
+      userSettings.viewMode = data.viewMode;
+    }
+
+    return await this.userService.updateUserSettings(userSettings);
   }
 }

@@ -1,10 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3">
-        <ng-container *ngIf="user?.alias">{{ user.alias }}</ng-container>
-        <ng-container *ngIf="!user?.alias" i18n>Account</ng-container>
-      </h3>
+      <h3 class="d-flex justify-content-center mb-3" i18n>Account</h3>
     </div>
   </div>
   <div *ngIf="user?.settings" class="mb-5 row">
@@ -26,9 +23,23 @@
                 defaultDateFormat }}
               </div>
               <div *ngIf="!user.subscription.expiresAt">
-                <button color="primary" disabled i18n mat-flat-button>
+                <button
+                  color="primary"
+                  i18n
+                  mat-flat-button
+                  (click)="onCheckout(priceId)"
+                >
                   Upgrade
                 </button>
+                <div *ngIf="price" class="mt-1">
+                  {{ user.settings.baseCurrency }}
+                  <ng-container *ngIf="coupon"
+                    >{{ price - coupon }}
+                    <del>{{ user.settings.baseCurrency }} {{ price }}</del>
+                  </ng-container>
+                  <ng-container *ngIf="!coupon">{{ price }}</ng-container>
+                  <span i18n> per year</span>
+                </div>
               </div>
             </div>
           </div>
@@ -55,7 +66,7 @@
                   <mat-label i18n>View Mode</mat-label>
                   <mat-select
                     name="viewMode"
-                    [disabled]="!hasPermissionToUpdateUserSettings"
+                    [disabled]="!hasPermissionToUpdateViewMode"
                     [value]="user.settings.viewMode"
                     (selectionChange)="onChangeUserSettings('viewMode', $event.value)"
                   >

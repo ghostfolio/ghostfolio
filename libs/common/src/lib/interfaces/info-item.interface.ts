@@ -1,6 +1,7 @@
 import { Currency } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
+import { Subscription } from './subscription.interface';
 
 export interface InfoItem {
   currencies: Currency[];
@@ -13,4 +14,5 @@ export interface InfoItem {
   };
   platforms: { id: string; name: string }[];
   statistics: Statistics;
+  subscriptions: Subscription[];
 }

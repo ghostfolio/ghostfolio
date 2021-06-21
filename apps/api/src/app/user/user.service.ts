@@ -1,13 +1,14 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { locale } from '@ghostfolio/common/config';
-import { resetHours } from '@ghostfolio/common/helper';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
 import { getPermissions, permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User, ViewMode } from '@prisma/client';
-import { add, isBefore } from 'date-fns';
+import { isBefore } from 'date-fns';
+
+import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 
 const crypto = require('crypto');
 
@@ -24,7 +25,7 @@ export class UserService {
     Account,
     alias,
     id,
-    role,
+    permissions,
     Settings,
     subscription
   }: UserWithSettings): Promise<IUser> {
@@ -36,15 +37,10 @@ export class UserService {
       where: { GranteeUser: { id } }
     });
 
-    const currentPermissions = getPermissions(role);
-
-    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      currentPermissions.push(permissions.accessFearAndGreedIndex);
-    }
-
     return {
       alias,
       id,
+      permissions,
       subscription,
       access: access.map((accessItem) => {
         return {
@@ -53,7 +49,6 @@ export class UserService {
         };
       }),
       accounts: Account,
-      permissions: currentPermissions,
       settings: {
         locale,
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
@@ -71,6 +66,14 @@ export class UserService {
     });
 
     const user: UserWithSettings = userFromDatabase;
+
+    const currentPermissions = getPermissions(userFromDatabase.role);
+
+    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
+      currentPermissions.push(permissions.accessFearAndGreedIndex);
+    }
+
+    user.permissions = currentPermissions;
 
     if (userFromDatabase?.Settings) {
       if (!userFromDatabase.Settings.currency) {
@@ -105,6 +108,13 @@ export class UserService {
         user.subscription = {
           type: SubscriptionType.Basic
         };
+      }
+
+      if (user.subscription.type === SubscriptionType.Basic) {
+        user.permissions = user.permissions.filter((permission) => {
+          return permission !== permissions.updateViewMode;
+        });
+        user.Settings.viewMode = ViewMode.ZEN;
       }
     }
 
@@ -213,11 +223,7 @@ export class UserService {
     currency,
     userId,
     viewMode
-  }: {
-    currency?: Currency;
-    userId: string;
-    viewMode?: ViewMode;
-  }) {
+  }: UserSettingsParams) {
     await this.prisma.settings.upsert({
       create: {
         currency,

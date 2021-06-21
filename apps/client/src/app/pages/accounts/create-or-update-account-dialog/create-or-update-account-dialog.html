@@ -1,6 +1,6 @@
 <form #addAccountForm="ngForm" class="d-flex flex-column h-100">
-  <h1 *ngIf="data.account.id" mat-dialog-title i18n>Update account</h1>
-  <h1 *ngIf="!data.account.id" mat-dialog-title i18n>Add account</h1>
+  <h1 *ngIf="data.account.id" i18n mat-dialog-title>Update account</h1>
+  <h1 *ngIf="!data.account.id" i18n mat-dialog-title>Add account</h1>
   <div class="flex-grow-1" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
