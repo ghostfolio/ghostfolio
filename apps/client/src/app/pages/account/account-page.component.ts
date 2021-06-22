@@ -12,7 +12,7 @@ import {
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { baseCurrency, DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Currency } from '@prisma/client';
@@ -30,11 +30,12 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   signInWithFingerprintElement: MatSlideToggle;
 
   public accesses: Access[];
-  public baseCurrency: Currency;
+  public baseCurrency = baseCurrency;
   public coupon: number;
   public couponId: string;
   public currencies: Currency[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public hasPermissionForSubscription;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
@@ -56,10 +57,16 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchInfo()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currencies, subscriptions }) => {
+      .subscribe(({ currencies, globalPermissions, subscriptions }) => {
         this.coupon = subscriptions?.[0]?.coupon;
         this.couponId = subscriptions?.[0]?.couponId;
         this.currencies = currencies;
+
+        this.hasPermissionForSubscription = hasPermission(
+          globalPermissions,
+          permissions.enableSubscription
+        );
+
         this.price = subscriptions?.[0]?.price;
         this.priceId = subscriptions?.[0]?.priceId;
 

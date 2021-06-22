@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Changed _Stripe_ mode from `subscription` to `payment`
+
+### Fixed
+
 - Fixed the base currency on the pricing page
 
 ## 1.20.0 - 21.06.2021

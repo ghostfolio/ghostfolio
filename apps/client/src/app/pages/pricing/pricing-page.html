@@ -178,13 +178,10 @@
             <p>Fully managed <strong>Ghostfolio</strong> cloud offering.</p>
             <p class="h5 text-right" [hidden]="!price">
               <span class="font-weight-normal"
-                >{{ user?.settings.baseCurrency || baseCurrency }}
+                >{{ baseCurrency }}
                 <ng-container *ngIf="coupon"
-                  ><strong>{{ price - coupon }} </strong>
-                  <del
-                    >{{ user?.settings.baseCurrency || baseCurrency }} {{ price
-                    }}</del
-                  >
+                  ><strong>{{ price - coupon | number : '1.2-2' }} </strong>
+                  <del>{{ price }}</del>
                 </ng-container>
                 <ng-container *ngIf="!coupon"
                   ><strong>{{ price }}</strong></ng-container
