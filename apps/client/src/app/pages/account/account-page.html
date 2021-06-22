@@ -22,7 +22,9 @@
                 Valid until {{ user.subscription.expiresAt | date:
                 defaultDateFormat }}
               </div>
-              <div *ngIf="!user.subscription.expiresAt">
+              <div
+                *ngIf="hasPermissionForSubscription && !user.subscription.expiresAt"
+              >
                 <button
                   color="primary"
                   i18n
@@ -32,10 +34,10 @@
                   Upgrade
                 </button>
                 <div *ngIf="price" class="mt-1">
-                  {{ user.settings.baseCurrency }}
+                  {{ baseCurrency }}
                   <ng-container *ngIf="coupon"
-                    >{{ price - coupon }}
-                    <del>{{ user.settings.baseCurrency }} {{ price }}</del>
+                    >{{ price - coupon | number : '1.2-2' }}
+                    <del>{{ price }}</del>
                   </ng-container>
                   <ng-container *ngIf="!coupon">{{ price }}</ng-container>
                   <span i18n> per year</span>
@@ -62,18 +64,25 @@
                     >
                   </mat-select>
                 </mat-form-field>
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label i18n>View Mode</mat-label>
-                  <mat-select
-                    name="viewMode"
-                    [disabled]="!hasPermissionToUpdateViewMode"
-                    [value]="user.settings.viewMode"
-                    (selectionChange)="onChangeUserSettings('viewMode', $event.value)"
-                  >
-                    <mat-option value="DEFAULT">Default</mat-option>
-                    <mat-option value="ZEN">Zen</mat-option>
-                  </mat-select>
-                </mat-form-field>
+                <div class="align-items-center d-flex overflow-hidden">
+                  <mat-form-field appearance="outline" class="flex-grow-1">
+                    <mat-label i18n>View Mode</mat-label>
+                    <mat-select
+                      name="viewMode"
+                      [disabled]="!hasPermissionToUpdateViewMode"
+                      [value]="user.settings.viewMode"
+                      (selectionChange)="onChangeUserSettings('viewMode', $event.value)"
+                    >
+                      <mat-option value="DEFAULT">Default</mat-option>
+                      <mat-option value="ZEN">Zen</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <ion-icon
+                    *ngIf="!hasPermissionToUpdateViewMode"
+                    class="h5 mb-0 mx-3 text-muted"
+                    name="diamond-outline"
+                  ></ion-icon>
+                </div>
               </form>
             </div>
           </div>

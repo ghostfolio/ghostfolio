@@ -41,7 +41,7 @@ export class SubscriptionService {
       metadata: {
         user_id: userId
       },
-      mode: 'subscription',
+      mode: 'payment',
       payment_method_types: ['card'],
       success_url: `${this.configurationService.get(
         'ROOT_URL'
