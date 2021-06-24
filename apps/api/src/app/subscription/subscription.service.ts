@@ -38,9 +38,6 @@ export class SubscriptionService {
           quantity: 1
         }
       ],
-      metadata: {
-        user_id: userId
-      },
       mode: 'payment',
       payment_method_types: ['card'],
       success_url: `${this.configurationService.get(
@@ -80,6 +77,10 @@ export class SubscriptionService {
             }
           }
         }
+      });
+
+      await this.stripe.customers.update(session.customer as string, {
+        description: session.client_reference_id
       });
     } catch (error) {
       console.error(error);
