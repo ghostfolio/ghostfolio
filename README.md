@@ -84,7 +84,7 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 
 ## Development
 
-Please make sure you have completed the instructions from [_Setup_](#Setup)
+Please make sure you have completed the instructions from [_Setup_](#Setup).
 
 ### Start server
 
@@ -100,6 +100,12 @@ Run `yarn start:client`
 ## Testing
 
 Run `yarn test`
+
+## Contributing
+
+Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public - including you.
+
+Not sure what to work on? We have got some ideas. Please tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_) or send an e-mail to hi@ghostfol.io. We would love to hear from you.
 
 ## License
 
