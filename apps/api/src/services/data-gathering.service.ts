@@ -224,7 +224,10 @@ export class DataGatheringService {
     const distinctOrders = await this.prisma.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
-      select: { dataSource: true, symbol: true }
+      select: { dataSource: true, symbol: true },
+      where: {
+        isDraft: false
+      }
     });
 
     const distinctOrdersWithDate: IDataGatheringItem[] = distinctOrders
@@ -280,7 +283,10 @@ export class DataGatheringService {
     const distinctOrders = await this.prisma.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ date: 'asc' }],
-      select: { dataSource: true, date: true, symbol: true }
+      select: { dataSource: true, date: true, symbol: true },
+      where: {
+        isDraft: false
+      }
     });
 
     return [

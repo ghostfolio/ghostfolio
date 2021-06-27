@@ -100,24 +100,27 @@
       Symbol
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
-      {{ element.symbol | gfSymbol }}
+      <div class="d-flex align-items-center">
+        {{ element.symbol | gfSymbol }}
+        <span *ngIf="element.isDraft" class="badge badge-secondary ml-1" i18n
+          >Draft</span
+        >
+      </div>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="currency">
     <th
       *matHeaderCellDef
-      class="d-none d-lg-table-cell justify-content-center px-1"
-      mat-header-cell
+      class="d-none d-lg-table-cell px-1"
       i18n
+      mat-header-cell
       mat-sort-header
     >
       Currency
     </th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
-      <div class="d-flex justify-content-center">
-        {{ element.currency }}
-      </div>
+      {{ element.currency }}
     </td>
   </ng-container>
 

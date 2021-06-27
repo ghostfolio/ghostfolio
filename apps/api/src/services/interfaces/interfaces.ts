@@ -22,6 +22,7 @@ export interface IOrder {
   date: string;
   fee: number;
   id?: string;
+  isDraft: boolean;
   quantity: number;
   symbol: string;
   symbolProfile: SymbolProfile;

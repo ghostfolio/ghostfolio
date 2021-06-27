@@ -10,6 +10,7 @@ export class Order {
   private fee: number;
   private date: string;
   private id: string;
+  private isDraft: boolean;
   private quantity: number;
   private symbol: string;
   private symbolProfile: SymbolProfile;
@@ -23,6 +24,7 @@ export class Order {
     this.fee = data.fee;
     this.date = data.date;
     this.id = data.id || uuidv4();
+    this.isDraft = data.isDraft ?? false;
     this.quantity = data.quantity;
     this.symbol = data.symbol;
     this.symbolProfile = data.symbolProfile;
@@ -50,6 +52,10 @@ export class Order {
 
   public getId() {
     return this.id;
+  }
+
+  public getIsDraft() {
+    return this.isDraft;
   }
 
   public getQuantity() {
