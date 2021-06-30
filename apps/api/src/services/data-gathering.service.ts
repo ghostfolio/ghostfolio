@@ -187,7 +187,8 @@ export class DataGatheringService {
   public async getCustomSymbolsToGather(
     startDate?: Date
   ): Promise<IDataGatheringItem[]> {
-    const scraperConfigurations = await this.ghostfolioScraperApi.getScraperConfigurations();
+    const scraperConfigurations =
+      await this.ghostfolioScraperApi.getScraperConfigurations();
 
     return scraperConfigurations.map((scraperConfiguration) => {
       return {
