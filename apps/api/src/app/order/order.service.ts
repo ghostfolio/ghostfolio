@@ -50,14 +50,16 @@ export class OrderService {
   ): Promise<Order> {
     this.redisCacheService.remove(`${aUserId}.portfolio`);
 
-    // Gather symbol data of order in the background
-    this.dataGatheringService.gatherSymbols([
-      {
-        dataSource: data.dataSource,
-        date: <Date>data.date,
-        symbol: data.symbol
-      }
-    ]);
+    if (!data.isDraft) {
+      // Gather symbol data of order in the background
+      this.dataGatheringService.gatherSymbols([
+        {
+          dataSource: data.dataSource,
+          date: <Date>data.date,
+          symbol: data.symbol
+        }
+      ]);
+    }
 
     await this.cacheService.flush(aUserId);
 

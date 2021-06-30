@@ -19,7 +19,7 @@ import {
   TimeScale
 } from 'chart.js';
 import { Chart } from 'chart.js';
-import { addMonths, parseISO, subMonths } from 'date-fns';
+import { addMonths, isAfter, parseISO, subMonths } from 'date-fns';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -87,7 +87,16 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
           borderWidth: 2,
           data: this.portfolioItems.map((position) => {
             return position.investment;
-          })
+          }),
+          segment: {
+            borderColor: (ctx) =>
+              this.isInFuture(
+                ctx,
+                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.5)`
+              ),
+            borderDash: (ctx) => this.isInFuture(ctx, [2, 2])
+          },
+          stepped: true
         }
       ]
     };
@@ -143,5 +152,11 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
         this.isLoading = false;
       }
     }
+  }
+
+  private isInFuture(ctx, value) {
+    return isAfter(new Date(ctx?.p0?.parsed?.x), new Date())
+      ? value
+      : undefined;
   }
 }
