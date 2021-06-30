@@ -220,7 +220,6 @@ export class Portfolio implements PortfolioInterface {
     }
 
     return cloneDeep(this.portfolioItems);
-    // return [];
   }
 
   public getCommittedFunds() {

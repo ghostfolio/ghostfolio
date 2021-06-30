@@ -89,12 +89,12 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
             return position.investment;
           }),
           segment: {
-            borderColor: (ctx) =>
+            borderColor: (context: unknown) =>
               this.isInFuture(
-                ctx,
+                context,
                 `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.5)`
               ),
-            borderDash: (ctx) => this.isInFuture(ctx, [2, 2])
+            borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
           },
           stepped: true
         }
@@ -154,9 +154,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  private isInFuture(ctx, value) {
-    return isAfter(new Date(ctx?.p0?.parsed?.x), new Date())
-      ? value
+  private isInFuture(aContext: any, aValue: any) {
+    return isAfter(new Date(aContext?.p0?.parsed?.x), new Date())
+      ? aValue
       : undefined;
   }
 }
