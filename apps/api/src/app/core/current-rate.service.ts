@@ -1,32 +1,37 @@
-import { Currency } from '@prisma/client';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { Injectable } from '@nestjs/common';
+import { Currency } from '@prisma/client';
 
+import { MarketDataService } from './market-data.service';
+
+@Injectable()
 export class CurrentRateService {
-
   public constructor(
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private prisma: PrismaService
+    private readonly marketDataService: MarketDataService
   ) {}
 
-  /**
-   * TODO: @dtslvr
-   */
-  public async getValue({date, symbol, currency, userCurrency}: GetValueParams): Promise<number> {
-    const marketData = await this.prisma.marketData.findFirst({
-      select: { date: true, marketPrice: true },
-      where: { date: date, symbol: symbol }
+  public async getValue({
+    currency,
+    date,
+    symbol,
+    userCurrency
+  }: GetValueParams): Promise<number> {
+    const marketData = await this.marketDataService.get({
+      date,
+      symbol
     });
 
-    console.log(marketData); // { date: Date, marketPrice: number }
+    if (marketData) {
+      return this.exchangeRateDataService.toCurrency(
+        marketData.marketPrice,
+        currency,
+        userCurrency
+      );
+    }
 
-    return this.exchangeRateDataService.toCurrency(
-      marketData.marketPrice,
-      currency,
-      userCurrency
-    );
+    throw new Error(`Value not found for ${symbol} at ${date}`);
   }
-
 }
 
 export interface GetValueParams {

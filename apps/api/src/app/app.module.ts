@@ -22,6 +22,7 @@ import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
+import { CoreModule } from './core/core.module';
 import { ExperimentalModule } from './experimental/experimental.module';
 import { ExportModule } from './export/export.module';
 import { ImportModule } from './import/import.module';
@@ -42,6 +43,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     CacheModule,
     ConfigModule.forRoot(),
+    CoreModule,
     ExperimentalModule,
     ExportModule,
     ImportModule,
