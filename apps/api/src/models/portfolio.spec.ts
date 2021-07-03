@@ -405,7 +405,6 @@ describe('Portfolio', () => {
           fee: 0,
           date: new Date(getUtc('2018-01-28')),
           id: '4a5a5c6e-659d-45cc-9fd4-fd6c873b50fc',
-          isDraft: false,
           quantity: 0.3,
           symbol: 'ETHUSD',
           symbolProfileId: null,
