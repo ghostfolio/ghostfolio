@@ -110,7 +110,9 @@ describe('Portfolio', () => {
       Account: [
         {
           accountType: AccountType.SECURITIES,
+          balance: 0,
           createdAt: new Date(),
+          currency: Currency.USD,
           id: DEFAULT_ACCOUNT_ID,
           isDefault: true,
           name: 'Default Account',
