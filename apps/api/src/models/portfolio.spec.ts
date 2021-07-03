@@ -78,14 +78,14 @@ jest.mock('../services/exchange-rate-data.service', () => {
     ExchangeRateDataService: jest.fn().mockImplementation(() => {
       return {
         initialize: () => Promise.resolve(),
-        toCurrency: (value: number) => value
+        toCurrency: (value: number) => {
+          return 1 * value;
+        }
       };
     })
   };
 });
 
-jest.mock('../services/data-provider.service');
-jest.mock('../services/exchange-rate-data.service');
 jest.mock('../services/rules.service');
 
 const DEFAULT_ACCOUNT_ID = '693a834b-eb89-42c9-ae47-35196c25d269';
