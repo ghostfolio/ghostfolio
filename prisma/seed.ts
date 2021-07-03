@@ -87,6 +87,8 @@ async function main() {
         create: [
           {
             accountType: AccountType.SECURITIES,
+            balance: 0,
+            currency: Currency.USD,
             id: 'f4425b66-9ba9-4ac4-93d7-fdf9a145e8cb',
             isDefault: true,
             name: 'Default Account'
@@ -109,18 +111,24 @@ async function main() {
         create: [
           {
             accountType: AccountType.SECURITIES,
+            balance: 0,
+            currency: Currency.USD,
             id: 'd804de69-0429-42dc-b6ca-b308fd7dd926',
             name: 'Coinbase Account',
             platformId: platformCoinbase.id
           },
           {
             accountType: AccountType.SECURITIES,
+            balance: 0,
+            currency: Currency.EUR,
             id: '65cfb79d-b6c7-4591-9d46-73426bc62094',
             name: 'DEGIRO Account',
             platformId: platformDegiro.id
           },
           {
             accountType: AccountType.SECURITIES,
+            balance: 0,
+            currency: Currency.USD,
             id: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
             isDefault: true,
             name: 'Interactive Brokers Account',

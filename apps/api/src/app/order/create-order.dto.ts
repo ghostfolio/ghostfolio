@@ -1,5 +1,5 @@
 import { Currency, DataSource, Type } from '@prisma/client';
-import { IsISO8601, IsNumber, IsString, ValidateIf } from 'class-validator';
+import { IsISO8601, IsNumber, IsString } from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()

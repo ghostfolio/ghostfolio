@@ -1,3 +1,7 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { Portfolio } from '@ghostfolio/api/models/portfolio';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
@@ -30,9 +34,6 @@ import {
 import { isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 
-import { OrderService } from '../order/order.service';
-import { RedisCacheService } from '../redis-cache/redis-cache.service';
-import { UserService } from '../user/user.service';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
@@ -41,6 +42,7 @@ import {
 @Injectable()
 export class PortfolioService {
   public constructor(
+    private readonly accountService: AccountService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
@@ -192,10 +194,15 @@ export class PortfolioService {
       impersonationUserId || this.request.user.id
     );
 
+    const cash = await this.accountService.calculateCashBalance(
+      impersonationUserId || this.request.user.id,
+      this.request.user.Settings.currency
+    );
     const committedFunds = portfolio.getCommittedFunds();
     const fees = portfolio.getFees();
 
     return {
+      cash,
       committedFunds,
       fees,
       ordersCount: portfolio.getOrders().length,

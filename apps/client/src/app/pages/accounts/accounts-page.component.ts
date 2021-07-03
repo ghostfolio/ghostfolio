@@ -125,6 +125,8 @@ export class AccountsPageComponent implements OnInit {
 
   public openUpdateAccountDialog({
     accountType,
+    balance,
+    currency,
     id,
     name,
     platformId
@@ -133,6 +135,8 @@ export class AccountsPageComponent implements OnInit {
       data: {
         account: {
           accountType,
+          balance,
+          currency,
           id,
           name,
           platformId
@@ -167,6 +171,8 @@ export class AccountsPageComponent implements OnInit {
       data: {
         account: {
           accountType: AccountType.SECURITIES,
+          balance: 0,
+          currency: this.user?.settings?.baseCurrency,
           name: null,
           platformId: null
         }

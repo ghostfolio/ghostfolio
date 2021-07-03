@@ -1,12 +1,14 @@
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Account, Order, Prisma } from '@prisma/client';
+import { Account, Currency, Order, Prisma } from '@prisma/client';
 
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
 
 @Injectable()
 export class AccountService {
   public constructor(
+    private exchangeRateDataService: ExchangeRateDataService,
     private readonly redisCacheService: RedisCacheService,
     private prisma: PrismaService
   ) {}
@@ -51,6 +53,24 @@ export class AccountService {
       take,
       where
     });
+  }
+
+  public async calculateCashBalance(aUserId: string, aCurrency: Currency) {
+    let totalCashBalance = 0;
+
+    const accounts = await this.accounts({
+      where: { userId: aUserId }
+    });
+
+    accounts.forEach((account) => {
+      totalCashBalance += this.exchangeRateDataService.toCurrency(
+        account.balance,
+        account.currency,
+        aCurrency
+      );
+    });
+
+    return totalCashBalance;
   }
 
   public async createAccount(
