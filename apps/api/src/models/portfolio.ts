@@ -317,7 +317,7 @@ export class Portfolio implements PortfolioInterface {
       let now = portfolioItemsNow.positions[symbol].marketPrice;
 
       // 1d
-      let before = portfolioItemsBefore.positions[symbol].marketPrice;
+      let before = portfolioItemsBefore?.positions[symbol].marketPrice;
 
       if (aDateRange === 'ytd') {
         before =
@@ -334,7 +334,7 @@ export class Portfolio implements PortfolioInterface {
       if (
         !isBefore(
           parseISO(portfolioItemsNow.positions[symbol].firstBuyDate),
-          parseISO(portfolioItemsBefore.date)
+          parseISO(portfolioItemsBefore?.date)
         )
       ) {
         // Trade was not before the date of portfolioItemsBefore, then override it with average price

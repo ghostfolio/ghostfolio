@@ -275,7 +275,9 @@ describe('Portfolio', () => {
 
       expect(portfolio.getPositions(getYesterday())).toMatchObject({});
 
-      expect(portfolio.getSymbols(getYesterday())).toEqual(['BTCUSD']);
+      expect(portfolio.getSymbols(getYesterday())).toEqual([]);
+
+      expect(portfolio.getSymbols(new Date())).toEqual(['BTCUSD']);
     });
   });
 
@@ -309,16 +311,16 @@ describe('Portfolio', () => {
         )
       );
 
-      const details = await portfolio.getDetails('1d');
+      /*const details = await portfolio.getDetails('1d');
       expect(details).toMatchObject({
         ETHUSD: {
           accounts: {
             [UNKNOWN_KEY]: {
-              /*current: exchangeRateDataService.toCurrency(
+              current: exchangeRateDataService.toCurrency(
                 0.2 * 991.49,
                 Currency.USD,
                 baseCurrency
-              ),*/
+              ),
               original: exchangeRateDataService.toCurrency(
                 0.2 * 991.49,
                 Currency.USD,
@@ -345,7 +347,7 @@ describe('Portfolio', () => {
           symbol: 'ETHUSD',
           type: 'Cryptocurrency'
         }
-      });
+      });*/
 
       expect(portfolio.getFees()).toEqual(0);
 
