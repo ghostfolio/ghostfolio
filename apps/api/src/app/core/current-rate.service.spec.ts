@@ -1,60 +1,65 @@
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { Currency } from '@prisma/client';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { Currency, MarketData } from '@prisma/client';
 
-jest.mock('../../services/exchange-rate-data.service', () => {
+import { MarketDataService } from './market-data.service';
+
+jest.mock('./market-data.service', () => {
   return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    exchangeRateDataService: jest.fn().mockImplementation(() => {
+    MarketDataService: jest.fn().mockImplementation(() => {
       return {
-        toCurrency: (aValue: number,
-                     aFromCurrency: Currency,
-                     aToCurrency: Currency) => {
-          return 1 * aValue;
+        get: (date: Date, symbol: string) => {
+          return Promise.resolve<MarketData>({
+            date,
+            symbol,
+            createdAt: date,
+            id: 'aefcbe3a-ee10-4c4f-9f2d-8ffad7b05584',
+            marketPrice: 1847.839966
+          });
         }
-      }
+      };
     })
   };
 });
 
-// https://jestjs.io/docs/manual-mocks#mocking-node-modules
-// jest.mock('?', () => {
-//   return {
-//     // eslint-disable-next-line @typescript-eslint/naming-convention
-//     prismaService: jest.fn().mockImplementation(() => {
-//       return {
-//         marketData: {
-//           findFirst: (data: any) => {
-//             return {
-//               marketPrice: 100
-//             };
-//           }
-//         }
-//       };
-//     })
-//   };
-// });
+jest.mock('../../services/exchange-rate-data.service', () => {
+  return {
+    ExchangeRateDataService: jest.fn().mockImplementation(() => {
+      return {
+        initialize: () => Promise.resolve(),
+        toCurrency: (value: number) => {
+          return 1 * value;
+        }
+      };
+    })
+  };
+});
 
-xdescribe('CurrentRateService', () => {
-
+describe('CurrentRateService', () => {
+  let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
-  let prismaService: PrismaService;
+  let marketDataService: MarketDataService;
 
-  beforeEach(() => {
-    exchangeRateDataService = new ExchangeRateDataService(undefined);
-    prismaService = new PrismaService();
+  beforeAll(async () => {
+    exchangeRateDataService = new ExchangeRateDataService(null);
+    marketDataService = new MarketDataService(null);
+
+    await exchangeRateDataService.initialize();
+
+    currentRateService = new CurrentRateService(
+      exchangeRateDataService,
+      marketDataService
+    );
   });
 
-  it('getValue', () => {
-    const currentRateService = new CurrentRateService(exchangeRateDataService, prismaService);
-
-    expect(currentRateService.getValue({
-      date: new Date(),
-      symbol: 'AIA',
-      currency: Currency.USD,
-      userCurrency: Currency.CHF
-    })).toEqual(0);
+  it('getValue', async () => {
+    expect(
+      await currentRateService.getValue({
+        currency: Currency.USD,
+        date: new Date(Date.UTC(2020, 0, 1, 0, 0, 0)),
+        symbol: 'AMZN',
+        userCurrency: Currency.CHF
+      })
+    ).toEqual(1847.839966);
   });
-
 });
