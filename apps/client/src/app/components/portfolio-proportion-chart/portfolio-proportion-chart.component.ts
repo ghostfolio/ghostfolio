@@ -24,7 +24,8 @@ import { Chart } from 'chart.js';
   styleUrls: ['./portfolio-proportion-chart.component.scss']
 })
 export class PortfolioProportionChartComponent
-  implements OnChanges, OnDestroy, OnInit {
+  implements OnChanges, OnDestroy, OnInit
+{
   @Input() baseCurrency: Currency;
   @Input() isInPercent: boolean;
   @Input() key: string;
@@ -72,9 +73,8 @@ export class PortfolioProportionChartComponent
     Object.keys(this.positions).forEach((symbol) => {
       if (this.positions[symbol][this.key]) {
         if (chartData[this.positions[symbol][this.key]]) {
-          chartData[this.positions[symbol][this.key]].value += this.positions[
-            symbol
-          ].value;
+          chartData[this.positions[symbol][this.key]].value +=
+            this.positions[symbol].value;
         } else {
           chartData[this.positions[symbol][this.key]] = {
             value: this.positions[symbol].value
@@ -114,7 +114,11 @@ export class PortfolioProportionChartComponent
       }
 
       rest.forEach((restItem) => {
-        unknownItem[1] = { value: unknownItem[1].value + restItem[1].value };
+        if (unknownItem?.[1]) {
+          unknownItem[1] = {
+            value: unknownItem[1].value + restItem[1].value
+          };
+        }
       });
 
       // Sort data again

@@ -14,6 +14,7 @@ import { REQUEST } from '@nestjs/core';
 import { DataSource } from '@prisma/client';
 import {
   add,
+  endOfToday,
   format,
   getDate,
   getMonth,
@@ -52,7 +53,7 @@ export class PortfolioService {
 
   public async createPortfolio(aUserId: string): Promise<Portfolio> {
     let portfolio: Portfolio;
-    let stringifiedPortfolio = await this.redisCacheService.get(
+    const stringifiedPortfolio = await this.redisCacheService.get(
       `${aUserId}.portfolio`
     );
 
@@ -63,9 +64,8 @@ export class PortfolioService {
       const {
         orders,
         portfolioItems
-      }: { orders: IOrder[]; portfolioItems: PortfolioItem[] } = JSON.parse(
-        stringifiedPortfolio
-      );
+      }: { orders: IOrder[]; portfolioItems: PortfolioItem[] } =
+        JSON.parse(stringifiedPortfolio);
 
       portfolio = new Portfolio(
         this.dataProviderService,
@@ -104,15 +104,21 @@ export class PortfolioService {
     }
 
     // Enrich portfolio with current data
-    return await portfolio.addCurrentPortfolioItems();
+    await portfolio.addCurrentPortfolioItems();
+
+    // Enrich portfolio with future data
+    await portfolio.addFuturePortfolioItems();
+
+    return portfolio;
   }
 
   public async findAll(aImpersonationId: string): Promise<PortfolioItem[]> {
     try {
-      const impersonationUserId = await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        this.request.user.id
-      );
+      const impersonationUserId =
+        await this.impersonationService.validateImpersonationId(
+          aImpersonationId,
+          this.request.user.id
+        );
 
       const portfolio = await this.createPortfolio(
         impersonationUserId || this.request.user.id
@@ -127,10 +133,11 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<HistoricalDataItem[]> {
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      aImpersonationId,
-      this.request.user.id
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        aImpersonationId,
+        this.request.user.id
+      );
 
     const portfolio = await this.createPortfolio(
       impersonationUserId || this.request.user.id
@@ -148,6 +155,11 @@ export class PortfolioService {
     return portfolio
       .get()
       .filter((portfolioItem) => {
+        if (isAfter(parseISO(portfolioItem.date), endOfToday())) {
+          // Filter out future dates
+          return false;
+        }
+
         if (dateRangeDate === undefined) {
           return true;
         }
@@ -170,10 +182,11 @@ export class PortfolioService {
   public async getOverview(
     aImpersonationId: string
   ): Promise<PortfolioOverview> {
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      aImpersonationId,
-      this.request.user.id
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        aImpersonationId,
+        this.request.user.id
+      );
 
     const portfolio = await this.createPortfolio(
       impersonationUserId || this.request.user.id
@@ -195,10 +208,11 @@ export class PortfolioService {
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      aImpersonationId,
-      this.request.user.id
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        aImpersonationId,
+        this.request.user.id
+      );
 
     const portfolio = await this.createPortfolio(
       impersonationUserId || this.request.user.id
@@ -318,7 +332,7 @@ export class PortfolioService {
 
       const historicalDataArray: HistoricalDataItem[] = [];
 
-      for (const [date, { marketPrice, performance }] of Object.entries(
+      for (const [date, { marketPrice }] of Object.entries(
         historicalData[aSymbol]
       ).reverse()) {
         historicalDataArray.push({

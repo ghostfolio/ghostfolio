@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
   differenceInHours,
+  endOfToday,
   format,
   getDate,
   getMonth,
@@ -187,7 +188,8 @@ export class DataGatheringService {
   public async getCustomSymbolsToGather(
     startDate?: Date
   ): Promise<IDataGatheringItem[]> {
-    const scraperConfigurations = await this.ghostfolioScraperApi.getScraperConfigurations();
+    const scraperConfigurations =
+      await this.ghostfolioScraperApi.getScraperConfigurations();
 
     return scraperConfigurations.map((scraperConfiguration) => {
       return {
@@ -224,7 +226,12 @@ export class DataGatheringService {
     const distinctOrders = await this.prisma.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
-      select: { dataSource: true, symbol: true }
+      select: { dataSource: true, symbol: true },
+      where: {
+        date: {
+          lt: endOfToday() // no draft
+        }
+      }
     });
 
     const distinctOrdersWithDate: IDataGatheringItem[] = distinctOrders
@@ -280,7 +287,12 @@ export class DataGatheringService {
     const distinctOrders = await this.prisma.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ date: 'asc' }],
-      select: { dataSource: true, date: true, symbol: true }
+      select: { dataSource: true, date: true, symbol: true },
+      where: {
+        date: {
+          lt: endOfToday() // no draft
+        }
+      }
     });
 
     return [

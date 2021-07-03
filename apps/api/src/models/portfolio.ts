@@ -73,7 +73,7 @@ export class Portfolio implements PortfolioInterface {
 
     const [portfolioItemsYesterday] = this.get(yesterday);
 
-    let positions: { [symbol: string]: Position } = {};
+    const positions: { [symbol: string]: Position } = {};
 
     this.getSymbols().forEach((symbol) => {
       positions[symbol] = {
@@ -105,10 +105,45 @@ export class Portfolio implements PortfolioInterface {
       );
 
       // Set value after pushing today's portfolio items
-      this.portfolioItems[portfolioItemsLength - 1].value = this.getValue(
-        today
-      );
+      this.portfolioItems[portfolioItemsLength - 1].value =
+        this.getValue(today);
     }
+
+    return this;
+  }
+
+  public async addFuturePortfolioItems() {
+    let investment = this.getInvestment(new Date());
+
+    this.getOrders()
+      .filter((order) => order.getIsDraft() === true)
+      .forEach((order) => {
+        const portfolioItem = this.portfolioItems.find((item) => {
+          return item.date === order.getDate();
+        });
+
+        if (portfolioItem) {
+          portfolioItem.investment += this.exchangeRateDataService.toCurrency(
+            order.getTotal(),
+            order.getCurrency(),
+            this.user.Settings.currency
+          );
+        } else {
+          investment += this.exchangeRateDataService.toCurrency(
+            order.getTotal(),
+            order.getCurrency(),
+            this.user.Settings.currency
+          );
+
+          this.portfolioItems.push({
+            investment,
+            date: order.getDate(),
+            grossPerformancePercent: 0,
+            positions: {},
+            value: 0
+          });
+        }
+      });
 
     return this;
   }
@@ -178,6 +213,8 @@ export class Portfolio implements PortfolioInterface {
       if (filteredPortfolio) {
         return [cloneDeep(filteredPortfolio)];
       }
+
+      return [];
     }
 
     return cloneDeep(this.portfolioItems);
@@ -239,12 +276,10 @@ export class Portfolio implements PortfolioInterface {
         if (
           accounts[orderOfSymbol.getAccount()?.name || UNKNOWN_KEY]?.current
         ) {
-          accounts[
-            orderOfSymbol.getAccount()?.name || UNKNOWN_KEY
-          ].current += currentValueOfSymbol;
-          accounts[
-            orderOfSymbol.getAccount()?.name || UNKNOWN_KEY
-          ].original += originalValueOfSymbol;
+          accounts[orderOfSymbol.getAccount()?.name || UNKNOWN_KEY].current +=
+            currentValueOfSymbol;
+          accounts[orderOfSymbol.getAccount()?.name || UNKNOWN_KEY].original +=
+            originalValueOfSymbol;
         } else {
           accounts[orderOfSymbol.getAccount()?.name || UNKNOWN_KEY] = {
             current: currentValueOfSymbol,
@@ -282,7 +317,7 @@ export class Portfolio implements PortfolioInterface {
       let now = portfolioItemsNow.positions[symbol].marketPrice;
 
       // 1d
-      let before = portfolioItemsBefore.positions[symbol].marketPrice;
+      let before = portfolioItemsBefore?.positions[symbol].marketPrice;
 
       if (aDateRange === 'ytd') {
         before =
@@ -299,7 +334,7 @@ export class Portfolio implements PortfolioInterface {
       if (
         !isBefore(
           parseISO(portfolioItemsNow.positions[symbol].firstBuyDate),
-          parseISO(portfolioItemsBefore.date)
+          parseISO(portfolioItemsBefore?.date)
         )
       ) {
         // Trade was not before the date of portfolioItemsBefore, then override it with average price
@@ -365,7 +400,11 @@ export class Portfolio implements PortfolioInterface {
   }
 
   public getMinDate() {
-    if (this.orders.length > 0) {
+    const orders = this.getOrders().filter(
+      (order) => order.getIsDraft() === false
+    );
+
+    if (orders.length > 0) {
       return new Date(this.orders[0].getDate());
     }
 
@@ -492,9 +531,11 @@ export class Portfolio implements PortfolioInterface {
         }
       }
     } else {
-      symbols = this.orders.map((order) => {
-        return order.getSymbol();
-      });
+      symbols = this.orders
+        .filter((order) => order.getIsDraft() === false)
+        .map((order) => {
+          return order.getSymbol();
+        });
     }
 
     // unique values
@@ -503,7 +544,9 @@ export class Portfolio implements PortfolioInterface {
 
   public getTotalBuy() {
     return this.orders
-      .filter((order) => order.getType() === 'BUY')
+      .filter(
+        (order) => order.getIsDraft() === false && order.getType() === 'BUY'
+      )
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.getTotal(),
@@ -516,7 +559,9 @@ export class Portfolio implements PortfolioInterface {
 
   public getTotalSell() {
     return this.orders
-      .filter((order) => order.getType() === 'SELL')
+      .filter(
+        (order) => order.getIsDraft() === false && order.getType() === 'SELL'
+      )
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.getTotal(),
@@ -686,10 +731,10 @@ export class Portfolio implements PortfolioInterface {
 
       this.portfolioItems.push(
         cloneDeep({
+          positions,
           date: yesterday.toISOString(),
           grossPerformancePercent: 0,
           investment: 0,
-          positions: positions,
           value: 0
         })
       );
@@ -746,8 +791,6 @@ export class Portfolio implements PortfolioInterface {
   }
 
   private updatePortfolioItems() {
-    // console.time('update-portfolio-items');
-
     let currentDate = new Date();
 
     const year = getYear(currentDate);
@@ -771,107 +814,99 @@ export class Portfolio implements PortfolioInterface {
     }
 
     this.orders.forEach((order) => {
-      let index = this.portfolioItems.findIndex((item) => {
-        const dateOfOrder = setDate(parseISO(order.getDate()), 1);
-        return isSameDay(parseISO(item.date), dateOfOrder);
-      });
+      if (order.getIsDraft() === false) {
+        let index = this.portfolioItems.findIndex((item) => {
+          const dateOfOrder = setDate(parseISO(order.getDate()), 1);
+          return isSameDay(parseISO(item.date), dateOfOrder);
+        });
 
-      if (index === -1) {
-        // if not found, we only have one order, which means we do not loop below
-        index = 0;
-      }
-
-      for (let i = index; i < this.portfolioItems.length; i++) {
-        // Set currency
-        this.portfolioItems[i].positions[
-          order.getSymbol()
-        ].currency = order.getCurrency();
-
-        this.portfolioItems[i].positions[
-          order.getSymbol()
-        ].transactionCount += 1;
-
-        if (order.getType() === 'BUY') {
-          if (
-            !this.portfolioItems[i].positions[order.getSymbol()].firstBuyDate
-          ) {
-            this.portfolioItems[i].positions[
-              order.getSymbol()
-            ].firstBuyDate = resetHours(
-              parseISO(order.getDate())
-            ).toISOString();
-          }
-
-          this.portfolioItems[i].positions[
-            order.getSymbol()
-          ].quantity += order.getQuantity();
-          this.portfolioItems[i].positions[
-            order.getSymbol()
-          ].investment += this.exchangeRateDataService.toCurrency(
-            order.getTotal(),
-            order.getCurrency(),
-            this.user.Settings.currency
-          );
-          this.portfolioItems[i].positions[
-            order.getSymbol()
-          ].investmentInOriginalCurrency += order.getTotal();
-
-          this.portfolioItems[
-            i
-          ].investment += this.exchangeRateDataService.toCurrency(
-            order.getTotal(),
-            order.getCurrency(),
-            this.user.Settings.currency
-          );
-        } else if (order.getType() === 'SELL') {
-          this.portfolioItems[i].positions[
-            order.getSymbol()
-          ].quantity -= order.getQuantity();
-
-          if (
-            this.portfolioItems[i].positions[order.getSymbol()].quantity === 0
-          ) {
-            this.portfolioItems[i].positions[order.getSymbol()].investment = 0;
-            this.portfolioItems[i].positions[
-              order.getSymbol()
-            ].investmentInOriginalCurrency = 0;
-          } else {
-            this.portfolioItems[i].positions[
-              order.getSymbol()
-            ].investment -= this.exchangeRateDataService.toCurrency(
-              order.getTotal(),
-              order.getCurrency(),
-              this.user.Settings.currency
-            );
-            this.portfolioItems[i].positions[
-              order.getSymbol()
-            ].investmentInOriginalCurrency -= order.getTotal();
-          }
-
-          this.portfolioItems[
-            i
-          ].investment -= this.exchangeRateDataService.toCurrency(
-            order.getTotal(),
-            order.getCurrency(),
-            this.user.Settings.currency
-          );
+        if (index === -1) {
+          // if not found, we only have one order, which means we do not loop below
+          index = 0;
         }
 
-        this.portfolioItems[i].positions[order.getSymbol()].averagePrice =
-          this.portfolioItems[i].positions[order.getSymbol()]
-            .investmentInOriginalCurrency /
-          this.portfolioItems[i].positions[order.getSymbol()].quantity;
+        for (let i = index; i < this.portfolioItems.length; i++) {
+          // Set currency
+          this.portfolioItems[i].positions[order.getSymbol()].currency =
+            order.getCurrency();
 
-        const currentValue = this.getValue(
-          parseISO(this.portfolioItems[i].date)
-        );
+          this.portfolioItems[i].positions[
+            order.getSymbol()
+          ].transactionCount += 1;
 
-        this.portfolioItems[i].grossPerformancePercent =
-          currentValue / this.portfolioItems[i].investment - 1 || 0;
-        this.portfolioItems[i].value = currentValue;
+          if (order.getType() === 'BUY') {
+            if (
+              !this.portfolioItems[i].positions[order.getSymbol()].firstBuyDate
+            ) {
+              this.portfolioItems[i].positions[order.getSymbol()].firstBuyDate =
+                resetHours(parseISO(order.getDate())).toISOString();
+            }
+
+            this.portfolioItems[i].positions[order.getSymbol()].quantity +=
+              order.getQuantity();
+            this.portfolioItems[i].positions[order.getSymbol()].investment +=
+              this.exchangeRateDataService.toCurrency(
+                order.getTotal(),
+                order.getCurrency(),
+                this.user.Settings.currency
+              );
+            this.portfolioItems[i].positions[
+              order.getSymbol()
+            ].investmentInOriginalCurrency += order.getTotal();
+
+            this.portfolioItems[i].investment +=
+              this.exchangeRateDataService.toCurrency(
+                order.getTotal(),
+                order.getCurrency(),
+                this.user.Settings.currency
+              );
+          } else if (order.getType() === 'SELL') {
+            this.portfolioItems[i].positions[order.getSymbol()].quantity -=
+              order.getQuantity();
+
+            if (
+              this.portfolioItems[i].positions[order.getSymbol()].quantity === 0
+            ) {
+              this.portfolioItems[i].positions[
+                order.getSymbol()
+              ].investment = 0;
+              this.portfolioItems[i].positions[
+                order.getSymbol()
+              ].investmentInOriginalCurrency = 0;
+            } else {
+              this.portfolioItems[i].positions[order.getSymbol()].investment -=
+                this.exchangeRateDataService.toCurrency(
+                  order.getTotal(),
+                  order.getCurrency(),
+                  this.user.Settings.currency
+                );
+              this.portfolioItems[i].positions[
+                order.getSymbol()
+              ].investmentInOriginalCurrency -= order.getTotal();
+            }
+
+            this.portfolioItems[i].investment -=
+              this.exchangeRateDataService.toCurrency(
+                order.getTotal(),
+                order.getCurrency(),
+                this.user.Settings.currency
+              );
+          }
+
+          this.portfolioItems[i].positions[order.getSymbol()].averagePrice =
+            this.portfolioItems[i].positions[order.getSymbol()]
+              .investmentInOriginalCurrency /
+            this.portfolioItems[i].positions[order.getSymbol()].quantity;
+
+          const currentValue = this.getValue(
+            parseISO(this.portfolioItems[i].date)
+          );
+
+          this.portfolioItems[i].grossPerformancePercent =
+            currentValue / this.portfolioItems[i].investment - 1 || 0;
+          this.portfolioItems[i].value = currentValue;
+        }
       }
     });
-
-    // console.timeEnd('update-portfolio-items');
   }
 }

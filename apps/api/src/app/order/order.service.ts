@@ -3,6 +3,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Order, Prisma } from '@prisma/client';
+import { endOfToday, isAfter } from 'date-fns';
 
 import { CacheService } from '../cache/cache.service';
 import { RedisCacheService } from '../redis-cache/redis-cache.service';
@@ -50,14 +51,16 @@ export class OrderService {
   ): Promise<Order> {
     this.redisCacheService.remove(`${aUserId}.portfolio`);
 
-    // Gather symbol data of order in the background
-    this.dataGatheringService.gatherSymbols([
-      {
-        dataSource: data.dataSource,
-        date: <Date>data.date,
-        symbol: data.symbol
-      }
-    ]);
+    if (!isAfter(data.date as Date, endOfToday())) {
+      // Gather symbol data of order in the background, if not draft
+      this.dataGatheringService.gatherSymbols([
+        {
+          dataSource: data.dataSource,
+          date: <Date>data.date,
+          symbol: data.symbol
+        }
+      ]);
+    }
 
     await this.cacheService.flush(aUserId);
 

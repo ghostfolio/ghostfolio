@@ -68,10 +68,11 @@ export class OrderController {
   public async getAllOrders(
     @Headers('impersonation-id') impersonationId
   ): Promise<OrderModel[]> {
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      impersonationId,
-      this.request.user.id
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        impersonationId,
+        this.request.user.id
+      );
 
     let orders = await this.orderService.orders({
       include: {

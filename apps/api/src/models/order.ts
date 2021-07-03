@@ -1,4 +1,5 @@
-import { Account, Currency, Platform, SymbolProfile } from '@prisma/client';
+import { Account, Currency, SymbolProfile } from '@prisma/client';
+import { endOfToday, isAfter, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IOrder } from '../services/interfaces/interfaces';
@@ -50,6 +51,10 @@ export class Order {
 
   public getId() {
     return this.id;
+  }
+
+  public getIsDraft() {
+    return isAfter(parseISO(this.date), endOfToday());
   }
 
   public getQuantity() {

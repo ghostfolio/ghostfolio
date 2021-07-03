@@ -23,7 +23,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { format } from 'date-fns';
+import { endOfToday, format, isAfter } from 'date-fns';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -39,7 +39,8 @@ const SEARCH_STRING_SEPARATOR = ',';
   styleUrls: ['./transactions-table.component.scss']
 })
 export class TransactionsTableComponent
-  implements OnChanges, OnDestroy, OnInit {
+  implements OnChanges, OnDestroy, OnInit
+{
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() locale: string;
@@ -54,11 +55,14 @@ export class TransactionsTableComponent
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<OrderWithAccount> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<OrderWithAccount> =
+    new MatTableDataSource();
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public displayedColumns = [];
+  public endOfToday = endOfToday();
   public filters$: Subject<string[]> = new BehaviorSubject([]);
   public filters: Observable<string[]> = this.filters$.asObservable();
+  public isAfter = isAfter;
   public isLoading = true;
   public placeholder = '';
   public routeQueryParams: Subscription;

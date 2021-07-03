@@ -19,6 +19,7 @@ import {
   TimeScale
 } from 'chart.js';
 import { Chart } from 'chart.js';
+import { addMonths, isAfter, parseISO, subMonths } from 'date-fns';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -52,8 +53,29 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
+  public ngOnDestroy() {
+    this.chart?.destroy();
+  }
+
   private initialize() {
     this.isLoading = true;
+
+    if (this.portfolioItems?.length > 0) {
+      // Extend chart by three months (before)
+      const firstItem = this.portfolioItems[0];
+      this.portfolioItems.unshift({
+        ...firstItem,
+        date: subMonths(parseISO(firstItem.date), 3).toISOString(),
+        investment: 0
+      });
+
+      // Extend chart by three months (after)
+      const lastItem = this.portfolioItems[this.portfolioItems.length - 1];
+      this.portfolioItems.push({
+        ...lastItem,
+        date: addMonths(parseISO(lastItem.date), 3).toISOString()
+      });
+    }
 
     const data = {
       labels: this.portfolioItems.map((position) => {
@@ -65,7 +87,16 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
           borderWidth: 2,
           data: this.portfolioItems.map((position) => {
             return position.investment;
-          })
+          }),
+          segment: {
+            borderColor: (context: unknown) =>
+              this.isInFuture(
+                context,
+                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
+              ),
+            borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
+          },
+          stepped: true
         }
       ]
     };
@@ -123,7 +154,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public ngOnDestroy() {
-    this.chart?.destroy();
+  private isInFuture(aContext: any, aValue: any) {
+    return isAfter(new Date(aContext?.p0?.parsed?.x), new Date())
+      ? aValue
+      : undefined;
   }
 }
