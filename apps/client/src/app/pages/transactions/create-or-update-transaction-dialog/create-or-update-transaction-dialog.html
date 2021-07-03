@@ -4,6 +4,22 @@
   <div class="flex-grow-1" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Account</mat-label>
+        <mat-select
+          name="accountId"
+          required
+          [(value)]="data.transaction.accountId"
+        >
+          <mat-option
+            *ngFor="let account of data.user?.accounts"
+            [value]="account.id"
+            >{{ account.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Symbol or ISIN</mat-label>
         <input
           autocapitalize="off"
@@ -42,7 +58,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div>
+    <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
         <mat-select
@@ -136,31 +152,25 @@
         </button>
       </mat-form-field>
     </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Account</mat-label>
-        <mat-select
-          name="accountId"
-          required
-          [(value)]="data.transaction.accountId"
-        >
-          <mat-option *ngFor="let account of data.accounts" [value]="account.id"
-            >{{ account.name }}</mat-option
-          >
-        </mat-select>
-      </mat-form-field>
-    </div>
   </div>
-  <div class="justify-content-end" mat-dialog-actions>
-    <button i18n mat-button (click)="onCancel()">Cancel</button>
-    <button
-      color="primary"
-      i18n
-      mat-flat-button
-      [disabled]="!(addTransactionForm.form.valid && data.transaction.symbol)"
-      [mat-dialog-close]="data"
-    >
-      Save
-    </button>
+  <div class="d-flex" mat-dialog-actions>
+    <gf-value
+      class="flex-grow-1"
+      [currency]="data.transaction.currency"
+      [locale]="data.user?.settings?.locale"
+      [value]="data.transaction.fee + (data.transaction.quantity * data.transaction.unitPrice)"
+    ></gf-value>
+    <div>
+      <button i18n mat-button (click)="onCancel()">Cancel</button>
+      <button
+        color="primary"
+        i18n
+        mat-flat-button
+        [disabled]="!(addTransactionForm.form.valid && data.transaction.symbol)"
+        [mat-dialog-close]="data"
+      >
+        Save
+      </button>
+    </div>
   </div>
 </form>

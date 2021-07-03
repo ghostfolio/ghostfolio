@@ -1,6 +1,12 @@
 :host {
   display: block;
 
+  .mat-dialog-actions {
+    gf-value {
+      font-size: 0.9rem;
+    }
+  }
+
   .mat-dialog-content {
     max-height: unset;
 

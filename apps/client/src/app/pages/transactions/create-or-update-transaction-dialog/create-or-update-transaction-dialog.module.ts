@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { GfValueModule } from '@ghostfolio/client/components/value/value.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 
 import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog.component';
@@ -19,6 +20,7 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
   imports: [
     CommonModule,
     GfSymbolModule,
+    GfValueModule,
     FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
