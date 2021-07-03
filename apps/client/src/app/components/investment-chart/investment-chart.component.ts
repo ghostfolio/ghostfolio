@@ -92,7 +92,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
             borderColor: (context: unknown) =>
               this.isInFuture(
                 context,
-                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.5)`
+                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
               ),
             borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
           },
