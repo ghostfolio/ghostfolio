@@ -43,7 +43,6 @@ export class ExperimentalService {
         date: parseISO(order.date),
         fee: 0,
         id: undefined,
-        isDraft: false,
         platformId: undefined,
         symbolProfileId: undefined,
         type: Type.BUY,

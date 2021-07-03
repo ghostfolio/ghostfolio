@@ -22,7 +22,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Order as OrderModel } from '@prisma/client';
-import { endOfToday, isAfter, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { CreateOrderDto } from './create-order.dto';
@@ -130,8 +130,6 @@ export class OrderController {
     const accountId = data.accountId;
     delete data.accountId;
 
-    const isDraft = isAfter(date, endOfToday());
-
     return this.orderService.createOrder(
       {
         ...data,
@@ -141,7 +139,6 @@ export class OrderController {
           }
         },
         date,
-        isDraft,
         SymbolProfile: {
           connectOrCreate: {
             where: {
@@ -196,14 +193,11 @@ export class OrderController {
     const accountId = data.accountId;
     delete data.accountId;
 
-    const isDraft = isAfter(date, endOfToday());
-
     return this.orderService.updateOrder(
       {
         data: {
           ...data,
           date,
-          isDraft,
           Account: {
             connect: {
               id_userId: { id: accountId, userId: this.request.user.id }

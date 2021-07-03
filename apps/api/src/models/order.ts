@@ -1,4 +1,5 @@
-import { Account, Currency, Platform, SymbolProfile } from '@prisma/client';
+import { Account, Currency, SymbolProfile } from '@prisma/client';
+import { endOfToday, isAfter, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IOrder } from '../services/interfaces/interfaces';
@@ -10,7 +11,6 @@ export class Order {
   private fee: number;
   private date: string;
   private id: string;
-  private isDraft: boolean;
   private quantity: number;
   private symbol: string;
   private symbolProfile: SymbolProfile;
@@ -24,7 +24,6 @@ export class Order {
     this.fee = data.fee;
     this.date = data.date;
     this.id = data.id || uuidv4();
-    this.isDraft = data.isDraft ?? false;
     this.quantity = data.quantity;
     this.symbol = data.symbol;
     this.symbolProfile = data.symbolProfile;
@@ -55,7 +54,7 @@ export class Order {
   }
 
   public getIsDraft() {
-    return this.isDraft;
+    return isAfter(parseISO(this.date), endOfToday());
   }
 
   public getQuantity() {

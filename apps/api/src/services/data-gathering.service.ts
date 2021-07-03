@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
   differenceInHours,
+  endOfToday,
   format,
   getDate,
   getMonth,
@@ -227,7 +228,9 @@ export class DataGatheringService {
       orderBy: [{ symbol: 'asc' }],
       select: { dataSource: true, symbol: true },
       where: {
-        isDraft: false
+        date: {
+          lt: endOfToday() // no draft
+        }
       }
     });
 
@@ -286,7 +289,9 @@ export class DataGatheringService {
       orderBy: [{ date: 'asc' }],
       select: { dataSource: true, date: true, symbol: true },
       where: {
-        isDraft: false
+        date: {
+          lt: endOfToday() // no draft
+        }
       }
     });
 
