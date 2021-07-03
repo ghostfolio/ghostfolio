@@ -118,23 +118,19 @@ export class Portfolio implements PortfolioInterface {
     this.getOrders()
       .filter((order) => order.getIsDraft() === true)
       .forEach((order) => {
+        investment += this.exchangeRateDataService.toCurrency(
+          order.getTotal(),
+          order.getCurrency(),
+          this.user.Settings.currency
+        );
+
         const portfolioItem = this.portfolioItems.find((item) => {
           return item.date === order.getDate();
         });
 
         if (portfolioItem) {
-          portfolioItem.investment += this.exchangeRateDataService.toCurrency(
-            order.getTotal(),
-            order.getCurrency(),
-            this.user.Settings.currency
-          );
+          portfolioItem.investment = investment;
         } else {
-          investment += this.exchangeRateDataService.toCurrency(
-            order.getTotal(),
-            order.getCurrency(),
-            this.user.Settings.currency
-          );
-
           this.portfolioItems.push({
             investment,
             date: order.getDate(),
