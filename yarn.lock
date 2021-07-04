@@ -155,12 +155,12 @@
   dependencies:
     tslib "^2.1.0"
 
-"@angular/cdk@11.0.4":
-  version "11.0.4"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-11.0.4.tgz#ecdf9206b10cc0f1dc7217948b43b01604cb1406"
-  integrity sha512-suhAhsZEv+lLwm8dc524cMvO7gHPi+z2+4tueNS+zDiIObdZc4fs+KoOlnRMdYwba++X/V8mHXuDEQetl3GFcw==
+"@angular/cdk@12.0.6":
+  version "12.0.6"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-12.0.6.tgz#bea895aace78b9498869ad82d83dd7b9bdfa2cd8"
+  integrity sha512-GroS6U9u2GhZmm26XQ/YjKEtJvawI0p25eANi7mPg0pDvvi18Q+inJHE5TvCP8Xnw4Vd27oWv8k7OSm/UQOrAA==
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
   optionalDependencies:
     parse5 "^5.0.0"
 
@@ -253,21 +253,21 @@
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-12.0.4.tgz#af2610721953f4c26727c37d829c38fa7f85445b"
   integrity sha512-BtXQ6MlnmBO/Ld0tyWP7GezHu9EAd+UtEZqBdoCCO0AgQ3JN4WGctowmYxEBc2cVtKGpjKEgJfVQu80RxK4RZg==
 
-"@angular/localize@11.0.9":
-  version "11.0.9"
-  resolved "https://registry.yarnpkg.com/@angular/localize/-/localize-11.0.9.tgz#b39cd05721b9dbbcdd18c2d0212ab8f4b329c040"
-  integrity sha512-5NtyqCcBN8G6muXpyrHuVHTdD9slpyUAl6vF6NbyejgVeuV35wPXwIa+3qauPiVlFGEBQpn/uKAU57mVGm8WUg==
+"@angular/localize@12.0.5":
+  version "12.0.5"
+  resolved "https://registry.yarnpkg.com/@angular/localize/-/localize-12.0.5.tgz#92576f9c9783a7c6434379223509eafaf930f8e7"
+  integrity sha512-CRyXsNJYV7TJBsbG/Sn6lW9qMQCa+lw5SSNKHvnmfCTyd5p3DV8AdjOYkyWM5tfB4wg/aOc4C1ynDom4TmKv+w==
   dependencies:
     "@babel/core" "7.8.3"
-    glob "7.1.2"
-    yargs "^16.1.1"
+    glob "7.1.7"
+    yargs "^16.2.0"
 
-"@angular/material@11.0.4":
-  version "11.0.4"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-11.0.4.tgz#af7a8208800332dfba1dc5c8f1dbc0745f72da1f"
-  integrity sha512-yjJEl3UbJxyKZFAbhvyZGphDfhtR1vo0AnDEE3KBxAOp9oD4r7paL6ER9rSXFoNRjST56tIDbNtG/wZNtH0XDQ==
+"@angular/material@12.0.6":
+  version "12.0.6"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-12.0.6.tgz#d30c8c75b90aa259f5a25bd3b98ba95103f2446d"
+  integrity sha512-xZ3+f+obADIg1nRaTBy43/+lvCDkG/5J6SXOgCVP60rZJ3NYhlMcYvRcY8c2sd1//PCOJ+nQeGx3NHxhC7dUqA==
   dependencies:
-    tslib "^2.0.0"
+    tslib "^2.1.0"
 
 "@angular/platform-browser-dynamic@12.0.4":
   version "12.0.4"
@@ -7044,18 +7044,6 @@ glob-to-regexp@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz#c75297087c851b9a578bd217dd59a92f59fe546e"
   integrity sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==
-
-glob@7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.2.tgz#c19c9df9a028702d678612384a6552404c636d15"
-  integrity sha512-MJTUg1kjuLeQCJ+ccE4Vpa6kKVXkPYJ2mOCQyUuKLcLQsdrMCpBPUi8qVE6+YuaJkozeA9NusTAw3hLr8Xe5EQ==
-  dependencies:
-    fs.realpath "^1.0.0"
-    inflight "^1.0.4"
-    inherits "2"
-    minimatch "^3.0.4"
-    once "^1.3.0"
-    path-is-absolute "^1.0.0"
 
 glob@7.1.4:
   version "7.1.4"
@@ -14219,7 +14207,7 @@ yargs@^13.3.2:
     y18n "^4.0.0"
     yargs-parser "^13.1.2"
 
-yargs@^16.0.3, yargs@^16.1.1, yargs@^16.2.0:
+yargs@^16.0.3, yargs@^16.2.0:
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.2.0.tgz#1c82bf0f6b6a66eafce7ef30e376f49a12477f66"
   integrity sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==
