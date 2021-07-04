@@ -15,7 +15,7 @@
   </p>
 </div>
 
-**Ghostfolio** is an open source portfolio tracker based on web technology. The software empowers busy folks to have a sharp look of their financial assets and to make solid, data-driven investment decisions by evaluating automated static portfolio analysis rules.
+**Ghostfolio** is an open source portfolio tracker built with web technology. The software empowers busy people to have a sharp look of their financial assets and to make solid, data-driven investment decisions.
 
 ## Why Ghostfolio?
 
@@ -79,8 +79,8 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 1. Run `yarn setup:database` to initialize the database schema and populate your database with (example) data
 1. Start server and client (see [_Development_](#Development))
 1. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
-1. Go to the _Admin Control Panel_ and press _Gather All Data_ to fetch historical data
-1. Press _Sign out_ and check out the _Live Demo_
+1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+1. Click _Sign out_ and check out the _Live Demo_
 
 ## Development
 
