@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `@nestjs` dependencies
 - Upgraded `Nx` from version `12.3.6` to `12.5.4`
 
 ## 1.23.1 - 03.07.2021
