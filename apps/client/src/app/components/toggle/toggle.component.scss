@@ -7,10 +7,7 @@
     padding: 0.15rem 0.75rem;
 
     &.mat-radio-checked {
-      background-color: rgba(
-        var(--dark-primary-text),
-        var(--palette-foreground-divider-alpha)
-      );
+      background-color: rgba(var(--dark-dividers));
     }
 
     ::ng-deep {
@@ -33,15 +30,8 @@
 :host-context(.is-dark-theme) {
   .mat-radio-button {
     &.mat-radio-checked {
-      background-color: rgba(
-        var(--light-primary-text),
-        var(--palette-foreground-divider-alpha)
-      );
-      border: 1px solid
-        rgba(
-          var(--light-primary-text),
-          var(--palette-foreground-disabled-button-alpha)
-        );
+      background-color: rgba(var(--light-dividers));
+      border: 1px solid rgba(var(--light-disabled-text));
     }
 
     ::ng-deep {

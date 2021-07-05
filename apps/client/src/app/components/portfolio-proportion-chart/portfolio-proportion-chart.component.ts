@@ -8,7 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getCssVariable, getTextColor } from '@ghostfolio/common/helper';
+import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 import { Tooltip } from 'chart.js';
@@ -43,9 +43,7 @@ export class PortfolioProportionChartComponent
   private colorMap: {
     [symbol: string]: string;
   } = {
-    [UNKNOWN_KEY]: `rgba(${getTextColor()}, ${getCssVariable(
-      '--palette-foreground-divider-alpha'
-    )})`
+    [UNKNOWN_KEY]: `rgba(${getTextColor()}, 0.12)`
   };
 
   public constructor() {

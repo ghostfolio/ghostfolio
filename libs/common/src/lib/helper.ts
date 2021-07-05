@@ -26,11 +26,15 @@ export function getCssVariable(aCssVariable: string) {
 }
 
 export function getTextColor() {
-  return getCssVariable(
+  const cssVariable = getCssVariable(
     window.matchMedia('(prefers-color-scheme: dark)').matches
       ? '--light-primary-text'
       : '--dark-primary-text'
   );
+
+  const [r, g, b] = cssVariable.split(',');
+
+  return `${r}, ${g}, ${b}`;
 }
 
 export function getToday() {
