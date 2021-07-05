@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `@angular/cdk` and `@angular/material` from version `11.0.4` to `12.0.6`
 - Upgraded `@nestjs` dependencies
+- Upgraded `angular-material-css-vars` from version `1.2.0` to `2.0.0`
 - Upgraded `Nx` from version `12.3.6` to `12.5.4`
 
 ## 1.23.1 - 03.07.2021

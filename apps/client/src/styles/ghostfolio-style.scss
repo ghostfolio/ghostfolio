@@ -2,6 +2,9 @@ $mat-css-dark-theme-selector: '.is-dark-theme';
 
 @import '~angular-material-css-vars/public-util';
 
+$alpha-disabled-text: 0.38;
+$alpha-hover: 0.04;
+
 .gf-table {
   td {
     border: 0;

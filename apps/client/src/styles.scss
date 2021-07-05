@@ -43,10 +43,7 @@ body {
     }
 
     hr {
-      border-top-color: rgba(
-        var(--light-primary-text),
-        var(--palette-foreground-divider-alpha)
-      );
+      border-top-color: rgba(var(--light-dividers));
     }
 
     ngx-skeleton-loader {
@@ -63,10 +60,7 @@ body {
       background: var(--dark-background);
 
       &:not([class*='mat-elevation-z']) {
-        border-color: rgba(
-          var(--light-primary-text),
-          var(--palette-foreground-divider-alpha)
-        );
+        border-color: rgba(var(--light-dividers));
         box-shadow: none;
       }
     }
@@ -102,8 +96,7 @@ button:focus {
 }
 
 hr {
-  border-top: 1px solid
-    rgba(var(--dark-primary-text), var(--palette-foreground-divider-alpha));
+  border-top: 1px solid rgba(var(--dark-dividers));
 }
 
 ion-icon {
@@ -138,8 +131,7 @@ ngx-skeleton-loader {
 
 .mat-card {
   &:not([class*='mat-elevation-z']) {
-    border: 1px solid
-      rgba(var(--dark-primary-text), var(--palette-foreground-divider-alpha));
+    border: 1px solid rgba(var(--dark-dividers));
     box-shadow: none;
   }
 }

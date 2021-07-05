@@ -5,10 +5,7 @@
   z-index: 999;
 
   .mat-toolbar {
-    background-color: rgba(
-      var(--light-primary-text),
-      var(--palette-foreground-disabled-alpha)
-    );
+    background-color: rgba(var(--light-disabled-text));
 
     .spacer {
       flex: 1 1 auto;
@@ -28,11 +25,6 @@
 
 :host-context(.is-dark-theme) {
   .mat-toolbar {
-    background-color: rgba(
-      39,
-      39,
-      39,
-      var(--palette-foreground-disabled-alpha)
-    );
+    background-color: rgba(39, 39, 39, $alpha-disabled-text);
   }
 }
