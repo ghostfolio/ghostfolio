@@ -14,6 +14,10 @@ import {
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
+function dparse(date: string) {
+  return parse(date, DATE_FORMAT, new Date());
+}
+
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
 
@@ -135,11 +139,12 @@ export class PortfolioCalculator {
     }
 
     const startDate = timelineSpecification[0].start;
-    const start = parse(startDate, DATE_FORMAT, new Date());
-    const end = parse(endDate, DATE_FORMAT, new Date());
+    const start = dparse(startDate);
+    const end = dparse(endDate);
 
     const timelinePeriod: TimelinePeriod[] = [];
     let i = 0;
+    let j = -1;
     for (
       let currentDate = start;
       !isAfter(currentDate, end);
@@ -151,10 +156,23 @@ export class PortfolioCalculator {
       if (this.isNextItemActive(timelineSpecification, currentDate, i)) {
         i++;
       }
+      while (
+        j + 1 < this.transactionPoints.length &&
+        !isAfter(dparse(this.transactionPoints[j + 1].date), currentDate)
+      ) {
+        j++;
+      }
+
+      let investment: Big = new Big(0);
+      if (j >= 0) {
+        for (const item of this.transactionPoints[j].items) {
+          investment = investment.add(item.investment);
+        }
+      }
       timelinePeriod.push({
         date: format(currentDate, DATE_FORMAT),
         grossPerformance: 0,
-        investment: 0,
+        investment,
         value: 0
       });
     }
@@ -196,10 +214,7 @@ export class PortfolioCalculator {
   ) {
     return (
       i + 1 < timelineSpecification.length &&
-      !isBefore(
-        currentDate,
-        parse(timelineSpecification[i + 1].start, DATE_FORMAT, new Date())
-      )
+      !isBefore(currentDate, dparse(timelineSpecification[i + 1].start))
     );
   }
 }
@@ -238,7 +253,7 @@ export interface TimelineSpecification {
 export interface TimelinePeriod {
   date: string;
   grossPerformance: number;
-  investment: number;
+  investment: Big;
   value: number;
 }
 
