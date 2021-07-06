@@ -11,6 +11,7 @@ import {
 import { Currency } from '@prisma/client';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import Big from 'big.js';
+import { differenceInCalendarDays, parse } from 'date-fns';
 
 function toYearMonthDay(date: Date) {
   const year = date.getFullYear();
@@ -43,8 +44,20 @@ jest.mock('./current-rate.service.ts', () => {
           userCurrency
         }: GetValueParams) => {
           const today = new Date();
-          if (dateEqual(today, date) && symbol === 'VTI') {
-            return Promise.resolve(new Big('213.32'));
+          if (symbol === 'VTI') {
+            if (dateEqual(today, date)) {
+              return Promise.resolve(new Big('213.32'));
+            } else {
+              const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
+              const daysInBetween = differenceInCalendarDays(date, startDate);
+
+              const result = new Big('144.38').plus(
+                new Big('0.08').mul(daysInBetween)
+              );
+              return Promise.resolve(result);
+            }
+          } else if (symbol === 'AMZN') {
+            return Promise.resolve(2021.99);
           }
 
           return Promise.resolve(new Big('0'));
@@ -554,7 +567,7 @@ describe('PortfolioCalculator', () => {
       const timeline: TimelinePeriod[] =
         await portfolioCalculator.calculateTimeline(
           timelineSpecification,
-          '2021-12-31'
+          '2021-06-30'
         );
 
       expect(timeline).toEqual([
@@ -562,19 +575,19 @@ describe('PortfolioCalculator', () => {
           date: '2019-01-01',
           grossPerformance: 0,
           investment: new Big('0'),
-          value: 0
+          value: new Big('0')
         },
         {
           date: '2020-01-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
         },
         {
           date: '2021-01-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
         }
       ]);
     });
@@ -594,7 +607,7 @@ describe('PortfolioCalculator', () => {
       const timeline: TimelinePeriod[] =
         await portfolioCalculator.calculateTimeline(
           timelineSpecification,
-          '2021-12-31'
+          '2021-06-30'
         );
 
       expect(timeline).toEqual([
@@ -602,217 +615,181 @@ describe('PortfolioCalculator', () => {
           date: '2019-01-01',
           grossPerformance: 0,
           investment: new Big('0'),
-          value: 0
+          value: new Big('0')
         },
         {
           date: '2019-02-01',
           grossPerformance: 0,
           investment: new Big('1443.8'),
-          value: 0
+          value: new Big('1443.8') // 10 * (144.38 + days=0 * 0.08)
         },
         {
           date: '2019-03-01',
           grossPerformance: 0,
           investment: new Big('1443.8'),
-          value: 0
+          value: new Big('1466.2') // 10 * (144.38 + days=28 * 0.08)
         },
         {
           date: '2019-04-01',
           grossPerformance: 0,
           investment: new Big('1443.8'),
-          value: 0
+          value: new Big('1491') // 10 * (144.38 + days=59 * 0.08)
         },
         {
           date: '2019-05-01',
           grossPerformance: 0,
           investment: new Big('1443.8'),
-          value: 0
+          value: new Big('1515') // 10 * (144.38 + days=89 * 0.08)
         },
         {
           date: '2019-06-01',
           grossPerformance: 0,
           investment: new Big('1443.8'),
-          value: 0
+          value: new Big('1539.8') // 10 * (144.38 + days=120 * 0.08)
         },
         {
           date: '2019-07-01',
           grossPerformance: 0,
           investment: new Big('1443.8'),
-          value: 0
+          value: new Big('1563.8') // 10 * (144.38 + days=150 * 0.08)
         },
         {
           date: '2019-08-01',
           grossPerformance: 0,
           investment: new Big('1443.8'),
-          value: 0
+          value: new Big('1588.6') // 10 * (144.38 + days=181 * 0.08)
         },
         {
           date: '2019-09-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3226.8') // 20 * (144.38 + days=212 * 0.08)
         },
         {
           date: '2019-10-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3274.8') // 20 * (144.38 + days=242 * 0.08)
         },
         {
           date: '2019-11-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3324.4') // 20 * (144.38 + days=273 * 0.08)
         },
         {
           date: '2019-12-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3372.4') // 20 * (144.38 + days=303 * 0.08)
         },
         {
           date: '2020-01-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
         },
         {
           date: '2020-02-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3471.6') // 20 * (144.38 + days=365 * 0.08)
         },
         {
           date: '2020-03-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('879.5') // 5 * (144.38 + days=394 * 0.08)
         },
         {
           date: '2020-04-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('891.9') // 5 * (144.38 + days=425 * 0.08)
         },
         {
           date: '2020-05-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('903.9') // 5 * (144.38 + days=455 * 0.08)
         },
         {
           date: '2020-06-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('916.3') // 5 * (144.38 + days=486 * 0.08)
         },
         {
           date: '2020-07-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('928.3') // 5 * (144.38 + days=516 * 0.08)
         },
         {
           date: '2020-08-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('940.7') // 5 * (144.38 + days=547 * 0.08)
         },
         {
           date: '2020-09-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('953.1') // 5 * (144.38 + days=578 * 0.08)
         },
         {
           date: '2020-10-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('965.1') // 5 * (144.38 + days=608 * 0.08)
         },
         {
           date: '2020-11-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('977.5') // 5 * (144.38 + days=639 * 0.08)
         },
         {
           date: '2020-12-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('989.5') // 5 * (144.38 + days=669 * 0.08)
         },
         {
           date: '2021-01-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
         },
         {
           date: '2021-02-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3042.9') // 15 * (144.38 + days=731 * 0.08)
         },
         {
           date: '2021-03-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3076.5') // 15 * (144.38 + days=759 * 0.08)
         },
         {
           date: '2021-04-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3113.7') // 15 * (144.38 + days=790 * 0.08)
         },
         {
           date: '2021-05-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3149.7') // 15 * (144.38 + days=820 * 0.08)
         },
         {
           date: '2021-06-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
-        },
-        {
-          date: '2021-07-01',
-          grossPerformance: 0,
-          investment: new Big('2684.05'),
-          value: 0
-        },
-        {
-          date: '2021-08-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-09-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-10-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-11-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          value: new Big('3186.9') // 15 * (144.38 + days=851 * 0.08)
         }
       ]);
     });
@@ -836,7 +813,7 @@ describe('PortfolioCalculator', () => {
       const timeline: TimelinePeriod[] =
         await portfolioCalculator.calculateTimeline(
           timelineSpecification,
-          '2021-12-31'
+          '2021-06-30'
         );
 
       expect(timeline).toEqual([
@@ -844,85 +821,49 @@ describe('PortfolioCalculator', () => {
           date: '2019-01-01',
           grossPerformance: 0,
           investment: new Big('0'),
-          value: 0
+          value: new Big('0')
         },
         {
           date: '2020-01-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
         },
         {
           date: '2021-01-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
         },
         {
           date: '2021-02-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3042.9') // 15 * (144.38 + days=731 * 0.08)
         },
         {
           date: '2021-03-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3076.5') // 15 * (144.38 + days=759 * 0.08)
         },
         {
           date: '2021-04-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3113.7') // 15 * (144.38 + days=790 * 0.08)
         },
         {
           date: '2021-05-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3149.7') // 15 * (144.38 + days=820 * 0.08)
         },
         {
           date: '2021-06-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
-        },
-        {
-          date: '2021-07-01',
-          grossPerformance: 0,
-          investment: new Big('2684.05'),
-          value: 0
-        },
-        {
-          date: '2021-08-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-09-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-10-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-11-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-01',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          value: new Big('3186.9') // 15 * (144.38 + days=851 * 0.08)
         }
       ]);
     });
@@ -943,14 +884,14 @@ describe('PortfolioCalculator', () => {
           accuracy: 'month'
         },
         {
-          start: '2021-12-01',
+          start: '2021-06-01',
           accuracy: 'day'
         }
       ];
       const timeline: TimelinePeriod[] =
         await portfolioCalculator.calculateTimeline(
           timelineSpecification,
-          '2021-12-31'
+          '2021-06-30'
         );
 
       expect(timeline).toEqual([
@@ -958,265 +899,279 @@ describe('PortfolioCalculator', () => {
           date: '2019-01-01',
           grossPerformance: 0,
           investment: new Big('0'),
-          value: 0
+          value: new Big('0')
         },
         {
           date: '2020-01-01',
           grossPerformance: 0,
           investment: new Big('2923.7'),
-          value: 0
+          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
         },
         {
           date: '2021-01-01',
           grossPerformance: 0,
           investment: new Big('652.55'),
-          value: 0
+          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
         },
         {
           date: '2021-02-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3042.9') // 15 * (144.38 + days=731 * 0.08)
         },
         {
           date: '2021-03-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3076.5') // 15 * (144.38 + days=759 * 0.08)
         },
         {
           date: '2021-04-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3113.7') // 15 * (144.38 + days=790 * 0.08)
         },
         {
           date: '2021-05-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3149.7') // 15 * (144.38 + days=820 * 0.08)
         },
         {
           date: '2021-06-01',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3186.9') // 15 * (144.38 + days=851 * 0.08)
         },
         {
-          date: '2021-07-01',
+          date: '2021-06-02',
           grossPerformance: 0,
           investment: new Big('2684.05'),
-          value: 0
+          value: new Big('3188.1') // 15 * (144.38 + days=852 * 0.08) / +1.2
         },
         {
-          date: '2021-08-01',
+          date: '2021-06-03',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3189.3') // +1.2
         },
         {
-          date: '2021-09-01',
+          date: '2021-06-04',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3190.5') // +1.2
         },
         {
-          date: '2021-10-01',
+          date: '2021-06-05',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3191.7') // +1.2
         },
         {
-          date: '2021-11-01',
+          date: '2021-06-06',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3192.9') // +1.2
         },
         {
-          date: '2021-12-01',
+          date: '2021-06-07',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3194.1') // +1.2
         },
         {
-          date: '2021-12-02',
+          date: '2021-06-08',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3195.3') // +1.2
         },
         {
-          date: '2021-12-03',
+          date: '2021-06-09',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3196.5') // +1.2
         },
         {
-          date: '2021-12-04',
+          date: '2021-06-10',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3197.7') // +1.2
         },
         {
-          date: '2021-12-05',
+          date: '2021-06-11',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3198.9') // +1.2
         },
         {
-          date: '2021-12-06',
+          date: '2021-06-12',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3200.1') // +1.2
         },
         {
-          date: '2021-12-07',
+          date: '2021-06-13',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3201.3') // +1.2
         },
         {
-          date: '2021-12-08',
+          date: '2021-06-14',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3202.5') // +1.2
         },
         {
-          date: '2021-12-09',
+          date: '2021-06-15',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3203.7') // +1.2
         },
         {
-          date: '2021-12-10',
+          date: '2021-06-16',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3204.9') // +1.2
         },
         {
-          date: '2021-12-11',
+          date: '2021-06-17',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3206.1') // +1.2
         },
         {
-          date: '2021-12-12',
+          date: '2021-06-18',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3207.3') // +1.2
         },
         {
-          date: '2021-12-13',
+          date: '2021-06-19',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3208.5') // +1.2
         },
         {
-          date: '2021-12-14',
+          date: '2021-06-20',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3209.7') // +1.2
         },
         {
-          date: '2021-12-15',
+          date: '2021-06-21',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3210.9') // +1.2
         },
         {
-          date: '2021-12-16',
+          date: '2021-06-22',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3212.1') // +1.2
         },
         {
-          date: '2021-12-17',
+          date: '2021-06-23',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3213.3') // +1.2
         },
         {
-          date: '2021-12-18',
+          date: '2021-06-24',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3214.5') // +1.2
         },
         {
-          date: '2021-12-19',
+          date: '2021-06-25',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3215.7') // +1.2
         },
         {
-          date: '2021-12-20',
+          date: '2021-06-26',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3216.9') // +1.2
         },
         {
-          date: '2021-12-21',
+          date: '2021-06-27',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3218.1') // +1.2
         },
         {
-          date: '2021-12-22',
+          date: '2021-06-28',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3219.3') // +1.2
         },
         {
-          date: '2021-12-23',
+          date: '2021-06-29',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3220.5') // +1.2
         },
         {
-          date: '2021-12-24',
+          date: '2021-06-30',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('2684.05'),
+          value: new Big('3221.7') // +1.2
+        }
+      ]);
+    });
+
+    it('with mixed portfolio', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints([
+        {
+          date: '2019-02-01',
+          items: [
+            {
+              quantity: new Big('5'),
+              symbol: 'AMZN',
+              investment: new Big('10109.95'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 1
+            },
+            {
+              quantity: new Big('10'),
+              symbol: 'VTI',
+              investment: new Big('1443.8'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 1
+            }
+          ]
+        }
+      ]);
+      const timelineSpecification: TimelineSpecification[] = [
+        {
+          start: '2019-01-01',
+          accuracy: 'year'
+        }
+      ];
+      const timeline: TimelinePeriod[] =
+        await portfolioCalculator.calculateTimeline(
+          timelineSpecification,
+          '2020-01-01'
+        );
+
+      expect(timeline).toEqual([
+        {
+          date: '2019-01-01',
+          grossPerformance: 0,
+          investment: new Big('0'),
+          value: new Big('0')
         },
         {
-          date: '2021-12-25',
+          date: '2020-01-01',
           grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-26',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-27',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-28',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-29',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-30',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
-        },
-        {
-          date: '2021-12-31',
-          grossPerformance: 0,
-          investment: new Big('4460.95'),
-          value: 0
+          investment: new Big('11553.75'),
+          value: new Big('11820.95') // 10 * (144.38 + days=334 * 0.08) + 5 * 2021.99
         }
       ]);
     });
