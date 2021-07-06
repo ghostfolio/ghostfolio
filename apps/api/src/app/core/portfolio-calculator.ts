@@ -130,10 +130,10 @@ export class PortfolioCalculator {
     return result;
   }
 
-  calculateTimeline(
+  async calculateTimeline(
     timelineSpecification: TimelineSpecification[],
     endDate: string
-  ): TimelinePeriod[] {
+  ): Promise<TimelinePeriod[]> {
     if (timelineSpecification.length === 0) {
       return [];
     }
@@ -164,16 +164,32 @@ export class PortfolioCalculator {
       }
 
       let investment: Big = new Big(0);
+      const promises = [];
       if (j >= 0) {
         for (const item of this.transactionPoints[j].items) {
           investment = investment.add(item.investment);
+          promises.push(
+            this.currentRateService
+              .getValue({
+                date: currentDate,
+                symbol: item.symbol,
+                currency: item.currency,
+                userCurrency: this.currency
+              })
+              .then((v) => new Big(v).mul(item.quantity))
+          );
         }
       }
+
+      const value = (await Promise.all(promises)).reduce(
+        (a, b) => a.add(b),
+        new Big(0)
+      );
       timelinePeriod.push({
         date: format(currentDate, DATE_FORMAT),
         grossPerformance: 0,
         investment,
-        value: 0
+        value
       });
     }
 
