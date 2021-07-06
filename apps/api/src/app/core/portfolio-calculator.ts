@@ -2,6 +2,17 @@ import { Currency } from '@prisma/client';
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import Big from 'big.js';
+import {
+  addDays,
+  addMonths,
+  addYears,
+  format,
+  isAfter,
+  isBefore,
+  parse
+} from 'date-fns';
+
+const DATE_FORMAT = 'yyyy-MM-dd';
 
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
@@ -10,10 +21,6 @@ export class PortfolioCalculator {
     private currentRateService: CurrentRateService,
     private currency: Currency
   ) {}
-
-  addOrder(order: PortfolioOrder): void {}
-
-  deleteOrder(order: PortfolioOrder): void {}
 
   computeTransactionPoints(orders: PortfolioOrder[]) {
     orders.sort((a, b) => a.date.localeCompare(b.date));
@@ -121,9 +128,38 @@ export class PortfolioCalculator {
 
   calculateTimeline(
     timelineSpecification: TimelineSpecification[],
-    endDate: Date
+    endDate: string
   ): TimelinePeriod[] {
-    return null;
+    if (timelineSpecification.length === 0) {
+      return [];
+    }
+
+    const startDate = timelineSpecification[0].start;
+    const start = parse(startDate, DATE_FORMAT, new Date());
+    const end = parse(endDate, DATE_FORMAT, new Date());
+
+    const timelinePeriod: TimelinePeriod[] = [];
+    let i = 0;
+    for (
+      let currentDate = start;
+      !isAfter(currentDate, end);
+      currentDate = this.addToDate(
+        currentDate,
+        timelineSpecification[i].accuracy
+      )
+    ) {
+      if (this.isNextItemActive(timelineSpecification, currentDate, i)) {
+        i++;
+      }
+      timelinePeriod.push({
+        date: format(currentDate, DATE_FORMAT),
+        grossPerformance: 0,
+        investment: 0,
+        value: 0
+      });
+    }
+
+    return timelinePeriod;
   }
 
   private getFactor(type: OrderType) {
@@ -140,6 +176,31 @@ export class PortfolioCalculator {
         break;
     }
     return factor;
+  }
+
+  private addToDate(date: Date, accurany: Accuracy): Date {
+    switch (accurany) {
+      case 'day':
+        return addDays(date, 1);
+      case 'month':
+        return addMonths(date, 1);
+      case 'year':
+        return addYears(date, 1);
+    }
+  }
+
+  private isNextItemActive(
+    timelineSpecification: TimelineSpecification[],
+    currentDate: Date,
+    i: number
+  ) {
+    return (
+      i + 1 < timelineSpecification.length &&
+      !isBefore(
+        currentDate,
+        parse(timelineSpecification[i + 1].start, DATE_FORMAT, new Date())
+      )
+    );
   }
 }
 
@@ -169,13 +230,13 @@ interface TimelinePosition {
 
 type Accuracy = 'year' | 'month' | 'day';
 
-interface TimelineSpecification {
-  start: Date;
+export interface TimelineSpecification {
+  start: string;
   accuracy: Accuracy;
 }
 
-interface TimelinePeriod {
-  date: Date;
+export interface TimelinePeriod {
+  date: string;
   grossPerformance: number;
   investment: number;
   value: number;
