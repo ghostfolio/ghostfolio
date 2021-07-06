@@ -9,10 +9,8 @@ export class PortfolioCalculator {
 
   constructor(
     private currentRateService: CurrentRateService,
-    private currency: Currency,
-    orders: PortfolioOrder[]
+    private currency: Currency
   ) {
-    this.computeTransactionPoints(orders);
   }
 
   addOrder(order: PortfolioOrder): void {
@@ -23,19 +21,7 @@ export class PortfolioCalculator {
 
   }
 
-  getPortfolioItemsAtTransactionPoints(): TransactionPoint[] {
-    return this.transactionPoints;
-  }
-
-  getCurrentPositions(): { [symbol: string]: TimelinePosition } {
-    return {};
-  }
-
-  calculateTimeline(timelineSpecification: TimelineSpecification[], endDate: Date): TimelinePeriod[] {
-    return null;
-  }
-
-  private computeTransactionPoints(orders: PortfolioOrder[]) {
+  computeTransactionPoints(orders: PortfolioOrder[]) {
     orders.sort((a, b) => a.date.localeCompare(b.date));
 
     this.transactionPoints = [];
@@ -56,14 +42,18 @@ export class PortfolioCalculator {
           quantity: order.quantity.mul(factor).plus(oldAccumulatedSymbol.quantity),
           symbol: order.symbol,
           investment: unitPrice.mul(order.quantity).mul(factor).add(oldAccumulatedSymbol.investment),
-          currency: order.currency
+          currency: order.currency,
+          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
+          transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
         currentTransactionPointItem = {
           quantity: order.quantity.mul(factor),
           symbol: order.symbol,
           investment: unitPrice.mul(order.quantity).mul(factor),
-          currency: order.currency
+          currency: order.currency,
+          firstBuyDate: order.date,
+          transactionCount: 1
         };
       }
 
@@ -88,6 +78,47 @@ export class PortfolioCalculator {
       }
       lastDate = currentDate;
     }
+  }
+
+  setTransactionPoints(transactionPoints: TransactionPoint[]) {
+    this.transactionPoints = transactionPoints;
+  }
+
+  getTransactionPoints(): TransactionPoint[] {
+    return this.transactionPoints;
+  }
+
+  async getCurrentPositions(): Promise<{ [symbol: string]: TimelinePosition }> {
+    if (!this.transactionPoints?.length) {
+      return {};
+    }
+
+    const lastTransactionPoint = this.transactionPoints[this.transactionPoints.length - 1];
+
+    const result: { [symbol: string]: TimelinePosition } = {};
+    for (const item of lastTransactionPoint.items) {
+      const marketPrice = await this.currentRateService.getValue({
+        date: new Date(),
+        symbol: item.symbol,
+        currency: item.currency,
+        userCurrency: this.currency
+      });
+      result[item.symbol] = {
+        averagePrice: item.investment.div(item.quantity),
+        firstBuyDate: item.firstBuyDate,
+        quantity: item.quantity,
+        symbol: item.symbol,
+        investment: item.investment,
+        marketPrice: marketPrice,
+        transactionCount: item.transactionCount
+      };
+    }
+
+    return result;
+  }
+
+  calculateTimeline(timelineSpecification: TimelineSpecification[], endDate: Date): TimelinePeriod[] {
+    return null;
   }
 
   private getFactor(type: OrderType) {
@@ -118,6 +149,8 @@ interface TransactionPointSymbol {
   symbol: string;
   investment: Big;
   currency: Currency;
+  firstBuyDate: string;
+  transactionCount: number;
 }
 
 interface TimelinePosition {
