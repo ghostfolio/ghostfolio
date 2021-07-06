@@ -4,22 +4,16 @@ import { OrderType } from '@ghostfolio/api/models/order-type';
 import Big from 'big.js';
 
 export class PortfolioCalculator {
-
   private transactionPoints: TransactionPoint[];
 
   constructor(
     private currentRateService: CurrentRateService,
     private currency: Currency
-  ) {
-  }
+  ) {}
 
-  addOrder(order: PortfolioOrder): void {
+  addOrder(order: PortfolioOrder): void {}
 
-  }
-
-  deleteOrder(order: PortfolioOrder): void {
-
-  }
+  deleteOrder(order: PortfolioOrder): void {}
 
   computeTransactionPoints(orders: PortfolioOrder[]) {
     orders.sort((a, b) => a.date.localeCompare(b.date));
@@ -39,9 +33,14 @@ export class PortfolioCalculator {
       const unitPrice = new Big(order.unitPrice);
       if (oldAccumulatedSymbol) {
         currentTransactionPointItem = {
-          quantity: order.quantity.mul(factor).plus(oldAccumulatedSymbol.quantity),
+          quantity: order.quantity
+            .mul(factor)
+            .plus(oldAccumulatedSymbol.quantity),
           symbol: order.symbol,
-          investment: unitPrice.mul(order.quantity).mul(factor).add(oldAccumulatedSymbol.investment),
+          investment: unitPrice
+            .mul(order.quantity)
+            .mul(factor)
+            .add(oldAccumulatedSymbol.investment),
           currency: order.currency,
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
@@ -60,7 +59,9 @@ export class PortfolioCalculator {
       symbols[order.symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
-      const newItems = items.filter(transactionPointItem => transactionPointItem.symbol !== order.symbol);
+      const newItems = items.filter(
+        (transactionPointItem) => transactionPointItem.symbol !== order.symbol
+      );
       if (!currentTransactionPointItem.quantity.eq(0)) {
         newItems.push(currentTransactionPointItem);
       } else {
@@ -93,7 +94,8 @@ export class PortfolioCalculator {
       return {};
     }
 
-    const lastTransactionPoint = this.transactionPoints[this.transactionPoints.length - 1];
+    const lastTransactionPoint =
+      this.transactionPoints[this.transactionPoints.length - 1];
 
     const result: { [symbol: string]: TimelinePosition } = {};
     for (const item of lastTransactionPoint.items) {
@@ -117,7 +119,10 @@ export class PortfolioCalculator {
     return result;
   }
 
-  calculateTimeline(timelineSpecification: TimelineSpecification[], endDate: Date): TimelinePeriod[] {
+  calculateTimeline(
+    timelineSpecification: TimelineSpecification[],
+    endDate: Date
+  ): TimelinePeriod[] {
     return null;
   }
 
@@ -136,7 +141,6 @@ export class PortfolioCalculator {
     }
     return factor;
   }
-
 }
 
 interface TransactionPoint {
@@ -167,7 +171,7 @@ type Accuracy = 'year' | 'month' | 'day';
 
 interface TimelineSpecification {
   start: Date;
-  accuracy: Accuracy
+  accuracy: Accuracy;
 }
 
 interface TimelinePeriod {
