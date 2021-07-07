@@ -18,6 +18,8 @@ import { Module } from '@nestjs/common';
 
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
+import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import { MarketDataService } from '@ghostfolio/api/app/core/market-data.service';
 
 @Module({
   imports: [RedisCacheModule],
@@ -26,6 +28,7 @@ import { PortfolioService } from './portfolio.service';
     AccountService,
     AlphaVantageService,
     CacheService,
+    CurrentRateService,
     ConfigurationService,
     DataGatheringService,
     DataProviderService,
@@ -37,6 +40,7 @@ import { PortfolioService } from './portfolio.service';
     PrismaService,
     RakutenRapidApiService,
     RulesService,
+    MarketDataService,
     UserService,
     YahooFinanceService
   ]
