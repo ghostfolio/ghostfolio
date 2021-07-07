@@ -26,11 +26,15 @@ import {
   getYear,
   isAfter,
   isSameDay,
+  max,
   parse,
   parseISO,
   setDate,
+  setDayOfYear,
   setMonth,
-  sub
+  sub,
+  subDays,
+  subYears
 } from 'date-fns';
 import { isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
@@ -39,6 +43,14 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
+import {
+  PortfolioCalculator,
+  PortfolioOrder,
+  TimelineSpecification
+} from '@ghostfolio/api/app/core/portfolio-calculator';
+import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import Big from 'big.js';
+import { port } from 'envalid';
 
 @Injectable()
 export class PortfolioService {
@@ -51,7 +63,8 @@ export class PortfolioService {
     private readonly redisCacheService: RedisCacheService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly currentRateService: CurrentRateService
   ) {}
 
   public async createPortfolio(aUserId: string): Promise<Portfolio> {
@@ -148,7 +161,8 @@ export class PortfolioService {
       impersonationUserId || this.request.user.id
     );
 
-    if (portfolio.getOrders().length <= 0) {
+    const orders = portfolio.getOrders();
+    if (orders.length <= 0) {
       return [];
     }
 
@@ -157,10 +171,14 @@ export class PortfolioService {
       portfolio.getMinDate()
     );
 
-    return portfolio
-      .get()
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+
+    const portfolioOrders: PortfolioOrder[] = orders
       .filter((portfolioItem) => {
-        if (isAfter(parseISO(portfolioItem.date), endOfToday())) {
+        if (isAfter(parseISO(portfolioItem.getDate()), endOfToday())) {
           // Filter out future dates
           return false;
         }
@@ -170,18 +188,70 @@ export class PortfolioService {
         }
 
         return (
-          isSameDay(parseISO(portfolioItem.date), dateRangeDate) ||
-          isAfter(parseISO(portfolioItem.date), dateRangeDate)
+          isSameDay(parseISO(portfolioItem.getDate()), dateRangeDate) ||
+          isAfter(parseISO(portfolioItem.getDate()), dateRangeDate)
         );
       })
-      .map((portfolioItem) => {
-        return {
-          date: format(parseISO(portfolioItem.date), 'yyyy-MM-dd'),
-          grossPerformancePercent: portfolioItem.grossPerformancePercent,
-          marketPrice: portfolioItem.value ?? null,
-          value: portfolioItem.value - portfolioItem.investment ?? null
-        };
-      });
+      .map((order) => ({
+        date: order.getDate().substr(0, 10),
+        quantity: new Big(order.getQuantity()),
+        symbol: order.getSymbol(),
+        type: order.getType(),
+        unitPrice: new Big(order.getUnitPrice()),
+        currency: order.getCurrency()
+      }));
+    portfolioCalculator.computeTransactionPoints(portfolioOrders);
+    const transactionPoints = portfolioCalculator.getTransactionPoints();
+    if (transactionPoints.length === 0) {
+      return [];
+    }
+    const dateFormat = 'yyyy-MM-dd';
+    let portfolioStart = parse(
+      transactionPoints[0].date,
+      dateFormat,
+      new Date()
+    );
+    portfolioStart = this.getStartDate(aDateRange, portfolioStart);
+
+    const timelineSpecification: TimelineSpecification[] = [
+      {
+        start: format(portfolioStart, dateFormat),
+        accuracy: 'month'
+      },
+      {
+        start: format(subYears(new Date(), 1), dateFormat),
+        accuracy: 'day'
+      }
+    ];
+
+    const timeline = await portfolioCalculator.calculateTimeline(
+      timelineSpecification,
+      format(new Date(), dateFormat)
+    );
+
+    return timeline.map((timelineItem) => ({
+      date: timelineItem.date,
+      value: timelineItem.grossPerformance,
+      marketPrice: timelineItem.value
+    }));
+  }
+
+  private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
+    switch (aDateRange) {
+      case '1d':
+        portfolioStart = max([portfolioStart, subDays(new Date(), 1)]);
+        break;
+      case 'ytd':
+        portfolioStart = max([portfolioStart, setDayOfYear(new Date(), 1)]);
+        break;
+      case '1y':
+        portfolioStart = max([portfolioStart, subYears(new Date(), 1)]);
+        break;
+      case '5y':
+        portfolioStart = max([portfolioStart, subYears(new Date(), 5)]);
+        break;
+    }
+    return portfolioStart;
   }
 
   public async getOverview(
