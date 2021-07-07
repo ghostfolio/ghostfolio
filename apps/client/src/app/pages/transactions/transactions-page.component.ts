@@ -141,7 +141,6 @@ export class TransactionsPageComponent implements OnInit {
   }: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
-        accounts: this.user.accounts,
         transaction: {
           accountId,
           currency,
@@ -153,7 +152,8 @@ export class TransactionsPageComponent implements OnInit {
           symbol,
           type,
           unitPrice
-        }
+        },
+        user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
@@ -182,7 +182,6 @@ export class TransactionsPageComponent implements OnInit {
   private openCreateTransactionDialog(aTransaction?: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
-        accounts: this.user?.accounts,
         transaction: {
           accountId:
             aTransaction?.accountId ??
@@ -197,7 +196,8 @@ export class TransactionsPageComponent implements OnInit {
           symbol: aTransaction?.symbol ?? null,
           type: aTransaction?.type ?? 'BUY',
           unitPrice: null
-        }
+        },
+        user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

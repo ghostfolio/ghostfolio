@@ -12,7 +12,7 @@ import {
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { baseCurrency, DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { DEFAULT_DATE_FORMAT, baseCurrency } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Currency } from '@prisma/client';

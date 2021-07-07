@@ -23,7 +23,7 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'h-100' },
-  selector: 'create-or-update-transaction-dialog',
+  selector: 'gf-create-or-update-transaction-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-transaction-dialog.scss'],
   templateUrl: 'create-or-update-transaction-dialog.html'

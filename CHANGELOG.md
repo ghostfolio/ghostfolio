@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the total value in the create or edit transaction dialog
+
 ### Changed
 
 - Upgraded `@angular/cdk` and `@angular/material` from version `11.0.4` to `12.0.6`
