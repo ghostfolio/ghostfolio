@@ -1,6 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
+import { subDays } from 'date-fns';
 
 @Injectable()
 export class MarketDataService {
@@ -14,7 +15,13 @@ export class MarketDataService {
     symbol: string;
   }): Promise<MarketData> {
     return await this.prisma.marketData.findFirst({
-      where: { date, symbol }
+      where: {
+        date: {
+          gte: subDays(date, 1),
+          lt: date
+        },
+        symbol
+      }
     });
   }
 }
