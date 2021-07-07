@@ -89,18 +89,20 @@ export class TransactionsTableComponent
         }
       });
 
-    this.searchControl.valueChanges.subscribe((keyword) => {
-      if (keyword) {
-        const filterValue = keyword.toLowerCase();
-        this.filters$.next(
-          this.allFilters.filter(
-            (filter) => filter.toLowerCase().indexOf(filterValue) === 0
-          )
-        );
-      } else {
-        this.filters$.next(this.allFilters);
-      }
-    });
+    this.searchControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((keyword) => {
+        if (keyword) {
+          const filterValue = keyword.toLowerCase();
+          this.filters$.next(
+            this.allFilters.filter(
+              (filter) => filter.toLowerCase().indexOf(filterValue) === 0
+            )
+          );
+        } else {
+          this.filters$.next(this.allFilters);
+        }
+      });
   }
 
   public addKeyword({ input, value }: MatChipInputEvent): void {
@@ -223,9 +225,12 @@ export class TransactionsTableComponent
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   public ngOnDestroy() {

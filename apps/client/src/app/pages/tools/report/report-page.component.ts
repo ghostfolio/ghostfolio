@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
@@ -9,7 +9,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './report-page.html',
   styleUrls: ['./report-page.scss']
 })
-export class ReportPageComponent implements OnInit {
+export class ReportPageComponent implements OnDestroy, OnInit {
   public accountClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public feeRules: PortfolioReportRule[];

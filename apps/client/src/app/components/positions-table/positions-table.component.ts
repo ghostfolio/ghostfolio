@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild
@@ -26,7 +27,7 @@ import { PositionDetailDialog } from '../position/position-detail-dialog/positio
   templateUrl: './positions-table.component.html',
   styleUrls: ['./positions-table.component.scss']
 })
-export class PositionsTableComponent implements OnChanges, OnInit {
+export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() locale: string;
@@ -38,7 +39,8 @@ export class PositionsTableComponent implements OnChanges, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<PortfolioPosition> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<PortfolioPosition> =
+    new MatTableDataSource();
   public displayedColumns = [];
   public isLoading = true;
   public pageSize = 7;
@@ -133,9 +135,12 @@ export class PositionsTableComponent implements OnChanges, OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   public ngOnDestroy() {

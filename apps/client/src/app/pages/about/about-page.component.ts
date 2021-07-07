@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { baseCurrency } from '@ghostfolio/common/config';
@@ -15,7 +15,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './about-page.html',
   styleUrls: ['./about-page.scss']
 })
-export class AboutPageComponent implements OnInit {
+export class AboutPageComponent implements OnDestroy, OnInit {
   public baseCurrency = baseCurrency;
   public hasPermissionForStatistics: boolean;
   public isLoggedIn: boolean;
@@ -41,6 +41,7 @@ export class AboutPageComponent implements OnInit {
   public ngOnInit() {
     this.dataService
       .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ globalPermissions, statistics }) => {
         this.hasPermissionForStatistics = hasPermission(
           globalPermissions,

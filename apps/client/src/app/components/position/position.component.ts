@@ -72,8 +72,11 @@ export class PositionComponent implements OnDestroy, OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
@@ -20,7 +20,7 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/c
   templateUrl: './accounts-page.html',
   styleUrls: ['./accounts-page.scss']
 })
-export class AccountsPageComponent implements OnInit {
+export class AccountsPageComponent implements OnDestroy, OnInit {
   public accounts: AccountModel[];
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -71,6 +71,7 @@ export class AccountsPageComponent implements OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
       });
@@ -98,23 +99,29 @@ export class AccountsPageComponent implements OnInit {
   }
 
   public fetchAccounts() {
-    this.dataService.fetchAccounts().subscribe((response) => {
-      this.accounts = response;
+    this.dataService
+      .fetchAccounts()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        this.accounts = response;
 
-      if (this.accounts?.length <= 0) {
-        this.router.navigate([], { queryParams: { createDialog: true } });
-      }
+        if (this.accounts?.length <= 0) {
+          this.router.navigate([], { queryParams: { createDialog: true } });
+        }
 
-      this.changeDetectorRef.markForCheck();
-    });
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onDeleteAccount(aId: string) {
-    this.dataService.deleteAccount(aId).subscribe({
-      next: () => {
-        this.fetchAccounts();
-      }
-    });
+    this.dataService
+      .deleteAccount(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.fetchAccounts();
+        }
+      });
   }
 
   public onUpdateAccount(aAccount: AccountModel) {
@@ -146,19 +153,25 @@ export class AccountsPageComponent implements OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((data: any) => {
-      const account: UpdateAccountDto = data?.account;
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data: any) => {
+        const account: UpdateAccountDto = data?.account;
 
-      if (account) {
-        this.dataService.putAccount(account).subscribe({
-          next: () => {
-            this.fetchAccounts();
-          }
-        });
-      }
+        if (account) {
+          this.dataService
+            .putAccount(account)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe({
+              next: () => {
+                this.fetchAccounts();
+              }
+            });
+        }
 
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   public ngOnDestroy() {
@@ -181,18 +194,24 @@ export class AccountsPageComponent implements OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((data: any) => {
-      const account: CreateAccountDto = data?.account;
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data: any) => {
+        const account: CreateAccountDto = data?.account;
 
-      if (account) {
-        this.dataService.postAccount(account).subscribe({
-          next: () => {
-            this.fetchAccounts();
-          }
-        });
-      }
+        if (account) {
+          this.dataService
+            .postAccount(account)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe({
+              next: () => {
+                this.fetchAccounts();
+              }
+            });
+        }
 
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 }

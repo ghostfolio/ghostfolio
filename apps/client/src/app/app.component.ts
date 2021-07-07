@@ -52,9 +52,12 @@ export class AppComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
-    this.dataService.fetchInfo().subscribe((info) => {
-      this.info = info;
-    });
+    this.dataService
+      .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((info) => {
+        this.info = info;
+      });
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))

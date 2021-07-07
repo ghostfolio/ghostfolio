@@ -7,6 +7,8 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { isToday, parse } from 'date-fns';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { LineChartItem } from '../line-chart/interfaces/line-chart.interface';
 import { PositionDetailDialogParams } from './interfaces/interfaces';
@@ -27,6 +29,8 @@ export class PerformanceChartDialog {
   public historicalDataItems: LineChartItem[];
   public title: string;
 
+  private unsubscribeSubject = new Subject<void>();
+
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -35,6 +39,7 @@ export class PerformanceChartDialog {
   ) {
     this.dataService
       .fetchPositionDetail(this.benchmarkSymbol)
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ currency, firstBuyDate, historicalData, marketPrice }) => {
         this.benchmarkDataItems = [];
         this.currency = currency;
@@ -83,5 +88,10 @@ export class PerformanceChartDialog {
 
   public onClose(): void {
     this.dialogRef.close();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }

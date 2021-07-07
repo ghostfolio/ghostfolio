@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { baseCurrency } from '@ghostfolio/common/config';
@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './pricing-page.html',
   styleUrls: ['./pricing-page.scss']
 })
-export class PricingPageComponent implements OnInit {
+export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency = baseCurrency;
   public coupon: number;
   public isLoggedIn: boolean;

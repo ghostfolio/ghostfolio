@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-page.html',
   styleUrls: ['./admin-page.scss']
 })
-export class AdminPageComponent implements OnInit {
+export class AdminPageComponent implements OnDestroy, OnInit {
   public dataGatheringInProgress: boolean;
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public exchangeRates: { label1: string; label2: string; value: number }[];
@@ -58,11 +58,14 @@ export class AdminPageComponent implements OnInit {
   }
 
   public onFlushCache() {
-    this.cacheService.flush().subscribe(() => {
-      setTimeout(() => {
-        window.location.reload();
-      }, 300);
-    });
+    this.cacheService
+      .flush()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
   }
 
   public onGatherMax() {
@@ -71,11 +74,14 @@ export class AdminPageComponent implements OnInit {
     );
 
     if (confirmation === true) {
-      this.adminService.gatherMax().subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
+      this.adminService
+        .gatherMax()
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        });
     }
   }
 
@@ -98,11 +104,14 @@ export class AdminPageComponent implements OnInit {
     const confirmation = confirm('Do you really want to delete this user?');
 
     if (confirmation) {
-      this.dataService.deleteUser(aId).subscribe({
-        next: () => {
-          this.fetchAdminData();
-        }
-      });
+      this.dataService
+        .deleteUser(aId)
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe({
+          next: () => {
+            this.fetchAdminData();
+          }
+        });
     }
   }
 
