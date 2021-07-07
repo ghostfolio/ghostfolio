@@ -187,7 +187,7 @@ export class PortfolioCalculator {
       );
       timelinePeriod.push({
         date: format(currentDate, DATE_FORMAT),
-        grossPerformance: 0,
+        grossPerformance: value.minus(investment),
         investment,
         value
       });
