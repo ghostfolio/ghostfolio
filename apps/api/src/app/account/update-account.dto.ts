@@ -1,9 +1,15 @@
-import { AccountType } from '@prisma/client';
-import { IsString, ValidateIf } from 'class-validator';
+import { AccountType, Currency } from '@prisma/client';
+import { IsNumber, IsString, ValidateIf } from 'class-validator';
 
 export class UpdateAccountDto {
   @IsString()
   accountType: AccountType;
+
+  @IsNumber()
+  balance: number;
+
+  @IsString()
+  currency: Currency;
 
   @IsString()
   id: string;

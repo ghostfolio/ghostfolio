@@ -28,7 +28,8 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Output() accountDeleted = new EventEmitter<string>();
   @Output() accountToUpdate = new EventEmitter<AccountModel>();
 
-  public dataSource: MatTableDataSource<AccountModel> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<AccountModel> =
+    new MatTableDataSource();
   public displayedColumns = [];
   public isLoading = true;
   public routeQueryParams: Subscription;
@@ -40,7 +41,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = ['account', 'platform', 'transactions'];
+    this.displayedColumns = ['account', 'platform', 'transactions', 'balance'];
 
     if (this.showActions) {
       this.displayedColumns.push('actions');

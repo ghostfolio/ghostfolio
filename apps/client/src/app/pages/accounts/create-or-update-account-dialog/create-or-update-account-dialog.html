@@ -8,12 +8,35 @@
         <input matInput name="name" required [(ngModel)]="data.account.name" />
       </mat-form-field>
     </div>
-    <div class="d-none">
+    <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select name="type" required [(value)]="data.account.accountType">
-          <mat-option value="SECURITIES" i18n> SECURITIES </mat-option>
+          <mat-option value="CASH" i18n>Cash</mat-option>
+          <mat-option value="SECURITIES" i18n>Securities</mat-option>
         </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Currency</mat-label>
+        <mat-select name="currency" required [(value)]="data.account.currency">
+          <mat-option *ngFor="let currency of currencies" [value]="currency"
+            >{{ currency }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Balance</mat-label>
+        <input
+          matInput
+          name="balance"
+          required
+          type="number"
+          [(ngModel)]="data.account.balance"
+        />
       </mat-form-field>
     </div>
     <div>

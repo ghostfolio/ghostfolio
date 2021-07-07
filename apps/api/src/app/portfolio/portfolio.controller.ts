@@ -142,10 +142,11 @@ export class PortfolioController {
   ): Promise<{ [symbol: string]: PortfolioPosition }> {
     let details: { [symbol: string]: PortfolioPosition } = {};
 
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      impersonationId,
-      this.request.user.id
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        impersonationId,
+        this.request.user.id
+      );
 
     const portfolio = await this.portfolioService.createPortfolio(
       impersonationUserId || this.request.user.id
@@ -221,6 +222,7 @@ export class PortfolioController {
       )
     ) {
       overview = nullifyValuesInObject(overview, [
+        'cash',
         'committedFunds',
         'fees',
         'totalBuy',
@@ -238,10 +240,11 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioPerformance> {
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      impersonationId,
-      this.request.user.id
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        impersonationId,
+        this.request.user.id
+      );
 
     const portfolio = await this.portfolioService.createPortfolio(
       impersonationUserId || this.request.user.id
@@ -306,10 +309,11 @@ export class PortfolioController {
   public async getReport(
     @Headers('impersonation-id') impersonationId
   ): Promise<PortfolioReport> {
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      impersonationId,
-      this.request.user.id
-    );
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        impersonationId,
+        this.request.user.id
+      );
 
     const portfolio = await this.portfolioService.createPortfolio(
       impersonationUserId || this.request.user.id

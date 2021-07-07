@@ -1,3 +1,8 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
@@ -11,10 +16,6 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { Module } from '@nestjs/common';
 
-import { CacheService } from '../cache/cache.service';
-import { OrderService } from '../order/order.service';
-import { RedisCacheModule } from '../redis-cache/redis-cache.module';
-import { UserService } from '../user/user.service';
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
 
@@ -22,6 +23,7 @@ import { PortfolioService } from './portfolio.service';
   imports: [RedisCacheModule],
   controllers: [PortfolioController],
   providers: [
+    AccountService,
     AlphaVantageService,
     CacheService,
     ConfigurationService,

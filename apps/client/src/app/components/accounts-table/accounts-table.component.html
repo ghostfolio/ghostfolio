@@ -26,6 +26,27 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="transactions">
+    <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
+      Transactions
+    </th>
+    <td *matCellDef="let element" class="text-right" mat-cell>
+      {{ element.Order?.length }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="balance">
+    <th *matHeaderCellDef class="text-right" i18n mat-header-cell>Balance</th>
+    <td *matCellDef="let element" class="text-right" mat-cell>
+      <gf-value
+        class="d-inline-block justify-content-end"
+        [currency]="element.currency"
+        [locale]="locale"
+        [value]="element.balance"
+      ></gf-value>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="actions">
     <th *matHeaderCellDef class="px-1 text-center" i18n mat-header-cell></th>
     <td *matCellDef="let element" class="px-1 text-center" mat-cell>
@@ -50,15 +71,6 @@
           Delete
         </button>
       </mat-menu>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="transactions">
-    <th *matHeaderCellDef class="text-right" i18n mat-header-cell>
-      Transactions
-    </th>
-    <td *matCellDef="let element" class="text-right" mat-cell>
-      {{ element.Order?.length }}
     </td>
   </ng-container>
 
