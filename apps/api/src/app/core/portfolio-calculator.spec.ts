@@ -69,8 +69,9 @@ jest.mock('./current-rate.service.ts', () => {
 
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
+
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null);
+    currentRateService = new CurrentRateService(null, null, null);
   });
 
   describe('calculate transaction points', () => {
