@@ -1,4 +1,5 @@
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { Currency, MarketData } from '@prisma/client';
 
@@ -37,16 +38,26 @@ jest.mock('../../services/exchange-rate-data.service', () => {
 
 describe('CurrentRateService', () => {
   let currentRateService: CurrentRateService;
+  let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
   let marketDataService: MarketDataService;
 
   beforeAll(async () => {
+    dataProviderService = new DataProviderService(
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    );
     exchangeRateDataService = new ExchangeRateDataService(null);
     marketDataService = new MarketDataService(null);
 
     await exchangeRateDataService.initialize();
 
     currentRateService = new CurrentRateService(
+      dataProviderService,
       exchangeRateDataService,
       marketDataService
     );
