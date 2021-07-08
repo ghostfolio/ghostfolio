@@ -166,6 +166,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.webAuthnService
       .deregister()
       .pipe(
+        takeUntil(this.unsubscribeSubject),
         catchError(() => {
           this.update();
 
@@ -181,6 +182,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.webAuthnService
       .register()
       .pipe(
+        takeUntil(this.unsubscribeSubject),
         catchError(() => {
           this.update();
 

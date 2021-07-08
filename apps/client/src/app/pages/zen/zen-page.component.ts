@@ -61,6 +61,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
       });
@@ -78,6 +79,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchChart({ range: this.dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((chartData) => {
         this.historicalDataItems = chartData.map((chartDataItem) => {
           return {
@@ -91,6 +93,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({ range: this.dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.performance = response;
         this.isLoadingPerformance = false;

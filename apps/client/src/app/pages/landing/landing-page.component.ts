@@ -6,6 +6,7 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-landing-page',
@@ -33,13 +34,16 @@ export class LandingPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
-    this.dataService.fetchInfo().subscribe(({ demoAuthToken }) => {
-      this.demoAuthToken = demoAuthToken;
+    this.dataService
+      .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ demoAuthToken }) => {
+        this.demoAuthToken = demoAuthToken;
 
-      this.initializeLineChart();
+        this.initializeLineChart();
 
-      this.changeDetectorRef.markForCheck();
-    });
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public initializeLineChart() {

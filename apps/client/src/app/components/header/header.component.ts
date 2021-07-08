@@ -51,6 +51,7 @@ export class HeaderComponent implements OnChanges {
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((id) => {
         this.impersonationId = id;
       });
@@ -98,23 +99,26 @@ export class HeaderComponent implements OnChanges {
       width: '30rem'
     });
 
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data?.accessToken) {
-        this.dataService
-          .loginAnonymous(data?.accessToken)
-          .pipe(
-            catchError(() => {
-              alert('Oops! Incorrect Security Token.');
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        if (data?.accessToken) {
+          this.dataService
+            .loginAnonymous(data?.accessToken)
+            .pipe(
+              catchError(() => {
+                alert('Oops! Incorrect Security Token.');
 
-              return EMPTY;
-            }),
-            takeUntil(this.unsubscribeSubject)
-          )
-          .subscribe(({ authToken }) => {
-            this.setToken(authToken);
-          });
-      }
-    });
+                return EMPTY;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe(({ authToken }) => {
+              this.setToken(authToken);
+            });
+        }
+      });
   }
 
   public setToken(aToken: string) {
@@ -124,5 +128,10 @@ export class HeaderComponent implements OnChanges {
     );
 
     this.router.navigate(['/']);
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }

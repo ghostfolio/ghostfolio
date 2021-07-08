@@ -2,11 +2,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject
+  Inject,
+  OnDestroy
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { LineChartItem } from '../../line-chart/interfaces/line-chart.interface';
 import { PositionDetailDialogParams } from './interfaces/interfaces';
@@ -18,7 +21,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'position-detail-dialog.html',
   styleUrls: ['./position-detail-dialog.component.scss']
 })
-export class PositionDetailDialog {
+export class PositionDetailDialog implements OnDestroy {
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
   public currency: string;
@@ -33,6 +36,8 @@ export class PositionDetailDialog {
   public quantity: number;
   public transactionCount: number;
 
+  private unsubscribeSubject = new Subject<void>();
+
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -41,6 +46,7 @@ export class PositionDetailDialog {
   ) {
     this.dataService
       .fetchPositionDetail(data.symbol)
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
           averagePrice,
@@ -134,5 +140,10 @@ export class PositionDetailDialog {
 
   public onClose(): void {
     this.dialogRef.close();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }

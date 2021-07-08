@@ -2,7 +2,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject
+  Inject,
+  OnDestroy
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -28,7 +29,7 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-transaction-dialog.scss'],
   templateUrl: 'create-or-update-transaction-dialog.html'
 })
-export class CreateOrUpdateTransactionDialog {
+export class CreateOrUpdateTransactionDialog implements OnDestroy {
   public currencies: Currency[] = [];
   public currentMarketPrice = null;
   public filteredLookupItems: Observable<LookupItem[]>;
@@ -49,10 +50,15 @@ export class CreateOrUpdateTransactionDialog {
   ) {}
 
   ngOnInit() {
-    this.dataService.fetchInfo().subscribe(({ currencies, platforms }) => {
-      this.currencies = currencies;
-      this.platforms = platforms;
-    });
+    this.dataService
+      .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ currencies, platforms }) => {
+        this.currencies = currencies;
+        this.platforms = platforms;
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.filteredLookupItems = this.searchSymbolCtrl.valueChanges.pipe(
       startWith(''),
@@ -73,6 +79,7 @@ export class CreateOrUpdateTransactionDialog {
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(({ marketPrice }) => {
           this.currentMarketPrice = marketPrice;
+
           this.changeDetectorRef.markForCheck();
         });
     }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
@@ -20,7 +20,7 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
   templateUrl: './transactions-page.html',
   styleUrls: ['./transactions-page.scss']
 })
-export class TransactionsPageComponent implements OnInit {
+export class TransactionsPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
@@ -71,6 +71,7 @@ export class TransactionsPageComponent implements OnInit {
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
       });
@@ -98,15 +99,18 @@ export class TransactionsPageComponent implements OnInit {
   }
 
   public fetchOrders() {
-    this.dataService.fetchOrders().subscribe((response) => {
-      this.transactions = response;
+    this.dataService
+      .fetchOrders()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        this.transactions = response;
 
-      if (this.transactions?.length <= 0) {
-        this.router.navigate([], { queryParams: { createDialog: true } });
-      }
+        if (this.transactions?.length <= 0) {
+          this.router.navigate([], { queryParams: { createDialog: true } });
+        }
 
-      this.changeDetectorRef.markForCheck();
-    });
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onCloneTransaction(aTransaction: OrderModel) {
@@ -114,11 +118,14 @@ export class TransactionsPageComponent implements OnInit {
   }
 
   public onDeleteTransaction(aId: string) {
-    this.dataService.deleteOrder(aId).subscribe({
-      next: () => {
-        this.fetchOrders();
-      }
-    });
+    this.dataService
+      .deleteOrder(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.fetchOrders();
+        }
+      });
   }
 
   public onUpdateTransaction(aTransaction: OrderModel) {
@@ -159,19 +166,25 @@ export class TransactionsPageComponent implements OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((data: any) => {
-      const transaction: UpdateOrderDto = data?.transaction;
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data: any) => {
+        const transaction: UpdateOrderDto = data?.transaction;
 
-      if (transaction) {
-        this.dataService.putOrder(transaction).subscribe({
-          next: () => {
-            this.fetchOrders();
-          }
-        });
-      }
+        if (transaction) {
+          this.dataService
+            .putOrder(transaction)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe({
+              next: () => {
+                this.fetchOrders();
+              }
+            });
+        }
 
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   public ngOnDestroy() {
@@ -203,18 +216,21 @@ export class TransactionsPageComponent implements OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((data: any) => {
-      const transaction: CreateOrderDto = data?.transaction;
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data: any) => {
+        const transaction: CreateOrderDto = data?.transaction;
 
-      if (transaction) {
-        this.dataService.postOrder(transaction).subscribe({
-          next: () => {
-            this.fetchOrders();
-          }
-        });
-      }
+        if (transaction) {
+          this.dataService.postOrder(transaction).subscribe({
+            next: () => {
+              this.fetchOrders();
+            }
+          });
+        }
 
-      this.router.navigate(['.'], { relativeTo: this.route });
-    });
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 }

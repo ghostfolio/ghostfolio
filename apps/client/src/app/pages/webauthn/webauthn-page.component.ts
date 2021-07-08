@@ -1,15 +1,19 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-webauthn-page',
   templateUrl: './webauthn-page.html',
   styleUrls: ['./webauthn-page.scss']
 })
-export class WebauthnPageComponent implements OnInit {
+export class WebauthnPageComponent implements OnDestroy, OnInit {
   public hasError = false;
+
+  private unsubscribeSubject = new Subject<void>();
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -23,24 +27,35 @@ export class WebauthnPageComponent implements OnInit {
   }
 
   public deregisterDevice() {
-    this.webAuthnService.deregister().subscribe(() => {
-      this.router.navigate(['/']);
-    });
+    this.webAuthnService
+      .deregister()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['/']);
+      });
   }
 
   public signIn() {
     this.hasError = false;
 
-    this.webAuthnService.login().subscribe(
-      ({ authToken }) => {
-        this.tokenStorageService.saveToken(authToken, false);
-        this.router.navigate(['/']);
-      },
-      (error) => {
-        console.error(error);
-        this.hasError = true;
-        this.changeDetectorRef.markForCheck();
-      }
-    );
+    this.webAuthnService
+      .login()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(
+        ({ authToken }) => {
+          this.tokenStorageService.saveToken(authToken, false);
+          this.router.navigate(['/']);
+        },
+        (error) => {
+          console.error(error);
+          this.hasError = true;
+          this.changeDetectorRef.markForCheck();
+        }
+      );
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }

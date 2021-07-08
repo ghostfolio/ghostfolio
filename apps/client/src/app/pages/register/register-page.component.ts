@@ -43,6 +43,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.dataService
       .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ demoAuthToken, globalPermissions }) => {
         this.demoAuthToken = demoAuthToken;
         this.hasPermissionForSocialLogin = hasPermission(
@@ -76,13 +77,16 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
       width: '30rem'
     });
 
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data?.authToken) {
-        this.tokenStorageService.saveToken(authToken, true);
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        if (data?.authToken) {
+          this.tokenStorageService.saveToken(authToken, true);
 
-        this.router.navigate(['/']);
-      }
-    });
+          this.router.navigate(['/']);
+        }
+      });
   }
 
   public ngOnDestroy() {
