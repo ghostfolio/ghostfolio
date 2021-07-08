@@ -29,7 +29,7 @@ export class DataProviderService {
     private readonly rakutenRapidApiService: RakutenRapidApiService,
     private readonly yahooFinanceService: YahooFinanceService
   ) {
-    this.rakutenRapidApiService.setPrisma(this.prisma);
+    this.rakutenRapidApiService?.setPrisma(this.prisma);
   }
 
   public async get(
