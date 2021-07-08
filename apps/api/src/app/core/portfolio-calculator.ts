@@ -142,7 +142,7 @@ export class PortfolioCalculator {
     const start = dparse(startDate);
     const end = dparse(endDate);
 
-    const timelinePeriod: TimelinePeriod[] = [];
+    const timelinePeriodPromises: Promise<TimelinePeriod>[] = [];
     let i = 0;
     let j = -1;
     for (
@@ -162,38 +162,45 @@ export class PortfolioCalculator {
       ) {
         j++;
       }
-
-      let investment: Big = new Big(0);
-      const promises = [];
-      if (j >= 0) {
-        for (const item of this.transactionPoints[j].items) {
-          investment = investment.add(item.investment);
-          promises.push(
-            this.currentRateService
-              .getValue({
-                date: currentDate,
-                symbol: item.symbol,
-                currency: item.currency,
-                userCurrency: this.currency
-              })
-              .then((v) => new Big(v).mul(item.quantity))
-          );
-        }
-      }
-
-      const value = (await Promise.all(promises)).reduce(
-        (a, b) => a.add(b),
-        new Big(0)
-      );
-      timelinePeriod.push({
-        date: format(currentDate, DATE_FORMAT),
-        grossPerformance: value.minus(investment),
-        investment,
-        value
-      });
+      timelinePeriodPromises.push(this.getTimePeriodForDate(j, currentDate));
     }
 
+    const timelinePeriod: TimelinePeriod[] = await Promise.all(
+      timelinePeriodPromises
+    );
+
     return timelinePeriod;
+  }
+
+  private async getTimePeriodForDate(j: number, currentDate: Date) {
+    let investment: Big = new Big(0);
+    const promises = [];
+    if (j >= 0) {
+      for (const item of this.transactionPoints[j].items) {
+        investment = investment.add(item.investment);
+        promises.push(
+          this.currentRateService
+            .getValue({
+              date: currentDate,
+              symbol: item.symbol,
+              currency: item.currency,
+              userCurrency: this.currency
+            })
+            .then((v) => new Big(v).mul(item.quantity))
+        );
+      }
+    }
+
+    const value = (await Promise.all(promises)).reduce(
+      (a, b) => a.add(b),
+      new Big(0)
+    );
+    return {
+      date: format(currentDate, DATE_FORMAT),
+      grossPerformance: value.minus(investment),
+      investment,
+      value
+    };
   }
 
   private getFactor(type: OrderType) {
