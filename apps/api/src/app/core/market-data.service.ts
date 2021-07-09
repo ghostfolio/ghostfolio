@@ -1,7 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
-import { addDays } from 'date-fns';
 
 @Injectable()
 export class MarketDataService {
@@ -16,11 +16,7 @@ export class MarketDataService {
   }): Promise<MarketData> {
     return await this.prisma.marketData.findFirst({
       where: {
-        // Filter for given date
-        date: {
-          gte: date,
-          lt: addDays(date, 1)
-        },
+        date: resetHours(date),
         symbol
       }
     });
