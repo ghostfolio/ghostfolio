@@ -1,4 +1,10 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import {
+  PortfolioCalculator,
+  PortfolioOrder,
+  TimelineSpecification
+} from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
@@ -16,6 +22,7 @@ import { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DataSource } from '@prisma/client';
+import Big from 'big.js';
 import {
   add,
   addMonths,
@@ -36,6 +43,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
+import { port } from 'envalid';
 import { isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 
@@ -43,14 +51,6 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import {
-  PortfolioCalculator,
-  PortfolioOrder,
-  TimelineSpecification
-} from '@ghostfolio/api/app/core/portfolio-calculator';
-import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import Big from 'big.js';
-import { port } from 'envalid';
 
 @Injectable()
 export class PortfolioService {
