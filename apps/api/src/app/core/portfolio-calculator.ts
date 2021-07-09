@@ -1,6 +1,6 @@
-import { Currency } from '@prisma/client';
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
+import { Currency } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
@@ -110,7 +110,7 @@ export class PortfolioCalculator {
 
     const result: { [symbol: string]: TimelinePosition } = {};
     for (const item of lastTransactionPoint.items) {
-      const marketPrice = await this.currentRateService.getValue({
+      const marketValue = await this.currentRateService.getValue({
         date: new Date(),
         symbol: item.symbol,
         currency: item.currency,
@@ -122,7 +122,7 @@ export class PortfolioCalculator {
         quantity: item.quantity,
         symbol: item.symbol,
         investment: item.investment,
-        marketPrice: marketPrice,
+        marketPrice: marketValue.marketPrice,
         transactionCount: item.transactionCount
       };
     }
@@ -186,7 +186,7 @@ export class PortfolioCalculator {
               currency: item.currency,
               userCurrency: this.currency
             })
-            .then((v) => new Big(v).mul(item.quantity))
+            .then(({ marketPrice }) => new Big(marketPrice).mul(item.quantity))
         );
       }
     }

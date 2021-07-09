@@ -17,6 +17,28 @@ jest.mock('./market-data.service', () => {
             id: 'aefcbe3a-ee10-4c4f-9f2d-8ffad7b05584',
             marketPrice: 1847.839966
           });
+        },
+        getRange: (
+          dateRangeEnd: Date,
+          dateRangeStart: Date,
+          symbol: string
+        ) => {
+          return Promise.resolve<MarketData[]>([
+            {
+              date: dateRangeStart,
+              symbol,
+              createdAt: dateRangeStart,
+              id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
+              marketPrice: 1841.823902
+            },
+            {
+              date: dateRangeEnd,
+              symbol,
+              createdAt: dateRangeEnd,
+              id: '082d6893-df27-4c91-8a5d-092e84315b56',
+              marketPrice: 1847.839966
+            }
+          ]);
         }
       };
     })
@@ -71,6 +93,29 @@ describe('CurrentRateService', () => {
         symbol: 'AMZN',
         userCurrency: Currency.CHF
       })
-    ).toEqual(1847.839966);
+    ).toMatchObject({
+      marketPrice: 1847.839966
+    });
+  });
+
+  it('getValues', async () => {
+    expect(
+      await currentRateService.getValues({
+        currency: Currency.USD,
+        dateRangeEnd: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
+        dateRangeStart: new Date(Date.UTC(2020, 0, 1, 0, 0, 0)),
+        symbol: 'AMZN',
+        userCurrency: Currency.CHF
+      })
+    ).toMatchObject([
+      {
+        // date
+        marketPrice: 1841.823902
+      },
+      {
+        // date
+        marketPrice: 1847.839966
+      }
+    ]);
   });
 });

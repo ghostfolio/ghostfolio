@@ -1,15 +1,15 @@
 import {
+  CurrentRateService,
+  GetValueParams
+} from '@ghostfolio/api/app/core/current-rate.service';
+import {
   PortfolioCalculator,
   PortfolioOrder,
   TimelinePeriod,
   TimelineSpecification
 } from '@ghostfolio/api/app/core/portfolio-calculator';
-import {
-  CurrentRateService,
-  GetValueParams
-} from '@ghostfolio/api/app/core/current-rate.service';
-import { Currency } from '@prisma/client';
 import { OrderType } from '@ghostfolio/api/models/order-type';
+import { Currency } from '@prisma/client';
 import Big from 'big.js';
 import { differenceInCalendarDays, parse } from 'date-fns';
 
@@ -46,21 +46,21 @@ jest.mock('./current-rate.service.ts', () => {
           const today = new Date();
           if (symbol === 'VTI') {
             if (dateEqual(today, date)) {
-              return Promise.resolve(new Big('213.32'));
+              return Promise.resolve({ marketPrice: new Big('213.32') });
             } else {
               const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
               const daysInBetween = differenceInCalendarDays(date, startDate);
 
-              const result = new Big('144.38').plus(
+              const marketPrice = new Big('144.38').plus(
                 new Big('0.08').mul(daysInBetween)
               );
-              return Promise.resolve(result);
+              return Promise.resolve({ marketPrice });
             }
           } else if (symbol === 'AMZN') {
-            return Promise.resolve(2021.99);
+            return Promise.resolve({ marketPrice: new Big('2021.99') });
           }
 
-          return Promise.resolve(new Big('0'));
+          return Promise.resolve({ marketPrice: new Big('0') });
         }
       };
     })
