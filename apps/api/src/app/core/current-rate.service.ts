@@ -1,5 +1,6 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
 import { isToday } from 'date-fns';
@@ -19,10 +20,13 @@ export class CurrentRateService {
     date,
     symbol,
     userCurrency
-  }: GetValueParams): Promise<number> {
+  }: GetValueParams): Promise<GetValueObject> {
     if (isToday(date)) {
       const dataProviderResult = await this.dataProviderService.get([symbol]);
-      return dataProviderResult?.[symbol]?.marketPrice ?? 0;
+      return {
+        date: resetHours(date),
+        marketPrice: dataProviderResult?.[symbol]?.marketPrice ?? 0
+      };
     }
 
     const marketData = await this.marketDataService.get({
@@ -31,14 +35,50 @@ export class CurrentRateService {
     });
 
     if (marketData) {
-      return this.exchangeRateDataService.toCurrency(
-        marketData.marketPrice,
-        currency,
-        userCurrency
-      );
+      return {
+        date: marketData.date,
+        marketPrice: this.exchangeRateDataService.toCurrency(
+          marketData.marketPrice,
+          currency,
+          userCurrency
+        )
+      };
     }
 
-    throw new Error(`Value not found for ${symbol} at ${date}`);
+    throw new Error(`Value not found for ${symbol} at ${resetHours(date)}`);
+  }
+
+  public async getValues({
+    currency,
+    dateRangeEnd,
+    dateRangeStart,
+    symbol,
+    userCurrency
+  }: GetValuesParams): Promise<GetValueObject[]> {
+    const marketData = await this.marketDataService.getRange({
+      dateRangeEnd,
+      dateRangeStart,
+      symbol
+    });
+
+    if (marketData) {
+      return marketData.map((marketDataItem) => {
+        return {
+          date: marketDataItem.date,
+          marketPrice: this.exchangeRateDataService.toCurrency(
+            marketDataItem.marketPrice,
+            currency,
+            userCurrency
+          )
+        };
+      });
+    }
+
+    throw new Error(
+      `Values not found for ${symbol} from ${resetHours(
+        dateRangeStart
+      )} to ${resetHours(dateRangeEnd)}`
+    );
   }
 }
 
@@ -47,4 +87,17 @@ export interface GetValueParams {
   symbol: string;
   currency: Currency;
   userCurrency: Currency;
+}
+
+export interface GetValuesParams {
+  dateRangeEnd: Date;
+  dateRangeStart: Date;
+  symbol: string;
+  currency: Currency;
+  userCurrency: Currency;
+}
+
+export interface GetValueObject {
+  date: Date;
+  marketPrice: number;
 }

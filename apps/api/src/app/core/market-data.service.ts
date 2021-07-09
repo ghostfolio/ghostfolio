@@ -2,6 +2,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
+import { endOfDay } from 'date-fns';
 
 @Injectable()
 export class MarketDataService {
@@ -17,6 +18,26 @@ export class MarketDataService {
     return await this.prisma.marketData.findFirst({
       where: {
         date: resetHours(date),
+        symbol
+      }
+    });
+  }
+
+  public async getRange({
+    dateRangeEnd,
+    dateRangeStart,
+    symbol
+  }: {
+    dateRangeEnd: Date;
+    dateRangeStart: Date;
+    symbol: string;
+  }): Promise<MarketData[]> {
+    return await this.prisma.marketData.findMany({
+      where: {
+        date: {
+          gte: dateRangeStart,
+          lt: endOfDay(dateRangeEnd)
+        },
         symbol
       }
     });
