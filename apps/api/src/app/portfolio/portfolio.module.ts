@@ -1,5 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
+import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import { MarketDataService } from '@ghostfolio/api/app/core/market-data.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
@@ -18,8 +20,6 @@ import { Module } from '@nestjs/common';
 
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
-import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { MarketDataService } from '@ghostfolio/api/app/core/market-data.service';
 
 @Module({
   imports: [RedisCacheModule],
