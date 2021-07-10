@@ -1,3 +1,4 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
 import { getUtc, getYesterday } from '@ghostfolio/common/helper';
 import {
@@ -9,7 +10,6 @@ import {
   ViewMode
 } from '@prisma/client';
 import { format } from 'date-fns';
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
 
 import { DataProviderService } from '../services/data-provider.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
