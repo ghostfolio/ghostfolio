@@ -1,13 +1,22 @@
 <div align="center">
+  <a href="https://ghostfol.io">
+    <img
+      alt="Ghostfolio Logo"
+      src="https://avatars.githubusercontent.com/u/82473144?s=200"
+      width="100"
+    />
+  </a>
+
   <h1>Ghostfolio</h1>
   <p>
-    <strong>Open Source Portfolio Tracker</strong>
+    <strong>Open Source Wealth Management Software made for Humans</strong>
   </p>
   <p>
     <a href="https://ghostfol.io"><strong>Live Demo</strong></a>
   </p>
   <p>
-    <img src="https://img.shields.io/badge/contributions-welcome-orange.svg"/>
+    <a href="#contributing">
+      <img src="https://img.shields.io/badge/contributions-welcome-orange.svg"/></a>
     <a href="https://travis-ci.com/github/ghostfolio/ghostfolio" rel="nofollow">
       <img src="https://travis-ci.com/ghostfolio/ghostfolio.svg?branch=main" alt="Build Status"/></a>
     <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
@@ -15,7 +24,13 @@
   </p>
 </div>
 
-**Ghostfolio** is an open source portfolio tracker built with web technology. The software empowers busy people to have a sharp look of their financial assets and to make solid, data-driven investment decisions.
+**Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of their wealth like stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.
+
+## Ghostfolio Premium
+
+Our official cloud offering [Ghostfolio Premium](https://ghostfol.io/pricing) is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs.
+
+If you prefer to run Ghostfolio on your own infrastructure, please find the source code and further instructions here on _GitHub_.
 
 ## Why Ghostfolio?
 
