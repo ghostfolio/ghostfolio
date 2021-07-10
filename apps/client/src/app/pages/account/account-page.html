@@ -16,14 +16,19 @@
             <div class="w-50" i18n>Membership</div>
             <div class="w-50">
               <div class="align-items-center d-flex mb-1">
-                {{ user.subscription.type }}
+                {{ user?.subscription?.type }}
+                <ion-icon
+                  *ngIf="user?.subscription?.type === 'Premium'"
+                  class="ml-1 text-muted"
+                  name="diamond-outline"
+                ></ion-icon>
               </div>
-              <div *ngIf="user.subscription.expiresAt">
-                Valid until {{ user.subscription.expiresAt | date:
+              <div *ngIf="user?.subscription?.expiresAt">
+                Valid until {{ user?.subscription?.expiresAt | date:
                 defaultDateFormat }}
               </div>
               <div
-                *ngIf="hasPermissionForSubscription && !user.subscription.expiresAt"
+                *ngIf="hasPermissionForSubscription && !user?.subscription?.expiresAt"
               >
                 <button
                   color="primary"
@@ -46,45 +51,54 @@
             </div>
           </div>
           <div class="d-flex mt-4 py-1">
-            <div class="pt-4 w-50" i18n>Settings</div>
-            <div class="w-50">
-              <form #changeUserSettingsForm="ngForm">
-                <mat-form-field appearance="outline" class="mb-3 w-100">
-                  <mat-label i18n>Base Currency</mat-label>
-                  <mat-select
-                    name="baseCurrency"
-                    [disabled]="!hasPermissionToUpdateUserSettings"
-                    [value]="user.settings.baseCurrency"
-                    (selectionChange)="onChangeUserSettings('baseCurrency', $event.value)"
-                  >
-                    <mat-option
-                      *ngFor="let currency of currencies"
-                      [value]="currency"
-                      >{{ currency }}</mat-option
-                    >
-                  </mat-select>
-                </mat-form-field>
-                <div class="align-items-center d-flex overflow-hidden">
-                  <mat-form-field appearance="outline" class="flex-grow-1">
-                    <mat-label i18n>View Mode</mat-label>
+            <form #changeUserSettingsForm="ngForm" class="w-100">
+              <div class="d-flex mb-2">
+                <div class="align-items-center d-flex pt-1 w-50" i18n>
+                  Base Currency
+                </div>
+                <div class="w-50">
+                  <mat-form-field appearance="outline" class="w-100">
                     <mat-select
-                      name="viewMode"
-                      [disabled]="!hasPermissionToUpdateViewMode"
-                      [value]="user.settings.viewMode"
-                      (selectionChange)="onChangeUserSettings('viewMode', $event.value)"
+                      name="baseCurrency"
+                      [disabled]="!hasPermissionToUpdateUserSettings"
+                      [value]="user.settings.baseCurrency"
+                      (selectionChange)="onChangeUserSettings('baseCurrency', $event.value)"
                     >
-                      <mat-option value="DEFAULT">Default</mat-option>
-                      <mat-option value="ZEN">Zen</mat-option>
+                      <mat-option
+                        *ngFor="let currency of currencies"
+                        [value]="currency"
+                        >{{ currency }}</mat-option
+                      >
                     </mat-select>
                   </mat-form-field>
+                </div>
+              </div>
+              <div class="d-flex">
+                <div class="align-items-center d-flex pt-1 w-50" i18n>
+                  View Mode
                   <ion-icon
                     *ngIf="!hasPermissionToUpdateViewMode"
-                    class="h5 mb-0 mx-3 text-muted"
+                    class="mx-1 text-muted"
                     name="diamond-outline"
                   ></ion-icon>
                 </div>
-              </form>
-            </div>
+                <div class="w-50">
+                  <div class="align-items-center d-flex overflow-hidden">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-select
+                        name="viewMode"
+                        [disabled]="!hasPermissionToUpdateViewMode"
+                        [value]="user.settings.viewMode"
+                        (selectionChange)="onChangeUserSettings('viewMode', $event.value)"
+                      >
+                        <mat-option value="DEFAULT">Default</mat-option>
+                        <mat-option value="ZEN">Zen</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
           <div class="align-items-center d-flex mt-4 py-1">
             <div class="w-50" i18n>Sign in with fingerprint</div>
