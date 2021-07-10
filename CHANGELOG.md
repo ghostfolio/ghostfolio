@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Respected the cash balance on the analysis page
+- Harmonized the slogan to "Open Source Wealth Management Software"
 
 ### Fixed
 
