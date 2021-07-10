@@ -82,7 +82,13 @@
   <tr
     *matRowDef="let row; columns: displayedColumns"
     mat-row
-    (click)="onOpenPositionDialog({ symbol: row.symbol, title: row.name })"
+    [ngClass]="{
+      'cursor-pointer': !this.ignoreList.includes(row.symbol)
+    }"
+    (click)="
+      !this.ignoreList.includes(row.symbol) &&
+        onOpenPositionDialog({ symbol: row.symbol, title: row.name })
+    "
   ></tr>
 </table>
 

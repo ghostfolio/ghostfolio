@@ -9,7 +9,6 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -30,12 +29,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
+  public hasImpersonationId: boolean;
   public period = 'current';
   public periodOptions: ToggleOption[] = [
     { label: 'Initial', value: 'original' },
     { label: 'Current', value: 'current' }
   ];
-  public hasImpersonationId: boolean;
   public portfolioItems: PortfolioItem[];
   public portfolioPositions: { [symbol: string]: PortfolioPosition };
   public positions: { [symbol: string]: any };

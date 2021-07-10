@@ -14,6 +14,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
@@ -46,6 +47,7 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   public pageSize = 7;
   public routeQueryParams: Subscription;
 
+  private ignoreList = [ghostfolioCashSymbol];
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(

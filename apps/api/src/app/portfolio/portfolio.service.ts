@@ -70,6 +70,7 @@ export class PortfolioService {
         JSON.parse(stringifiedPortfolio);
 
       portfolio = new Portfolio(
+        this.accountService,
         this.dataProviderService,
         this.exchangeRateDataService,
         this.rulesService
@@ -86,6 +87,7 @@ export class PortfolioService {
       });
 
       portfolio = new Portfolio(
+        this.accountService,
         this.dataProviderService,
         this.exchangeRateDataService,
         this.rulesService
@@ -194,7 +196,7 @@ export class PortfolioService {
       impersonationUserId || this.request.user.id
     );
 
-    const cash = await this.accountService.calculateCashBalance(
+    const { balance } = await this.accountService.getCashDetails(
       impersonationUserId || this.request.user.id,
       this.request.user.Settings.currency
     );
@@ -202,9 +204,9 @@ export class PortfolioService {
     const fees = portfolio.getFees();
 
     return {
-      cash,
       committedFunds,
       fees,
+      cash: balance,
       ordersCount: portfolio.getOrders().length,
       totalBuy: portfolio.getTotalBuy(),
       totalSell: portfolio.getTotalSell()
@@ -350,13 +352,13 @@ export class PortfolioService {
 
       return {
         averagePrice: undefined,
-        currency: currentData[aSymbol].currency,
+        currency: currentData[aSymbol]?.currency,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
         historicalData: historicalDataArray,
         investment: undefined,
-        marketPrice: currentData[aSymbol].marketPrice,
+        marketPrice: currentData[aSymbol]?.marketPrice,
         maxPrice: undefined,
         minPrice: undefined,
         quantity: undefined,

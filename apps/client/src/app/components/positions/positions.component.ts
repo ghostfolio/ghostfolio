@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
+import { ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces/portfolio-position.interface';
 
 @Component({
@@ -25,6 +26,8 @@ export class PositionsComponent implements OnChanges, OnInit {
   public positionsRest: PortfolioPosition[] = [];
   public positionsWithPriority: PortfolioPosition[] = [];
 
+  private ignoreList = [ghostfolioCashSymbol];
+
   public constructor() {}
 
   public ngOnInit() {}
@@ -41,6 +44,10 @@ export class PositionsComponent implements OnChanges, OnInit {
       this.positionsWithPriority = [];
 
       for (const [, portfolioPosition] of Object.entries(this.positions)) {
+        if (this.ignoreList.includes(portfolioPosition.symbol)) {
+          continue;
+        }
+
         if (
           portfolioPosition.marketState === MarketState.open ||
           this.range !== '1d'
