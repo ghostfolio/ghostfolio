@@ -19,7 +19,9 @@
     }
 
     .mat-row {
-      cursor: pointer;
+      &.cursor-pointer {
+        cursor: pointer;
+      }
     }
   }
 }

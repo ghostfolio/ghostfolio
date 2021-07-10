@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Respected the cash balance on the analysis page
+
 ### Fixed
 
 - Fixed rendering of currency and platform in dialogs (account and transaction)

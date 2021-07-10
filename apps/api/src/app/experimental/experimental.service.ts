@@ -1,3 +1,4 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { Portfolio } from '@ghostfolio/api/models/portfolio';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
@@ -14,6 +15,7 @@ import { Data } from './interfaces/data.interface';
 @Injectable()
 export class ExperimentalService {
   public constructor(
+    private readonly accountService: AccountService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private prisma: PrismaService,
@@ -52,6 +54,7 @@ export class ExperimentalService {
     });
 
     const portfolio = new Portfolio(
+      this.accountService,
       this.dataProviderService,
       this.exchangeRateDataService,
       this.rulesService

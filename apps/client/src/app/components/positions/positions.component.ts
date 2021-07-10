@@ -5,7 +5,10 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
-import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  MarketState,
+  Type
+} from '@ghostfolio/api/services/interfaces/interfaces';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces/portfolio-position.interface';
 
 @Component({
@@ -25,6 +28,8 @@ export class PositionsComponent implements OnChanges, OnInit {
   public positionsRest: PortfolioPosition[] = [];
   public positionsWithPriority: PortfolioPosition[] = [];
 
+  private ignoreTypes = [Type.Cash];
+
   public constructor() {}
 
   public ngOnInit() {}
@@ -41,6 +46,10 @@ export class PositionsComponent implements OnChanges, OnInit {
       this.positionsWithPriority = [];
 
       for (const [, portfolioPosition] of Object.entries(this.positions)) {
+        if (this.ignoreTypes.includes(portfolioPosition.type)) {
+          continue;
+        }
+
         if (
           portfolioPosition.marketState === MarketState.open ||
           this.range !== '1d'

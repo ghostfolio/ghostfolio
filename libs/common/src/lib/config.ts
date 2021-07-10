@@ -15,6 +15,7 @@ export const currencyPairs: Partial<IDataGatheringItem>[] = [
 ];
 
 export const ghostfolioScraperApiSymbolPrefix = '_GF_';
+export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;
 
 export const locale = 'de-CH';
 

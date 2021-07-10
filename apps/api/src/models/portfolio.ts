@@ -1,4 +1,6 @@
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
+import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { getToday, getYesterday, resetHours } from '@ghostfolio/common/helper';
 import {
   PortfolioItem,
@@ -11,7 +13,7 @@ import {
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { DateRange, OrderWithAccount } from '@ghostfolio/common/types';
-import { Prisma } from '@prisma/client';
+import { Currency, Prisma } from '@prisma/client';
 import { continents, countries } from 'countries-list';
 import {
   add,
@@ -34,7 +36,7 @@ import * as roundTo from 'round-to';
 
 import { DataProviderService } from '../services/data-provider.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
-import { IOrder } from '../services/interfaces/interfaces';
+import { IOrder, MarketState, Type } from '../services/interfaces/interfaces';
 import { RulesService } from '../services/rules.service';
 import { PortfolioInterface } from './interfaces/portfolio.interface';
 import { Order } from './order';
@@ -54,6 +56,7 @@ export class Portfolio implements PortfolioInterface {
   private user: UserWithSettings;
 
   public constructor(
+    private accountService: AccountService,
     private dataProviderService: DataProviderService,
     private exchangeRateDataService: ExchangeRateDataService,
     private rulesService: RulesService
@@ -232,10 +235,14 @@ export class Portfolio implements PortfolioInterface {
 
     const [portfolioItemsNow] = await this.get(new Date());
 
-    const investment = this.getInvestment(new Date());
+    const cashDetails = await this.accountService.getCashDetails(
+      this.user.id,
+      this.user.Settings.currency
+    );
+    const investment = this.getInvestment(new Date()) + cashDetails.balance;
     const portfolioItems = this.get(new Date());
     const symbols = this.getSymbols(new Date());
-    const value = this.getValue();
+    const value = this.getValue() + cashDetails.balance;
 
     const details: { [symbol: string]: PortfolioPosition } = {};
 
@@ -370,6 +377,12 @@ export class Portfolio implements PortfolioInterface {
           this.user.Settings.currency
         )
       };
+    });
+
+    details[ghostfolioCashSymbol] = await this.getCashPosition({
+      cashDetails,
+      investment,
+      value
     });
 
     return details;
@@ -642,6 +655,46 @@ export class Portfolio implements PortfolioInterface {
     this.user = aUser;
 
     return this;
+  }
+
+  private async getCashPosition({
+    cashDetails,
+    investment,
+    value
+  }: {
+    cashDetails: CashDetails;
+    investment: number;
+    value: number;
+  }) {
+    const accounts = {};
+    const cashValue = cashDetails.balance;
+
+    cashDetails.accounts.forEach((account) => {
+      accounts[account.name] = {
+        current: account.balance,
+        original: account.balance
+      };
+    });
+
+    return {
+      accounts,
+      allocationCurrent: cashValue / value,
+      allocationInvestment: cashValue / investment,
+      countries: [],
+      currency: Currency.CHF,
+      grossPerformance: 0,
+      grossPerformancePercent: 0,
+      investment: cashValue,
+      marketPrice: 0,
+      marketState: MarketState.open,
+      name: Type.Cash,
+      quantity: 0,
+      sectors: [],
+      symbol: ghostfolioCashSymbol,
+      type: Type.Cash,
+      transactionCount: 0,
+      value: cashValue
+    };
   }
 
   /**

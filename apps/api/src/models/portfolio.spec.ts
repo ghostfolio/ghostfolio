@@ -1,3 +1,4 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
 import { getUtc, getYesterday } from '@ghostfolio/common/helper';
 import {
@@ -15,6 +16,16 @@ import { ExchangeRateDataService } from '../services/exchange-rate-data.service'
 import { MarketState } from '../services/interfaces/interfaces';
 import { RulesService } from '../services/rules.service';
 import { Portfolio } from './portfolio';
+
+jest.mock('../app/account/account.service', () => {
+  return {
+    AccountService: jest.fn().mockImplementation(() => {
+      return {
+        getCashDetails: () => Promise.resolve({ accounts: [], balance: 0 })
+      };
+    })
+  };
+});
 
 jest.mock('../services/data-provider.service', () => {
   return {
@@ -81,12 +92,14 @@ const DEFAULT_ACCOUNT_ID = '693a834b-eb89-42c9-ae47-35196c25d269';
 const USER_ID = 'ca6ce867-5d31-495a-bce9-5942bbca9237';
 
 describe('Portfolio', () => {
+  let accountService: AccountService;
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolio: Portfolio;
   let rulesService: RulesService;
 
   beforeAll(async () => {
+    accountService = new AccountService(null, null, null);
     dataProviderService = new DataProviderService(
       null,
       null,
@@ -101,6 +114,7 @@ describe('Portfolio', () => {
     await exchangeRateDataService.initialize();
 
     portfolio = new Portfolio(
+      accountService,
       dataProviderService,
       exchangeRateDataService,
       rulesService
@@ -147,12 +161,52 @@ describe('Portfolio', () => {
 
     it('should return empty details', async () => {
       const details = await portfolio.getDetails('1d');
-      expect(details).toEqual({});
+      expect(details).toMatchObject({
+        _GF_CASH: {
+          accounts: {},
+          allocationCurrent: NaN, // TODO
+          allocationInvestment: NaN, // TODO
+          countries: [],
+          currency: 'CHF',
+          grossPerformance: 0,
+          grossPerformancePercent: 0,
+          investment: 0,
+          marketPrice: 0,
+          marketState: 'open',
+          name: 'Cash',
+          quantity: 0,
+          sectors: [],
+          symbol: '_GF_CASH',
+          transactionCount: 0,
+          type: 'Cash',
+          value: 0
+        }
+      });
     });
 
     it('should return empty details', async () => {
       const details = await portfolio.getDetails('max');
-      expect(details).toEqual({});
+      expect(details).toMatchObject({
+        _GF_CASH: {
+          accounts: {},
+          allocationCurrent: NaN, // TODO
+          allocationInvestment: NaN, // TODO
+          countries: [],
+          currency: 'CHF',
+          grossPerformance: 0,
+          grossPerformancePercent: 0,
+          investment: 0,
+          marketPrice: 0,
+          marketState: 'open',
+          name: 'Cash',
+          quantity: 0,
+          sectors: [],
+          symbol: '_GF_CASH',
+          transactionCount: 0,
+          type: 'Cash',
+          value: 0
+        }
+      });
     });
 
     it('should return zero performance for 1d', async () => {

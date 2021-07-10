@@ -10,6 +10,7 @@ export const MarketState = {
 };
 
 export const Type = {
+  Cash: 'Cash',
   Cryptocurrency: 'Cryptocurrency',
   ETF: 'ETF',
   Stock: 'Stock',
