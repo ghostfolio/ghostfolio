@@ -3,7 +3,6 @@
     <img
       alt="Ghostfolio Logo"
       src="https://avatars.githubusercontent.com/u/82473144?s=200"
-      style="border-radius: 6px"
       width="100"
     />
   </a>
