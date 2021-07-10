@@ -18,6 +18,7 @@ import { REQUEST } from '@nestjs/core';
 import { DataSource } from '@prisma/client';
 import {
   add,
+  addMonths,
   endOfToday,
   format,
   getDate,
@@ -227,19 +228,18 @@ export class PortfolioService {
       impersonationUserId || this.request.user.id
     );
 
-    const positions = portfolio.getPositions(new Date())[aSymbol];
+    const position = portfolio.getPositions(new Date())[aSymbol];
 
-    if (positions) {
-      let {
+    if (position) {
+      const {
         averagePrice,
         currency,
         firstBuyDate,
         investment,
-        marketPrice,
         quantity,
         transactionCount
-      } = portfolio.getPositions(new Date())[aSymbol];
-
+      } = position;
+      let marketPrice = position.marketPrice;
       const orders = portfolio.getOrders(aSymbol);
 
       const historicalData = await this.dataProviderService.getHistorical(
@@ -267,13 +267,14 @@ export class PortfolioService {
             isSameDay(currentDate, parseISO(orders[0]?.getDate())) ||
             isAfter(currentDate, parseISO(orders[0]?.getDate()))
           ) {
-            // Get snapshot of first day of month
-            const snapshot = portfolio.get(setDate(currentDate, 1))[0]
-              .positions[aSymbol];
+            // Get snapshot of first day of next month
+            const snapshot = portfolio.get(
+              addMonths(setDate(currentDate, 1), 1)
+            )?.[0]?.positions[aSymbol];
             orders.shift();
 
             if (snapshot?.averagePrice) {
-              currentAveragePrice = snapshot?.averagePrice;
+              currentAveragePrice = snapshot.averagePrice;
             }
           }
 

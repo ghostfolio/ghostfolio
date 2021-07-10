@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed rendering of currency and platform in dialogs (account and transaction)
+- Fixed an issue in the calculation of the average buy prices in the position detail chart
 
 ## 1.24.0 - 07.07.2021
 
