@@ -21,12 +21,12 @@ function dparse(date: string) {
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
 
-  constructor(
+  public constructor(
     private currentRateService: CurrentRateService,
     private currency: Currency
   ) {}
 
-  computeTransactionPoints(orders: PortfolioOrder[]) {
+  public computeTransactionPoints(orders: PortfolioOrder[]) {
     orders.sort((a, b) => a.date.localeCompare(b.date));
 
     this.transactionPoints = [];
@@ -92,15 +92,17 @@ export class PortfolioCalculator {
     }
   }
 
-  setTransactionPoints(transactionPoints: TransactionPoint[]) {
+  public setTransactionPoints(transactionPoints: TransactionPoint[]) {
     this.transactionPoints = transactionPoints;
   }
 
-  getTransactionPoints(): TransactionPoint[] {
+  public getTransactionPoints(): TransactionPoint[] {
     return this.transactionPoints;
   }
 
-  async getCurrentPositions(): Promise<{ [symbol: string]: TimelinePosition }> {
+  public async getCurrentPositions(): Promise<{
+    [symbol: string]: TimelinePosition;
+  }> {
     if (!this.transactionPoints?.length) {
       return {};
     }
@@ -130,7 +132,7 @@ export class PortfolioCalculator {
     return result;
   }
 
-  async calculateTimeline(
+  public async calculateTimeline(
     timelineSpecification: TimelineSpecification[],
     endDate: string
   ): Promise<TimelinePeriod[]> {
