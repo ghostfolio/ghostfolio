@@ -90,6 +90,8 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<HistoricalDataItem[]> {
+    console.time('get-chart-request');
+
     let chartData = await this.portfolioService.getChart(
       impersonationId,
       range
@@ -129,6 +131,8 @@ export class PortfolioController {
         };
       });
     }
+
+    console.timeEnd('get-chart-request');
 
     return <any>res.json(chartData);
   }
