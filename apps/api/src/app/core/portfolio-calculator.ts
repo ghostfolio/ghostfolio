@@ -167,11 +167,15 @@ export class PortfolioCalculator {
       timelinePeriodPromises.push(this.getTimePeriodForDate(j, currentDate));
     }
 
-    const timelinePeriod: TimelinePeriod[] = await Promise.all(
+    console.time('calculate-timeline-periods');
+
+    const timelinePeriods: TimelinePeriod[] = await Promise.all(
       timelinePeriodPromises
     );
 
-    return timelinePeriod;
+    console.timeEnd('calculate-timeline-periods');
+
+    return timelinePeriods;
   }
 
   private async getTimePeriodForDate(j: number, currentDate: Date) {
