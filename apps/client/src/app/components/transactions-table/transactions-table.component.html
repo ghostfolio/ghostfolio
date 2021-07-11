@@ -202,17 +202,29 @@
   </ng-container>
 
   <ng-container matColumnDef="actions">
-    <th *matHeaderCellDef class="px-1 text-center" i18n mat-header-cell></th>
-    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+    <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
       <button
         class="mx-1 no-min-width px-2"
         mat-button
-        [matMenuTriggerFor]="accountMenu"
+        [matMenuTriggerFor]="transactionsMenu"
         (click)="$event.stopPropagation()"
       >
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
-      <mat-menu #accountMenu="matMenu" xPosition="before">
+      <mat-menu #transactionsMenu="matMenu" xPosition="before">
+        <button i18n mat-menu-item (click)="onExport()">Export</button>
+      </mat-menu>
+    </th>
+    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <button
+        class="mx-1 no-min-width px-2"
+        mat-button
+        [matMenuTriggerFor]="transactionMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </button>
+      <mat-menu #transactionMenu="matMenu" xPosition="before">
         <button i18n mat-menu-item (click)="onUpdateTransaction(element)">
           Edit
         </button>

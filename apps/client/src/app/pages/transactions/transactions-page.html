@@ -8,6 +8,7 @@
         [locale]="user?.settings?.locale"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder"
         [transactions]="transactions"
+        (export)="onExport()"
         (transactionDeleted)="onDeleteTransaction($event)"
         (transactionToClone)="onCloneTransaction($event)"
         (transactionToUpdate)="onUpdateTransaction($event)"

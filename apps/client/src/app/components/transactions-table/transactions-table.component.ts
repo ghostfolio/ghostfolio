@@ -47,6 +47,7 @@ export class TransactionsTableComponent
   @Input() showActions: boolean;
   @Input() transactions: OrderWithAccount[];
 
+  @Output() export = new EventEmitter<void>();
   @Output() transactionDeleted = new EventEmitter<string>();
   @Output() transactionToClone = new EventEmitter<OrderWithAccount>();
   @Output() transactionToUpdate = new EventEmitter<OrderWithAccount>();
@@ -183,6 +184,10 @@ export class TransactionsTableComponent
     if (confirmation) {
       this.transactionDeleted.emit(aId);
     }
+  }
+
+  public onExport() {
+    this.export.emit();
   }
 
   public onOpenPositionDialog({
