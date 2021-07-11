@@ -51,6 +51,7 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
+import { OrderType } from '@ghostfolio/api/models/order-type';
 
 @Injectable()
 export class PortfolioService {
@@ -91,14 +92,7 @@ export class PortfolioService {
       ).createFromData({ orders, portfolioItems, user });
     } else {
       // Get portfolio from database
-      const orders = await this.orderService.orders({
-        include: {
-          Account: true,
-          SymbolProfile: true
-        },
-        orderBy: { date: 'asc' },
-        where: { userId: aUserId }
-      });
+      const orders = await this.getOrders(aUserId);
 
       portfolio = new Portfolio(
         this.accountService,
@@ -160,50 +154,27 @@ export class PortfolioService {
     console.timeEnd('impersonation-service');
 
     console.time('create-portfolio');
-    const portfolio = await this.createPortfolio(
-      impersonationUserId || this.request.user.id
-    );
+    const userId = impersonationUserId || this.request.user.id;
+    const orders = await this.getOrders(userId);
     console.timeEnd('create-portfolio');
 
-    const orders = portfolio.getOrders();
     if (orders.length <= 0) {
       return [];
     }
-
-    const dateRangeDate = this.convertDateRangeToDate(
-      aDateRange,
-      portfolio.getMinDate()
-    );
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
       this.request.user.Settings.currency
     );
 
-    const portfolioOrders: PortfolioOrder[] = orders
-      .filter((portfolioItem) => {
-        if (isAfter(parseISO(portfolioItem.getDate()), endOfToday())) {
-          // Filter out future dates
-          return false;
-        }
-
-        if (dateRangeDate === undefined) {
-          return true;
-        }
-
-        return (
-          isSameDay(parseISO(portfolioItem.getDate()), dateRangeDate) ||
-          isAfter(parseISO(portfolioItem.getDate()), dateRangeDate)
-        );
-      })
-      .map((order) => ({
-        date: order.getDate().substr(0, 10),
-        quantity: new Big(order.getQuantity()),
-        symbol: order.getSymbol(),
-        type: order.getType(),
-        unitPrice: new Big(order.getUnitPrice()),
-        currency: order.getCurrency()
-      }));
+    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
+      date: format(order.date, 'yyyy-MM-dd'),
+      quantity: new Big(order.quantity),
+      symbol: order.symbol,
+      type: <OrderType>order.type,
+      unitPrice: new Big(order.unitPrice),
+      currency: order.currency
+    }));
     portfolioCalculator.computeTransactionPoints(portfolioOrders);
     const transactionPoints = portfolioCalculator.getTransactionPoints();
     if (transactionPoints.length === 0) {
@@ -504,5 +475,18 @@ export class PortfolioService {
         // Gets handled as all data
         return undefined;
     }
+  }
+
+  private getOrders(aUserId: string) {
+    return this.orderService.orders({
+      include: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        Account: true,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        SymbolProfile: true
+      },
+      orderBy: { date: 'asc' },
+      where: { userId: aUserId }
+    });
   }
 }
