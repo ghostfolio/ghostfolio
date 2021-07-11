@@ -9,6 +9,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
+import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -128,6 +129,22 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onExport() {
+    this.dataService
+      .fetchExport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        this.downloadAsFile(
+          data,
+          `ghostfolio-export-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.json`,
+          'text/plain'
+        );
+      });
+  }
+
   public onUpdateTransaction(aTransaction: OrderModel) {
     this.router.navigate([], {
       queryParams: { editDialog: true, transactionId: aTransaction.id }
@@ -190,6 +207,20 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private downloadAsFile(
+    aContent: unknown,
+    aFileName: string,
+    aContentType: string
+  ) {
+    const a = document.createElement('a');
+    const file = new Blob([JSON.stringify(aContent, undefined, '  ')], {
+      type: aContentType
+    });
+    a.href = URL.createObjectURL(file);
+    a.download = aFileName;
+    a.click();
   }
 
   private openCreateTransactionDialog(aTransaction?: OrderModel): void {

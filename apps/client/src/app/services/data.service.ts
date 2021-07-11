@@ -15,6 +15,7 @@ import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-sett
 import {
   Access,
   AdminData,
+  Export,
   InfoItem,
   PortfolioItem,
   PortfolioOverview,
@@ -84,6 +85,10 @@ export class DataService {
     return this.http.get<HistoricalDataItem[]>('/api/portfolio/chart', {
       params: aParams
     });
+  }
+
+  public fetchExport() {
+    return this.http.get<Export>('/api/export');
   }
 
   public fetchInfo() {
