@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the export functionality for transactions
+
 ### Changed
 
 - Respected the cash balance on the analysis page
