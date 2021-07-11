@@ -151,15 +151,19 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<HistoricalDataItem[]> {
+    console.time('impersonation-service');
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         aImpersonationId,
         this.request.user.id
       );
+    console.timeEnd('impersonation-service');
 
+    console.time('create-portfolio');
     const portfolio = await this.createPortfolio(
       impersonationUserId || this.request.user.id
     );
+    console.timeEnd('create-portfolio');
 
     const orders = portfolio.getOrders();
     if (orders.length <= 0) {
