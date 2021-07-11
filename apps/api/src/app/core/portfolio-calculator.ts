@@ -27,6 +27,8 @@ export class PortfolioCalculator {
   ) {}
 
   public computeTransactionPoints(orders: PortfolioOrder[]) {
+    console.time('compute-transaction-points');
+
     orders.sort((a, b) => a.date.localeCompare(b.date));
 
     this.transactionPoints = [];
@@ -90,6 +92,7 @@ export class PortfolioCalculator {
       }
       lastDate = currentDate;
     }
+    console.timeEnd('compute-transaction-points');
   }
 
   public setTransactionPoints(transactionPoints: TransactionPoint[]) {
@@ -139,6 +142,8 @@ export class PortfolioCalculator {
     if (timelineSpecification.length === 0) {
       return [];
     }
+    console.time('calculate-timeline-total');
+    console.time('calculate-timeline-calculations');
 
     const startDate = timelineSpecification[0].start;
     const start = dparse(startDate);
@@ -166,6 +171,7 @@ export class PortfolioCalculator {
       }
       timelinePeriodPromises.push(this.getTimePeriodForDate(j, currentDate));
     }
+    console.timeEnd('calculate-timeline-calculations');
 
     console.time('calculate-timeline-periods');
 
@@ -174,6 +180,7 @@ export class PortfolioCalculator {
     );
 
     console.timeEnd('calculate-timeline-periods');
+    console.timeEnd('calculate-timeline-total');
 
     return timelinePeriods;
   }

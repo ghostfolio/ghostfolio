@@ -91,11 +91,12 @@ export class PortfolioController {
     @Res() res: Response
   ): Promise<HistoricalDataItem[]> {
     console.time('get-chart-request');
-
+    console.time('portfolio-service-get-chart');
     let chartData = await this.portfolioService.getChart(
       impersonationId,
       range
     );
+    console.timeEnd('portfolio-service-get-chart');
 
     let hasNullValue = false;
 
