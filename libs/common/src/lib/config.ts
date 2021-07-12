@@ -33,6 +33,13 @@ export const secondaryColorRgb = {
   b: 207
 };
 
+export const warnColorHex = '#dc3545';
+export const warnColorRgb = {
+  r: 220,
+  g: 53,
+  b: 69
+};
+
 export const DEFAULT_DATE_FORMAT = 'dd.MM.yyyy';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 

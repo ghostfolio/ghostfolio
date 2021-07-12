@@ -6,7 +6,11 @@ import {
   OnInit
 } from '@angular/core';
 import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
-import { primaryColorHex, secondaryColorHex } from '@ghostfolio/common/config';
+import {
+  primaryColorHex,
+  secondaryColorHex,
+  warnColorHex
+} from '@ghostfolio/common/config';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
@@ -109,5 +113,6 @@ export class AppComponent implements OnDestroy, OnInit {
 
     this.materialCssVarsService.setPrimaryColor(primaryColorHex);
     this.materialCssVarsService.setAccentColor(secondaryColorHex);
+    this.materialCssVarsService.setWarnColor(warnColorHex);
   }
 }
