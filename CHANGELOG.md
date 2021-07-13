@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the import functionality for transactions
+
 ### Changed
 
 - Upgraded `angular-material-css-vars` from version `2.0.0` to `2.1.0`
