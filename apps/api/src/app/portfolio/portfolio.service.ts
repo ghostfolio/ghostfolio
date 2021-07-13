@@ -26,7 +26,6 @@ import Big from 'big.js';
 import {
   add,
   addMonths,
-  endOfToday,
   format,
   getDate,
   getMonth,
@@ -43,7 +42,6 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { port } from 'envalid';
 import { isEmpty } from 'lodash';
 import * as roundTo from 'round-to';
 
@@ -204,11 +202,13 @@ export class PortfolioService {
       format(new Date(), dateFormat)
     );
 
-    return timeline.map((timelineItem) => ({
-      date: timelineItem.date,
-      value: timelineItem.grossPerformance,
-      marketPrice: timelineItem.value
-    }));
+    return timeline
+      .filter((timelineItem) => timelineItem !== null)
+      .map((timelineItem) => ({
+        date: timelineItem.date,
+        value: timelineItem.grossPerformance,
+        marketPrice: timelineItem.value
+      }));
   }
 
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {

@@ -169,7 +169,10 @@ export class PortfolioCalculator {
       ) {
         j++;
       }
-      timelinePeriodPromises.push(this.getTimePeriodForDate(j, currentDate));
+      const timePeriodForDate = this.getTimePeriodForDate(j, currentDate);
+      if (timePeriodForDate != null) {
+        timelinePeriodPromises.push(timePeriodForDate);
+      }
     }
     console.timeEnd('calculate-timeline-calculations');
 
@@ -185,7 +188,10 @@ export class PortfolioCalculator {
     return timelinePeriods;
   }
 
-  private async getTimePeriodForDate(j: number, currentDate: Date) {
+  private async getTimePeriodForDate(
+    j: number,
+    currentDate: Date
+  ): Promise<TimelinePeriod> {
     let investment: Big = new Big(0);
     const promises = [];
     if (j >= 0) {
@@ -204,10 +210,19 @@ export class PortfolioCalculator {
       }
     }
 
-    const value = (await Promise.all(promises)).reduce(
-      (a, b) => a.add(b),
-      new Big(0)
-    );
+    const result = await Promise.all(promises).catch((e) => {
+      console.error(
+        `failed to fetch info for date ${currentDate} with exception`,
+        e
+      );
+      return null;
+    });
+
+    if (result == null) {
+      return null;
+    }
+
+    const value = result.reduce((a, b) => a.add(b), new Big(0));
     return {
       date: format(currentDate, DATE_FORMAT),
       grossPerformance: value.minus(investment),
