@@ -43,11 +43,13 @@ export class TransactionsTableComponent
 {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
+  @Input() hasPermissionToImportOrders: boolean;
   @Input() locale: string;
   @Input() showActions: boolean;
   @Input() transactions: OrderWithAccount[];
 
   @Output() export = new EventEmitter<void>();
+  @Output() import = new EventEmitter<void>();
   @Output() transactionDeleted = new EventEmitter<string>();
   @Output() transactionToClone = new EventEmitter<OrderWithAccount>();
   @Output() transactionToUpdate = new EventEmitter<OrderWithAccount>();
@@ -188,6 +190,10 @@ export class TransactionsTableComponent
 
   public onExport() {
     this.export.emit();
+  }
+
+  public onImport() {
+    this.import.emit();
   }
 
   public onOpenPositionDialog({

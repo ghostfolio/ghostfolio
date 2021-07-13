@@ -212,7 +212,23 @@
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
       <mat-menu #transactionsMenu="matMenu" xPosition="before">
-        <button i18n mat-menu-item (click)="onExport()">Export</button>
+        <button
+          *ngIf="hasPermissionToImportOrders"
+          class="align-items-center d-flex"
+          mat-menu-item
+          (click)="onImport()"
+        >
+          <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+          <span i18n>Import</span>
+        </button>
+        <button
+          class="align-items-center d-flex"
+          mat-menu-item
+          (click)="onExport()"
+        >
+          <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
+          <span i18n>Export</span>
+        </button>
       </mat-menu>
     </th>
     <td *matCellDef="let element" class="px-1 text-center" mat-cell>

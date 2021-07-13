@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
@@ -9,6 +10,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
+import { environment } from 'apps/client/src/environments/environment';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -26,6 +28,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public hasPermissionToDeleteOrder: boolean;
+  public hasPermissionToImportOrders = !environment.production;
   public routeQueryParams: Subscription;
   public transactions: OrderModel[];
   public user: User;
@@ -43,6 +46,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
+    private snackBar: MatSnackBar,
     private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
@@ -142,6 +146,23 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           )}.json`,
           'text/plain'
         );
+      });
+  }
+
+  public onImport() {
+    this.snackBar.open('⏳ Importing data...');
+
+    this.dataService
+      .postImport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.fetchOrders();
+
+          this.snackBar.open('✅ Import has been completed', undefined, {
+            duration: 3000
+          });
+        }
       });
   }
 
