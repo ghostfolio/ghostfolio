@@ -28,7 +28,7 @@
 
 ## Ghostfolio Premium
 
-Our official cloud offering [Ghostfolio Premium](https://ghostfol.io/pricing) is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs.
+Our official **[Ghostfolio Premium](https://ghostfol.io/pricing)** cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs.
 
 If you prefer to run Ghostfolio on your own infrastructure, please find the source code and further instructions here on _GitHub_.
 
