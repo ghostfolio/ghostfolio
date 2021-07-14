@@ -27,6 +27,10 @@ export class InfoService {
 
     const globalPermissions: string[] = [];
 
+    if (this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
+      globalPermissions.push(permissions.enableImport);
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
       globalPermissions.push(permissions.enableSocialLogin);
     }

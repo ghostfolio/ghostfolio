@@ -28,7 +28,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public hasPermissionToDeleteOrder: boolean;
-  public hasPermissionToImportOrders = !environment.production;
+  public hasPermissionToImportOrders: boolean;
   public routeQueryParams: Subscription;
   public transactions: OrderModel[];
   public user: User;
@@ -72,6 +72,18 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
+    this.dataService
+      .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ globalPermissions }) => {
+        this.hasPermissionToImportOrders = hasPermission(
+          globalPermissions,
+          permissions.enableImport
+        );
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService

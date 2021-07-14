@@ -1,4 +1,4 @@
-import { environment } from '@ghostfolio/api/environments/environment';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -18,6 +18,7 @@ import { ImportService } from './import.service';
 @Controller('import')
 export class ImportController {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly importService: ImportService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -25,7 +26,7 @@ export class ImportController {
   @Post()
   @UseGuards(AuthGuard('jwt'))
   public async import(@Body() importData: ImportDataDto): Promise<void> {
-    if (environment.production) {
+    if (!this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

@@ -7,6 +7,7 @@ export interface Environment extends CleanedEnvAccessors {
   DATA_SOURCES: string | string[]; // string is not correct, error in envalid?
   ENABLE_FEATURE_CUSTOM_SYMBOLS: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
+  ENABLE_FEATURE_IMPORT: boolean;
   ENABLE_FEATURE_SOCIAL_LOGIN: boolean;
   ENABLE_FEATURE_STATISTICS: boolean;
   ENABLE_FEATURE_SUBSCRIPTION: boolean;
