@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
+import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import {
@@ -171,6 +172,10 @@ export class DataService {
 
   public postAccount(aAccount: CreateAccountDto) {
     return this.http.post<OrderModel>(`/api/account`, aAccount);
+  }
+
+  public postImport(aImportData: ImportDataDto) {
+    return this.http.post<void>('/api/import', aImportData);
   }
 
   public postOrder(aOrder: CreateOrderDto) {

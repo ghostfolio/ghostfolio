@@ -14,6 +14,7 @@ export const permissions = {
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
   deleteUser: 'deleteUser',
+  enableImport: 'enableImport',
   enableSocialLogin: 'enableSocialLogin',
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',

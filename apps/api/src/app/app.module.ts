@@ -24,6 +24,7 @@ import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
 import { ExperimentalModule } from './experimental/experimental.module';
 import { ExportModule } from './export/export.module';
+import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { OrderModule } from './order/order.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
@@ -43,6 +44,7 @@ import { UserModule } from './user/user.module';
     ConfigModule.forRoot(),
     ExperimentalModule,
     ExportModule,
+    ImportModule,
     InfoModule,
     OrderModule,
     PortfolioModule,

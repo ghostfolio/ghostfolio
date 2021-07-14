@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
@@ -9,10 +10,11 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
+import { environment } from 'apps/client/src/environments/environment';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject, Subscription } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.component';
 
@@ -26,6 +28,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public hasPermissionToDeleteOrder: boolean;
+  public hasPermissionToImportOrders: boolean;
   public routeQueryParams: Subscription;
   public transactions: OrderModel[];
   public user: User;
@@ -43,6 +46,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
+    private snackBar: MatSnackBar,
     private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
@@ -68,6 +72,18 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
+    this.dataService
+      .fetchInfo()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ globalPermissions }) => {
+        this.hasPermissionToImportOrders = hasPermission(
+          globalPermissions,
+          permissions.enableImport
+        );
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
@@ -143,6 +159,54 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           'text/plain'
         );
       });
+  }
+
+  public onImport() {
+    const input = document.createElement('input');
+    input.type = 'file';
+
+    input.onchange = (event) => {
+      // Getting the file reference
+      const file = (event.target as HTMLInputElement).files[0];
+
+      // Setting up the reader
+      const reader = new FileReader();
+      reader.readAsText(file, 'UTF-8');
+
+      reader.onload = (readerEvent) => {
+        try {
+          const content = JSON.parse(readerEvent.target.result as string);
+
+          this.snackBar.open('⏳ Importing data...');
+
+          this.dataService
+            .postImport({
+              orders: content.orders
+            })
+            .pipe(
+              catchError((error) => {
+                this.handleImportError(error);
+
+                return EMPTY;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe({
+              next: () => {
+                this.fetchOrders();
+
+                this.snackBar.open('✅ Import has been completed', undefined, {
+                  duration: 3000
+                });
+              }
+            });
+        } catch (error) {
+          this.handleImportError(error);
+        }
+      };
+    };
+
+    input.click();
   }
 
   public onUpdateTransaction(aTransaction: OrderModel) {
@@ -221,6 +285,11 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     a.href = URL.createObjectURL(file);
     a.download = aFileName;
     a.click();
+  }
+
+  private handleImportError(aError: unknown) {
+    console.error(aError);
+    this.snackBar.open('❌ Oops, something went wrong...');
   }
 
   private openCreateTransactionDialog(aTransaction?: OrderModel): void {

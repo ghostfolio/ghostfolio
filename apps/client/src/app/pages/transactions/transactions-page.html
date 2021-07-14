@@ -5,10 +5,12 @@
       <gf-transactions-table
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
+        [hasPermissionToImportOrders]="hasPermissionToImportOrders"
         [locale]="user?.settings?.locale"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder"
         [transactions]="transactions"
         (export)="onExport()"
+        (import)="onImport()"
         (transactionDeleted)="onDeleteTransaction($event)"
         (transactionToClone)="onCloneTransaction($event)"
         (transactionToUpdate)="onUpdateTransaction($event)"

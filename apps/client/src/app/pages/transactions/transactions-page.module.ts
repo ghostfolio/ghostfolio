@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { GfTransactionsTableModule } from '@ghostfolio/client/components/transactions-table/transactions-table.module';
 
@@ -16,6 +17,7 @@ import { TransactionsPageComponent } from './transactions-page.component';
     CreateOrUpdateTransactionDialogModule,
     GfTransactionsTableModule,
     MatButtonModule,
+    MatSnackBarModule,
     RouterModule,
     TransactionsPageRoutingModule
   ],
