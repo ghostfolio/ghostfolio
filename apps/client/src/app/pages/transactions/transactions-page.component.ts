@@ -13,8 +13,8 @@ import { Order as OrderModel } from '@prisma/client';
 import { environment } from 'apps/client/src/environments/environment';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject, Subscription } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.component';
 
@@ -150,20 +150,51 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   }
 
   public onImport() {
-    this.snackBar.open('⏳ Importing data...');
+    const input = document.createElement('input');
+    input.type = 'file';
 
-    this.dataService
-      .postImport()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => {
-          this.fetchOrders();
+    input.onchange = (event) => {
+      // Getting the file reference
+      const file = (event.target as HTMLInputElement).files[0];
 
-          this.snackBar.open('✅ Import has been completed', undefined, {
-            duration: 3000
-          });
+      // Setting up the reader
+      const reader = new FileReader();
+      reader.readAsText(file, 'UTF-8');
+
+      reader.onload = (readerEvent) => {
+        try {
+          const content = JSON.parse(readerEvent.target.result as string);
+
+          this.snackBar.open('⏳ Importing data...');
+
+          this.dataService
+            .postImport({
+              orders: content.orders
+            })
+            .pipe(
+              catchError((error) => {
+                this.handleImportError(error);
+
+                return EMPTY;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe({
+              next: () => {
+                this.fetchOrders();
+
+                this.snackBar.open('✅ Import has been completed', undefined, {
+                  duration: 3000
+                });
+              }
+            });
+        } catch (error) {
+          this.handleImportError(error);
         }
-      });
+      };
+    };
+
+    input.click();
   }
 
   public onUpdateTransaction(aTransaction: OrderModel) {
@@ -242,6 +273,11 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     a.href = URL.createObjectURL(file);
     a.download = aFileName;
     a.click();
+  }
+
+  private handleImportError(aError: unknown) {
+    console.error(aError);
+    this.snackBar.open('❌ Oops, something went wrong...');
   }
 
   private openCreateTransactionDialog(aTransaction?: OrderModel): void {

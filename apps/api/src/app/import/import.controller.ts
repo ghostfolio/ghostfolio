@@ -1,6 +1,7 @@
 import { environment } from '@ghostfolio/api/environments/environment';
 import { RequestWithUser } from '@ghostfolio/common/types';
 import {
+  Body,
   Controller,
   HttpException,
   Inject,
@@ -9,9 +10,9 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
+import { ImportDataDto } from './import-data.dto';
 import { ImportService } from './import.service';
 
 @Controller('import')
@@ -23,7 +24,7 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  public async import(): Promise<void> {
+  public async import(@Body() importData: ImportDataDto): Promise<void> {
     if (environment.production) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -31,15 +32,9 @@ export class ImportController {
       );
     }
 
-    let orders: Partial<Order>[];
-
     try {
-      // TODO: Wire with file upload
-      const data = { orders: [] };
-      orders = data.orders;
-
       return await this.importService.import({
-        orders,
+        orders: importData.orders,
         userId: this.request.user.id
       });
     } catch (error) {
