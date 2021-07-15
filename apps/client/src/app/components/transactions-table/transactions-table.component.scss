@@ -27,7 +27,7 @@
       cursor: pointer;
 
       .type-badge {
-        background-color: rgba(var(--dark-primary-text), 0.05);
+        background-color: rgba(var(--palette-foreground-text), 0.05);
         border-radius: 1rem;
         line-height: 1em;
 
@@ -54,7 +54,10 @@
 
   .mat-table {
     .type-badge {
-      background-color: rgba(var(--light-primary-text), 0.1);
+      background-color: rgba(
+        var(--palette-foreground-text-dark),
+        0.1
+      ) !important;
     }
   }
 }
