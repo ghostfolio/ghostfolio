@@ -104,6 +104,11 @@
                 "output": "./"
               },
               {
+                "glob": "robots.txt",
+                "input": "apps/client/src/assets",
+                "output": "./"
+              },
+              {
                 "glob": "sitemap.xml",
                 "input": "apps/client/src/assets",
                 "output": "./"
