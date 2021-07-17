@@ -41,18 +41,13 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ demoAuthToken, globalPermissions }) => {
-        this.demoAuthToken = demoAuthToken;
-        this.hasPermissionForSocialLogin = hasPermission(
-          globalPermissions,
-          permissions.enableSocialLogin
-        );
+    const { demoAuthToken, globalPermissions } = this.dataService.fetchInfo();
 
-        this.changeDetectorRef.markForCheck();
-      });
+    this.demoAuthToken = demoAuthToken;
+    this.hasPermissionForSocialLogin = hasPermission(
+      globalPermissions,
+      permissions.enableSocialLogin
+    );
   }
 
   public async createAccount() {

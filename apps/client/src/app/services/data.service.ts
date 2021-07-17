@@ -29,6 +29,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
+import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -92,21 +93,16 @@ export class DataService {
     return this.http.get<Export>('/api/export');
   }
 
-  public fetchInfo() {
-    return this.http.get<InfoItem>('/api/info').pipe(
-      map((data) => {
-        if (
-          this.settingsStorageService.getSetting('utm_source') ===
-          'trusted-web-activity'
-        ) {
-          data.globalPermissions = data.globalPermissions.filter(
-            (permission) => permission !== permissions.enableSubscription
-          );
-        }
+  public fetchInfo(): InfoItem {
+    const info = cloneDeep((window as any).info);
 
-        return data;
-      })
-    );
+    if (window.localStorage.getItem('utm_source') === 'trusted-web-activity') {
+      info.globalPermissions = info.globalPermissions.filter(
+        (permission) => permission !== permissions.enableSubscription
+      );
+    }
+
+    return info;
   }
 
   public fetchSymbolItem(aSymbol: string) {

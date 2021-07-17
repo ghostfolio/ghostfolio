@@ -10,7 +10,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
-import { environment } from 'apps/client/src/environments/environment';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject, Subscription } from 'rxjs';
@@ -72,17 +71,12 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ globalPermissions }) => {
-        this.hasPermissionToImportOrders = hasPermission(
-          globalPermissions,
-          permissions.enableImport
-        );
+    const { globalPermissions } = this.dataService.fetchInfo();
 
-        this.changeDetectorRef.markForCheck();
-      });
+    this.hasPermissionToImportOrders = hasPermission(
+      globalPermissions,
+      permissions.enableImport
+    );
 
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 

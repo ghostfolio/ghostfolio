@@ -56,13 +56,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((info) => {
-        this.info = info;
-      });
-
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -70,6 +63,8 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
         const urlSegments = urlSegmentGroup.segments;
         this.currentRoute = urlSegments[0].path;
+
+        this.info = this.dataService.fetchInfo();
       });
 
     this.userService.stateChanged

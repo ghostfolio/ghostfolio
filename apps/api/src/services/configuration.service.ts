@@ -30,6 +30,7 @@ export class ConfigurationService {
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PORT: port({ default: 6379 }),
       ROOT_URL: str({ default: 'http://localhost:4200' }),
+      STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),
       WEB_AUTH_RP_ID: host({ default: 'localhost' })
     });

@@ -16,21 +16,13 @@ const buildTimestamp = `${formatWithTwoDigits(
 )}:${formatWithTwoDigits(now.getMinutes())}`;
 
 try {
-  let changedFiles = replace.sync({
+  const changedFiles = replace.sync({
     files: './dist/apps/client/main.*.js',
     from: /{BUILD_TIMESTAMP}/g,
     to: buildTimestamp,
     allowEmptyPaths: false
   });
   console.log('Build version set: ' + buildTimestamp);
-  console.log(changedFiles);
-
-  changedFiles = replace.sync({
-    files: './dist/apps/client/main.*.js',
-    from: /{STRIPE_PUBLIC_KEY}/g,
-    to: process.env.STRIPE_PUBLIC_KEY ?? '',
-    allowEmptyPaths: false
-  });
   console.log(changedFiles);
 } catch (error) {
   console.error('Error occurred:', error);

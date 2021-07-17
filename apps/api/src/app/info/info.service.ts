@@ -20,6 +20,7 @@ export class InfoService {
   ) {}
 
   public async get(): Promise<InfoItem> {
+    const info: Partial<InfoItem> = {};
     const platforms = await this.prisma.platform.findMany({
       orderBy: { name: 'asc' },
       select: { id: true, name: true }
@@ -41,9 +42,12 @@ export class InfoService {
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       globalPermissions.push(permissions.enableSubscription);
+
+      info.stripePublicKey = this.configurationService.get('STRIPE_PUBLIC_KEY');
     }
 
     return {
+      ...info,
       globalPermissions,
       platforms,
       currencies: Object.values(Currency),

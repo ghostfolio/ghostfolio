@@ -39,19 +39,13 @@ export class AboutPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ globalPermissions, statistics }) => {
-        this.hasPermissionForStatistics = hasPermission(
-          globalPermissions,
-          permissions.enableStatistics
-        );
+    const { globalPermissions, statistics } = this.dataService.fetchInfo();
+    this.hasPermissionForStatistics = hasPermission(
+      globalPermissions,
+      permissions.enableStatistics
+    );
 
-        this.statistics = statistics;
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.statistics = statistics;
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
