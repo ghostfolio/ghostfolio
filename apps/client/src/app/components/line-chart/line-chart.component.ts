@@ -2,6 +2,7 @@ import 'chartjs-adapter-date-fns';
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -44,7 +45,7 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
   public chart: Chart;
   public isLoading = true;
 
-  public constructor() {
+  public constructor(private changeDetectorRef: ChangeDetectorRef) {
     Chart.register(
       Filler,
       LineController,
@@ -59,7 +60,12 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
 
   public ngOnChanges() {
     if (this.historicalDataItems) {
-      this.initialize();
+      setTimeout(() => {
+        // Wait for the chartCanvas
+        this.initialize();
+
+        this.changeDetectorRef.markForCheck();
+      });
     }
   }
 
@@ -79,8 +85,6 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
       marketPrices.push(historicalDataItem.value);
     });
 
-    const canvas = document.getElementById('chartCanvas');
-
     const gradient = this.chartCanvas?.nativeElement
       ?.getContext('2d')
       .createLinearGradient(
@@ -89,11 +93,14 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
         0,
         (this.chartCanvas.nativeElement.parentNode.offsetHeight * 4) / 5
       );
-    gradient.addColorStop(
-      0,
-      `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.01)`
-    );
-    gradient.addColorStop(1, getBackgroundColor());
+
+    if (gradient) {
+      gradient.addColorStop(
+        0,
+        `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.01)`
+      );
+      gradient.addColorStop(1, getBackgroundColor());
+    }
 
     const data = {
       labels,
