@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -15,18 +10,11 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ShowAccessTokenDialog {
   public isAgreeButtonDisabled = true;
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  public constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {}
 
   public enableAgreeButton() {
-    setTimeout(() => {
-      this.isAgreeButtonDisabled = false;
-
-      this.changeDetectorRef.markForCheck();
-    }, 1500);
+    this.isAgreeButtonDisabled = false;
   }
 }

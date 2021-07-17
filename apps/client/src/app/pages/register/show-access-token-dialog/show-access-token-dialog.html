@@ -32,11 +32,11 @@
   <button i18n mat-flat-button [mat-dialog-close]="undefined">Cancel</button>
   <button
     color="primary"
-    i18n
     mat-flat-button
     [disabled]="isAgreeButtonDisabled"
     [mat-dialog-close]="data"
   >
-    Agree and continue
+    <span i18n>Agree and continue</span>
+    <ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
   </button>
 </div>
