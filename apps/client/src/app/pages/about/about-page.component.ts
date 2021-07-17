@@ -18,6 +18,7 @@ import { environment } from '../../../environments/environment';
 export class AboutPageComponent implements OnDestroy, OnInit {
   public baseCurrency = baseCurrency;
   public hasPermissionForStatistics: boolean;
+  public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
   public lastPublish = environment.lastPublish;
   public statistics: Statistics;
@@ -43,6 +44,11 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
       permissions.enableStatistics
+    );
+
+    this.hasPermissionForSubscription = hasPermission(
+      globalPermissions,
+      permissions.enableSubscription
     );
 
     this.statistics = statistics;
