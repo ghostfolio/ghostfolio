@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the styling of the current pricing plan
 - Improved the styling of the transaction type badge
+- Set the public _Stripe_ key dynamically
 - Upgraded `angular-material-css-vars` from version `2.0.0` to `2.1.0`
 
 ### Fixed

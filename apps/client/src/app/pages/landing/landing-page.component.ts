@@ -3,10 +3,8 @@ import { Router } from '@angular/router';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-landing-page',
@@ -34,16 +32,11 @@ export class LandingPageComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ demoAuthToken }) => {
-        this.demoAuthToken = demoAuthToken;
+    const { demoAuthToken } = this.dataService.fetchInfo();
 
-        this.initializeLineChart();
+    this.demoAuthToken = demoAuthToken;
 
-        this.changeDetectorRef.markForCheck();
-      });
+    this.initializeLineChart();
   }
 
   public initializeLineChart() {

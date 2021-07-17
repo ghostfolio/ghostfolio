@@ -1,16 +1,33 @@
 import { enableProdMode } from '@angular/core';
 import { LOCALE_ID } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { InfoItem } from '@ghostfolio/common/interfaces';
+import { permissions } from '@ghostfolio/common/permissions';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
-if (environment.production) {
-  enableProdMode();
-}
+(async () => {
+  const response = await fetch('/api/info');
+  const info: InfoItem = await response.json();
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule, {
-    providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }]
-  })
-  .catch((err) => console.error(err));
+  if (window.localStorage.getItem('utm_source') === 'trusted-web-activity') {
+    info.globalPermissions = info.globalPermissions.filter(
+      (permission) => permission !== permissions.enableSubscription
+    );
+  }
+
+  (window as any).info = info;
+
+  environment.stripePublicKey = info.stripePublicKey;
+
+  if (environment.production) {
+    enableProdMode();
+  }
+
+  platformBrowserDynamic()
+    .bootstrapModule(AppModule, {
+      providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }]
+    })
+    .catch((err) => console.error(err));
+})();

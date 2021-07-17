@@ -8,7 +8,6 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Currency } from '@prisma/client';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 import { DataService } from '../../../services/data.service';
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
@@ -34,15 +33,10 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currencies, platforms }) => {
-        this.currencies = currencies;
-        this.platforms = platforms;
+    const { currencies, platforms } = this.dataService.fetchInfo();
 
-        this.changeDetectorRef.markForCheck();
-      });
+    this.currencies = currencies;
+    this.platforms = platforms;
   }
 
   public onCancel(): void {

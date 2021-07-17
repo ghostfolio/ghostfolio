@@ -54,24 +54,19 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currencies, globalPermissions, subscriptions }) => {
-        this.coupon = subscriptions?.[0]?.coupon;
-        this.couponId = subscriptions?.[0]?.couponId;
-        this.currencies = currencies;
+    const { currencies, globalPermissions, subscriptions } =
+      this.dataService.fetchInfo();
+    this.coupon = subscriptions?.[0]?.coupon;
+    this.couponId = subscriptions?.[0]?.couponId;
+    this.currencies = currencies;
 
-        this.hasPermissionForSubscription = hasPermission(
-          globalPermissions,
-          permissions.enableSubscription
-        );
+    this.hasPermissionForSubscription = hasPermission(
+      globalPermissions,
+      permissions.enableSubscription
+    );
 
-        this.price = subscriptions?.[0]?.price;
-        this.priceId = subscriptions?.[0]?.priceId;
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.price = subscriptions?.[0]?.price;
+    this.priceId = subscriptions?.[0]?.priceId;
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))

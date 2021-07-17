@@ -1,6 +1,6 @@
 export const environment = {
   lastPublish: '{BUILD_TIMESTAMP}',
   production: true,
-  stripePublicKey: '{STRIPE_PUBLIC_KEY}',
+  stripePublicKey: '',
   version: `v${require('../../../../package.json').version}`
 };

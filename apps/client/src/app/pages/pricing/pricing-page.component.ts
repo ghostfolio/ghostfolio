@@ -28,15 +28,10 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ subscriptions }) => {
-        this.coupon = this.price = subscriptions?.[0]?.coupon;
-        this.price = subscriptions?.[0]?.price;
+    const { subscriptions } = this.dataService.fetchInfo();
 
-        this.changeDetectorRef.markForCheck();
-      });
+    this.coupon = this.price = subscriptions?.[0]?.coupon;
+    this.price = subscriptions?.[0]?.price;
   }
 
   /**

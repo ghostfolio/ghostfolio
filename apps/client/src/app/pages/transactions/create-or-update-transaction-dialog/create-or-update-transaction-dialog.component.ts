@@ -50,15 +50,10 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.dataService
-      .fetchInfo()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ currencies, platforms }) => {
-        this.currencies = currencies;
-        this.platforms = platforms;
+    const { currencies, platforms } = this.dataService.fetchInfo();
 
-        this.changeDetectorRef.markForCheck();
-      });
+    this.currencies = currencies;
+    this.platforms = platforms;
 
     this.filteredLookupItems = this.searchSymbolCtrl.valueChanges.pipe(
       startWith(''),
