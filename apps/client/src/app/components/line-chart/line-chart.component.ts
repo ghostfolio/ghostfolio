@@ -61,6 +61,7 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnChanges() {
     if (this.historicalDataItems) {
       setTimeout(() => {
+        // Wait for the chartCanvas
         this.initialize();
 
         this.changeDetectorRef.markForCheck();
