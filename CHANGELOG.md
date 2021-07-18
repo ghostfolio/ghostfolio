@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the chart on the landing page
+- Fixed the url to the _Fear & Greed Index_ on the resources page
 
 ## 1.26.0 - 17.07.2021
 
