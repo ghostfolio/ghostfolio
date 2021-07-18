@@ -1,4 +1,4 @@
-<div class="container">
+<div *ngIf="hasPositions || !historicalDataItems" class="container">
   <div class="row">
     <div class="chart-container col mr-3">
       <gf-line-chart
@@ -22,4 +22,11 @@
       ></gf-portfolio-performance-summary>
     </div>
   </div>
+</div>
+
+<div
+  *ngIf="!hasPositions && historicalDataItems"
+  class="d-flex justify-content-center my-5"
+>
+  <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
 </div>

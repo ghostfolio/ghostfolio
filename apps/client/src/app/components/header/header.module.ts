@@ -6,7 +6,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { LoginWithAccessTokenDialogModule } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.module';
 
-import { GfLogoModule } from '../logo/logo.module';
+import { GfLogoModule } from '@ghostfolio/client/components/logo/logo.module';
 import { HeaderComponent } from './header.component';
 
 @NgModule({
