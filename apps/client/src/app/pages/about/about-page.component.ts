@@ -17,6 +17,7 @@ import { environment } from '../../../environments/environment';
 })
 export class AboutPageComponent implements OnDestroy, OnInit {
   public baseCurrency = baseCurrency;
+  public hasPermissionForBlog: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
@@ -41,6 +42,12 @@ export class AboutPageComponent implements OnDestroy, OnInit {
    */
   public ngOnInit() {
     const { globalPermissions, statistics } = this.dataService.fetchInfo();
+
+    this.hasPermissionForBlog = hasPermission(
+      globalPermissions,
+      permissions.enableBlog
+    );
+
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
       permissions.enableStatistics

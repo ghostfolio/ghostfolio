@@ -5,6 +5,7 @@ export interface Environment extends CleanedEnvAccessors {
   ALPHA_VANTAGE_API_KEY: string;
   CACHE_TTL: number;
   DATA_SOURCES: string | string[]; // string is not correct, error in envalid?
+  ENABLE_FEATURE_BLOG: boolean;
   ENABLE_FEATURE_CUSTOM_SYMBOLS: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
   ENABLE_FEATURE_IMPORT: boolean;

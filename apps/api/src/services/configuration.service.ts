@@ -15,6 +15,7 @@ export class ConfigurationService {
       ALPHA_VANTAGE_API_KEY: str({ default: '' }),
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCES: json({ default: JSON.stringify([DataSource.YAHOO]) }),
+      ENABLE_FEATURE_BLOG: bool({ default: false }),
       ENABLE_FEATURE_CUSTOM_SYMBOLS: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_IMPORT: bool({ default: !environment.production }),

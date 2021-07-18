@@ -104,7 +104,7 @@
     </div>
   </div>
 
-  <div class="mb-5 row">
+  <div *ngIf="hasPermissionForBlog" class="mb-5 row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Blog</h3>
       <mat-card class="blog-container">
