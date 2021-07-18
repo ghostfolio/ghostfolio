@@ -14,10 +14,12 @@ import {
 })
 export class LogoComponent implements OnInit {
   @HostBinding('class') @Input() size: 'large' | 'medium';
+  @Input() hideName: boolean;
 
   public constructor() {}
 
   public ngOnInit() {
-    this.size = this.size || 'medium';
+    this.hideName = this.hideName ?? false;
+    this.size = this.size ?? 'medium';
   }
 }

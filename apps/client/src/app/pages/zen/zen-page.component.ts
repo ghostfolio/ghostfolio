@@ -20,6 +20,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToReadForeignPortfolio: boolean;
+  public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
@@ -87,6 +88,8 @@ export class ZenPageComponent implements OnDestroy, OnInit {
             value: chartDataItem.value
           };
         });
+
+        this.hasPositions = this.historicalDataItems?.length > 0;
 
         this.changeDetectorRef.markForCheck();
       });

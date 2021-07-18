@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the onboarding
+  - Flow of creating a new account
+  - Info message to add the first transaction
 
 ### Fixed
 

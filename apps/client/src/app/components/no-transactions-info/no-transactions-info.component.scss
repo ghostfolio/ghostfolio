@@ -1,3 +1,13 @@
 :host {
+  border: 1px solid rgba(var(--dark-dividers));
+  border-radius: 0.25rem;
   display: block;
+
+  gf-logo {
+    opacity: 0.25;
+  }
+}
+
+:host-context(.is-dark-theme) {
+  border-color: rgba(var(--light-dividers));
 }

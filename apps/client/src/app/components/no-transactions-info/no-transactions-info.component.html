@@ -1,9 +1,13 @@
-<a
-  class="align-items-center justify-content-center"
-  color="primary"
-  [routerLink]="['/transactions']"
-  mat-button
->
-  <ion-icon class="mr-1" name="time-outline" size="large"></ion-icon>
-  <span i18n>Time to add your first transaction.</span>
-</a>
+<div class="p-3">
+  <div class="d-flex justify-content-center mb-1">
+    <gf-logo size="large" [hideName]="true"></gf-logo>
+  </div>
+  <a
+    class="align-items-center justify-content-center"
+    color="primary"
+    [routerLink]="['/transactions']"
+    mat-button
+  >
+    <span i18n>Time to add your first transaction.</span>
+  </a>
+</div>
