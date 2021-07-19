@@ -11,10 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the data management by symbol profile data
 - Added a currency attribute to the symbol profile model
+- Added a positions button on the home page which scrolls into the view
 
 ### Changed
 
 - Improved the style of the active page in the navigation on desktop
+- Removed the footer for users
+- Extended the _Zen Mode_ by positions
+- Improved the _Create Account_ message in the _Live Demo_
 
 ## 1.27.0 - 18.07.2021
 
