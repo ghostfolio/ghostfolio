@@ -9,17 +9,17 @@
 </header>
 
 <main role="main">
-  <div *ngIf="canCreateAccount" class="container create-account-container">
-    <div class="row mb-5">
-      <div class="col-md-6 offset-md-3">
-        <a [routerLink]="['/']">
-          <mat-card
-            class="create-account-box p-2 text-center"
+  <div *ngIf="canCreateAccount" class="container create-account-container mb-2">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 text-center">
+        <a class="text-center" [routerLink]="['/']">
+          <div
+            class="create-account-box d-inline-block px-3 py-2"
             (click)="onCreateAccount()"
           >
-            <div class="mt-1" i18n>You are using the Live Demo.</div>
-            <button mat-button color="primary" i18n>Create Account</button>
-          </mat-card></a
+            <span i18n>You are using the Live Demo.</span>
+            <a class="ml-2" href="#" i18n>Create Account</a>
+          </div></a
         >
       </div>
     </div>
@@ -28,10 +28,7 @@
   <router-outlet></router-outlet>
 </main>
 
-<footer
-  *ngIf="currentRoute === 'start' || deviceType !== 'mobile'"
-  class="footer d-flex justify-content-center position-absolute w-100"
->
+<footer *ngIf="!user" class="footer d-flex justify-content-center w-100">
   <div class="container text-center">
     <div>
       © {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>

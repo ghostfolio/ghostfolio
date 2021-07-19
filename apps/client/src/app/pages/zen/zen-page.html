@@ -1,32 +1,65 @@
-<div *ngIf="hasPositions || !historicalDataItems" class="container">
-  <div class="row">
-    <div class="chart-container col mr-3">
-      <gf-line-chart
-        symbol="Performance"
-        [historicalDataItems]="historicalDataItems"
-        [showLoader]="false"
-        [showXAxis]="false"
-        [showYAxis]="false"
-      ></gf-line-chart>
+<ng-container *ngIf="hasPositions || !historicalDataItems">
+  <div class="container overview position-relative">
+    <div class="row">
+      <div class="chart-container col mr-3">
+        <gf-line-chart
+          symbol="Performance"
+          [historicalDataItems]="historicalDataItems"
+          [showLoader]="false"
+          [showXAxis]="false"
+          [showYAxis]="false"
+        ></gf-line-chart>
+      </div>
     </div>
-  </div>
-  <div class="overview-container row mb-5 mt-1">
-    <div class="col">
-      <gf-portfolio-performance-summary
-        class="pb-4"
-        [baseCurrency]="user?.settings?.baseCurrency"
-        [isLoading]="isLoadingPerformance"
-        [locale]="user?.settings?.locale"
-        [performance]="performance"
-        [showDetails]="!hasImpersonationId || hasPermissionToReadForeignPortfolio"
-      ></gf-portfolio-performance-summary>
+    <div class="overview-container row mb-5 mt-1">
+      <div class="col">
+        <gf-portfolio-performance-summary
+          class="pb-4"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [isLoading]="isLoadingPerformance"
+          [locale]="user?.settings?.locale"
+          [performance]="performance"
+          [showDetails]="!hasImpersonationId || hasPermissionToReadForeignPortfolio"
+        ></gf-portfolio-performance-summary>
+      </div>
     </div>
-  </div>
-</div>
 
-<div
-  *ngIf="!hasPositions && historicalDataItems"
-  class="d-flex justify-content-center my-5"
->
-  <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
-</div>
+    <div
+      class="button-container d-flex justify-content-center position-absolute"
+    >
+      <a
+        *ngIf="showPositionsButton"
+        [routerLink]="['/zen']"
+        fragment="positions-container"
+        i18n
+        mat-flat-button
+        (click)="showPositionsButton = false"
+        >Positions</a
+      >
+    </div>
+  </div>
+
+  <div id="positions-container" class="container positions">
+    <div class="row mb-3">
+      <div class="col">
+        <mat-card class="p-0">
+          <mat-card-content>
+            <gf-positions
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [deviceType]="deviceType"
+              [locale]="user?.settings?.locale"
+              [positions]="positions"
+              [range]="dateRange"
+            ></gf-positions>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!hasPositions && historicalDataItems">
+  <div class="d-flex justify-content-center my-5">
+    <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+  </div>
+</ng-container>
