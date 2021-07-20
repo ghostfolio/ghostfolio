@@ -174,10 +174,6 @@ export class PortfolioService {
     const timelineSpecification: TimelineSpecification[] = [
       {
         start: format(portfolioStart, dateFormat),
-        accuracy: 'month'
-      },
-      {
-        start: format(subYears(new Date(), 1), dateFormat),
         accuracy: 'day'
       }
     ];
