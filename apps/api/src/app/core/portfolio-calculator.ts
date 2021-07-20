@@ -193,22 +193,23 @@ export class PortfolioCalculator {
         j++;
       }
 
-      let endDate = endOfDay(currentDate);
+      let periodEndDate = currentDate;
       if (timelineSpecification[i].accuracy === 'day') {
-        let nextEndDate: Date = end;
+        let nextEndDate = end;
         if (j + 1 < this.transactionPoints.length) {
           nextEndDate = dparse(this.transactionPoints[j + 1].date);
         }
-        endDate = min([
-          addMonths(currentDate, 1),
+        periodEndDate = min([
+          addMonths(currentDate, 3),
           max([currentDate, nextEndDate])
         ]);
       }
       const timePeriodForDates = this.getTimePeriodForDate(
         j,
         currentDate,
-        endDate
+        endOfDay(periodEndDate)
       );
+      currentDate = periodEndDate;
       if (timePeriodForDates != null) {
         timelinePeriodPromises.push(timePeriodForDates);
       }
@@ -234,8 +235,9 @@ export class PortfolioCalculator {
   ): Promise<TimelinePeriod[]> {
     let investment: Big = new Big(0);
 
-    let value = new Big(0);
-    const currentDateAsString = format(startDate, DATE_FORMAT);
+    const marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    } = {};
     if (j >= 0) {
       const currencies: { [name: string]: Currency } = {};
       const symbols: string[] = [];
@@ -250,8 +252,8 @@ export class PortfolioCalculator {
       if (symbols.length > 0) {
         try {
           marketSymbols = await this.currentRateService.getValues({
-            dateRangeStart: resetHours(startDate),
-            dateRangeEnd: resetHours(startDate),
+            dateRangeStart: startDate,
+            dateRangeEnd: endDate,
             symbols,
             currencies,
             userCurrency: this.currency
@@ -265,9 +267,6 @@ export class PortfolioCalculator {
         }
       }
 
-      const marketSymbolMap: {
-        [date: string]: { [symbol: string]: Big };
-      } = {};
       for (const marketSymbol of marketSymbols) {
         const date = format(marketSymbol.date, DATE_FORMAT);
         if (!marketSymbolMap[date]) {
@@ -277,27 +276,42 @@ export class PortfolioCalculator {
           marketSymbol.marketPrice
         );
       }
+    }
 
-      for (const item of this.transactionPoints[j].items) {
-        if (
-          !marketSymbolMap[currentDateAsString]?.hasOwnProperty(item.symbol)
-        ) {
-          return null;
+    const results = [];
+    for (
+      let currentDate = startDate;
+      isBefore(currentDate, endDate);
+      currentDate = addDays(currentDate, 1)
+    ) {
+      let value = new Big(0);
+      const currentDateAsString = format(currentDate, DATE_FORMAT);
+      let invalid = false;
+      if (j >= 0) {
+        for (const item of this.transactionPoints[j].items) {
+          if (
+            !marketSymbolMap[currentDateAsString]?.hasOwnProperty(item.symbol)
+          ) {
+            invalid = true;
+            break;
+          }
+          value = value.add(
+            item.quantity.mul(marketSymbolMap[currentDateAsString][item.symbol])
+          );
         }
-        value = value.add(
-          item.quantity.mul(marketSymbolMap[currentDateAsString][item.symbol])
-        );
+      }
+      if (!invalid) {
+        const result = {
+          date: currentDateAsString,
+          grossPerformance: value.minus(investment),
+          investment,
+          value
+        };
+        results.push(result);
       }
     }
 
-    return [
-      {
-        date: currentDateAsString,
-        grossPerformance: value.minus(investment),
-        investment,
-        value
-      }
-    ];
+    return results;
   }
 
   private getFactor(type: OrderType) {
