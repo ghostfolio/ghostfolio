@@ -9,6 +9,7 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -107,6 +108,14 @@ export class DataService {
 
   public fetchSymbolItem(aSymbol: string) {
     return this.http.get<SymbolItem>(`/api/symbol/${aSymbol}`);
+  }
+
+  public fetchPositions(): Observable<PortfolioPositions> {
+    return this.http.get<PortfolioPositions>('/api/portfolio/positions').pipe(
+      map((respose) => {
+        return respose;
+      })
+    );
   }
 
   public fetchSymbols(aQuery: string) {

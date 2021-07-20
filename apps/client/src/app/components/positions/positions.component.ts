@@ -9,7 +9,7 @@ import {
   MarketState,
   Type
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces/portfolio-position.interface';
+import { TimelinePosition } from '@ghostfolio/common/interfaces';
 
 @Component({
   selector: 'gf-positions',
@@ -21,12 +21,12 @@ export class PositionsComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() locale: string;
-  @Input() positions: { [symbol: string]: PortfolioPosition };
+  @Input() positions: TimelinePosition[];
   @Input() range: string;
 
   public hasPositions: boolean;
-  public positionsRest: PortfolioPosition[] = [];
-  public positionsWithPriority: PortfolioPosition[] = [];
+  public positionsRest: TimelinePosition[] = [];
+  public positionsWithPriority: TimelinePosition[] = [];
 
   private ignoreTypes = [Type.Cash];
 
@@ -36,7 +36,7 @@ export class PositionsComponent implements OnChanges, OnInit {
 
   public ngOnChanges() {
     if (this.positions) {
-      this.hasPositions = Object.entries(this.positions).length > 0;
+      this.hasPositions = this.positions.length > 0;
 
       if (!this.hasPositions) {
         return;
@@ -45,7 +45,7 @@ export class PositionsComponent implements OnChanges, OnInit {
       this.positionsRest = [];
       this.positionsWithPriority = [];
 
-      for (const [, portfolioPosition] of Object.entries(this.positions)) {
+      for (const portfolioPosition of this.positions) {
         if (this.ignoreTypes.includes(portfolioPosition.type)) {
           continue;
         }

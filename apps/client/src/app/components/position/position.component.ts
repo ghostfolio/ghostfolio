@@ -8,7 +8,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -25,7 +25,7 @@ export class PositionComponent implements OnDestroy, OnInit {
   @Input() deviceType: string;
   @Input() isLoading: boolean;
   @Input() locale: string;
-  @Input() position: PortfolioPosition;
+  @Input() position: TimelinePosition;
   @Input() range: string;
 
   public unknownKey = UNKNOWN_KEY;
