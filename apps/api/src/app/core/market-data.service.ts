@@ -26,11 +26,11 @@ export class MarketDataService {
   public async getRange({
     dateRangeEnd,
     dateRangeStart,
-    symbol
+    symbols
   }: {
     dateRangeEnd: Date;
     dateRangeStart: Date;
-    symbol: string;
+    symbols: string[];
   }): Promise<MarketData[]> {
     return await this.prisma.marketData.findMany({
       where: {
@@ -38,7 +38,9 @@ export class MarketDataService {
           gte: dateRangeStart,
           lt: endOfDay(dateRangeEnd)
         },
-        symbol
+        symbol: {
+          in: symbols
+        }
       }
     });
   }

@@ -49,16 +49,16 @@ export class CurrentRateService {
   }
 
   public async getValues({
-    currency,
+    currencies,
     dateRangeEnd,
     dateRangeStart,
-    symbol,
+    symbols,
     userCurrency
   }: GetValuesParams): Promise<GetValueObject[]> {
     const marketData = await this.marketDataService.getRange({
       dateRangeEnd,
       dateRangeStart,
-      symbol
+      symbols
     });
 
     if (marketData) {
@@ -67,7 +67,7 @@ export class CurrentRateService {
           date: marketDataItem.date,
           marketPrice: this.exchangeRateDataService.toCurrency(
             marketDataItem.marketPrice,
-            currency,
+            currencies[marketDataItem.symbol],
             userCurrency
           )
         };
@@ -75,7 +75,7 @@ export class CurrentRateService {
     }
 
     throw new Error(
-      `Values not found for ${symbol} from ${resetHours(
+      `Values not found for symbols ${symbols.join(', ')} from ${resetHours(
         dateRangeStart
       )} to ${resetHours(dateRangeEnd)}`
     );
@@ -92,8 +92,8 @@ export interface GetValueParams {
 export interface GetValuesParams {
   dateRangeEnd: Date;
   dateRangeStart: Date;
-  symbol: string;
-  currency: Currency;
+  symbols: string[];
+  currencies: { [symbol: string]: Currency };
   userCurrency: Currency;
 }
 
