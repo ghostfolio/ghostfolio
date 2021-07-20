@@ -121,6 +121,9 @@ export class PortfolioCalculator {
         currency: item.currency,
         userCurrency: this.currency
       });
+      const grossPerformance = new Big(marketValue.marketPrice)
+        .mul(item.quantity)
+        .minus(item.investment);
       result[item.symbol] = {
         averagePrice: item.investment.div(item.quantity),
         firstBuyDate: item.firstBuyDate,
@@ -128,7 +131,9 @@ export class PortfolioCalculator {
         symbol: item.symbol,
         investment: item.investment,
         marketPrice: marketValue.marketPrice,
-        transactionCount: item.transactionCount
+        transactionCount: item.transactionCount,
+        grossPerformance,
+        grossPerformancePercentage: grossPerformance.div(item.investment)
       };
     }
 
@@ -290,6 +295,8 @@ interface TimelinePosition {
   quantity: Big;
   symbol: string;
   investment: Big;
+  grossPerformancePercentage: Big;
+  grossPerformance: Big;
   marketPrice: number;
   transactionCount: number;
 }

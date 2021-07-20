@@ -32,7 +32,7 @@ function dateEqual(date1: Date, date2: Date) {
   );
 }
 
-jest.mock('./current-rate.service.ts', () => {
+jest.mock('@ghostfolio/api/app/core/current-rate.service', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     CurrentRateService: jest.fn().mockImplementation(() => {
@@ -546,7 +546,9 @@ describe('PortfolioCalculator', () => {
           symbol: 'VTI',
           investment: new Big('4460.95'),
           marketPrice: new Big('213.32'),
-          transactionCount: 5
+          transactionCount: 5,
+          grossPerformance: new Big('872.05'), // 213.32*25-4460.95
+          grossPerformancePercentage: new Big('0.19548526659119694236') // 872.05/4460.95
         }
       });
     });
