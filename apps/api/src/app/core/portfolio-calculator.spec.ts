@@ -1,6 +1,7 @@
 import {
   CurrentRateService,
-  GetValueParams
+  GetValueParams,
+  GetValuesParams
 } from '@ghostfolio/api/app/core/current-rate.service';
 import {
   PortfolioCalculator,
@@ -11,7 +12,14 @@ import {
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
-import { differenceInCalendarDays, parse } from 'date-fns';
+import {
+  addDays,
+  differenceInCalendarDays,
+  endOfDay,
+  isBefore,
+  parse
+} from 'date-fns';
+import { resetHours } from '@ghostfolio/common/helper';
 
 function toYearMonthDay(date: Date) {
   const year = date.getFullYear();
@@ -32,6 +40,27 @@ function dateEqual(date1: Date, date2: Date) {
   );
 }
 
+function mockGetValue(symbol: string, date: Date) {
+  const today = new Date();
+  if (symbol === 'VTI') {
+    if (dateEqual(today, date)) {
+      return { marketPrice: 213.32 };
+    } else {
+      const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
+      const daysInBetween = differenceInCalendarDays(date, startDate);
+
+      const marketPrice = new Big('144.38').plus(
+        new Big('0.08').mul(daysInBetween)
+      );
+      return { marketPrice: marketPrice.toNumber() };
+    }
+  } else if (symbol === 'AMZN') {
+    return { marketPrice: 2021.99 };
+  } else {
+    return { marketPrice: 0 };
+  }
+}
+
 jest.mock('@ghostfolio/api/app/core/current-rate.service', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -43,24 +72,30 @@ jest.mock('@ghostfolio/api/app/core/current-rate.service', () => {
           currency,
           userCurrency
         }: GetValueParams) => {
-          const today = new Date();
-          if (symbol === 'VTI') {
-            if (dateEqual(today, date)) {
-              return Promise.resolve({ marketPrice: new Big('213.32') });
-            } else {
-              const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
-              const daysInBetween = differenceInCalendarDays(date, startDate);
-
-              const marketPrice = new Big('144.38').plus(
-                new Big('0.08').mul(daysInBetween)
-              );
-              return Promise.resolve({ marketPrice });
+          return Promise.resolve(mockGetValue(symbol, date));
+        },
+        getValues: ({
+          currencies,
+          dateRangeEnd,
+          dateRangeStart,
+          symbols,
+          userCurrency
+        }: GetValuesParams) => {
+          const result = [];
+          for (
+            let date = resetHours(dateRangeStart);
+            isBefore(date, endOfDay(dateRangeEnd));
+            date = addDays(date, 1)
+          ) {
+            for (const symbol of symbols) {
+              result.push({
+                date,
+                symbol,
+                marketPrice: mockGetValue(symbol, date).marketPrice
+              });
             }
-          } else if (symbol === 'AMZN') {
-            return Promise.resolve({ marketPrice: new Big('2021.99') });
           }
-
-          return Promise.resolve({ marketPrice: new Big('0') });
+          return Promise.resolve(result);
         }
       };
     })
@@ -545,7 +580,7 @@ describe('PortfolioCalculator', () => {
           quantity: new Big('25'),
           symbol: 'VTI',
           investment: new Big('4460.95'),
-          marketPrice: new Big('213.32'),
+          marketPrice: 213.32,
           transactionCount: 5,
           grossPerformance: new Big('872.05'), // 213.32*25-4460.95
           grossPerformancePercentage: new Big('0.19548526659119694236') // 872.05/4460.95

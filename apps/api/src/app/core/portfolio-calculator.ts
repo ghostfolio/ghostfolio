@@ -1,4 +1,7 @@
-import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import {
+  CurrentRateService,
+  GetValueObject
+} from '@ghostfolio/api/app/core/current-rate.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
@@ -11,6 +14,7 @@ import {
   isBefore,
   parse
 } from 'date-fns';
+import { resetHours } from '@ghostfolio/common/helper';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -198,38 +202,65 @@ export class PortfolioCalculator {
     currentDate: Date
   ): Promise<TimelinePeriod> {
     let investment: Big = new Big(0);
-    const promises = [];
+
+    let value = new Big(0);
+    const currentDateAsString = format(currentDate, DATE_FORMAT);
     if (j >= 0) {
+      const currencies: { [name: string]: Currency } = {};
+      const symbols: string[] = [];
+
       for (const item of this.transactionPoints[j].items) {
+        currencies[item.symbol] = item.currency;
+        symbols.push(item.symbol);
         investment = investment.add(item.investment);
-        promises.push(
-          this.currentRateService
-            .getValue({
-              date: currentDate,
-              symbol: item.symbol,
-              currency: item.currency,
-              userCurrency: this.currency
-            })
-            .then(({ marketPrice }) => new Big(marketPrice).mul(item.quantity))
+      }
+
+      let marketSymbols: GetValueObject[] = [];
+      if (symbols.length > 0) {
+        try {
+          marketSymbols = await this.currentRateService.getValues({
+            dateRangeStart: resetHours(currentDate),
+            dateRangeEnd: resetHours(currentDate),
+            symbols,
+            currencies,
+            userCurrency: this.currency
+          });
+        } catch (e) {
+          console.error(
+            `failed to fetch info for date ${currentDate} with exception`,
+            e
+          );
+          return null;
+        }
+      }
+
+      const marketSymbolMap: {
+        [date: string]: { [symbol: string]: Big };
+      } = {};
+      for (const marketSymbol of marketSymbols) {
+        const date = format(marketSymbol.date, DATE_FORMAT);
+        if (!marketSymbolMap[date]) {
+          marketSymbolMap[date] = {};
+        }
+        marketSymbolMap[date][marketSymbol.symbol] = new Big(
+          marketSymbol.marketPrice
+        );
+      }
+
+      for (const item of this.transactionPoints[j].items) {
+        if (
+          !marketSymbolMap[currentDateAsString]?.hasOwnProperty(item.symbol)
+        ) {
+          return null;
+        }
+        value = value.add(
+          item.quantity.mul(marketSymbolMap[currentDateAsString][item.symbol])
         );
       }
     }
 
-    const result = await Promise.all(promises).catch((e) => {
-      console.error(
-        `failed to fetch info for date ${currentDate} with exception`,
-        e
-      );
-      return null;
-    });
-
-    if (result == null) {
-      return null;
-    }
-
-    const value = result.reduce((a, b) => a.add(b), new Big(0));
     return {
-      date: format(currentDate, DATE_FORMAT),
+      date: currentDateAsString,
       grossPerformance: value.minus(investment),
       investment,
       value
@@ -310,9 +341,9 @@ export interface TimelineSpecification {
 
 export interface TimelinePeriod {
   date: string;
-  grossPerformance: number;
+  grossPerformance: Big;
   investment: Big;
-  value: number;
+  value: Big;
 }
 
 export interface PortfolioOrder {
