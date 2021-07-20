@@ -8,6 +8,7 @@ import {
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { OrderType } from '@ghostfolio/api/models/order-type';
 import { Portfolio } from '@ghostfolio/api/models/portfolio';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
@@ -49,7 +50,6 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import { OrderType } from '@ghostfolio/api/models/order-type';
 
 @Injectable()
 export class PortfolioService {
@@ -151,30 +151,15 @@ export class PortfolioService {
       );
     console.timeEnd('impersonation-service');
 
-    console.time('create-portfolio');
     const userId = impersonationUserId || this.request.user.id;
-    const orders = await this.getOrders(userId);
-    console.timeEnd('create-portfolio');
-
-    if (orders.length <= 0) {
-      return [];
-    }
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
       this.request.user.Settings.currency
     );
 
-    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
-      date: format(order.date, 'yyyy-MM-dd'),
-      quantity: new Big(order.quantity),
-      symbol: order.symbol,
-      type: <OrderType>order.type,
-      unitPrice: new Big(order.unitPrice),
-      currency: order.currency
-    }));
-    portfolioCalculator.computeTransactionPoints(portfolioOrders);
-    const transactionPoints = portfolioCalculator.getTransactionPoints();
+    const transactionPoints = await this.getTransactionPoints(userId);
+    portfolioCalculator.setTransactionPoints(transactionPoints);
     if (transactionPoints.length === 0) {
       return [];
     }
@@ -211,6 +196,35 @@ export class PortfolioService {
       }));
   }
 
+  public async getPositions(aImpersonationId: string) {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        aImpersonationId,
+        this.request.user.id
+      );
+
+    const userId = impersonationUserId || this.request.user.id;
+
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+
+    const transactionPoints = await this.getTransactionPoints(userId);
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const positions = await portfolioCalculator.getCurrentPositions();
+
+    return Object.values(positions).map((position) => {
+      return {
+        ...position,
+        grossPerformance: Number(position.grossPerformance),
+        grossPerformancePercentage: Number(position.grossPerformancePercentage)
+      };
+    });
+  }
+
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
     switch (aDateRange) {
       case '1d':
@@ -227,6 +241,32 @@ export class PortfolioService {
         break;
     }
     return portfolioStart;
+  }
+
+  private async getTransactionPoints(userId: string) {
+    console.time('create-portfolio');
+    const orders = await this.getOrders(userId);
+    console.timeEnd('create-portfolio');
+
+    if (orders.length <= 0) {
+      return [];
+    }
+
+    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
+      date: format(order.date, 'yyyy-MM-dd'),
+      quantity: new Big(order.quantity),
+      symbol: order.symbol,
+      type: <OrderType>order.type,
+      unitPrice: new Big(order.unitPrice),
+      currency: order.currency
+    }));
+
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+    portfolioCalculator.computeTransactionPoints(portfolioOrders);
+    return portfolioCalculator.getTransactionPoints();
   }
 
   public async getOverview(
