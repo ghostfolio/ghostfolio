@@ -25,7 +25,8 @@ export class CurrentRateService {
       const dataProviderResult = await this.dataProviderService.get([symbol]);
       return {
         date: resetHours(date),
-        marketPrice: dataProviderResult?.[symbol]?.marketPrice ?? 0
+        marketPrice: dataProviderResult?.[symbol]?.marketPrice ?? 0,
+        symbol: symbol
       };
     }
 
@@ -37,6 +38,7 @@ export class CurrentRateService {
     if (marketData) {
       return {
         date: marketData.date,
+        symbol: marketData.symbol,
         marketPrice: this.exchangeRateDataService.toCurrency(
           marketData.marketPrice,
           currency,
@@ -65,6 +67,7 @@ export class CurrentRateService {
       return marketData.map((marketDataItem) => {
         return {
           date: marketDataItem.date,
+          symbol: marketDataItem.symbol,
           marketPrice: this.exchangeRateDataService.toCurrency(
             marketDataItem.marketPrice,
             currencies[marketDataItem.symbol],
@@ -99,5 +102,6 @@ export interface GetValuesParams {
 
 export interface GetValueObject {
   date: Date;
+  symbol: string;
   marketPrice: number;
 }
