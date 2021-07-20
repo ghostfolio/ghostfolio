@@ -33,6 +33,14 @@ export class MarketDataService {
     symbols: string[];
   }): Promise<MarketData[]> {
     return await this.prisma.marketData.findMany({
+      orderBy: [
+        {
+          date: 'asc'
+        },
+        {
+          symbol: 'asc'
+        }
+      ],
       where: {
         date: {
           gte: dateRangeStart,
