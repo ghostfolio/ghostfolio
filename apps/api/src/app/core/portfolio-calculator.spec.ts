@@ -10,6 +10,7 @@ import {
   TimelineSpecification
 } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderType } from '@ghostfolio/api/models/order-type';
+import { resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
 import {
@@ -19,7 +20,6 @@ import {
   isBefore,
   parse
 } from 'date-fns';
-import { resetHours } from '@ghostfolio/common/helper';
 
 function toYearMonthDay(date: Date) {
   const year = date.getFullYear();
@@ -583,7 +583,12 @@ describe('PortfolioCalculator', () => {
           marketPrice: 213.32,
           transactionCount: 5,
           grossPerformance: new Big('872.05'), // 213.32*25-4460.95
-          grossPerformancePercentage: new Big('0.19548526659119694236') // 872.05/4460.95
+          grossPerformancePercentage: new Big('0.19548526659119694236'), // 872.05/4460.95
+          marketState: 'open',
+          name: '',
+          type: 'UNKNOWN',
+          url: '',
+          currency: 'USD'
         }
       });
     });

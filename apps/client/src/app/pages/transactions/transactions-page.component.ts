@@ -107,6 +107,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
 
     this.fetchOrders();
+    this.fetchPositions();
   }
 
   public fetchOrders() {
@@ -121,6 +122,15 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         }
 
         this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  public fetchPositions() {
+    this.dataService
+      .fetchPositions()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        console.log(response);
       });
   }
 

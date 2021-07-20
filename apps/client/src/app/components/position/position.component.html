@@ -11,7 +11,7 @@
           [isLoading]="isLoading"
           [marketState]="position?.marketState"
           [range]="range"
-          [value]="position?.grossPerformancePercent"
+          [value]="position?.grossPerformancePercentage"
         ></gf-trend-indicator>
       </div>
       <div *ngIf="isLoading" class="flex-grow-1">
@@ -53,7 +53,7 @@
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale"
-            [value]="position?.grossPerformancePercent"
+            [value]="position?.grossPerformancePercentage"
           ></gf-value>
         </div>
       </div>
