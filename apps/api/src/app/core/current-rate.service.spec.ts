@@ -18,22 +18,26 @@ jest.mock('./market-data.service', () => {
             marketPrice: 1847.839966
           });
         },
-        getRange: (
-          dateRangeEnd: Date,
-          dateRangeStart: Date,
-          symbol: string
-        ) => {
+        getRange: ({
+          dateRangeEnd,
+          dateRangeStart,
+          symbols
+        }: {
+          dateRangeEnd: Date;
+          dateRangeStart: Date;
+          symbols: string[];
+        }) => {
           return Promise.resolve<MarketData[]>([
             {
               date: dateRangeStart,
-              symbol,
+              symbol: symbols[0],
               createdAt: dateRangeStart,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902
             },
             {
               date: dateRangeEnd,
-              symbol,
+              symbol: symbols[0],
               createdAt: dateRangeEnd,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966
@@ -45,7 +49,7 @@ jest.mock('./market-data.service', () => {
   };
 });
 
-jest.mock('../../services/exchange-rate-data.service', () => {
+jest.mock('@ghostfolio/api/services/exchange-rate-data.service', () => {
   return {
     ExchangeRateDataService: jest.fn().mockImplementation(() => {
       return {
@@ -101,10 +105,10 @@ describe('CurrentRateService', () => {
   it('getValues', async () => {
     expect(
       await currentRateService.getValues({
-        currency: Currency.USD,
+        currencies: { AMZN: Currency.USD },
         dateRangeEnd: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
         dateRangeStart: new Date(Date.UTC(2020, 0, 1, 0, 0, 0)),
-        symbol: 'AMZN',
+        symbols: ['AMZN'],
         userCurrency: Currency.CHF
       })
     ).toMatchObject([
