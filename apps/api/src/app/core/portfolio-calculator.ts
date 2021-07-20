@@ -3,6 +3,12 @@ import {
   GetValueObject
 } from '@ghostfolio/api/app/core/current-rate.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
+import {
+  MarketState,
+  Type
+} from '@ghostfolio/api/services/interfaces/interfaces';
+import { resetHours } from '@ghostfolio/common/helper';
+import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
 import {
@@ -14,7 +20,6 @@ import {
   isBefore,
   parse
 } from 'date-fns';
-import { resetHours } from '@ghostfolio/common/helper';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -130,14 +135,19 @@ export class PortfolioCalculator {
         .minus(item.investment);
       result[item.symbol] = {
         averagePrice: item.investment.div(item.quantity),
+        currency: item.currency,
         firstBuyDate: item.firstBuyDate,
+        marketState: MarketState.open, // TODO
         quantity: item.quantity,
         symbol: item.symbol,
         investment: item.investment,
         marketPrice: marketValue.marketPrice,
         transactionCount: item.transactionCount,
         grossPerformance,
-        grossPerformancePercentage: grossPerformance.div(item.investment)
+        grossPerformancePercentage: grossPerformance.div(item.investment),
+        url: '', // TODO
+        name: '', // TODO,
+        type: Type.Unknown // TODO
       };
     }
 
@@ -317,18 +327,6 @@ interface TransactionPointSymbol {
   investment: Big;
   currency: Currency;
   firstBuyDate: string;
-  transactionCount: number;
-}
-
-interface TimelinePosition {
-  averagePrice: Big;
-  firstBuyDate: string;
-  quantity: Big;
-  symbol: string;
-  investment: Big;
-  grossPerformancePercentage: Big;
-  grossPerformance: Big;
-  marketPrice: number;
   transactionCount: number;
 }
 

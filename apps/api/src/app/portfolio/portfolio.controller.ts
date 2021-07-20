@@ -37,6 +37,7 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
+import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
@@ -277,6 +278,16 @@ export class PortfolioController {
     }
 
     return <any>res.json(performance);
+  }
+
+  @Get('positions')
+  @UseGuards(AuthGuard('jwt'))
+  public async getPositions(
+    @Headers('impersonation-id') impersonationId
+  ): Promise<PortfolioPositions> {
+    const positions = await this.portfolioService.getPositions(impersonationId);
+
+    return { positions };
   }
 
   @Get('position/:symbol')
