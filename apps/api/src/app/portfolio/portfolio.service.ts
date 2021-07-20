@@ -206,7 +206,7 @@ export class PortfolioService {
       .filter((timelineItem) => timelineItem !== null)
       .map((timelineItem) => ({
         date: timelineItem.date,
-        value: timelineItem.grossPerformance,
+        value: timelineItem.grossPerformance.toNumber(),
         marketPrice: timelineItem.value
       }));
   }
