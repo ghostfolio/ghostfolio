@@ -13,8 +13,8 @@ export interface TimelinePosition {
   quantity: Big;
   symbol: string;
   investment: Big;
-  grossPerformancePercentage: Big;
-  grossPerformance: Big;
+  grossPerformancePercentage: Big | number; // TODO
+  grossPerformance: Big | number; // TODO
   marketPrice: number;
   transactionCount: number;
   name: string;
