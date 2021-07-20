@@ -15,11 +15,15 @@ import {
   addDays,
   addMonths,
   addYears,
+  endOfDay,
   format,
   isAfter,
   isBefore,
+  max,
+  min,
   parse
 } from 'date-fns';
+import { flatten } from 'lodash';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -168,7 +172,7 @@ export class PortfolioCalculator {
     const start = dparse(startDate);
     const end = dparse(endDate);
 
-    const timelinePeriodPromises: Promise<TimelinePeriod>[] = [];
+    const timelinePeriodPromises: Promise<TimelinePeriod[]>[] = [];
     let i = 0;
     let j = -1;
     for (
@@ -188,33 +192,50 @@ export class PortfolioCalculator {
       ) {
         j++;
       }
-      const timePeriodForDate = this.getTimePeriodForDate(j, currentDate);
-      if (timePeriodForDate != null) {
-        timelinePeriodPromises.push(timePeriodForDate);
+
+      let endDate = endOfDay(currentDate);
+      if (timelineSpecification[i].accuracy === 'day') {
+        let nextEndDate: Date = end;
+        if (j + 1 < this.transactionPoints.length) {
+          nextEndDate = dparse(this.transactionPoints[j + 1].date);
+        }
+        endDate = min([
+          addMonths(currentDate, 1),
+          max([currentDate, nextEndDate])
+        ]);
+      }
+      const timePeriodForDates = this.getTimePeriodForDate(
+        j,
+        currentDate,
+        endDate
+      );
+      if (timePeriodForDates != null) {
+        timelinePeriodPromises.push(timePeriodForDates);
       }
     }
     console.timeEnd('calculate-timeline-calculations');
 
     console.time('calculate-timeline-periods');
 
-    const timelinePeriods: TimelinePeriod[] = await Promise.all(
+    const timelinePeriods: TimelinePeriod[][] = await Promise.all(
       timelinePeriodPromises
     );
 
     console.timeEnd('calculate-timeline-periods');
     console.timeEnd('calculate-timeline-total');
 
-    return timelinePeriods;
+    return flatten(timelinePeriods);
   }
 
   private async getTimePeriodForDate(
     j: number,
-    currentDate: Date
-  ): Promise<TimelinePeriod> {
+    startDate: Date,
+    endDate: Date
+  ): Promise<TimelinePeriod[]> {
     let investment: Big = new Big(0);
 
     let value = new Big(0);
-    const currentDateAsString = format(currentDate, DATE_FORMAT);
+    const currentDateAsString = format(startDate, DATE_FORMAT);
     if (j >= 0) {
       const currencies: { [name: string]: Currency } = {};
       const symbols: string[] = [];
@@ -229,15 +250,15 @@ export class PortfolioCalculator {
       if (symbols.length > 0) {
         try {
           marketSymbols = await this.currentRateService.getValues({
-            dateRangeStart: resetHours(currentDate),
-            dateRangeEnd: resetHours(currentDate),
+            dateRangeStart: resetHours(startDate),
+            dateRangeEnd: resetHours(startDate),
             symbols,
             currencies,
             userCurrency: this.currency
           });
         } catch (e) {
           console.error(
-            `failed to fetch info for date ${currentDate} with exception`,
+            `failed to fetch info for date ${startDate} with exception`,
             e
           );
           return null;
@@ -269,12 +290,14 @@ export class PortfolioCalculator {
       }
     }
 
-    return {
-      date: currentDateAsString,
-      grossPerformance: value.minus(investment),
-      investment,
-      value
-    };
+    return [
+      {
+        date: currentDateAsString,
+        grossPerformance: value.minus(investment),
+        investment,
+        value
+      }
+    ];
   }
 
   private getFactor(type: OrderType) {
