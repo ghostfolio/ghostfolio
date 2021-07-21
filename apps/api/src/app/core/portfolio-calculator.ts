@@ -7,7 +7,6 @@ import {
   MarketState,
   Type
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
@@ -21,9 +20,11 @@ import {
   isBefore,
   max,
   min,
-  parse
+  parse,
+  subDays
 } from 'date-fns';
 import { flatten } from 'lodash';
+import { resetHours } from '@ghostfolio/common/helper';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -127,16 +128,19 @@ export class PortfolioCalculator {
       this.transactionPoints[this.transactionPoints.length - 1];
 
     const result: { [symbol: string]: TimelinePosition } = {};
+    const marketValues = await this.getMarketValues(
+      lastTransactionPoint,
+      resetHours(subDays(new Date(), 3)),
+      endOfDay(new Date())
+    );
+
     for (const item of lastTransactionPoint.items) {
-      const marketValue = await this.currentRateService.getValue({
-        date: new Date(),
-        symbol: item.symbol,
-        currency: item.currency,
-        userCurrency: this.currency
-      });
-      const grossPerformance = new Big(marketValue.marketPrice)
-        .mul(item.quantity)
-        .minus(item.investment);
+      const marketValue = marketValues[item.symbol];
+      const grossPerformance = marketValue
+        ? new Big(marketValue.marketPrice)
+            .mul(item.quantity)
+            .minus(item.investment)
+        : null;
       result[item.symbol] = {
         averagePrice: item.investment.div(item.quantity),
         currency: item.currency,
@@ -145,10 +149,12 @@ export class PortfolioCalculator {
         quantity: item.quantity,
         symbol: item.symbol,
         investment: item.investment,
-        marketPrice: marketValue.marketPrice,
+        marketPrice: marketValue?.marketPrice,
         transactionCount: item.transactionCount,
         grossPerformance,
-        grossPerformancePercentage: grossPerformance.div(item.investment),
+        grossPerformancePercentage: marketValue
+          ? grossPerformance.div(item.investment)
+          : null,
         url: '', // TODO
         name: '', // TODO,
         type: Type.Unknown // TODO
@@ -226,6 +232,33 @@ export class PortfolioCalculator {
     console.timeEnd('calculate-timeline-total');
 
     return flatten(timelinePeriods);
+  }
+
+  private async getMarketValues(
+    transactionPoint: TransactionPoint,
+    dateRangeStart: Date,
+    dateRangeEnd: Date
+  ) {
+    const symbols: string[] = [];
+    const currencies: { [symbol: string]: Currency } = {};
+
+    for (const item of transactionPoint.items) {
+      symbols.push(item.symbol);
+      currencies[item.symbol] = item.currency;
+    }
+    const values = await this.currentRateService.getValues({
+      dateRangeStart,
+      dateRangeEnd,
+      symbols,
+      currencies,
+      userCurrency: this.currency
+    });
+
+    const marketValues: { [symbol: string]: GetValueObject } = {};
+    for (const value of values) {
+      marketValues[value.symbol] = value;
+    }
+    return marketValues;
   }
 
   private async getTimePeriodForDate(
