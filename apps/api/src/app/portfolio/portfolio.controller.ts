@@ -283,9 +283,13 @@ export class PortfolioController {
   @Get('positions')
   @UseGuards(AuthGuard('jwt'))
   public async getPositions(
-    @Headers('impersonation-id') impersonationId
+    @Headers('impersonation-id') impersonationId,
+    @Query('range') range
   ): Promise<PortfolioPositions> {
-    const positions = await this.portfolioService.getPositions(impersonationId);
+    const positions = await this.portfolioService.getPositions(
+      impersonationId,
+      range
+    );
 
     return { positions };
   }

@@ -14,10 +14,15 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider.serv
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  MarketState,
+  Type
+} from '@ghostfolio/api/services/interfaces/interfaces';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
 import {
   PortfolioItem,
-  PortfolioOverview
+  PortfolioOverview,
+  Position
 } from '@ghostfolio/common/interfaces';
 import { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
@@ -192,7 +197,10 @@ export class PortfolioService {
       }));
   }
 
-  public async getPositions(aImpersonationId: string) {
+  public async getPositions(
+    aImpersonationId: string,
+    aDateRange: DateRange = 'max'
+  ): Promise<Position[]> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         aImpersonationId,
@@ -210,13 +218,23 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
+    // TODO: get positions for date range
+    console.log('Date range:', aDateRange);
     const positions = await portfolioCalculator.getCurrentPositions();
 
     return Object.values(positions).map((position) => {
       return {
         ...position,
-        grossPerformance: Number(position.grossPerformance),
-        grossPerformancePercentage: Number(position.grossPerformancePercentage)
+        averagePrice: new Big(position.averagePrice).toNumber(),
+        grossPerformance: new Big(position.grossPerformance).toNumber(),
+        grossPerformancePercentage: new Big(
+          position.grossPerformancePercentage
+        ).toNumber(),
+        investment: new Big(position.investment).toNumber(),
+        name: '', // TODO
+        quantity: new Big(position.quantity).toNumber(),
+        type: Type.Unknown, // TODO
+        url: '' // TODO
       };
     });
   }
