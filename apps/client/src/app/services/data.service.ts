@@ -27,6 +27,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
 import { Order as OrderModel } from '@prisma/client';
 import { Account as AccountModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
@@ -84,9 +85,9 @@ export class DataService {
     return this.http.get<Access[]>('/api/access');
   }
 
-  public fetchChart(aParams: { [param: string]: any }) {
+  public fetchChart({ range }: { range: DateRange }) {
     return this.http.get<HistoricalDataItem[]>('/api/portfolio/chart', {
-      params: aParams
+      params: { range }
     });
   }
 
@@ -110,12 +111,14 @@ export class DataService {
     return this.http.get<SymbolItem>(`/api/symbol/${aSymbol}`);
   }
 
-  public fetchPositions(): Observable<PortfolioPositions> {
-    return this.http.get<PortfolioPositions>('/api/portfolio/positions').pipe(
-      map((respose) => {
-        return respose;
-      })
-    );
+  public fetchPositions({
+    range
+  }: {
+    range: DateRange;
+  }): Observable<PortfolioPositions> {
+    return this.http.get<PortfolioPositions>('/api/portfolio/positions', {
+      params: { range }
+    });
   }
 
   public fetchSymbols(aQuery: string) {

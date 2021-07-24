@@ -9,7 +9,7 @@ import {
   MarketState,
   Type
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/interfaces';
+import { Position } from '@ghostfolio/common/interfaces';
 
 @Component({
   selector: 'gf-positions',
@@ -21,12 +21,12 @@ export class PositionsComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() locale: string;
-  @Input() positions: TimelinePosition[];
+  @Input() positions: Position[];
   @Input() range: string;
 
   public hasPositions: boolean;
-  public positionsRest: TimelinePosition[] = [];
-  public positionsWithPriority: TimelinePosition[] = [];
+  public positionsRest: Position[] = [];
+  public positionsWithPriority: Position[] = [];
 
   private ignoreTypes = [Type.Cash];
 
