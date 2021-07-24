@@ -2,6 +2,7 @@ import { benchmarks, currencyPairs } from '@ghostfolio/common/config';
 import {
   getUtc,
   isGhostfolioScraperApiSymbol,
+  isRakutenRapidApiSymbol,
   resetHours
 } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
@@ -37,7 +38,7 @@ export class DataGatheringService {
 
     if (isDataGatheringNeeded) {
       console.log('7d data gathering has been started.');
-      console.time('data-gathering');
+      console.time('7d-data-gathering');
 
       await this.prisma.property.create({
         data: {
@@ -70,7 +71,7 @@ export class DataGatheringService {
       });
 
       console.log('7d data gathering has been completed.');
-      console.timeEnd('data-gathering');
+      console.timeEnd('7d-data-gathering');
     }
   }
 
@@ -81,7 +82,7 @@ export class DataGatheringService {
 
     if (!isDataGatheringLocked) {
       console.log('Max data gathering has been started.');
-      console.time('data-gathering');
+      console.time('max-data-gathering');
 
       await this.prisma.property.create({
         data: {
@@ -114,8 +115,54 @@ export class DataGatheringService {
       });
 
       console.log('Max data gathering has been completed.');
-      console.timeEnd('data-gathering');
+      console.timeEnd('max-data-gathering');
     }
+  }
+
+  public async gatherProfileData(aSymbols?: string[]) {
+    console.log('Profile data gathering has been started.');
+    console.time('profile-data-gathering');
+
+    let symbols = aSymbols;
+
+    if (!symbols) {
+      const dataGatheringItems = await this.getSymbolsProfileData();
+      symbols = dataGatheringItems.map((dataGatheringItem) => {
+        return dataGatheringItem.symbol;
+      });
+    }
+
+    const currentData = await this.dataProviderService.get(symbols);
+
+    for (const [symbol, { currency, dataSource, name }] of Object.entries(
+      currentData
+    )) {
+      try {
+        await this.prisma.symbolProfile.upsert({
+          create: {
+            currency,
+            dataSource,
+            name,
+            symbol
+          },
+          update: {
+            currency,
+            name
+          },
+          where: {
+            dataSource_symbol: {
+              dataSource,
+              symbol
+            }
+          }
+        });
+      } catch (error) {
+        console.error(`${symbol}: ${error?.meta?.cause}`);
+      }
+    }
+
+    console.log('Profile data gathering has been completed.');
+    console.timeEnd('profile-data-gathering');
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
@@ -301,6 +348,25 @@ export class DataGatheringService {
       ...currencyPairsToGather,
       ...distinctOrders
     ];
+  }
+
+  private async getSymbolsProfileData(): Promise<IDataGatheringItem[]> {
+    const startDate = subDays(resetHours(new Date()), 7);
+
+    const distinctOrders = await this.prisma.order.findMany({
+      distinct: ['symbol'],
+      orderBy: [{ symbol: 'asc' }],
+      select: { dataSource: true, symbol: true }
+    });
+
+    return [...this.getBenchmarksToGather(startDate), ...distinctOrders].filter(
+      (distinctOrder) => {
+        return (
+          distinctOrder.dataSource !== DataSource.GHOSTFOLIO &&
+          distinctOrder.dataSource !== DataSource.RAKUTEN
+        );
+      }
+    );
   }
 
   private async isDataGatheringNeeded() {

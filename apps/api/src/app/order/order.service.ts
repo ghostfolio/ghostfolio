@@ -62,6 +62,8 @@ export class OrderService {
       ]);
     }
 
+    this.dataGatheringService.gatherProfileData([data.symbol]);
+
     await this.cacheService.flush(aUserId);
 
     return this.prisma.order.create({

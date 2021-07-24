@@ -61,7 +61,28 @@ export class AdminController {
       );
     }
 
+    await this.dataGatheringService.gatherProfileData();
     this.dataGatheringService.gatherMax();
+
+    return;
+  }
+
+  @Post('gather/profile-data')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherProfileData(): Promise<void> {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    this.dataGatheringService.gatherProfileData();
 
     return;
   }
