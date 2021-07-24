@@ -14,6 +14,8 @@
     .mat-flat-button {
       &:not(.mat-primary) {
         background-color: transparent;
+        text-decoration-color: rgba(var(--palette-primary-500), 1) !important;
+        text-underline-offset: 0.25rem;
       }
 
       ion-icon {
