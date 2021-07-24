@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the data management by symbol profile data
+- Added a currency attribute to the symbol profile model
+
 ### Changed
 
 - Improved the style of the active page in the navigation on desktop
