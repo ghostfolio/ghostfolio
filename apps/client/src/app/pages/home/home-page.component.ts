@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
@@ -21,14 +30,16 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-home-page',
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.scss']
 })
-export class HomePageComponent implements OnDestroy, OnInit {
+export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
+  @ViewChild('positionsContainer') positionsContainer: ElementRef;
+
   public dateRange: DateRange;
   public dateRangeOptions: ToggleOption[] = [
     { label: 'Today', value: '1d' },
@@ -50,6 +61,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public performance: PortfolioPerformance;
   public positions: { [symbol: string]: PortfolioPosition };
   public routeQueryParams: Subscription;
+  public showPositionsButton: boolean;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -66,7 +78,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private viewportScroller: ViewportScroller
   ) {
     this.routeQueryParams = this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -125,6 +138,12 @@ export class HomePageComponent implements OnDestroy, OnInit {
       <DateRange>this.settingsStorageService.getSetting(RANGE) || 'max';
 
     this.update();
+  }
+
+  public ngAfterViewInit(): void {
+    this.route.fragment
+      .pipe(first())
+      .subscribe((fragment) => this.viewportScroller.scrollToAnchor(fragment));
   }
 
   public onChangeDateRange(aDateRange: DateRange) {
@@ -203,7 +222,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .subscribe((response) => {
         this.positions = response;
         this.hasPositions =
-          this.positions && Object.keys(this.positions).length > 0;
+          this.positions && Object.keys(this.positions).length > 1;
+        this.showPositionsButton = this.hasPositions;
 
         this.changeDetectorRef.markForCheck();
       });

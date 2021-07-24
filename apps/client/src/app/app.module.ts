@@ -1,8 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -40,8 +38,6 @@ export function NgxStripeFactory(): string {
     GfHeaderModule,
     HttpClientModule,
     MarkdownModule.forRoot(),
-    MatButtonModule,
-    MatCardModule,
     MaterialCssVarsModule.forRoot({
       darkThemeClass: 'is-dark-theme',
       isAutoContrast: true,
