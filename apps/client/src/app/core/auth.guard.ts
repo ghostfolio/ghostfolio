@@ -63,6 +63,7 @@ export class AuthGuard implements CanActivate {
           ) {
             this.router.navigate(['/zen']);
             resolve(false);
+            return;
           } else if (state.url.startsWith('/start')) {
             if (user.settings.viewMode === ViewMode.ZEN) {
               this.router.navigate(['/zen']);
@@ -71,12 +72,14 @@ export class AuthGuard implements CanActivate {
             }
 
             resolve(false);
+            return;
           } else if (
             state.url.startsWith('/zen') &&
             user.settings.viewMode === ViewMode.DEFAULT
           ) {
             this.router.navigate(['/home']);
             resolve(false);
+            return;
           }
 
           resolve(true);
