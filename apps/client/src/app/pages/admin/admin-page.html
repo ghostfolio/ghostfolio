@@ -27,25 +27,46 @@
                 >
               </div>
               <div class="mt-2 overflow-hidden">
-                <button
-                  class="mb-2 mr-2 mw-100"
-                  color="accent"
-                  mat-flat-button
-                  (click)="onFlushCache()"
-                >
-                  <ion-icon class="mr-1" name="close-circle-outline"></ion-icon>
-                  <span i18n>Reset Data Gathering</span>
-                </button>
-                <button
-                  class="mw-100"
-                  color="warn"
-                  mat-flat-button
-                  [disabled]="dataGatheringInProgress"
-                  (click)="onGatherMax()"
-                >
-                  <ion-icon class="mr-1" name="warning-outline"></ion-icon>
-                  <span i18n>Gather All Data</span>
-                </button>
+                <div class="mb-2">
+                  <button
+                    class="mw-100"
+                    color="accent"
+                    mat-flat-button
+                    (click)="onFlushCache()"
+                  >
+                    <ion-icon
+                      class="mr-1"
+                      name="close-circle-outline"
+                    ></ion-icon>
+                    <span i18n>Reset Data Gathering</span>
+                  </button>
+                </div>
+                <div class="mb-2">
+                  <button
+                    class="mw-100"
+                    color="warn"
+                    mat-flat-button
+                    [disabled]="dataGatheringInProgress"
+                    (click)="onGatherMax()"
+                  >
+                    <ion-icon class="mr-1" name="warning-outline"></ion-icon>
+                    <span i18n>Gather All Data</span>
+                  </button>
+                </div>
+                <div>
+                  <button
+                    class="mb-2 mr-2 mw-100"
+                    color="accent"
+                    mat-flat-button
+                    (click)="onGatherProfileData()"
+                  >
+                    <ion-icon
+                      class="mr-1"
+                      name="cloud-download-outline"
+                    ></ion-icon>
+                    <span i18n>Gather Profile Data</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

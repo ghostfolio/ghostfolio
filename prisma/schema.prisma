@@ -117,6 +117,7 @@ model Settings {
 model SymbolProfile {
   countries  Json?
   createdAt  DateTime   @default(now())
+  currency   Currency?
   dataSource DataSource
   id         String     @id @default(uuid())
   name       String?

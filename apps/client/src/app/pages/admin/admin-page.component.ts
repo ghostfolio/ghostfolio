@@ -85,6 +85,13 @@ export class AdminPageComponent implements OnDestroy, OnInit {
     }
   }
 
+  public onGatherProfileData() {
+    this.adminService
+      .gatherProfileData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
   public formatDistanceToNow(aDateString: string) {
     if (aDateString) {
       const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {

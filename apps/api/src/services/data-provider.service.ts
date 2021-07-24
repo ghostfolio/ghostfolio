@@ -46,7 +46,10 @@ export class DataProviderService {
     }
 
     const yahooFinanceSymbols = aSymbols.filter((symbol) => {
-      return !isGhostfolioScraperApiSymbol(symbol);
+      return (
+        !isGhostfolioScraperApiSymbol(symbol) &&
+        !isRakutenRapidApiSymbol(symbol)
+      );
     });
 
     const response = await this.yahooFinanceService.get(yahooFinanceSymbols);
@@ -57,10 +60,21 @@ export class DataProviderService {
 
     for (const symbol of ghostfolioScraperApiSymbols) {
       if (symbol) {
-        const ghostfolioScraperApiResult = await this.ghostfolioScraperApiService.get(
-          [symbol]
-        );
+        const ghostfolioScraperApiResult =
+          await this.ghostfolioScraperApiService.get([symbol]);
         response[symbol] = ghostfolioScraperApiResult[symbol];
+      }
+    }
+
+    const rakutenRapidApiSymbols = aSymbols.filter((symbol) => {
+      return isRakutenRapidApiSymbol(symbol);
+    });
+
+    for (const symbol of rakutenRapidApiSymbols) {
+      if (symbol) {
+        const rakutenRapidApiResult =
+          await this.ghostfolioScraperApiService.get([symbol]);
+        response[symbol] = rakutenRapidApiResult[symbol];
       }
     }
 

@@ -10,4 +10,8 @@ export class AdminService {
   public gatherMax() {
     return this.http.post<void>(`/api/admin/gather/max`, {});
   }
+
+  public gatherProfileData() {
+    return this.http.post<void>(`/api/admin/gather/profile-data`, {});
+  }
 }
