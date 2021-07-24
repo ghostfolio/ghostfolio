@@ -24,7 +24,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PortfolioOverview,
   PortfolioPerformance,
-  TimelinePosition,
+  Position,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -65,7 +65,7 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
   public isLoadingPerformance = true;
   public overview: PortfolioOverview;
   public performance: PortfolioPerformance;
-  public positions: TimelinePosition[];
+  public positions: Position[];
   public routeQueryParams: Subscription;
   public user: User;
 
@@ -231,14 +231,11 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchPositions(/* { range: this.dateRange } */) // TODO
+      .fetchPositions({ range: this.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        console.log(response);
-
         this.positions = response.positions;
-        this.hasPositions =
-          this.positions && Object.keys(this.positions).length > 1;
+        this.hasPositions = this.positions?.length > 0;
 
         this.changeDetectorRef.markForCheck();
       });

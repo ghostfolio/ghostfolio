@@ -80,6 +80,7 @@ export class Portfolio implements PortfolioInterface {
 
     this.getSymbols().forEach((symbol) => {
       positions[symbol] = {
+        symbol,
         averagePrice: portfolioItemsYesterday?.positions[symbol]?.averagePrice,
         currency: portfolioItemsYesterday?.positions[symbol]?.currency,
         firstBuyDate: portfolioItemsYesterday?.positions[symbol]?.firstBuyDate,
@@ -723,6 +724,7 @@ export class Portfolio implements PortfolioInterface {
       const positions: { [symbol: string]: Position } = {};
       this.getSymbols().forEach((symbol) => {
         positions[symbol] = {
+          symbol,
           averagePrice: 0,
           currency: undefined,
           firstBuyDate: null,
@@ -759,12 +761,13 @@ export class Portfolio implements PortfolioInterface {
 
     const yesterday = getYesterday();
 
-    let positions: { [symbol: string]: Position } = {};
+    const positions: { [symbol: string]: Position } = {};
 
     if (isAfter(yesterday, this.getMinDate())) {
       // Add yesterday
       this.getSymbols().forEach((symbol) => {
         positions[symbol] = {
+          symbol,
           averagePrice: 0,
           currency: undefined,
           firstBuyDate: null,
@@ -773,6 +776,7 @@ export class Portfolio implements PortfolioInterface {
           marketPrice:
             historicalData[symbol]?.[format(yesterday, 'yyyy-MM-dd')]
               ?.marketPrice || 0,
+          name: '',
           quantity: 0,
           transactionCount: 0
         };
