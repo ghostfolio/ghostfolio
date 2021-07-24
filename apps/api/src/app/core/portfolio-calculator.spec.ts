@@ -576,19 +576,15 @@ describe('PortfolioCalculator', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         VTI: {
           averagePrice: new Big('178.438'),
+          currency: 'USD',
           firstBuyDate: '2019-02-01',
-          quantity: new Big('25'),
-          symbol: 'VTI',
-          investment: new Big('4460.95'),
-          marketPrice: 213.32,
-          transactionCount: 5,
           grossPerformance: new Big('872.05'), // 213.32*25-4460.95
           grossPerformancePercentage: new Big('0.19548526659119694236'), // 872.05/4460.95
-          marketState: 'open',
-          name: '',
-          type: 'UNKNOWN',
-          url: '',
-          currency: 'USD'
+          investment: new Big('4460.95'),
+          marketPrice: 213.32,
+          quantity: new Big('25'),
+          symbol: 'VTI',
+          transactionCount: 5
         }
       });
     });
