@@ -1,5 +1,5 @@
-import { TimelinePosition } from '@ghostfolio/common/interfaces';
+import { Position } from '@ghostfolio/common/interfaces';
 
 export interface PortfolioPositions {
-  positions: TimelinePosition[];
+  positions: Position[];
 }

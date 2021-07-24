@@ -3,10 +3,7 @@ import {
   GetValueObject
 } from '@ghostfolio/api/app/core/current-rate.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
-import {
-  MarketState,
-  Type
-} from '@ghostfolio/api/services/interfaces/interfaces';
+import { resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
@@ -24,7 +21,6 @@ import {
   subDays
 } from 'date-fns';
 import { flatten } from 'lodash';
-import { resetHours } from '@ghostfolio/common/helper';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 
@@ -145,19 +141,15 @@ export class PortfolioCalculator {
         averagePrice: item.investment.div(item.quantity),
         currency: item.currency,
         firstBuyDate: item.firstBuyDate,
-        marketState: MarketState.open, // TODO
-        quantity: item.quantity,
-        symbol: item.symbol,
-        investment: item.investment,
-        marketPrice: marketValue?.marketPrice,
-        transactionCount: item.transactionCount,
         grossPerformance,
         grossPerformancePercentage: marketValue
           ? grossPerformance.div(item.investment)
           : null,
-        url: '', // TODO
-        name: '', // TODO,
-        type: Type.Unknown // TODO
+        investment: item.investment,
+        marketPrice: marketValue?.marketPrice,
+        quantity: item.quantity,
+        symbol: item.symbol,
+        transactionCount: item.transactionCount
       };
     }
 
