@@ -57,10 +57,10 @@
 
   <mat-tab>
     <ng-template mat-tab-label>
-      <ion-icon name="list-outline" size="large"></ion-icon>
+      <ion-icon name="wallet-outline" size="large"></ion-icon>
     </ng-template>
-    <div class="container h-100 justify-content-center p-3 positions">
-      <div class="h-100 row">
+    <div class="container justify-content-center p-3 positions">
+      <div class="row">
         <div class="align-items-center col">
           <mat-card *ngIf="hasPositions === true" class="p-0">
             <mat-card-content>
@@ -75,7 +75,7 @@
           </mat-card>
           <div
             *ngIf="hasPositions === false"
-            class="align-items-center d-flex h-100 justify-content-center"
+            class="d-flex justify-content-center"
           >
             <div>
               <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>

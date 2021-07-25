@@ -23,6 +23,7 @@
     >
       <div class="row w-100">
         <a
+          *ngIf="historicalDataItems?.length !== 0"
           class="chart-container col"
           [routerLink]="[]"
           [queryParams]="{performanceChartDialog: true}"
@@ -36,7 +37,16 @@
             [showYAxis]="false"
           ></gf-line-chart>
         </a>
-        <div *ngIf="historicalDataItems?.length === 0" class="chart-container">
+        <div
+          *ngIf="historicalDataItems?.length === 0"
+          class="
+            align-items-center
+            chart-container
+            d-flex
+            justify-content-center
+            w-100
+          "
+        >
           <div class="d-flex justify-content-center">
             <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
           </div>
