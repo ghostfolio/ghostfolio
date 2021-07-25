@@ -231,7 +231,7 @@ export class PortfolioService {
           position.grossPerformancePercentage
         ).toNumber(),
         investment: new Big(position.investment).toNumber(),
-        name: '', // TODO
+        name: position.name,
         quantity: new Big(position.quantity).toNumber(),
         type: Type.Unknown, // TODO
         url: '' // TODO
@@ -267,12 +267,13 @@ export class PortfolioService {
     }
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
+      currency: order.currency,
       date: format(order.date, 'yyyy-MM-dd'),
+      name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.symbol,
       type: <OrderType>order.type,
-      unitPrice: new Big(order.unitPrice),
-      currency: order.currency
+      unitPrice: new Big(order.unitPrice)
     }));
 
     const portfolioCalculator = new PortfolioCalculator(
