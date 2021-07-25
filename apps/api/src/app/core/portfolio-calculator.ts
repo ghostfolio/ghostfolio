@@ -381,7 +381,7 @@ export class PortfolioCalculator {
   }
 }
 
-interface TransactionPoint {
+export interface TransactionPoint {
   date: string;
   items: TransactionPointSymbol[];
 }

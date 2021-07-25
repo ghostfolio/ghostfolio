@@ -7,7 +7,8 @@ import {
   PortfolioCalculator,
   PortfolioOrder,
   TimelinePeriod,
-  TimelineSpecification
+  TimelineSpecification,
+  TransactionPoint
 } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -129,6 +130,7 @@ describe('PortfolioCalculator', () => {
         ...ordersVTI,
         {
           date: '2021-02-01',
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
           quantity: new Big('20'),
           symbol: 'VTI',
           type: OrderType.Buy,
@@ -149,6 +151,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -162,6 +165,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -175,6 +179,7 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -188,6 +193,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-02-01',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('35'),
               symbol: 'VTI',
               investment: new Big('6627.05'),
@@ -201,6 +207,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-08-01',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('45'),
               symbol: 'VTI',
               investment: new Big('8403.95'),
@@ -218,6 +225,7 @@ describe('PortfolioCalculator', () => {
         ...ordersVTI,
         {
           date: '2019-09-01',
+          name: 'Amazon.com, Inc.',
           quantity: new Big('5'),
           symbol: 'AMZN',
           type: OrderType.Buy,
@@ -238,6 +246,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -251,6 +260,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -264,6 +274,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-09-01',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -272,6 +283,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -285,6 +297,7 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -293,6 +306,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -306,6 +320,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-02-01',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -314,6 +329,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('15'),
               symbol: 'VTI',
               investment: new Big('2684.05'),
@@ -327,6 +343,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-08-01',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -335,6 +352,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('25'),
               symbol: 'VTI',
               investment: new Big('4460.95'),
@@ -352,6 +370,7 @@ describe('PortfolioCalculator', () => {
         ...ordersVTI,
         {
           date: '2019-09-01',
+          name: 'Amazon.com, Inc.',
           quantity: new Big('5'),
           symbol: 'AMZN',
           type: OrderType.Buy,
@@ -360,6 +379,7 @@ describe('PortfolioCalculator', () => {
         },
         {
           date: '2020-08-02',
+          name: 'Amazon.com, Inc.',
           quantity: new Big('5'),
           symbol: 'AMZN',
           type: OrderType.Sell,
@@ -380,6 +400,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -393,6 +414,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -406,6 +428,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-09-01',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -414,6 +437,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -427,6 +451,7 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -435,6 +460,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -448,6 +474,7 @@ describe('PortfolioCalculator', () => {
           date: '2020-08-02',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -461,6 +488,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-02-01',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('15'),
               symbol: 'VTI',
               investment: new Big('2684.05'),
@@ -474,6 +502,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-08-01',
           items: [
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('25'),
               symbol: 'VTI',
               investment: new Big('4460.95'),
@@ -500,6 +529,7 @@ describe('PortfolioCalculator', () => {
           date: '2017-01-03',
           items: [
             {
+              name: 'Tesla, Inc.',
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -513,6 +543,7 @@ describe('PortfolioCalculator', () => {
           date: '2017-07-01',
           items: [
             {
+              name: 'Bitcoin USD',
               quantity: new Big('0.5614682'),
               symbol: 'BTCUSD',
               investment: new Big('1999.9999999999998659756'),
@@ -521,6 +552,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Tesla, Inc.',
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -534,6 +566,7 @@ describe('PortfolioCalculator', () => {
           date: '2018-09-01',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -542,6 +575,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Bitcoin USD',
               quantity: new Big('0.5614682'),
               symbol: 'BTCUSD',
               investment: new Big('1999.9999999999998659756'),
@@ -550,6 +584,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Tesla, Inc.',
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -582,6 +617,7 @@ describe('PortfolioCalculator', () => {
           grossPerformancePercentage: new Big('0.19548526659119694236'), // 872.05/4460.95
           investment: new Big('4460.95'),
           marketPrice: 213.32,
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
           quantity: new Big('25'),
           symbol: 'VTI',
           transactionCount: 5
@@ -1171,6 +1207,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -1179,6 +1216,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -1221,6 +1259,7 @@ describe('PortfolioCalculator', () => {
 const ordersMixedSymbols: PortfolioOrder[] = [
   {
     date: '2017-01-03',
+    name: 'Tesla, Inc.',
     quantity: new Big('50'),
     symbol: 'TSLA',
     type: OrderType.Buy,
@@ -1229,6 +1268,7 @@ const ordersMixedSymbols: PortfolioOrder[] = [
   },
   {
     date: '2017-07-01',
+    name: 'Bitcoin USD',
     quantity: new Big('0.5614682'),
     symbol: 'BTCUSD',
     type: OrderType.Buy,
@@ -1237,6 +1277,7 @@ const ordersMixedSymbols: PortfolioOrder[] = [
   },
   {
     date: '2018-09-01',
+    name: 'Amazon.com, Inc.',
     quantity: new Big('5'),
     symbol: 'AMZN',
     type: OrderType.Buy,
@@ -1248,6 +1289,7 @@ const ordersMixedSymbols: PortfolioOrder[] = [
 const ordersVTI: PortfolioOrder[] = [
   {
     date: '2019-02-01',
+    name: 'Vanguard Total Stock Market Index Fund ETF Shares',
     quantity: new Big('10'),
     symbol: 'VTI',
     type: OrderType.Buy,
@@ -1256,6 +1298,7 @@ const ordersVTI: PortfolioOrder[] = [
   },
   {
     date: '2019-08-03',
+    name: 'Vanguard Total Stock Market Index Fund ETF Shares',
     quantity: new Big('10'),
     symbol: 'VTI',
     type: OrderType.Buy,
@@ -1264,6 +1307,7 @@ const ordersVTI: PortfolioOrder[] = [
   },
   {
     date: '2020-02-02',
+    name: 'Vanguard Total Stock Market Index Fund ETF Shares',
     quantity: new Big('15'),
     symbol: 'VTI',
     type: OrderType.Sell,
@@ -1272,6 +1316,7 @@ const ordersVTI: PortfolioOrder[] = [
   },
   {
     date: '2021-08-01',
+    name: 'Vanguard Total Stock Market Index Fund ETF Shares',
     quantity: new Big('10'),
     symbol: 'VTI',
     type: OrderType.Buy,
@@ -1280,6 +1325,7 @@ const ordersVTI: PortfolioOrder[] = [
   },
   {
     date: '2021-02-01',
+    name: 'Vanguard Total Stock Market Index Fund ETF Shares',
     quantity: new Big('10'),
     symbol: 'VTI',
     type: OrderType.Buy,
@@ -1288,11 +1334,12 @@ const ordersVTI: PortfolioOrder[] = [
   }
 ];
 
-const ordersVTITransactionPoints = [
+const ordersVTITransactionPoints: TransactionPoint[] = [
   {
     date: '2019-02-01',
     items: [
       {
+        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('10'),
         symbol: 'VTI',
         investment: new Big('1443.8'),
@@ -1306,6 +1353,7 @@ const ordersVTITransactionPoints = [
     date: '2019-08-03',
     items: [
       {
+        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('20'),
         symbol: 'VTI',
         investment: new Big('2923.7'),
@@ -1319,6 +1367,7 @@ const ordersVTITransactionPoints = [
     date: '2020-02-02',
     items: [
       {
+        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('5'),
         symbol: 'VTI',
         investment: new Big('652.55'),
@@ -1332,6 +1381,7 @@ const ordersVTITransactionPoints = [
     date: '2021-02-01',
     items: [
       {
+        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('15'),
         symbol: 'VTI',
         investment: new Big('2684.05'),
@@ -1345,6 +1395,7 @@ const ordersVTITransactionPoints = [
     date: '2021-08-01',
     items: [
       {
+        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('25'),
         symbol: 'VTI',
         investment: new Big('4460.95'),
