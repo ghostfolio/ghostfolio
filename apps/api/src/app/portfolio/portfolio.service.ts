@@ -14,10 +14,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider.serv
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
-import {
-  MarketState,
-  Type
-} from '@ghostfolio/api/services/interfaces/interfaces';
+import { Type } from '@ghostfolio/api/services/interfaces/interfaces';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
 import {
   PortfolioItem,
@@ -195,93 +192,6 @@ export class PortfolioService {
         value: timelineItem.grossPerformance.toNumber(),
         marketPrice: timelineItem.value
       }));
-  }
-
-  public async getPositions(
-    aImpersonationId: string,
-    aDateRange: DateRange = 'max'
-  ): Promise<Position[]> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        this.request.user.id
-      );
-
-    const userId = impersonationUserId || this.request.user.id;
-
-    const portfolioCalculator = new PortfolioCalculator(
-      this.currentRateService,
-      this.request.user.Settings.currency
-    );
-
-    const transactionPoints = await this.getTransactionPoints(userId);
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
-
-    // TODO: get positions for date range
-    console.log('Date range:', aDateRange);
-    const positions = await portfolioCalculator.getCurrentPositions();
-
-    return Object.values(positions).map((position) => {
-      return {
-        ...position,
-        averagePrice: new Big(position.averagePrice).toNumber(),
-        grossPerformance: new Big(position.grossPerformance).toNumber(),
-        grossPerformancePercentage: new Big(
-          position.grossPerformancePercentage
-        ).toNumber(),
-        investment: new Big(position.investment).toNumber(),
-        name: position.name,
-        quantity: new Big(position.quantity).toNumber(),
-        type: Type.Unknown, // TODO
-        url: '' // TODO
-      };
-    });
-  }
-
-  private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
-    switch (aDateRange) {
-      case '1d':
-        portfolioStart = max([portfolioStart, subDays(new Date(), 1)]);
-        break;
-      case 'ytd':
-        portfolioStart = max([portfolioStart, setDayOfYear(new Date(), 1)]);
-        break;
-      case '1y':
-        portfolioStart = max([portfolioStart, subYears(new Date(), 1)]);
-        break;
-      case '5y':
-        portfolioStart = max([portfolioStart, subYears(new Date(), 5)]);
-        break;
-    }
-    return portfolioStart;
-  }
-
-  private async getTransactionPoints(userId: string) {
-    console.time('create-portfolio');
-    const orders = await this.getOrders(userId);
-    console.timeEnd('create-portfolio');
-
-    if (orders.length <= 0) {
-      return [];
-    }
-
-    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
-      currency: order.currency,
-      date: format(order.date, 'yyyy-MM-dd'),
-      name: order.SymbolProfile?.name,
-      quantity: new Big(order.quantity),
-      symbol: order.symbol,
-      type: <OrderType>order.type,
-      unitPrice: new Big(order.unitPrice)
-    }));
-
-    const portfolioCalculator = new PortfolioCalculator(
-      this.currentRateService,
-      this.request.user.Settings.currency
-    );
-    portfolioCalculator.computeTransactionPoints(portfolioOrders);
-    return portfolioCalculator.getTransactionPoints();
   }
 
   public async getOverview(
@@ -483,6 +393,93 @@ export class PortfolioService {
       symbol: aSymbol,
       transactionCount: undefined
     };
+  }
+
+  public async getPositions(
+    aImpersonationId: string,
+    aDateRange: DateRange = 'max'
+  ): Promise<Position[]> {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        aImpersonationId,
+        this.request.user.id
+      );
+
+    const userId = impersonationUserId || this.request.user.id;
+
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+
+    const transactionPoints = await this.getTransactionPoints(userId);
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    // TODO: get positions for date range
+    console.log('Date range:', aDateRange);
+    const positions = await portfolioCalculator.getCurrentPositions();
+
+    return Object.values(positions).map((position) => {
+      return {
+        ...position,
+        averagePrice: new Big(position.averagePrice).toNumber(),
+        grossPerformance: new Big(position.grossPerformance).toNumber(),
+        grossPerformancePercentage: new Big(
+          position.grossPerformancePercentage
+        ).toNumber(),
+        investment: new Big(position.investment).toNumber(),
+        name: position.name,
+        quantity: new Big(position.quantity).toNumber(),
+        type: Type.Unknown, // TODO
+        url: '' // TODO
+      };
+    });
+  }
+
+  private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
+    switch (aDateRange) {
+      case '1d':
+        portfolioStart = max([portfolioStart, subDays(new Date(), 1)]);
+        break;
+      case 'ytd':
+        portfolioStart = max([portfolioStart, setDayOfYear(new Date(), 1)]);
+        break;
+      case '1y':
+        portfolioStart = max([portfolioStart, subYears(new Date(), 1)]);
+        break;
+      case '5y':
+        portfolioStart = max([portfolioStart, subYears(new Date(), 5)]);
+        break;
+    }
+    return portfolioStart;
+  }
+
+  private async getTransactionPoints(userId: string) {
+    console.time('create-portfolio');
+    const orders = await this.getOrders(userId);
+    console.timeEnd('create-portfolio');
+
+    if (orders.length <= 0) {
+      return [];
+    }
+
+    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
+      currency: order.currency,
+      date: format(order.date, 'yyyy-MM-dd'),
+      name: order.SymbolProfile?.name,
+      quantity: new Big(order.quantity),
+      symbol: order.symbol,
+      type: <OrderType>order.type,
+      unitPrice: new Big(order.unitPrice)
+    }));
+
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+    portfolioCalculator.computeTransactionPoints(portfolioOrders);
+    return portfolioCalculator.getTransactionPoints();
   }
 
   private convertDateRangeToDate(aDateRange: DateRange, aMinDate: Date) {
