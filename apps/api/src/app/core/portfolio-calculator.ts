@@ -56,25 +56,27 @@ export class PortfolioCalculator {
       const unitPrice = new Big(order.unitPrice);
       if (oldAccumulatedSymbol) {
         currentTransactionPointItem = {
-          quantity: order.quantity
-            .mul(factor)
-            .plus(oldAccumulatedSymbol.quantity),
-          symbol: order.symbol,
+          currency: order.currency,
+          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           investment: unitPrice
             .mul(order.quantity)
             .mul(factor)
             .add(oldAccumulatedSymbol.investment),
-          currency: order.currency,
-          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
+          name: order.name,
+          quantity: order.quantity
+            .mul(factor)
+            .plus(oldAccumulatedSymbol.quantity),
+          symbol: order.symbol,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
         currentTransactionPointItem = {
-          quantity: order.quantity.mul(factor),
-          symbol: order.symbol,
-          investment: unitPrice.mul(order.quantity).mul(factor),
           currency: order.currency,
           firstBuyDate: order.date,
+          investment: unitPrice.mul(order.quantity).mul(factor),
+          name: order.name,
+          quantity: order.quantity.mul(factor),
+          symbol: order.symbol,
           transactionCount: 1
         };
       }
@@ -147,6 +149,7 @@ export class PortfolioCalculator {
           : null,
         investment: item.investment,
         marketPrice: marketValue?.marketPrice,
+        name: item.name,
         quantity: item.quantity,
         symbol: item.symbol,
         transactionCount: item.transactionCount
@@ -384,11 +387,12 @@ interface TransactionPoint {
 }
 
 interface TransactionPointSymbol {
-  quantity: Big;
-  symbol: string;
-  investment: Big;
   currency: Currency;
   firstBuyDate: string;
+  investment: Big;
+  name: string;
+  quantity: Big;
+  symbol: string;
   transactionCount: number;
 }
 
@@ -407,10 +411,11 @@ export interface TimelinePeriod {
 }
 
 export interface PortfolioOrder {
+  currency: Currency;
   date: string;
+  name: string;
   quantity: Big;
   symbol: string;
   type: OrderType;
   unitPrice: Big;
-  currency: Currency;
 }
