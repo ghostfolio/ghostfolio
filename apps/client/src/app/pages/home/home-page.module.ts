@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { GfLineChartModule } from '@ghostfolio/client/components/line-chart/line-chart.module';
+import { GfNoTransactionsInfoModule } from '@ghostfolio/client/components/no-transactions-info/no-transactions-info.module';
 import { GfPerformanceChartDialogModule } from '@ghostfolio/client/components/performance-chart-dialog/performance-chart-dialog.module';
 import { GfPortfolioOverviewModule } from '@ghostfolio/client/components/portfolio-overview/portfolio-overview.module';
 import { GfPortfolioPerformanceSummaryModule } from '@ghostfolio/client/components/portfolio-performance-summary/portfolio-performance-summary.module';
@@ -20,6 +22,7 @@ import { HomePageComponent } from './home-page.component';
   imports: [
     CommonModule,
     GfLineChartModule,
+    GfNoTransactionsInfoModule,
     GfPerformanceChartDialogModule,
     GfPortfolioOverviewModule,
     GfPortfolioPerformanceModule,
@@ -29,6 +32,7 @@ import { HomePageComponent } from './home-page.component';
     HomePageRoutingModule,
     MatButtonModule,
     MatCardModule,
+    MatTabsModule,
     RouterModule
   ],
   providers: [],

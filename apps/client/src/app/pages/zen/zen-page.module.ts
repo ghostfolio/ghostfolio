@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { GfLineChartModule } from '@ghostfolio/client/components/line-chart/line-chart.module';
 import { GfNoTransactionsInfoModule } from '@ghostfolio/client/components/no-transactions-info/no-transactions-info.module';
@@ -22,6 +23,7 @@ import { ZenPageComponent } from './zen-page.component';
     GfPositionsModule,
     MatButtonModule,
     MatCardModule,
+    MatTabsModule,
     RouterModule,
     ZenPageRoutingModule
   ],
