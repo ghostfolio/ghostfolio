@@ -146,13 +146,11 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<HistoricalDataItem[]> {
-    console.time('impersonation-service');
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         aImpersonationId,
         this.request.user.id
       );
-    console.timeEnd('impersonation-service');
 
     const userId = impersonationUserId || this.request.user.id;
 
@@ -457,9 +455,7 @@ export class PortfolioService {
   }
 
   private async getTransactionPoints(userId: string) {
-    console.time('create-portfolio');
     const orders = await this.getOrders(userId);
-    console.timeEnd('create-portfolio');
 
     if (orders.length <= 0) {
       return [];

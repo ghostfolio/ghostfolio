@@ -91,14 +91,10 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<HistoricalDataItem[]> {
-    console.log(`------- ${range} ------`);
-    console.time('get-chart-request');
-    console.time('portfolio-service-get-chart');
     let chartData = await this.portfolioService.getChart(
       impersonationId,
       range
     );
-    console.timeEnd('portfolio-service-get-chart');
 
     let hasNullValue = false;
 
@@ -134,8 +130,6 @@ export class PortfolioController {
         };
       });
     }
-
-    console.timeEnd('get-chart-request');
 
     return <any>res.json(chartData);
   }
