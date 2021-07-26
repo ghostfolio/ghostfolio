@@ -106,6 +106,8 @@
       class="no-min-width px-1"
       mat-flat-button
       [matMenuTriggerFor]="accountMenu"
+      (menuClosed)="onMenuClosed()"
+      (menuOpened)="onMenuOpened()"
     >
       <ion-icon
         class="d-none d-sm-block"
@@ -114,8 +116,8 @@
       ></ion-icon>
       <ion-icon
         class="d-block d-sm-none"
-        name="menu-outline"
         size="large"
+        [name]="isMenuOpen ? 'close-outline' : 'menu-outline'"
       ></ion-icon>
     </button>
     <mat-menu #accountMenu="matMenu" xPosition="before">

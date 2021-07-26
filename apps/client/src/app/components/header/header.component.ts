@@ -38,6 +38,7 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
   public impersonationId: string;
+  public isMenuOpen: boolean;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -82,6 +83,14 @@ export class HeaderComponent implements OnChanges {
     }
 
     window.location.reload();
+  }
+
+  public onMenuClosed() {
+    this.isMenuOpen = false;
+  }
+
+  public onMenuOpened() {
+    this.isMenuOpen = true;
   }
 
   public onSignOut() {

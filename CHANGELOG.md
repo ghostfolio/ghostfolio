@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Introduced tabs on the home page
+- Changed the menu icon if the menu is open on mobile
 
 ## 1.28.0 - 24.07.2021
 
