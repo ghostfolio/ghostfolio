@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
 import { isToday } from 'date-fns';
 
-import { MarketDataService } from './market-data.service';
+import { DateQuery, MarketDataService } from './market-data.service';
 
 @Injectable()
 export class CurrentRateService {
@@ -52,14 +52,12 @@ export class CurrentRateService {
 
   public async getValues({
     currencies,
-    dateRangeEnd,
-    dateRangeStart,
+    dateQuery,
     symbols,
     userCurrency
   }: GetValuesParams): Promise<GetValueObject[]> {
     const marketData = await this.marketDataService.getRange({
-      dateRangeEnd,
-      dateRangeStart,
+      dateQuery,
       symbols
     });
 
@@ -77,11 +75,7 @@ export class CurrentRateService {
       });
     }
 
-    throw new Error(
-      `Values not found for symbols ${symbols.join(', ')} from ${resetHours(
-        dateRangeStart
-      )} to ${resetHours(dateRangeEnd)}`
-    );
+    throw new Error(`Values not found for symbols ${symbols.join(', ')}`);
   }
 }
 
@@ -93,8 +87,7 @@ export interface GetValueParams {
 }
 
 export interface GetValuesParams {
-  dateRangeEnd: Date;
-  dateRangeStart: Date;
+  dateQuery: DateQuery;
   symbols: string[];
   currencies: { [symbol: string]: Currency };
   userCurrency: Currency;

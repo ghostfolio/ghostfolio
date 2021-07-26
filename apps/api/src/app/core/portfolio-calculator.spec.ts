@@ -77,23 +77,34 @@ jest.mock('@ghostfolio/api/app/core/current-rate.service', () => {
         },
         getValues: ({
           currencies,
-          dateRangeEnd,
-          dateRangeStart,
+          dateQuery,
           symbols,
           userCurrency
         }: GetValuesParams) => {
           const result = [];
-          for (
-            let date = resetHours(dateRangeStart);
-            isBefore(date, endOfDay(dateRangeEnd));
-            date = addDays(date, 1)
-          ) {
-            for (const symbol of symbols) {
-              result.push({
-                date,
-                symbol,
-                marketPrice: mockGetValue(symbol, date).marketPrice
-              });
+          if (dateQuery.lt) {
+            for (
+              let date = resetHours(dateQuery.gte);
+              isBefore(date, endOfDay(dateQuery.lt));
+              date = addDays(date, 1)
+            ) {
+              for (const symbol of symbols) {
+                result.push({
+                  date,
+                  symbol,
+                  marketPrice: mockGetValue(symbol, date).marketPrice
+                });
+              }
+            }
+          } else {
+            for (const date of dateQuery.in) {
+              for (const symbol of symbols) {
+                result.push({
+                  date,
+                  symbol,
+                  marketPrice: mockGetValue(symbol, date).marketPrice
+                });
+              }
             }
           }
           return Promise.resolve(result);
@@ -605,7 +616,14 @@ describe('PortfolioCalculator', () => {
         Currency.USD
       );
       portfolioCalculator.setTransactionPoints(ordersVTITransactionPoints);
-      const currentPositions = await portfolioCalculator.getCurrentPositions();
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => 1603490400000); // 2020-10-24
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parse('2019-01-01', 'yyyy-MM-dd', new Date())
+      );
+      spy.mockRestore();
 
       expect(currentPositions).toEqual({
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -613,14 +631,89 @@ describe('PortfolioCalculator', () => {
           averagePrice: new Big('178.438'),
           currency: 'USD',
           firstBuyDate: '2019-02-01',
-          grossPerformance: new Big('872.05'), // 213.32*25-4460.95
-          grossPerformancePercentage: new Big('0.19548526659119694236'), // 872.05/4460.95
+          // see next test for details about how to calculate this
+          grossPerformance: new Big('265.2'),
+          grossPerformancePercentage: new Big(
+            '0.37322057787174066244232522865731355471028555367747465860626740684417274277219590953836818016777856'
+          ),
           investment: new Big('4460.95'),
-          marketPrice: 213.32,
+          marketPrice: 194.86,
           name: 'Vanguard Total Stock Market Index Fund ETF Shares',
           quantity: new Big('25'),
           symbol: 'VTI',
           transactionCount: 5
+        }
+      });
+    });
+
+    it('with performance since Jan 1st, 2020', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      const transactionPoints = [
+        {
+          date: '2019-02-01',
+          items: [
+            {
+              quantity: new Big('10'),
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+              symbol: 'VTI',
+              investment: new Big('1443.8'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 1
+            }
+          ]
+        },
+        {
+          date: '2020-08-03',
+          items: [
+            {
+              quantity: new Big('20'),
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+              symbol: 'VTI',
+              investment: new Big('2923.7'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 2
+            }
+          ]
+        }
+      ];
+
+      portfolioCalculator.setTransactionPoints(transactionPoints);
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => 1603490400000); // 2020-10-24
+
+      // 2020-01-01         -> days 334 => value: VTI: 144.38+334*0.08=171.1  => 10*171.10=1711
+      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 10*188.30=1883 => 1883/1711=1.100526008 - 1 = 0.100526008
+      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 20*188.30=3766
+      // 2020-10-24 [today] -> days 631 => value: VTI: 144.38+631*0.08=194.86 => 20*194.86=3897.2 => 3897.2/3766=1.034838024 - 1 = 0.034838024
+      // gross performance: 1883-1711 + 3897.2-3766 = 303.2
+      // gross performance percentage: 1.100526008 * 1.034838024 = 1.138866159 => 13.89 %
+
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parse('2020-01-01', 'yyyy-MM-dd', new Date())
+      );
+
+      spy.mockRestore();
+      expect(currentPositions).toEqual({
+        VTI: {
+          averagePrice: new Big('146.185'),
+          firstBuyDate: '2019-02-01',
+          quantity: new Big('20'),
+          symbol: 'VTI',
+          investment: new Big('2923.7'),
+          marketPrice: 194.86,
+          transactionCount: 2,
+          grossPerformance: new Big('303.2'),
+          grossPerformancePercentage: new Big(
+            '0.1388661601402688486251911721754180022242'
+          ),
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+          currency: 'USD'
         }
       });
     });

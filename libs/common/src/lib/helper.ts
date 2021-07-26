@@ -1,5 +1,5 @@
 import { Currency } from '@prisma/client';
-import { getDate, getMonth, getYear, subDays } from 'date-fns';
+import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
 import { ghostfolioScraperApiSymbolPrefix } from './config';
 
@@ -136,4 +136,10 @@ export function resolveFearAndGreedIndex(aValue: number) {
   } else if (aValue >= 75) {
     return { emoji: '🤪', text: 'Extreme Greed' };
   }
+}
+
+export const DATE_FORMAT = 'yyyy-MM-dd';
+
+export function parseDate(date: string) {
+  return parse(date, DATE_FORMAT, new Date());
 }
