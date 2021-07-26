@@ -3,7 +3,7 @@ import {
   GetValueObject
 } from '@ghostfolio/api/app/core/current-rate.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
-import { resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
@@ -17,16 +17,9 @@ import {
   isBefore,
   max,
   min,
-  parse,
   subDays
 } from 'date-fns';
 import { flatten } from 'lodash';
-
-const DATE_FORMAT = 'yyyy-MM-dd';
-
-function dparse(date: string) {
-  return parse(date, DATE_FORMAT, new Date());
-}
 
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
@@ -115,7 +108,7 @@ export class PortfolioCalculator {
     return this.transactionPoints;
   }
 
-  public async getCurrentPositions(): Promise<{
+  public async getCurrentPositions(start: Date): Promise<{
     [symbol: string]: TimelinePosition;
   }> {
     if (!this.transactionPoints?.length) {
@@ -126,29 +119,117 @@ export class PortfolioCalculator {
       this.transactionPoints[this.transactionPoints.length - 1];
 
     const result: { [symbol: string]: TimelinePosition } = {};
-    const marketValues = await this.getMarketValues(
-      lastTransactionPoint,
-      resetHours(subDays(new Date(), 3)),
-      endOfDay(new Date())
-    );
+    // use Date.now() to use the mock for today
+    const today = new Date(Date.now());
+
+    let firstTransactionPoint: TransactionPoint = null;
+    let firstIndex = this.transactionPoints.length;
+    const dates = [];
+    const symbols = new Set<string>();
+    const currencies: { [symbol: string]: Currency } = {};
+
+    dates.push(resetHours(start));
+    for (const item of this.transactionPoints[firstIndex - 1].items) {
+      symbols.add(item.symbol);
+      currencies[item.symbol] = item.currency;
+    }
+    for (let i = 0; i < this.transactionPoints.length; i++) {
+      if (
+        !isBefore(parseDate(this.transactionPoints[i].date), start) &&
+        firstTransactionPoint === null
+      ) {
+        firstTransactionPoint = this.transactionPoints[i];
+        firstIndex = i;
+      }
+      if (firstTransactionPoint !== null) {
+        dates.push(resetHours(parseDate(this.transactionPoints[i].date)));
+      }
+    }
+
+    const yesterday = resetHours(subDays(today, 1));
+    if (dates.indexOf(yesterday) === -1) {
+      dates.push(yesterday);
+    }
+    dates.push(resetHours(today));
+
+    const marketSymbols = await this.currentRateService.getValues({
+      currencies,
+      dateQuery: {
+        in: dates
+      },
+      symbols: Array.from(symbols),
+      userCurrency: this.currency
+    });
+
+    const marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    } = {};
+    for (const marketSymbol of marketSymbols) {
+      const date = format(marketSymbol.date, DATE_FORMAT);
+      if (!marketSymbolMap[date]) {
+        marketSymbolMap[date] = {};
+      }
+      marketSymbolMap[date][marketSymbol.symbol] = new Big(
+        marketSymbol.marketPrice
+      );
+    }
+
+    const startString = format(start, DATE_FORMAT);
+
+    const holdingPeriodReturns: { [symbol: string]: Big } = {};
+    const grossPerformance: { [symbol: string]: Big } = {};
+    let todayString = format(today, DATE_FORMAT);
+    // in case no symbols are there for today, use yesterday
+    if (!marketSymbolMap[todayString]) {
+      todayString = format(subDays(today, 1), DATE_FORMAT);
+    }
+
+    if (firstIndex > 0) {
+      firstIndex--;
+    }
+    for (let i = firstIndex; i < this.transactionPoints.length; i++) {
+      const currentDate =
+        i === firstIndex ? startString : this.transactionPoints[i].date;
+      const nextDate =
+        i + 1 < this.transactionPoints.length
+          ? this.transactionPoints[i + 1].date
+          : todayString;
+
+      const items = this.transactionPoints[i].items;
+      for (const item of items) {
+        let oldHoldingPeriodReturn = holdingPeriodReturns[item.symbol];
+        if (!oldHoldingPeriodReturn) {
+          oldHoldingPeriodReturn = new Big(1);
+        }
+        holdingPeriodReturns[item.symbol] = oldHoldingPeriodReturn.mul(
+          marketSymbolMap[nextDate][item.symbol].div(
+            marketSymbolMap[currentDate][item.symbol]
+          )
+        );
+        let oldGrossPerformance = grossPerformance[item.symbol];
+        if (!oldGrossPerformance) {
+          oldGrossPerformance = new Big(0);
+        }
+        grossPerformance[item.symbol] = oldGrossPerformance.plus(
+          marketSymbolMap[nextDate][item.symbol]
+            .minus(marketSymbolMap[currentDate][item.symbol])
+            .mul(item.quantity)
+        );
+      }
+    }
 
     for (const item of lastTransactionPoint.items) {
-      const marketValue = marketValues[item.symbol];
-      const grossPerformance = marketValue
-        ? new Big(marketValue.marketPrice)
-            .mul(item.quantity)
-            .minus(item.investment)
-        : null;
+      const marketValue = marketSymbolMap[todayString][item.symbol];
       result[item.symbol] = {
         averagePrice: item.investment.div(item.quantity),
         currency: item.currency,
         firstBuyDate: item.firstBuyDate,
-        grossPerformance,
-        grossPerformancePercentage: marketValue
-          ? grossPerformance.div(item.investment)
+        grossPerformance: grossPerformance[item.symbol] ?? null,
+        grossPerformancePercentage: holdingPeriodReturns[item.symbol]
+          ? holdingPeriodReturns[item.symbol].minus(1)
           : null,
         investment: item.investment,
-        marketPrice: marketValue?.marketPrice,
+        marketPrice: marketValue.toNumber(),
         name: item.name,
         quantity: item.quantity,
         symbol: item.symbol,
@@ -170,8 +251,8 @@ export class PortfolioCalculator {
     console.time('calculate-timeline-calculations');
 
     const startDate = timelineSpecification[0].start;
-    const start = dparse(startDate);
-    const end = dparse(endDate);
+    const start = parseDate(startDate);
+    const end = parseDate(endDate);
 
     const timelinePeriodPromises: Promise<TimelinePeriod[]>[] = [];
     let i = 0;
@@ -189,7 +270,7 @@ export class PortfolioCalculator {
       }
       while (
         j + 1 < this.transactionPoints.length &&
-        !isAfter(dparse(this.transactionPoints[j + 1].date), currentDate)
+        !isAfter(parseDate(this.transactionPoints[j + 1].date), currentDate)
       ) {
         j++;
       }
@@ -198,7 +279,7 @@ export class PortfolioCalculator {
       if (timelineSpecification[i].accuracy === 'day') {
         let nextEndDate = end;
         if (j + 1 < this.transactionPoints.length) {
-          nextEndDate = dparse(this.transactionPoints[j + 1].date);
+          nextEndDate = parseDate(this.transactionPoints[j + 1].date);
         }
         periodEndDate = min([
           addMonths(currentDate, 3),
@@ -242,8 +323,10 @@ export class PortfolioCalculator {
       currencies[item.symbol] = item.currency;
     }
     const values = await this.currentRateService.getValues({
-      dateRangeStart,
-      dateRangeEnd,
+      dateQuery: {
+        gte: dateRangeStart,
+        lt: endOfDay(dateRangeEnd)
+      },
       symbols,
       currencies,
       userCurrency: this.currency
@@ -280,8 +363,10 @@ export class PortfolioCalculator {
       if (symbols.length > 0) {
         try {
           marketSymbols = await this.currentRateService.getValues({
-            dateRangeStart: startDate,
-            dateRangeEnd: endDate,
+            dateQuery: {
+              gte: startDate,
+              lt: endOfDay(endDate)
+            },
             symbols,
             currencies,
             userCurrency: this.currency
@@ -376,7 +461,7 @@ export class PortfolioCalculator {
   ) {
     return (
       i + 1 < timelineSpecification.length &&
-      !isBefore(currentDate, dparse(timelineSpecification[i + 1].start))
+      !isBefore(currentDate, parseDate(timelineSpecification[i + 1].start))
     );
   }
 }

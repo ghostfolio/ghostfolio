@@ -52,6 +52,7 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
+import { parseDate } from '@ghostfolio/common/helper';
 
 @Injectable()
 export class PortfolioService {
@@ -416,9 +417,9 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    // TODO: get positions for date range
-    console.log('Date range:', aDateRange);
-    const positions = await portfolioCalculator.getCurrentPositions();
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(aDateRange, portfolioStart);
+    const positions = await portfolioCalculator.getCurrentPositions(startDate);
 
     return Object.values(positions).map((position) => {
       return {
