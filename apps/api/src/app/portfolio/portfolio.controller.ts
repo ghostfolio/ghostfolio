@@ -31,7 +31,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import {
   HistoricalDataItem,
@@ -280,12 +280,7 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId,
     @Query('range') range
   ): Promise<PortfolioPositions> {
-    const positions = await this.portfolioService.getPositions(
-      impersonationId,
-      range
-    );
-
-    return { positions };
+    return await this.portfolioService.getPositions(impersonationId, range);
   }
 
   @Get('position/:symbol')

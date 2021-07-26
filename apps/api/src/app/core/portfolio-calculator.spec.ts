@@ -626,23 +626,25 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        VTI: {
-          averagePrice: new Big('178.438'),
-          currency: 'USD',
-          firstBuyDate: '2019-02-01',
-          // see next test for details about how to calculate this
-          grossPerformance: new Big('265.2'),
-          grossPerformancePercentage: new Big(
-            '0.37322057787174066244232522865731355471028555367747465860626740684417274277219590953836818016777856'
-          ),
-          investment: new Big('4460.95'),
-          marketPrice: 194.86,
-          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
-          quantity: new Big('25'),
-          symbol: 'VTI',
-          transactionCount: 5
-        }
+        hasErrors: false,
+        positions: [
+          {
+            averagePrice: new Big('178.438'),
+            currency: 'USD',
+            firstBuyDate: '2019-02-01',
+            // see next test for details about how to calculate this
+            grossPerformance: new Big('265.2'),
+            grossPerformancePercentage: new Big(
+              '0.37322057787174066244232522865731355471028555367747465860626740684417274277219590953836818016777856'
+            ),
+            investment: new Big('4460.95'),
+            marketPrice: 194.86,
+            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+            quantity: new Big('25'),
+            symbol: 'VTI',
+            transactionCount: 5
+          }
+        ]
       });
     });
 
@@ -700,21 +702,24 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
       expect(currentPositions).toEqual({
-        VTI: {
-          averagePrice: new Big('146.185'),
-          firstBuyDate: '2019-02-01',
-          quantity: new Big('20'),
-          symbol: 'VTI',
-          investment: new Big('2923.7'),
-          marketPrice: 194.86,
-          transactionCount: 2,
-          grossPerformance: new Big('303.2'),
-          grossPerformancePercentage: new Big(
-            '0.1388661601402688486251911721754180022242'
-          ),
-          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
-          currency: 'USD'
-        }
+        hasErrors: false,
+        positions: [
+          {
+            averagePrice: new Big('146.185'),
+            firstBuyDate: '2019-02-01',
+            quantity: new Big('20'),
+            symbol: 'VTI',
+            investment: new Big('2923.7'),
+            marketPrice: 194.86,
+            transactionCount: 2,
+            grossPerformance: new Big('303.2'),
+            grossPerformancePercentage: new Big(
+              '0.1388661601402688486251911721754180022242'
+            ),
+            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+            currency: 'USD'
+          }
+        ]
       });
     });
   });
