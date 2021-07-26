@@ -3,57 +3,73 @@
 :host {
   color: rgb(var(--dark-primary-text));
   display: block;
-  min-height: 100vh;
+  min-height: calc(100vh - 5rem);
+  position: relative;
 
-  .container {
-    &.overview {
-      min-height: calc(100vh - 5rem);
+  &.with-create-account-container {
+    min-height: calc(100vh - 5rem - 2.5rem);
+  }
 
-      .button-container {
-        bottom: 3rem;
-        left: 0;
-        right: 0;
-        .mat-flat-button {
-          background-color: rgba(0, 0, 0, $alpha-hover);
-          border-radius: 2rem;
+  .mat-tab-group {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+
+    ::ng-deep {
+      .mat-tab-body-wrapper {
+        height: 100%;
+
+        .container {
+          &.overview {
+            .chart-container {
+              aspect-ratio: 16 / 9;
+              cursor: pointer;
+              max-height: 50vh;
+
+              // Fallback for aspect-ratio (using padding hack)
+              @supports not (aspect-ratio: 16 / 9) {
+                &::before {
+                  float: left;
+                  padding-top: 56.25%;
+                  content: '';
+                }
+
+                &::after {
+                  display: block;
+                  content: '';
+                  clear: both;
+                }
+              }
+
+              gf-line-chart {
+                bottom: 0;
+                left: 0;
+                position: absolute;
+                right: 0;
+                top: 0;
+                z-index: -1;
+              }
+            }
+          }
+
+          &.positions {
+            min-height: 100%;
+          }
         }
       }
 
-      .chart-container {
-        aspect-ratio: 16 / 9;
-        cursor: pointer;
-        margin-top: -1rem;
-        max-height: 50vh;
+      .mat-tab-header {
+        border-top: 0;
 
-        // Fallback for aspect-ratio (using padding hack)
-        @supports not (aspect-ratio: 16 / 9) {
-          &::before {
-            float: left;
-            padding-top: 56.25%;
-            content: '';
-          }
-
-          &::after {
-            display: block;
-            content: '';
-            clear: both;
-          }
+        .mat-ink-bar {
+          visibility: hidden !important;
         }
 
-        gf-line-chart {
-          bottom: 0;
-          left: 0;
-          position: absolute;
-          right: 0;
-          top: 0;
-          z-index: -1;
+        .mat-tab-label-active {
+          color: rgba(var(--palette-primary-500), 1);
         }
       }
-    }
-
-    &.positions {
-      padding-top: 5rem;
-      min-height: calc(100vh - 5rem);
     }
   }
 

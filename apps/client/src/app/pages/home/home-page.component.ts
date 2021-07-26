@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostBinding,
   OnDestroy,
   OnInit,
   ViewChild
@@ -38,8 +39,13 @@ import { first, takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-page.scss']
 })
 export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
+  @HostBinding('class.with-create-account-container') get isDemo() {
+    return this.canCreateAccount;
+  }
+
   @ViewChild('positionsContainer') positionsContainer: ElementRef;
 
+  public canCreateAccount: boolean;
   public dateRange: DateRange;
   public dateRangeOptions: ToggleOption[] = [
     { label: 'Today', value: '1d' },
@@ -94,6 +100,11 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.canCreateAccount = hasPermission(
+            this.user?.permissions,
+            permissions.createUserAccount
+          );
 
           this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
             this.user.permissions,

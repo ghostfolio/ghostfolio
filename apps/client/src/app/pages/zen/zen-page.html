@@ -1,65 +1,88 @@
-<ng-container *ngIf="hasPositions || !historicalDataItems">
-  <div class="container overview position-relative">
-    <div class="row">
-      <div class="chart-container col mr-3">
-        <gf-line-chart
-          symbol="Performance"
-          [historicalDataItems]="historicalDataItems"
-          [showLoader]="false"
-          [showXAxis]="false"
-          [showYAxis]="false"
-        ></gf-line-chart>
-      </div>
-    </div>
-    <div class="overview-container row mb-5 mt-1">
-      <div class="col">
-        <gf-portfolio-performance-summary
-          class="pb-4"
-          [baseCurrency]="user?.settings?.baseCurrency"
-          [isLoading]="isLoadingPerformance"
-          [locale]="user?.settings?.locale"
-          [performance]="performance"
-          [showDetails]="!hasImpersonationId || hasPermissionToReadForeignPortfolio"
-        ></gf-portfolio-performance-summary>
-      </div>
-    </div>
-
+<mat-tab-group
+  animationDuration="0ms"
+  class="position-absolute"
+  headerPosition="below"
+  mat-align-tabs="center"
+>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <ion-icon name="analytics-outline" size="large"></ion-icon>
+    </ng-template>
     <div
-      class="button-container d-flex justify-content-center position-absolute"
+      class="
+        container
+        d-flex
+        flex-column
+        h-100
+        justify-content-center
+        overview
+        p-3
+        position-relative
+      "
     >
-      <a
-        *ngIf="showPositionsButton"
-        [routerLink]="['/zen']"
-        fragment="positions-container"
-        i18n
-        mat-flat-button
-        (click)="showPositionsButton = false"
-        >Positions</a
-      >
-    </div>
-  </div>
-
-  <div id="positions-container" class="container positions">
-    <div class="row mb-3">
-      <div class="col">
-        <mat-card class="p-0">
-          <mat-card-content>
-            <gf-positions
-              [baseCurrency]="user?.settings?.baseCurrency"
-              [deviceType]="deviceType"
-              [locale]="user?.settings?.locale"
-              [positions]="positions"
-              [range]="dateRange"
-            ></gf-positions>
-          </mat-card-content>
-        </mat-card>
+      <div class="row">
+        <div
+          class="chart-container d-flex flex-column col justify-content-center"
+        >
+          <gf-line-chart
+            class="mr-3"
+            symbol="Performance"
+            [historicalDataItems]="historicalDataItems"
+            [showLoader]="false"
+            [showXAxis]="false"
+            [showYAxis]="false"
+          ></gf-line-chart>
+          <div
+            *ngIf="historicalDataItems?.length === 0"
+            class="d-flex justify-content-center"
+          >
+            <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+          </div>
+        </div>
+      </div>
+      <div class="overview-container row mb-5 mt-1">
+        <div class="col">
+          <gf-portfolio-performance-summary
+            class="pb-4"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isLoading]="isLoadingPerformance"
+            [locale]="user?.settings?.locale"
+            [performance]="performance"
+            [showDetails]="!hasImpersonationId || hasPermissionToReadForeignPortfolio"
+          ></gf-portfolio-performance-summary>
+        </div>
       </div>
     </div>
-  </div>
-</ng-container>
+  </mat-tab>
 
-<ng-container *ngIf="!hasPositions && historicalDataItems">
-  <div class="d-flex justify-content-center my-5">
-    <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
-  </div>
-</ng-container>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <ion-icon name="wallet-outline" size="large"></ion-icon>
+    </ng-template>
+    <div class="container justify-content-center p-3 positions">
+      <div class="row">
+        <div class="align-items-center col">
+          <mat-card *ngIf="hasPositions === true" class="p-0">
+            <mat-card-content>
+              <gf-positions
+                [baseCurrency]="user?.settings?.baseCurrency"
+                [deviceType]="deviceType"
+                [locale]="user?.settings?.locale"
+                [positions]="positions"
+                [range]="dateRange"
+              ></gf-positions>
+            </mat-card-content>
+          </mat-card>
+          <div
+            *ngIf="hasPositions === false"
+            class="d-flex justify-content-center"
+          >
+            <div>
+              <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
