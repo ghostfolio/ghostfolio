@@ -39,7 +39,7 @@ import { first, takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-page.scss']
 })
 export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
-  @HostBinding('class.with-demo') get isDemo() {
+  @HostBinding('class.with-create-account-container') get isDemo() {
     return this.canCreateAccount;
   }
 
