@@ -397,7 +397,7 @@ export class PortfolioService {
   public async getPositions(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<Position[]> {
+  ): Promise<{ hasErrors: boolean; positions: Position[] }> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         aImpersonationId,
@@ -417,23 +417,27 @@ export class PortfolioService {
 
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(aDateRange, portfolioStart);
-    const positions = await portfolioCalculator.getCurrentPositions(startDate);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate
+    );
 
-    return Object.values(positions).map((position) => {
-      return {
-        ...position,
-        averagePrice: new Big(position.averagePrice).toNumber(),
-        grossPerformance: new Big(position.grossPerformance).toNumber(),
-        grossPerformancePercentage: new Big(
-          position.grossPerformancePercentage
-        ).toNumber(),
-        investment: new Big(position.investment).toNumber(),
-        name: position.name,
-        quantity: new Big(position.quantity).toNumber(),
-        type: Type.Unknown, // TODO
-        url: '' // TODO
-      };
-    });
+    return {
+      hasErrors: currentPositions.hasErrors,
+      positions: currentPositions.positions.map((position) => {
+        return {
+          ...position,
+          averagePrice: new Big(position.averagePrice).toNumber(),
+          grossPerformance: position.grossPerformance?.toNumber() ?? null,
+          grossPerformancePercentage:
+            position.grossPerformancePercentage?.toNumber() ?? null,
+          investment: new Big(position.investment).toNumber(),
+          name: position.name,
+          quantity: new Big(position.quantity).toNumber(),
+          type: Type.Unknown, // TODO
+          url: '' // TODO
+        };
+      })
+    };
   }
 
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {

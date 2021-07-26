@@ -106,16 +106,19 @@ export class PortfolioCalculator {
   }
 
   public async getCurrentPositions(start: Date): Promise<{
-    [symbol: string]: TimelinePosition;
+    hasErrors: boolean;
+    positions: TimelinePosition[];
   }> {
     if (!this.transactionPoints?.length) {
-      return {};
+      return {
+        hasErrors: false,
+        positions: []
+      };
     }
 
     const lastTransactionPoint =
       this.transactionPoints[this.transactionPoints.length - 1];
 
-    const result: { [symbol: string]: TimelinePosition } = {};
     // use Date.now() to use the mock for today
     const today = new Date(Date.now());
 
@@ -171,6 +174,7 @@ export class PortfolioCalculator {
       );
     }
 
+    let hasErrors = false;
     const startString = format(start, DATE_FORMAT);
 
     const holdingPeriodReturns: { [symbol: string]: Big } = {};
@@ -178,12 +182,14 @@ export class PortfolioCalculator {
     let todayString = format(today, DATE_FORMAT);
     // in case no symbols are there for today, use yesterday
     if (!marketSymbolMap[todayString]) {
+      hasErrors = true;
       todayString = format(subDays(today, 1), DATE_FORMAT);
     }
 
     if (firstIndex > 0) {
       firstIndex--;
     }
+    const invalidSymbols = [];
     for (let i = firstIndex; i < this.transactionPoints.length; i++) {
       const currentDate =
         i === firstIndex ? startString : this.transactionPoints[i].date;
@@ -197,6 +203,22 @@ export class PortfolioCalculator {
         let oldHoldingPeriodReturn = holdingPeriodReturns[item.symbol];
         if (!oldHoldingPeriodReturn) {
           oldHoldingPeriodReturn = new Big(1);
+        }
+        if (!marketSymbolMap[nextDate]?.[item.symbol]) {
+          invalidSymbols.push(item.symbol);
+          hasErrors = true;
+          console.error(
+            `Missing value for symbol ${item.symbol} at ${nextDate}`
+          );
+          continue;
+        }
+        if (!marketSymbolMap[currentDate]?.[item.symbol]) {
+          invalidSymbols.push(item.symbol);
+          hasErrors = true;
+          console.error(
+            `Missing value for symbol ${item.symbol} at ${currentDate}`
+          );
+          continue;
         }
         holdingPeriodReturns[item.symbol] = oldHoldingPeriodReturn.mul(
           marketSymbolMap[nextDate][item.symbol].div(
@@ -215,26 +237,31 @@ export class PortfolioCalculator {
       }
     }
 
+    const positions: TimelinePosition[] = [];
     for (const item of lastTransactionPoint.items) {
-      const marketValue = marketSymbolMap[todayString][item.symbol];
-      result[item.symbol] = {
+      const marketValue = marketSymbolMap[todayString]?.[item.symbol];
+      const isValid = invalidSymbols.indexOf(item.symbol) === -1;
+      positions.push({
         averagePrice: item.investment.div(item.quantity),
         currency: item.currency,
         firstBuyDate: item.firstBuyDate,
-        grossPerformance: grossPerformance[item.symbol] ?? null,
-        grossPerformancePercentage: holdingPeriodReturns[item.symbol]
-          ? holdingPeriodReturns[item.symbol].minus(1)
+        grossPerformance: isValid
+          ? grossPerformance[item.symbol] ?? null
           : null,
+        grossPerformancePercentage:
+          isValid && holdingPeriodReturns[item.symbol]
+            ? holdingPeriodReturns[item.symbol].minus(1)
+            : null,
         investment: item.investment,
-        marketPrice: marketValue.toNumber(),
+        marketPrice: marketValue?.toNumber() ?? null,
         name: item.name,
         quantity: item.quantity,
         symbol: item.symbol,
         transactionCount: item.transactionCount
-      };
+      });
     }
 
-    return result;
+    return { hasErrors, positions };
   }
 
   public async calculateTimeline(
