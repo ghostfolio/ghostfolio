@@ -16,7 +16,6 @@
         h-100
         justify-content-center
         overview
-        p-3
         position-relative
       "
     >
@@ -59,7 +58,11 @@
     <ng-template mat-tab-label>
       <ion-icon name="wallet-outline" size="large"></ion-icon>
     </ng-template>
-    <div class="container justify-content-center p-3 positions">
+    <div
+      *ngIf="hasPositions === true"
+      class="container justify-content-center pb-3 px-3 positions"
+    >
+      <h3 class="d-flex justify-content-center mb-3" i18n>Positions</h3>
       <div class="row">
         <div class="align-items-center col">
           <mat-card *ngIf="hasPositions === true" class="p-0">
