@@ -619,7 +619,7 @@ describe('PortfolioCalculator', () => {
 
       const spy = jest
         .spyOn(Date, 'now')
-        .mockImplementation(() => 1603490400000); // 2020-10-24
+        .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         parse('2019-01-01', 'yyyy-MM-dd', new Date())
       );
@@ -685,7 +685,7 @@ describe('PortfolioCalculator', () => {
       portfolioCalculator.setTransactionPoints(transactionPoints);
       const spy = jest
         .spyOn(Date, 'now')
-        .mockImplementation(() => 1603490400000); // 2020-10-24
+        .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
 
       // 2020-01-01         -> days 334 => value: VTI: 144.38+334*0.08=171.1  => 10*171.10=1711
       // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 10*188.30=1883 => 1883/1711=1.100526008 - 1 = 0.100526008
