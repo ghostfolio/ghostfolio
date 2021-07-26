@@ -106,8 +106,10 @@ describe('CurrentRateService', () => {
     expect(
       await currentRateService.getValues({
         currencies: { AMZN: Currency.USD },
-        dateRangeEnd: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
-        dateRangeStart: new Date(Date.UTC(2020, 0, 1, 0, 0, 0)),
+        dateQuery: {
+          lt: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
+          gte: new Date(Date.UTC(2020, 0, 1, 0, 0, 0))
+        },
         symbols: ['AMZN'],
         userCurrency: Currency.CHF
       })

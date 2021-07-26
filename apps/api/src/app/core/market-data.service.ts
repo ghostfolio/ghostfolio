@@ -2,7 +2,6 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
-import { endOfDay } from 'date-fns';
 
 @Injectable()
 export class MarketDataService {
@@ -24,12 +23,10 @@ export class MarketDataService {
   }
 
   public async getRange({
-    dateRangeEnd,
-    dateRangeStart,
+    dateQuery,
     symbols
   }: {
-    dateRangeEnd: Date;
-    dateRangeStart: Date;
+    dateQuery: DateQuery;
     symbols: string[];
   }): Promise<MarketData[]> {
     return await this.prisma.marketData.findMany({
@@ -42,14 +39,17 @@ export class MarketDataService {
         }
       ],
       where: {
-        date: {
-          gte: dateRangeStart,
-          lt: endOfDay(dateRangeEnd)
-        },
+        date: dateQuery,
         symbol: {
           in: symbols
         }
       }
     });
   }
+}
+
+export interface DateQuery {
+  gte?: Date;
+  lt?: Date;
+  in?: Date[];
 }
