@@ -16,6 +16,7 @@ import { UserService } from '../services/user/user.service';
 export class AuthGuard implements CanActivate {
   private static PUBLIC_PAGE_ROUTES = [
     '/about',
+    '/de/blog',
     '/en/blog',
     '/pricing',
     '/register',

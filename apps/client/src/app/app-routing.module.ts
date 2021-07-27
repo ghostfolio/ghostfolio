@@ -41,6 +41,13 @@ const routes: Routes = [
       ).then((m) => m.HelloGhostfolioPageModule)
   },
   {
+    path: 'de/blog/2021/07/hallo-ghostfolio',
+    loadChildren: () =>
+      import(
+        './pages/blog/2021/07/hallo-ghostfolio/hallo-ghostfolio-page.module'
+      ).then((m) => m.HalloGhostfolioPageModule)
+  },
+  {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)

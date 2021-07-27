@@ -28,6 +28,22 @@ body {
 
   a {
     color: var(--dark-primary-text);
+
+    &:hover {
+      color: unset;
+      text-decoration: none;
+    }
+  }
+
+  .blog {
+    a {
+      color: rgba(var(--palette-primary-500), 1);
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   &.is-dark-theme {
@@ -80,11 +96,6 @@ body {
       }
     }
   }
-}
-
-a:hover {
-  color: unset;
-  text-decoration: none;
 }
 
 button:focus {
