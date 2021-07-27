@@ -2,12 +2,13 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider.serv
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
-import { isToday } from 'date-fns';
+import { isBefore, isToday } from 'date-fns';
 
 import { MarketDataService } from './market-data.service';
 import { GetValueObject } from '@ghostfolio/api/app/core/get-value.object';
 import { GetValuesParams } from '@ghostfolio/api/app/core/get-values.params';
 import { GetValueParams } from '@ghostfolio/api/app/core/get-value.params';
+import { flatten } from 'lodash';
 
 @Injectable()
 export class CurrentRateService {
@@ -58,10 +59,44 @@ export class CurrentRateService {
     symbols,
     userCurrency
   }: GetValuesParams): Promise<GetValueObject[]> {
-    const marketData = await this.marketDataService.getRange({
-      dateQuery,
-      symbols
-    });
+    const includeToday =
+      (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
+      (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
+      (!dateQuery.in || this.containsToday(dateQuery.in));
+
+    const promises: Promise<
+      {
+        date: Date;
+        symbol: string;
+        marketPrice: number;
+      }[]
+    >[] = [];
+
+    if (includeToday) {
+      const today = resetHours(new Date());
+      promises.push(
+        this.dataProviderService.get(symbols).then((dataResultProvider) => {
+          const result = [];
+          for (const symbol of symbols) {
+            result.push({
+              date: today,
+              symbol: symbol,
+              marketPrice: dataResultProvider?.[symbol]?.marketPrice ?? 0
+            });
+          }
+          return result;
+        })
+      );
+    }
+
+    promises.push(
+      this.marketDataService.getRange({
+        dateQuery,
+        symbols
+      })
+    );
+
+    const marketData = flatten(await Promise.all(promises));
 
     if (marketData) {
       return marketData.map((marketDataItem) => {
@@ -79,5 +114,13 @@ export class CurrentRateService {
 
     throw new Error(`Values not found for symbols ${symbols.join(', ')}`);
   }
-}
 
+  private containsToday(dates: Date[]): boolean {
+    for (const date of dates) {
+      if (isToday(date)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
