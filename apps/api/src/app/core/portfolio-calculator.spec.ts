@@ -61,6 +61,9 @@ function mockGetValue(symbol: string, date: Date) {
     if (dateEqual(parse('2021-07-26', 'yyyy-MM-dd', new Date()), date)) {
       return { marketPrice: 657.62 };
     }
+    if (dateEqual(parse('2021-01-02', 'yyyy-MM-dd', new Date()), date)) {
+      return { marketPrice: 666.66 };
+    }
     return { marketPrice: 0 };
   } else {
     return { marketPrice: 0 };
@@ -615,7 +618,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it('with single TSLA', async () => {
+    it('with single TSLA and early start', async () => {
       const portfolioCalculator = new PortfolioCalculator(
         currentRateService,
         Currency.USD
@@ -639,6 +642,76 @@ describe('PortfolioCalculator', () => {
             firstBuyDate: '2021-01-01',
             grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
             grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.085953353904317
+            investment: new Big('719.46'),
+            marketPrice: 657.62,
+            name: 'Tesla, Inc.',
+            quantity: new Big('1'),
+            symbol: 'TSLA',
+            transactionCount: 1
+          }
+        ]
+      });
+    });
+
+    it('with single TSLA and buy day start', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints(orderTslaTransactionPoint);
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parse('2021-01-01', 'yyyy-MM-dd', new Date())
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toEqual({
+        hasErrors: false,
+        positions: [
+          {
+            averagePrice: new Big('719.46'),
+            currency: 'USD',
+            firstBuyDate: '2021-01-01',
+            grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
+            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.085953353904317
+            investment: new Big('719.46'),
+            marketPrice: 657.62,
+            name: 'Tesla, Inc.',
+            quantity: new Big('1'),
+            symbol: 'TSLA',
+            transactionCount: 1
+          }
+        ]
+      });
+    });
+
+    it('with single TSLA and late start', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints(orderTslaTransactionPoint);
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parse('2021-01-02', 'yyyy-MM-dd', new Date())
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toEqual({
+        hasErrors: false,
+        positions: [
+          {
+            averagePrice: new Big('719.46'),
+            currency: 'USD',
+            firstBuyDate: '2021-01-01',
+            grossPerformance: new Big('-9.04'), // 657.62-666.66=-9.04
+            grossPerformancePercentage: new Big('-0.01356013560135601356'), // 657.62/666.66-1=-0.013560136
             investment: new Big('719.46'),
             marketPrice: 657.62,
             name: 'Tesla, Inc.',
