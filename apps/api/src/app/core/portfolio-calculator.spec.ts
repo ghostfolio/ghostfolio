@@ -46,8 +46,6 @@ function mockGetValue(symbol: string, date: Date) {
   if (symbol === 'VTI') {
     if (dateEqual(today, date)) {
       return { marketPrice: 213.32 };
-    } else if (dateEqual(parse('2021-07-26', 'yyyy-MM-dd', new Date()), date)) {
-      return { marketPrice: 227.92 };
     } else {
       const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
       const daysInBetween = differenceInCalendarDays(date, startDate);
@@ -59,6 +57,11 @@ function mockGetValue(symbol: string, date: Date) {
     }
   } else if (symbol === 'AMZN') {
     return { marketPrice: 2021.99 };
+  } else if (symbol === 'TSLA') {
+    if (dateEqual(parse('2021-07-26', 'yyyy-MM-dd', new Date()), date)) {
+      return { marketPrice: 657.62 };
+    }
+    return { marketPrice: 0 };
   } else {
     return { marketPrice: 0 };
   }
@@ -612,12 +615,12 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it('with single VTI', async () => {
+    it('with single TSLA', async () => {
       const portfolioCalculator = new PortfolioCalculator(
         currentRateService,
         Currency.USD
       );
-      portfolioCalculator.setTransactionPoints(orderVTITransactionPoint);
+      portfolioCalculator.setTransactionPoints(orderTslaTransactionPoint);
 
       const spy = jest
         .spyOn(Date, 'now')
@@ -631,16 +634,16 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         positions: [
           {
-            averagePrice: new Big('195.39'),
+            averagePrice: new Big('719.46'),
             currency: 'USD',
             firstBuyDate: '2021-01-01',
-            grossPerformance: new Big('32.53'), // 227.92-195.39=32.53
-            grossPerformancePercentage: new Big('0.166487537745023'), // (227.92-195.39)/195.39=0.166487537745023
-            investment: new Big('195.39'),
-            marketPrice: 227.92,
-            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+            grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
+            grossPerformancePercentage: new Big('-0.0859533539043171'), // (657.62-719.46)/719.46=-0.085953353904317
+            investment: new Big('719.46'),
+            marketPrice: 657.62,
+            name: 'Tesla, Inc.',
             quantity: new Big('1'),
-            symbol: 'VTI',
+            symbol: 'TSLA',
             transactionCount: 1
           }
         ]
@@ -1469,15 +1472,15 @@ const ordersVTI: PortfolioOrder[] = [
   }
 ];
 
-const orderVTITransactionPoint: TransactionPoint[] = [
+const orderTslaTransactionPoint: TransactionPoint[] = [
   {
     date: '2021-01-01',
     items: [
       {
-        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+        name: 'Tesla, Inc.',
         quantity: new Big('1'),
-        symbol: 'VTI',
-        investment: new Big('195.39'),
+        symbol: 'TSLA',
+        investment: new Big('719.46'),
         currency: Currency.USD,
         firstBuyDate: '2021-01-01',
         transactionCount: 1
