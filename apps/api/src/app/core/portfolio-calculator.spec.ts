@@ -46,6 +46,8 @@ function mockGetValue(symbol: string, date: Date) {
   if (symbol === 'VTI') {
     if (dateEqual(today, date)) {
       return { marketPrice: 213.32 };
+    } else if (dateEqual(parse('2021-07-26', 'yyyy-MM-dd', new Date()), date)) {
+      return { marketPrice: 227.92 };
     } else {
       const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
       const daysInBetween = differenceInCalendarDays(date, startDate);
@@ -610,7 +612,42 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it('with just VTI', async () => {
+    fit('with single VTI', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints(orderVTITransactionPoint);
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parse('2021-07-26', 'yyyy-MM-dd', new Date())
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toEqual({
+        hasErrors: false,
+        positions: [
+          {
+            averagePrice: new Big('195.39'),
+            currency: 'USD',
+            firstBuyDate: '2021-01-01',
+            grossPerformance: new Big('32.53'), // 227.92-195.39=32.53
+            grossPerformancePercentage: new Big('0.166487537745023'), // (227.92-195.39)/195.39=0.166487537745023
+            investment: new Big('195.39'),
+            marketPrice: 227.92,
+            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+            quantity: new Big('1'),
+            symbol: 'VTI',
+            transactionCount: 1
+          }
+        ]
+      });
+    });
+
+    it('with VTI only', async () => {
       const portfolioCalculator = new PortfolioCalculator(
         currentRateService,
         Currency.USD
@@ -1429,6 +1466,23 @@ const ordersVTI: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('203.15'),
     currency: Currency.USD
+  }
+];
+
+const orderVTITransactionPoint: TransactionPoint[] = [
+  {
+    date: '2021-01-01',
+    items: [
+      {
+        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+        quantity: new Big('1'),
+        symbol: 'VTI',
+        investment: new Big('195.39'),
+        currency: Currency.USD,
+        firstBuyDate: '2021-01-01',
+        transactionCount: 1
+      }
+    ]
   }
 ];
 
