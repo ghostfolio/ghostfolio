@@ -212,7 +212,11 @@ export class PortfolioCalculator {
           );
           continue;
         }
-        if (!marketSymbolMap[currentDate]?.[item.symbol]) {
+        let currentValue = marketSymbolMap[currentDate]?.[item.symbol];
+        if (!isAfter(parseDate(currentDate), parseDate(item.firstBuyDate))) {
+          currentValue = item.investment.div(item.quantity);
+        }
+        if (!currentValue) {
           invalidSymbols.push(item.symbol);
           hasErrors = true;
           console.error(
@@ -221,9 +225,7 @@ export class PortfolioCalculator {
           continue;
         }
         holdingPeriodReturns[item.symbol] = oldHoldingPeriodReturn.mul(
-          marketSymbolMap[nextDate][item.symbol].div(
-            marketSymbolMap[currentDate][item.symbol]
-          )
+          marketSymbolMap[nextDate][item.symbol].div(currentValue)
         );
         let oldGrossPerformance = grossPerformance[item.symbol];
         if (!oldGrossPerformance) {
@@ -231,7 +233,7 @@ export class PortfolioCalculator {
         }
         grossPerformance[item.symbol] = oldGrossPerformance.plus(
           marketSymbolMap[nextDate][item.symbol]
-            .minus(marketSymbolMap[currentDate][item.symbol])
+            .minus(currentValue)
             .mul(item.quantity)
         );
       }
