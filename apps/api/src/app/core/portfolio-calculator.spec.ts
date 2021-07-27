@@ -626,7 +626,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2021-07-26', 'yyyy-MM-dd', new Date())
+        parse('2020-01-21', 'yyyy-MM-dd', new Date())
       );
       spy.mockRestore();
 
@@ -638,7 +638,7 @@ describe('PortfolioCalculator', () => {
             currency: 'USD',
             firstBuyDate: '2021-01-01',
             grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
-            grossPerformancePercentage: new Big('-0.0859533539043171'), // (657.62-719.46)/719.46=-0.085953353904317
+            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.085953353904317
             investment: new Big('719.46'),
             marketPrice: 657.62,
             name: 'Tesla, Inc.',
@@ -673,9 +673,9 @@ describe('PortfolioCalculator', () => {
             currency: 'USD',
             firstBuyDate: '2019-02-01',
             // see next test for details about how to calculate this
-            grossPerformance: new Big('265.2'),
+            grossPerformance: new Big('240.4'),
             grossPerformancePercentage: new Big(
-              '0.37322057787174066244232522865731355471028555367747465860626740684417274277219590953836818016777856'
+              '0.349632913145865078264579821060810370805662039085569533288730749607797361322474717934042420125015808'
             ),
             investment: new Big('4460.95'),
             marketPrice: 194.86,
