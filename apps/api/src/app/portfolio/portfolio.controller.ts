@@ -252,6 +252,10 @@ export class PortfolioController {
       range
     );
 
+    if (performanceInformation?.hasErrors) {
+      res.status(StatusCodes.ACCEPTED);
+    }
+
     let performance = performanceInformation.performance;
     if (
       impersonationId &&
