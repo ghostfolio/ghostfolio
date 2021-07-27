@@ -468,16 +468,23 @@ export class PortfolioService {
     let currentValue = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformancePercentage = new Big(1);
+    let hasErrors = false;
     for (const currentPosition of currentPositions.positions) {
       currentValue = currentValue.add(
         new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
       );
-      grossPerformance = grossPerformance.plus(
-        currentPosition.grossPerformance
-      );
-      grossPerformancePercentage = grossPerformancePercentage.mul(
-        currentPosition.grossPerformancePercentage.plus(1)
-      );
+      if (currentPosition.grossPerformance) {
+        hasErrors = true;
+        grossPerformance = grossPerformance.plus(
+          currentPosition.grossPerformance
+        );
+      }
+      if (currentPosition.grossPerformancePercentage) {
+        hasErrors = true;
+        grossPerformancePercentage = grossPerformancePercentage.mul(
+          currentPosition.grossPerformancePercentage.plus(1)
+        );
+      }
     }
 
     const currentGrossPerformance = grossPerformance.toNumber();
@@ -485,7 +492,7 @@ export class PortfolioService {
       .minus(1)
       .toNumber();
     return {
-      hasErrors: currentPositions.hasErrors,
+      hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
         currentGrossPerformance,
         currentGrossPerformancePercent,
