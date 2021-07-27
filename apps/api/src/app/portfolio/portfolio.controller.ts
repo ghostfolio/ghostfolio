@@ -247,16 +247,12 @@ export class PortfolioController {
         this.request.user.id
       );
 
-    const portfolio = await this.portfolioService.createPortfolio(
-      impersonationUserId || this.request.user.id
+    const performanceInformation = await this.portfolioService.getPerformance(
+      impersonationUserId,
+      range
     );
 
-    let performance = await portfolio.getPerformance(range);
-
-    if (hasNotDefinedValuesInObject(performance)) {
-      res.status(StatusCodes.ACCEPTED);
-    }
-
+    let performance = performanceInformation.performance;
     if (
       impersonationId &&
       !hasPermission(

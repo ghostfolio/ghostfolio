@@ -15,6 +15,7 @@ import { RulesService } from '@ghostfolio/api/services/rules.service';
 import {
   PortfolioItem,
   PortfolioOverview,
+  PortfolioPerformance,
   Position
 } from '@ghostfolio/common/interfaces';
 import { DateRange, RequestWithUser } from '@ghostfolio/common/types';
@@ -435,6 +436,64 @@ export class PortfolioService {
           url: '' // TODO
         };
       })
+    };
+  }
+
+  public async getPerformance(
+    aImpersonationId: string,
+    aDateRange: DateRange = 'max'
+  ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        aImpersonationId,
+        this.request.user.id
+      );
+    const userId = impersonationUserId || this.request.user.id;
+
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+
+    const transactionPoints = await this.getTransactionPoints(userId);
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(aDateRange, portfolioStart);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate
+    );
+
+    let currentValue = new Big(0);
+    let grossPerformance = new Big(0);
+    let grossPerformancePercentage = new Big(1);
+    for (const currentPosition of currentPositions.positions) {
+      currentValue = currentValue.add(
+        new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
+      );
+      grossPerformance = grossPerformance.plus(
+        currentPosition.grossPerformance
+      );
+      grossPerformancePercentage = grossPerformancePercentage.mul(
+        currentPosition.grossPerformancePercentage.plus(1)
+      );
+    }
+
+    const currentGrossPerformance = grossPerformance.toNumber();
+    const currentGrossPerformancePercent = grossPerformancePercentage
+      .minus(1)
+      .toNumber();
+    return {
+      hasErrors: currentPositions.hasErrors,
+      performance: {
+        currentGrossPerformance,
+        currentGrossPerformancePercent,
+        // TODO: the next two should include fees
+        currentNetPerformance: currentGrossPerformance,
+        currentNetPerformancePercent: currentGrossPerformancePercent,
+        currentValue: currentValue.toNumber()
+      }
     };
   }
 
