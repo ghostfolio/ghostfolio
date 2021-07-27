@@ -152,10 +152,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const yesterday = resetHours(subDays(today, 1));
-    if (dates.indexOf(yesterday) === -1) {
-      dates.push(yesterday);
-    }
+    dates.push(resetHours(subDays(today, 1)));
     dates.push(resetHours(today));
 
     const marketSymbols = await this.currentRateService.getValues({
