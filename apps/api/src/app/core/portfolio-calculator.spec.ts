@@ -641,7 +641,7 @@ describe('PortfolioCalculator', () => {
             currency: 'USD',
             firstBuyDate: '2021-01-01',
             grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
-            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.085953353904317
+            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
             investment: new Big('719.46'),
             marketPrice: 657.62,
             name: 'Tesla, Inc.',
@@ -676,7 +676,7 @@ describe('PortfolioCalculator', () => {
             currency: 'USD',
             firstBuyDate: '2021-01-01',
             grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
-            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.085953353904317
+            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
             investment: new Big('719.46'),
             marketPrice: 657.62,
             name: 'Tesla, Inc.',
