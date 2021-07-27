@@ -1,7 +1,4 @@
-import {
-  CurrentRateService,
-  GetValueObject
-} from '@ghostfolio/api/app/core/current-rate.service';
+import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
@@ -20,6 +17,15 @@ import {
   subDays
 } from 'date-fns';
 import { flatten } from 'lodash';
+import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
+import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
+import {
+  Accuracy,
+  TimelineSpecification
+} from '@ghostfolio/api/app/core/timeline-specification';
+import { TransactionPointSymbol } from '@ghostfolio/api/app/core/transaction-point-symbol';
+import { TransactionPoint } from '@ghostfolio/api/app/core/transaction-point';
+import { GetValueObject } from '@ghostfolio/api/app/core/get-value.object';
 
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
@@ -482,43 +488,4 @@ export class PortfolioCalculator {
       !isBefore(currentDate, parseDate(timelineSpecification[i + 1].start))
     );
   }
-}
-
-export interface TransactionPoint {
-  date: string;
-  items: TransactionPointSymbol[];
-}
-
-interface TransactionPointSymbol {
-  currency: Currency;
-  firstBuyDate: string;
-  investment: Big;
-  name: string;
-  quantity: Big;
-  symbol: string;
-  transactionCount: number;
-}
-
-type Accuracy = 'year' | 'month' | 'day';
-
-export interface TimelineSpecification {
-  start: string;
-  accuracy: Accuracy;
-}
-
-export interface TimelinePeriod {
-  date: string;
-  grossPerformance: Big;
-  investment: Big;
-  value: Big;
-}
-
-export interface PortfolioOrder {
-  currency: Currency;
-  date: string;
-  name: string;
-  quantity: Big;
-  symbol: string;
-  type: OrderType;
-  unitPrice: Big;
 }
