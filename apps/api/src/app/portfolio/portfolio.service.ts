@@ -474,16 +474,18 @@ export class PortfolioService {
         new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
       );
       if (currentPosition.grossPerformance) {
-        hasErrors = true;
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
         );
+      } else {
+        hasErrors = true;
       }
       if (currentPosition.grossPerformancePercentage) {
-        hasErrors = true;
         grossPerformancePercentage = grossPerformancePercentage.mul(
           currentPosition.grossPerformancePercentage.plus(1)
         );
+      } else {
+        hasErrors = true;
       }
     }
 
