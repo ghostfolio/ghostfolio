@@ -41,7 +41,6 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
   public positions: { [symbol: string]: PortfolioPosition };
-  public showPositionsButton: boolean;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -93,6 +92,10 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((fragment) => this.viewportScroller.scrollToAnchor(fragment));
   }
 
+  public onTabChanged() {
+    this.update();
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -132,7 +135,6 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
         this.positions = response;
         this.hasPositions =
           this.positions && Object.keys(this.positions).length > 1;
-        this.showPositionsButton = this.hasPositions;
 
         this.changeDetectorRef.markForCheck();
       });
