@@ -612,7 +612,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    fit('with single VTI', async () => {
+    it('with single VTI', async () => {
       const portfolioCalculator = new PortfolioCalculator(
         currentRateService,
         Currency.USD
