@@ -90,29 +90,27 @@ export class CurrentRateService {
     }
 
     promises.push(
-      this.marketDataService.getRange({
-        dateQuery,
-        symbols
-      })
+      this.marketDataService
+        .getRange({
+          dateQuery,
+          symbols
+        })
+        .then((data) => {
+          return data.map((marketDataItem) => {
+            return {
+              date: marketDataItem.date,
+              symbol: marketDataItem.symbol,
+              marketPrice: this.exchangeRateDataService.toCurrency(
+                marketDataItem.marketPrice,
+                currencies[marketDataItem.symbol],
+                userCurrency
+              )
+            };
+          });
+        })
     );
 
-    const marketData = flatten(await Promise.all(promises));
-
-    if (marketData) {
-      return marketData.map((marketDataItem) => {
-        return {
-          date: marketDataItem.date,
-          symbol: marketDataItem.symbol,
-          marketPrice: this.exchangeRateDataService.toCurrency(
-            marketDataItem.marketPrice,
-            currencies[marketDataItem.symbol],
-            userCurrency
-          )
-        };
-      });
-    }
-
-    throw new Error(`Values not found for symbols ${symbols.join(', ')}`);
+    return flatten(await Promise.all(promises));
   }
 
   private containsToday(dates: Date[]): boolean {
