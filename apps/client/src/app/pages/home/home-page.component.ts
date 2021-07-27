@@ -67,7 +67,6 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
   public performance: PortfolioPerformance;
   public positions: { [symbol: string]: PortfolioPosition };
   public routeQueryParams: Subscription;
-  public showPositionsButton: boolean;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -163,6 +162,10 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
     this.update();
   }
 
+  public onTabChanged() {
+    this.update();
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -234,7 +237,6 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
         this.positions = response;
         this.hasPositions =
           this.positions && Object.keys(this.positions).length > 1;
-        this.showPositionsButton = this.hasPositions;
 
         this.changeDetectorRef.markForCheck();
       });

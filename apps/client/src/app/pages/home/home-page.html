@@ -3,6 +3,7 @@
   class="position-absolute"
   headerPosition="below"
   mat-align-tabs="center"
+  (selectedTabChange)="onTabChanged()"
 >
   <mat-tab>
     <ng-template mat-tab-label>
@@ -79,7 +80,7 @@
     </ng-template>
     <div class="container justify-content-center pb-3 px-3 positions">
       <h3
-        *ngIf="hasPositions === true"
+        *ngIf="hasPositions !== false"
         class="d-flex justify-content-center mb-3"
         i18n
       >
@@ -87,6 +88,15 @@
       </h3>
       <div class="row">
         <div class="align-items-center col">
+          <div class="pb-2 text-center">
+            <gf-toggle
+              [defaultValue]="dateRange"
+              [isLoading]="isLoadingPerformance"
+              [options]="dateRangeOptions"
+              (change)="onChangeDateRange($event.value)"
+            ></gf-toggle>
+          </div>
+
           <mat-card *ngIf="hasPositions === true" class="p-0">
             <mat-card-content>
               <gf-positions
