@@ -461,8 +461,8 @@ export class PortfolioCalculator {
     return factor;
   }
 
-  private addToDate(date: Date, accurany: Accuracy): Date {
-    switch (accurany) {
+  private addToDate(date: Date, accuracy: Accuracy): Date {
+    switch (accuracy) {
       case 'day':
         return addDays(date, 1);
       case 'month':
