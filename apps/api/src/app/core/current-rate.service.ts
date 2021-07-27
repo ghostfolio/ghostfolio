@@ -2,10 +2,12 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider.serv
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
-import { Currency } from '@prisma/client';
 import { isToday } from 'date-fns';
 
-import { DateQuery, MarketDataService } from './market-data.service';
+import { MarketDataService } from './market-data.service';
+import { GetValueObject } from '@ghostfolio/api/app/core/get-value.object';
+import { GetValuesParams } from '@ghostfolio/api/app/core/get-values.params';
+import { GetValueParams } from '@ghostfolio/api/app/core/get-value.params';
 
 @Injectable()
 export class CurrentRateService {
@@ -79,22 +81,3 @@ export class CurrentRateService {
   }
 }
 
-export interface GetValueParams {
-  date: Date;
-  symbol: string;
-  currency: Currency;
-  userCurrency: Currency;
-}
-
-export interface GetValuesParams {
-  dateQuery: DateQuery;
-  symbols: string[];
-  currencies: { [symbol: string]: Currency };
-  userCurrency: Currency;
-}
-
-export interface GetValueObject {
-  date: Date;
-  symbol: string;
-  marketPrice: number;
-}
