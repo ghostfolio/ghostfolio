@@ -6,8 +6,8 @@ import {
   Accuracy,
   TimelineSpecification
 } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
-import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/core/interfaces/transaction-point-symbol.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
