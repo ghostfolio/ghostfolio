@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { isToday, parse } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -66,7 +67,7 @@ export class PerformanceChartDialog {
               value: benchmarkItem.value * coefficient
             });
           } else if (
-            isToday(parse(historicalDataItem.date, 'yyyy-MM-dd', new Date()))
+            isToday(parse(historicalDataItem.date, DATE_FORMAT, new Date()))
           ) {
             this.benchmarkDataItems.push({
               date: historicalDataItem.date,

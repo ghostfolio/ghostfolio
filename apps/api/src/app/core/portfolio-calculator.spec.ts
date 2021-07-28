@@ -7,7 +7,7 @@ import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timel
 import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderType } from '@ghostfolio/api/models/order-type';
-import { resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
 import {
@@ -25,7 +25,7 @@ function mockGetValue(symbol: string, date: Date) {
     if (isSameDay(today, date)) {
       return { marketPrice: 213.32 };
     } else {
-      const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
+      const startDate = parse('2019-02-01', DATE_FORMAT, new Date());
       const daysInBetween = differenceInCalendarDays(date, startDate);
 
       const marketPrice = new Big('144.38').plus(
@@ -36,10 +36,10 @@ function mockGetValue(symbol: string, date: Date) {
   } else if (symbol === 'AMZN') {
     return { marketPrice: 2021.99 };
   } else if (symbol === 'TSLA') {
-    if (isSameDay(parse('2021-07-26', 'yyyy-MM-dd', new Date()), date)) {
+    if (isSameDay(parse('2021-07-26', DATE_FORMAT, new Date()), date)) {
       return { marketPrice: 657.62 };
     }
-    if (isSameDay(parse('2021-01-02', 'yyyy-MM-dd', new Date()), date)) {
+    if (isSameDay(parse('2021-01-02', DATE_FORMAT, new Date()), date)) {
       return { marketPrice: 666.66 };
     }
     return { marketPrice: 0 };
@@ -607,7 +607,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2020-01-21', 'yyyy-MM-dd', new Date())
+        parse('2020-01-21', DATE_FORMAT, new Date())
       );
       spy.mockRestore();
 
@@ -642,7 +642,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2021-01-01', 'yyyy-MM-dd', new Date())
+        parse('2021-01-01', DATE_FORMAT, new Date())
       );
       spy.mockRestore();
 
@@ -677,7 +677,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2021-01-02', 'yyyy-MM-dd', new Date())
+        parse('2021-01-02', DATE_FORMAT, new Date())
       );
       spy.mockRestore();
 
@@ -712,7 +712,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2019-01-01', 'yyyy-MM-dd', new Date())
+        parse('2019-01-01', DATE_FORMAT, new Date())
       );
       spy.mockRestore();
 
@@ -788,7 +788,7 @@ describe('PortfolioCalculator', () => {
       // gross performance percentage: 1.100526008 * 1.034838024 = 1.138866159 => 13.89 %
 
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2020-01-01', 'yyyy-MM-dd', new Date())
+        parse('2020-01-01', DATE_FORMAT, new Date())
       );
 
       spy.mockRestore();

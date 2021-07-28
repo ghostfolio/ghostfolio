@@ -1,6 +1,6 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
-import { getUtc, getYesterday } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getUtc, getYesterday } from '@ghostfolio/common/helper';
 import {
   AccountType,
   Currency,
@@ -30,8 +30,8 @@ jest.mock('../app/account/account.service', () => {
 jest.mock('../services/data-provider.service', () => {
   return {
     DataProviderService: jest.fn().mockImplementation(() => {
-      const today = format(new Date(), 'yyyy-MM-dd');
-      const yesterday = format(getYesterday(), 'yyyy-MM-dd');
+      const today = format(new Date(), DATE_FORMAT);
+      const yesterday = format(getYesterday(), DATE_FORMAT);
 
       return {
         get: () => {
