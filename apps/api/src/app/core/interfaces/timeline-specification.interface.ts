@@ -1,4 +1,4 @@
-export type Accuracy = 'year' | 'month' | 'day';
+export type Accuracy = 'day' | 'month' | 'year';
 
 export interface TimelineSpecification {
   accuracy: Accuracy;
