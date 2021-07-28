@@ -15,32 +15,14 @@ import {
   differenceInCalendarDays,
   endOfDay,
   isBefore,
+  isSameDay,
   parse
 } from 'date-fns';
-
-function toYearMonthDay(date: Date) {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-
-  return [year, month, day];
-}
-
-function dateEqual(date1: Date, date2: Date) {
-  const date1Converted = toYearMonthDay(date1);
-  const date2Converted = toYearMonthDay(date2);
-
-  return (
-    date1Converted[0] === date2Converted[0] &&
-    date1Converted[1] === date2Converted[1] &&
-    date1Converted[2] === date2Converted[2]
-  );
-}
 
 function mockGetValue(symbol: string, date: Date) {
   const today = new Date();
   if (symbol === 'VTI') {
-    if (dateEqual(today, date)) {
+    if (isSameDay(today, date)) {
       return { marketPrice: 213.32 };
     } else {
       const startDate = parse('2019-02-01', 'yyyy-MM-dd', new Date());
@@ -54,10 +36,10 @@ function mockGetValue(symbol: string, date: Date) {
   } else if (symbol === 'AMZN') {
     return { marketPrice: 2021.99 };
   } else if (symbol === 'TSLA') {
-    if (dateEqual(parse('2021-07-26', 'yyyy-MM-dd', new Date()), date)) {
+    if (isSameDay(parse('2021-07-26', 'yyyy-MM-dd', new Date()), date)) {
       return { marketPrice: 657.62 };
     }
-    if (dateEqual(parse('2021-01-02', 'yyyy-MM-dd', new Date()), date)) {
+    if (isSameDay(parse('2021-01-02', 'yyyy-MM-dd', new Date()), date)) {
       return { marketPrice: 666.66 };
     }
     return { marketPrice: 0 };
@@ -72,9 +54,9 @@ jest.mock('@ghostfolio/api/app/core/current-rate.service', () => {
     CurrentRateService: jest.fn().mockImplementation(() => {
       return {
         getValue: ({
+          currency,
           date,
           symbol,
-          currency,
           userCurrency
         }: GetValueParams) => {
           return Promise.resolve(mockGetValue(symbol, date));
@@ -144,13 +126,13 @@ describe('PortfolioCalculator', () => {
       const orders = [
         ...ordersVTI,
         {
+          currency: Currency.USD,
           date: '2021-02-01',
           name: 'Vanguard Total Stock Market Index Fund ETF Shares',
           quantity: new Big('20'),
           symbol: 'VTI',
           type: OrderType.Buy,
-          unitPrice: new Big('197.15'),
-          currency: Currency.USD
+          unitPrice: new Big('197.15')
         }
       ];
       const portfolioCalculator = new PortfolioCalculator(
@@ -166,12 +148,12 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              investment: new Big('1443.8'),
               name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
-              investment: new Big('1443.8'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
               transactionCount: 1
             }
           ]
@@ -180,12 +162,12 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              investment: new Big('2923.7'),
               name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
-              investment: new Big('2923.7'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
               transactionCount: 2
             }
           ]
@@ -194,12 +176,12 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              investment: new Big('652.55'),
               name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
-              investment: new Big('652.55'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
               transactionCount: 3
             }
           ]
@@ -208,12 +190,12 @@ describe('PortfolioCalculator', () => {
           date: '2021-02-01',
           items: [
             {
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              investment: new Big('6627.05'),
               name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('35'),
               symbol: 'VTI',
-              investment: new Big('6627.05'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
               transactionCount: 5
             }
           ]
@@ -222,12 +204,12 @@ describe('PortfolioCalculator', () => {
           date: '2021-08-01',
           items: [
             {
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              investment: new Big('8403.95'),
               name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('45'),
               symbol: 'VTI',
-              investment: new Big('8403.95'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
               transactionCount: 6
             }
           ]
@@ -239,13 +221,13 @@ describe('PortfolioCalculator', () => {
       const orders = [
         ...ordersVTI,
         {
+          currency: Currency.USD,
           date: '2019-09-01',
           name: 'Amazon.com, Inc.',
           quantity: new Big('5'),
           symbol: 'AMZN',
           type: OrderType.Buy,
-          unitPrice: new Big('2021.99'),
-          currency: Currency.USD
+          unitPrice: new Big('2021.99')
         }
       ];
       const portfolioCalculator = new PortfolioCalculator(
@@ -1463,6 +1445,7 @@ describe('PortfolioCalculator', () => {
     });
   });
 });
+
 const ordersMixedSymbols: PortfolioOrder[] = [
   {
     date: '2017-01-03',
