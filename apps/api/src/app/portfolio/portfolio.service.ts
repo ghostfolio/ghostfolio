@@ -1,6 +1,8 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
+import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
+import { TimelineSpecification } from '@ghostfolio/api/app/core/timeline-specification';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
@@ -12,6 +14,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Type } from '@ghostfolio/api/services/interfaces/interfaces';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioItem,
   PortfolioOverview,
@@ -49,9 +52,6 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import { parseDate } from '@ghostfolio/common/helper';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
-import { TimelineSpecification } from '@ghostfolio/api/app/core/timeline-specification';
 
 @Injectable()
 export class PortfolioService {
