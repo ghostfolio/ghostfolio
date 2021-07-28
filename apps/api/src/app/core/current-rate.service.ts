@@ -1,6 +1,6 @@
-import { GetValueObject } from '@ghostfolio/api/app/core/get-value.object';
-import { GetValueParams } from '@ghostfolio/api/app/core/get-value.params';
-import { GetValuesParams } from '@ghostfolio/api/app/core/get-values.params';
+import { GetValueObject } from '@ghostfolio/api/app/core/get-value-object.interface';
+import { GetValueParams } from '@ghostfolio/api/app/core/get-value-params.interface';
+import { GetValuesParams } from '@ghostfolio/api/app/core/get-values-params.interface';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -41,12 +41,12 @@ export class CurrentRateService {
     if (marketData) {
       return {
         date: marketData.date,
-        symbol: marketData.symbol,
         marketPrice: this.exchangeRateDataService.toCurrency(
           marketData.marketPrice,
           currency,
           userCurrency
-        )
+        ),
+        symbol: marketData.symbol
       };
     }
 
@@ -67,8 +67,8 @@ export class CurrentRateService {
     const promises: Promise<
       {
         date: Date;
-        symbol: string;
         marketPrice: number;
+        symbol: string;
       }[]
     >[] = [];
 
@@ -80,8 +80,8 @@ export class CurrentRateService {
           for (const symbol of symbols) {
             result.push({
               date: today,
-              symbol: symbol,
-              marketPrice: dataResultProvider?.[symbol]?.marketPrice ?? 0
+              marketPrice: dataResultProvider?.[symbol]?.marketPrice ?? 0,
+              symbol: symbol
             });
           }
           return result;
@@ -99,12 +99,12 @@ export class CurrentRateService {
           return data.map((marketDataItem) => {
             return {
               date: marketDataItem.date,
-              symbol: marketDataItem.symbol,
               marketPrice: this.exchangeRateDataService.toCurrency(
                 marketDataItem.marketPrice,
                 currencies[marketDataItem.symbol],
                 userCurrency
-              )
+              ),
+              symbol: marketDataItem.symbol
             };
           });
         })
