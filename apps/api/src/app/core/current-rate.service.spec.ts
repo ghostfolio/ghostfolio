@@ -29,18 +29,18 @@ jest.mock('./market-data.service', () => {
         }) => {
           return Promise.resolve<MarketData[]>([
             {
-              date: dateRangeStart,
-              symbol: symbols[0],
               createdAt: dateRangeStart,
+              date: dateRangeStart,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
-              marketPrice: 1841.823902
+              marketPrice: 1841.823902,
+              symbol: symbols[0]
             },
             {
-              date: dateRangeEnd,
-              symbol: symbols[0],
               createdAt: dateRangeEnd,
+              date: dateRangeEnd,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
-              marketPrice: 1847.839966
+              marketPrice: 1847.839966,
+              symbol: symbols[0]
             }
           ]);
         }
