@@ -2,6 +2,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
+import { DateQuery } from './date-query.interface';
 
 @Injectable()
 export class MarketDataService {
@@ -16,8 +17,8 @@ export class MarketDataService {
   }): Promise<MarketData> {
     return await this.prisma.marketData.findFirst({
       where: {
-        date: resetHours(date),
-        symbol
+        symbol,
+        date: resetHours(date)
       }
     });
   }
@@ -46,10 +47,4 @@ export class MarketDataService {
       }
     });
   }
-}
-
-export interface DateQuery {
-  gte?: Date;
-  lt?: Date;
-  in?: Date[];
 }
