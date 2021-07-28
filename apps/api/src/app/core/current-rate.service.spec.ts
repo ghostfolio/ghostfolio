@@ -115,12 +115,14 @@ describe('CurrentRateService', () => {
       })
     ).toMatchObject([
       {
-        // date
-        marketPrice: 1841.823902
+        date: undefined,
+        marketPrice: 1841.823902,
+        symbol: 'AMZN'
       },
       {
-        // date
-        marketPrice: 1847.839966
+        date: undefined,
+        marketPrice: 1847.839966,
+        symbol: 'AMZN'
       }
     ]);
   });
