@@ -34,27 +34,29 @@
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-2">
-    <div class="d-flex flex-grow-1" i18n>Net performance</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
-      <gf-value
-        class="justify-content-end mb-2"
-        position="end"
-        [colorizeSign]="true"
-        [currency]="baseCurrency"
-        [locale]="locale"
-        [value]="isLoading ? undefined : performance?.currentNetPerformance"
-      ></gf-value>
-      <gf-value
-        class="justify-content-end"
-        position="end"
-        [colorizeSign]="true"
-        [isPercent]="true"
-        [locale]="locale"
-        [value]="
-          isLoading ? undefined : performance?.currentNetPerformancePercent
-        "
-      ></gf-value>
+  <!--
+    <div class="row px-3 py-2">
+      <div class="d-flex flex-grow-1" i18n>Net performance</div>
+      <div class="d-flex flex-column flex-wrap justify-content-end">
+        <gf-value
+          class="justify-content-end mb-2"
+          position="end"
+          [colorizeSign]="true"
+          [currency]="baseCurrency"
+          [locale]="locale"
+          [value]="isLoading ? undefined : performance?.currentNetPerformance"
+        ></gf-value>
+        <gf-value
+          class="justify-content-end"
+          position="end"
+          [colorizeSign]="true"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="
+            isLoading ? undefined : performance?.currentNetPerformancePercent
+          "
+        ></gf-value>
+      </div>
     </div>
-  </div>
+  -->
 </div>
