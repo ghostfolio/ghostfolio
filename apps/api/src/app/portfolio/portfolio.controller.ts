@@ -31,7 +31,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import {
   HistoricalDataItem,

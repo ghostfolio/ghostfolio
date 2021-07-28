@@ -1,4 +1,13 @@
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import { GetValueObject } from '@ghostfolio/api/app/core/get-value.object';
+import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
+import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
+import {
+  Accuracy,
+  TimelineSpecification
+} from '@ghostfolio/api/app/core/timeline-specification';
+import { TransactionPoint } from '@ghostfolio/api/app/core/transaction-point';
+import { TransactionPointSymbol } from '@ghostfolio/api/app/core/transaction-point-symbol';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
@@ -17,15 +26,6 @@ import {
   subDays
 } from 'date-fns';
 import { flatten } from 'lodash';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
-import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
-import {
-  Accuracy,
-  TimelineSpecification
-} from '@ghostfolio/api/app/core/timeline-specification';
-import { TransactionPointSymbol } from '@ghostfolio/api/app/core/transaction-point-symbol';
-import { TransactionPoint } from '@ghostfolio/api/app/core/transaction-point';
-import { GetValueObject } from '@ghostfolio/api/app/core/get-value.object';
 
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];

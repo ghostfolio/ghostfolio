@@ -1,7 +1,13 @@
 import {
   CurrentRateService
 } from '@ghostfolio/api/app/core/current-rate.service';
+import { GetValueParams } from '@ghostfolio/api/app/core/get-value.params';
+import { GetValuesParams } from '@ghostfolio/api/app/core/get-values.params';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
+import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
+import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
+import { TimelineSpecification } from '@ghostfolio/api/app/core/timeline-specification';
+import { TransactionPoint } from '@ghostfolio/api/app/core/transaction-point';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
@@ -13,12 +19,6 @@ import {
   isBefore,
   parse
 } from 'date-fns';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
-import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
-import { TimelineSpecification } from '@ghostfolio/api/app/core/timeline-specification';
-import { TransactionPoint } from '@ghostfolio/api/app/core/transaction-point';
-import { GetValuesParams } from '@ghostfolio/api/app/core/get-values.params';
-import { GetValueParams } from '@ghostfolio/api/app/core/get-value.params';
 
 function toYearMonthDay(date: Date) {
   const year = date.getFullYear();
