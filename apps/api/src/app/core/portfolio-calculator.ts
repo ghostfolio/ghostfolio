@@ -103,12 +103,12 @@ export class PortfolioCalculator {
     }
   }
 
-  public setTransactionPoints(transactionPoints: TransactionPoint[]) {
-    this.transactionPoints = transactionPoints;
-  }
-
   public getTransactionPoints(): TransactionPoint[] {
     return this.transactionPoints;
+  }
+
+  public setTransactionPoints(transactionPoints: TransactionPoint[]) {
+    this.transactionPoints = transactionPoints;
   }
 
   public async getCurrentPositions(start: Date): Promise<{
@@ -331,35 +331,6 @@ export class PortfolioCalculator {
     return flatten(timelinePeriods);
   }
 
-  private async getMarketValues(
-    transactionPoint: TransactionPoint,
-    dateRangeStart: Date,
-    dateRangeEnd: Date
-  ) {
-    const symbols: string[] = [];
-    const currencies: { [symbol: string]: Currency } = {};
-
-    for (const item of transactionPoint.items) {
-      symbols.push(item.symbol);
-      currencies[item.symbol] = item.currency;
-    }
-    const values = await this.currentRateService.getValues({
-      dateQuery: {
-        gte: dateRangeStart,
-        lt: endOfDay(dateRangeEnd)
-      },
-      symbols,
-      currencies,
-      userCurrency: this.currency
-    });
-
-    const marketValues: { [symbol: string]: GetValueObject } = {};
-    for (const value of values) {
-      marketValues[value.symbol] = value;
-    }
-    return marketValues;
-  }
-
   private async getTimePeriodForDate(
     j: number,
     startDate: Date,
@@ -450,6 +421,7 @@ export class PortfolioCalculator {
 
   private getFactor(type: OrderType) {
     let factor: number;
+
     switch (type) {
       case OrderType.Buy:
         factor = 1;
@@ -461,6 +433,7 @@ export class PortfolioCalculator {
         factor = 0;
         break;
     }
+
     return factor;
   }
 
