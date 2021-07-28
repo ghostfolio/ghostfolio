@@ -1,5 +1,5 @@
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { GetValueObject } from '@ghostfolio/api/app/core/get-value.object';
+import { GetValueObject } from '@ghostfolio/api/app/core/get-value-object.interface';
 import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
 import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
 import {
