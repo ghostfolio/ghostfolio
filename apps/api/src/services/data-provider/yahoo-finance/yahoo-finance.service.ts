@@ -1,6 +1,11 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { isCrypto, isCurrency, parseCurrency } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  isCrypto,
+  isCurrency,
+  parseCurrency
+} from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -103,8 +108,8 @@ export class YahooFinanceService implements DataProviderInterface {
         [symbol: string]: IYahooFinanceHistoricalResponse[];
       } = await yahooFinance.historical({
         symbols: yahooSymbols,
-        from: format(from, 'yyyy-MM-dd'),
-        to: format(to, 'yyyy-MM-dd')
+        from: format(from, DATE_FORMAT),
+        to: format(to, DATE_FORMAT)
       });
 
       const response: {
@@ -117,7 +122,7 @@ export class YahooFinanceService implements DataProviderInterface {
         response[symbol] = {};
 
         timeSeries.forEach((timeSerie) => {
-          response[symbol][format(timeSerie.date, 'yyyy-MM-dd')] = {
+          response[symbol][format(timeSerie.date, DATE_FORMAT)] = {
             marketPrice: timeSerie.close,
             performance: timeSerie.open - timeSerie.close
           };

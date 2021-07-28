@@ -14,7 +14,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Type } from '@ghostfolio/api/services/interfaces/interfaces';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
-import { parseDate } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioItem,
   PortfolioOverview,
@@ -57,6 +57,7 @@ import {
 export class PortfolioService {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly currentRateService: CurrentRateService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
@@ -64,8 +65,7 @@ export class PortfolioService {
     private readonly redisCacheService: RedisCacheService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
-    private readonly userService: UserService,
-    private readonly currentRateService: CurrentRateService
+    private readonly userService: UserService
   ) {}
 
   public async createPortfolio(aUserId: string): Promise<Portfolio> {
@@ -163,32 +163,31 @@ export class PortfolioService {
     if (transactionPoints.length === 0) {
       return [];
     }
-    const dateFormat = 'yyyy-MM-dd';
     let portfolioStart = parse(
       transactionPoints[0].date,
-      dateFormat,
+      DATE_FORMAT,
       new Date()
     );
     portfolioStart = this.getStartDate(aDateRange, portfolioStart);
 
     const timelineSpecification: TimelineSpecification[] = [
       {
-        start: format(portfolioStart, dateFormat),
+        start: format(portfolioStart, DATE_FORMAT),
         accuracy: 'day'
       }
     ];
 
     const timeline = await portfolioCalculator.calculateTimeline(
       timelineSpecification,
-      format(new Date(), dateFormat)
+      format(new Date(), DATE_FORMAT)
     );
 
     return timeline
       .filter((timelineItem) => timelineItem !== null)
       .map((timelineItem) => ({
         date: timelineItem.date,
-        value: timelineItem.grossPerformance.toNumber(),
-        marketPrice: timelineItem.value
+        marketPrice: timelineItem.value,
+        value: timelineItem.grossPerformance.toNumber()
       }));
   }
 
@@ -270,7 +269,7 @@ export class PortfolioService {
         for (const [date, { marketPrice }] of Object.entries(
           historicalData[aSymbol]
         )) {
-          const currentDate = parse(date, 'yyyy-MM-dd', new Date());
+          const currentDate = parse(date, DATE_FORMAT, new Date());
           if (
             isSameDay(currentDate, parseISO(orders[0]?.getDate())) ||
             isAfter(currentDate, parseISO(orders[0]?.getDate()))
@@ -533,7 +532,7 @@ export class PortfolioService {
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
-      date: format(order.date, 'yyyy-MM-dd'),
+      date: format(order.date, DATE_FORMAT),
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.symbol,

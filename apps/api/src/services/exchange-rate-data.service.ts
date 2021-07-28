@@ -1,4 +1,4 @@
-import { getYesterday } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
 import { format } from 'date-fns';
@@ -51,7 +51,7 @@ export class ExchangeRateDataService {
 
     this.pairs.forEach((pair) => {
       const [currency1, currency2] = pair.match(/.{1,3}/g);
-      const date = format(getYesterday(), 'yyyy-MM-dd');
+      const date = format(getYesterday(), DATE_FORMAT);
 
       this.currencies[pair] = resultExtended[pair]?.[date]?.marketPrice;
 

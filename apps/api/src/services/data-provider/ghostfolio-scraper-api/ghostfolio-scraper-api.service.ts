@@ -1,4 +1,5 @@
 import {
+  DATE_FORMAT,
   getYesterday,
   isGhostfolioScraperApiSymbol
 } from '@ghostfolio/common/helper';
@@ -95,7 +96,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
 
       return {
         [symbol]: {
-          [format(getYesterday(), 'yyyy-MM-dd')]: {
+          [format(getYesterday(), DATE_FORMAT)]: {
             marketPrice: value
           }
         }
@@ -109,14 +110,13 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
 
   public async getScraperConfigurations(): Promise<ScraperConfig[]> {
     try {
-      const {
-        value: scraperConfigString
-      } = await this.prisma.property.findFirst({
-        select: {
-          value: true
-        },
-        where: { key: 'SCRAPER_CONFIG' }
-      });
+      const { value: scraperConfigString } =
+        await this.prisma.property.findFirst({
+          select: {
+            value: true
+          },
+          where: { key: 'SCRAPER_CONFIG' }
+        });
 
       return JSON.parse(scraperConfigString);
     } catch {}
