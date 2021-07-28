@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -115,13 +116,13 @@ export class PositionDetailDialog implements OnDestroy {
           } else {
             // Add market price
             this.historicalDataItems.push({
-              date: format(new Date(), 'yyyy-MM-dd'),
+              date: format(new Date(), DATE_FORMAT),
               value: this.marketPrice
             });
 
             // Add benchmark
             this.benchmarkDataItems.push({
-              date: format(new Date(), 'yyyy-MM-dd'),
+              date: format(new Date(), DATE_FORMAT),
               value: averagePrice
             });
           }

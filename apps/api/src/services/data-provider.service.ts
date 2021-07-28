@@ -1,4 +1,5 @@
 import {
+  DATE_FORMAT,
   isGhostfolioScraperApiSymbol,
   isRakutenRapidApiSymbol
 } from '@ghostfolio/common/helper';
@@ -100,9 +101,9 @@ export class DataProviderService {
 
     const rangeQuery =
       from && to
-        ? `AND date >= '${format(from, 'yyyy-MM-dd')}' AND date <= '${format(
+        ? `AND date >= '${format(from, DATE_FORMAT)}' AND date <= '${format(
             to,
-            'yyyy-MM-dd'
+            DATE_FORMAT
           )}'`
         : '';
 
@@ -120,7 +121,7 @@ export class DataProviderService {
 
         r[symbol] = {
           ...(r[symbol] || {}),
-          [format(new Date(date), 'yyyy-MM-dd')]: { marketPrice }
+          [format(new Date(date), DATE_FORMAT)]: { marketPrice }
         };
 
         return r;

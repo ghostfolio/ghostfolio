@@ -1,7 +1,12 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
-import { getToday, getYesterday, resetHours } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getToday,
+  getYesterday,
+  resetHours
+} from '@ghostfolio/common/helper';
 import {
   PortfolioItem,
   PortfolioPerformance,
@@ -731,7 +736,7 @@ export class Portfolio implements PortfolioInterface {
           investment: 0,
           investmentInOriginalCurrency: 0,
           marketPrice:
-            historicalData[symbol]?.[format(currentDate, 'yyyy-MM-dd')]
+            historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
               ?.marketPrice || 0,
           quantity: 0,
           transactionCount: 0
@@ -774,7 +779,7 @@ export class Portfolio implements PortfolioInterface {
           investment: 0,
           investmentInOriginalCurrency: 0,
           marketPrice:
-            historicalData[symbol]?.[format(yesterday, 'yyyy-MM-dd')]
+            historicalData[symbol]?.[format(yesterday, DATE_FORMAT)]
               ?.marketPrice || 0,
           name: '',
           quantity: 0,

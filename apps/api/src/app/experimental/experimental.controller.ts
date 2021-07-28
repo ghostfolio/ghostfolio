@@ -1,4 +1,5 @@
 import { baseCurrency, benchmarks } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { isApiTokenAuthorized } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 import {
@@ -82,7 +83,7 @@ export class ExperimentalController {
     let date = new Date();
 
     if (dateString) {
-      date = parse(dateString, 'yyyy-MM-dd', new Date());
+      date = parse(dateString, DATE_FORMAT, new Date());
     }
 
     return this.experimentalService.getValue(orders, date, baseCurrency);

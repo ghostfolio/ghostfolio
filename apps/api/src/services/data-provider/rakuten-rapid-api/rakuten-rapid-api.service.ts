@@ -1,4 +1,5 @@
 import {
+  DATE_FORMAT,
   getToday,
   getYesterday,
   isRakutenRapidApiSymbol
@@ -117,7 +118,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
 
         return {
           'GF.FEAR_AND_GREED_INDEX': {
-            [format(getYesterday(), 'yyyy-MM-dd')]: {
+            [format(getYesterday(), DATE_FORMAT)]: {
               marketPrice: fgi.previousClose.value
             }
           }

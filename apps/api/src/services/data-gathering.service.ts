@@ -1,5 +1,6 @@
 import { benchmarks, currencyPairs } from '@ghostfolio/common/config';
 import {
+  DATE_FORMAT,
   getUtc,
   isGhostfolioScraperApiSymbol,
   isRakutenRapidApiSymbol,
@@ -193,11 +194,11 @@ export class DataGatheringService {
           )
         ) {
           if (
-            historicalData[symbol]?.[format(currentDate, 'yyyy-MM-dd')]
+            historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
               ?.marketPrice
           ) {
             lastMarketPrice =
-              historicalData[symbol]?.[format(currentDate, 'yyyy-MM-dd')]
+              historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
                 ?.marketPrice;
           }
 
