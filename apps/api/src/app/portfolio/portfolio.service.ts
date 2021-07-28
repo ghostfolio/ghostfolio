@@ -1,8 +1,8 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
-import { TimelineSpecification } from '@ghostfolio/api/app/core/timeline-specification';
+import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
+import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';

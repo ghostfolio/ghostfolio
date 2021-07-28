@@ -1,13 +1,13 @@
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { GetValueObject } from '@ghostfolio/api/app/core/get-value-object.interface';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
-import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
+import { GetValueObject } from '@ghostfolio/api/app/core/interfaces/get-value-object.interface';
+import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
+import { TimelinePeriod } from '@ghostfolio/api/app/core/interfaces/timeline-period.interface';
 import {
   Accuracy,
   TimelineSpecification
-} from '@ghostfolio/api/app/core/timeline-specification';
-import { TransactionPoint } from '@ghostfolio/api/app/core/transaction-point';
-import { TransactionPointSymbol } from '@ghostfolio/api/app/core/transaction-point-symbol';
+} from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
+import { TransactionPointSymbol } from '@ghostfolio/api/app/core/interfaces/transaction-point-symbol.interface';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
