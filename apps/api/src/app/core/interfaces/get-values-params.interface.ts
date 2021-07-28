@@ -1,4 +1,4 @@
-import { DateQuery } from '@ghostfolio/api/app/core/date-query.interface';
+import { DateQuery } from '@ghostfolio/api/app/core/interfaces/date-query.interface';
 import { Currency } from '@prisma/client';
 
 export interface GetValuesParams {

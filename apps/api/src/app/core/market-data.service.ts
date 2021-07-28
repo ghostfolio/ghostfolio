@@ -2,7 +2,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { MarketData } from '@prisma/client';
-import { DateQuery } from './date-query.interface';
+import { DateQuery } from './interfaces/date-query.interface';
 
 @Injectable()
 export class MarketDataService {
