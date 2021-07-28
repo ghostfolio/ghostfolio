@@ -1,11 +1,11 @@
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { GetValueParams } from '@ghostfolio/api/app/core/get-value-params.interface';
-import { GetValuesParams } from '@ghostfolio/api/app/core/get-values-params.interface';
+import { GetValueParams } from '@ghostfolio/api/app/core/interfaces/get-value-params.interface';
+import { GetValuesParams } from '@ghostfolio/api/app/core/interfaces/get-values-params.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
-import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
-import { TimelineSpecification } from '@ghostfolio/api/app/core/timeline-specification';
-import { TransactionPoint } from '@ghostfolio/api/app/core/transaction-point';
+import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
+import { TimelinePeriod } from '@ghostfolio/api/app/core/interfaces/timeline-period.interface';
+import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
