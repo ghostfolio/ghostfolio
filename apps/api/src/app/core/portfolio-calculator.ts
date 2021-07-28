@@ -363,10 +363,10 @@ export class PortfolioCalculator {
             currencies,
             userCurrency: this.currency
           });
-        } catch (e) {
+        } catch (error) {
           console.error(
-            `failed to fetch info for date ${startDate} with exception`,
-            e
+            `Failed to fetch info for date ${startDate} with exception`,
+            error
           );
           return null;
         }
