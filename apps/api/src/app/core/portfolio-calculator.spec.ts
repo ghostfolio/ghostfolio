@@ -1,8 +1,6 @@
-import {
-  CurrentRateService
-} from '@ghostfolio/api/app/core/current-rate.service';
-import { GetValueParams } from '@ghostfolio/api/app/core/get-value.params';
-import { GetValuesParams } from '@ghostfolio/api/app/core/get-values.params';
+import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import { GetValueParams } from '@ghostfolio/api/app/core/get-value-params.interface';
+import { GetValuesParams } from '@ghostfolio/api/app/core/get-values-params.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { PortfolioOrder } from '@ghostfolio/api/app/core/portfolio-order';
 import { TimelinePeriod } from '@ghostfolio/api/app/core/timeline-period';
