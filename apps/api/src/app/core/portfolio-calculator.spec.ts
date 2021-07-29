@@ -35,13 +35,23 @@ function mockGetValue(symbol: string, date: Date) {
     }
   } else if (symbol === 'AMZN') {
     return { marketPrice: 2021.99 };
+  } else if (symbol === 'MFA') {
+    if (isSameDay(parse('2010-12-31', DATE_FORMAT, new Date()), date)) {
+      return { marketPrice: 1 };
+    } else if (isSameDay(parse('2011-08-15', DATE_FORMAT, new Date()), date)) {
+      return { marketPrice: 1.14771272727273 }; // 1262484 / 1100000
+    } else if (isSameDay(parse('2011-12-31', DATE_FORMAT, new Date()), date)) {
+      return { marketPrice: 1.08393454545455 }; // 1192328 / 1100000
+    }
+
+    return { marketPrice: 0 };
   } else if (symbol === 'TSLA') {
     if (isSameDay(parse('2021-07-26', DATE_FORMAT, new Date()), date)) {
       return { marketPrice: 657.62 };
-    }
-    if (isSameDay(parse('2021-01-02', DATE_FORMAT, new Date()), date)) {
+    } else if (isSameDay(parse('2021-01-02', DATE_FORMAT, new Date()), date)) {
       return { marketPrice: 666.66 };
     }
+
     return { marketPrice: 0 };
   } else {
     return { marketPrice: 0 };
@@ -1440,6 +1450,72 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('267.2'),
           investment: new Big('11553.75'),
           value: new Big('11820.95') // 10 * (144.38 + days=334 * 0.08) + 5 * 2021.99
+        }
+      ]);
+    });
+
+    /**
+     * Source: https://www.investopedia.com/terms/t/time-weightedror.asp
+     */
+    it('with TWR example from Investopedia: Scenario 1', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints([
+        {
+          date: '2010-12-31',
+          items: [
+            {
+              name: 'Mutual Fund A',
+              quantity: new Big('1000000'), // 1 million
+              symbol: 'MFA',
+              investment: new Big('1000000'), // 1 million
+              currency: Currency.USD,
+              firstBuyDate: '2010-31-12',
+              transactionCount: 1
+            }
+          ]
+        },
+        {
+          date: '2011-08-15',
+          items: [
+            {
+              name: 'Mutual Fund A',
+              quantity: new Big('100000'), // 100,000
+              symbol: 'MFA',
+              investment: new Big('100000'), // 100,000
+              currency: Currency.USD,
+              firstBuyDate: '2010-31-12',
+              transactionCount: 2
+            }
+          ]
+        }
+      ]);
+      const timelineSpecification: TimelineSpecification[] = [
+        {
+          start: '2010-12-31',
+          accuracy: 'year'
+        }
+      ];
+      const timeline: TimelinePeriod[] =
+        await portfolioCalculator.calculateTimeline(
+          timelineSpecification,
+          '2011-12-31'
+        );
+
+      expect(timeline).toEqual([
+        {
+          date: '2010-12-31',
+          grossPerformance: new Big('0'),
+          investment: new Big('1000000'), // 1 million
+          value: new Big('1000000') // 1 million
+        },
+        {
+          date: '2011-12-31',
+          grossPerformance: new Big('0.0979'), // 9.79%
+          investment: new Big('1100000'), // 1 million + 100,000
+          value: new Big('1192328') // 1,192,328
         }
       ]);
     });
