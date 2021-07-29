@@ -172,9 +172,11 @@ export class PortfolioCalculator {
       if (!marketSymbolMap[date]) {
         marketSymbolMap[date] = {};
       }
-      marketSymbolMap[date][marketSymbol.symbol] = new Big(
-        marketSymbol.marketPrice
-      );
+      if (marketSymbol.marketPrice) {
+        marketSymbolMap[date][marketSymbol.symbol] = new Big(
+          marketSymbol.marketPrice
+        );
+      }
     }
 
     let hasErrors = false;
@@ -377,9 +379,11 @@ export class PortfolioCalculator {
         if (!marketSymbolMap[date]) {
           marketSymbolMap[date] = {};
         }
-        marketSymbolMap[date][marketSymbol.symbol] = new Big(
-          marketSymbol.marketPrice
-        );
+        if (marketSymbol.marketPrice) {
+          marketSymbolMap[date][marketSymbol.symbol] = new Big(
+            marketSymbol.marketPrice
+          );
+        }
       }
     }
 
