@@ -1482,9 +1482,9 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               name: 'Mutual Fund A',
-              quantity: new Big('100000'), // 100,000
+              quantity: new Big('1100000'), // 1,100,000
               symbol: 'MFA',
-              investment: new Big('100000'), // 100,000
+              investment: new Big('1100000'), // 1,100,000
               currency: Currency.USD,
               firstBuyDate: '2010-31-12',
               transactionCount: 2
@@ -1515,7 +1515,7 @@ describe('PortfolioCalculator', () => {
           date: '2011-12-31',
           grossPerformance: new Big('0.0979'), // 9.79%
           investment: new Big('1100000'), // 1 million + 100,000
-          value: new Big('1192328') // 1,192,328
+          value: new Big('1192328.000000005') // 1,192,328
         }
       ]);
     });
