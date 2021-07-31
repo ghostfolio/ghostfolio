@@ -19,6 +19,7 @@ import {
   PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,
+  PortfolioReport,
   Position,
   TimelinePosition
 } from '@ghostfolio/common/interfaces';
@@ -64,6 +65,14 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
+import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
+import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-initial-investment';
+import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
+import { CurrencyClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/initial-investment';
+import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 
 @Injectable()
 export class PortfolioService {
@@ -590,6 +599,76 @@ export class PortfolioService {
         );
       })
       .reduce((previous, current) => previous + current, 0);
+  }
+
+  public async getReport(impersonationId: string): Promise<PortfolioReport> {
+    const userId = await this.getUserId(impersonationId);
+    const portfolio = await this.createPortfolio(userId);
+
+    const details = await portfolio.getDetails();
+    const { orders } = await this.getTransactionPoints(userId);
+
+    if (isEmpty(details)) {
+      return {
+        rules: {}
+      };
+    }
+
+    const fees = this.getFees(orders);
+
+    const baseCurrency = this.request.user.Settings.currency;
+    return {
+      rules: {
+        accountClusterRisk: await this.rulesService.evaluate(
+          [
+            new AccountClusterRiskInitialInvestment(
+              this.exchangeRateDataService,
+              details
+            ),
+            new AccountClusterRiskCurrentInvestment(
+              this.exchangeRateDataService,
+              details
+            ),
+            new AccountClusterRiskSingleAccount(
+              this.exchangeRateDataService,
+              details
+            )
+          ],
+          { baseCurrency }
+        ),
+        currencyClusterRisk: await this.rulesService.evaluate(
+          [
+            new CurrencyClusterRiskBaseCurrencyInitialInvestment(
+              this.exchangeRateDataService,
+              details
+            ),
+            new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+              this.exchangeRateDataService,
+              details
+            ),
+            new CurrencyClusterRiskInitialInvestment(
+              this.exchangeRateDataService,
+              details
+            ),
+            new CurrencyClusterRiskCurrentInvestment(
+              this.exchangeRateDataService,
+              details
+            )
+          ],
+          { baseCurrency }
+        ),
+        fees: await this.rulesService.evaluate(
+          [
+            new FeeRatioInitialInvestment(
+              this.exchangeRateDataService,
+              details,
+              fees
+            )
+          ],
+          { baseCurrency }
+        )
+      }
+    };
   }
 
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
