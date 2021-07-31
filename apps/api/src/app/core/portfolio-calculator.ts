@@ -297,48 +297,15 @@ export class PortfolioCalculator {
         transactionCount: item.transactionCount
       });
     }
-
-    let currentValue = new Big(0);
-    let overallGrossPerformance = new Big(0);
-    let grossPerformancePercentage = new Big(1);
-    let completeInitialValue = new Big(0);
-    for (const currentPosition of positions) {
-      currentValue = currentValue.add(
-        new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
-      );
-      if (currentPosition.grossPerformance) {
-        overallGrossPerformance = overallGrossPerformance.plus(
-          currentPosition.grossPerformance
-        );
-      } else {
-        hasErrors = true;
-      }
-      if (
-        currentPosition.grossPerformancePercentage &&
-        initialValues[currentPosition.symbol]
-      ) {
-        const currentInitialValue = initialValues[currentPosition.symbol];
-        completeInitialValue = completeInitialValue.plus(currentInitialValue);
-        grossPerformancePercentage = grossPerformancePercentage.plus(
-          currentPosition.grossPerformancePercentage.mul(currentInitialValue)
-        );
-      } else {
-        console.log(initialValues);
-        console.error(
-          'initial value is missing for symbol',
-          currentPosition.symbol
-        );
-        hasErrors = true;
-      }
-    }
+    const overall = this.calculateOverallGrossPerformance(
+      positions,
+      initialValues
+    );
 
     return {
-      hasErrors,
-      positions,
-      grossPerformance: overallGrossPerformance,
-      grossPerformancePercentage:
-        grossPerformancePercentage.div(completeInitialValue),
-      currentValue
+      ...overall,
+      hasErrors: hasErrors || overall.hasErrors,
+      positions
     };
   }
 
@@ -402,6 +369,53 @@ export class PortfolioCalculator {
     );
 
     return flatten(timelinePeriods);
+  }
+
+  private calculateOverallGrossPerformance(
+    positions: TimelinePosition[],
+    initialValues: { [p: string]: Big }
+  ) {
+    let hasErrors = false;
+    let currentValue = new Big(0);
+    let grossPerformance = new Big(0);
+    let grossPerformancePercentage = new Big(0);
+    let completeInitialValue = new Big(0);
+    for (const currentPosition of positions) {
+      currentValue = currentValue.add(
+        new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
+      );
+      if (currentPosition.grossPerformance) {
+        grossPerformance = grossPerformance.plus(
+          currentPosition.grossPerformance
+        );
+      } else {
+        hasErrors = true;
+      }
+
+      if (
+        currentPosition.grossPerformancePercentage &&
+        initialValues[currentPosition.symbol]
+      ) {
+        const currentInitialValue = initialValues[currentPosition.symbol];
+        completeInitialValue = completeInitialValue.plus(currentInitialValue);
+        grossPerformancePercentage = grossPerformancePercentage.plus(
+          currentPosition.grossPerformancePercentage.mul(currentInitialValue)
+        );
+      } else {
+        console.error(
+          'initial value is missing for symbol',
+          currentPosition.symbol
+        );
+        hasErrors = true;
+      }
+    }
+    return {
+      currentValue,
+      grossPerformance,
+      grossPerformancePercentage:
+        grossPerformancePercentage.div(completeInitialValue),
+      hasErrors
+    };
   }
 
   private async getTimePeriodForDate(
