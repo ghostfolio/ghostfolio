@@ -225,10 +225,6 @@ export class Portfolio implements PortfolioInterface {
     return cloneDeep(this.portfolioItems);
   }
 
-  public getCommittedFunds() {
-    return this.getTotalBuy() - this.getTotalSell();
-  }
-
   public async getDetails(
     aDateRange: DateRange = 'max'
   ): Promise<{ [symbol: string]: PortfolioPosition }> {

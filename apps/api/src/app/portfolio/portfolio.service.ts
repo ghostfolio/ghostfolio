@@ -29,16 +29,18 @@ import {
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { DataSource } from '@prisma/client';
+import { DataSource, Currency, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
   add,
   addMonths,
+  endOfToday,
   format,
   getDate,
   getMonth,
   getYear,
   isAfter,
+  isBefore,
   isSameDay,
   max,
   parse,
@@ -204,30 +206,25 @@ export class PortfolioService {
   public async getOverview(
     aImpersonationId: string
   ): Promise<PortfolioOverview> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        this.request.user.id
-      );
+    const userId = await this.getUserId(aImpersonationId);
 
-    const portfolio = await this.createPortfolio(
-      impersonationUserId || this.request.user.id
-    );
-
+    const currency = this.request.user.Settings.currency;
     const { balance } = await this.accountService.getCashDetails(
-      impersonationUserId || this.request.user.id,
-      this.request.user.Settings.currency
+      userId,
+      currency
     );
-    const committedFunds = portfolio.getCommittedFunds();
-    const fees = portfolio.getFees();
+    const orders = await this.getOrders(userId);
+    const fees = this.getFees(orders);
 
+    const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
+    const totalSell = this.getTotalByType(orders, currency, TypeOfOrder.SELL);
     return {
-      committedFunds,
+      committedFunds: totalBuy - totalSell,
       fees,
       cash: balance,
-      ordersCount: portfolio.getOrders().length,
-      totalBuy: portfolio.getTotalBuy(),
-      totalSell: portfolio.getTotalSell()
+      ordersCount: orders.length,
+      totalBuy: totalBuy,
+      totalSell: totalSell
     };
   }
 
@@ -586,6 +583,22 @@ export class PortfolioService {
     };
   }
 
+  public getFees(orders: OrderWithAccount[], date = new Date(0)) {
+    return orders
+      .filter((order) => {
+        // Filter out all orders before given date
+        return isBefore(date, new Date(order.date));
+      })
+      .map((order) => {
+        return this.exchangeRateDataService.toCurrency(
+          order.fee,
+          order.currency,
+          this.request.user.Settings.currency
+        );
+      })
+      .reduce((previous, current) => previous + current, 0);
+  }
+
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
     switch (aDateRange) {
       case '1d':
@@ -741,5 +754,24 @@ export class PortfolioService {
       );
 
     return impersonationUserId || this.request.user.id;
+  }
+
+  private getTotalByType(
+    orders: OrderWithAccount[],
+    currency: Currency,
+    type: TypeOfOrder
+  ) {
+    return orders
+      .filter(
+        (order) => !isAfter(order.date, endOfToday()) && order.type === type
+      )
+      .map((order) => {
+        return this.exchangeRateDataService.toCurrency(
+          order.quantity * order.unitPrice,
+          order.currency,
+          currency
+        );
+      })
+      .reduce((previous, current) => previous + current, 0);
   }
 }
