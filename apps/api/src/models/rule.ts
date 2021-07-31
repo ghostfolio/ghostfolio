@@ -1,5 +1,8 @@
 import { groupBy } from '@ghostfolio/common/helper';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPosition,
+  TimelinePosition
+} from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
@@ -30,30 +33,30 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
     return this.name;
   }
 
-  public groupPositionsByAttribute(
-    aPositions: { [symbol: string]: PortfolioPosition },
-    aAttribute: keyof PortfolioPosition,
-    aBaseCurrency: Currency
+  public groupCurrentPositionsByAttribute(
+    positions: TimelinePosition[],
+    attribute: keyof TimelinePosition,
+    baseCurrency: Currency
   ) {
-    return Array.from(
-      groupBy(aAttribute, Object.values(aPositions)).entries()
-    ).map(([attributeValue, objs]) => ({
-      groupKey: attributeValue,
-      investment: objs.reduce(
-        (previousValue, currentValue) =>
-          previousValue + currentValue.investment,
-        0
-      ),
-      value: objs.reduce(
-        (previousValue, currentValue) =>
-          previousValue +
-          this.exchangeRateDataService.toCurrency(
-            currentValue.quantity * currentValue.marketPrice,
-            currentValue.currency,
-            aBaseCurrency
-          ),
-        0
-      )
-    }));
+    return Array.from(groupBy(attribute, positions).entries()).map(
+      ([attributeValue, objs]) => ({
+        groupKey: attributeValue,
+        investment: objs.reduce(
+          (previousValue, currentValue) =>
+            previousValue + currentValue.investment.toNumber(),
+          0
+        ),
+        value: objs.reduce(
+          (previousValue, currentValue) =>
+            previousValue +
+            this.exchangeRateDataService.toCurrency(
+              currentValue.quantity.mul(currentValue.marketPrice).toNumber(),
+              currentValue.currency,
+              baseCurrency
+            ),
+          0
+        )
+      })
+    );
   }
 }

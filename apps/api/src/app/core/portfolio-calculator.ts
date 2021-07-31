@@ -26,6 +26,7 @@ import {
   subDays
 } from 'date-fns';
 import { flatten } from 'lodash';
+import { CurrentPositions } from '@ghostfolio/api/app/core/interfaces/current-positions.interface';
 
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
@@ -111,14 +112,7 @@ export class PortfolioCalculator {
     this.transactionPoints = transactionPoints;
   }
 
-  public async getCurrentPositions(start: Date): Promise<{
-    hasErrors: boolean;
-    positions: TimelinePosition[];
-    grossPerformance: Big;
-    grossPerformancePercentage: Big;
-    currentValue: Big;
-    totalInvestment: Big;
-  }> {
+  public async getCurrentPositions(start: Date): Promise<CurrentPositions> {
     if (!this.transactionPoints?.length) {
       return {
         hasErrors: false,

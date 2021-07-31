@@ -8,7 +8,9 @@ import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.in
 export class AccountClusterRiskInitialInvestment extends Rule<Settings> {
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    private positions: { [symbol: string]: PortfolioPosition }
+    private accounts: {
+      [account: string]: { current: number; original: number };
+    }
   ) {
     super(exchangeRateDataService, {
       name: 'Initial Investment'
@@ -22,18 +24,12 @@ export class AccountClusterRiskInitialInvestment extends Rule<Settings> {
       };
     } = {};
 
-    Object.values(this.positions).forEach((position) => {
-      for (const [account, { original }] of Object.entries(position.accounts)) {
-        if (platforms[account]?.investment) {
-          platforms[account].investment += original;
-        } else {
-          platforms[account] = {
-            investment: original,
-            name: account
-          };
-        }
-      }
-    });
+    for (const account of Object.keys(this.accounts)) {
+      platforms[account] = {
+        name: account,
+        investment: this.accounts[account].original
+      };
+    }
 
     let maxItem;
     let totalInvestment = 0;

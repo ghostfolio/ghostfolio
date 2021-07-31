@@ -4,18 +4,14 @@ import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-or
 import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
-import { Portfolio } from '@ghostfolio/api/models/portfolio';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { IOrder, Type } from '@ghostfolio/api/services/interfaces/interfaces';
+import { Type } from '@ghostfolio/api/services/interfaces/interfaces';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
-  PortfolioItem,
   PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,
@@ -30,11 +26,10 @@ import {
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { DataSource, Currency, Type as TypeOfOrder } from '@prisma/client';
+import { Currency, DataSource, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
   add,
-  addMonths,
   endOfToday,
   format,
   getDate,
@@ -42,7 +37,6 @@ import {
   getYear,
   isAfter,
   isBefore,
-  isSameDay,
   max,
   parse,
   parseISO,
@@ -54,7 +48,6 @@ import {
   subYears
 } from 'date-fns';
 import { isEmpty } from 'lodash';
-import * as roundTo from 'round-to';
 
 import {
   HistoricalDataItem,
@@ -83,68 +76,10 @@ export class PortfolioService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
-    private readonly redisCacheService: RedisCacheService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
-    private readonly userService: UserService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
-
-  public async createPortfolio(aUserId: string): Promise<Portfolio> {
-    let portfolio: Portfolio;
-    const stringifiedPortfolio = await this.redisCacheService.get(
-      `${aUserId}.portfolio`
-    );
-
-    const user = await this.userService.user({ id: aUserId });
-
-    if (stringifiedPortfolio) {
-      // Get portfolio from redis
-      const {
-        orders,
-        portfolioItems
-      }: { orders: IOrder[]; portfolioItems: PortfolioItem[] } =
-        JSON.parse(stringifiedPortfolio);
-
-      portfolio = new Portfolio(
-        this.accountService,
-        this.dataProviderService,
-        this.exchangeRateDataService,
-        this.rulesService
-      ).createFromData({ orders, portfolioItems, user });
-    } else {
-      // Get portfolio from database
-      const orders = await this.getOrders(aUserId);
-
-      portfolio = new Portfolio(
-        this.accountService,
-        this.dataProviderService,
-        this.exchangeRateDataService,
-        this.rulesService
-      );
-      portfolio.setUser(user);
-      await portfolio.setOrders(orders);
-
-      // Cache data for the next time...
-      const portfolioData = {
-        orders: portfolio.getOrders(),
-        portfolioItems: portfolio.getPortfolioItems()
-      };
-
-      await this.redisCacheService.set(
-        `${aUserId}.portfolio`,
-        JSON.stringify(portfolioData)
-      );
-    }
-
-    // Enrich portfolio with current data
-    await portfolio.addCurrentPortfolioItems();
-
-    // Enrich portfolio with future data
-    await portfolio.addFuturePortfolioItems();
-
-    return portfolio;
-  }
 
   public async getInvestments(
     aImpersonationId: string
@@ -603,35 +538,49 @@ export class PortfolioService {
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const userId = await this.getUserId(impersonationId);
-    const portfolio = await this.createPortfolio(userId);
+    const baseCurrency = this.request.user.Settings.currency;
 
-    const details = await portfolio.getDetails();
-    const { orders } = await this.getTransactionPoints(userId);
+    const { transactionPoints, orders } = await this.getTransactionPoints(
+      userId
+    );
 
-    if (isEmpty(details)) {
+    if (isEmpty(orders)) {
       return {
         rules: {}
       };
     }
 
-    const fees = this.getFees(orders);
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+    portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const baseCurrency = this.request.user.Settings.currency;
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      portfolioStart
+    );
+
+    const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
+    for (const position of currentPositions.positions) {
+      portfolioItemsNow[position.symbol] = position;
+    }
+    const accounts = this.getAccounts(orders, portfolioItemsNow, baseCurrency);
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
           [
             new AccountClusterRiskInitialInvestment(
               this.exchangeRateDataService,
-              details
+              accounts
             ),
             new AccountClusterRiskCurrentInvestment(
               this.exchangeRateDataService,
-              details
+              accounts
             ),
             new AccountClusterRiskSingleAccount(
               this.exchangeRateDataService,
-              details
+              accounts
             )
           ],
           { baseCurrency }
@@ -640,19 +589,19 @@ export class PortfolioService {
           [
             new CurrencyClusterRiskBaseCurrencyInitialInvestment(
               this.exchangeRateDataService,
-              details
+              currentPositions
             ),
             new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
               this.exchangeRateDataService,
-              details
+              currentPositions
             ),
             new CurrencyClusterRiskInitialInvestment(
               this.exchangeRateDataService,
-              details
+              currentPositions
             ),
             new CurrencyClusterRiskCurrentInvestment(
               this.exchangeRateDataService,
-              details
+              currentPositions
             )
           ],
           { baseCurrency }
@@ -661,8 +610,8 @@ export class PortfolioService {
           [
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
-              details,
-              fees
+              currentPositions.totalInvestment.toNumber(),
+              this.getFees(orders)
             )
           ],
           { baseCurrency }

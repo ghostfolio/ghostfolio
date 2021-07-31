@@ -5,11 +5,12 @@ import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Rule } from '../../rule';
 import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { CurrentPositions } from '@ghostfolio/api/app/core/interfaces/current-positions.interface';
 
 export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Settings> {
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    private positions: { [symbol: string]: PortfolioPosition }
+    private currentPositions: CurrentPositions
   ) {
     super(exchangeRateDataService, {
       name: 'Current Investment: Base Currency'
@@ -17,8 +18,8 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
   }
 
   public evaluate(ruleSettings: Settings) {
-    const positionsGroupedByCurrency = this.groupPositionsByAttribute(
-      this.positions,
+    const positionsGroupedByCurrency = this.groupCurrentPositionsByAttribute(
+      this.currentPositions.positions,
       'currency',
       ruleSettings.baseCurrency
     );
