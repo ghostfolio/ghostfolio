@@ -5,13 +5,9 @@ import { Order } from '../order';
 export interface PortfolioInterface {
   get(aDate?: Date): PortfolioItem[];
 
-  getCommittedFunds(): number;
-
   getFees(): number;
 
-  getPositions(
-    aDate: Date
-  ): {
+  getPositions(aDate: Date): {
     [symbol: string]: Position;
   };
 

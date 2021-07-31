@@ -232,14 +232,6 @@ describe('Portfolio', () => {
         }
       ]);
 
-      expect(portfolio.getCommittedFunds()).toEqual(
-        exchangeRateDataService.toCurrency(
-          1 * 49631.24,
-          Currency.USD,
-          baseCurrency
-        )
-      );
-
       const details = await portfolio.getDetails('1d');
       expect(details).toMatchObject({
         BTCUSD: {
@@ -311,14 +303,6 @@ describe('Portfolio', () => {
         }
       ]);
 
-      expect(portfolio.getCommittedFunds()).toEqual(
-        exchangeRateDataService.toCurrency(
-          0.2 * 991.49,
-          Currency.USD,
-          baseCurrency
-        )
-      );
-
       expect(portfolio.getFees()).toEqual(0);
 
       expect(portfolio.getPositions(getYesterday())).toMatchObject({
@@ -377,19 +361,6 @@ describe('Portfolio', () => {
           userId: USER_ID
         }
       ]);
-
-      expect(portfolio.getCommittedFunds()).toEqual(
-        exchangeRateDataService.toCurrency(
-          0.2 * 991.49,
-          Currency.USD,
-          baseCurrency
-        ) +
-          exchangeRateDataService.toCurrency(
-            0.3 * 1050,
-            Currency.USD,
-            baseCurrency
-          )
-      );
 
       expect(portfolio.getFees()).toEqual(0);
 
@@ -455,19 +426,6 @@ describe('Portfolio', () => {
           userId: USER_ID
         }
       ]);
-
-      expect(portfolio.getCommittedFunds()).toEqual(
-        exchangeRateDataService.toCurrency(
-          0.05614682 * 3562.089535970158,
-          Currency.EUR,
-          baseCurrency
-        ) +
-          exchangeRateDataService.toCurrency(
-            0.2 * 991.49,
-            Currency.USD,
-            baseCurrency
-          )
-      );
 
       expect(portfolio.getFees()).toEqual(
         exchangeRateDataService.toCurrency(2.99, Currency.EUR, baseCurrency) +
@@ -563,24 +521,6 @@ describe('Portfolio', () => {
           userId: USER_ID
         }
       ]);
-
-      expect(portfolio.getCommittedFunds()).toEqual(
-        exchangeRateDataService.toCurrency(
-          0.2 * 991.49,
-          Currency.USD,
-          baseCurrency
-        ) -
-          exchangeRateDataService.toCurrency(
-            0.1 * 1050,
-            Currency.USD,
-            baseCurrency
-          ) +
-          exchangeRateDataService.toCurrency(
-            0.2 * 1050,
-            Currency.USD,
-            baseCurrency
-          )
-      );
 
       expect(portfolio.getFees()).toEqual(
         exchangeRateDataService.toCurrency(3, Currency.USD, baseCurrency)
