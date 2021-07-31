@@ -66,26 +66,4 @@ export class ExperimentalController {
 
     return marketData;
   }
-
-  @Post('value/:dateString?')
-  public async getValue(
-    @Body() orders: CreateOrderDto[],
-    @Headers('Authorization') apiToken: string,
-    @Param('dateString') dateString: string
-  ): Promise<Data> {
-    if (!isApiTokenAuthorized(apiToken)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    let date = new Date();
-
-    if (dateString) {
-      date = parse(dateString, DATE_FORMAT, new Date());
-    }
-
-    return this.experimentalService.getValue(orders, date, baseCurrency);
-  }
 }
