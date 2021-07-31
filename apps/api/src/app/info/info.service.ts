@@ -28,6 +28,10 @@ export class InfoService {
 
     const globalPermissions: string[] = [];
 
+    if (this.configurationService.get('ENABLE_FEATURE_BLOG')) {
+      globalPermissions.push(permissions.enableBlog);
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
       globalPermissions.push(permissions.enableImport);
     }

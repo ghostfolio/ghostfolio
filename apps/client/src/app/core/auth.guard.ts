@@ -16,6 +16,8 @@ import { UserService } from '../services/user/user.service';
 export class AuthGuard implements CanActivate {
   private static PUBLIC_PAGE_ROUTES = [
     '/about',
+    '/de/blog',
+    '/en/blog',
     '/pricing',
     '/register',
     '/resources'
@@ -43,7 +45,11 @@ export class AuthGuard implements CanActivate {
             if (route.queryParams?.utm_source) {
               this.router.navigate(['/register']);
               resolve(false);
-            } else if (AuthGuard.PUBLIC_PAGE_ROUTES.includes(state.url)) {
+            } else if (
+              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) =>
+                state.url.startsWith(publicPageRoute)
+              )?.length > 0
+            ) {
               resolve(true);
               return EMPTY;
             } else if (state.url !== '/start') {

@@ -2,7 +2,7 @@
   <div class="mb-5 row">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>About Ghostfolio</h3>
-      <mat-card>
+      <mat-card class="about-container">
         <mat-card-content>
           <p>
             <strong>Ghostfolio</strong> is a lightweight wealth management
@@ -56,7 +56,10 @@
               <ion-icon name="logo-github" size="large"></ion-icon>
             </a>
           </p>
-          <div class="d-flex justify-content-center">
+          <div
+            *ngIf="hasPermissionForSubscription"
+            class="d-flex justify-content-center"
+          >
             <div
               class="independent-and-bootstrapped-logo mb-2"
               title="Ghostfolio is an independent & bootstrapped business"
@@ -94,6 +97,54 @@
                 {{ statistics?.gitHubStargazers ?? '-' }}
               </h3>
               <div class="h6 mb-0">Stars on GitHub</div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div *ngIf="hasPermissionForBlog" class="mb-5 row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>Blog</h3>
+      <mat-card class="blog-container">
+        <mat-card-content>
+          <div class="container p-0">
+            <div class="flex-nowrap mb-3 no-gutters row">
+              <a
+                class="d-flex w-100"
+                [routerLink]="['/en', 'blog', '2021', '07', 'hello-ghostfolio']"
+              >
+                <div class="flex-grow-1">
+                  <div class="h6 m-0 text-truncate">Hello Ghostfolio</div>
+                  <div class="d-flex text-muted">31.07.2021</div>
+                </div>
+                <div class="align-items-center d-flex">
+                  <ion-icon
+                    class="chevron text-muted"
+                    name="chevron-forward-outline"
+                    size="small"
+                  ></ion-icon>
+                </div>
+              </a>
+            </div>
+            <div class="flex-nowrap no-gutters row">
+              <a
+                class="d-flex w-100"
+                [routerLink]="['/de', 'blog', '2021', '07', 'hallo-ghostfolio']"
+              >
+                <div class="flex-grow-1">
+                  <div class="h6 m-0 text-truncate">Hallo Ghostfolio</div>
+                  <div class="d-flex text-muted">31.07.2021</div>
+                </div>
+                <div class="align-items-center d-flex">
+                  <ion-icon
+                    class="chevron text-muted"
+                    name="chevron-forward-outline"
+                    size="small"
+                  ></ion-icon>
+                </div>
+              </a>
             </div>
           </div>
         </mat-card-content>

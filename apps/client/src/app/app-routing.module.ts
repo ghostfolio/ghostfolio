@@ -34,6 +34,20 @@ const routes: Routes = [
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
   },
   {
+    path: 'de/blog/2021/07/hallo-ghostfolio',
+    loadChildren: () =>
+      import(
+        './pages/blog/2021/07/hallo-ghostfolio/hallo-ghostfolio-page.module'
+      ).then((m) => m.HalloGhostfolioPageModule)
+  },
+  {
+    path: 'en/blog/2021/07/hello-ghostfolio',
+    loadChildren: () =>
+      import(
+        './pages/blog/2021/07/hello-ghostfolio/hello-ghostfolio-page.module'
+      ).then((m) => m.HelloGhostfolioPageModule)
+  },
+  {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)

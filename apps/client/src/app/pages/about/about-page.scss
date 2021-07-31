@@ -7,6 +7,18 @@
   }
 
   .mat-card {
+    &.about-container,
+    &.changelog {
+      a {
+        color: rgba(var(--palette-primary-500), 1);
+        font-weight: 500;
+
+        &:hover {
+          color: rgba(var(--palette-primary-300), 1);
+        }
+      }
+    }
+
     &.changelog {
       ::ng-deep {
         markdown {
@@ -27,15 +39,6 @@
             font-size: 15px;
           }
         }
-      }
-    }
-
-    a {
-      color: rgba(var(--palette-primary-500), 1);
-      font-weight: bold;
-
-      &:hover {
-        color: rgba(var(--palette-primary-300), 1);
       }
     }
 

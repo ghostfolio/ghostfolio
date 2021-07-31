@@ -35,7 +35,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public couponId: string;
   public currencies: Currency[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
-  public hasPermissionForSubscription;
+  public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
