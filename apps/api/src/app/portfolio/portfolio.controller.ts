@@ -318,16 +318,6 @@ export class PortfolioController {
   public async getReport(
     @Headers('impersonation-id') impersonationId
   ): Promise<PortfolioReport> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        impersonationId,
-        this.request.user.id
-      );
-
-    const portfolio = await this.portfolioService.createPortfolio(
-      impersonationUserId || this.request.user.id
-    );
-
-    return await portfolio.getReport();
+    return await this.portfolioService.getReport(impersonationId);
   }
 }
