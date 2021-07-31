@@ -7,7 +7,7 @@ import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timel
 import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderType } from '@ghostfolio/api/models/order-type';
-import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
 import {
@@ -35,13 +35,23 @@ function mockGetValue(symbol: string, date: Date) {
     }
   } else if (symbol === 'AMZN') {
     return { marketPrice: 2021.99 };
+  } else if (symbol === 'MFA') {
+    if (isSameDay(parseDate('2010-12-31'), date)) {
+      return { marketPrice: 1 };
+    } else if (isSameDay(parseDate('2011-08-15'), date)) {
+      return { marketPrice: 1.162484 }; // 1162484 / 1000000
+    } else if (isSameDay(parseDate('2011-12-31'), date)) {
+      return { marketPrice: 1.097884981 }; // 1192328 / 1086022.689344541
+    }
+
+    return { marketPrice: 0 };
   } else if (symbol === 'TSLA') {
     if (isSameDay(parse('2021-07-26', DATE_FORMAT, new Date()), date)) {
       return { marketPrice: 657.62 };
-    }
-    if (isSameDay(parse('2021-01-02', DATE_FORMAT, new Date()), date)) {
+    } else if (isSameDay(parse('2021-01-02', DATE_FORMAT, new Date()), date)) {
       return { marketPrice: 666.66 };
     }
+
     return { marketPrice: 0 };
   } else {
     return { marketPrice: 0 };
@@ -726,7 +736,7 @@ describe('PortfolioCalculator', () => {
             // see next test for details about how to calculate this
             grossPerformance: new Big('240.4'),
             grossPerformancePercentage: new Big(
-              '0.349632913145865078264579821060810370805662039085569533288730749607797361322474717934042420125015808'
+              '0.0883940790487647710162214425767848424215253864940558186258745429269647266073266478435285352186572448'
             ),
             investment: new Big('4460.95'),
             marketPrice: 194.86,
@@ -781,11 +791,12 @@ describe('PortfolioCalculator', () => {
         .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
 
       // 2020-01-01         -> days 334 => value: VTI: 144.38+334*0.08=171.1  => 10*171.10=1711
-      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 10*188.30=1883 => 1883/1711=1.100526008 - 1 = 0.100526008
+      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 10*188.30=1883 => 1883/1711 = 1.100526008
       // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 20*188.30=3766
-      // 2020-10-24 [today] -> days 631 => value: VTI: 144.38+631*0.08=194.86 => 20*194.86=3897.2 => 3897.2/3766=1.034838024 - 1 = 0.034838024
+      // cash flow: 2923.7-1443.8=1479.9
+      // 2020-10-24 [today] -> days 631 => value: VTI: 144.38+631*0.08=194.86 => 20*194.86=3897.2 => 3897.2/(1883+1479.9) = 1.158880728
       // gross performance: 1883-1711 + 3897.2-3766 = 303.2
-      // gross performance percentage: 1.100526008 * 1.034838024 = 1.138866159 => 13.89 %
+      // gross performance percentage: 1.100526008 * 1.158880728 = 1.275378381 => 27.5378381 %
 
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         parse('2020-01-01', DATE_FORMAT, new Date())
@@ -805,9 +816,77 @@ describe('PortfolioCalculator', () => {
             transactionCount: 2,
             grossPerformance: new Big('303.2'),
             grossPerformancePercentage: new Big(
-              '0.1388661601402688486251911721754180022242'
+              '0.2753783814827239834392742298083677500037'
             ),
             name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+            currency: 'USD'
+          }
+        ]
+      });
+    });
+
+    /**
+     * Source: https://www.investopedia.com/terms/t/time-weightedror.asp
+     */
+    it('with TWR example from Investopedia: Scenario 1', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints([
+        {
+          date: '2010-12-31',
+          items: [
+            {
+              name: 'Mutual Fund A',
+              quantity: new Big('1000000'), // 1 million
+              symbol: 'MFA',
+              investment: new Big('1000000'), // 1 million
+              currency: Currency.USD,
+              firstBuyDate: '2010-12-31',
+              transactionCount: 1
+            }
+          ]
+        },
+        {
+          date: '2011-08-15',
+          items: [
+            {
+              name: 'Mutual Fund A',
+              quantity: new Big('1086022.689344541'), // 1,000,000 + 100,000 / 1.162484
+              symbol: 'MFA',
+              investment: new Big('1100000'), // 1,000,000 + 100,000
+              currency: Currency.USD,
+              firstBuyDate: '2010-12-31',
+              transactionCount: 2
+            }
+          ]
+        }
+      ]);
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2011, 11, 31)).getTime()); // 2011-12-31
+
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parseDate('2010-12-31')
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toEqual({
+        hasErrors: false,
+        positions: [
+          {
+            averagePrice: new Big('1.01287018290924923237'), // 1'100'000 / 1'086'022.689344542
+            firstBuyDate: '2010-12-31',
+            quantity: new Big('1086022.689344541'),
+            symbol: 'MFA',
+            investment: new Big('1100000'),
+            marketPrice: 1.097884981,
+            transactionCount: 2,
+            grossPerformance: new Big('92327.999656600898394721'), // 1'192'328 - 1'100'000 = 92'328
+            grossPerformancePercentage: new Big('0.09788498099999947808927632'), // 9.79 %
+            name: 'Mutual Fund A',
             currency: 'USD'
           }
         ]
