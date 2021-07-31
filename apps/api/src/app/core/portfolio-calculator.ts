@@ -416,8 +416,7 @@ export class PortfolioCalculator {
         );
       } else {
         console.error(
-          'initial value is missing for symbol',
-          currentPosition.symbol
+          `Initial value is missing for symbol ${currentPosition.symbol}`
         );
         hasErrors = true;
       }
