@@ -236,14 +236,8 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioPerformance> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        impersonationId,
-        this.request.user.id
-      );
-
     const performanceInformation = await this.portfolioService.getPerformance(
-      impersonationUserId,
+      impersonationId,
       range
     );
 
