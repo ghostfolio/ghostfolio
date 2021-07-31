@@ -389,9 +389,13 @@ export class PortfolioCalculator {
     let grossPerformancePercentage = new Big(0);
     let completeInitialValue = new Big(0);
     for (const currentPosition of positions) {
-      currentValue = currentValue.add(
-        new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
-      );
+      if (currentPosition.marketPrice) {
+        currentValue = currentValue.add(
+          new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
+        );
+      } else {
+        hasErrors = true;
+      }
       totalInvestment = totalInvestment.add(currentPosition.investment);
       if (currentPosition.grossPerformance) {
         grossPerformance = grossPerformance.plus(
