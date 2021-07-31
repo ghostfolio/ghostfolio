@@ -484,34 +484,12 @@ export class PortfolioService {
       startDate
     );
 
-    let currentValue = new Big(0);
-    let grossPerformance = new Big(0);
-    let grossPerformancePercentage = new Big(1);
-    let hasErrors = false;
-    for (const currentPosition of currentPositions.positions) {
-      currentValue = currentValue.add(
-        new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
-      );
-      if (currentPosition.grossPerformance) {
-        grossPerformance = grossPerformance.plus(
-          currentPosition.grossPerformance
-        );
-      } else {
-        hasErrors = true;
-      }
-      if (currentPosition.grossPerformancePercentage) {
-        grossPerformancePercentage = grossPerformancePercentage.mul(
-          currentPosition.grossPerformancePercentage.plus(1)
-        );
-      } else {
-        hasErrors = true;
-      }
-    }
-
-    const currentGrossPerformance = grossPerformance.toNumber();
-    const currentGrossPerformancePercent = grossPerformancePercentage
-      .minus(1)
-      .toNumber();
+    const hasErrors = currentPositions.hasErrors;
+    const currentValue = currentPositions.currentValue.toNumber();
+    const currentGrossPerformance =
+      currentPositions.grossPerformance.toNumber();
+    const currentGrossPerformancePercent =
+      currentPositions.grossPerformancePercentage.toNumber();
     return {
       hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
@@ -520,7 +498,7 @@ export class PortfolioService {
         // TODO: the next two should include fees
         currentNetPerformance: currentGrossPerformance,
         currentNetPerformancePercent: currentGrossPerformancePercent,
-        currentValue: currentValue.toNumber()
+        currentValue: currentValue
       }
     };
   }
