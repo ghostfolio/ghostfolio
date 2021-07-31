@@ -114,11 +114,17 @@ export class PortfolioCalculator {
   public async getCurrentPositions(start: Date): Promise<{
     hasErrors: boolean;
     positions: TimelinePosition[];
+    grossPerformance: Big;
+    grossPerformancePercentage: Big;
+    currentValue: Big;
   }> {
     if (!this.transactionPoints?.length) {
       return {
         hasErrors: false,
-        positions: []
+        positions: [],
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0),
+        currentValue: new Big(0)
       };
     }
 
@@ -197,6 +203,8 @@ export class PortfolioCalculator {
     const invalidSymbols = [];
     const lastInvestments: { [symbol: string]: Big } = {};
     const lastQuantities: { [symbol: string]: Big } = {};
+    const initialValues: { [symbol: string]: Big } = {};
+
     for (let i = firstIndex; i < this.transactionPoints.length; i++) {
       const currentDate =
         i === firstIndex ? startString : this.transactionPoints[i].date;
@@ -232,6 +240,9 @@ export class PortfolioCalculator {
         if (!isAfter(parseDate(currentDate), parseDate(item.firstBuyDate))) {
           initialValue = item.investment;
           investedValue = item.investment;
+        }
+        if (i === firstIndex || !initialValues[item.symbol]) {
+          initialValues[item.symbol] = initialValue;
         }
         if (!initialValue) {
           invalidSymbols.push(item.symbol);
@@ -287,7 +298,48 @@ export class PortfolioCalculator {
       });
     }
 
-    return { hasErrors, positions };
+    let currentValue = new Big(0);
+    let overallGrossPerformance = new Big(0);
+    let grossPerformancePercentage = new Big(1);
+    let completeInitialValue = new Big(0);
+    for (const currentPosition of positions) {
+      currentValue = currentValue.add(
+        new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
+      );
+      if (currentPosition.grossPerformance) {
+        overallGrossPerformance = overallGrossPerformance.plus(
+          currentPosition.grossPerformance
+        );
+      } else {
+        hasErrors = true;
+      }
+      if (
+        currentPosition.grossPerformancePercentage &&
+        initialValues[currentPosition.symbol]
+      ) {
+        const currentInitialValue = initialValues[currentPosition.symbol];
+        completeInitialValue = completeInitialValue.plus(currentInitialValue);
+        grossPerformancePercentage = grossPerformancePercentage.plus(
+          currentPosition.grossPerformancePercentage.mul(currentInitialValue)
+        );
+      } else {
+        console.log(initialValues);
+        console.error(
+          'initial value is missing for symbol',
+          currentPosition.symbol
+        );
+        hasErrors = true;
+      }
+    }
+
+    return {
+      hasErrors,
+      positions,
+      grossPerformance: overallGrossPerformance,
+      grossPerformancePercentage:
+        grossPerformancePercentage.div(completeInitialValue),
+      currentValue
+    };
   }
 
   public async calculateTimeline(

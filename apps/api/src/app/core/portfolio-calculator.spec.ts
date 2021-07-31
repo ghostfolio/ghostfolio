@@ -623,6 +623,9 @@ describe('PortfolioCalculator', () => {
 
       expect(currentPositions).toEqual({
         hasErrors: false,
+        currentValue: new Big('657.62'),
+        grossPerformance: new Big('-61.84'),
+        grossPerformancePercentage: new Big('-0.08456342256692519389'),
         positions: [
           {
             averagePrice: new Big('719.46'),
@@ -658,6 +661,9 @@ describe('PortfolioCalculator', () => {
 
       expect(currentPositions).toEqual({
         hasErrors: false,
+        currentValue: new Big('657.62'),
+        grossPerformance: new Big('-61.84'),
+        grossPerformancePercentage: new Big('-0.08456342256692519389'),
         positions: [
           {
             averagePrice: new Big('719.46'),
@@ -693,6 +699,9 @@ describe('PortfolioCalculator', () => {
 
       expect(currentPositions).toEqual({
         hasErrors: false,
+        currentValue: new Big('657.62'),
+        grossPerformance: new Big('-9.04'),
+        grossPerformancePercentage: new Big('-0.01206012060120601206'),
         positions: [
           {
             averagePrice: new Big('719.46'),
@@ -728,6 +737,9 @@ describe('PortfolioCalculator', () => {
 
       expect(currentPositions).toEqual({
         hasErrors: false,
+        currentValue: new Big('4871.5'),
+        grossPerformance: new Big('240.4'),
+        grossPerformancePercentage: new Big('0.08908669575467971768'),
         positions: [
           {
             averagePrice: new Big('178.438'),
@@ -805,6 +817,9 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
       expect(currentPositions).toEqual({
         hasErrors: false,
+        currentValue: new Big('3897.2'),
+        grossPerformance: new Big('303.2'),
+        grossPerformancePercentage: new Big('0.2759628350186678759'),
         positions: [
           {
             averagePrice: new Big('146.185'),
@@ -875,6 +890,9 @@ describe('PortfolioCalculator', () => {
 
       expect(currentPositions).toEqual({
         hasErrors: false,
+        currentValue: new Big('1192327.999656600298238721'),
+        grossPerformance: new Big('92327.999656600898394721'),
+        grossPerformancePercentage: new Big('0.09788598099999947809'),
         positions: [
           {
             averagePrice: new Big('1.01287018290924923237'), // 1'100'000 / 1'086'022.689344542
