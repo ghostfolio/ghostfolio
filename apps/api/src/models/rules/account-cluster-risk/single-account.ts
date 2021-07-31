@@ -1,4 +1,3 @@
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
@@ -8,7 +7,9 @@ import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.in
 export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    private positions: { [symbol: string]: PortfolioPosition }
+    private accounts: {
+      [account: string]: { current: number; original: number };
+    }
   ) {
     super(exchangeRateDataService, {
       name: 'Single Account'
@@ -16,15 +17,7 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
   }
 
   public evaluate() {
-    const accounts: string[] = [];
-
-    Object.values(this.positions).forEach((position) => {
-      for (const [account] of Object.entries(position.accounts)) {
-        if (!accounts.includes(account)) {
-          accounts.push(account);
-        }
-      }
-    });
+    const accounts: string[] = Object.keys(this.accounts);
 
     if (accounts.length === 1) {
       return {

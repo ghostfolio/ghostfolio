@@ -1,5 +1,4 @@
 import { Currency } from '@prisma/client';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
@@ -9,7 +8,7 @@ import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.in
 export class FeeRatioInitialInvestment extends Rule<Settings> {
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    private positions: { [symbol: string]: PortfolioPosition },
+    private totalInvestment: number,
     private fees: number
   ) {
     super(exchangeRateDataService, {
@@ -18,20 +17,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
   }
 
   public evaluate(ruleSettings: Settings) {
-    const positionsGroupedByCurrency = this.groupPositionsByAttribute(
-      this.positions,
-      'currency',
-      ruleSettings.baseCurrency
-    );
-
-    let totalInvestment = 0;
-
-    positionsGroupedByCurrency.forEach((groupItem) => {
-      // Calculate total investment
-      totalInvestment += groupItem.investment;
-    });
-
-    const feeRatio = this.fees / totalInvestment;
+    const feeRatio = this.fees / this.totalInvestment;
 
     if (feeRatio > ruleSettings.threshold) {
       return {
