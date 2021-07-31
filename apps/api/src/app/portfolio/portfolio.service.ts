@@ -321,9 +321,44 @@ export class PortfolioService {
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
     const userId = await this.getUserId(aImpersonationId);
-    const portfolio = await this.createPortfolio(userId);
 
-    const position = portfolio.getPositions(new Date())[aSymbol];
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+
+    const { transactionPoints, orders } = await this.getTransactionPoints(
+      userId
+    );
+
+    if (transactionPoints?.length <= 0) {
+      return {
+        averagePrice: undefined,
+        currency: undefined,
+        firstBuyDate: undefined,
+        grossPerformance: undefined,
+        grossPerformancePercent: undefined,
+        historicalData: [],
+        investment: undefined,
+        marketPrice: undefined,
+        maxPrice: undefined,
+        minPrice: undefined,
+        quantity: undefined,
+        symbol: aSymbol,
+        transactionCount: undefined
+      };
+    }
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      portfolioStart
+    );
+
+    const position = currentPositions.positions.find(
+      (item) => item.symbol === aSymbol
+    );
 
     if (position) {
       const {
@@ -331,11 +366,10 @@ export class PortfolioService {
         currency,
         firstBuyDate,
         investment,
+        marketPrice,
         quantity,
         transactionCount
       } = position;
-      let marketPrice = position.marketPrice;
-      const orders = portfolio.getOrders(aSymbol);
 
       const historicalData = await this.dataProviderService.getHistorical(
         [aSymbol],
@@ -344,33 +378,29 @@ export class PortfolioService {
         new Date()
       );
 
-      if (marketPrice === 0) {
-        marketPrice = averagePrice;
-      }
-
       const historicalDataArray: HistoricalDataItem[] = [];
-      let currentAveragePrice: number;
       let maxPrice = marketPrice;
       let minPrice = marketPrice;
 
       if (historicalData[aSymbol]) {
+        let j = -1;
         for (const [date, { marketPrice }] of Object.entries(
           historicalData[aSymbol]
         )) {
-          const currentDate = parse(date, DATE_FORMAT, new Date());
-          if (
-            isSameDay(currentDate, parseISO(orders[0]?.getDate())) ||
-            isAfter(currentDate, parseISO(orders[0]?.getDate()))
+          while (
+            j + 1 < transactionPoints.length &&
+            !isAfter(parseDate(transactionPoints[j + 1].date), parseDate(date))
           ) {
-            // Get snapshot of first day of next month
-            const snapshot = portfolio.get(
-              addMonths(setDate(currentDate, 1), 1)
-            )?.[0]?.positions[aSymbol];
-            orders.shift();
-
-            if (snapshot?.averagePrice) {
-              currentAveragePrice = snapshot.averagePrice;
-            }
+            j++;
+          }
+          let currentAveragePrice = 0;
+          const currentSymbol = transactionPoints[j].items.find(
+            (item) => item.symbol === aSymbol
+          );
+          if (currentSymbol) {
+            currentAveragePrice = currentSymbol.investment
+              .div(currentSymbol.quantity)
+              .toNumber();
           }
 
           historicalDataArray.push({
@@ -379,58 +409,40 @@ export class PortfolioService {
             value: marketPrice
           });
 
-          if (
-            marketPrice &&
-            (marketPrice > maxPrice || maxPrice === undefined)
-          ) {
-            maxPrice = marketPrice;
-          }
-
-          if (
-            marketPrice &&
-            (marketPrice < minPrice || minPrice === undefined)
-          ) {
-            minPrice = marketPrice;
-          }
+          maxPrice = Math.max(marketPrice ?? 0, maxPrice);
+          minPrice = Math.min(marketPrice ?? Number.MAX_SAFE_INTEGER, minPrice);
         }
       }
 
       return {
-        averagePrice,
+        averagePrice: averagePrice.toNumber(),
         currency,
         firstBuyDate,
-        investment,
+        investment: investment.toNumber(),
         marketPrice,
         maxPrice,
         minPrice,
-        quantity,
+        quantity: quantity.toNumber(),
         transactionCount,
-        grossPerformance: this.exchangeRateDataService.toCurrency(
-          marketPrice - averagePrice,
-          currency,
-          this.request.user.Settings.currency
-        ),
-        grossPerformancePercent: roundTo(
-          (marketPrice - averagePrice) / averagePrice,
-          4
-        ),
+        grossPerformance: position.grossPerformance.toNumber(),
+        grossPerformancePercent: position.grossPerformancePercentage.toNumber(),
         historicalData: historicalDataArray,
         symbol: aSymbol
       };
-    } else if (portfolio.getMinDate()) {
+    } else {
       const currentData = await this.dataProviderService.get([aSymbol]);
 
       let historicalData = await this.dataProviderService.getHistorical(
         [aSymbol],
         'day',
-        portfolio.getMinDate(),
+        portfolioStart,
         new Date()
       );
 
       if (isEmpty(historicalData)) {
         historicalData = await this.dataProviderService.getHistoricalRaw(
           [{ dataSource: DataSource.YAHOO, symbol: aSymbol }],
-          portfolio.getMinDate(),
+          portfolioStart,
           new Date()
         );
       }
@@ -462,22 +474,6 @@ export class PortfolioService {
         transactionCount: undefined
       };
     }
-
-    return {
-      averagePrice: undefined,
-      currency: undefined,
-      firstBuyDate: undefined,
-      grossPerformance: undefined,
-      grossPerformancePercent: undefined,
-      historicalData: [],
-      investment: undefined,
-      marketPrice: undefined,
-      maxPrice: undefined,
-      minPrice: undefined,
-      quantity: undefined,
-      symbol: aSymbol,
-      transactionCount: undefined
-    };
   }
 
   public async getPositions(

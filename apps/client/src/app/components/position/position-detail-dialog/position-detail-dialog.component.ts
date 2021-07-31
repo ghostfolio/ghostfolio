@@ -67,7 +67,7 @@ export class PositionDetailDialog implements OnDestroy {
           this.benchmarkDataItems = [];
           this.currency = currency;
           this.firstBuyDate = firstBuyDate;
-          this.grossPerformance = quantity * grossPerformance;
+          this.grossPerformance = grossPerformance;
           this.grossPerformancePercent = grossPerformancePercent;
           this.historicalDataItems = historicalData.map(
             (historicalDataItem) => {
