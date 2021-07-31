@@ -5,8 +5,10 @@ import { Currency } from '@prisma/client';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
-export abstract class Rule implements RuleInterface {
+export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   private name: string;
 
   public constructor(
@@ -25,10 +27,10 @@ export abstract class Rule implements RuleInterface {
       [symbol: string]: PortfolioPosition;
     },
     aFees: number,
-    aRuleSettingsMap?: {
-      [key: string]: any;
-    }
+    aRuleSettings: T
   ): EvaluationResult;
+
+  public abstract getSettings(aUserSettings: UserSettings): T;
 
   public getName() {
     return this.name;

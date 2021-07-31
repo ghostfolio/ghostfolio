@@ -2,8 +2,11 @@ import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
+import { Currency } from '@prisma/client';
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
-export class CurrencyClusterRiskCurrentInvestment extends Rule {
+export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
   public constructor(public exchangeRateDataService: ExchangeRateDataService) {
     super(exchangeRateDataService, {
       name: 'Current Investment'
@@ -13,13 +16,8 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule {
   public evaluate(
     aPositions: { [symbol: string]: PortfolioPosition },
     aFees: number,
-    aRuleSettingsMap?: {
-      [key: string]: any;
-    }
+    ruleSettings: Settings
   ) {
-    const ruleSettings =
-      aRuleSettingsMap[CurrencyClusterRiskCurrentInvestment.name];
-
     const positionsGroupedByCurrency = this.groupPositionsByAttribute(
       aPositions,
       'currency',
@@ -61,4 +59,17 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule {
       value: true
     };
   }
+
+  public getSettings(aUserSettings: UserSettings): Settings {
+    return {
+      baseCurrency: aUserSettings.baseCurrency,
+      isActive: true,
+      threshold: 0.5
+    };
+  }
+}
+
+interface Settings extends RuleSettings {
+  baseCurrency: Currency;
+  threshold: number;
 }
