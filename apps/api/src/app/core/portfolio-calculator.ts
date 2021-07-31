@@ -195,6 +195,8 @@ export class PortfolioCalculator {
       firstIndex--;
     }
     const invalidSymbols = [];
+    const lastInvestments: { [symbol: string]: Big } = {};
+    const lastQuantities: { [symbol: string]: Big } = {};
     for (let i = firstIndex; i < this.transactionPoints.length; i++) {
       const currentDate =
         i === firstIndex ? startString : this.transactionPoints[i].date;
@@ -217,11 +219,21 @@ export class PortfolioCalculator {
           );
           continue;
         }
-        let currentValue = marketSymbolMap[currentDate]?.[item.symbol];
-        if (!isAfter(parseDate(currentDate), parseDate(item.firstBuyDate))) {
-          currentValue = item.investment.div(item.quantity);
+        let lastInvestment: Big = new Big(0);
+        let lastQuantity: Big = item.quantity;
+        if (lastInvestments[item.symbol] && lastQuantities[item.symbol]) {
+          lastInvestment = item.investment.minus(lastInvestments[item.symbol]);
+          lastQuantity = lastQuantities[item.symbol];
         }
-        if (!currentValue) {
+
+        const itemValue = marketSymbolMap[currentDate]?.[item.symbol];
+        let initialValue = itemValue?.mul(lastQuantity);
+        let investedValue = itemValue?.mul(item.quantity);
+        if (!isAfter(parseDate(currentDate), parseDate(item.firstBuyDate))) {
+          initialValue = item.investment;
+          investedValue = item.investment;
+        }
+        if (!initialValue) {
           invalidSymbols.push(item.symbol);
           hasErrors = true;
           console.error(
@@ -229,18 +241,25 @@ export class PortfolioCalculator {
           );
           continue;
         }
-        holdingPeriodReturns[item.symbol] = oldHoldingPeriodReturn.mul(
-          marketSymbolMap[nextDate][item.symbol].div(currentValue)
+
+        const cashFlow = lastInvestment;
+        const endValue = marketSymbolMap[nextDate][item.symbol].mul(
+          item.quantity
         );
+
+        const holdingPeriodReturn = endValue.div(initialValue.plus(cashFlow));
+        holdingPeriodReturns[item.symbol] =
+          oldHoldingPeriodReturn.mul(holdingPeriodReturn);
         let oldGrossPerformance = grossPerformance[item.symbol];
         if (!oldGrossPerformance) {
           oldGrossPerformance = new Big(0);
         }
-        grossPerformance[item.symbol] = oldGrossPerformance.plus(
-          marketSymbolMap[nextDate][item.symbol]
-            .minus(currentValue)
-            .mul(item.quantity)
-        );
+        const currentPerformance = endValue.minus(investedValue);
+        grossPerformance[item.symbol] =
+          oldGrossPerformance.plus(currentPerformance);
+
+        lastInvestments[item.symbol] = item.investment;
+        lastQuantities[item.symbol] = item.quantity;
       }
     }
 
