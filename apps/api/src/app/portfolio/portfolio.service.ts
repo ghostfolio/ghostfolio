@@ -456,6 +456,19 @@ export class PortfolioService {
 
     const transactionPoints = await this.getTransactionPoints(userId);
 
+    if (transactionPoints?.length <= 0) {
+      return {
+        hasErrors: false,
+        performance: {
+          currentGrossPerformance: 0,
+          currentGrossPerformancePercent: 0,
+          currentNetPerformance: 0,
+          currentNetPerformancePercent: 0,
+          currentValue: 0
+        }
+      };
+    }
+
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const portfolioStart = parseDate(transactionPoints[0].date);
