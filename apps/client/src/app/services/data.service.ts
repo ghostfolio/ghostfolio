@@ -36,6 +36,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SettingsStorageService } from './settings-storage.service';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -143,8 +144,8 @@ export class DataService {
     );
   }
 
-  public fetchPortfolio() {
-    return this.http.get<PortfolioItem[]>('/api/portfolio');
+  public fetchInvestments() {
+    return this.http.get<InvestmentItem[]>('/api/portfolio/investments');
   }
 
   public fetchPortfolioOverview() {

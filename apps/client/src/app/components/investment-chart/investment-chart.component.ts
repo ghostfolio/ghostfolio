@@ -10,16 +10,16 @@ import {
   ViewChild
 } from '@angular/core';
 import { primaryColorRgb } from '@ghostfolio/common/config';
-import { PortfolioItem } from '@ghostfolio/common/interfaces';
 import {
+  Chart,
+  LinearScale,
   LineController,
   LineElement,
-  LinearScale,
   PointElement,
   TimeScale
 } from 'chart.js';
-import { Chart } from 'chart.js';
 import { addMonths, isAfter, parseISO, subMonths } from 'date-fns';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -28,7 +28,7 @@ import { addMonths, isAfter, parseISO, subMonths } from 'date-fns';
   styleUrls: ['./investment-chart.component.scss']
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
-  @Input() portfolioItems: PortfolioItem[];
+  @Input() investments: InvestmentItem[];
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -48,7 +48,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    if (this.portfolioItems) {
+    if (this.investments) {
       this.initialize();
     }
   }
@@ -60,32 +60,32 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
   private initialize() {
     this.isLoading = true;
 
-    if (this.portfolioItems?.length > 0) {
+    if (this.investments?.length > 0) {
       // Extend chart by three months (before)
-      const firstItem = this.portfolioItems[0];
-      this.portfolioItems.unshift({
+      const firstItem = this.investments[0];
+      this.investments.unshift({
         ...firstItem,
         date: subMonths(parseISO(firstItem.date), 3).toISOString(),
         investment: 0
       });
 
       // Extend chart by three months (after)
-      const lastItem = this.portfolioItems[this.portfolioItems.length - 1];
-      this.portfolioItems.push({
+      const lastItem = this.investments[this.investments.length - 1];
+      this.investments.push({
         ...lastItem,
         date: addMonths(parseISO(lastItem.date), 3).toISOString()
       });
     }
 
     const data = {
-      labels: this.portfolioItems.map((position) => {
+      labels: this.investments.map((position) => {
         return position.date;
       }),
       datasets: [
         {
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.portfolioItems.map((position) => {
+          data: this.investments.map((position) => {
             return position.investment;
           }),
           segment: {

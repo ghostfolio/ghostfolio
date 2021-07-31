@@ -63,6 +63,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.se
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Injectable()
 export class PortfolioService {
@@ -136,34 +137,35 @@ export class PortfolioService {
     return portfolio;
   }
 
-  public async findAll(aImpersonationId: string): Promise<PortfolioItem[]> {
-    try {
-      const impersonationUserId =
-        await this.impersonationService.validateImpersonationId(
-          aImpersonationId,
-          this.request.user.id
-        );
+  public async getInvestments(
+    aImpersonationId: string
+  ): Promise<InvestmentItem[]> {
+    const userId = await this.getUserId(aImpersonationId);
 
-      const portfolio = await this.createPortfolio(
-        impersonationUserId || this.request.user.id
-      );
-      return portfolio.get();
-    } catch (error) {
-      console.error(error);
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      this.request.user.Settings.currency
+    );
+
+    const { transactionPoints } = await this.getTransactionPoints(userId);
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+    if (transactionPoints.length === 0) {
+      return [];
     }
+
+    return portfolioCalculator.getInvestments().map((item) => {
+      return {
+        date: item.date,
+        investment: item.investment.toNumber()
+      };
+    });
   }
 
   public async getChart(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<HistoricalDataItem[]> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        this.request.user.id
-      );
-
-    const userId = impersonationUserId || this.request.user.id;
+    const userId = await this.getUserId(aImpersonationId);
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
