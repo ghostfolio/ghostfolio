@@ -79,13 +79,13 @@ export class CurrentRateService {
           const result = [];
           for (const symbol of symbols) {
             result.push({
+              symbol,
               date: today,
               marketPrice: this.exchangeRateDataService.toCurrency(
                 dataResultProvider?.[symbol]?.marketPrice ?? 0,
                 dataResultProvider?.[symbol]?.currency,
                 userCurrency
-              ),
-              symbol: symbol
+              )
             });
           }
           return result;
