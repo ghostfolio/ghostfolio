@@ -12,6 +12,7 @@ import {
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Component({
   selector: 'gf-analysis-page',
@@ -35,7 +36,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     { label: 'Initial', value: 'original' },
     { label: 'Current', value: 'current' }
   ];
-  public portfolioItems: PortfolioItem[];
+  public investments: InvestmentItem[];
   public portfolioPositions: { [symbol: string]: PortfolioPosition };
   public positions: { [symbol: string]: any };
   public positionsArray: PortfolioPosition[];
@@ -71,10 +72,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchPortfolio()
+      .fetchInvestments()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        this.portfolioItems = response;
+        this.investments = response;
 
         this.changeDetectorRef.markForCheck();
       });

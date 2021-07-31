@@ -311,6 +311,23 @@ export class PortfolioCalculator {
     };
   }
 
+  public getInvestments(): { date: string; investment: Big }[] {
+    if (this.transactionPoints.length === 0) {
+      return [];
+    }
+
+    return this.transactionPoints.map((transactionPoint) => {
+      return {
+        date: transactionPoint.date,
+        investment: transactionPoint.items.reduce(
+          (investment, transactionPointSymbol) =>
+            investment.add(transactionPointSymbol.investment),
+          new Big(0)
+        )
+      };
+    });
+  }
+
   public async calculateTimeline(
     timelineSpecification: TimelineSpecification[],
     endDate: string

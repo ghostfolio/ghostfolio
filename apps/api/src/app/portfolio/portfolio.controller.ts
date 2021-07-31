@@ -39,6 +39,7 @@ import {
 } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -49,12 +50,14 @@ export class PortfolioController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get()
+  @Get('/investments')
   @UseGuards(AuthGuard('jwt'))
   public async findAll(
     @Headers('impersonation-id') impersonationId
-  ): Promise<PortfolioItem[]> {
-    let portfolio = await this.portfolioService.findAll(impersonationId);
+  ): Promise<InvestmentItem[]> {
+    let investments = await this.portfolioService.getInvestments(
+      impersonationId
+    );
 
     if (
       impersonationId &&
@@ -63,25 +66,18 @@ export class PortfolioController {
         permissions.readForeignPortfolio
       )
     ) {
-      portfolio = portfolio.map((portfolioItem) => {
-        Object.keys(portfolioItem.positions).forEach((symbol) => {
-          portfolioItem.positions[symbol].investment =
-            portfolioItem.positions[symbol].investment > 0 ? 1 : 0;
-          portfolioItem.positions[symbol].investmentInOriginalCurrency =
-            portfolioItem.positions[symbol].investmentInOriginalCurrency > 0
-              ? 1
-              : 0;
-          portfolioItem.positions[symbol].quantity =
-            portfolioItem.positions[symbol].quantity > 0 ? 1 : 0;
-        });
+      const maxInvestment = investments.reduce(
+        (investment, item) => Math.max(investment, item.investment),
+        1
+      );
 
-        portfolioItem.investment = null;
-
-        return portfolioItem;
-      });
+      investments = investments.map((item) => ({
+        date: item.date,
+        investment: item.investment / maxInvestment
+      }));
     }
 
-    return portfolio;
+    return investments;
   }
 
   @Get('chart')
