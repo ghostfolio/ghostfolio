@@ -11,17 +11,22 @@ import { Portfolio } from '@ghostfolio/api/models/portfolio';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
-import { Type } from '@ghostfolio/api/services/interfaces/interfaces';
+import { IOrder, Type } from '@ghostfolio/api/services/interfaces/interfaces';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioItem,
   PortfolioOverview,
   PortfolioPerformance,
-  Position
+  PortfolioPosition,
+  Position,
+  TimelinePosition
 } from '@ghostfolio/common/interfaces';
-import { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import {
+  DateRange,
+  OrderWithAccount,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DataSource } from '@prisma/client';
@@ -52,6 +57,10 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 
 @Injectable()
 export class PortfolioService {
@@ -65,7 +74,8 @@ export class PortfolioService {
     private readonly redisCacheService: RedisCacheService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public async createPortfolio(aUserId: string): Promise<Portfolio> {
@@ -158,7 +168,7 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
 
-    const transactionPoints = await this.getTransactionPoints(userId);
+    const { transactionPoints } = await this.getTransactionPoints(userId);
     portfolioCalculator.setTransactionPoints(transactionPoints);
     if (transactionPoints.length === 0) {
       return [];
@@ -221,19 +231,98 @@ export class PortfolioService {
     };
   }
 
+  public async getDetails(
+    aImpersonationId: string,
+    aDateRange: DateRange = 'max'
+  ): Promise<{ [symbol: string]: PortfolioPosition }> {
+    const userId = await this.getUserId(aImpersonationId);
+
+    const userCurrency = this.request.user.Settings.currency;
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      userCurrency
+    );
+
+    const { transactionPoints, orders } = await this.getTransactionPoints(
+      userId
+    );
+
+    if (transactionPoints?.length <= 0) {
+      return {};
+    }
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(aDateRange, portfolioStart);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate
+    );
+
+    if (currentPositions.hasErrors) {
+      throw new Error('Missing information');
+    }
+
+    const result: { [symbol: string]: PortfolioPosition } = {};
+    const totalValue = currentPositions.currentValue;
+
+    const symbols = currentPositions.positions.map(
+      (position) => position.symbol
+    );
+
+    const [dataProviderResponses, symbolProfiles] = await Promise.all([
+      this.dataProviderService.get(symbols),
+      this.symbolProfileService.getSymbolProfiles(symbols)
+    ]);
+
+    const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
+    for (const symbolProfile of symbolProfiles) {
+      symbolProfileMap[symbolProfile.symbol] = symbolProfile;
+    }
+
+    const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
+    for (const position of currentPositions.positions) {
+      portfolioItemsNow[position.symbol] = position;
+    }
+    const accounts = this.getAccounts(orders, portfolioItemsNow, userCurrency);
+
+    for (const item of currentPositions.positions) {
+      const value = item.quantity.mul(item.marketPrice);
+      const symbolProfile = symbolProfileMap[item.symbol];
+      const dataProviderResponse = dataProviderResponses[item.symbol];
+      result[item.symbol] = {
+        accounts,
+        allocationCurrent: value.div(totalValue).toNumber(),
+        allocationInvestment: item.investment
+          .div(currentPositions.totalInvestment)
+          .toNumber(),
+        countries: symbolProfile.countries,
+        currency: item.currency,
+        exchange: dataProviderResponse.exchange,
+        grossPerformance: item.grossPerformance.toNumber(),
+        grossPerformancePercent: item.grossPerformancePercentage.toNumber(),
+        investment: item.investment.toNumber(),
+        marketPrice: item.marketPrice,
+        marketState: dataProviderResponse.marketState,
+        name: item.name,
+        quantity: item.quantity.toNumber(),
+        sectors: symbolProfile.sectors,
+        symbol: item.symbol,
+        transactionCount: item.transactionCount,
+        type: dataProviderResponse.type,
+        value: value.toNumber()
+      };
+    }
+
+    return result;
+  }
+
   public async getPosition(
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        this.request.user.id
-      );
-
-    const portfolio = await this.createPortfolio(
-      impersonationUserId || this.request.user.id
-    );
+    const userId = await this.getUserId(aImpersonationId);
+    const portfolio = await this.createPortfolio(userId);
 
     const position = portfolio.getPositions(new Date())[aSymbol];
 
@@ -396,20 +485,14 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<{ hasErrors: boolean; positions: Position[] }> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        this.request.user.id
-      );
-
-    const userId = impersonationUserId || this.request.user.id;
+    const userId = await this.getUserId(aImpersonationId);
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
       this.request.user.Settings.currency
     );
 
-    const transactionPoints = await this.getTransactionPoints(userId);
+    const { transactionPoints } = await this.getTransactionPoints(userId);
 
     if (transactionPoints?.length <= 0) {
       return {
@@ -461,7 +544,7 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
 
-    const transactionPoints = await this.getTransactionPoints(userId);
+    const { transactionPoints } = await this.getTransactionPoints(userId);
 
     if (transactionPoints?.length <= 0) {
       return {
@@ -521,11 +604,14 @@ export class PortfolioService {
     return portfolioStart;
   }
 
-  private async getTransactionPoints(userId: string) {
+  private async getTransactionPoints(userId: string): Promise<{
+    transactionPoints: TransactionPoint[];
+    orders: OrderWithAccount[];
+  }> {
     const orders = await this.getOrders(userId);
 
     if (orders.length <= 0) {
-      return [];
+      return { transactionPoints: [], orders: [] };
     }
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
@@ -543,7 +629,10 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
     portfolioCalculator.computeTransactionPoints(portfolioOrders);
-    return portfolioCalculator.getTransactionPoints();
+    return {
+      transactionPoints: portfolioCalculator.getTransactionPoints(),
+      orders
+    };
   }
 
   private convertDateRangeToDate(aDateRange: DateRange, aMinDate: Date) {
@@ -593,6 +682,44 @@ export class PortfolioService {
     }
   }
 
+  private getAccounts(
+    orders: OrderWithAccount[],
+    portfolioItemsNow: { [p: string]: TimelinePosition },
+    userCurrency
+  ) {
+    const accounts: PortfolioPosition['accounts'] = {};
+    for (const order of orders) {
+      let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
+        order.quantity * portfolioItemsNow[order.symbol].marketPrice,
+        order.currency,
+        userCurrency
+      );
+      let originalValueOfSymbol = this.exchangeRateDataService.toCurrency(
+        order.quantity * order.unitPrice,
+        order.currency,
+        userCurrency
+      );
+
+      if (order.type === 'SELL') {
+        currentValueOfSymbol *= -1;
+        originalValueOfSymbol *= -1;
+      }
+
+      if (accounts[order.Account?.name || UNKNOWN_KEY]?.current) {
+        accounts[order.Account?.name || UNKNOWN_KEY].current +=
+          currentValueOfSymbol;
+        accounts[order.Account?.name || UNKNOWN_KEY].original +=
+          originalValueOfSymbol;
+      } else {
+        accounts[order.Account?.name || UNKNOWN_KEY] = {
+          current: currentValueOfSymbol,
+          original: originalValueOfSymbol
+        };
+      }
+    }
+    return accounts;
+  }
+
   private getOrders(aUserId: string) {
     return this.orderService.orders({
       include: {
@@ -604,5 +731,15 @@ export class PortfolioService {
       orderBy: { date: 'asc' },
       where: { userId: aUserId }
     });
+  }
+
+  private async getUserId(aImpersonationId: string) {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        aImpersonationId,
+        this.request.user.id
+      );
+
+    return impersonationUserId || this.request.user.id;
   }
 }

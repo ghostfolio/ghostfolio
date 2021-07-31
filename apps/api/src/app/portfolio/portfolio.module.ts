@@ -20,6 +20,7 @@ import { Module } from '@nestjs/common';
 
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 
 @Module({
   imports: [RedisCacheModule],
@@ -35,12 +36,13 @@ import { PortfolioService } from './portfolio.service';
     ExchangeRateDataService,
     GhostfolioScraperApiService,
     ImpersonationService,
+    MarketDataService,
     OrderService,
     PortfolioService,
     PrismaService,
     RakutenRapidApiService,
     RulesService,
-    MarketDataService,
+    SymbolProfileService,
     UserService,
     YahooFinanceService
   ]
