@@ -117,6 +117,7 @@ export class PortfolioCalculator {
     grossPerformance: Big;
     grossPerformancePercentage: Big;
     currentValue: Big;
+    totalInvestment: Big;
   }> {
     if (!this.transactionPoints?.length) {
       return {
@@ -124,7 +125,8 @@ export class PortfolioCalculator {
         positions: [],
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
-        currentValue: new Big(0)
+        currentValue: new Big(0),
+        totalInvestment: new Big(0)
       };
     }
 
@@ -377,6 +379,7 @@ export class PortfolioCalculator {
   ) {
     let hasErrors = false;
     let currentValue = new Big(0);
+    let totalInvestment = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformancePercentage = new Big(0);
     let completeInitialValue = new Big(0);
@@ -384,6 +387,7 @@ export class PortfolioCalculator {
       currentValue = currentValue.add(
         new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
       );
+      totalInvestment = totalInvestment.add(currentPosition.investment);
       if (currentPosition.grossPerformance) {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
@@ -411,6 +415,7 @@ export class PortfolioCalculator {
     }
     return {
       currentValue,
+      totalInvestment,
       grossPerformance,
       grossPerformancePercentage:
         grossPerformancePercentage.div(completeInitialValue),

@@ -149,12 +149,11 @@ export class PortfolioController {
         this.request.user.id
       );
 
-    const portfolio = await this.portfolioService.createPortfolio(
-      impersonationUserId || this.request.user.id
-    );
-
     try {
-      details = await portfolio.getDetails(range);
+      details = await this.portfolioService.getDetails(
+        impersonationUserId,
+        range
+      );
     } catch (error) {
       console.error(error);
 
