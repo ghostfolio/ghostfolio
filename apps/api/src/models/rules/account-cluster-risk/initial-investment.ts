@@ -6,24 +6,23 @@ import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.in
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
 export class AccountClusterRiskInitialInvestment extends Rule<Settings> {
-  public constructor(public exchangeRateDataService: ExchangeRateDataService) {
+  public constructor(
+    protected exchangeRateDataService: ExchangeRateDataService,
+    private positions: { [symbol: string]: PortfolioPosition }
+  ) {
     super(exchangeRateDataService, {
       name: 'Initial Investment'
     });
   }
 
-  public evaluate(
-    aPositions: { [symbol: string]: PortfolioPosition },
-    aFees: number,
-    ruleSettings?: Settings
-  ) {
+  public evaluate(ruleSettings?: Settings) {
     const platforms: {
       [symbol: string]: Pick<PortfolioPosition, 'name'> & {
         investment: number;
       };
     } = {};
 
-    Object.values(aPositions).forEach((position) => {
+    Object.values(this.positions).forEach((position) => {
       for (const [account, { original }] of Object.entries(position.accounts)) {
         if (platforms[account]?.investment) {
           platforms[account].investment += original;

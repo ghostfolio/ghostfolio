@@ -12,7 +12,7 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   private name: string;
 
   public constructor(
-    public exchangeRateDataService: ExchangeRateDataService,
+    protected exchangeRateDataService: ExchangeRateDataService,
     {
       name
     }: {
@@ -22,13 +22,7 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
     this.name = name;
   }
 
-  public abstract evaluate(
-    aPortfolioPositionMap: {
-      [symbol: string]: PortfolioPosition;
-    },
-    aFees: number,
-    aRuleSettings: T
-  ): EvaluationResult;
+  public abstract evaluate(aRuleSettings: T): EvaluationResult;
 
   public abstract getSettings(aUserSettings: UserSettings): T;
 
