@@ -426,49 +426,6 @@ export class Portfolio implements PortfolioInterface {
     return null;
   }
 
-  public async getPerformance(
-    aDateRange: DateRange = 'max'
-  ): Promise<PortfolioPerformance> {
-    const dateRangeDate = this.convertDateRangeToDate(
-      aDateRange,
-      this.getMinDate()
-    );
-
-    const currentInvestment = this.getInvestment(new Date());
-    const currentValue = await this.getValue();
-
-    let originalInvestment = currentInvestment;
-    let originalValue = this.getCommittedFunds();
-
-    if (dateRangeDate) {
-      originalInvestment = this.getInvestment(dateRangeDate);
-      originalValue = (await this.getValue(dateRangeDate)) || originalValue;
-    }
-
-    const fees = this.getFees(dateRangeDate);
-
-    const currentGrossPerformance =
-      currentValue - currentInvestment - (originalValue - originalInvestment);
-
-    // https://www.skillsyouneed.com/num/percent-change.html
-    const currentGrossPerformancePercent =
-      currentGrossPerformance / originalInvestment || 0;
-
-    const currentNetPerformance = currentGrossPerformance - fees;
-
-    // https://www.skillsyouneed.com/num/percent-change.html
-    const currentNetPerformancePercent =
-      currentNetPerformance / originalInvestment || 0;
-
-    return {
-      currentGrossPerformance,
-      currentGrossPerformancePercent,
-      currentNetPerformance,
-      currentNetPerformancePercent,
-      currentValue
-    };
-  }
-
   public getPositions(aDate: Date) {
     const [portfolioItem] = this.get(aDate);
 

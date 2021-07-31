@@ -208,28 +208,6 @@ describe('Portfolio', () => {
         }
       });
     });
-
-    it('should return zero performance for 1d', async () => {
-      const performance = await portfolio.getPerformance('1d');
-      expect(performance).toEqual({
-        currentGrossPerformance: 0,
-        currentGrossPerformancePercent: 0,
-        currentNetPerformance: 0,
-        currentNetPerformancePercent: 0,
-        currentValue: 0
-      });
-    });
-
-    it('should return zero performance for max', async () => {
-      const performance = await portfolio.getPerformance('max');
-      expect(performance).toEqual({
-        currentGrossPerformance: 0,
-        currentGrossPerformancePercent: 0,
-        currentNetPerformance: 0,
-        currentNetPerformancePercent: 0,
-        currentValue: 0
-      });
-    });
   });
 
   describe(`works with today's orders`, () => {
@@ -303,32 +281,6 @@ describe('Portfolio', () => {
 
       expect(portfolio.getFees()).toEqual(0);
 
-      /*const performance1d = await portfolio.getPerformance('1d');
-      expect(performance1d).toEqual({
-        currentGrossPerformance: 0,
-        currentGrossPerformancePercent: 0,
-        currentNetPerformance: 0,
-        currentNetPerformancePercent: 0,
-        currentValue: exchangeRateDataService.toBaseCurrency(
-          1 * 49631.24,
-          Currency.USD,
-          baseCurrency
-        )
-      });*/
-
-      /*const performanceMax = await portfolio.getPerformance('max');
-      expect(performanceMax).toEqual({
-        currentGrossPerformance: 0,
-        currentGrossPerformancePercent: 0,
-        currentNetPerformance: 0,
-        currentNetPerformancePercent: 0,
-        currentValue: exchangeRateDataService.toBaseCurrency(
-          1 * 49631.24,
-          Currency.USD,
-          baseCurrency
-        )
-      });*/
-
       expect(portfolio.getPositions(getYesterday())).toMatchObject({});
 
       expect(portfolio.getSymbols(getYesterday())).toEqual([]);
@@ -367,54 +319,7 @@ describe('Portfolio', () => {
         )
       );
 
-      /*const details = await portfolio.getDetails('1d');
-      expect(details).toMatchObject({
-        ETHUSD: {
-          accounts: {
-            [UNKNOWN_KEY]: {
-              current: exchangeRateDataService.toCurrency(
-                0.2 * 991.49,
-                Currency.USD,
-                baseCurrency
-              ),
-              original: exchangeRateDataService.toCurrency(
-                0.2 * 991.49,
-                Currency.USD,
-                baseCurrency
-              )
-            }
-          },
-          // allocationCurrent: 1,
-          allocationInvestment: 1,
-          countries: [],
-          currency: Currency.USD,
-          exchange: UNKNOWN_KEY,
-          // grossPerformance: 0,
-          // grossPerformancePercent: 0,
-          investment: exchangeRateDataService.toCurrency(
-            0.2 * 991.49,
-            Currency.USD,
-            baseCurrency
-          ),
-          marketPrice: 3915.337,
-          name: 'Ethereum USD',
-          quantity: 0.2,
-          transactionCount: 1,
-          symbol: 'ETHUSD',
-          type: 'Cryptocurrency'
-        }
-      });*/
-
       expect(portfolio.getFees()).toEqual(0);
-
-      /*const performance = await portfolio.getPerformance('max');
-      expect(performance).toEqual({
-        currentGrossPerformance: 0,
-        currentGrossPerformancePercent: 0,
-        currentNetPerformance: 0,
-        currentNetPerformancePercent: 0,
-        currentValue: 0
-      });*/
 
       expect(portfolio.getPositions(getYesterday())).toMatchObject({
         ETHUSD: {
