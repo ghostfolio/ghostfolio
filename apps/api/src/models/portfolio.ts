@@ -445,10 +445,13 @@ export class Portfolio implements PortfolioInterface {
       };
     }
 
+    const fees = this.getFees();
+
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
-          this,
+          details,
+          fees,
           [
             new AccountClusterRiskInitialInvestment(
               this.exchangeRateDataService
@@ -461,7 +464,8 @@ export class Portfolio implements PortfolioInterface {
           { baseCurrency: this.user.Settings.currency }
         ),
         currencyClusterRisk: await this.rulesService.evaluate(
-          this,
+          details,
+          fees,
           [
             new CurrencyClusterRiskBaseCurrencyInitialInvestment(
               this.exchangeRateDataService
@@ -479,7 +483,8 @@ export class Portfolio implements PortfolioInterface {
           { baseCurrency: this.user.Settings.currency }
         ),
         fees: await this.rulesService.evaluate(
-          this,
+          details,
+          fees,
           [new FeeRatioInitialInvestment(this.exchangeRateDataService)],
           { baseCurrency: this.user.Settings.currency }
         )

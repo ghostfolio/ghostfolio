@@ -2,8 +2,10 @@ import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
-export class AccountClusterRiskSingleAccount extends Rule {
+export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
   public constructor(public exchangeRateDataService: ExchangeRateDataService) {
     super(exchangeRateDataService, {
       name: 'Single Account'
@@ -31,6 +33,12 @@ export class AccountClusterRiskSingleAccount extends Rule {
     return {
       evaluation: `Your investment is managed by ${accounts.length} accounts`,
       value: true
+    };
+  }
+
+  public getSettings(aUserSettings: UserSettings): RuleSettings {
+    return {
+      isActive: true
     };
   }
 }

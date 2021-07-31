@@ -2,8 +2,10 @@ import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
-export class AccountClusterRiskInitialInvestment extends Rule {
+export class AccountClusterRiskInitialInvestment extends Rule<Settings> {
   public constructor(public exchangeRateDataService: ExchangeRateDataService) {
     super(exchangeRateDataService, {
       name: 'Initial Investment'
@@ -13,13 +15,8 @@ export class AccountClusterRiskInitialInvestment extends Rule {
   public evaluate(
     aPositions: { [symbol: string]: PortfolioPosition },
     aFees: number,
-    aRuleSettingsMap?: {
-      [key: string]: any;
-    }
+    ruleSettings?: Settings
   ) {
-    const ruleSettings =
-      aRuleSettingsMap[AccountClusterRiskInitialInvestment.name];
-
     const platforms: {
       [symbol: string]: Pick<PortfolioPosition, 'name'> & {
         investment: number;
@@ -78,4 +75,18 @@ export class AccountClusterRiskInitialInvestment extends Rule {
       value: true
     };
   }
+
+  public getSettings(aUserSettings: UserSettings): Settings {
+    return {
+      baseCurrency: aUserSettings.baseCurrency,
+      isActive: true,
+      threshold: 0.5
+    };
+  }
+}
+
+interface Settings extends RuleSettings {
+  baseCurrency: string;
+  isActive: boolean;
+  threshold: number;
 }
