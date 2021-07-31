@@ -636,7 +636,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         currentValue: new Big('657.62'),
         grossPerformance: new Big('-61.84'),
-        grossPerformancePercentage: new Big('-0.08456342256692519389'),
+        grossPerformancePercentage: new Big('-0.08595335390431712673'),
         positions: [
           {
             averagePrice: new Big('719.46'),
@@ -674,7 +674,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         currentValue: new Big('657.62'),
         grossPerformance: new Big('-61.84'),
-        grossPerformancePercentage: new Big('-0.08456342256692519389'),
+        grossPerformancePercentage: new Big('-0.08595335390431712673'),
         positions: [
           {
             averagePrice: new Big('719.46'),
@@ -712,7 +712,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         currentValue: new Big('657.62'),
         grossPerformance: new Big('-9.04'),
-        grossPerformancePercentage: new Big('-0.01206012060120601206'),
+        grossPerformancePercentage: new Big('-0.01356013560135601356'),
         positions: [
           {
             averagePrice: new Big('719.46'),
@@ -750,7 +750,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         currentValue: new Big('4871.5'),
         grossPerformance: new Big('240.4'),
-        grossPerformancePercentage: new Big('0.08908669575467971768'),
+        grossPerformancePercentage: new Big('0.08839407904876477102'),
         positions: [
           {
             averagePrice: new Big('178.438'),
@@ -830,7 +830,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         currentValue: new Big('3897.2'),
         grossPerformance: new Big('303.2'),
-        grossPerformancePercentage: new Big('0.2759628350186678759'),
+        grossPerformancePercentage: new Big('0.27537838148272398344'),
         positions: [
           {
             averagePrice: new Big('146.185'),
@@ -903,7 +903,7 @@ describe('PortfolioCalculator', () => {
         hasErrors: false,
         currentValue: new Big('1192327.999656600298238721'),
         grossPerformance: new Big('92327.999656600898394721'),
-        grossPerformancePercentage: new Big('0.09788598099999947809'),
+        grossPerformancePercentage: new Big('0.09788498099999947809'),
         positions: [
           {
             averagePrice: new Big('1.01287018290924923237'), // 1'100'000 / 1'086'022.689344542
@@ -989,9 +989,9 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        currentValue: '517',
-        grossPerformance: '17', // 517 - 500
-        grossPerformancePercentage: '0.034', // ((200 * 2.5) + (300 * 4)) / (200 + 300) = 3.4%
+        currentValue: new Big('517'),
+        grossPerformance: new Big('17'), // 517 - 500
+        grossPerformancePercentage: new Big('0.034'), // ((200 * 0.025) + (300 * 0.04)) / (200 + 300) = 3.4%
         hasErrors: false,
         positions: [
           {
