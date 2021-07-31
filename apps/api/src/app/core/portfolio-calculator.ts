@@ -300,8 +300,8 @@ export class PortfolioCalculator {
 
     return {
       ...overall,
-      hasErrors: hasErrors || overall.hasErrors,
-      positions
+      positions,
+      hasErrors: hasErrors || overall.hasErrors
     };
   }
 
@@ -426,11 +426,11 @@ export class PortfolioCalculator {
     }
     return {
       currentValue,
-      totalInvestment,
       grossPerformance,
+      hasErrors,
+      totalInvestment,
       grossPerformancePercentage:
-        grossPerformancePercentage.div(completeInitialValue),
-      hasErrors
+        grossPerformancePercentage.div(completeInitialValue)
     };
   }
 
