@@ -450,42 +450,51 @@ export class Portfolio implements PortfolioInterface {
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
-          details,
-          fees,
           [
             new AccountClusterRiskInitialInvestment(
-              this.exchangeRateDataService
+              this.exchangeRateDataService,
+              details
             ),
             new AccountClusterRiskCurrentInvestment(
-              this.exchangeRateDataService
+              this.exchangeRateDataService,
+              details
             ),
-            new AccountClusterRiskSingleAccount(this.exchangeRateDataService)
+            new AccountClusterRiskSingleAccount(
+              this.exchangeRateDataService,
+              details
+            )
           ],
           { baseCurrency: this.user.Settings.currency }
         ),
         currencyClusterRisk: await this.rulesService.evaluate(
-          details,
-          fees,
           [
             new CurrencyClusterRiskBaseCurrencyInitialInvestment(
-              this.exchangeRateDataService
+              this.exchangeRateDataService,
+              details
             ),
             new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-              this.exchangeRateDataService
+              this.exchangeRateDataService,
+              details
             ),
             new CurrencyClusterRiskInitialInvestment(
-              this.exchangeRateDataService
+              this.exchangeRateDataService,
+              details
             ),
             new CurrencyClusterRiskCurrentInvestment(
-              this.exchangeRateDataService
+              this.exchangeRateDataService,
+              details
             )
           ],
           { baseCurrency: this.user.Settings.currency }
         ),
         fees: await this.rulesService.evaluate(
-          details,
-          fees,
-          [new FeeRatioInitialInvestment(this.exchangeRateDataService)],
+          [
+            new FeeRatioInitialInvestment(
+              this.exchangeRateDataService,
+              details,
+              fees
+            )
+          ],
           { baseCurrency: this.user.Settings.currency }
         )
       }

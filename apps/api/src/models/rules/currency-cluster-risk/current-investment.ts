@@ -7,19 +7,18 @@ import { Currency } from '@prisma/client';
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
 export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
-  public constructor(public exchangeRateDataService: ExchangeRateDataService) {
+  public constructor(
+    public exchangeRateDataService: ExchangeRateDataService,
+    private positions: { [symbol: string]: PortfolioPosition }
+  ) {
     super(exchangeRateDataService, {
       name: 'Current Investment'
     });
   }
 
-  public evaluate(
-    aPositions: { [symbol: string]: PortfolioPosition },
-    aFees: number,
-    ruleSettings: Settings
-  ) {
+  public evaluate(ruleSettings: Settings) {
     const positionsGroupedByCurrency = this.groupPositionsByAttribute(
-      aPositions,
+      this.positions,
       'currency',
       ruleSettings.baseCurrency
     );
