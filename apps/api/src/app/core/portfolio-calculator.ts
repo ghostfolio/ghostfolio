@@ -160,7 +160,6 @@ export class PortfolioCalculator {
       }
     }
 
-    dates.push(resetHours(subDays(today, 1)));
     dates.push(resetHours(today));
 
     const marketSymbols = await this.currentRateService.getValues({
@@ -192,12 +191,7 @@ export class PortfolioCalculator {
 
     const holdingPeriodReturns: { [symbol: string]: Big } = {};
     const grossPerformance: { [symbol: string]: Big } = {};
-    let todayString = format(today, DATE_FORMAT);
-    // in case no symbols are there for today, use yesterday
-    if (!marketSymbolMap[todayString]) {
-      hasErrors = true;
-      todayString = format(subDays(today, 1), DATE_FORMAT);
-    }
+    const todayString = format(today, DATE_FORMAT);
 
     if (firstIndex > 0) {
       firstIndex--;
