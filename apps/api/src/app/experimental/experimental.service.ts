@@ -1,16 +1,9 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { Portfolio } from '@ghostfolio/api/models/portfolio';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
-import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { Currency, Type } from '@prisma/client';
-import { parseISO } from 'date-fns';
-
-import { CreateOrderDto } from './create-order.dto';
-import { Data } from './interfaces/data.interface';
 
 @Injectable()
 export class ExperimentalService {
@@ -28,42 +21,5 @@ export class ExperimentalService {
       select: { date: true, marketPrice: true },
       where: { symbol: aSymbol }
     });
-  }
-
-  public async getValue(
-    aOrders: CreateOrderDto[],
-    aDate: Date,
-    aBaseCurrency: Currency
-  ): Promise<Data> {
-    const ordersWithPlatform: OrderWithAccount[] = aOrders.map((order) => {
-      return {
-        ...order,
-        accountId: undefined,
-        accountUserId: undefined,
-        createdAt: new Date(),
-        dataSource: undefined,
-        date: parseISO(order.date),
-        fee: 0,
-        id: undefined,
-        platformId: undefined,
-        symbolProfileId: undefined,
-        type: Type.BUY,
-        updatedAt: undefined,
-        userId: undefined
-      };
-    });
-
-    const portfolio = new Portfolio(
-      this.accountService,
-      this.dataProviderService,
-      this.exchangeRateDataService,
-      this.rulesService
-    );
-    await portfolio.setOrders(ordersWithPlatform);
-
-    return {
-      currency: aBaseCurrency,
-      value: portfolio.getValue(aDate)
-    };
   }
 }
