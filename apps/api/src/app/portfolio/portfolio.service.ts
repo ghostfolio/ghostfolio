@@ -527,12 +527,7 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        this.request.user.id
-      );
-    const userId = impersonationUserId || this.request.user.id;
+    const userId = await this.getUserId(aImpersonationId);
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
