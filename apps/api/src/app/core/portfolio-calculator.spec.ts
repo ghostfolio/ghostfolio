@@ -19,53 +19,51 @@ import {
 } from 'date-fns';
 
 function mockGetValue(symbol: string, date: Date) {
-  const today = new Date();
-  if (symbol === 'VTI') {
-    if (isSameDay(today, date)) {
-      return { marketPrice: 213.32 };
-    } else {
-      const startDate = parseDate('2019-02-01');
-      const daysInBetween = differenceInCalendarDays(date, startDate);
+  switch (symbol) {
+    case 'AMZN':
+      return { marketPrice: 2021.99 };
+    case 'MFA':
+      if (isSameDay(parseDate('2010-12-31'), date)) {
+        return { marketPrice: 1 };
+      } else if (isSameDay(parseDate('2011-08-15'), date)) {
+        return { marketPrice: 1.162484 }; // 1162484 / 1000000
+      } else if (isSameDay(parseDate('2011-12-31'), date)) {
+        return { marketPrice: 1.097884981 }; // 1192328 / 1086022.689344541
+      }
 
-      const marketPrice = new Big('144.38').plus(
-        new Big('0.08').mul(daysInBetween)
-      );
-      return { marketPrice: marketPrice.toNumber() };
-    }
-  } else if (symbol === 'AMZN') {
-    return { marketPrice: 2021.99 };
-  } else if (symbol === 'MFA') {
-    if (isSameDay(parseDate('2010-12-31'), date)) {
-      return { marketPrice: 1 };
-    } else if (isSameDay(parseDate('2011-08-15'), date)) {
-      return { marketPrice: 1.162484 }; // 1162484 / 1000000
-    } else if (isSameDay(parseDate('2011-12-31'), date)) {
-      return { marketPrice: 1.097884981 }; // 1192328 / 1086022.689344541
-    }
+      return { marketPrice: 0 };
+    case 'SPA':
+      if (isSameDay(parseDate('2013-12-31'), date)) {
+        return { marketPrice: 1.025 }; // 205 / 200
+      }
 
-    return { marketPrice: 0 };
-  } else if (symbol === 'SPA') {
-    if (isSameDay(parseDate('2013-12-31'), date)) {
-      return { marketPrice: 1.025 }; // 205 / 200
-    }
+      return { marketPrice: 0 };
+    case 'SPB':
+      if (isSameDay(parseDate('2013-12-31'), date)) {
+        return { marketPrice: 1.04 }; // 312 / 300
+      }
 
-    return { marketPrice: 0 };
-  } else if (symbol === 'SPB') {
-    if (isSameDay(parseDate('2013-12-31'), date)) {
-      return { marketPrice: 1.04 }; // 312 / 300
-    }
+      return { marketPrice: 0 };
+    case 'TSLA':
+      if (isSameDay(parseDate('2021-07-26'), date)) {
+        return { marketPrice: 657.62 };
+      } else if (isSameDay(parseDate('2021-01-02'), date)) {
+        return { marketPrice: 666.66 };
+      }
 
-    return { marketPrice: 0 };
-  } else if (symbol === 'TSLA') {
-    if (isSameDay(parseDate('2021-07-26'), date)) {
-      return { marketPrice: 657.62 };
-    } else if (isSameDay(parseDate('2021-01-02'), date)) {
-      return { marketPrice: 666.66 };
-    }
-
-    return { marketPrice: 0 };
-  } else {
-    return { marketPrice: 0 };
+      return { marketPrice: 0 };
+    case 'VTI':
+      return {
+        marketPrice: new Big('144.38')
+          .plus(
+            new Big('0.08').mul(
+              differenceInCalendarDays(date, parseDate('2019-02-01'))
+            )
+          )
+          .toNumber()
+      };
+    default:
+      return { marketPrice: 0 };
   }
 }
 
