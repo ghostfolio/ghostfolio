@@ -15,7 +15,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PortfolioPerformance,
-  PortfolioPosition,
+  Position,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -36,11 +36,11 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToReadForeignPortfolio: boolean;
-  public hasPositions: boolean;
+  public hasPositions = false;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
-  public positions: { [symbol: string]: PortfolioPosition };
+  public positions: Position[];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -102,7 +102,9 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   private update() {
+    this.hasPositions = undefined;
     this.isLoadingPerformance = true;
+    this.positions = undefined;
 
     this.dataService
       .fetchChart({ range: this.dateRange })
@@ -129,12 +131,11 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchPortfolioPositions({ range: this.dateRange })
+      .fetchPositions({ range: this.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        this.positions = response;
-        this.hasPositions =
-          this.positions && Object.keys(this.positions).length > 1;
+        this.positions = response.positions;
+        this.hasPositions = this.positions?.length > 0;
 
         this.changeDetectorRef.markForCheck();
       });
