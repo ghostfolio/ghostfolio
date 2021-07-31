@@ -7,7 +7,7 @@ import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timel
 import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderType } from '@ghostfolio/api/models/order-type';
-import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
+import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
 import Big from 'big.js';
 import {
@@ -15,8 +15,7 @@ import {
   differenceInCalendarDays,
   endOfDay,
   isBefore,
-  isSameDay,
-  parse
+  isSameDay
 } from 'date-fns';
 
 function mockGetValue(symbol: string, date: Date) {
@@ -25,7 +24,7 @@ function mockGetValue(symbol: string, date: Date) {
     if (isSameDay(today, date)) {
       return { marketPrice: 213.32 };
     } else {
-      const startDate = parse('2019-02-01', DATE_FORMAT, new Date());
+      const startDate = parseDate('2019-02-01');
       const daysInBetween = differenceInCalendarDays(date, startDate);
 
       const marketPrice = new Big('144.38').plus(
@@ -45,10 +44,22 @@ function mockGetValue(symbol: string, date: Date) {
     }
 
     return { marketPrice: 0 };
+  } else if (symbol === 'SPA') {
+    if (isSameDay(parseDate('2013-12-31'), date)) {
+      return { marketPrice: 1.025 }; // 205 / 200
+    }
+
+    return { marketPrice: 0 };
+  } else if (symbol === 'SPB') {
+    if (isSameDay(parseDate('2013-12-31'), date)) {
+      return { marketPrice: 1.04 }; // 312 / 300
+    }
+
+    return { marketPrice: 0 };
   } else if (symbol === 'TSLA') {
-    if (isSameDay(parse('2021-07-26', DATE_FORMAT, new Date()), date)) {
+    if (isSameDay(parseDate('2021-07-26'), date)) {
       return { marketPrice: 657.62 };
-    } else if (isSameDay(parse('2021-01-02', DATE_FORMAT, new Date()), date)) {
+    } else if (isSameDay(parseDate('2021-01-02'), date)) {
       return { marketPrice: 666.66 };
     }
 
@@ -617,7 +628,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2020-01-21', DATE_FORMAT, new Date())
+        parseDate('2020-01-21')
       );
       spy.mockRestore();
 
@@ -655,7 +666,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2021-01-01', DATE_FORMAT, new Date())
+        parseDate('2021-01-01')
       );
       spy.mockRestore();
 
@@ -693,7 +704,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2021, 6, 26)).getTime()); // 2021-07-26
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2021-01-02', DATE_FORMAT, new Date())
+        parseDate('2021-01-02')
       );
       spy.mockRestore();
 
@@ -731,7 +742,7 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2019-01-01', DATE_FORMAT, new Date())
+        parseDate('2019-01-01')
       );
       spy.mockRestore();
 
@@ -811,7 +822,7 @@ describe('PortfolioCalculator', () => {
       // gross performance percentage: 1.100526008 * 1.158880728 = 1.275378381 => 27.5378381 %
 
       const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parse('2020-01-01', DATE_FORMAT, new Date())
+        parseDate('2020-01-01')
       );
 
       spy.mockRestore();
@@ -906,6 +917,108 @@ describe('PortfolioCalculator', () => {
             grossPerformancePercentage: new Big('0.09788498099999947808927632'), // 9.79 %
             name: 'Mutual Fund A',
             currency: 'USD'
+          }
+        ]
+      });
+    });
+
+    /**
+     * Source: https://www.chsoft.ch/en/assets/Dateien/files/PDF/ePoca/en/Practical%20Performance%20Calculation.pdf
+     */
+    it('with example from chsoft.ch: Performance of a Combination of Investments', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.CHF
+      );
+      portfolioCalculator.setTransactionPoints([
+        {
+          date: '2012-12-31',
+          items: [
+            {
+              name: 'Sub Portfolio A',
+              quantity: new Big('200'),
+              symbol: 'SPA',
+              investment: new Big('200'),
+              currency: Currency.CHF,
+              firstBuyDate: '2012-12-31',
+              transactionCount: 1
+            },
+            {
+              name: 'Sub Portfolio B',
+              quantity: new Big('300'),
+              symbol: 'SPB',
+              investment: new Big('300'),
+              currency: Currency.CHF,
+              firstBuyDate: '2012-12-31',
+              transactionCount: 1
+            }
+          ]
+        },
+        {
+          date: '2013-12-31',
+          items: [
+            {
+              name: 'Sub Portfolio A',
+              quantity: new Big('200'),
+              symbol: 'SPA',
+              investment: new Big('200'),
+              currency: Currency.CHF,
+              firstBuyDate: '2012-12-31',
+              transactionCount: 1
+            },
+            {
+              name: 'Sub Portfolio B',
+              quantity: new Big('300'),
+              symbol: 'SPB',
+              investment: new Big('300'),
+              currency: Currency.CHF,
+              firstBuyDate: '2012-12-31',
+              transactionCount: 1
+            }
+          ]
+        }
+      ]);
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2013, 11, 31)).getTime()); // 2013-12-31
+
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parseDate('2012-12-31')
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toEqual({
+        currentValue: '517',
+        grossPerformance: '17', // 517 - 500
+        grossPerformancePercentage: '0.034', // ((200 * 2.5) + (300 * 4)) / (200 + 300) = 3.4%
+        hasErrors: false,
+        positions: [
+          {
+            averagePrice: new Big('1'),
+            firstBuyDate: '2012-12-31',
+            quantity: new Big('200'),
+            symbol: 'SPA',
+            investment: new Big('200'),
+            marketPrice: 1.025, // 205 / 200
+            transactionCount: 1,
+            grossPerformance: new Big('5'), // 205 - 200
+            grossPerformancePercentage: new Big('0.025'),
+            name: 'Sub Portfolio A',
+            currency: 'CHF'
+          },
+          {
+            averagePrice: new Big('1'),
+            firstBuyDate: '2012-12-31',
+            quantity: new Big('300'),
+            symbol: 'SPB',
+            investment: new Big('300'),
+            marketPrice: 1.04, // 312 / 300
+            transactionCount: 1,
+            grossPerformance: new Big('12'), // 312 - 300
+            grossPerformancePercentage: new Big('0.04'),
+            name: 'Sub Portfolio B',
+            currency: 'CHF'
           }
         ]
       });
