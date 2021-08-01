@@ -10,16 +10,16 @@ import {
   ViewChild
 } from '@angular/core';
 import { primaryColorRgb } from '@ghostfolio/common/config';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import {
   Chart,
-  LinearScale,
   LineController,
   LineElement,
+  LinearScale,
   PointElement,
   TimeScale
 } from 'chart.js';
 import { addMonths, isAfter, parseISO, subMonths } from 'date-fns';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Component({
   selector: 'gf-investment-chart',

@@ -26,6 +26,7 @@ import {
   PortfolioReport,
   User
 } from '@ghostfolio/common/interfaces';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { Order as OrderModel } from '@prisma/client';
@@ -36,7 +37,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SettingsStorageService } from './settings-storage.service';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Injectable({
   providedIn: 'root'

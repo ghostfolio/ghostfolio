@@ -11,6 +11,7 @@ import {
   PortfolioPosition,
   PortfolioReport
 } from '@ghostfolio/common/interfaces';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import {
   getPermissions,
   hasPermission,
@@ -39,7 +40,6 @@ import {
 } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Controller('portfolio')
 export class PortfolioController {

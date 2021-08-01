@@ -2,14 +2,26 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
 import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
+import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
+import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
+import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
+import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-initial-investment';
+import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { CurrencyClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/initial-investment';
+import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { Type } from '@ghostfolio/api/services/interfaces/interfaces';
+import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioOverview,
@@ -19,6 +31,7 @@ import {
   Position,
   TimelinePosition
 } from '@ghostfolio/common/interfaces';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import {
   DateRange,
   OrderWithAccount,
@@ -46,19 +59,6 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
-import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
-import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
-import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
-import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-initial-investment';
-import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
-import { CurrencyClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/initial-investment';
-import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
-import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 
 @Injectable()
 export class PortfolioService {

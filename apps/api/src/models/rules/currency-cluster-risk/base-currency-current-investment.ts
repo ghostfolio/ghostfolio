@@ -1,11 +1,11 @@
-import { Currency } from '@prisma/client';
+import { CurrentPositions } from '@ghostfolio/api/app/core/interfaces/current-positions.interface';
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { Currency } from '@prisma/client';
 
 import { Rule } from '../../rule';
-import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
-import { CurrentPositions } from '@ghostfolio/api/app/core/interfaces/current-positions.interface';
 
 export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Settings> {
   public constructor(

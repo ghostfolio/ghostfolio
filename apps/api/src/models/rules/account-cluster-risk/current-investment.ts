@@ -1,9 +1,9 @@
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 import { Rule } from '../../rule';
-import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   public constructor(
