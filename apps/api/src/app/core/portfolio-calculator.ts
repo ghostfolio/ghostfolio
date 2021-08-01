@@ -23,8 +23,7 @@ import {
   isAfter,
   isBefore,
   max,
-  min,
-  subDays
+  min
 } from 'date-fns';
 import { flatten } from 'lodash';
 
@@ -60,7 +59,6 @@ export class PortfolioCalculator {
             .mul(order.quantity)
             .mul(factor)
             .add(oldAccumulatedSymbol.investment),
-          name: order.name,
           quantity: order.quantity
             .mul(factor)
             .plus(oldAccumulatedSymbol.quantity),
@@ -72,7 +70,6 @@ export class PortfolioCalculator {
           currency: order.currency,
           firstBuyDate: order.date,
           investment: unitPrice.mul(order.quantity).mul(factor),
-          name: order.name,
           quantity: order.quantity.mul(factor),
           symbol: order.symbol,
           transactionCount: 1
@@ -265,6 +262,7 @@ export class PortfolioCalculator {
     }
 
     const positions: TimelinePosition[] = [];
+
     for (const item of lastTransactionPoint.items) {
       const marketValue = marketSymbolMap[todayString]?.[item.symbol];
       const isValid = invalidSymbols.indexOf(item.symbol) === -1;
@@ -281,7 +279,6 @@ export class PortfolioCalculator {
             : null,
         investment: item.investment,
         marketPrice: marketValue?.toNumber() ?? null,
-        name: item.name,
         quantity: item.quantity,
         symbol: item.symbol,
         transactionCount: item.transactionCount

@@ -5,7 +5,6 @@ export interface TransactionPointSymbol {
   currency: Currency;
   firstBuyDate: string;
   investment: Big;
-  name: string;
   quantity: Big;
   symbol: string;
   transactionCount: number;
