@@ -29,21 +29,14 @@ import { REQUEST } from '@nestjs/core';
 import { Currency, DataSource, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
-  add,
   endOfToday,
   format,
-  getDate,
-  getMonth,
-  getYear,
   isAfter,
   isBefore,
   max,
   parse,
   parseISO,
-  setDate,
   setDayOfYear,
-  setMonth,
-  sub,
   subDays,
   subYears
 } from 'date-fns';
@@ -667,53 +660,6 @@ export class PortfolioService {
       transactionPoints: portfolioCalculator.getTransactionPoints(),
       orders
     };
-  }
-
-  private convertDateRangeToDate(aDateRange: DateRange, aMinDate: Date) {
-    let currentDate = new Date();
-
-    const normalizedMinDate =
-      getDate(aMinDate) === 1
-        ? aMinDate
-        : add(setDate(aMinDate, 1), { months: 1 });
-
-    const year = getYear(currentDate);
-    const month = getMonth(currentDate);
-    const day = getDate(currentDate);
-
-    currentDate = new Date(Date.UTC(year, month, day, 0));
-
-    switch (aDateRange) {
-      case '1d':
-        return sub(currentDate, {
-          days: 1
-        });
-      case 'ytd':
-        currentDate = setDate(currentDate, 1);
-        currentDate = setMonth(currentDate, 0);
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      case '1y':
-        currentDate = setDate(currentDate, 1);
-        currentDate = sub(currentDate, {
-          years: 1
-        });
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      case '5y':
-        currentDate = setDate(currentDate, 1);
-        currentDate = sub(currentDate, {
-          years: 5
-        });
-        return isAfter(currentDate, normalizedMinDate)
-          ? currentDate
-          : undefined;
-      default:
-        // Gets handled as all data
-        return undefined;
-    }
   }
 
   private getAccounts(
