@@ -16,11 +16,11 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { Module } from '@nestjs/common';
 
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 
 @Module({
   imports: [RedisCacheModule],

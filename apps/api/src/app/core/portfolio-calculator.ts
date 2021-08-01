@@ -1,4 +1,5 @@
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import { CurrentPositions } from '@ghostfolio/api/app/core/interfaces/current-positions.interface';
 import { GetValueObject } from '@ghostfolio/api/app/core/interfaces/get-value-object.interface';
 import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
 import { TimelinePeriod } from '@ghostfolio/api/app/core/interfaces/timeline-period.interface';
@@ -26,7 +27,6 @@ import {
   subDays
 } from 'date-fns';
 import { flatten } from 'lodash';
-import { CurrentPositions } from '@ghostfolio/api/app/core/interfaces/current-positions.interface';
 
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];

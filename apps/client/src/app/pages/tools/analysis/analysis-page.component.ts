@@ -9,10 +9,10 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 
 @Component({
   selector: 'gf-analysis-page',

@@ -1,9 +1,9 @@
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
 import { Currency } from '@prisma/client';
 import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
-import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
 export class FeeRatioInitialInvestment extends Rule<Settings> {
   public constructor(

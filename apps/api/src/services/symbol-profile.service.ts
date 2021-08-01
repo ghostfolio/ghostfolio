@@ -1,11 +1,11 @@
+import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { Country } from '@ghostfolio/common/interfaces/country.interface';
+import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
 import { Prisma, SymbolProfile } from '@prisma/client';
 import { continents, countries } from 'countries-list';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { Country } from '@ghostfolio/common/interfaces/country.interface';
-import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
-import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 @Injectable()
 export class SymbolProfileService {

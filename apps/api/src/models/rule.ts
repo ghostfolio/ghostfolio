@@ -1,3 +1,5 @@
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
 import { groupBy } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
@@ -8,8 +10,6 @@ import { Currency } from '@prisma/client';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
-import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   private name: string;
