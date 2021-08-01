@@ -1,10 +1,7 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
 import { groupBy } from '@ghostfolio/common/helper';
-import {
-  PortfolioPosition,
-  TimelinePosition
-} from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
@@ -24,10 +21,6 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   ) {
     this.name = name;
   }
-
-  public abstract evaluate(aRuleSettings: T): EvaluationResult;
-
-  public abstract getSettings(aUserSettings: UserSettings): T;
 
   public getName() {
     return this.name;
@@ -59,4 +52,8 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
       })
     );
   }
+
+  public abstract evaluate(aRuleSettings: T): EvaluationResult;
+
+  public abstract getSettings(aUserSettings: UserSettings): T;
 }

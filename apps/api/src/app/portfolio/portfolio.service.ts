@@ -17,7 +17,6 @@ import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { Type } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
@@ -264,9 +263,7 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
 
-    const { transactionPoints, orders } = await this.getTransactionPoints(
-      userId
-    );
+    const { transactionPoints } = await this.getTransactionPoints(userId);
 
     if (transactionPoints?.length <= 0) {
       return {
@@ -352,18 +349,18 @@ export class PortfolioService {
       }
 
       return {
-        averagePrice: averagePrice.toNumber(),
         currency,
         firstBuyDate,
-        investment: investment.toNumber(),
         marketPrice,
         maxPrice,
         minPrice,
-        quantity: quantity.toNumber(),
         transactionCount,
+        averagePrice: averagePrice.toNumber(),
         grossPerformance: position.grossPerformance.toNumber(),
         grossPerformancePercent: position.grossPerformancePercentage.toNumber(),
         historicalData: historicalDataArray,
+        investment: investment.toNumber(),
+        quantity: quantity.toNumber(),
         symbol: aSymbol
       };
     } else {
@@ -452,9 +449,7 @@ export class PortfolioService {
             position.grossPerformancePercentage?.toNumber() ?? null,
           investment: new Big(position.investment).toNumber(),
           name: position.name,
-          quantity: new Big(position.quantity).toNumber(),
-          type: Type.Unknown, // TODO
-          url: '' // TODO
+          quantity: new Big(position.quantity).toNumber()
         };
       })
     };
