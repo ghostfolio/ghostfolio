@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.31.1 - 01.08.2021
 
+### Added
+
+- Added the name to the position detail dialog when opened from the transactions table
+
 ### Fixed
 
 - Fixed an issue with the currency conversion in the portfolio calculations
