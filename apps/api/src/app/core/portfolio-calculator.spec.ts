@@ -170,7 +170,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               investment: new Big('1443.8'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               transactionCount: 1
@@ -184,7 +183,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               investment: new Big('2923.7'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               transactionCount: 2
@@ -198,7 +196,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               investment: new Big('652.55'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               transactionCount: 3
@@ -212,7 +209,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               investment: new Big('6627.05'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('35'),
               symbol: 'VTI',
               transactionCount: 5
@@ -226,7 +222,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               investment: new Big('8403.95'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('45'),
               symbol: 'VTI',
               transactionCount: 6
@@ -262,7 +257,6 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -276,7 +270,6 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -290,7 +283,6 @@ describe('PortfolioCalculator', () => {
           date: '2019-09-01',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -299,7 +291,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -313,7 +304,6 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -322,7 +312,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -336,7 +325,6 @@ describe('PortfolioCalculator', () => {
           date: '2021-02-01',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -345,7 +333,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('15'),
               symbol: 'VTI',
               investment: new Big('2684.05'),
@@ -359,7 +346,6 @@ describe('PortfolioCalculator', () => {
           date: '2021-08-01',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -368,7 +354,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('25'),
               symbol: 'VTI',
               investment: new Big('4460.95'),
@@ -416,7 +401,6 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -430,7 +414,6 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -444,7 +427,6 @@ describe('PortfolioCalculator', () => {
           date: '2019-09-01',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -453,7 +435,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -467,7 +448,6 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -476,7 +456,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -490,7 +469,6 @@ describe('PortfolioCalculator', () => {
           date: '2020-08-02',
           items: [
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -504,7 +482,6 @@ describe('PortfolioCalculator', () => {
           date: '2021-02-01',
           items: [
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('15'),
               symbol: 'VTI',
               investment: new Big('2684.05'),
@@ -518,7 +495,6 @@ describe('PortfolioCalculator', () => {
           date: '2021-08-01',
           items: [
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('25'),
               symbol: 'VTI',
               investment: new Big('4460.95'),
@@ -545,7 +521,6 @@ describe('PortfolioCalculator', () => {
           date: '2017-01-03',
           items: [
             {
-              name: 'Tesla, Inc.',
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -559,7 +534,6 @@ describe('PortfolioCalculator', () => {
           date: '2017-07-01',
           items: [
             {
-              name: 'Bitcoin USD',
               quantity: new Big('0.5614682'),
               symbol: 'BTCUSD',
               investment: new Big('1999.9999999999998659756'),
@@ -568,7 +542,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Tesla, Inc.',
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -582,7 +555,6 @@ describe('PortfolioCalculator', () => {
           date: '2018-09-01',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -591,7 +563,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Bitcoin USD',
               quantity: new Big('0.5614682'),
               symbol: 'BTCUSD',
               investment: new Big('1999.9999999999998659756'),
@@ -600,7 +571,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Tesla, Inc.',
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -645,7 +615,6 @@ describe('PortfolioCalculator', () => {
             grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
             investment: new Big('719.46'),
             marketPrice: 657.62,
-            name: 'Tesla, Inc.',
             quantity: new Big('1'),
             symbol: 'TSLA',
             transactionCount: 1
@@ -684,7 +653,6 @@ describe('PortfolioCalculator', () => {
             grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
             investment: new Big('719.46'),
             marketPrice: 657.62,
-            name: 'Tesla, Inc.',
             quantity: new Big('1'),
             symbol: 'TSLA',
             transactionCount: 1
@@ -723,7 +691,6 @@ describe('PortfolioCalculator', () => {
             grossPerformancePercentage: new Big('-0.01356013560135601356'), // 657.62/666.66-1=-0.013560136
             investment: new Big('719.46'),
             marketPrice: 657.62,
-            name: 'Tesla, Inc.',
             quantity: new Big('1'),
             symbol: 'TSLA',
             transactionCount: 1
@@ -765,7 +732,6 @@ describe('PortfolioCalculator', () => {
             ),
             investment: new Big('4460.95'),
             marketPrice: 194.86,
-            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
             quantity: new Big('25'),
             symbol: 'VTI',
             transactionCount: 5
@@ -847,7 +813,6 @@ describe('PortfolioCalculator', () => {
             grossPerformancePercentage: new Big(
               '0.2753783814827239834392742298083677500037'
             ),
-            name: 'Vanguard Total Stock Market Index Fund ETF Shares',
             currency: 'USD'
           }
         ]
@@ -867,9 +832,8 @@ describe('PortfolioCalculator', () => {
           date: '2010-12-31',
           items: [
             {
-              name: 'Mutual Fund A',
               quantity: new Big('1000000'), // 1 million
-              symbol: 'MFA',
+              symbol: 'MFA', // Mutual Fund A
               investment: new Big('1000000'), // 1 million
               currency: Currency.USD,
               firstBuyDate: '2010-12-31',
@@ -881,9 +845,8 @@ describe('PortfolioCalculator', () => {
           date: '2011-08-15',
           items: [
             {
-              name: 'Mutual Fund A',
               quantity: new Big('1086022.689344541'), // 1,000,000 + 100,000 / 1.162484
-              symbol: 'MFA',
+              symbol: 'MFA', // Mutual Fund A
               investment: new Big('1100000'), // 1,000,000 + 100,000
               currency: Currency.USD,
               firstBuyDate: '2010-12-31',
@@ -919,7 +882,6 @@ describe('PortfolioCalculator', () => {
             transactionCount: 2,
             grossPerformance: new Big('92327.999656600898394721'), // 1'192'328 - 1'100'000 = 92'328
             grossPerformancePercentage: new Big('0.09788498099999947808927632'), // 9.79 %
-            name: 'Mutual Fund A',
             currency: 'USD'
           }
         ]
@@ -939,18 +901,16 @@ describe('PortfolioCalculator', () => {
           date: '2012-12-31',
           items: [
             {
-              name: 'Sub Portfolio A',
               quantity: new Big('200'),
-              symbol: 'SPA',
+              symbol: 'SPA', // Sub Portfolio A
               investment: new Big('200'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
               transactionCount: 1
             },
             {
-              name: 'Sub Portfolio B',
               quantity: new Big('300'),
-              symbol: 'SPB',
+              symbol: 'SPB', // Sub Portfolio B
               investment: new Big('300'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
@@ -962,18 +922,16 @@ describe('PortfolioCalculator', () => {
           date: '2013-12-31',
           items: [
             {
-              name: 'Sub Portfolio A',
               quantity: new Big('200'),
-              symbol: 'SPA',
+              symbol: 'SPA', // Sub Portfolio A
               investment: new Big('200'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
               transactionCount: 1
             },
             {
-              name: 'Sub Portfolio B',
               quantity: new Big('300'),
-              symbol: 'SPB',
+              symbol: 'SPB', // Sub Portfolio B
               investment: new Big('300'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
@@ -1009,7 +967,6 @@ describe('PortfolioCalculator', () => {
             transactionCount: 1,
             grossPerformance: new Big('5'), // 205 - 200
             grossPerformancePercentage: new Big('0.025'),
-            name: 'Sub Portfolio A',
             currency: 'CHF'
           },
           {
@@ -1022,7 +979,6 @@ describe('PortfolioCalculator', () => {
             transactionCount: 1,
             grossPerformance: new Big('12'), // 312 - 300
             grossPerformancePercentage: new Big('0.04'),
-            name: 'Sub Portfolio B',
             currency: 'CHF'
           }
         ]
@@ -1611,7 +1567,6 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
-              name: 'Amazon.com, Inc.',
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -1620,7 +1575,6 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -1744,7 +1698,6 @@ const orderTslaTransactionPoint: TransactionPoint[] = [
     date: '2021-01-01',
     items: [
       {
-        name: 'Tesla, Inc.',
         quantity: new Big('1'),
         symbol: 'TSLA',
         investment: new Big('719.46'),
@@ -1761,7 +1714,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
     date: '2019-02-01',
     items: [
       {
-        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('10'),
         symbol: 'VTI',
         investment: new Big('1443.8'),
@@ -1775,7 +1727,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
     date: '2019-08-03',
     items: [
       {
-        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('20'),
         symbol: 'VTI',
         investment: new Big('2923.7'),
@@ -1789,7 +1740,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
     date: '2020-02-02',
     items: [
       {
-        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('5'),
         symbol: 'VTI',
         investment: new Big('652.55'),
@@ -1803,7 +1753,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
     date: '2021-02-01',
     items: [
       {
-        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('15'),
         symbol: 'VTI',
         investment: new Big('2684.05'),
@@ -1817,7 +1766,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
     date: '2021-08-01',
     items: [
       {
-        name: 'Vanguard Total Stock Market Index Fund ETF Shares',
         quantity: new Big('25'),
         symbol: 'VTI',
         investment: new Big('4460.95'),
