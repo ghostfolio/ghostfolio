@@ -641,6 +641,7 @@ export class PortfolioService {
       return { transactionPoints: [], orders: [] };
     }
 
+    const userCurrency = this.request.user.Settings.currency;
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
       date: format(order.date, DATE_FORMAT),
@@ -648,12 +649,18 @@ export class PortfolioService {
       quantity: new Big(order.quantity),
       symbol: order.symbol,
       type: <OrderType>order.type,
-      unitPrice: new Big(order.unitPrice)
+      unitPrice: new Big(
+        this.exchangeRateDataService.toCurrency(
+          order.unitPrice,
+          order.currency,
+          userCurrency
+        )
+      )
     }));
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
-      this.request.user.Settings.currency
+      userCurrency
     );
     portfolioCalculator.computeTransactionPoints(portfolioOrders);
     return {
