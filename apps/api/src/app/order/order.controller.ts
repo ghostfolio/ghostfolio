@@ -80,6 +80,11 @@ export class OrderController {
           include: {
             Platform: true
           }
+        },
+        SymbolProfile: {
+          select: {
+            name: true
+          }
         }
       },
       orderBy: { date: 'desc' },

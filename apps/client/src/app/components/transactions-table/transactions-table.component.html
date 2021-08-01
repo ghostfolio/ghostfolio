@@ -258,7 +258,12 @@
   <tr
     *matRowDef="let row; columns: displayedColumns"
     mat-row
-    (click)="onOpenPositionDialog({ symbol: row.symbol, title: '' })"
+    (click)="
+      onOpenPositionDialog({
+        symbol: row.symbol,
+        title: row.SymbolProfile?.name
+      })
+    "
   ></tr>
 </table>
 

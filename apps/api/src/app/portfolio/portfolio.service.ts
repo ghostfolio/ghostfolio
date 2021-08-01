@@ -239,7 +239,7 @@ export class PortfolioService {
         investment: item.investment.toNumber(),
         marketPrice: item.marketPrice,
         marketState: dataProviderResponse.marketState,
-        name: item.name,
+        name: symbolProfile.name,
         quantity: item.quantity.toNumber(),
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
@@ -438,6 +438,19 @@ export class PortfolioService {
       startDate
     );
 
+    const symbols = currentPositions.positions.map(
+      (position) => position.symbol
+    );
+
+    const [symbolProfiles] = await Promise.all([
+      this.symbolProfileService.getSymbolProfiles(symbols)
+    ]);
+
+    const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
+    for (const symbolProfile of symbolProfiles) {
+      symbolProfileMap[symbolProfile.symbol] = symbolProfile;
+    }
+
     return {
       hasErrors: currentPositions.hasErrors,
       positions: currentPositions.positions.map((position) => {
@@ -448,7 +461,7 @@ export class PortfolioService {
           grossPerformancePercentage:
             position.grossPerformancePercentage?.toNumber() ?? null,
           investment: new Big(position.investment).toNumber(),
-          name: position.name,
+          name: symbolProfileMap[position.symbol].name,
           quantity: new Big(position.quantity).toNumber()
         };
       })
