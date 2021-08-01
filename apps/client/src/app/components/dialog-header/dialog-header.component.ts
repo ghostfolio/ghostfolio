@@ -16,7 +16,6 @@ import {
 })
 export class DialogHeaderComponent implements OnInit {
   @Input() deviceType: string;
-  @Input() symbolUrl: string;
   @Input() title: string;
 
   @Output() closeButtonClicked = new EventEmitter<void>();

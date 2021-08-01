@@ -65,7 +65,6 @@ export class PositionComponent implements OnDestroy, OnInit {
         deviceType: this.deviceType,
         locale: this.locale,
         symbol: this.position?.symbol,
-        symbolUrl: this.position?.url,
         title: this.position?.name
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
