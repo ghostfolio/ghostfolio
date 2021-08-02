@@ -25,8 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refactored the core engine for the portfolio calculations
-- Improved the performance of the portfolio calculations
+- Rewritten the core engine for the portfolio calculations
+  - Switched to [Time-Weighted Rate of Return](https://www.investopedia.com/terms/t/time-weightedror.asp) (TWR) for the performance calculation
+  - Improved the performance of the portfolio calculations
 
 ## 1.30.0 - 31.07.2021
 
