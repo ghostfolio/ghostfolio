@@ -26,6 +26,10 @@
 
 **Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of their wealth like stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.
 
+<div align="center">
+  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+</div>
+
 ## Ghostfolio Premium
 
 Our official **[Ghostfolio Premium](https://ghostfol.io/pricing)** cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs.
