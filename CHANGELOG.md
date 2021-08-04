@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the name to the position detail dialog when opened from the transactions table
 - Added a screenshot to the blog posts
 
+### Fixed
+
+- Fixed the missing market state in the positions tab
+
 ## 1.31.1 - 01.08.2021
 
 ### Fixed

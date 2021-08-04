@@ -442,7 +442,8 @@ export class PortfolioService {
       (position) => position.symbol
     );
 
-    const [symbolProfiles] = await Promise.all([
+    const [dataProviderResponses, symbolProfiles] = await Promise.all([
+      this.dataProviderService.get(symbols),
       this.symbolProfileService.getSymbolProfiles(symbols)
     ]);
 
@@ -461,6 +462,7 @@ export class PortfolioService {
           grossPerformancePercentage:
             position.grossPerformancePercentage?.toNumber() ?? null,
           investment: new Big(position.investment).toNumber(),
+          marketState: dataProviderResponses[position.symbol].marketState,
           name: symbolProfileMap[position.symbol].name,
           quantity: new Big(position.quantity).toNumber()
         };
