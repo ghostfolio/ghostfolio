@@ -15,11 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the missing market state in the positions tab
-
-## Unreleased
-
-### Fixed
-
 - Fixed the chart of positions with differing currency from user
 
 ## 1.31.1 - 01.08.2021
