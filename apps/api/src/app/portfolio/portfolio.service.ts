@@ -300,10 +300,16 @@ export class PortfolioService {
         currency,
         firstBuyDate,
         investment,
-        marketPrice,
         quantity,
         transactionCount
       } = position;
+
+      // Convert market price back to currency of position
+      const marketPrice = this.exchangeRateDataService.toCurrency(
+        position.marketPrice,
+        this.request.user.Settings.currency,
+        currency
+      );
 
       const historicalData = await this.dataProviderService.getHistorical(
         [aSymbol],
