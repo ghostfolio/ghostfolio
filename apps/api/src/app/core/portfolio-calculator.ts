@@ -418,13 +418,18 @@ export class PortfolioCalculator {
         hasErrors = true;
       }
     }
+
+    if (!completeInitialValue.eq(0)) {
+      grossPerformancePercentage =
+        grossPerformancePercentage.div(completeInitialValue);
+    }
+
     return {
       currentValue,
       grossPerformance,
+      grossPerformancePercentage,
       hasErrors,
-      totalInvestment,
-      grossPerformancePercentage:
-        grossPerformancePercentage.div(completeInitialValue)
+      totalInvestment
     };
   }
 
