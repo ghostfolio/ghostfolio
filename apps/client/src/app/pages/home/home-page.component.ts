@@ -1,6 +1,4 @@
-import { ViewportScroller } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -31,14 +29,14 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
-import { first, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-home-page',
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.scss']
 })
-export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
+export class HomePageComponent implements OnDestroy, OnInit {
   @HostBinding('class.with-create-account-container') get isDemo() {
     return this.canCreateAccount;
   }
@@ -83,8 +81,7 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private userService: UserService,
-    private viewportScroller: ViewportScroller
+    private userService: UserService
   ) {
     this.routeQueryParams = this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -148,12 +145,6 @@ export class HomePageComponent implements AfterViewInit, OnDestroy, OnInit {
       <DateRange>this.settingsStorageService.getSetting(RANGE) || 'max';
 
     this.update();
-  }
-
-  public ngAfterViewInit(): void {
-    this.route.fragment
-      .pipe(first())
-      .subscribe((fragment) => this.viewportScroller.scrollToAnchor(fragment));
   }
 
   public onChangeDateRange(aDateRange: DateRange) {
