@@ -258,14 +258,9 @@ export class PortfolioService {
   ): Promise<PortfolioPositionDetail> {
     const userId = await this.getUserId(aImpersonationId);
 
-    const portfolioCalculator = new PortfolioCalculator(
-      this.currentRateService,
-      this.request.user.Settings.currency
-    );
+    const orders = await this.getOrders(userId);
 
-    const { transactionPoints } = await this.getTransactionPoints(userId);
-
-    if (transactionPoints?.length <= 0) {
+    if (orders.length <= 0) {
       return {
         averagePrice: undefined,
         currency: undefined,
@@ -283,7 +278,24 @@ export class PortfolioService {
       };
     }
 
-    portfolioCalculator.setTransactionPoints(transactionPoints);
+    const positionCurrency = orders[0].currency;
+
+    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
+      currency: order.currency,
+      date: format(order.date, DATE_FORMAT),
+      name: order.SymbolProfile?.name,
+      quantity: new Big(order.quantity),
+      symbol: order.symbol,
+      type: <OrderType>order.type,
+      unitPrice: new Big(order.unitPrice)
+    }));
+
+    const portfolioCalculator = new PortfolioCalculator(
+      this.currentRateService,
+      positionCurrency
+    );
+    portfolioCalculator.computeTransactionPoints(portfolioOrders);
+    const transactionPoints = portfolioCalculator.getTransactionPoints();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
     const currentPositions = await portfolioCalculator.getCurrentPositions(
@@ -299,16 +311,22 @@ export class PortfolioService {
         averagePrice,
         currency,
         firstBuyDate,
-        investment,
+        marketPrice,
         quantity,
         transactionCount
       } = position;
 
-      // Convert market price back to currency of position
-      const marketPrice = this.exchangeRateDataService.toCurrency(
-        position.marketPrice,
-        this.request.user.Settings.currency,
-        currency
+      // Convert investment and gross performance to currency of user
+      const userCurrency = this.request.user.Settings.currency;
+      const investment = this.exchangeRateDataService.toCurrency(
+        position.investment.toNumber(),
+        currency,
+        userCurrency
+      );
+      const grossPerformance = this.exchangeRateDataService.toCurrency(
+        position.grossPerformance.toNumber(),
+        currency,
+        userCurrency
       );
 
       const historicalData = await this.dataProviderService.getHistorical(
@@ -357,15 +375,15 @@ export class PortfolioService {
       return {
         currency,
         firstBuyDate,
+        grossPerformance,
+        investment,
         marketPrice,
         maxPrice,
         minPrice,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
-        grossPerformance: position.grossPerformance.toNumber(),
         grossPerformancePercent: position.grossPerformancePercentage.toNumber(),
         historicalData: historicalDataArray,
-        investment: investment.toNumber(),
         quantity: quantity.toNumber(),
         symbol: aSymbol
       };
