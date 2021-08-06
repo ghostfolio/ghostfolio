@@ -258,7 +258,9 @@ export class PortfolioService {
   ): Promise<PortfolioPositionDetail> {
     const userId = await this.getUserId(aImpersonationId);
 
-    const orders = await this.getOrders(userId);
+    const orders = (await this.getOrders(userId)).filter(
+      (order) => order.symbol === aSymbol
+    );
 
     if (orders.length <= 0) {
       return {
