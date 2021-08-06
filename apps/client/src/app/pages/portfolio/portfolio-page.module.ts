@@ -4,20 +4,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 
-import { ToolsPageRoutingModule } from './tools-page-routing.module';
-import { ToolsPageComponent } from './tools-page.component';
+import { PortfolioPageRoutingModule } from './portfolio-page-routing.module';
+import { PortfolioPageComponent } from './portfolio-page.component';
 
 @NgModule({
-  declarations: [ToolsPageComponent],
+  declarations: [PortfolioPageComponent],
   exports: [],
   imports: [
     CommonModule,
     MatButtonModule,
     MatCardModule,
-    RouterModule,
-    ToolsPageRoutingModule
+    PortfolioPageRoutingModule,
+    RouterModule
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ToolsPageModule {}
+export class PortfolioPageModule {}

@@ -22,27 +22,22 @@
       i18n
       mat-flat-button
       [ngClass]="{
-        'font-weight-bold':
-          currentRoute === 'analysis' ||
-          currentRoute === 'report' ||
-          currentRoute === 'tools',
-        'text-decoration-underline':
-          currentRoute === 'analysis' ||
-          currentRoute === 'report' ||
-          currentRoute === 'tools'
+        'font-weight-bold': currentRoute === 'portfolio',
+        'text-decoration-underline': currentRoute === 'portfolio'
       }"
-      [routerLink]="['/tools']"
-      >Tools</a
+      [routerLink]="['/portfolio']"
+      >Portfolio</a
     >
     <a
+      *ngIf="user?.settings?.viewMode !== 'DEFAULT'"
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
       [ngClass]="{
-        'font-weight-bold': currentRoute === 'transactions',
-        'text-decoration-underline': currentRoute === 'transactions'
+        'font-weight-bold': currentRoute === 'portfolio',
+        'text-decoration-underline': currentRoute === 'portfolio'
       }"
-      [routerLink]="['/transactions']"
+      [routerLink]="['/portfolio', 'transactions']"
       >Transactions</a
     >
     <a
@@ -166,22 +161,20 @@
         i18n
         mat-menu-item
         [ngClass]="{
-          'font-weight-bold':
-            currentRoute === 'analysis' ||
-            currentRoute === 'report' ||
-            currentRoute === 'tools'
+          'font-weight-bold': currentRoute === 'portfolio'
         }"
-        [routerLink]="['/tools']"
-        >Tools</a
+        [routerLink]="['/portfolio']"
+        >Portfolio</a
       >
       <a
+        *ngIf="user?.settings?.viewMode !== 'DEFAULT'"
         class="d-block d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{
-          'font-weight-bold': currentRoute === 'transactions'
+          'font-weight-bold': currentRoute === 'portfolio'
         }"
-        [routerLink]="['/transactions']"
+        [routerLink]="['/portfolio', 'transactions']"
         >Transactions</a
       >
       <a

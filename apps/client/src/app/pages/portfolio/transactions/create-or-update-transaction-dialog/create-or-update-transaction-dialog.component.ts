@@ -19,7 +19,7 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-import { DataService } from '../../../services/data.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 
 @Component({
