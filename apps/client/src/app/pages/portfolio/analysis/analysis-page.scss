@@ -3,33 +3,6 @@
     .mat-card {
       .mat-card-content {
         aspect-ratio: 16 / 9;
-
-        gf-investment-chart {
-          height: 100%;
-        }
-      }
-    }
-  }
-
-  .mat-card {
-    .mat-card-header {
-      ::ng-deep {
-        .mat-card-header-text {
-          flex: 1 1 auto;
-        }
-      }
-
-      gf-toggle {
-        font-size: 90%;
-      }
-    }
-
-    a {
-      color: rgba(var(--palette-primary-500), 1);
-      font-weight: 500;
-
-      &:hover {
-        color: rgba(var(--palette-primary-300), 1);
       }
     }
   }
