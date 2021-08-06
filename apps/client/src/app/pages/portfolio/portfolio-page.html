@@ -17,7 +17,10 @@
         </p>
       </mat-card>
     </div>
-    <div class="col-xs-12 col-md-6">
+    <div
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
+      class="col-xs-12 col-md-6"
+    >
       <mat-card class="mb-3">
         <h4 i18n>Allocations</h4>
         <p class="mb-0">Check the allocations of your portfolio.</p>
@@ -35,7 +38,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-xs-12 col-md-6">
+    <div
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
+      class="col-xs-12 col-md-6"
+    >
       <mat-card class="mb-3">
         <h4 i18n>Analysis</h4>
         <p class="mb-0">Ghostfolio Analysis visualizes your portfolio.</p>
@@ -51,7 +57,10 @@
         </p>
       </mat-card>
     </div>
-    <div class="col-xs-12 col-md-6">
+    <div
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
+      class="col-xs-12 col-md-6"
+    >
       <mat-card class="mb-3">
         <h4 i18n>X-ray</h4>
         <p class="mb-0">

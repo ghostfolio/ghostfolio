@@ -60,6 +60,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'portfolio/allocations',
+    loadChildren: () =>
+      import('./pages/portfolio/allocations/allocations-page.module').then(
+        (m) => m.AllocationsPageModule
+      )
+  },
+  {
     path: 'portfolio/analysis',
     loadChildren: () =>
       import('./pages/portfolio/analysis/analysis-page.module').then(

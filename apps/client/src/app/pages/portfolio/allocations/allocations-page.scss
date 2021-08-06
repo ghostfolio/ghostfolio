@@ -1,12 +1,16 @@
 :host {
-  .investment-chart {
+  .proportion-charts {
+    .mat-card {
+      .mat-card-content {
+        padding: 1rem 2rem;
+      }
+    }
+  }
+
+  .world-map-chart {
     .mat-card {
       .mat-card-content {
         aspect-ratio: 16 / 9;
-
-        gf-investment-chart {
-          height: 100%;
-        }
       }
     }
   }
