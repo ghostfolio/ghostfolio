@@ -311,13 +311,13 @@ export class PortfolioService {
         averagePrice,
         currency,
         firstBuyDate,
-        marketPrice,
         quantity,
         transactionCount
       } = position;
 
-      // Convert investment and gross performance to currency of user
       const userCurrency = this.request.user.Settings.currency;
+
+      // Convert investment and gross performance to currency of user
       const investment = this.exchangeRateDataService.toCurrency(
         position.investment.toNumber(),
         currency,
@@ -327,6 +327,13 @@ export class PortfolioService {
         position.grossPerformance.toNumber(),
         currency,
         userCurrency
+      );
+
+      // Convert market price to currency of position
+      const marketPrice = this.exchangeRateDataService.toCurrency(
+        position.marketPrice,
+        userCurrency,
+        currency
       );
 
       const historicalData = await this.dataProviderService.getHistorical(
