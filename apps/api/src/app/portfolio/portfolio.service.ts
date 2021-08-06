@@ -411,7 +411,7 @@ export class PortfolioService {
 
       for (const [date, { marketPrice }] of Object.entries(
         historicalData[aSymbol]
-      ).reverse()) {
+      )) {
         historicalDataArray.push({
           date,
           value: marketPrice
