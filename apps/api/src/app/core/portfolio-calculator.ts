@@ -52,16 +52,19 @@ export class PortfolioCalculator {
       const factor = this.getFactor(order.type);
       const unitPrice = new Big(order.unitPrice);
       if (oldAccumulatedSymbol) {
+        const newQuantity = order.quantity
+          .mul(factor)
+          .plus(oldAccumulatedSymbol.quantity);
         currentTransactionPointItem = {
           currency: order.currency,
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
-          investment: unitPrice
-            .mul(order.quantity)
-            .mul(factor)
-            .add(oldAccumulatedSymbol.investment),
-          quantity: order.quantity
-            .mul(factor)
-            .plus(oldAccumulatedSymbol.quantity),
+          investment: newQuantity.eq(0)
+            ? new Big(0)
+            : unitPrice
+                .mul(order.quantity)
+                .mul(factor)
+                .add(oldAccumulatedSymbol.investment),
+          quantity: newQuantity,
           symbol: order.symbol,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
@@ -82,11 +85,7 @@ export class PortfolioCalculator {
       const newItems = items.filter(
         (transactionPointItem) => transactionPointItem.symbol !== order.symbol
       );
-      if (!currentTransactionPointItem.quantity.eq(0)) {
-        newItems.push(currentTransactionPointItem);
-      } else {
-        delete symbols[order.symbol];
-      }
+      newItems.push(currentTransactionPointItem);
       newItems.sort((a, b) => a.symbol.localeCompare(b.symbol));
       if (lastDate !== currentDate || lastTransactionPoint === null) {
         lastTransactionPoint = {
@@ -231,31 +230,32 @@ export class PortfolioCalculator {
         if (i === firstIndex || !initialValues[item.symbol]) {
           initialValues[item.symbol] = initialValue;
         }
-        if (!initialValue) {
-          invalidSymbols.push(item.symbol);
-          hasErrors = true;
-          console.error(
-            `Missing value for symbol ${item.symbol} at ${currentDate}`
+        if (!item.quantity.eq(0)) {
+          if (!initialValue) {
+            invalidSymbols.push(item.symbol);
+            hasErrors = true;
+            console.error(
+              `Missing value for symbol ${item.symbol} at ${currentDate}`
+            );
+            continue;
+          }
+
+          const cashFlow = lastInvestment;
+          const endValue = marketSymbolMap[nextDate][item.symbol].mul(
+            item.quantity
           );
-          continue;
+
+          const holdingPeriodReturn = endValue.div(initialValue.plus(cashFlow));
+          holdingPeriodReturns[item.symbol] =
+            oldHoldingPeriodReturn.mul(holdingPeriodReturn);
+          let oldGrossPerformance = grossPerformance[item.symbol];
+          if (!oldGrossPerformance) {
+            oldGrossPerformance = new Big(0);
+          }
+          const currentPerformance = endValue.minus(investedValue);
+          grossPerformance[item.symbol] =
+            oldGrossPerformance.plus(currentPerformance);
         }
-
-        const cashFlow = lastInvestment;
-        const endValue = marketSymbolMap[nextDate][item.symbol].mul(
-          item.quantity
-        );
-
-        const holdingPeriodReturn = endValue.div(initialValue.plus(cashFlow));
-        holdingPeriodReturns[item.symbol] =
-          oldHoldingPeriodReturn.mul(holdingPeriodReturn);
-        let oldGrossPerformance = grossPerformance[item.symbol];
-        if (!oldGrossPerformance) {
-          oldGrossPerformance = new Big(0);
-        }
-        const currentPerformance = endValue.minus(investedValue);
-        grossPerformance[item.symbol] =
-          oldGrossPerformance.plus(currentPerformance);
-
         lastInvestments[item.symbol] = item.investment;
         lastQuantities[item.symbol] = item.quantity;
       }
@@ -267,7 +267,9 @@ export class PortfolioCalculator {
       const marketValue = marketSymbolMap[todayString]?.[item.symbol];
       const isValid = invalidSymbols.indexOf(item.symbol) === -1;
       positions.push({
-        averagePrice: item.investment.div(item.quantity),
+        averagePrice: item.quantity.eq(0)
+          ? new Big(0)
+          : item.investment.div(item.quantity),
         currency: item.currency,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: isValid
@@ -398,7 +400,7 @@ export class PortfolioCalculator {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
         );
-      } else {
+      } else if (!currentPosition.quantity.eq(0)) {
         hasErrors = true;
       }
 
@@ -411,7 +413,7 @@ export class PortfolioCalculator {
         grossPerformancePercentage = grossPerformancePercentage.plus(
           currentPosition.grossPerformancePercentage.mul(currentInitialValue)
         );
-      } else {
+      } else if (!currentPosition.quantity.eq(0)) {
         console.error(
           `Initial value is missing for symbol ${currentPosition.symbol}`
         );

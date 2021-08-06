@@ -396,115 +396,9 @@ describe('PortfolioCalculator', () => {
       const portfolioItemsAtTransactionPoints =
         portfolioCalculator.getTransactionPoints();
 
-      expect(portfolioItemsAtTransactionPoints).toEqual([
-        {
-          date: '2019-02-01',
-          items: [
-            {
-              quantity: new Big('10'),
-              symbol: 'VTI',
-              investment: new Big('1443.8'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
-              transactionCount: 1
-            }
-          ]
-        },
-        {
-          date: '2019-08-03',
-          items: [
-            {
-              quantity: new Big('20'),
-              symbol: 'VTI',
-              investment: new Big('2923.7'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
-              transactionCount: 2
-            }
-          ]
-        },
-        {
-          date: '2019-09-01',
-          items: [
-            {
-              quantity: new Big('5'),
-              symbol: 'AMZN',
-              investment: new Big('10109.95'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-09-01',
-              transactionCount: 1
-            },
-            {
-              quantity: new Big('20'),
-              symbol: 'VTI',
-              investment: new Big('2923.7'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
-              transactionCount: 2
-            }
-          ]
-        },
-        {
-          date: '2020-02-02',
-          items: [
-            {
-              quantity: new Big('5'),
-              symbol: 'AMZN',
-              investment: new Big('10109.95'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-09-01',
-              transactionCount: 1
-            },
-            {
-              quantity: new Big('5'),
-              symbol: 'VTI',
-              investment: new Big('652.55'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
-              transactionCount: 3
-            }
-          ]
-        },
-        {
-          date: '2020-08-02',
-          items: [
-            {
-              quantity: new Big('5'),
-              symbol: 'VTI',
-              investment: new Big('652.55'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
-              transactionCount: 3
-            }
-          ]
-        },
-        {
-          date: '2021-02-01',
-          items: [
-            {
-              quantity: new Big('15'),
-              symbol: 'VTI',
-              investment: new Big('2684.05'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
-              transactionCount: 4
-            }
-          ]
-        },
-        {
-          date: '2021-08-01',
-          items: [
-            {
-              quantity: new Big('25'),
-              symbol: 'VTI',
-              investment: new Big('4460.95'),
-              currency: Currency.USD,
-              firstBuyDate: '2019-02-01',
-              transactionCount: 5
-            }
-          ]
-        }
-      ]);
+      expect(portfolioItemsAtTransactionPoints).toEqual(
+        transactionPointsBuyAndSell
+      );
     });
 
     it('with mixed symbols', () => {
@@ -735,6 +629,138 @@ describe('PortfolioCalculator', () => {
             quantity: new Big('25'),
             symbol: 'VTI',
             transactionCount: 5
+          }
+        ]
+      });
+    });
+
+    it('with buy and sell', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints(transactionPointsBuyAndSell);
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parseDate('2019-01-01')
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toEqual({
+        hasErrors: false,
+        currentValue: new Big('4871.5'),
+        grossPerformance: new Big('240.4'),
+        grossPerformancePercentage: new Big('0.01104605615757711361'),
+        totalInvestment: new Big('4460.95'),
+        positions: [
+          {
+            averagePrice: new Big('0'),
+            currency: 'USD',
+            firstBuyDate: '2019-09-01',
+            grossPerformance: new Big('0'),
+            grossPerformancePercentage: new Big('0'),
+            investment: new Big('0'),
+            marketPrice: 2021.99,
+            quantity: new Big('0'),
+            symbol: 'AMZN',
+            transactionCount: 2
+          },
+          {
+            averagePrice: new Big('178.438'),
+            currency: 'USD',
+            firstBuyDate: '2019-02-01',
+            grossPerformance: new Big('240.4'),
+            grossPerformancePercentage: new Big(
+              '0.08839407904876477101219019935616297754969945667391763908415656216989674494965785538864363782688167989866968512455219637257546280462751601552'
+            ),
+            investment: new Big('4460.95'),
+            marketPrice: 194.86,
+            quantity: new Big('25'),
+            symbol: 'VTI',
+            transactionCount: 5
+          }
+        ]
+      });
+    });
+
+    it('with buy, sell, buy', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      portfolioCalculator.setTransactionPoints([
+        {
+          date: '2019-09-01',
+          items: [
+            {
+              quantity: new Big('5'),
+              symbol: 'VTI',
+              investment: new Big('805.9'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-09-01',
+              transactionCount: 1
+            }
+          ]
+        },
+        {
+          date: '2020-08-02',
+          items: [
+            {
+              quantity: new Big('0'),
+              symbol: 'VTI',
+              investment: new Big('0'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-09-01',
+              transactionCount: 2
+            }
+          ]
+        },
+        {
+          date: '2021-02-01',
+          items: [
+            {
+              quantity: new Big('5'),
+              symbol: 'VTI',
+              investment: new Big('1013.9'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-09-01',
+              transactionCount: 3
+            }
+          ]
+        }
+      ]);
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2021, 7, 1)).getTime()); // 2021-08-01
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parseDate('2019-02-01')
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toEqual({
+        hasErrors: false,
+        currentValue: new Big('1086.7'),
+        grossPerformance: new Big('207.6'),
+        grossPerformancePercentage: new Big('0.2516103956224511062'),
+        totalInvestment: new Big('1013.9'),
+        positions: [
+          {
+            averagePrice: new Big('202.78'),
+            currency: 'USD',
+            firstBuyDate: '2019-09-01',
+            grossPerformance: new Big('207.6'),
+            grossPerformancePercentage: new Big(
+              '0.2516103956224511061954915466429950404846'
+            ),
+            investment: new Big('1013.9'),
+            marketPrice: 217.34,
+            quantity: new Big('5'),
+            symbol: 'VTI',
+            transactionCount: 3
           }
         ]
       });
@@ -1765,6 +1791,140 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
   {
     date: '2021-08-01',
     items: [
+      {
+        quantity: new Big('25'),
+        symbol: 'VTI',
+        investment: new Big('4460.95'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-02-01',
+        transactionCount: 5
+      }
+    ]
+  }
+];
+
+const transactionPointsBuyAndSell = [
+  {
+    date: '2019-02-01',
+    items: [
+      {
+        quantity: new Big('10'),
+        symbol: 'VTI',
+        investment: new Big('1443.8'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-02-01',
+        transactionCount: 1
+      }
+    ]
+  },
+  {
+    date: '2019-08-03',
+    items: [
+      {
+        quantity: new Big('20'),
+        symbol: 'VTI',
+        investment: new Big('2923.7'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-02-01',
+        transactionCount: 2
+      }
+    ]
+  },
+  {
+    date: '2019-09-01',
+    items: [
+      {
+        quantity: new Big('5'),
+        symbol: 'AMZN',
+        investment: new Big('10109.95'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-09-01',
+        transactionCount: 1
+      },
+      {
+        quantity: new Big('20'),
+        symbol: 'VTI',
+        investment: new Big('2923.7'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-02-01',
+        transactionCount: 2
+      }
+    ]
+  },
+  {
+    date: '2020-02-02',
+    items: [
+      {
+        quantity: new Big('5'),
+        symbol: 'AMZN',
+        investment: new Big('10109.95'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-09-01',
+        transactionCount: 1
+      },
+      {
+        quantity: new Big('5'),
+        symbol: 'VTI',
+        investment: new Big('652.55'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-02-01',
+        transactionCount: 3
+      }
+    ]
+  },
+  {
+    date: '2020-08-02',
+    items: [
+      {
+        quantity: new Big('0'),
+        symbol: 'AMZN',
+        investment: new Big('0'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-09-01',
+        transactionCount: 2
+      },
+      {
+        quantity: new Big('5'),
+        symbol: 'VTI',
+        investment: new Big('652.55'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-02-01',
+        transactionCount: 3
+      }
+    ]
+  },
+  {
+    date: '2021-02-01',
+    items: [
+      {
+        quantity: new Big('0'),
+        symbol: 'AMZN',
+        investment: new Big('0'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-09-01',
+        transactionCount: 2
+      },
+      {
+        quantity: new Big('15'),
+        symbol: 'VTI',
+        investment: new Big('2684.05'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-02-01',
+        transactionCount: 4
+      }
+    ]
+  },
+  {
+    date: '2021-08-01',
+    items: [
+      {
+        quantity: new Big('0'),
+        symbol: 'AMZN',
+        investment: new Big('0'),
+        currency: Currency.USD,
+        firstBuyDate: '2019-09-01',
+        transactionCount: 2
+      },
       {
         quantity: new Big('25'),
         symbol: 'VTI',
