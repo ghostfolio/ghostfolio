@@ -52,15 +52,12 @@ export class OrderController {
       );
     }
 
-    return this.orderService.deleteOrder(
-      {
-        id_userId: {
-          id,
-          userId: this.request.user.id
-        }
-      },
-      this.request.user.id
-    );
+    return this.orderService.deleteOrder({
+      id_userId: {
+        id,
+        userId: this.request.user.id
+      }
+    });
   }
 
   @Get()
@@ -135,33 +132,30 @@ export class OrderController {
     const accountId = data.accountId;
     delete data.accountId;
 
-    return this.orderService.createOrder(
-      {
-        ...data,
-        Account: {
-          connect: {
-            id_userId: { id: accountId, userId: this.request.user.id }
-          }
-        },
-        date,
-        SymbolProfile: {
-          connectOrCreate: {
-            where: {
-              dataSource_symbol: {
-                dataSource: data.dataSource,
-                symbol: data.symbol
-              }
-            },
-            create: {
+    return this.orderService.createOrder({
+      ...data,
+      Account: {
+        connect: {
+          id_userId: { id: accountId, userId: this.request.user.id }
+        }
+      },
+      date,
+      SymbolProfile: {
+        connectOrCreate: {
+          where: {
+            dataSource_symbol: {
               dataSource: data.dataSource,
               symbol: data.symbol
             }
+          },
+          create: {
+            dataSource: data.dataSource,
+            symbol: data.symbol
           }
-        },
-        User: { connect: { id: this.request.user.id } }
+        }
       },
-      this.request.user.id
-    );
+      User: { connect: { id: this.request.user.id } }
+    });
   }
 
   @Put(':id')
@@ -198,26 +192,23 @@ export class OrderController {
     const accountId = data.accountId;
     delete data.accountId;
 
-    return this.orderService.updateOrder(
-      {
-        data: {
-          ...data,
-          date,
-          Account: {
-            connect: {
-              id_userId: { id: accountId, userId: this.request.user.id }
-            }
-          },
-          User: { connect: { id: this.request.user.id } }
-        },
-        where: {
-          id_userId: {
-            id,
-            userId: this.request.user.id
+    return this.orderService.updateOrder({
+      data: {
+        ...data,
+        date,
+        Account: {
+          connect: {
+            id_userId: { id: accountId, userId: this.request.user.id }
           }
-        }
+        },
+        User: { connect: { id: this.request.user.id } }
       },
-      this.request.user.id
-    );
+      where: {
+        id_userId: {
+          id,
+          userId: this.request.user.id
+        }
+      }
+    });
   }
 }

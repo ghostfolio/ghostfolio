@@ -69,8 +69,6 @@ export class AccountService {
     where: Prisma.AccountWhereUniqueInput,
     aUserId: string
   ): Promise<Account> {
-    this.redisCacheService.remove(`${aUserId}.portfolio`);
-
     return this.prisma.account.delete({
       where
     });

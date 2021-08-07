@@ -38,7 +38,12 @@ import {
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Currency, DataSource, Type as TypeOfOrder } from '@prisma/client';
+import {
+  Currency,
+  DataSource,
+  Prisma,
+  Type as TypeOfOrder
+} from '@prisma/client';
 import Big from 'big.js';
 import {
   endOfToday,
@@ -83,7 +88,10 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
 
-    const { transactionPoints } = await this.getTransactionPoints(userId);
+    const { transactionPoints } = await this.getTransactionPoints({
+      userId,
+      includeDrafts: true
+    });
     portfolioCalculator.setTransactionPoints(transactionPoints);
     if (transactionPoints.length === 0) {
       return [];
@@ -108,7 +116,7 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
 
-    const { transactionPoints } = await this.getTransactionPoints(userId);
+    const { transactionPoints } = await this.getTransactionPoints({ userId });
     portfolioCalculator.setTransactionPoints(transactionPoints);
     if (transactionPoints.length === 0) {
       return [];
@@ -151,7 +159,7 @@ export class PortfolioService {
       userId,
       currency
     );
-    const orders = await this.getOrders(userId);
+    const orders = await this.orderService.getOrders({ userId });
     const fees = this.getFees(orders);
 
     const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
@@ -178,9 +186,9 @@ export class PortfolioService {
       userCurrency
     );
 
-    const { transactionPoints, orders } = await this.getTransactionPoints(
+    const { orders, transactionPoints } = await this.getTransactionPoints({
       userId
-    );
+    });
 
     if (transactionPoints?.length <= 0) {
       return {};
@@ -258,7 +266,7 @@ export class PortfolioService {
   ): Promise<PortfolioPositionDetail> {
     const userId = await this.getUserId(aImpersonationId);
 
-    const orders = (await this.getOrders(userId)).filter(
+    const orders = (await this.orderService.getOrders({ userId })).filter(
       (order) => order.symbol === aSymbol
     );
 
@@ -453,7 +461,7 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
 
-    const { transactionPoints } = await this.getTransactionPoints(userId);
+    const { transactionPoints } = await this.getTransactionPoints({ userId });
 
     if (transactionPoints?.length <= 0) {
       return {
@@ -514,7 +522,7 @@ export class PortfolioService {
       this.request.user.Settings.currency
     );
 
-    const { transactionPoints } = await this.getTransactionPoints(userId);
+    const { transactionPoints } = await this.getTransactionPoints({ userId });
 
     if (transactionPoints?.length <= 0) {
       return {
@@ -576,9 +584,9 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId);
     const baseCurrency = this.request.user.Settings.currency;
 
-    const { transactionPoints, orders } = await this.getTransactionPoints(
+    const { orders, transactionPoints } = await this.getTransactionPoints({
       userId
-    );
+    });
 
     if (isEmpty(orders)) {
       return {
@@ -674,11 +682,17 @@ export class PortfolioService {
     return portfolioStart;
   }
 
-  private async getTransactionPoints(userId: string): Promise<{
+  private async getTransactionPoints({
+    includeDrafts = false,
+    userId
+  }: {
+    includeDrafts?: boolean;
+    userId: string;
+  }): Promise<{
     transactionPoints: TransactionPoint[];
     orders: OrderWithAccount[];
   }> {
-    const orders = await this.getOrders(userId);
+    const orders = await this.orderService.getOrders({ includeDrafts, userId });
 
     if (orders.length <= 0) {
       return { transactionPoints: [], orders: [] };
@@ -748,19 +762,6 @@ export class PortfolioService {
       }
     }
     return accounts;
-  }
-
-  private getOrders(aUserId: string) {
-    return this.orderService.orders({
-      include: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        Account: true,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        SymbolProfile: true
-      },
-      orderBy: { date: 'asc' },
-      where: { userId: aUserId }
-    });
   }
 
   private async getUserId(aImpersonationId: string) {

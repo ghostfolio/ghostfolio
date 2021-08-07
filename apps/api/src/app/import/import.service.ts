@@ -24,20 +24,17 @@ export class ImportService {
       type,
       unitPrice
     } of orders) {
-      await this.orderService.createOrder(
-        {
-          currency,
-          dataSource,
-          fee,
-          quantity,
-          symbol,
-          type,
-          unitPrice,
-          date: parseISO(<string>(<unknown>date)),
-          User: { connect: { id: userId } }
-        },
-        userId
-      );
+      await this.orderService.createOrder({
+        currency,
+        dataSource,
+        fee,
+        quantity,
+        symbol,
+        type,
+        unitPrice,
+        date: parseISO(<string>(<unknown>date)),
+        User: { connect: { id: userId } }
+      });
     }
   }
 }

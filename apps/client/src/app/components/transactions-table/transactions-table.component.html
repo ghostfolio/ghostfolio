@@ -96,10 +96,7 @@
     <td *matCellDef="let element" class="px-1" mat-cell>
       <div class="d-flex align-items-center">
         {{ element.symbol | gfSymbol }}
-        <span
-          *ngIf="isAfter(element.date, endOfToday)"
-          class="badge badge-secondary ml-1"
-          i18n
+        <span *ngIf="element.isDraft" class="badge badge-secondary ml-1" i18n
           >Draft</span
         >
       </div>
