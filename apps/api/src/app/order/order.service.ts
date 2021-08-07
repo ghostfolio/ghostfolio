@@ -77,6 +77,31 @@ export class OrderService {
     });
   }
 
+  public getOrders({
+    includeDrafts = false,
+    userId
+  }: {
+    includeDrafts?: boolean;
+    userId: string;
+  }) {
+    const where: Prisma.OrderWhereInput = { userId };
+
+    if (includeDrafts === false) {
+      where.isDraft = false;
+    }
+
+    return this.orders({
+      where,
+      include: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        Account: true,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        SymbolProfile: true
+      },
+      orderBy: { date: 'asc' }
+    });
+  }
+
   public async updateOrder(params: {
     where: Prisma.OrderWhereUniqueInput;
     data: Prisma.OrderUpdateInput;

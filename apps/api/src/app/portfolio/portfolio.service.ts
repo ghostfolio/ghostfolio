@@ -159,7 +159,7 @@ export class PortfolioService {
       userId,
       currency
     );
-    const orders = await this.getOrders({ userId });
+    const orders = await this.orderService.getOrders({ userId });
     const fees = this.getFees(orders);
 
     const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
@@ -266,7 +266,7 @@ export class PortfolioService {
   ): Promise<PortfolioPositionDetail> {
     const userId = await this.getUserId(aImpersonationId);
 
-    const orders = (await this.getOrders({ userId })).filter(
+    const orders = (await this.orderService.getOrders({ userId })).filter(
       (order) => order.symbol === aSymbol
     );
 
@@ -692,7 +692,7 @@ export class PortfolioService {
     transactionPoints: TransactionPoint[];
     orders: OrderWithAccount[];
   }> {
-    const orders = await this.getOrders({ includeDrafts, userId });
+    const orders = await this.orderService.getOrders({ includeDrafts, userId });
 
     if (orders.length <= 0) {
       return { transactionPoints: [], orders: [] };
@@ -762,31 +762,6 @@ export class PortfolioService {
       }
     }
     return accounts;
-  }
-
-  private getOrders({
-    includeDrafts = false,
-    userId
-  }: {
-    includeDrafts?: boolean;
-    userId: string;
-  }) {
-    const where: Prisma.OrderWhereInput = { userId };
-
-    if (includeDrafts === false) {
-      where.isDraft = false;
-    }
-
-    return this.orderService.orders({
-      where,
-      include: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        Account: true,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        SymbolProfile: true
-      },
-      orderBy: { date: 'asc' }
-    });
   }
 
   private async getUserId(aImpersonationId: string) {
