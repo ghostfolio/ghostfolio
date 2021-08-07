@@ -1,9 +1,10 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
-import { resetHours } from '@ghostfolio/common/helper';
-import { Injectable } from '@nestjs/common';
-import { isBefore, isToday } from 'date-fns';
+import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
+import { Injectable, Logger } from '@nestjs/common';
+import { Big } from 'big.js';
+import { format, isAfter, isBefore, isToday } from 'date-fns';
 import { flatten } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -77,6 +78,13 @@ export class CurrentRateService {
       }[]
     >[] = [];
 
+    const sourceCurrencies = Object.values(currencies);
+    const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
+      dateQuery,
+      sourceCurrencies,
+      destinationCurrency: userCurrency
+    });
+
     if (includeToday) {
       const today = resetHours(new Date());
       promises.push(
@@ -112,17 +120,59 @@ export class CurrentRateService {
           symbols
         })
         .then((data) => {
-          return data.map((marketDataItem) => {
-            return {
-              date: marketDataItem.date,
-              marketPrice: this.exchangeRateDataService.toCurrency(
+          const result = [];
+          let j = 0;
+          for (const marketDataItem of data) {
+            const currency = currencies[marketDataItem.symbol];
+            while (
+              j + 1 < exchangeRates.length &&
+              !isAfter(exchangeRates[j + 1].date, marketDataItem.date)
+            ) {
+              j++;
+            }
+            let exchangeRate: Big;
+            if (currency !== userCurrency) {
+              exchangeRate = exchangeRates[j]?.exchangeRates[currency];
+
+              for (
+                let k = j;
+                k >= 0 && !exchangeRates[k]?.exchangeRates[currency];
+                k--
+              ) {
+                exchangeRate = exchangeRates[k]?.exchangeRates[currency];
+              }
+            } else {
+              exchangeRate = new Big(1);
+            }
+            let marketPrice: number;
+            if (exchangeRate) {
+              marketPrice = exchangeRate
+                .mul(marketDataItem.marketPrice)
+                .toNumber();
+            } else {
+              if (!isToday(marketDataItem.date)) {
+                Logger.error(
+                  `Failed to get exchange rate for ${
+                    currencies[marketDataItem.symbol]
+                  } to ${userCurrency} at ${format(
+                    marketDataItem.date,
+                    DATE_FORMAT
+                  )}, using today's exchange rate as a fallback`
+                );
+              }
+              marketPrice = this.exchangeRateDataService.toCurrency(
                 marketDataItem.marketPrice,
                 currencies[marketDataItem.symbol],
                 userCurrency
-              ),
+              );
+            }
+            result.push({
+              date: marketDataItem.date,
+              marketPrice: marketPrice,
               symbol: marketDataItem.symbol
-            };
-          });
+            });
+          }
+          return result;
         })
     );
 

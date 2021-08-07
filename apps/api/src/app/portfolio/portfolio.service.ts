@@ -26,7 +26,7 @@ import {
   baseCurrency,
   ghostfolioCashSymbol
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   Accounts,
   PortfolioDetails,
@@ -43,7 +43,7 @@ import type {
   OrderWithAccount,
   RequestWithUser
 } from '@ghostfolio/common/types';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AssetClass, DataSource, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
@@ -52,6 +52,7 @@ import {
   format,
   isAfter,
   isBefore,
+  isToday,
   max,
   parse,
   parseISO,
@@ -735,20 +736,24 @@ export class PortfolioService {
     };
   }
 
-  public getFees(orders: OrderWithAccount[], date = new Date(0)) {
+  public getFees(
+    orders: OrderWithAccount[],
+    exchangeRates: { [date: string]: { [currency: string]: Big } },
+    date = new Date(0)
+  ) {
     return orders
       .filter((order) => {
         // Filter out all orders before given date
         return isBefore(date, new Date(order.date));
       })
-      .map((order) => {
-        return this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.currency,
-          this.request.user.Settings.currency
-        );
-      })
-      .reduce((previous, current) => previous + current, 0);
+      .map((order) =>
+        this.convertCurrency({
+          exchangeRates,
+          ...order,
+          value: order.fee
+        })
+      )
+      .reduce((previous, current) => current.plus(previous), new Big(0));
   }
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
@@ -786,6 +791,7 @@ export class PortfolioService {
       currency,
       userId
     );
+    const exchangeRates = await this.exchangeRateForOrders(orders);
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
@@ -831,7 +837,7 @@ export class PortfolioService {
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
               currentPositions.totalInvestment.toNumber(),
-              this.getFees(orders)
+              this.getFees(orders, exchangeRates).toNumber()
             )
           ],
           { baseCurrency: currency }
@@ -851,11 +857,20 @@ export class PortfolioService {
       currency
     );
     const orders = await this.orderService.getOrders({ userId });
-    const fees = this.getFees(orders);
+    const exchangeRates = await this.exchangeRateForOrders(orders);
+    const fees = this.getFees(orders, exchangeRates);
     const firstOrderDate = orders[0]?.date;
 
-    const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
-    const totalSell = this.getTotalByType(orders, currency, TypeOfOrder.SELL);
+    const totalBuy = this.getTotalByType(
+      orders,
+      TypeOfOrder.BUY,
+      exchangeRates
+    );
+    const totalSell = this.getTotalByType(
+      orders,
+      TypeOfOrder.SELL,
+      exchangeRates
+    );
 
     const committedFunds = new Big(totalBuy).sub(totalSell);
 
@@ -865,14 +880,14 @@ export class PortfolioService {
 
     return {
       ...performanceInformation.performance,
-      fees,
       firstOrderDate,
       netWorth,
       cash: balance,
       committedFunds: committedFunds.toNumber(),
+      fees: fees.toNumber(),
       ordersCount: orders.length,
-      totalBuy: totalBuy,
-      totalSell: totalSell
+      totalBuy: totalBuy.toNumber(),
+      totalSell: totalSell.toNumber()
     };
   }
 
@@ -980,28 +995,25 @@ export class PortfolioService {
     }
 
     const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
+    const exchangeRates = await this.exchangeRateForOrders(orders);
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
       dataSource: order.dataSource,
       date: format(order.date, DATE_FORMAT),
-      fee: new Big(
-        this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.currency,
-          userCurrency
-        )
-      ),
+      fee: this.convertCurrency({
+        exchangeRates,
+        ...order,
+        value: order.fee
+      }),
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.symbol,
       type: <OrderType>order.type,
-      unitPrice: new Big(
-        this.exchangeRateDataService.toCurrency(
-          order.unitPrice,
-          order.currency,
-          userCurrency
-        )
-      )
+      unitPrice: this.convertCurrency({
+        exchangeRates,
+        ...order,
+        value: order.unitPrice
+      })
     }));
 
     const portfolioCalculator = new PortfolioCalculator(
@@ -1071,6 +1083,60 @@ export class PortfolioService {
     return accounts;
   }
 
+  private convertCurrency({
+    exchangeRates,
+    date,
+    currency,
+    value
+  }: {
+    exchangeRates: { [date: string]: { [currency: string]: Big } };
+    date: Date;
+    currency: string;
+    value: number | Big;
+  }): Big {
+    const exchangeRate = exchangeRates[format(date, DATE_FORMAT)]?.[currency];
+    if (exchangeRate) {
+      return exchangeRate?.mul(value);
+    }
+    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
+    if (!isToday(date)) {
+      Logger.error(
+        `Failed to convert value for date ${format(
+          date,
+          DATE_FORMAT
+        )} from ${currency} to ${userCurrency}`
+      );
+    }
+    return new Big(
+      this.exchangeRateDataService.toCurrency(
+        new Big(value).toNumber(),
+        currency,
+        userCurrency
+      )
+    );
+  }
+
+  private async exchangeRateForOrders(
+    orders: OrderWithAccount[]
+  ): Promise<{ [date: string]: { [currency: string]: Big } }> {
+    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
+
+    const dates = orders.map((order) => resetHours(order.date));
+    const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
+      dateQuery: {
+        in: dates
+      },
+      sourceCurrencies: orders.map((order) => order.currency),
+      destinationCurrency: userCurrency
+    });
+    const exchangeRateLookupMap = {};
+    for (const exchangeRate of exchangeRates) {
+      exchangeRateLookupMap[format(exchangeRate.date, DATE_FORMAT)] =
+        exchangeRate.exchangeRates;
+    }
+    return exchangeRateLookupMap;
+  }
+
   private async getUserId(aImpersonationId: string, aUserId: string) {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
@@ -1083,20 +1149,20 @@ export class PortfolioService {
 
   private getTotalByType(
     orders: OrderWithAccount[],
-    currency: string,
-    type: TypeOfOrder
+    type: TypeOfOrder,
+    exchangeRates: { [date: string]: { [currency: string]: Big } }
   ) {
     return orders
       .filter(
         (order) => !isAfter(order.date, endOfToday()) && order.type === type
       )
-      .map((order) => {
-        return this.exchangeRateDataService.toCurrency(
-          order.quantity * order.unitPrice,
-          order.currency,
-          currency
-        );
-      })
-      .reduce((previous, current) => previous + current, 0);
+      .map((order) =>
+        this.convertCurrency({
+          exchangeRates,
+          ...order,
+          value: order.quantity * order.unitPrice
+        })
+      )
+      .reduce((previous, current) => current.plus(previous), new Big(0));
   }
 }

@@ -1,7 +1,11 @@
+import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
+import { DateBasedExchangeRate } from '@ghostfolio/api/services/interfaces/date-based-exchange-rate.interface';
+import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
-import { format } from 'date-fns';
+import Big from 'big.js';
+import { format, isSameDay } from 'date-fns';
 import { isEmpty, isNumber, uniq } from 'lodash';
 
 import { DataProviderService } from './data-provider/data-provider.service';
@@ -17,6 +21,7 @@ export class ExchangeRateDataService {
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {
@@ -29,6 +34,55 @@ export class ExchangeRateDataService {
 
   public getCurrencyPairs() {
     return this.currencyPairs;
+  }
+
+  public async getExchangeRates({
+    dateQuery,
+    sourceCurrencies,
+    destinationCurrency
+  }: {
+    dateQuery: DateQuery;
+    sourceCurrencies: string[];
+    destinationCurrency: string;
+  }): Promise<DateBasedExchangeRate[]> {
+    const symbols = [...sourceCurrencies, destinationCurrency]
+      .map((currency) => `${baseCurrency}${currency}`)
+      .filter((v, i, a) => a.indexOf(v) === i);
+    const exchangeRates = await this.marketDataService.getRange({
+      dateQuery,
+      symbols
+    });
+
+    if (exchangeRates.length === 0) {
+      return [];
+    }
+    const results: DateBasedExchangeRate[] = [];
+    let currentDate = exchangeRates[0].date;
+    let currentRates: { [symbol: string]: Big } = {};
+    for (const exchangeRate of exchangeRates) {
+      if (!isSameDay(currentDate, exchangeRate.date)) {
+        results.push({
+          date: currentDate,
+          exchangeRates: this.getUserExchangeRates(
+            currentRates,
+            destinationCurrency,
+            sourceCurrencies
+          )
+        });
+        currentDate = exchangeRate.date;
+        currentRates = {};
+      }
+      currentRates[exchangeRate.symbol] = new Big(exchangeRate.marketPrice);
+    }
+    results.push({
+      date: currentDate,
+      exchangeRates: this.getUserExchangeRates(
+        currentRates,
+        destinationCurrency,
+        sourceCurrencies
+      )
+    });
+    return results;
   }
 
   public async initialize() {
@@ -97,10 +151,10 @@ export class ExchangeRateDataService {
       this.exchangeRates[symbol] = resultExtended[symbol]?.[date]?.marketPrice;
 
       if (!this.exchangeRates[symbol]) {
-        // Not found, calculate indirectly via USD
+        // Not found, calculate indirectly via base currency
         this.exchangeRates[symbol] =
-          resultExtended[`${currency1}${'USD'}`]?.[date]?.marketPrice *
-          resultExtended[`${'USD'}${currency2}`]?.[date]?.marketPrice;
+          resultExtended[`${currency1}${baseCurrency}`]?.[date]?.marketPrice *
+          resultExtended[`${baseCurrency}${currency2}`]?.[date]?.marketPrice;
 
         // Calculate the opposite direction
         this.exchangeRates[`${currency2}${currency1}`] =
@@ -129,9 +183,9 @@ export class ExchangeRateDataService {
       if (this.exchangeRates[`${aFromCurrency}${aToCurrency}`]) {
         factor = this.exchangeRates[`${aFromCurrency}${aToCurrency}`];
       } else {
-        // Calculate indirectly via USD
-        const factor1 = this.exchangeRates[`${aFromCurrency}${'USD'}`];
-        const factor2 = this.exchangeRates[`${'USD'}${aToCurrency}`];
+        // Calculate indirectly via base currency
+        const factor1 = this.exchangeRates[`${aFromCurrency}${baseCurrency}`];
+        const factor2 = this.exchangeRates[`${baseCurrency}${aToCurrency}`];
 
         factor = factor1 * factor2;
 
@@ -192,6 +246,46 @@ export class ExchangeRateDataService {
     }
 
     return uniq(currencies).sort();
+  }
+
+  private getUserExchangeRates(
+    currentRates: { [symbol: string]: Big },
+    destinationCurrency: string,
+    sourceCurrencies: string[]
+  ): { [currency: string]: Big } {
+    const result: { [currency: string]: Big } = {};
+
+    for (const sourceCurrency of sourceCurrencies) {
+      let exchangeRate: Big;
+      if (sourceCurrency === destinationCurrency) {
+        exchangeRate = new Big(1);
+      } else if (
+        destinationCurrency === baseCurrency &&
+        currentRates[`${destinationCurrency}${sourceCurrency}`]
+      ) {
+        exchangeRate = new Big(1).div(
+          currentRates[`${destinationCurrency}${sourceCurrency}`]
+        );
+      } else if (
+        sourceCurrency === baseCurrency &&
+        currentRates[`${sourceCurrency}${destinationCurrency}`]
+      ) {
+        exchangeRate = currentRates[`${sourceCurrency}${destinationCurrency}`];
+      } else if (
+        currentRates[`${baseCurrency}${destinationCurrency}`] &&
+        currentRates[`${baseCurrency}${sourceCurrency}`]
+      ) {
+        exchangeRate = currentRates[
+          `${baseCurrency}${destinationCurrency}`
+        ].div(currentRates[`${baseCurrency}${sourceCurrency}`]);
+      }
+
+      if (exchangeRate) {
+        result[sourceCurrency] = exchangeRate;
+      }
+    }
+
+    return result;
   }
 
   private prepareCurrencyPairs(aCurrencies: string[]) {
