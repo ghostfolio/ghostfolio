@@ -1,7 +1,7 @@
 <gf-dialog-header
   mat-dialog-title
   [deviceType]="data.deviceType"
-  [title]="data.title"
+  [title]="data.title ?? data.symbol"
   (closeButtonClicked)="onClose()"
 ></gf-dialog-header>
 

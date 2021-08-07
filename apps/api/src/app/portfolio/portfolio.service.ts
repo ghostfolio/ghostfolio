@@ -391,6 +391,7 @@ export class PortfolioService {
       };
     } else {
       const currentData = await this.dataProviderService.get([aSymbol]);
+      const marketPrice = currentData[aSymbol]?.marketPrice;
 
       let historicalData = await this.dataProviderService.getHistorical(
         [aSymbol],
@@ -408,28 +409,33 @@ export class PortfolioService {
       }
 
       const historicalDataArray: HistoricalDataItem[] = [];
+      let maxPrice = marketPrice;
+      let minPrice = marketPrice;
 
       for (const [date, { marketPrice }] of Object.entries(
         historicalData[aSymbol]
-      ).reverse()) {
+      )) {
         historicalDataArray.push({
           date,
           value: marketPrice
         });
+
+        maxPrice = Math.max(marketPrice ?? 0, maxPrice);
+        minPrice = Math.min(marketPrice ?? Number.MAX_SAFE_INTEGER, minPrice);
       }
 
       return {
-        averagePrice: undefined,
+        marketPrice,
+        maxPrice,
+        minPrice,
+        averagePrice: 0,
         currency: currentData[aSymbol]?.currency,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
         historicalData: historicalDataArray,
-        investment: undefined,
-        marketPrice: currentData[aSymbol]?.marketPrice,
-        maxPrice: undefined,
-        minPrice: undefined,
-        quantity: undefined,
+        investment: 0,
+        quantity: 0,
         symbol: aSymbol,
         transactionCount: undefined
       };
