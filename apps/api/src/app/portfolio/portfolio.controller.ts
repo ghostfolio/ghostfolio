@@ -5,7 +5,6 @@ import {
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import {
-  PortfolioItem,
   PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,

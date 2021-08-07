@@ -3,7 +3,6 @@ import {
   DATE_FORMAT,
   getUtc,
   isGhostfolioScraperApiSymbol,
-  isRakutenRapidApiSymbol,
   resetHours
 } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
