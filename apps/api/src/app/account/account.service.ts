@@ -3,21 +3,19 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Account, Currency, Order, Prisma } from '@prisma/client';
 
-import { RedisCacheService } from '../redis-cache/redis-cache.service';
 import { CashDetails } from './interfaces/cash-details.interface';
 
 @Injectable()
 export class AccountService {
   public constructor(
-    private exchangeRateDataService: ExchangeRateDataService,
-    private readonly redisCacheService: RedisCacheService,
-    private prisma: PrismaService
+    private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly prismaService: PrismaService
   ) {}
 
   public async account(
     accountWhereUniqueInput: Prisma.AccountWhereUniqueInput
   ): Promise<Account | null> {
-    return this.prisma.account.findUnique({
+    return this.prismaService.account.findUnique({
       where: accountWhereUniqueInput
     });
   }
@@ -30,7 +28,7 @@ export class AccountService {
       Order?: Order[];
     }
   > {
-    return this.prisma.account.findUnique({
+    return this.prismaService.account.findUnique({
       include: accountInclude,
       where: accountWhereUniqueInput
     });
@@ -46,7 +44,7 @@ export class AccountService {
   }): Promise<Account[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 
-    return this.prisma.account.findMany({
+    return this.prismaService.account.findMany({
       cursor,
       include,
       orderBy,
@@ -60,7 +58,7 @@ export class AccountService {
     data: Prisma.AccountCreateInput,
     aUserId: string
   ): Promise<Account> {
-    return this.prisma.account.create({
+    return this.prismaService.account.create({
       data
     });
   }
@@ -69,7 +67,7 @@ export class AccountService {
     where: Prisma.AccountWhereUniqueInput,
     aUserId: string
   ): Promise<Account> {
-    return this.prisma.account.delete({
+    return this.prismaService.account.delete({
       where
     });
   }
@@ -103,7 +101,7 @@ export class AccountService {
     aUserId: string
   ): Promise<Account> {
     const { data, where } = params;
-    return this.prisma.account.update({
+    return this.prismaService.account.update({
       data,
       where
     });

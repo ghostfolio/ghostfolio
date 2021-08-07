@@ -15,13 +15,13 @@ export class InfoService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private jwtService: JwtService,
-    private prisma: PrismaService
+    private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService
   ) {}
 
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
-    const platforms = await this.prisma.platform.findMany({
+    const platforms = await this.prismaService.platform.findMany({
       orderBy: { name: 'asc' },
       select: { id: true, name: true }
     });
@@ -63,7 +63,7 @@ export class InfoService {
   }
 
   private async countActiveUsers(aDays: number) {
-    return await this.prisma.user.count({
+    return await this.prismaService.user.count({
       orderBy: {
         Analytics: {
           updatedAt: 'desc'
@@ -116,7 +116,7 @@ export class InfoService {
   }
 
   private async getLastDataGathering() {
-    const lastDataGathering = await this.prisma.property.findUnique({
+    const lastDataGathering = await this.prismaService.property.findUnique({
       where: { key: 'LAST_DATA_GATHERING' }
     });
 
@@ -144,7 +144,7 @@ export class InfoService {
       return undefined;
     }
 
-    const stripeConfig = await this.prisma.property.findUnique({
+    const stripeConfig = await this.prismaService.property.findUnique({
       where: { key: 'STRIPE_CONFIG' }
     });
 

@@ -7,13 +7,13 @@ import { AuthDevice, Prisma } from '@prisma/client';
 export class AuthDeviceService {
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private prisma: PrismaService
+    private readonly prismaService: PrismaService
   ) {}
 
   public async authDevice(
     where: Prisma.AuthDeviceWhereUniqueInput
   ): Promise<AuthDevice | null> {
-    return this.prisma.authDevice.findUnique({
+    return this.prismaService.authDevice.findUnique({
       where
     });
   }
@@ -26,7 +26,7 @@ export class AuthDeviceService {
     orderBy?: Prisma.AuthDeviceOrderByInput;
   }): Promise<AuthDevice[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.authDevice.findMany({
+    return this.prismaService.authDevice.findMany({
       skip,
       take,
       cursor,
@@ -38,7 +38,7 @@ export class AuthDeviceService {
   public async createAuthDevice(
     data: Prisma.AuthDeviceCreateInput
   ): Promise<AuthDevice> {
-    return this.prisma.authDevice.create({
+    return this.prismaService.authDevice.create({
       data
     });
   }
@@ -49,7 +49,7 @@ export class AuthDeviceService {
   }): Promise<AuthDevice> {
     const { data, where } = params;
 
-    return this.prisma.authDevice.update({
+    return this.prismaService.authDevice.update({
       data,
       where
     });
@@ -58,7 +58,7 @@ export class AuthDeviceService {
   public async deleteAuthDevice(
     where: Prisma.AuthDeviceWhereUniqueInput
   ): Promise<AuthDevice> {
-    return this.prisma.authDevice.delete({
+    return this.prismaService.authDevice.delete({
       where
     });
   }

@@ -12,13 +12,13 @@ export class OrderService {
   public constructor(
     private readonly cacheService: CacheService,
     private readonly dataGatheringService: DataGatheringService,
-    private prisma: PrismaService
+    private readonly prismaService: PrismaService
   ) {}
 
   public async order(
     orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
   ): Promise<Order | null> {
-    return this.prisma.order.findUnique({
+    return this.prismaService.order.findUnique({
       where: orderWhereUniqueInput
     });
   }
@@ -33,7 +33,7 @@ export class OrderService {
   }): Promise<OrderWithAccount[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 
-    return this.prisma.order.findMany({
+    return this.prismaService.order.findMany({
       cursor,
       include,
       orderBy,
@@ -61,7 +61,7 @@ export class OrderService {
 
     await this.cacheService.flush();
 
-    return this.prisma.order.create({
+    return this.prismaService.order.create({
       data: {
         ...data,
         isDraft
@@ -72,7 +72,7 @@ export class OrderService {
   public async deleteOrder(
     where: Prisma.OrderWhereUniqueInput
   ): Promise<Order> {
-    return this.prisma.order.delete({
+    return this.prismaService.order.delete({
       where
     });
   }
@@ -123,7 +123,7 @@ export class OrderService {
 
     await this.cacheService.flush();
 
-    return this.prisma.order.update({
+    return this.prismaService.order.update({
       data: {
         ...data,
         isDraft

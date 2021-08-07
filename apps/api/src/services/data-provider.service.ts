@@ -26,11 +26,11 @@ export class DataProviderService {
     private readonly alphaVantageService: AlphaVantageService,
     private readonly configurationService: ConfigurationService,
     private readonly ghostfolioScraperApiService: GhostfolioScraperApiService,
-    private prisma: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly rakutenRapidApiService: RakutenRapidApiService,
     private readonly yahooFinanceService: YahooFinanceService
   ) {
-    this.rakutenRapidApiService?.setPrisma(this.prisma);
+    this.rakutenRapidApiService?.setPrisma(this.prismaService);
   }
 
   public async get(
@@ -112,9 +112,8 @@ export class DataProviderService {
         `','`
       )}') ${granularityQuery} ${rangeQuery} ORDER BY date;`;
 
-      const marketDataByGranularity: MarketData[] = await this.prisma.$queryRaw(
-        queryRaw
-      );
+      const marketDataByGranularity: MarketData[] =
+        await this.prismaService.$queryRaw(queryRaw);
 
       response = marketDataByGranularity.reduce((r, marketData) => {
         const { date, marketPrice, symbol } = marketData;

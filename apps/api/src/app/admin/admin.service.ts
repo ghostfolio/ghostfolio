@@ -7,8 +7,8 @@ import { Currency } from '@prisma/client';
 @Injectable()
 export class AdminService {
   public constructor(
-    private exchangeRateDataService: ExchangeRateDataService,
-    private prisma: PrismaService
+    private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly prismaService: PrismaService
   ) {}
 
   public async get(): Promise<AdminData> {
@@ -61,14 +61,14 @@ export class AdminService {
         }
       ],
       lastDataGathering: await this.getLastDataGathering(),
-      transactionCount: await this.prisma.order.count(),
-      userCount: await this.prisma.user.count(),
+      transactionCount: await this.prismaService.order.count(),
+      userCount: await this.prismaService.user.count(),
       users: await this.getUsersWithAnalytics()
     };
   }
 
   private async getLastDataGathering() {
-    const lastDataGathering = await this.prisma.property.findUnique({
+    const lastDataGathering = await this.prismaService.property.findUnique({
       where: { key: 'LAST_DATA_GATHERING' }
     });
 
@@ -76,9 +76,10 @@ export class AdminService {
       return new Date(lastDataGathering.value);
     }
 
-    const dataGatheringInProgress = await this.prisma.property.findUnique({
-      where: { key: 'LOCKED_DATA_GATHERING' }
-    });
+    const dataGatheringInProgress =
+      await this.prismaService.property.findUnique({
+        where: { key: 'LOCKED_DATA_GATHERING' }
+      });
 
     if (dataGatheringInProgress) {
       return 'IN_PROGRESS';
@@ -88,7 +89,7 @@ export class AdminService {
   }
 
   private async getUsersWithAnalytics() {
-    return await this.prisma.user.findMany({
+    return await this.prismaService.user.findMany({
       orderBy: {
         Analytics: {
           updatedAt: 'desc'

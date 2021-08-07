@@ -11,12 +11,12 @@ export class ExperimentalService {
     private readonly accountService: AccountService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private prisma: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly rulesService: RulesService
   ) {}
 
   public async getBenchmark(aSymbol: string) {
-    return this.prisma.marketData.findMany({
+    return this.prismaService.marketData.findMany({
       orderBy: { date: 'asc' },
       select: { date: true, marketPrice: true },
       where: { symbol: aSymbol }

@@ -4,10 +4,10 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class ImpersonationService {
-  public constructor(private prisma: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async validateImpersonationId(aId = '', aUserId: string) {
-    const accessObject = await this.prisma.access.findFirst({
+    const accessObject = await this.prismaService.access.findFirst({
       where: { GranteeUser: { id: aUserId }, id: aId }
     });
 

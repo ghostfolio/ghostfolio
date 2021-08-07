@@ -23,7 +23,7 @@ import { ScraperConfig } from './interfaces/scraper-config.interface';
 export class GhostfolioScraperApiService implements DataProviderInterface {
   private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
-  public constructor(private prisma: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public canHandle(symbol: string) {
     return isGhostfolioScraperApiSymbol(symbol);
@@ -41,7 +41,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
 
       const scraperConfig = await this.getScraperConfigurationBySymbol(symbol);
 
-      const { marketPrice } = await this.prisma.marketData.findFirst({
+      const { marketPrice } = await this.prismaService.marketData.findFirst({
         orderBy: {
           date: 'desc'
         },
@@ -111,7 +111,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   public async getScraperConfigurations(): Promise<ScraperConfig[]> {
     try {
       const { value: scraperConfigString } =
-        await this.prisma.property.findFirst({
+        await this.prismaService.property.findFirst({
           select: {
             value: true
           },
