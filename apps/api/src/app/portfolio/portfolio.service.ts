@@ -358,9 +358,9 @@ export class PortfolioService {
             (item) => item.symbol === aSymbol
           );
           if (currentSymbol) {
-            currentAveragePrice = currentSymbol.investment
-              .div(currentSymbol.quantity)
-              .toNumber();
+            currentAveragePrice = currentSymbol.quantity.eq(0)
+              ? 0
+              : currentSymbol.investment.div(currentSymbol.quantity).toNumber();
           }
 
           historicalDataArray.push({
@@ -470,9 +470,10 @@ export class PortfolioService {
       startDate
     );
 
-    const symbols = currentPositions.positions.map(
-      (position) => position.symbol
+    const positions = currentPositions.positions.filter(
+      (item) => !item.quantity.eq(0)
     );
+    const symbols = positions.map((position) => position.symbol);
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.get(symbols),
@@ -486,7 +487,7 @@ export class PortfolioService {
 
     return {
       hasErrors: currentPositions.hasErrors,
-      positions: currentPositions.positions.map((position) => {
+      positions: positions.map((position) => {
         return {
           ...position,
           averagePrice: new Big(position.averagePrice).toNumber(),
