@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Restructured the page hierarchy
+
 ### Fixed
 
 - Fixed an issue with the currency conversion of the market price in the position detail dialog

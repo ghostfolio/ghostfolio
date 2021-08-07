@@ -1,0 +1,83 @@
+<div class="container">
+  <h3 class="d-flex justify-content-center mb-3" i18n>Portfolio</h3>
+  <div class="row">
+    <div class="col-xs-12 col-md-6">
+      <mat-card class="mb-3">
+        <h4 i18n>Transactions</h4>
+        <p class="mb-0">Manage your transactions.</p>
+        <p class="text-right">
+          <a
+            color="primary"
+            i18n
+            mat-button
+            [routerLink]="['/portfolio', 'transactions']"
+          >
+            Open Transactions →
+          </a>
+        </p>
+      </mat-card>
+    </div>
+    <div
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
+      class="col-xs-12 col-md-6"
+    >
+      <mat-card class="mb-3">
+        <h4 i18n>Allocations</h4>
+        <p class="mb-0">Check the allocations of your portfolio.</p>
+        <p class="text-right">
+          <a
+            color="primary"
+            i18n
+            mat-button
+            [routerLink]="['/portfolio', 'allocations']"
+          >
+            Open Allocations →
+          </a>
+        </p>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
+      class="col-xs-12 col-md-6"
+    >
+      <mat-card class="mb-3">
+        <h4 i18n>Analysis</h4>
+        <p class="mb-0">Ghostfolio Analysis visualizes your portfolio.</p>
+        <p class="text-right">
+          <a
+            color="primary"
+            i18n
+            mat-button
+            [routerLink]="['/portfolio', 'analysis']"
+          >
+            Open Analysis →
+          </a>
+        </p>
+      </mat-card>
+    </div>
+    <div
+      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
+      class="col-xs-12 col-md-6"
+    >
+      <mat-card class="mb-3">
+        <h4 i18n>X-ray</h4>
+        <p class="mb-0">
+          Ghostfolio X-ray uses static analysis to identify potential issues and
+          risks in your portfolio.
+        </p>
+        <p class="text-right">
+          <a
+            color="primary"
+            i18n
+            mat-button
+            [routerLink]="['/portfolio', 'report']"
+          >
+            Open X-ray →
+          </a>
+        </p>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
-import { ToolsPageComponent } from './tools-page.component';
+import { AllocationsPageComponent } from './allocations-page.component';
 
 const routes: Routes = [
-  { path: '', component: ToolsPageComponent, canActivate: [AuthGuard] }
+  { path: '', component: AllocationsPageComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ToolsPageRoutingModule {}
+export class AllocationsPageRoutingModule {}

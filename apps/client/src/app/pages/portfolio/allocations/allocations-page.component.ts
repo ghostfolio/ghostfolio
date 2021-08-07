@@ -4,22 +4,17 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import {
-  PortfolioItem,
-  PortfolioPosition,
-  User
-} from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import { PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'gf-analysis-page',
-  templateUrl: './analysis-page.html',
-  styleUrls: ['./analysis-page.scss']
+  selector: 'gf-allocations-page',
+  templateUrl: './allocations-page.html',
+  styleUrls: ['./allocations-page.scss']
 })
-export class AnalysisPageComponent implements OnDestroy, OnInit {
+export class AllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {
     [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
   };
@@ -36,7 +31,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     { label: 'Initial', value: 'original' },
     { label: 'Current', value: 'current' }
   ];
-  public investments: InvestmentItem[];
   public portfolioPositions: { [symbol: string]: PortfolioPosition };
   public positions: { [symbol: string]: any };
   public positionsArray: PortfolioPosition[];
@@ -69,15 +63,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
-      });
-
-    this.dataService
-      .fetchInvestments()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.investments = response;
-
-        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService

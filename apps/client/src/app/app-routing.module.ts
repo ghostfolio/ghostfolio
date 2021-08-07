@@ -53,6 +53,41 @@ const routes: Routes = [
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
   {
+    path: 'portfolio',
+    loadChildren: () =>
+      import('./pages/portfolio/portfolio-page.module').then(
+        (m) => m.PortfolioPageModule
+      )
+  },
+  {
+    path: 'portfolio/allocations',
+    loadChildren: () =>
+      import('./pages/portfolio/allocations/allocations-page.module').then(
+        (m) => m.AllocationsPageModule
+      )
+  },
+  {
+    path: 'portfolio/analysis',
+    loadChildren: () =>
+      import('./pages/portfolio/analysis/analysis-page.module').then(
+        (m) => m.AnalysisPageModule
+      )
+  },
+  {
+    path: 'portfolio/report',
+    loadChildren: () =>
+      import('./pages/portfolio/report/report-page.module').then(
+        (m) => m.ReportPageModule
+      )
+  },
+  {
+    path: 'portfolio/transactions',
+    loadChildren: () =>
+      import('./pages/portfolio/transactions/transactions-page.module').then(
+        (m) => m.TransactionsPageModule
+      )
+  },
+  {
     path: 'pricing',
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
@@ -78,32 +113,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/landing/landing-page.module').then(
         (m) => m.LandingPageModule
-      )
-  },
-  {
-    path: 'tools',
-    loadChildren: () =>
-      import('./pages/tools/tools-page.module').then((m) => m.ToolsPageModule)
-  },
-  {
-    path: 'tools/analysis',
-    loadChildren: () =>
-      import('./pages/tools/analysis/analysis-page.module').then(
-        (m) => m.AnalysisPageModule
-      )
-  },
-  {
-    path: 'tools/report',
-    loadChildren: () =>
-      import('./pages/tools/report/report-page.module').then(
-        (m) => m.ReportPageModule
-      )
-  },
-  {
-    path: 'transactions',
-    loadChildren: () =>
-      import('./pages/transactions/transactions-page.module').then(
-        (m) => m.TransactionsPageModule
       )
   },
   {

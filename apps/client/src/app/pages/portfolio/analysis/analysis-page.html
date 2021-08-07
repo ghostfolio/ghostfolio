@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="investment-chart row">
+    <div class="col-lg">
+      <h3 class="d-flex justify-content-center mb-3" i18n>Analysis</h3>
+      <mat-card class="mb-3">
+        <mat-card-header>
+          <mat-card-title class="align-items-center d-flex" i18n
+            >Timeline</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <gf-investment-chart
+            class="h-100"
+            [investments]="investments"
+          ></gf-investment-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
