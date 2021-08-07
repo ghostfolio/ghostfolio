@@ -18,7 +18,7 @@ export class UserService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private prisma: PrismaService
+    private readonly prismaService: PrismaService
   ) {}
 
   public async getUser({
@@ -29,7 +29,7 @@ export class UserService {
     Settings,
     subscription
   }: UserWithSettings): Promise<IUser> {
-    const access = await this.prisma.access.findMany({
+    const access = await this.prismaService.access.findMany({
       include: {
         User: true
       },
@@ -60,7 +60,7 @@ export class UserService {
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
-    const userFromDatabase = await this.prisma.user.findUnique({
+    const userFromDatabase = await this.prismaService.user.findUnique({
       include: { Account: true, Settings: true, Subscription: true },
       where: userWhereUniqueInput
     });
@@ -129,7 +129,7 @@ export class UserService {
     orderBy?: Prisma.UserOrderByInput;
   }): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.user.findMany({
+    return this.prismaService.user.findMany({
       skip,
       take,
       cursor,
@@ -146,7 +146,7 @@ export class UserService {
   }
 
   public async createUser(data?: Prisma.UserCreateInput): Promise<User> {
-    let user = await this.prisma.user.create({
+    let user = await this.prismaService.user.create({
       data: {
         ...data,
         Account: {
@@ -169,7 +169,7 @@ export class UserService {
         process.env.ACCESS_TOKEN_SALT
       );
 
-      user = await this.prisma.user.update({
+      user = await this.prismaService.user.update({
         data: { accessToken: hashedAccessToken },
         where: { id: user.id }
       });
@@ -185,36 +185,36 @@ export class UserService {
     data: Prisma.UserUpdateInput;
   }): Promise<User> {
     const { where, data } = params;
-    return this.prisma.user.update({
+    return this.prismaService.user.update({
       data,
       where
     });
   }
 
   public async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    await this.prisma.access.deleteMany({
+    await this.prismaService.access.deleteMany({
       where: { OR: [{ granteeUserId: where.id }, { userId: where.id }] }
     });
 
-    await this.prisma.account.deleteMany({
+    await this.prismaService.account.deleteMany({
       where: { userId: where.id }
     });
 
-    await this.prisma.analytics.delete({
+    await this.prismaService.analytics.delete({
       where: { userId: where.id }
     });
 
-    await this.prisma.order.deleteMany({
+    await this.prismaService.order.deleteMany({
       where: { userId: where.id }
     });
 
     try {
-      await this.prisma.settings.delete({
+      await this.prismaService.settings.delete({
         where: { userId: where.id }
       });
     } catch {}
 
-    return this.prisma.user.delete({
+    return this.prismaService.user.delete({
       where
     });
   }
@@ -224,7 +224,7 @@ export class UserService {
     userId,
     viewMode
   }: UserSettingsParams) {
-    await this.prisma.settings.upsert({
+    await this.prismaService.settings.upsert({
       create: {
         currency,
         User: {

@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AccessService {
-  public constructor(private prisma: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async accesses(params: {
     include?: Prisma.AccessInclude;
@@ -17,7 +17,7 @@ export class AccessService {
   }): Promise<AccessWithGranteeUser[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 
-    return this.prisma.access.findMany({
+    return this.prismaService.access.findMany({
       cursor,
       include,
       orderBy,

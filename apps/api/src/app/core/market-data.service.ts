@@ -7,7 +7,7 @@ import { DateQuery } from './interfaces/date-query.interface';
 
 @Injectable()
 export class MarketDataService {
-  public constructor(private prisma: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async get({
     date,
@@ -16,7 +16,7 @@ export class MarketDataService {
     date: Date;
     symbol: string;
   }): Promise<MarketData> {
-    return await this.prisma.marketData.findFirst({
+    return await this.prismaService.marketData.findFirst({
       where: {
         symbol,
         date: resetHours(date)
@@ -31,7 +31,7 @@ export class MarketDataService {
     dateQuery: DateQuery;
     symbols: string[];
   }): Promise<MarketData[]> {
-    return await this.prisma.marketData.findMany({
+    return await this.prismaService.marketData.findMany({
       orderBy: [
         {
           date: 'asc'

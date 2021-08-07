@@ -9,12 +9,12 @@ import { continents, countries } from 'countries-list';
 
 @Injectable()
 export class SymbolProfileService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   public async getSymbolProfiles(
     symbols: string[]
   ): Promise<EnhancedSymbolProfile[]> {
-    return this.prisma.symbolProfile
+    return this.prismaService.symbolProfile
       .findMany({
         where: {
           symbol: {

@@ -30,7 +30,7 @@ export class DataGatheringService {
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly ghostfolioScraperApi: GhostfolioScraperApiService,
-    private prisma: PrismaService
+    private readonly prismaService: PrismaService
   ) {}
 
   public async gather7Days() {
@@ -40,7 +40,7 @@ export class DataGatheringService {
       console.log('7d data gathering has been started.');
       console.time('7d-data-gathering');
 
-      await this.prisma.property.create({
+      await this.prismaService.property.create({
         data: {
           key: 'LOCKED_DATA_GATHERING',
           value: new Date().toISOString()
@@ -52,7 +52,7 @@ export class DataGatheringService {
       try {
         await this.gatherSymbols(symbols);
 
-        await this.prisma.property.upsert({
+        await this.prismaService.property.upsert({
           create: {
             key: 'LAST_DATA_GATHERING',
             value: new Date().toISOString()
@@ -64,7 +64,7 @@ export class DataGatheringService {
         console.error(error);
       }
 
-      await this.prisma.property.delete({
+      await this.prismaService.property.delete({
         where: {
           key: 'LOCKED_DATA_GATHERING'
         }
@@ -76,7 +76,7 @@ export class DataGatheringService {
   }
 
   public async gatherMax() {
-    const isDataGatheringLocked = await this.prisma.property.findUnique({
+    const isDataGatheringLocked = await this.prismaService.property.findUnique({
       where: { key: 'LOCKED_DATA_GATHERING' }
     });
 
@@ -84,7 +84,7 @@ export class DataGatheringService {
       console.log('Max data gathering has been started.');
       console.time('max-data-gathering');
 
-      await this.prisma.property.create({
+      await this.prismaService.property.create({
         data: {
           key: 'LOCKED_DATA_GATHERING',
           value: new Date().toISOString()
@@ -96,7 +96,7 @@ export class DataGatheringService {
       try {
         await this.gatherSymbols(symbols);
 
-        await this.prisma.property.upsert({
+        await this.prismaService.property.upsert({
           create: {
             key: 'LAST_DATA_GATHERING',
             value: new Date().toISOString()
@@ -108,7 +108,7 @@ export class DataGatheringService {
         console.error(error);
       }
 
-      await this.prisma.property.delete({
+      await this.prismaService.property.delete({
         where: {
           key: 'LOCKED_DATA_GATHERING'
         }
@@ -138,7 +138,7 @@ export class DataGatheringService {
       currentData
     )) {
       try {
-        await this.prisma.symbolProfile.upsert({
+        await this.prismaService.symbolProfile.upsert({
           create: {
             currency,
             dataSource,
@@ -202,7 +202,7 @@ export class DataGatheringService {
           }
 
           try {
-            await this.prisma.marketData.create({
+            await this.prismaService.marketData.create({
               data: {
                 symbol,
                 date: currentDate,
@@ -270,7 +270,7 @@ export class DataGatheringService {
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
-    const distinctOrders = await this.prisma.order.findMany({
+    const distinctOrders = await this.prismaService.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
       select: { dataSource: true, symbol: true },
@@ -331,7 +331,7 @@ export class DataGatheringService {
       }
     );
 
-    const distinctOrders = await this.prisma.order.findMany({
+    const distinctOrders = await this.prismaService.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ date: 'asc' }],
       select: { dataSource: true, date: true, symbol: true },
@@ -353,7 +353,7 @@ export class DataGatheringService {
   private async getSymbolsProfileData(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
-    const distinctOrders = await this.prisma.order.findMany({
+    const distinctOrders = await this.prismaService.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
       select: { dataSource: true, symbol: true }
@@ -370,11 +370,11 @@ export class DataGatheringService {
   }
 
   private async isDataGatheringNeeded() {
-    const lastDataGathering = await this.prisma.property.findUnique({
+    const lastDataGathering = await this.prismaService.property.findUnique({
       where: { key: 'LAST_DATA_GATHERING' }
     });
 
-    const isDataGatheringLocked = await this.prisma.property.findUnique({
+    const isDataGatheringLocked = await this.prismaService.property.findUnique({
       where: { key: 'LOCKED_DATA_GATHERING' }
     });
 

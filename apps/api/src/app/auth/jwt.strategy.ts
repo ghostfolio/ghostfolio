@@ -10,7 +10,7 @@ import { UserService } from '../user/user.service';
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   public constructor(
     readonly configurationService: ConfigurationService,
-    private prisma: PrismaService,
+    private readonly prismaService: PrismaService,
     private readonly userService: UserService
   ) {
     super({
@@ -24,7 +24,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       const user = await this.userService.user({ id });
 
       if (user) {
-        await this.prisma.analytics.upsert({
+        await this.prismaService.analytics.upsert({
           create: { User: { connect: { id: user.id } } },
           update: { activityCount: { increment: 1 }, updatedAt: new Date() },
           where: { userId: user.id }

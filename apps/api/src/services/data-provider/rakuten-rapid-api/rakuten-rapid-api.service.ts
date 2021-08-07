@@ -23,7 +23,7 @@ import { PrismaService } from '../../prisma.service';
 export class RakutenRapidApiService implements DataProviderInterface {
   public static FEAR_AND_GREED_INDEX_NAME = 'Fear & Greed Index';
 
-  private prisma: PrismaService;
+  private prismaService: PrismaService;
 
   public constructor(
     private readonly configurationService: ConfigurationService
@@ -89,7 +89,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           // TODO: can be removed after all data from the last year has been gathered
           // (introduced on 27.03.2021)
 
-          await this.prisma.marketData.create({
+          await this.prismaService.marketData.create({
             data: {
               symbol,
               date: subWeeks(getToday(), 1),
@@ -97,7 +97,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
             }
           });
 
-          await this.prisma.marketData.create({
+          await this.prismaService.marketData.create({
             data: {
               symbol,
               date: subMonths(getToday(), 1),
@@ -105,7 +105,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
             }
           });
 
-          await this.prisma.marketData.create({
+          await this.prismaService.marketData.create({
             data: {
               symbol,
               date: subYears(getToday(), 1),
@@ -134,7 +134,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
   }
 
   public setPrisma(aPrismaService: PrismaService) {
-    this.prisma = aPrismaService;
+    this.prismaService = aPrismaService;
   }
 
   private async getFearAndGreedIndex(): Promise<{

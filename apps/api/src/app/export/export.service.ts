@@ -5,10 +5,10 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ExportService {
-  public constructor(private prisma: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async export({ userId }: { userId: string }): Promise<Export> {
-    const orders = await this.prisma.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       orderBy: { date: 'desc' },
       select: {
         currency: true,

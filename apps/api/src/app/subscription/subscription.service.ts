@@ -10,7 +10,7 @@ export class SubscriptionService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private prisma: PrismaService
+    private readonly prismaService: PrismaService
   ) {
     this.stripe = new Stripe(
       this.configurationService.get('STRIPE_SECRET_KEY'),
@@ -68,7 +68,7 @@ export class SubscriptionService {
         aCheckoutSessionId
       );
 
-      await this.prisma.subscription.create({
+      await this.prismaService.subscription.create({
         data: {
           expiresAt: addDays(new Date(), 365),
           User: {
