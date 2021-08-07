@@ -154,8 +154,8 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  private isInFuture(aContext: any, aValue: any) {
-    return isAfter(new Date(aContext?.p0?.parsed?.x), new Date())
+  private isInFuture<T>(aContext: any, aValue: T) {
+    return isAfter(new Date(aContext?.p1?.parsed?.x), new Date())
       ? aValue
       : undefined;
   }

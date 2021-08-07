@@ -21,6 +21,6 @@ export class CacheController {
   public async flushCache(): Promise<void> {
     this.redisCacheService.reset();
 
-    return this.cacheService.flush(this.request.user.id);
+    return this.cacheService.flush();
   }
 }
