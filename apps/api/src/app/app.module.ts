@@ -31,6 +31,7 @@ import { UserModule } from './user/user.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 
 @Module({
   imports: [
@@ -68,10 +69,11 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration.modu
     SymbolModule,
     UserModule,
     DataProviderModule,
+    DataGatheringModule,
     PrismaModule,
     ConfigurationModule
   ],
   controllers: [AppController],
-  providers: [CronService, DataGatheringService, ExchangeRateDataService]
+  providers: [CronService, ExchangeRateDataService]
 })
 export class AppModule {}
