@@ -1,10 +1,8 @@
-import {
-  MarketState,
-  Type
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import { Currency } from '@prisma/client';
+import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
+import { AssetClass, Currency } from '@prisma/client';
 
 export interface Position {
+  assetClass: AssetClass;
   averagePrice: number;
   currency: Currency;
   firstBuyDate: string;
@@ -18,6 +16,5 @@ export interface Position {
   quantity: number;
   symbol: string;
   transactionCount: number;
-  type?: Type;
   url?: string;
 }

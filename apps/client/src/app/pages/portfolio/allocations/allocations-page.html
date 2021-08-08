@@ -15,28 +15,6 @@
     <div class="col-md-6">
       <mat-card class="mb-3">
         <mat-card-header class="w-100">
-          <mat-card-title i18n>By Type</mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
-        </mat-card-header>
-        <mat-card-content>
-          <gf-portfolio-proportion-chart
-            key="type"
-            [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="true"
-            [locale]="user?.settings?.locale"
-            [positions]="positions"
-          ></gf-portfolio-proportion-chart>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-6">
-      <mat-card class="mb-3">
-        <mat-card-header class="w-100">
           <mat-card-title i18n>By Account</mat-card-title>
           <gf-toggle
             [defaultValue]="period"
@@ -59,7 +37,7 @@
     <div class="col-md-6">
       <mat-card class="mb-3">
         <mat-card-header class="w-100">
-          <mat-card-title i18n>By Currency</mat-card-title>
+          <mat-card-title i18n>By Asset Class</mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -69,7 +47,7 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="currency"
+            key="assetClass"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="true"
             [locale]="user?.settings?.locale"
@@ -81,7 +59,7 @@
     <div class="col-md-6">
       <mat-card class="mb-3">
         <mat-card-header class="w-100">
-          <mat-card-title i18n>By Exchange</mat-card-title>
+          <mat-card-title i18n>By Currency</mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -91,7 +69,7 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="exchange"
+            key="currency"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="true"
             [locale]="user?.settings?.locale"

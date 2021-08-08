@@ -116,14 +116,15 @@ model Settings {
 }
 
 model SymbolProfile {
+  assetClass AssetClass?
   countries  Json?
-  createdAt  DateTime   @default(now())
+  createdAt  DateTime    @default(now())
   currency   Currency?
   dataSource DataSource
-  id         String     @id @default(uuid())
+  id         String      @id @default(uuid())
   name       String?
   Order      Order[]
-  updatedAt  DateTime   @updatedAt
+  updatedAt  DateTime    @updatedAt
   sectors    Json?
   symbol     String
 
@@ -164,6 +165,12 @@ model User {
 enum AccountType {
   CASH
   SECURITIES
+}
+
+enum AssetClass {
+  CASH
+  COMMODITY
+  EQUITY
 }
 
 enum Currency {

@@ -1,8 +1,9 @@
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
-import { Currency, DataSource } from '@prisma/client';
+import { AssetClass, Currency, DataSource } from '@prisma/client';
 
 export interface EnhancedSymbolProfile {
+  assetClass: AssetClass;
   createdAt: Date;
   currency: Currency | null;
   dataSource: DataSource;

@@ -8,7 +8,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { AssetClass, DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
@@ -17,8 +17,7 @@ import { DataProviderInterface } from '../../interfaces/data-provider.interface'
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
-  MarketState,
-  Type
+  MarketState
 } from '../../interfaces/interfaces';
 import {
   IYahooFinanceHistoricalResponse,
@@ -61,6 +60,7 @@ export class YahooFinanceService implements DataProviderInterface {
         const symbol = convertFromYahooSymbol(yahooSymbol);
 
         response[symbol] = {
+          assetClass: this.parseAssetClass(value.price?.quoteType),
           currency: parseCurrency(value.price?.currency),
           dataSource: DataSource.YAHOO,
           exchange: this.parseExchange(value.price?.exchangeName),
@@ -69,8 +69,7 @@ export class YahooFinanceService implements DataProviderInterface {
               ? MarketState.open
               : MarketState.closed,
           marketPrice: value.price?.regularMarketPrice || 0,
-          name: value.price?.longName || value.price?.shortName || symbol,
-          type: this.parseType(this.getType(symbol, value))
+          name: value.price?.longName || value.price?.shortName || symbol
         };
 
         const url = value.summaryProfile?.website;
@@ -203,14 +202,20 @@ export class YahooFinanceService implements DataProviderInterface {
     return aSymbol;
   }
 
-  private getType(aSymbol: string, aValue: IYahooFinanceQuoteResponse): Type {
-    if (isCrypto(aSymbol)) {
-      return Type.Cryptocurrency;
-    } else if (aValue.price?.quoteType.toLowerCase() === 'equity') {
-      return Type.Stock;
+  private parseAssetClass(aString: string): AssetClass {
+    let assetClass: AssetClass;
+
+    switch (aString?.toLowerCase()) {
+      case 'cryptocurrency':
+        assetClass = AssetClass.CASH;
+        break;
+      case 'equity':
+      case 'etf':
+        assetClass = AssetClass.EQUITY;
+        break;
     }
 
-    return aValue.price?.quoteType.toLowerCase();
+    return assetClass;
   }
 
   private parseExchange(aString: string): string {
@@ -219,18 +224,6 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return aString;
-  }
-
-  private parseType(aString: string): Type {
-    if (aString?.toLowerCase() === 'cryptocurrency') {
-      return Type.Cryptocurrency;
-    } else if (aString?.toLowerCase() === 'etf') {
-      return Type.ETF;
-    } else if (aString?.toLowerCase() === 'stock') {
-      return Type.Stock;
-    }
-
-    return Type.Unknown;
   }
 }
 
