@@ -88,7 +88,10 @@ export class ExchangeRateDataService {
       return factor * aValue;
     }
 
-    // Fallback if currencies are not available
+    // Fallback with error, if currencies are not available
+    console.error(
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
+    );
     return aValue;
   }
 
