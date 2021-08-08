@@ -20,6 +20,7 @@ import { ImpersonationModule } from '@ghostfolio/api/services/impersonation.modu
     PrismaModule
   ],
   controllers: [OrderController],
-  providers: [CacheService, OrderService]
+  providers: [CacheService, OrderService],
+  exports: [OrderService]
 })
 export class OrderModule {}

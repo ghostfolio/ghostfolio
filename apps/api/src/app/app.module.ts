@@ -5,19 +5,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
-
-import { ConfigurationService } from '../services/configuration.service';
 import { CronService } from '../services/cron.service';
-import { DataGatheringService } from '../services/data-gathering.service';
-import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
-import { PrismaService } from '../services/prisma.service';
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
-import { CoreModule } from './core/core.module';
 import { ExperimentalModule } from './experimental/experimental.module';
 import { ExportModule } from './export/export.module';
 import { ImportModule } from './import/import.module';
@@ -43,7 +37,6 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
     AuthModule,
     CacheModule,
     ConfigModule.forRoot(),
-    CoreModule,
     ExperimentalModule,
     ExportModule,
     ImportModule,

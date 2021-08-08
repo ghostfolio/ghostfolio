@@ -1,4 +1,4 @@
-import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
+import { CurrentRateService } from './current-rate.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { Currency, MarketData } from '@prisma/client';
