@@ -2,6 +2,7 @@ import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
 import { format } from 'date-fns';
+import { isNumber } from 'lodash';
 
 import { DataProviderService } from './data-provider.service';
 
@@ -83,7 +84,15 @@ export class ExchangeRateDataService {
       factor = this.currencies[`${aFromCurrency}${aToCurrency}`];
     }
 
-    return factor * aValue;
+    if (isNumber(factor)) {
+      return factor * aValue;
+    }
+
+    // Fallback with error, if currencies are not available
+    console.error(
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
+    );
+    return aValue;
   }
 
   private addPairs(aCurrency1: Currency, aCurrency2: Currency) {

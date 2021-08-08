@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Added a fallback if the exchange rate service has not been initialized correctly
+
+## Unreleased
+
 ### Changed
 
 - Hid the pagination of tabs
