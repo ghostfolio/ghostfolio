@@ -250,6 +250,34 @@ export class DataGatheringService {
     });
   }
 
+  public async getIsInProgress() {
+    return await this.prismaService.property.findUnique({
+      where: { key: 'LOCKED_DATA_GATHERING' }
+    });
+  }
+
+  public async getLastDataGathering() {
+    const lastDataGathering = await this.prismaService.property.findUnique({
+      where: { key: 'LAST_DATA_GATHERING' }
+    });
+
+    if (lastDataGathering?.value) {
+      return new Date(lastDataGathering.value);
+    }
+
+    return undefined;
+  }
+
+  public async reset() {
+    console.log('Data gathering has been reset.');
+
+    await this.prismaService.property.deleteMany({
+      where: {
+        OR: [{ key: 'LAST_DATA_GATHERING' }, { key: 'LOCKED_DATA_GATHERING' }]
+      }
+    });
+  }
+
   private getBenchmarksToGather(startDate: Date): IDataGatheringItem[] {
     const benchmarksToGather = benchmarks.map(({ dataSource, symbol }) => {
       return {
@@ -373,18 +401,13 @@ export class DataGatheringService {
   }
 
   private async isDataGatheringNeeded() {
-    const lastDataGathering = await this.prismaService.property.findUnique({
-      where: { key: 'LAST_DATA_GATHERING' }
-    });
+    const lastDataGathering = await this.getLastDataGathering();
 
     const isDataGatheringLocked = await this.prismaService.property.findUnique({
       where: { key: 'LOCKED_DATA_GATHERING' }
     });
 
-    const diffInHours = differenceInHours(
-      new Date(),
-      new Date(lastDataGathering?.value)
-    );
+    const diffInHours = differenceInHours(new Date(), lastDataGathering);
 
     return (diffInHours >= 1 || !lastDataGathering) && !isDataGatheringLocked;
   }

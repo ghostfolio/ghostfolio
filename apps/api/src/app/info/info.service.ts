@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
@@ -15,6 +16,7 @@ export class InfoService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly dataGatheringService: DataGatheringService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService
   ) {}
@@ -116,11 +118,10 @@ export class InfoService {
   }
 
   private async getLastDataGathering() {
-    const lastDataGathering = await this.prismaService.property.findUnique({
-      where: { key: 'LAST_DATA_GATHERING' }
-    });
+    const lastDataGathering =
+      await this.dataGatheringService.getLastDataGathering();
 
-    return lastDataGathering?.value ? new Date(lastDataGathering.value) : null;
+    return lastDataGathering ?? null;
   }
 
   private async getStatistics() {
