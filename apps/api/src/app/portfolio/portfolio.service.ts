@@ -20,7 +20,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
-import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { RulesService } from './rules.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';

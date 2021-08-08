@@ -1,6 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
-import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { Module } from '@nestjs/common';
 
 import { ExperimentalController } from './experimental.controller';
@@ -19,6 +18,6 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
     PrismaModule
   ],
   controllers: [ExperimentalController],
-  providers: [AccountService, ExperimentalService, RulesService]
+  providers: [AccountService, ExperimentalService]
 })
 export class ExperimentalModule {}

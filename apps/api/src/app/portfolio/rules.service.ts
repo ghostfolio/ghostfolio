@@ -2,7 +2,7 @@ import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.in
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
 
-import { Rule } from '../models/rule';
+import { Rule } from '../../models/rule';
 
 @Injectable()
 export class RulesService {

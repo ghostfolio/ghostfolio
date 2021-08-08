@@ -5,7 +5,7 @@ import { MarketDataService } from '@ghostfolio/api/app/core/market-data.service'
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { RulesService } from './rules.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { Module } from '@nestjs/common';
 
