@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the data gathering handling on server restart
 - Respected the cash balance on the allocations page
+- Eliminated the name from the scraper configuration
 
 ### Fixed
 
