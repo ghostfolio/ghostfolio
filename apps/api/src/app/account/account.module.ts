@@ -1,6 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
-import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
@@ -14,13 +13,11 @@ import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
 
 @Module({
-  imports: [RedisCacheModule],
+  imports: [RedisCacheModule, DataProviderModule],
   controllers: [AccountController],
   providers: [
     AccountService,
-    AlphaVantageService,
     ConfigurationService,
-    DataProviderService,
     ExchangeRateDataService,
     GhostfolioScraperApiService,
     ImpersonationService,

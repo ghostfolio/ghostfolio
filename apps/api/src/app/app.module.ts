@@ -9,11 +9,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigurationService } from '../services/configuration.service';
 import { CronService } from '../services/cron.service';
 import { DataGatheringService } from '../services/data-gathering.service';
-import { DataProviderService } from '../services/data-provider.service';
-import { AlphaVantageService } from '../services/data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from '../services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '../services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '../services/data-provider/yahoo-finance/yahoo-finance.service';
 import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { PrismaService } from '../services/prisma.service';
 import { AccessModule } from './access/access.module';
@@ -33,6 +28,9 @@ import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 
 @Module({
   imports: [
@@ -68,20 +66,12 @@ import { UserModule } from './user/user.module';
     }),
     SubscriptionModule,
     SymbolModule,
-    UserModule
+    UserModule,
+    DataProviderModule,
+    PrismaModule,
+    ConfigurationModule
   ],
   controllers: [AppController],
-  providers: [
-    AlphaVantageService,
-    ConfigurationService,
-    CronService,
-    DataGatheringService,
-    DataProviderService,
-    ExchangeRateDataService,
-    GhostfolioScraperApiService,
-    PrismaService,
-    RakutenRapidApiService,
-    YahooFinanceService
-  ]
+  providers: [CronService, DataGatheringService, ExchangeRateDataService]
 })
 export class AppModule {}

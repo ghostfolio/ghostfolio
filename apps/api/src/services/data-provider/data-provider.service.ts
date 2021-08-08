@@ -9,17 +9,17 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 
-import { ConfigurationService } from './configuration.service';
-import { AlphaVantageService } from './data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from './data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from './data-provider/yahoo-finance/yahoo-finance.service';
+import { ConfigurationService } from '../configuration.service';
+import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
+import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
+import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
+import { YahooFinanceService } from './yahoo-finance/yahoo-finance.service';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse
-} from './interfaces/interfaces';
-import { PrismaService } from './prisma.service';
+} from '../interfaces/interfaces';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class DataProviderService {
