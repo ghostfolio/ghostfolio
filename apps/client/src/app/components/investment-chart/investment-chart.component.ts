@@ -73,7 +73,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
       const lastItem = this.investments[this.investments.length - 1];
       this.investments.push({
         ...lastItem,
-        date: addMonths(parseISO(lastItem.date), 3).toISOString()
+        date: addMonths(new Date(), 3).toISOString()
       });
     }
 
