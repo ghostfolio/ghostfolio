@@ -83,10 +83,10 @@
     *matRowDef="let row; columns: displayedColumns"
     mat-row
     [ngClass]="{
-      'cursor-pointer': !this.ignoreTypes.includes(row.type)
+      'cursor-pointer': !this.ignoreAssetClasses.includes(row.assetClass)
     }"
     (click)="
-      !this.ignoreTypes.includes(row.type) &&
+      !this.ignoreAssetClasses.includes(row.assetClass) &&
         onOpenPositionDialog({ symbol: row.symbol, title: row.name })
     "
   ></tr>

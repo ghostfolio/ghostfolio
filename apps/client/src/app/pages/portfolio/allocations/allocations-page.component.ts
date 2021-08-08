@@ -116,9 +116,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
     for (const [symbol, position] of Object.entries(aPortfolioPositions)) {
       this.positions[symbol] = {
+        assetClass: position.assetClass,
         currency: position.currency,
         exchange: position.exchange,
-        type: position.type,
         value:
           aPeriod === 'original'
             ? position.allocationInvestment

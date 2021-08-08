@@ -10,4 +10,4 @@ import { PortfolioProportionChartComponent } from './portfolio-proportion-chart.
   imports: [CommonModule, NgxSkeletonLoaderModule],
   providers: []
 })
-export class PortfolioProportionChartModule {}
+export class GfPortfolioProportionChartModule {}

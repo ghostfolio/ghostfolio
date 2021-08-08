@@ -38,12 +38,7 @@ import {
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import {
-  Currency,
-  DataSource,
-  Prisma,
-  Type as TypeOfOrder
-} from '@prisma/client';
+import { Currency, DataSource, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
   endOfToday,
@@ -239,6 +234,7 @@ export class PortfolioService {
         allocationInvestment: item.investment
           .div(currentPositions.totalInvestment)
           .toNumber(),
+        assetClass: symbolProfile.assetClass,
         countries: symbolProfile.countries,
         currency: item.currency,
         exchange: dataProviderResponse.exchange,
@@ -252,7 +248,6 @@ export class PortfolioService {
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
         transactionCount: item.transactionCount,
-        type: dataProviderResponse.type,
         value: value.toNumber()
       };
     }
@@ -498,6 +493,7 @@ export class PortfolioService {
       positions: positions.map((position) => {
         return {
           ...position,
+          assetClass: symbolProfileMap[position.symbol].assetClass,
           averagePrice: new Big(position.averagePrice).toNumber(),
           grossPerformance: position.grossPerformance?.toNumber() ?? null,
           grossPerformancePercentage:
