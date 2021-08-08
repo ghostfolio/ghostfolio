@@ -42,7 +42,7 @@ export interface IDataProviderResponse {
   marketChangePercent?: number;
   marketPrice: number;
   marketState: MarketState;
-  name: string;
+  name?: string;
   url?: string;
 }
 
