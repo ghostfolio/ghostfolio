@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hid the pagination of tabs
 - Improved the support for future transactions (drafts)
+- Optimized the accounts table for mobile
 - Upgraded `chart.js` from version `3.3.2` to `3.5.0`
 
 ### Todo
