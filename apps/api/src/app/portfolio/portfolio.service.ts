@@ -1,4 +1,4 @@
-import { CashDetails } from '@ghostfolio/api/account/interfaces/cash-details.interface';
+import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
