@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the data gathering handling on server restart
+- Respected the cash balance on the allocations page
+
+### Fixed
+
+- Fixed hidden cryptocurrency holdings
 
 ## 1.35.0 - 08.08.2021
 

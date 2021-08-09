@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Position } from '@ghostfolio/common/interfaces';
-import { AssetClass } from '@prisma/client';
 
 @Component({
   selector: 'gf-positions',
@@ -26,8 +25,6 @@ export class PositionsComponent implements OnChanges, OnInit {
   public positionsRest: Position[] = [];
   public positionsWithPriority: Position[] = [];
 
-  private ignoreAssetClasses = [AssetClass.CASH.toString()];
-
   public constructor() {}
 
   public ngOnInit() {}
@@ -44,10 +41,6 @@ export class PositionsComponent implements OnChanges, OnInit {
       this.positionsWithPriority = [];
 
       for (const portfolioPosition of this.positions) {
-        if (this.ignoreAssetClasses.includes(portfolioPosition.assetClass)) {
-          continue;
-        }
-
         if (
           portfolioPosition.marketState === MarketState.open ||
           this.range !== '1d'
