@@ -265,6 +265,7 @@ export class PortfolioService {
       };
     }
 
+    // TODO: Add a cash position for each currency
     result[ghostfolioCashSymbol] = await this.getCashPosition({
       cashDetails,
       investment: totalInvestment,
