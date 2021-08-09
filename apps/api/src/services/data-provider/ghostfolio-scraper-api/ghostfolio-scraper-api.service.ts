@@ -12,6 +12,7 @@ import { format } from 'date-fns';
 
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
 import {
+  IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
   MarketState
@@ -55,8 +56,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
           marketPrice,
           currency: scraperConfig?.currency,
           dataSource: DataSource.GHOSTFOLIO,
-          marketState: MarketState.delayed,
-          name: scraperConfig?.name
+          marketState: MarketState.delayed
         }
       };
     } catch (error) {
@@ -64,6 +64,25 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
 
     return {};
+  }
+
+  public async getCustomSymbolsToGather(
+    startDate?: Date
+  ): Promise<IDataGatheringItem[]> {
+    const ghostfolioSymbolProfiles =
+      await this.prismaService.symbolProfile.findMany({
+        where: {
+          dataSource: DataSource.GHOSTFOLIO
+        }
+      });
+
+    return ghostfolioSymbolProfiles.map(({ dataSource, symbol }) => {
+      return {
+        dataSource,
+        symbol,
+        date: startDate
+      };
+    });
   }
 
   public async getHistorical(

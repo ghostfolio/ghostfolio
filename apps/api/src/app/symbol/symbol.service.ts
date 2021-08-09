@@ -1,6 +1,5 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
-import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { convertFromYahooSymbol } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Currency, DataSource } from '@prisma/client';
 
@@ -11,7 +10,7 @@ import { SymbolItem } from './interfaces/symbol-item.interface';
 export class SymbolService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly ghostfolioScraperApiService: GhostfolioScraperApiService
+    private readonly prismaService: PrismaService
   ) {}
 
   public async get(aSymbol: string): Promise<SymbolItem> {
@@ -37,16 +36,28 @@ export class SymbolService {
       results.items = items;
 
       // Add custom symbols
-      const scraperConfigurations = await this.ghostfolioScraperApiService.getScraperConfigurations();
-      scraperConfigurations.forEach((scraperConfiguration) => {
-        if (scraperConfiguration.name.toLowerCase().startsWith(aQuery)) {
-          results.items.push({
-            dataSource: DataSource.GHOSTFOLIO,
-            name: scraperConfiguration.name,
-            symbol: scraperConfiguration.symbol
-          });
-        }
-      });
+      const ghostfolioSymbolProfiles =
+        await this.prismaService.symbolProfile.findMany({
+          select: {
+            dataSource: true,
+            name: true,
+            symbol: true
+          },
+          where: {
+            AND: [
+              {
+                dataSource: DataSource.GHOSTFOLIO,
+                name: {
+                  startsWith: aQuery
+                }
+              }
+            ]
+          }
+        });
+
+      for (const ghostfolioSymbolProfile of ghostfolioSymbolProfiles) {
+        results.items.push(ghostfolioSymbolProfile);
+      }
 
       return results;
     } catch (error) {

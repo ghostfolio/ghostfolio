@@ -333,9 +333,8 @@ export class DataGatheringService {
       }
     );
 
-    const customSymbolsToGather = await this.getCustomSymbolsToGather(
-      startDate
-    );
+    const customSymbolsToGather =
+      await this.ghostfolioScraperApi.getCustomSymbolsToGather(startDate);
 
     return [
       ...this.getBenchmarksToGather(startDate),
@@ -348,9 +347,8 @@ export class DataGatheringService {
   private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
     const startDate = new Date(getUtc('2015-01-01'));
 
-    const customSymbolsToGather = await this.getCustomSymbolsToGather(
-      startDate
-    );
+    const customSymbolsToGather =
+      await this.ghostfolioScraperApi.getCustomSymbolsToGather(startDate);
 
     const currencyPairsToGather = currencyPairs.map(
       ({ dataSource, symbol }) => {
