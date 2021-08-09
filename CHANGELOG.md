@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the data gathering handling on server restart
+
 ## 1.35.0 - 08.08.2021
 
 ### Changed
@@ -12,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hid the pagination of tabs
 - Improved the classification of assets
 - Improved the support for future transactions (drafts)
-- Improved the data gathering handling on server restart
 - Optimized the accounts table for mobile
 - Upgraded `chart.js` from version `3.3.2` to `3.5.0`
 
