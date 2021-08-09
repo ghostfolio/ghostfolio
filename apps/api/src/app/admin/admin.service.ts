@@ -1,3 +1,4 @@
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { AdminData } from '@ghostfolio/common/interfaces';
@@ -7,6 +8,7 @@ import { Currency } from '@prisma/client';
 @Injectable()
 export class AdminService {
   public constructor(
+    private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService
   ) {}
@@ -68,18 +70,15 @@ export class AdminService {
   }
 
   private async getLastDataGathering() {
-    const lastDataGathering = await this.prismaService.property.findUnique({
-      where: { key: 'LAST_DATA_GATHERING' }
-    });
+    const lastDataGathering =
+      await this.dataGatheringService.getLastDataGathering();
 
-    if (lastDataGathering?.value) {
-      return new Date(lastDataGathering.value);
+    if (lastDataGathering) {
+      return lastDataGathering;
     }
 
     const dataGatheringInProgress =
-      await this.prismaService.property.findUnique({
-        where: { key: 'LOCKED_DATA_GATHERING' }
-      });
+      await this.dataGatheringService.getIsInProgress();
 
     if (dataGatheringInProgress) {
       return 'IN_PROGRESS';

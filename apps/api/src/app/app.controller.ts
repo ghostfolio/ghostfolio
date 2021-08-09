@@ -1,12 +1,12 @@
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { Controller } from '@nestjs/common';
 
-import { PrismaService } from '../services/prisma.service';
 import { RedisCacheService } from './redis-cache/redis-cache.service';
 
 @Controller()
 export class AppController {
   public constructor(
-    private readonly prismaService: PrismaService,
+    private readonly dataGatheringService: DataGatheringService,
     private readonly redisCacheService: RedisCacheService
   ) {
     this.initialize();
@@ -15,17 +15,12 @@ export class AppController {
   private async initialize() {
     this.redisCacheService.reset();
 
-    const isDataGatheringLocked = await this.prismaService.property.findUnique({
-      where: { key: 'LOCKED_DATA_GATHERING' }
-    });
+    const isDataGatheringInProgress =
+      await this.dataGatheringService.getIsInProgress();
 
-    if (!isDataGatheringLocked) {
-      // Prepare for automatical data gather if not locked
-      await this.prismaService.property.deleteMany({
-        where: {
-          OR: [{ key: 'LAST_DATA_GATHERING' }, { key: 'LOCKED_DATA_GATHERING' }]
-        }
-      });
+    if (isDataGatheringInProgress) {
+      // Prepare for automatical data gathering, if hung up in progress state
+      await this.dataGatheringService.reset();
     }
   }
 }

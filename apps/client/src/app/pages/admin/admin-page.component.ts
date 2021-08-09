@@ -152,7 +152,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
           } else if (lastDataGathering === 'IN_PROGRESS') {
             this.dataGatheringInProgress = true;
           } else {
-            this.lastDataGathering = '-';
+            this.lastDataGathering = 'Starting soon...';
           }
 
           this.transactionCount = transactionCount;
