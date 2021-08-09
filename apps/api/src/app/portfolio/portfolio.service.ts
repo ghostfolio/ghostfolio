@@ -1,4 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
 import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
@@ -17,10 +18,11 @@ import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee
 import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
+import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioOverview,
@@ -38,7 +40,12 @@ import {
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { Currency, DataSource, Type as TypeOfOrder } from '@prisma/client';
+import {
+  AssetClass,
+  Currency,
+  DataSource,
+  Type as TypeOfOrder
+} from '@prisma/client';
 import Big from 'big.js';
 import {
   endOfToday,
@@ -201,8 +208,16 @@ export class PortfolioService {
       throw new Error('Missing information');
     }
 
+    const cashDetails = await this.accountService.getCashDetails(
+      userId,
+      userCurrency
+    );
+
     const result: { [symbol: string]: PortfolioPosition } = {};
-    const totalValue = currentPositions.currentValue;
+    const totalInvestment = currentPositions.totalInvestment.plus(
+      cashDetails.balance
+    );
+    const totalValue = currentPositions.currentValue.plus(cashDetails.balance);
 
     const symbols = currentPositions.positions.map(
       (position) => position.symbol
@@ -231,9 +246,7 @@ export class PortfolioService {
       result[item.symbol] = {
         accounts,
         allocationCurrent: value.div(totalValue).toNumber(),
-        allocationInvestment: item.investment
-          .div(currentPositions.totalInvestment)
-          .toNumber(),
+        allocationInvestment: item.investment.div(totalInvestment).toNumber(),
         assetClass: symbolProfile.assetClass,
         countries: symbolProfile.countries,
         currency: item.currency,
@@ -251,6 +264,13 @@ export class PortfolioService {
         value: value.toNumber()
       };
     }
+
+    // TODO: Add a cash position for each currency
+    result[ghostfolioCashSymbol] = await this.getCashPosition({
+      cashDetails,
+      investment: totalInvestment,
+      value: totalValue
+    });
 
     return result;
   }
@@ -657,6 +677,46 @@ export class PortfolioService {
           { baseCurrency }
         )
       }
+    };
+  }
+
+  private async getCashPosition({
+    cashDetails,
+    investment,
+    value
+  }: {
+    cashDetails: CashDetails;
+    investment: Big;
+    value: Big;
+  }) {
+    const accounts = {};
+    const cashValue = new Big(cashDetails.balance);
+
+    cashDetails.accounts.forEach((account) => {
+      accounts[account.name] = {
+        current: account.balance,
+        original: account.balance
+      };
+    });
+
+    return {
+      accounts,
+      allocationCurrent: cashValue.div(value).toNumber(),
+      allocationInvestment: cashValue.div(investment).toNumber(),
+      assetClass: AssetClass.CASH,
+      countries: [],
+      currency: Currency.CHF,
+      grossPerformance: 0,
+      grossPerformancePercent: 0,
+      investment: cashValue.toNumber(),
+      marketPrice: 0,
+      marketState: MarketState.open,
+      name: 'Cash',
+      quantity: 0,
+      sectors: [],
+      symbol: ghostfolioCashSymbol,
+      transactionCount: 0,
+      value: cashValue.toNumber()
     };
   }
 
