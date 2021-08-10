@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the position detail chart if there are missing historical data around the first buy date
+- Fixed the snack bar background color in dark mode
+
+### Changed
+
+- Upgraded `angular-material-css-vars` from version `2.1.0` to `2.1.2`
 
 ## 1.36.0 - 09.08.2021
 
