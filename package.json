@@ -71,7 +71,7 @@
     "@simplewebauthn/typescript-types": "3.0.0",
     "@stripe/stripe-js": "1.15.0",
     "alphavantage": "2.2.0",
-    "angular-material-css-vars": "2.1.0",
+    "angular-material-css-vars": "2.1.2",
     "bent": "7.3.12",
     "big.js": "6.1.1",
     "bootstrap": "4.6.0",

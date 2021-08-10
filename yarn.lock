@@ -3432,10 +3432,10 @@ alphavantage@2.2.0:
   dependencies:
     cross-fetch "^3.0.5"
 
-angular-material-css-vars@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/angular-material-css-vars/-/angular-material-css-vars-2.1.0.tgz#43eac3bb3e74f509914c69106a194e3eab3f02f9"
-  integrity sha512-lFVzWOm8sVprhKobvEy+53VkulCAYTC1evv7EjBCpshm964voeYJ6k2Aqq0yZFNKMaQeGpMvwXSEZVvOyBzvTQ==
+angular-material-css-vars@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/angular-material-css-vars/-/angular-material-css-vars-2.1.2.tgz#cf2ac1349014ce1e29e699286d67928ba4aad7c9"
+  integrity sha512-cyfsky93k5e2huS786tuOkffIFeWqAj2bp/DbvNk0g20VYpPjdkZ1cZI/exMkAFijo140refBdilQ0DYIoxEIw==
   dependencies:
     "@ctrl/tinycolor" "^2.6.0"
     tslib "^2.0.0"
