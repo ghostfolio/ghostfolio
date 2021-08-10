@@ -1,11 +1,3 @@
-import { CurrentRateService } from './current-rate.service';
-import { GetValueParams } from './interfaces/get-value-params.interface';
-import { GetValuesParams } from './interfaces/get-values-params.interface';
-import { PortfolioOrder } from './interfaces/portfolio-order.interface';
-import { TimelinePeriod } from './interfaces/timeline-period.interface';
-import { TimelineSpecification } from './interfaces/timeline-specification.interface';
-import { TransactionPoint } from './interfaces/transaction-point.interface';
-import { PortfolioCalculator } from './portfolio-calculator';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
@@ -17,6 +9,15 @@ import {
   isBefore,
   isSameDay
 } from 'date-fns';
+
+import { CurrentRateService } from './current-rate.service';
+import { GetValueParams } from './interfaces/get-value-params.interface';
+import { GetValuesParams } from './interfaces/get-values-params.interface';
+import { PortfolioOrder } from './interfaces/portfolio-order.interface';
+import { TimelinePeriod } from './interfaces/timeline-period.interface';
+import { TimelineSpecification } from './interfaces/timeline-specification.interface';
+import { TransactionPoint } from './interfaces/transaction-point.interface';
+import { PortfolioCalculator } from './portfolio-calculator';
 
 function mockGetValue(symbol: string, date: Date) {
   switch (symbol) {

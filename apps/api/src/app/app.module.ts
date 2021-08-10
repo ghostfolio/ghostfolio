@@ -1,10 +1,16 @@
 import { join } from 'path';
 
 import { AuthDeviceModule } from '@ghostfolio/api/app/auth-device/auth-device.module';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
+
 import { CronService } from '../services/cron.service';
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
@@ -22,11 +28,6 @@ import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
-import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
-import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
-import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
-import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
-import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 
 @Module({
   imports: [
