@@ -8,6 +8,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -32,11 +33,12 @@ import { first, takeUntil } from 'rxjs/operators';
 export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('positionsContainer') positionsContainer: ElementRef;
 
+  public currentTabIndex = 0;
   public dateRange: DateRange = 'max';
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToReadForeignPortfolio: boolean;
-  public hasPositions = false;
+  public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
@@ -92,7 +94,9 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((fragment) => this.viewportScroller.scrollToAnchor(fragment));
   }
 
-  public onTabChanged() {
+  public onTabChanged(event: MatTabChangeEvent) {
+    this.currentTabIndex = event.index;
+
     this.update();
   }
 
@@ -102,43 +106,43 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   private update() {
-    this.hasPositions = undefined;
-    this.isLoadingPerformance = true;
-    this.positions = undefined;
+    if (this.currentTabIndex === 0) {
+      this.isLoadingPerformance = true;
 
-    this.dataService
-      .fetchChart({ range: this.dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((chartData) => {
-        this.historicalDataItems = chartData.map((chartDataItem) => {
-          return {
-            date: chartDataItem.date,
-            value: chartDataItem.value
-          };
+      this.dataService
+        .fetchChart({ range: this.dateRange })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((chartData) => {
+          this.historicalDataItems = chartData.map((chartDataItem) => {
+            return {
+              date: chartDataItem.date,
+              value: chartDataItem.value
+            };
+          });
+
+          this.changeDetectorRef.markForCheck();
         });
 
-        this.changeDetectorRef.markForCheck();
-      });
+      this.dataService
+        .fetchPortfolioPerformance({ range: this.dateRange })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((response) => {
+          this.performance = response;
+          this.isLoadingPerformance = false;
 
-    this.dataService
-      .fetchPortfolioPerformance({ range: this.dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.performance = response;
-        this.isLoadingPerformance = false;
+          this.changeDetectorRef.markForCheck();
+        });
+    } else if (this.currentTabIndex === 1) {
+      this.dataService
+        .fetchPositions({ range: this.dateRange })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((response) => {
+          this.positions = response.positions;
+          this.hasPositions = this.positions?.length > 0;
 
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchPositions({ range: this.dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.positions = response.positions;
-        this.hasPositions = this.positions?.length > 0;
-
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+        });
+    }
 
     this.changeDetectorRef.markForCheck();
   }

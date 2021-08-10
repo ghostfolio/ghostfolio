@@ -4,7 +4,7 @@
   headerPosition="below"
   mat-align-tabs="center"
   [disablePagination]="true"
-  (selectedTabChange)="onTabChanged()"
+  (selectedTabChange)="onTabChanged($event)"
 >
   <mat-tab>
     <ng-template mat-tab-label>
