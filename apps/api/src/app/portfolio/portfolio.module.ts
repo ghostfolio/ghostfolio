@@ -19,8 +19,8 @@ import { RulesService } from './rules.service';
 @Module({
   imports: [
     ConfigurationModule,
-    DataProviderModule,
     DataGatheringModule,
+    DataProviderModule,
     ExchangeRateDataModule,
     ImpersonationModule,
     OrderModule,

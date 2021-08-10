@@ -14,9 +14,9 @@ import { ImportService } from './import.service';
   imports: [
     ConfigurationModule,
     DataGatheringModule,
-    RedisCacheModule,
     DataProviderModule,
-    PrismaModule
+    PrismaModule,
+    RedisCacheModule
   ],
   controllers: [ImportController],
   providers: [CacheService, ImportService, OrderService]

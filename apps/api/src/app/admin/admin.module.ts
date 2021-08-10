@@ -11,8 +11,8 @@ import { AdminService } from './admin.service';
 @Module({
   imports: [
     ConfigurationModule,
-    DataProviderModule,
     DataGatheringModule,
+    DataProviderModule,
     ExchangeRateDataModule,
     PrismaModule
   ],

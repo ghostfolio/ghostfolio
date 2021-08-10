@@ -38,12 +38,17 @@ import { UserModule } from './user/user.module';
     AuthModule,
     CacheModule,
     ConfigModule.forRoot(),
+    ConfigurationModule,
+    DataGatheringModule,
+    DataProviderModule,
+    ExchangeRateDataModule,
     ExperimentalModule,
     ExportModule,
     ImportModule,
     InfoModule,
     OrderModule,
     PortfolioModule,
+    PrismaModule,
     RedisCacheModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
@@ -62,12 +67,7 @@ import { UserModule } from './user/user.module';
     }),
     SubscriptionModule,
     SymbolModule,
-    UserModule,
-    DataProviderModule,
-    DataGatheringModule,
-    ExchangeRateDataModule,
-    PrismaModule,
-    ConfigurationModule
+    UserModule
   ],
   controllers: [AppController],
   providers: [CronService]

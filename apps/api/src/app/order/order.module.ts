@@ -13,11 +13,11 @@ import { OrderService } from './order.service';
 @Module({
   imports: [
     ConfigurationModule,
-    RedisCacheModule,
-    DataProviderModule,
     DataGatheringModule,
+    DataProviderModule,
     ImpersonationModule,
-    PrismaModule
+    PrismaModule,
+    RedisCacheModule
   ],
   controllers: [OrderController],
   providers: [CacheService, OrderService],

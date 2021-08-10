@@ -12,10 +12,10 @@ import { ExportService } from './export.service';
 @Module({
   imports: [
     ConfigurationModule,
-    RedisCacheModule,
-    DataProviderModule,
     DataGatheringModule,
-    PrismaModule
+    DataProviderModule,
+    PrismaModule,
+    RedisCacheModule
   ],
   controllers: [ExportController],
   providers: [CacheService, ExportService]
