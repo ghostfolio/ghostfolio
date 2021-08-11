@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed hidden cryptocurrency holdings
+- Fixed the position detail chart if there are missing historical data around the first buy date
 
 ## 1.35.0 - 08.08.2021
 
