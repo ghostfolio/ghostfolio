@@ -21,8 +21,8 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  PortfolioOverview,
   PortfolioPerformance,
+  PortfolioSummary,
   Position,
   User
 } from '@ghostfolio/common/interfaces';
@@ -61,12 +61,12 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public hasPermissionToReadForeignPortfolio: boolean;
   public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
-  public isLoadingOverview = true;
   public isLoadingPerformance = true;
-  public overview: PortfolioOverview;
+  public isLoadingSummary = true;
   public performance: PortfolioPerformance;
   public positions: Position[];
   public routeQueryParams: Subscription;
+  public summary: PortfolioSummary;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -223,14 +223,14 @@ export class HomePageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         });
     } else if (this.currentTabIndex === 2) {
-      this.isLoadingOverview = true;
+      this.isLoadingSummary = true;
 
       this.dataService
-        .fetchPortfolioOverview()
+        .fetchPortfolioSummary()
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe((response) => {
-          this.overview = response;
-          this.isLoadingOverview = false;
+          this.summary = response;
+          this.isLoadingSummary = false;
 
           this.changeDetectorRef.markForCheck();
         });

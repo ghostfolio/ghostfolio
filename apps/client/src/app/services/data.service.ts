@@ -19,11 +19,10 @@ import {
   AdminData,
   Export,
   InfoItem,
-  PortfolioItem,
-  PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,
   PortfolioReport,
+  PortfolioSummary,
   User
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
@@ -148,10 +147,6 @@ export class DataService {
     return this.http.get<InvestmentItem[]>('/api/portfolio/investments');
   }
 
-  public fetchPortfolioOverview() {
-    return this.http.get<PortfolioOverview>('/api/portfolio/overview');
-  }
-
   public fetchPortfolioPerformance(aParams: { [param: string]: any }) {
     return this.http.get<PortfolioPerformance>('/api/portfolio/performance', {
       params: aParams
@@ -167,6 +162,18 @@ export class DataService {
 
   public fetchPortfolioReport() {
     return this.http.get<PortfolioReport>('/api/portfolio/report');
+  }
+
+  public fetchPortfolioSummary(): Observable<PortfolioSummary> {
+    return this.http.get<any>('/api/portfolio/summary').pipe(
+      map((summary) => {
+        if (summary.firstOrderDate) {
+          summary.firstOrderDate = parseISO(summary.firstOrderDate);
+        }
+
+        return summary;
+      })
+    );
   }
 
   public fetchPositionDetail(aSymbol: string) {

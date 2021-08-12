@@ -85,14 +85,18 @@ export class ValueComponent implements OnChanges, OnInit {
             });
           } catch {}
         }
-      } else if (isDate(new Date(this.value))) {
-        this.isDate = true;
-        this.isNumber = false;
+      } else {
+        try {
+          if (isDate(new Date(this.value))) {
+            this.isDate = true;
+            this.isNumber = false;
 
-        this.formattedDate = format(
-          new Date(<string>this.value),
-          DEFAULT_DATE_FORMAT
-        );
+            this.formattedDate = format(
+              new Date(<string>this.value),
+              DEFAULT_DATE_FORMAT
+            );
+          }
+        } catch {}
       }
     }
   }

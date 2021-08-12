@@ -1,0 +1,134 @@
+<div class="container p-0">
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Time in Market</div>
+    <div class="d-flex justify-content-end">
+      {{ timeInMarket }}
+      <gf-value class="justify-content-end" [value]="timeInMarket"></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3">
+    <div class="d-flex flex-grow-1" i18n>
+      Fees for {{ summary?.ordersCount }} {summary?.ordersCount, plural, =1
+      {order} other {orders}}
+    </div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.fees"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Buy</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.totalBuy"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Sell</div>
+    <div class="d-flex justify-content-end">
+      <span *ngIf="summary?.totalSell || summary?.totalSell === 0" class="mr-1"
+        >-</span
+      >
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.totalSell"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Investment</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.committedFunds"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Absolute Performance</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.currentGrossPerformance"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1 ml-3" i18n>Performance (TWR)</div>
+    <div class="d-flex flex-column flex-wrap justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        position="end"
+        [colorizeSign]="true"
+        [isPercent]="true"
+        [locale]="locale"
+        [value]="
+          isLoading ? undefined : summary?.currentGrossPerformancePercent
+        "
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Value</div>
+    <div class="d-flex flex-column flex-wrap justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        position="end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.currentValue"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Cash</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.cash"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Net Worth</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.netWorth"
+      ></gf-value>
+    </div>
+  </div>
+</div>
