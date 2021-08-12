@@ -672,10 +672,10 @@ export class PortfolioService {
     const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
     const totalSell = this.getTotalByType(orders, currency, TypeOfOrder.SELL);
 
-    const committedFunds = new Big(totalBuy).sub(new Big(totalSell));
+    const committedFunds = new Big(totalBuy).sub(totalSell);
 
     const netWorth = new Big(balance)
-      .plus(new Big(performanceInformation.performance.currentValue))
+      .plus(performanceInformation.performance.currentValue)
       .toNumber();
 
     return {
