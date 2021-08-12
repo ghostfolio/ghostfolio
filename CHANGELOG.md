@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the calculated net worth to the portfolio summary tab on the home page
+- Added the calculated time in market to the portfolio summary tab on the home page
+
 ### Changed
 
 - Improved the usability of the tabs on the home page
+- Restructured the portfolio summary tab on the home page
 
 ## 1.36.0 - 09.08.2021
 
