@@ -8,7 +8,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { AssetClass, DataSource } from '@prisma/client';
+import { AssetClass, Currency, DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
@@ -147,8 +147,23 @@ export class YahooFinanceService implements DataProviderInterface {
         200
       );
 
-      const result = await get();
-      items = result.quotes
+      const searchResult = await get();
+
+      const symbols: string[] = searchResult.quotes
+        .filter((quote) => {
+          // filter out undefined symbols
+          return quote.symbol;
+        })
+        .filter(({ quoteType }) => {
+          return quoteType === 'EQUITY' || quoteType === 'ETF';
+        })
+        .map(({ symbol }) => {
+          return symbol;
+        });
+
+      const marketData = await this.get(symbols);
+
+      items = searchResult.quotes
         .filter((quote) => {
           return quote.isYahooFinance;
         })
@@ -162,7 +177,12 @@ export class YahooFinanceService implements DataProviderInterface {
         .filter(({ quoteType, symbol }) => {
           if (quoteType === 'CRYPTOCURRENCY') {
             // Only allow cryptocurrencies in USD
-            return symbol.includes('USD');
+            return symbol.includes(Currency.USD);
+          }
+
+          if (!marketData[symbol]?.currency) {
+            // Only allow symbols with supported currency
+            return false;
           }
 
           return true;
