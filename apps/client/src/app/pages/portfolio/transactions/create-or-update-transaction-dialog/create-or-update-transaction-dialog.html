@@ -166,7 +166,7 @@
         color="primary"
         i18n
         mat-flat-button
-        [disabled]="!(addTransactionForm.form.valid && data.transaction.symbol)"
+        [disabled]="!(addTransactionForm.form.valid && data.transaction.currency && data.transaction.symbol)"
         [mat-dialog-close]="data"
       >
         Save
