@@ -1,67 +1,54 @@
 <div class="container p-0">
-  <div class="row px-3 py-2">
-    <div class="d-flex flex-grow-1" i18n>Value</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        position="end"
-        [currency]="baseCurrency"
-        [locale]="locale"
-        [value]="isLoading ? undefined : performance?.currentValue"
-      ></gf-value>
+  <div class="row no-gutters">
+    <div class="flex-grow-1"></div>
+    <div *ngIf="isLoading" class="align-items-center d-flex">
+      <ngx-skeleton-loader
+        animation="pulse"
+        class="mb-2"
+        [theme]="{
+          height: '4rem',
+          width: '15rem'
+        }"
+      ></ngx-skeleton-loader>
+    </div>
+    <div
+      [hidden]="isLoading"
+      class="display-4 font-weight-bold m-0 text-center value-container"
+    >
+      <span #value id="value"></span>
+    </div>
+    <div class="flex-grow-1 px-1">
+      <ngx-skeleton-loader
+        *ngIf="isLoading"
+        animation="pulse"
+        [theme]="{
+          height: '1.3rem',
+          width: '2.5rem'
+        }"
+      ></ngx-skeleton-loader>
+      <div *ngIf="!isLoading">
+        {{ unit }}
+      </div>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Absolute Performance</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
+  <div *ngIf="showDetails" class="row">
+    <div class="d-flex col justify-content-end">
       <gf-value
-        class="justify-content-end"
-        position="end"
         [colorizeSign]="true"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
-        [value]="isLoading ? undefined : performance?.currentGrossPerformance"
+        [value]="isLoading ? undefined : performance?.currentNetPerformance"
       ></gf-value>
     </div>
-  </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Performance (TWR)</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
+    <div class="col">
       <gf-value
-        class="justify-content-end"
-        position="end"
         [colorizeSign]="true"
         [isPercent]="true"
         [locale]="locale"
         [value]="
-          isLoading ? undefined : performance?.currentGrossPerformancePercent
+          isLoading ? undefined : performance?.currentNetPerformancePercent
         "
       ></gf-value>
     </div>
   </div>
-  <!--
-    <div class="row px-3 py-2">
-      <div class="d-flex flex-grow-1" i18n>Net performance</div>
-      <div class="d-flex flex-column flex-wrap justify-content-end">
-        <gf-value
-          class="justify-content-end mb-2"
-          position="end"
-          [colorizeSign]="true"
-          [currency]="baseCurrency"
-          [locale]="locale"
-          [value]="isLoading ? undefined : performance?.currentNetPerformance"
-        ></gf-value>
-        <gf-value
-          class="justify-content-end"
-          position="end"
-          [colorizeSign]="true"
-          [isPercent]="true"
-          [locale]="locale"
-          [value]="
-            isLoading ? undefined : performance?.currentNetPerformancePercent
-          "
-        ></gf-value>
-      </div>
-    </div>
-  -->
 </div>

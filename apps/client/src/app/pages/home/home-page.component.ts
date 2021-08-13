@@ -8,6 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { PerformanceChartDialog } from '@ghostfolio/client/components/performance-chart-dialog/performance-chart-dialog.component';
@@ -20,8 +21,8 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  PortfolioOverview,
   PortfolioPerformance,
+  PortfolioSummary,
   Position,
   User
 } from '@ghostfolio/common/interfaces';
@@ -44,6 +45,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
   @ViewChild('positionsContainer') positionsContainer: ElementRef;
 
   public canCreateAccount: boolean;
+  public currentTabIndex = 0;
   public dateRange: DateRange;
   public dateRangeOptions: ToggleOption[] = [
     { label: 'Today', value: '1d' },
@@ -57,14 +59,14 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToReadForeignPortfolio: boolean;
-  public hasPositions = false;
+  public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
-  public isLoadingOverview = true;
   public isLoadingPerformance = true;
-  public overview: PortfolioOverview;
+  public isLoadingSummary = true;
   public performance: PortfolioPerformance;
   public positions: Position[];
   public routeQueryParams: Subscription;
+  public summary: PortfolioSummary;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -153,7 +155,9 @@ export class HomePageComponent implements OnDestroy, OnInit {
     this.update();
   }
 
-  public onTabChanged() {
+  public onTabChanged(event: MatTabChangeEvent) {
+    this.currentTabIndex = event.index;
+
     this.update();
   }
 
@@ -182,54 +186,55 @@ export class HomePageComponent implements OnDestroy, OnInit {
   }
 
   private update() {
-    this.hasPositions = undefined;
-    this.isLoadingOverview = true;
-    this.isLoadingPerformance = true;
-    this.positions = undefined;
+    if (this.currentTabIndex === 0) {
+      this.isLoadingPerformance = true;
 
-    this.dataService
-      .fetchChart({ range: this.dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((chartData) => {
-        this.historicalDataItems = chartData.map((chartDataItem) => {
-          return {
-            date: chartDataItem.date,
-            value: chartDataItem.value
-          };
+      this.dataService
+        .fetchChart({ range: this.dateRange })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((chartData) => {
+          this.historicalDataItems = chartData.map((chartDataItem) => {
+            return {
+              date: chartDataItem.date,
+              value: chartDataItem.value
+            };
+          });
+
+          this.changeDetectorRef.markForCheck();
         });
 
-        this.changeDetectorRef.markForCheck();
-      });
+      this.dataService
+        .fetchPortfolioPerformance({ range: this.dateRange })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((response) => {
+          this.performance = response;
+          this.isLoadingPerformance = false;
 
-    this.dataService
-      .fetchPortfolioPerformance({ range: this.dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.performance = response;
-        this.isLoadingPerformance = false;
+          this.changeDetectorRef.markForCheck();
+        });
+    } else if (this.currentTabIndex === 1) {
+      this.dataService
+        .fetchPositions({ range: this.dateRange })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((response) => {
+          this.positions = response.positions;
+          this.hasPositions = this.positions?.length > 0;
 
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+        });
+    } else if (this.currentTabIndex === 2) {
+      this.isLoadingSummary = true;
 
-    this.dataService
-      .fetchPortfolioOverview()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.overview = response;
-        this.isLoadingOverview = false;
+      this.dataService
+        .fetchPortfolioSummary()
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((response) => {
+          this.summary = response;
+          this.isLoadingSummary = false;
 
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchPositions({ range: this.dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.positions = response.positions;
-        this.hasPositions = this.positions?.length > 0;
-
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+        });
+    }
 
     this.changeDetectorRef.markForCheck();
   }

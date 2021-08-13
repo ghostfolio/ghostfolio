@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { GfValueModule } from '../value/value.module';
-import { PortfolioOverviewComponent } from './portfolio-overview.component';
+import { PortfolioSummaryComponent } from './portfolio-summary.component';
 
 @NgModule({
-  declarations: [PortfolioOverviewComponent],
-  exports: [PortfolioOverviewComponent],
+  declarations: [PortfolioSummaryComponent],
+  exports: [PortfolioSummaryComponent],
   imports: [CommonModule, GfValueModule],
   providers: []
 })
-export class GfPortfolioOverviewModule {}
+export class GfPortfolioSummaryModule {}

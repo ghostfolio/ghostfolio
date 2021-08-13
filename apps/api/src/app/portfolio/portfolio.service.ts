@@ -25,10 +25,10 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.se
 import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
-  PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,
   PortfolioReport,
+  PortfolioSummary,
   Position,
   TimelinePosition
 } from '@ghostfolio/common/interfaces';
@@ -149,31 +149,6 @@ export class PortfolioService {
         marketPrice: timelineItem.value,
         value: timelineItem.grossPerformance.toNumber()
       }));
-  }
-
-  public async getOverview(
-    aImpersonationId: string
-  ): Promise<PortfolioOverview> {
-    const userId = await this.getUserId(aImpersonationId);
-
-    const currency = this.request.user.Settings.currency;
-    const { balance } = await this.accountService.getCashDetails(
-      userId,
-      currency
-    );
-    const orders = await this.orderService.getOrders({ userId });
-    const fees = this.getFees(orders);
-
-    const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
-    const totalSell = this.getTotalByType(orders, currency, TypeOfOrder.SELL);
-    return {
-      committedFunds: totalBuy - totalSell,
-      fees,
-      cash: balance,
-      ordersCount: orders.length,
-      totalBuy: totalBuy,
-      totalSell: totalSell
-    };
   }
 
   public async getDetails(
@@ -686,6 +661,42 @@ export class PortfolioService {
           { baseCurrency }
         )
       }
+    };
+  }
+
+  public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
+    const currency = this.request.user.Settings.currency;
+    const userId = await this.getUserId(aImpersonationId);
+
+    const performanceInformation = await this.getPerformance(userId);
+
+    const { balance } = await this.accountService.getCashDetails(
+      userId,
+      currency
+    );
+    const orders = await this.orderService.getOrders({ userId });
+    const fees = this.getFees(orders);
+    const firstOrderDate = orders[0]?.date;
+
+    const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
+    const totalSell = this.getTotalByType(orders, currency, TypeOfOrder.SELL);
+
+    const committedFunds = new Big(totalBuy).sub(totalSell);
+
+    const netWorth = new Big(balance)
+      .plus(performanceInformation.performance.currentValue)
+      .toNumber();
+
+    return {
+      ...performanceInformation.performance,
+      fees,
+      firstOrderDate,
+      netWorth,
+      cash: balance,
+      committedFunds: committedFunds.toNumber(),
+      ordersCount: orders.length,
+      totalBuy: totalBuy,
+      totalSell: totalSell
     };
   }
 

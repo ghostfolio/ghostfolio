@@ -4,7 +4,7 @@
   headerPosition="below"
   mat-align-tabs="center"
   [disablePagination]="true"
-  (selectedTabChange)="onTabChanged()"
+  (selectedTabChange)="onTabChanged($event)"
 >
   <mat-tab>
     <ng-template mat-tab-label>
@@ -43,14 +43,14 @@
       </div>
       <div class="overview-container row mb-5 mt-1">
         <div class="col">
-          <gf-portfolio-performance-summary
+          <gf-portfolio-performance
             class="pb-4"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isLoading]="isLoadingPerformance"
             [locale]="user?.settings?.locale"
             [performance]="performance"
             [showDetails]="!hasImpersonationId || hasPermissionToReadForeignPortfolio"
-          ></gf-portfolio-performance-summary>
+          ></gf-portfolio-performance>
         </div>
       </div>
     </div>
