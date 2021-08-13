@@ -5,10 +5,10 @@ import {
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import {
-  PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,
-  PortfolioReport
+  PortfolioReport,
+  PortfolioSummary
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import {
@@ -30,6 +30,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import Big from 'big.js';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -202,32 +203,6 @@ export class PortfolioController {
     return <any>res.json(details);
   }
 
-  @Get('overview')
-  @UseGuards(AuthGuard('jwt'))
-  public async getOverview(
-    @Headers('impersonation-id') impersonationId
-  ): Promise<PortfolioOverview> {
-    let overview = await this.portfolioService.getOverview(impersonationId);
-
-    if (
-      impersonationId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
-      overview = nullifyValuesInObject(overview, [
-        'cash',
-        'committedFunds',
-        'fees',
-        'totalBuy',
-        'totalSell'
-      ]);
-    }
-
-    return overview;
-  }
-
   @Get('performance')
   @UseGuards(AuthGuard('jwt'))
   public async getPerformance(
@@ -279,6 +254,35 @@ export class PortfolioController {
     }
 
     return <any>res.json(result);
+  }
+
+  @Get('summary')
+  @UseGuards(AuthGuard('jwt'))
+  public async getSummary(
+    @Headers('impersonation-id') impersonationId
+  ): Promise<PortfolioSummary> {
+    let summary = await this.portfolioService.getSummary(impersonationId);
+
+    if (
+      impersonationId &&
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.readForeignPortfolio
+      )
+    ) {
+      summary = nullifyValuesInObject(summary, [
+        'cash',
+        'committedFunds',
+        'currentGrossPerformance',
+        'currentNetPerformance',
+        'currentValue',
+        'fees',
+        'totalBuy',
+        'totalSell'
+      ]);
+    }
+
+    return summary;
   }
 
   @Get('position/:symbol')

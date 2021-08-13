@@ -6,7 +6,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { GfLineChartModule } from '@ghostfolio/client/components/line-chart/line-chart.module';
 import { GfNoTransactionsInfoModule } from '@ghostfolio/client/components/no-transactions-info/no-transactions-info.module';
-import { GfPortfolioPerformanceSummaryModule } from '@ghostfolio/client/components/portfolio-performance-summary/portfolio-performance-summary.module';
+import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
 import { GfPositionsModule } from '@ghostfolio/client/components/positions/positions.module';
 
 import { ZenPageRoutingModule } from './zen-page-routing.module';
@@ -19,7 +19,7 @@ import { ZenPageComponent } from './zen-page.component';
     CommonModule,
     GfLineChartModule,
     GfNoTransactionsInfoModule,
-    GfPortfolioPerformanceSummaryModule,
+    GfPortfolioPerformanceModule,
     GfPositionsModule,
     MatButtonModule,
     MatCardModule,
