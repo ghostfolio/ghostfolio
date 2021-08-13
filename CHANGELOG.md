@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the position detail chart if there are missing historical data around the first buy date
 - Fixed the snack bar background color in dark mode
+- Fixed the search functionality for symbols (filter for supported currencies)
 
 ## 1.36.0 - 09.08.2021
 
