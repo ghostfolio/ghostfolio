@@ -1,3 +1,4 @@
+import { currencyPairs } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
@@ -8,29 +9,27 @@ import { DataProviderService } from './data-provider.service';
 
 @Injectable()
 export class ExchangeRateDataService {
-  private currencies = {};
-  private pairs: string[] = [];
+  private currencyPairs: string[] = [];
+  private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(private dataProviderService: DataProviderService) {
     this.initialize();
   }
 
   public async initialize() {
-    this.pairs = [];
+    this.currencyPairs = [];
+    this.exchangeRates = {};
 
-    this.addPairs(Currency.CHF, Currency.EUR);
-    this.addPairs(Currency.CHF, Currency.GBP);
-    this.addPairs(Currency.CHF, Currency.USD);
-    this.addPairs(Currency.EUR, Currency.GBP);
-    this.addPairs(Currency.EUR, Currency.USD);
-    this.addPairs(Currency.GBP, Currency.USD);
+    for (const { currency1, currency2 } of currencyPairs) {
+      this.addCurrencyPairs(currency1, currency2);
+    }
 
     await this.loadCurrencies();
   }
 
   public async loadCurrencies() {
     const result = await this.dataProviderService.getHistorical(
-      this.pairs,
+      this.currencyPairs,
       'day',
       getYesterday(),
       getYesterday()
@@ -50,20 +49,21 @@ export class ExchangeRateDataService {
       };
     });
 
-    this.pairs.forEach((pair) => {
+    this.currencyPairs.forEach((pair) => {
       const [currency1, currency2] = pair.match(/.{1,3}/g);
       const date = format(getYesterday(), DATE_FORMAT);
 
-      this.currencies[pair] = resultExtended[pair]?.[date]?.marketPrice;
+      this.exchangeRates[pair] = resultExtended[pair]?.[date]?.marketPrice;
 
-      if (!this.currencies[pair]) {
+      if (!this.exchangeRates[pair]) {
         // Not found, calculate indirectly via USD
-        this.currencies[pair] =
+        this.exchangeRates[pair] =
           resultExtended[`${currency1}${Currency.USD}`]?.[date]?.marketPrice *
           resultExtended[`${Currency.USD}${currency2}`]?.[date]?.marketPrice;
 
         // Calculate the opposite direction
-        this.currencies[`${currency2}${currency1}`] = 1 / this.currencies[pair];
+        this.exchangeRates[`${currency2}${currency1}`] =
+          1 / this.exchangeRates[pair];
       }
     });
   }
@@ -73,7 +73,7 @@ export class ExchangeRateDataService {
     aFromCurrency: Currency,
     aToCurrency: Currency
   ) {
-    if (isNaN(this.currencies[`${Currency.USD}${Currency.CHF}`])) {
+    if (isNaN(this.exchangeRates[`${Currency.USD}${Currency.CHF}`])) {
       // Reinitialize if data is not loaded correctly
       this.initialize();
     }
@@ -81,7 +81,17 @@ export class ExchangeRateDataService {
     let factor = 1;
 
     if (aFromCurrency !== aToCurrency) {
-      factor = this.currencies[`${aFromCurrency}${aToCurrency}`];
+      if (this.exchangeRates[`${aFromCurrency}${aToCurrency}`]) {
+        factor = this.exchangeRates[`${aFromCurrency}${aToCurrency}`];
+      } else {
+        // Calculate indirectly via USD
+        const factor1 = this.exchangeRates[`${aFromCurrency}${Currency.USD}`];
+        const factor2 = this.exchangeRates[`${Currency.USD}${aToCurrency}`];
+
+        factor = factor1 * factor2;
+
+        this.exchangeRates[`${aFromCurrency}${aToCurrency}`] = factor;
+      }
     }
 
     if (isNumber(factor)) {
@@ -95,8 +105,8 @@ export class ExchangeRateDataService {
     return aValue;
   }
 
-  private addPairs(aCurrency1: Currency, aCurrency2: Currency) {
-    this.pairs.push(`${aCurrency1}${aCurrency2}`);
-    this.pairs.push(`${aCurrency2}${aCurrency1}`);
+  private addCurrencyPairs(aCurrency1: Currency, aCurrency2: Currency) {
+    this.currencyPairs.push(`${aCurrency1}${aCurrency2}`);
+    this.currencyPairs.push(`${aCurrency2}${aCurrency1}`);
   }
 }

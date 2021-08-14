@@ -39,6 +39,7 @@ export class SymbolService {
       const ghostfolioSymbolProfiles =
         await this.prismaService.symbolProfile.findMany({
           select: {
+            currency: true,
             dataSource: true,
             name: true,
             symbol: true

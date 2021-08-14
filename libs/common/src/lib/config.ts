@@ -8,11 +8,23 @@ export const benchmarks: Partial<IDataGatheringItem>[] = [
   { dataSource: DataSource.YAHOO, symbol: 'VOO' }
 ];
 
-export const currencyPairs: Partial<IDataGatheringItem>[] = [
-  { dataSource: DataSource.YAHOO, symbol: `${Currency.USD}${Currency.EUR}` },
-  { dataSource: DataSource.YAHOO, symbol: `${Currency.USD}${Currency.GBP}` },
-  { dataSource: DataSource.YAHOO, symbol: `${Currency.USD}${Currency.CHF}` }
-];
+export const currencyPairs: Partial<
+  IDataGatheringItem & {
+    currency1: Currency;
+    currency2: Currency;
+  }
+>[] = Object.keys(Currency)
+  .filter((currency) => {
+    return currency !== Currency.USD;
+  })
+  .map((currency) => {
+    return {
+      currency1: Currency.USD,
+      currency2: Currency[currency],
+      dataSource: DataSource.YAHOO,
+      symbol: `${Currency.USD}${Currency[currency]}`
+    };
+  });
 
 export const ghostfolioScraperApiSymbolPrefix = '_GF_';
 export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;

@@ -1,3 +1,4 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import {
   DATE_FORMAT,
   getYesterday,
@@ -143,7 +144,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return [];
   }
 
-  public async search(aSymbol: string) {
+  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
 
