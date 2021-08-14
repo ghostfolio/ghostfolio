@@ -97,7 +97,7 @@
               <th class="mat-header-cell px-1 py-2 text-right" i18n>#</th>
               <th class="mat-header-cell px-1 py-2" i18n>User</th>
               <th class="mat-header-cell px-1 py-2 text-right" i18n>
-                Registration Date
+                Registration
               </th>
               <th class="mat-header-cell px-1 py-2 text-right" i18n>
                 Accounts
@@ -106,7 +106,7 @@
                 Transactions
               </th>
               <th class="mat-header-cell px-1 py-2 text-right" i18n>
-                Engagement
+                Engagement per Day
               </th>
               <th class="mat-header-cell px-1 py-2" i18n>Last Activitiy</th>
               <th class="mat-header-cell px-1 py-2"></th>
@@ -119,19 +119,19 @@
                 {{ userItem.alias || userItem.id }}
               </td>
               <td class="mat-cell px-1 py-2 text-right">
-                {{ userItem.createdAt | date: defaultDateFormat }}
+                {{ formatDistanceToNow(userItem.createdAt) }}
               </td>
               <td class="mat-cell px-1 py-2 text-right">
-                {{ userItem._count?.Account }}
+                {{ userItem.accountCount }}
               </td>
               <td class="mat-cell px-1 py-2 text-right">
-                {{ userItem._count?.Order }}
+                {{ userItem.transactionCount }}
               </td>
               <td class="mat-cell px-1 py-2 text-right">
-                {{ userItem.Analytics?.activityCount }}
+                {{ userItem.engagement | number: '1.0-0' }}
               </td>
               <td class="mat-cell px-1 py-2">
-                {{ formatDistanceToNow(userItem.Analytics?.updatedAt) }}
+                {{ formatDistanceToNow(userItem.lastActivity) }}
               </td>
               <td class="mat-cell px-1 py-2">
                 <button

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the exchange rate service
+- Improved the users table in the admin control panel
 
 ## 1.37.0 - 13.08.2021
 
