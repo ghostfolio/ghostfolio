@@ -19,7 +19,7 @@ import {
 } from 'date-fns';
 
 import { ConfigurationService } from './configuration.service';
-import { DataProviderService } from './data-provider.service';
+import { DataProviderService } from './data-provider/data-provider.service';
 import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
 import { PrismaService } from './prisma.service';

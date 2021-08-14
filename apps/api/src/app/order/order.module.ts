@@ -1,34 +1,26 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
-import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { ImpersonationModule } from '@ghostfolio/api/services/impersonation.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
-import { CacheService } from '../cache/cache.service';
-import { RedisCacheModule } from '../redis-cache/redis-cache.module';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 
 @Module({
-  imports: [RedisCacheModule],
+  imports: [
+    ConfigurationModule,
+    DataGatheringModule,
+    DataProviderModule,
+    ImpersonationModule,
+    PrismaModule,
+    RedisCacheModule
+  ],
   controllers: [OrderController],
-  providers: [
-    AlphaVantageService,
-    CacheService,
-    ConfigurationService,
-    DataGatheringService,
-    DataProviderService,
-    GhostfolioScraperApiService,
-    ImpersonationService,
-    OrderService,
-    PrismaService,
-    RakutenRapidApiService,
-    YahooFinanceService
-  ]
+  providers: [CacheService, OrderService],
+  exports: [OrderService]
 })
 export class OrderModule {}

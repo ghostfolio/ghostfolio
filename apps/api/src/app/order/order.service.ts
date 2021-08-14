@@ -1,11 +1,10 @@
+import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Order, Prisma } from '@prisma/client';
 import { endOfToday, isAfter } from 'date-fns';
-
-import { CacheService } from '../cache/cache.service';
 
 @Injectable()
 export class OrderService {

@@ -1,32 +1,24 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
-import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
+import { ImpersonationModule } from '@ghostfolio/api/services/impersonation.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
-import { RedisCacheModule } from '../redis-cache/redis-cache.module';
 import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
 
 @Module({
-  imports: [RedisCacheModule],
+  imports: [
+    ConfigurationModule,
+    DataProviderModule,
+    ExchangeRateDataModule,
+    ImpersonationModule,
+    RedisCacheModule,
+    PrismaModule
+  ],
   controllers: [AccountController],
-  providers: [
-    AccountService,
-    AlphaVantageService,
-    ConfigurationService,
-    DataProviderService,
-    ExchangeRateDataService,
-    GhostfolioScraperApiService,
-    ImpersonationService,
-    PrismaService,
-    RakutenRapidApiService,
-    YahooFinanceService
-  ]
+  providers: [AccountService]
 })
 export class AccountModule {}

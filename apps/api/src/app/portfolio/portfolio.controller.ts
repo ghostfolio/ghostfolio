@@ -46,7 +46,7 @@ export class PortfolioController {
   public constructor(
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
-    private portfolioService: PortfolioService,
+    private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 

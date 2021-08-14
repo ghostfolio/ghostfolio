@@ -1,50 +1,40 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
-import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { MarketDataService } from '@ghostfolio/api/app/core/market-data.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
-import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
+import { ImpersonationModule } from '@ghostfolio/api/services/impersonation.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { Module } from '@nestjs/common';
 
+import { CurrentRateService } from './current-rate.service';
+import { MarketDataService } from './market-data.service';
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
+import { RulesService } from './rules.service';
 
 @Module({
-  imports: [RedisCacheModule],
+  imports: [
+    ConfigurationModule,
+    DataGatheringModule,
+    DataProviderModule,
+    ExchangeRateDataModule,
+    ImpersonationModule,
+    OrderModule,
+    PrismaModule
+  ],
   controllers: [PortfolioController],
   providers: [
     AccountService,
-    AlphaVantageService,
-    CacheService,
     CurrentRateService,
-    ConfigurationService,
-    DataGatheringService,
-    DataProviderService,
-    ExchangeRateDataService,
-    GhostfolioScraperApiService,
-    ImpersonationService,
     MarketDataService,
-    OrderService,
     PortfolioService,
-    PrismaService,
-    RakutenRapidApiService,
     RulesService,
     SymbolProfileService,
-    UserService,
-    YahooFinanceService
+    UserService
   ]
 })
 export class PortfolioModule {}

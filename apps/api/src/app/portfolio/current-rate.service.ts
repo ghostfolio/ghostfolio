@@ -1,13 +1,13 @@
-import { GetValueObject } from '@ghostfolio/api/app/core/interfaces/get-value-object.interface';
-import { GetValueParams } from '@ghostfolio/api/app/core/interfaces/get-value-params.interface';
-import { GetValuesParams } from '@ghostfolio/api/app/core/interfaces/get-values-params.interface';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { isBefore, isToday } from 'date-fns';
 import { flatten } from 'lodash';
 
+import { GetValueObject } from './interfaces/get-value-object.interface';
+import { GetValueParams } from './interfaces/get-value-params.interface';
+import { GetValuesParams } from './interfaces/get-values-params.interface';
 import { MarketDataService } from './market-data.service';
 
 @Injectable()

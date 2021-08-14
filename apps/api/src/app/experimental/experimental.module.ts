@@ -1,34 +1,23 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
-import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { RulesService } from '@ghostfolio/api/services/rules.service';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
 import { ExperimentalController } from './experimental.controller';
 import { ExperimentalService } from './experimental.service';
 
 @Module({
-  imports: [RedisCacheModule],
+  imports: [
+    ConfigurationModule,
+    DataProviderModule,
+    ExchangeRateDataModule,
+    RedisCacheModule,
+    PrismaModule
+  ],
   controllers: [ExperimentalController],
-  providers: [
-    AccountService,
-    AlphaVantageService,
-    ConfigurationService,
-    DataProviderService,
-    ExchangeRateDataService,
-    ExperimentalService,
-    GhostfolioScraperApiService,
-    PrismaService,
-    RakutenRapidApiService,
-    RulesService,
-    YahooFinanceService
-  ]
+  providers: [AccountService, ExperimentalService]
 })
 export class ExperimentalModule {}

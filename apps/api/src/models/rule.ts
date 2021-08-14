@@ -1,10 +1,10 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { groupBy } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
 
-import { ExchangeRateDataService } from '../services/exchange-rate-data.service';
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
 

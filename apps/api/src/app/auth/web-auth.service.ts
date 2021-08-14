@@ -1,5 +1,6 @@
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { RequestWithUser } from '@ghostfolio/common/types';
 import {
@@ -22,7 +23,6 @@ import {
   verifyAttestationResponse
 } from '@simplewebauthn/server';
 
-import { UserService } from '../user/user.service';
 import {
   AssertionCredentialJSON,
   AttestationCredentialJSON

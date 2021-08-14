@@ -1,4 +1,4 @@
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Currency, DataSource } from '@prisma/client';

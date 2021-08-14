@@ -1,11 +1,11 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
-import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
-import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
-import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
-import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
+import { TimelineSpecification } from '@ghostfolio/api/app/portfolio/interfaces/timeline-specification.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
+import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/portfolio-calculator';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
@@ -15,12 +15,11 @@ import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from '@ghostfolio/ap
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { CurrencyClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/initial-investment';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
-import { RulesService } from '@ghostfolio/api/services/rules.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
@@ -65,6 +64,7 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
+import { RulesService } from './rules.service';
 
 @Injectable()
 export class PortfolioService {

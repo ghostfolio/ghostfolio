@@ -1,4 +1,6 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import {
   DATE_FORMAT,
   getToday,
@@ -11,14 +13,12 @@ import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
 
-import { ConfigurationService } from '../../configuration.service';
 import { DataProviderInterface } from '../../interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
   MarketState
 } from '../../interfaces/interfaces';
-import { PrismaService } from '../../prisma.service';
 
 @Injectable()
 export class RakutenRapidApiService implements DataProviderInterface {
