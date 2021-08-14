@@ -156,6 +156,16 @@
         <hr class="m-0" />
       </ng-container>
       <a
+        class="d-block d-sm-none"
+        i18n
+        mat-menu-item
+        [ngClass]="{
+          'font-weight-bold': currentRoute === 'home' || currentRoute === 'zen'
+        }"
+        [routerLink]="['/']"
+        >Overview</a
+      >
+      <a
         *ngIf="user?.settings?.viewMode === 'DEFAULT'"
         class="d-block d-sm-none"
         i18n
