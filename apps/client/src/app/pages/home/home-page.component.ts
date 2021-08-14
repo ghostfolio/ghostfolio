@@ -58,7 +58,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public fearAndGreedIndex: number;
   public hasImpersonationId: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public hasPermissionToReadForeignPortfolio: boolean;
   public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
@@ -119,11 +118,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
                 this.changeDetectorRef.markForCheck();
               });
           }
-
-          this.hasPermissionToReadForeignPortfolio = hasPermission(
-            this.user.permissions,
-            permissions.readForeignPortfolio
-          );
 
           this.changeDetectorRef.markForCheck();
         }

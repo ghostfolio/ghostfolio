@@ -19,7 +19,6 @@ import {
   Position,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -37,7 +36,6 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   public dateRange: DateRange = 'max';
   public deviceType: string;
   public hasImpersonationId: boolean;
-  public hasPermissionToReadForeignPortfolio: boolean;
   public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
@@ -64,11 +62,6 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.hasPermissionToReadForeignPortfolio = hasPermission(
-            this.user.permissions,
-            permissions.readForeignPortfolio
-          );
 
           this.changeDetectorRef.markForCheck();
         }

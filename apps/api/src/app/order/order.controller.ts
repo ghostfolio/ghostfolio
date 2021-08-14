@@ -88,13 +88,7 @@ export class OrderController {
       where: { userId: impersonationUserId || this.request.user.id }
     });
 
-    if (
-      impersonationUserId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
+    if (impersonationUserId) {
       orders = nullifyValuesInObjects(orders, ['fee', 'quantity', 'unitPrice']);
     }
 

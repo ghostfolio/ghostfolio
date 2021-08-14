@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed an issue with the performance in the portfolio summary tab on the home page (impersonation mode)
+- Fixed various values in the impersonation mode which have not been nullified
+
+### Removed
+
+- Removed the current net performance
+- Removed the read foreign portfolio permission
+
 ## 1.38.0 - 14.08.2021
 
 ### Added

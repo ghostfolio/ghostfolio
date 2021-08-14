@@ -530,8 +530,6 @@ export class PortfolioService {
         performance: {
           currentGrossPerformance: 0,
           currentGrossPerformancePercent: 0,
-          currentNetPerformance: 0,
-          currentNetPerformancePercent: 0,
           currentValue: 0
         }
       };
@@ -556,9 +554,6 @@ export class PortfolioService {
       performance: {
         currentGrossPerformance,
         currentGrossPerformancePercent,
-        // TODO: the next two should include fees
-        currentNetPerformance: currentGrossPerformance,
-        currentNetPerformancePercent: currentGrossPerformancePercent,
         currentValue: currentValue
       }
     };
@@ -668,7 +663,7 @@ export class PortfolioService {
     const currency = this.request.user.Settings.currency;
     const userId = await this.getUserId(aImpersonationId);
 
-    const performanceInformation = await this.getPerformance(userId);
+    const performanceInformation = await this.getPerformance(aImpersonationId);
 
     const { balance } = await this.accountService.getCashDetails(
       userId,

@@ -84,25 +84,19 @@ export class AccountController {
   public async getAllAccounts(
     @Headers('impersonation-id') impersonationId
   ): Promise<AccountModel[]> {
-    const impersonationUserId = await this.impersonationService.validateImpersonationId(
-      impersonationId,
-      this.request.user.id
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        impersonationId,
+        this.request.user.id
+      );
+
+    let accounts = await this.accountService.getAccounts(
+      impersonationUserId || this.request.user.id
     );
 
-    let accounts = await this.accountService.accounts({
-      include: { Order: true, Platform: true },
-      orderBy: { name: 'asc' },
-      where: { userId: impersonationUserId || this.request.user.id }
-    });
-
-    if (
-      impersonationUserId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
+    if (impersonationUserId) {
       accounts = nullifyValuesInObjects(accounts, [
+        'balance',
         'fee',
         'quantity',
         'unitPrice'

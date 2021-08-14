@@ -11,11 +11,6 @@ import {
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
@@ -30,7 +25,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import Big from 'big.js';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -50,7 +44,7 @@ export class PortfolioController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get('/investments')
+  @Get('investments')
   @UseGuards(AuthGuard('jwt'))
   public async findAll(
     @Headers('impersonation-id') impersonationId
@@ -59,13 +53,7 @@ export class PortfolioController {
       impersonationId
     );
 
-    if (
-      impersonationId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
+    if (impersonationId) {
       const maxInvestment = investments.reduce(
         (investment, item) => Math.max(investment, item.investment),
         1
@@ -104,13 +92,7 @@ export class PortfolioController {
       res.status(StatusCodes.ACCEPTED);
     }
 
-    if (
-      impersonationId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
+    if (impersonationId) {
       let maxValue = 0;
 
       chartData.forEach((portfolioItem) => {
@@ -139,17 +121,8 @@ export class PortfolioController {
   ): Promise<{ [symbol: string]: PortfolioPosition }> {
     let details: { [symbol: string]: PortfolioPosition } = {};
 
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        impersonationId,
-        this.request.user.id
-      );
-
     try {
-      details = await this.portfolioService.getDetails(
-        impersonationUserId,
-        range
-      );
+      details = await this.portfolioService.getDetails(impersonationId, range);
     } catch (error) {
       console.error(error);
 
@@ -160,13 +133,7 @@ export class PortfolioController {
       res.status(StatusCodes.ACCEPTED);
     }
 
-    if (
-      impersonationId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
+    if (impersonationId) {
       const totalInvestment = Object.values(details)
         .map((portfolioPosition) => {
           return portfolioPosition.investment;
@@ -220,16 +187,9 @@ export class PortfolioController {
     }
 
     let performance = performanceInformation.performance;
-    if (
-      impersonationId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
+    if (impersonationId) {
       performance = nullifyValuesInObject(performance, [
         'currentGrossPerformance',
-        'currentNetPerformance',
         'currentValue'
       ]);
     }
@@ -253,6 +213,16 @@ export class PortfolioController {
       res.status(StatusCodes.ACCEPTED);
     }
 
+    if (impersonationId) {
+      result.positions = result.positions.map((position) => {
+        return nullifyValuesInObject(position, [
+          'grossPerformance',
+          'investment',
+          'quantity'
+        ]);
+      });
+    }
+
     return <any>res.json(result);
   }
 
@@ -263,20 +233,14 @@ export class PortfolioController {
   ): Promise<PortfolioSummary> {
     let summary = await this.portfolioService.getSummary(impersonationId);
 
-    if (
-      impersonationId &&
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.readForeignPortfolio
-      )
-    ) {
+    if (impersonationId) {
       summary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
         'currentGrossPerformance',
-        'currentNetPerformance',
         'currentValue',
         'fees',
+        'netWorth',
         'totalBuy',
         'totalSell'
       ]);
@@ -297,14 +261,12 @@ export class PortfolioController {
     );
 
     if (position) {
-      if (
-        impersonationId &&
-        !hasPermission(
-          getPermissions(this.request.user.role),
-          permissions.readForeignPortfolio
-        )
-      ) {
-        position = nullifyValuesInObject(position, ['grossPerformance']);
+      if (impersonationId) {
+        position = nullifyValuesInObject(position, [
+          'grossPerformance',
+          'investment',
+          'quantity'
+        ]);
       }
 
       return position;
