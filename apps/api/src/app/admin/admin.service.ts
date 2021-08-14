@@ -4,6 +4,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { AdminData } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
+import { differenceInDays } from 'date-fns';
 
 @Injectable()
 export class AdminService {
@@ -87,8 +88,8 @@ export class AdminService {
     return null;
   }
 
-  private async getUsersWithAnalytics() {
-    return await this.prismaService.user.findMany({
+  private async getUsersWithAnalytics(): Promise<AdminData['users']> {
+    const usersWithAnalytics = await this.prismaService.user.findMany({
       orderBy: {
         Analytics: {
           updatedAt: 'desc'
@@ -115,5 +116,23 @@ export class AdminService {
         }
       }
     });
+
+    return usersWithAnalytics.map(
+      ({ _count, alias, Analytics, createdAt, id }) => {
+        const daysSinceRegistration =
+          differenceInDays(new Date(), createdAt) + 1;
+        const engagement = Analytics.activityCount / daysSinceRegistration;
+
+        return {
+          alias,
+          createdAt,
+          engagement,
+          id,
+          accountCount: _count.Account || 0,
+          lastActivity: Analytics.updatedAt,
+          transactionCount: _count.Order || 0
+        };
+      }
+    );
   }
 }
