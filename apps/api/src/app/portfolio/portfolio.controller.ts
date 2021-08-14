@@ -213,6 +213,16 @@ export class PortfolioController {
       res.status(StatusCodes.ACCEPTED);
     }
 
+    if (impersonationId) {
+      result.positions = result.positions.map((position) => {
+        return nullifyValuesInObject(position, [
+          'grossPerformance',
+          'investment',
+          'quantity'
+        ]);
+      });
+    }
+
     return <any>res.json(result);
   }
 

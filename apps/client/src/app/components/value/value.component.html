@@ -1,16 +1,21 @@
-<ng-container *ngIf="value || value === 0">
+<ng-container *ngIf="value || value === 0 || value === null">
   <div
     class="d-flex"
     [ngClass]="position === 'end' ? 'justify-content-end' : ''"
   >
-    <ng-container *ngIf="isNumber">
+    <ng-container *ngIf="isNumber || value === null">
       <div *ngIf="colorizeSign && value > 0" class="mr-1 text-success">+</div>
       <div *ngIf="colorizeSign && value < 0" class="mr-1 text-danger">-</div>
       <div *ngIf="isPercent" [ngClass]="size === 'medium' ? 'h4 mb-0' : ''">
         {{ formattedValue }}%
       </div>
       <div *ngIf="!isPercent" [ngClass]="size === 'medium' ? 'h4 mb-0' : ''">
-        {{ formattedValue }}
+        <ng-container *ngIf="value === null">
+          <span class="text-monospace text-muted">***</span>
+        </ng-container>
+        <ng-container *ngIf="value !== null">
+          {{ formattedValue }}
+        </ng-container>
       </div>
       <small *ngIf="currency && size === 'medium'" class="ml-1">
         {{ currency }}
@@ -38,8 +43,3 @@
     width: '5rem'
   }"
 ></ngx-skeleton-loader>
-
-<div *ngIf="value === null">
-  <span class="text-monospace text-muted text-right">***</span>
-  <span *ngIf="currency" class="ml-1 text-muted">{{ currency }}</span>
-</div>
