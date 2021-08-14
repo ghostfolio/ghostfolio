@@ -1,7 +1,7 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Account, Currency, Order, Prisma } from '@prisma/client';
+import { Account, Currency, Order, Platform, Prisma } from '@prisma/client';
 
 import { CashDetails } from './interfaces/cash-details.interface';
 
@@ -41,7 +41,12 @@ export class AccountService {
     cursor?: Prisma.AccountWhereUniqueInput;
     where?: Prisma.AccountWhereInput;
     orderBy?: Prisma.AccountOrderByInput;
-  }): Promise<Account[]> {
+  }): Promise<
+    (Account & {
+      Order?: Order[];
+      Platform?: Platform;
+    })[]
+  > {
     const { include, skip, take, cursor, where, orderBy } = params;
 
     return this.prismaService.account.findMany({
@@ -69,6 +74,22 @@ export class AccountService {
   ): Promise<Account> {
     return this.prismaService.account.delete({
       where
+    });
+  }
+
+  public async getAccounts(aUserId: string) {
+    const accounts = await this.accounts({
+      include: { Order: true, Platform: true },
+      orderBy: { name: 'asc' },
+      where: { userId: aUserId }
+    });
+
+    return accounts.map((account) => {
+      const result = { ...account, transactionCount: account.Order.length };
+
+      delete result.Order;
+
+      return result;
     });
   }
 

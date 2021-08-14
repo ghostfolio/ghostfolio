@@ -8,7 +8,7 @@
         [tooltip]="element.Platform?.name"
         [url]="element.Platform?.url"
       ></gf-symbol-icon>
-      <span>{{ element.name }}</span>
+      <span>{{ element.name }} </span>
       <span
         *ngIf="element.isDefault"
         class="d-lg-inline-block d-none text-muted"
@@ -45,7 +45,7 @@
       <span class="d-none d-sm-block" i18n>Transactions</span>
     </th>
     <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-      {{ element.Order?.length }}
+      {{ element.transactionCount }}
     </td>
   </ng-container>
 
