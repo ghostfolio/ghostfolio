@@ -1,3 +1,5 @@
+import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
@@ -8,9 +10,7 @@ import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yaho
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Module } from '@nestjs/common';
 
-import { RedisCacheModule } from '../redis-cache/redis-cache.module';
 import { CacheController } from './cache.controller';
-import { CacheService } from './cache.service';
 
 @Module({
   imports: [RedisCacheModule],

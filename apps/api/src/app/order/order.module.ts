@@ -1,3 +1,5 @@
+import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -5,8 +7,6 @@ import { ImpersonationModule } from '@ghostfolio/api/services/impersonation.modu
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
-import { CacheService } from '../cache/cache.service';
-import { RedisCacheModule } from '../redis-cache/redis-cache.module';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 

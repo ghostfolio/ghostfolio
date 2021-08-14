@@ -1,4 +1,5 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import {
   DATE_FORMAT,
   getYesterday,
@@ -18,7 +19,6 @@ import {
   IDataProviderResponse,
   MarketState
 } from '../../interfaces/interfaces';
-import { PrismaService } from '../../prisma.service';
 import { ScraperConfig } from './interfaces/scraper-config.interface';
 
 @Injectable()
