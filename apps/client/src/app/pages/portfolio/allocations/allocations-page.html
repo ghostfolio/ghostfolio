@@ -1,14 +1,7 @@
 <div class="container">
-  <div class="mb-5 row">
+  <div class="row">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>Allocations</h3>
-      <gf-positions-table
-        class="mb-4"
-        [baseCurrency]="user?.settings?.baseCurrency"
-        [deviceType]="deviceType"
-        [locale]="user?.settings?.locale"
-        [positions]="positionsArray"
-      ></gf-positions-table>
     </div>
   </div>
   <div class="proportion-charts row">
@@ -166,6 +159,16 @@
           ></gf-world-map-chart>
         </mat-card-content>
       </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg">
+      <gf-positions-table
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [deviceType]="deviceType"
+        [locale]="user?.settings?.locale"
+        [positions]="positionsArray"
+      ></gf-positions-table>
     </div>
   </div>
 </div>
