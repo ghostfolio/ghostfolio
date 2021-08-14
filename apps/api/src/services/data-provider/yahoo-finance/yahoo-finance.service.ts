@@ -137,7 +137,7 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
-    let items = [];
+    let items: LookupItem[] = [];
 
     try {
       const get = bent(
@@ -180,15 +180,11 @@ export class YahooFinanceService implements DataProviderInterface {
             return symbol.includes(Currency.USD);
           }
 
-          if (!marketData[symbol]?.currency) {
-            // Only allow symbols with supported currency
-            return false;
-          }
-
           return true;
         })
         .map(({ longname, shortname, symbol }) => {
           return {
+            currency: marketData[symbol]?.currency,
             dataSource: DataSource.YAHOO,
             name: longname || shortname,
             symbol: convertFromYahooSymbol(symbol)

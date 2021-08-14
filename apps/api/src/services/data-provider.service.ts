@@ -1,3 +1,4 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import {
   DATE_FORMAT,
   isGhostfolioScraperApiSymbol,
@@ -166,10 +167,19 @@ export class DataProviderService {
     return result;
   }
 
-  public async search(aSymbol: string) {
-    return this.getDataProvider(
+  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+    const { items } = await this.getDataProvider(
       <DataSource>this.configurationService.get('DATA_SOURCES')[0]
     ).search(aSymbol);
+
+    const filteredItems = items.filter((item) => {
+      // Only allow symbols with supported currency
+      return item.currency ? true : false;
+    });
+
+    return {
+      items: filteredItems
+    };
   }
 
   private getDataProvider(providerName: DataSource) {
