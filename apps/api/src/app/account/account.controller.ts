@@ -1,3 +1,4 @@
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import {
@@ -33,7 +34,8 @@ export class AccountController {
   public constructor(
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Delete(':id')
@@ -94,7 +96,10 @@ export class AccountController {
       impersonationUserId || this.request.user.id
     );
 
-    if (impersonationUserId) {
+    if (
+      impersonationUserId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       accounts = nullifyValuesInObjects(accounts, [
         'balance',
         'fee',

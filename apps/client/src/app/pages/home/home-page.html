@@ -61,7 +61,7 @@
             [isLoading]="isLoadingPerformance"
             [locale]="user?.settings?.locale"
             [performance]="performance"
-            [showDetails]="!hasImpersonationId"
+            [showDetails]="!hasImpersonationId && !user.settings.isRestrictedView"
           ></gf-portfolio-performance>
           <div class="text-center">
             <gf-toggle

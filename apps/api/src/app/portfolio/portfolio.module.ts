@@ -1,6 +1,6 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -24,7 +24,8 @@ import { RulesService } from './rules.service';
     ExchangeRateDataModule,
     ImpersonationModule,
     OrderModule,
-    PrismaModule
+    PrismaModule,
+    UserModule
   ],
   controllers: [PortfolioController],
   providers: [
@@ -33,8 +34,7 @@ import { RulesService } from './rules.service';
     MarketDataService,
     PortfolioService,
     RulesService,
-    SymbolProfileService,
-    UserService
+    SymbolProfileService
   ]
 })
 export class PortfolioModule {}

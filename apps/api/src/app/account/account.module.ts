@@ -1,4 +1,5 @@
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
@@ -16,7 +17,8 @@ import { AccountService } from './account.service';
     ExchangeRateDataModule,
     ImpersonationModule,
     RedisCacheModule,
-    PrismaModule
+    PrismaModule,
+    UserModule
   ],
   controllers: [AccountController],
   providers: [AccountService]

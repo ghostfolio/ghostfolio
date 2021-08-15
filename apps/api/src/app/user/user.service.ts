@@ -9,6 +9,7 @@ import { Currency, Prisma, Provider, User, ViewMode } from '@prisma/client';
 import { isBefore } from 'date-fns';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
+import { UserSettings } from './interfaces/user-settings.interface';
 
 const crypto = require('crypto');
 
@@ -50,11 +51,16 @@ export class UserService {
       }),
       accounts: Account,
       settings: {
+        ...(<UserSettings>Settings.settings),
         locale,
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
         viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
       }
     };
+  }
+
+  public isRestrictedView(aUser: UserWithSettings) {
+    return (aUser.Settings.settings as UserSettings)?.isRestrictedView ?? false;
   }
 
   public async user(
@@ -84,6 +90,7 @@ export class UserService {
       // Set default settings if needed
       userFromDatabase.Settings = {
         currency: UserService.DEFAULT_CURRENCY,
+        settings: null,
         updatedAt: new Date(),
         userId: userFromDatabase?.id,
         viewMode: ViewMode.DEFAULT
@@ -217,6 +224,35 @@ export class UserService {
     return this.prismaService.user.delete({
       where
     });
+  }
+
+  public async updateUserSetting({
+    userId,
+    userSettings
+  }: {
+    userId: string;
+    userSettings: UserSettings;
+  }) {
+    const settings = userSettings as Prisma.JsonObject;
+
+    await this.prismaService.settings.upsert({
+      create: {
+        settings,
+        User: {
+          connect: {
+            id: userId
+          }
+        }
+      },
+      update: {
+        settings
+      },
+      where: {
+        userId: userId
+      }
+    });
+
+    return;
   }
 
   public async updateUserSettings({

@@ -14,6 +14,7 @@ import { UserService } from './user.service';
     })
   ],
   controllers: [UserController],
-  providers: [ConfigurationService, PrismaService, UserService]
+  providers: [ConfigurationService, PrismaService, UserService],
+  exports: [UserService]
 })
 export class UserModule {}

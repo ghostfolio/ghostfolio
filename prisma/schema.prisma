@@ -109,8 +109,9 @@ model Property {
 
 model Settings {
   currency  Currency?
-  viewMode  ViewMode?
+  settings  Json?
   updatedAt DateTime  @updatedAt
+  viewMode  ViewMode?
   User      User      @relation(fields: [userId], references: [id])
   userId    String    @id
 }
