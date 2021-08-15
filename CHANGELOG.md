@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an option to hide absolute values like performances and quantities (_Restricted View_)
+
 ### Changed
 
 - Restructured the allocations page
@@ -20,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the current net performance
 - Removed the read foreign portfolio permission
+
+### Todo
+
+- Apply data migration (`yarn database:push`)
 
 ## 1.38.0 - 14.08.2021
 
