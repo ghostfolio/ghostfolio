@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Restructured the allocations page
+
 ### Fixed
 
 - Fixed an issue with the performance in the portfolio summary tab on the home page (impersonation mode)
