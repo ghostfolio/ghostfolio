@@ -337,10 +337,10 @@ export class PortfolioService {
       );
 
       const historicalDataArray: HistoricalDataItem[] = [];
-      let maxPrice = orders[0].unitPrice;
-      let minPrice = orders[0].unitPrice;
+      let maxPrice = Math.max(orders[0].unitPrice, marketPrice);
+      let minPrice = Math.min(orders[0].unitPrice, marketPrice);
 
-      if (!historicalData[aSymbol][firstBuyDate]) {
+      if (!historicalData?.[aSymbol]?.[firstBuyDate]) {
         // Add historical entry for buy date, if no historical data available
         historicalDataArray.push({
           averagePrice: orders[0].unitPrice,
