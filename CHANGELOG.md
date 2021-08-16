@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the node engine version mismatch in `package.json`
+- Fixed an issue on the buy date in the position detail dialog
 
 ## 1.39.0 - 16.08.2021
 
