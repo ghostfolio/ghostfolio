@@ -2,6 +2,11 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
+  .hint-text {
+    font-size: 90%;
+    line-height: 1.2;
+  }
+
   .mat-form-field {
     ::ng-deep {
       .mat-form-field-wrapper {

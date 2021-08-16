@@ -1,9 +1,9 @@
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import {
   PortfolioPerformance,
   PortfolioPosition,
@@ -39,9 +39,9 @@ import { PortfolioService } from './portfolio.service';
 export class PortfolioController {
   public constructor(
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userService: UserService
   ) {}
 
   @Get('investments')
@@ -53,7 +53,10 @@ export class PortfolioController {
       impersonationId
     );
 
-    if (impersonationId) {
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       const maxInvestment = investments.reduce(
         (investment, item) => Math.max(investment, item.investment),
         1
@@ -92,7 +95,10 @@ export class PortfolioController {
       res.status(StatusCodes.ACCEPTED);
     }
 
-    if (impersonationId) {
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       let maxValue = 0;
 
       chartData.forEach((portfolioItem) => {
@@ -133,7 +139,10 @@ export class PortfolioController {
       res.status(StatusCodes.ACCEPTED);
     }
 
-    if (impersonationId) {
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       const totalInvestment = Object.values(details)
         .map((portfolioPosition) => {
           return portfolioPosition.investment;
@@ -187,7 +196,10 @@ export class PortfolioController {
     }
 
     let performance = performanceInformation.performance;
-    if (impersonationId) {
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       performance = nullifyValuesInObject(performance, [
         'currentGrossPerformance',
         'currentValue'
@@ -213,7 +225,10 @@ export class PortfolioController {
       res.status(StatusCodes.ACCEPTED);
     }
 
-    if (impersonationId) {
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       result.positions = result.positions.map((position) => {
         return nullifyValuesInObject(position, [
           'grossPerformance',
@@ -233,7 +248,10 @@ export class PortfolioController {
   ): Promise<PortfolioSummary> {
     let summary = await this.portfolioService.getSummary(impersonationId);
 
-    if (impersonationId) {
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       summary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
@@ -261,7 +279,10 @@ export class PortfolioController {
     );
 
     if (position) {
-      if (impersonationId) {
+      if (
+        impersonationId ||
+        this.userService.isRestrictedView(this.request.user)
+      ) {
         position = nullifyValuesInObject(position, [
           'grossPerformance',
           'investment',

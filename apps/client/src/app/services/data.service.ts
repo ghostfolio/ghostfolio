@@ -13,6 +13,7 @@ import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/por
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
+import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import {
   Access,
@@ -208,6 +209,10 @@ export class DataService {
 
   public putOrder(aOrder: UpdateOrderDto) {
     return this.http.put<UserItem>(`/api/order/${aOrder.id}`, aOrder);
+  }
+
+  public putUserSetting(aData: UpdateUserSettingDto) {
+    return this.http.put<User>(`/api/user/setting`, aData);
   }
 
   public putUserSettings(aData: UpdateUserSettingsDto) {

@@ -136,6 +136,24 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
+    this.dataService
+      .putUserSetting({ isRestrictedView: aEvent.checked })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
   public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
       this.registerDevice();
