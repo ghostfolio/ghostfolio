@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the node engine version mismatch in `package.json`
 - Fixed an issue on the buy date in the position detail dialog
+- Fixed an issue with the currency inconsistency in the _Yahoo Finance_ service (convert from `GBp` to `GBP`)
 
 ## 1.39.0 - 16.08.2021
 

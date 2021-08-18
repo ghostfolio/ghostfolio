@@ -102,18 +102,8 @@ export function isRakutenRapidApiSymbol(aSymbol = '') {
   return aSymbol === 'GF.FEAR_AND_GREED_INDEX';
 }
 
-export function parseCurrency(aString: string): Currency {
-  if (aString?.toLowerCase() === 'chf') {
-    return Currency.CHF;
-  } else if (aString?.toLowerCase() === 'eur') {
-    return Currency.EUR;
-  } else if (aString?.toLowerCase() === 'gbp') {
-    return Currency.GBP;
-  } else if (aString?.toLowerCase() === 'usd') {
-    return Currency.USD;
-  }
-
-  return undefined;
+export function parseCurrency(aCurrency: string): Currency {
+  return Currency[aCurrency];
 }
 
 export function resetHours(aDate: Date) {
