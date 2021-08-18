@@ -10,6 +10,7 @@ import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { AssetClass, Currency, DataSource } from '@prisma/client';
 import * as bent from 'bent';
+import Big from 'big.js';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
 
@@ -71,6 +72,16 @@ export class YahooFinanceService implements DataProviderInterface {
           marketPrice: value.price?.regularMarketPrice || 0,
           name: value.price?.longName || value.price?.shortName || symbol
         };
+
+        if (value.price?.currency === 'GBp') {
+          // Convert GBp (pence) to GBP
+          response[symbol].currency = Currency.GBP;
+          response[symbol].marketPrice = new Big(
+            value.price?.regularMarketPrice ?? 0
+          )
+            .div(100)
+            .toNumber();
+        }
 
         const url = value.summaryProfile?.website;
         if (url) {
