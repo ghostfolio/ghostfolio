@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the fault tolerance of the portfolio details endpoint
+
 ### Fixed
 
 - Fixed the node engine version mismatch in `package.json`
