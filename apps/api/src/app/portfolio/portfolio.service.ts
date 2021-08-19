@@ -154,7 +154,10 @@ export class PortfolioService {
   public async getDetails(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<{ [symbol: string]: PortfolioPosition }> {
+  ): Promise<{
+    details: { [symbol: string]: PortfolioPosition };
+    hasErrors: boolean;
+  }> {
     const userId = await this.getUserId(aImpersonationId);
 
     const userCurrency = this.request.user.Settings.currency;
@@ -168,7 +171,7 @@ export class PortfolioService {
     });
 
     if (transactionPoints?.length <= 0) {
-      return {};
+      return { details: {}, hasErrors: false };
     }
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
@@ -179,16 +182,12 @@ export class PortfolioService {
       startDate
     );
 
-    if (currentPositions.hasErrors) {
-      throw new Error('Missing information');
-    }
-
     const cashDetails = await this.accountService.getCashDetails(
       userId,
       userCurrency
     );
 
-    const result: { [symbol: string]: PortfolioPosition } = {};
+    const details: { [symbol: string]: PortfolioPosition } = {};
     const totalInvestment = currentPositions.totalInvestment.plus(
       cashDetails.balance
     );
@@ -218,7 +217,7 @@ export class PortfolioService {
       const value = item.quantity.mul(item.marketPrice);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
-      result[item.symbol] = {
+      details[item.symbol] = {
         accounts,
         allocationCurrent: value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
@@ -226,8 +225,9 @@ export class PortfolioService {
         countries: symbolProfile.countries,
         currency: item.currency,
         exchange: dataProviderResponse.exchange,
-        grossPerformance: item.grossPerformance.toNumber(),
-        grossPerformancePercent: item.grossPerformancePercentage.toNumber(),
+        grossPerformance: item.grossPerformance?.toNumber() ?? 0,
+        grossPerformancePercent:
+          item.grossPerformancePercentage?.toNumber() ?? 0,
         investment: item.investment.toNumber(),
         marketPrice: item.marketPrice,
         marketState: dataProviderResponse.marketState,
@@ -241,13 +241,13 @@ export class PortfolioService {
     }
 
     // TODO: Add a cash position for each currency
-    result[ghostfolioCashSymbol] = await this.getCashPosition({
+    details[ghostfolioCashSymbol] = await this.getCashPosition({
       cashDetails,
       investment: totalInvestment,
       value: totalValue
     });
 
-    return result;
+    return { details, hasErrors: currentPositions.hasErrors };
   }
 
   public async getPosition(
