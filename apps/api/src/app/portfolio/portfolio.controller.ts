@@ -125,17 +125,12 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<{ [symbol: string]: PortfolioPosition }> {
-    let details: { [symbol: string]: PortfolioPosition } = {};
+    const { details, hasErrors } = await this.portfolioService.getDetails(
+      impersonationId,
+      range
+    );
 
-    try {
-      details = await this.portfolioService.getDetails(impersonationId, range);
-    } catch (error) {
-      console.error(error);
-
-      res.status(StatusCodes.ACCEPTED);
-    }
-
-    if (hasNotDefinedValuesInObject(details)) {
+    if (hasErrors || hasNotDefinedValuesInObject(details)) {
       res.status(StatusCodes.ACCEPTED);
     }
 
