@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the wording for the _Restricted View_: _Presenter View_
 - Improved the styling of the tables
+- Ignored cash assets in the allocation chart by sector, continent and country
+
+### Fixed
+
+- Fixed an issue in the allocation chart by account
 
 ## 1.40.0 - 19.08.2021
 
