@@ -216,7 +216,6 @@ export class PortfolioService {
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
       holdings[item.symbol] = {
-        accounts,
         allocationCurrent: value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
         assetClass: symbolProfile.assetClass,
@@ -702,18 +701,9 @@ export class PortfolioService {
     investment: Big;
     value: Big;
   }) {
-    const accounts = {};
     const cashValue = new Big(cashDetails.balance);
 
-    cashDetails.accounts.forEach((account) => {
-      accounts[account.name] = {
-        current: account.balance,
-        original: account.balance
-      };
-    });
-
     return {
-      accounts,
       allocationCurrent: cashValue.div(value).toNumber(),
       allocationInvestment: cashValue.div(investment).toNumber(),
       assetClass: AssetClass.CASH,
@@ -800,7 +790,7 @@ export class PortfolioService {
     portfolioItemsNow: { [p: string]: TimelinePosition },
     userCurrency
   ) {
-    const accounts: PortfolioPosition['accounts'] = {};
+    const accounts: PortfolioDetails['accounts'] = {};
     for (const order of orders) {
       let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
         order.quantity * portfolioItemsNow[order.symbol].marketPrice,
