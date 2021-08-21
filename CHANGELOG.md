@@ -19,7 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue in the allocation chart by account
+- Fixed an issue in the allocation chart by account (wrong calculation)
+- Fixed an issue in the allocation chart by account (missing cash accounts)
 
 ## 1.40.0 - 19.08.2021
 
