@@ -3,12 +3,13 @@ import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/to
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { ghostfolioCashSymbol, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { AssetClass } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -137,70 +138,74 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       };
       this.positionsArray.push(position);
 
-      if (position.countries.length > 0) {
-        for (const country of position.countries) {
-          const { code, continent, name, weight } = country;
+      if (position.assetClass !== AssetClass.CASH) {
+        // Prepare analysis data by continents, countries and sectors except for cash
 
-          if (this.continents[continent]?.value) {
-            this.continents[continent].value += weight * position.value;
-          } else {
-            this.continents[continent] = {
-              name: continent,
-              value:
-                weight *
-                (aPeriod === 'original'
-                  ? this.portfolioDetails.holdings[symbol].investment
-                  : this.portfolioDetails.holdings[symbol].value)
-            };
-          }
+        if (position.countries.length > 0) {
+          for (const country of position.countries) {
+            const { code, continent, name, weight } = country;
 
-          if (this.countries[code]?.value) {
-            this.countries[code].value += weight * position.value;
-          } else {
-            this.countries[code] = {
-              name,
-              value:
-                weight *
-                (aPeriod === 'original'
-                  ? this.portfolioDetails.holdings[symbol].investment
-                  : this.portfolioDetails.holdings[symbol].value)
-            };
+            if (this.continents[continent]?.value) {
+              this.continents[continent].value += weight * position.value;
+            } else {
+              this.continents[continent] = {
+                name: continent,
+                value:
+                  weight *
+                  (aPeriod === 'original'
+                    ? this.portfolioDetails.holdings[symbol].investment
+                    : this.portfolioDetails.holdings[symbol].value)
+              };
+            }
+
+            if (this.countries[code]?.value) {
+              this.countries[code].value += weight * position.value;
+            } else {
+              this.countries[code] = {
+                name,
+                value:
+                  weight *
+                  (aPeriod === 'original'
+                    ? this.portfolioDetails.holdings[symbol].investment
+                    : this.portfolioDetails.holdings[symbol].value)
+              };
+            }
           }
+        } else {
+          this.continents[UNKNOWN_KEY].value +=
+            aPeriod === 'original'
+              ? this.portfolioDetails.holdings[symbol].investment
+              : this.portfolioDetails.holdings[symbol].value;
+
+          this.countries[UNKNOWN_KEY].value +=
+            aPeriod === 'original'
+              ? this.portfolioDetails.holdings[symbol].investment
+              : this.portfolioDetails.holdings[symbol].value;
         }
-      } else {
-        this.continents[UNKNOWN_KEY].value +=
-          aPeriod === 'original'
-            ? this.portfolioDetails.holdings[symbol].investment
-            : this.portfolioDetails.holdings[symbol].value;
 
-        this.countries[UNKNOWN_KEY].value +=
-          aPeriod === 'original'
-            ? this.portfolioDetails.holdings[symbol].investment
-            : this.portfolioDetails.holdings[symbol].value;
-      }
+        if (position.sectors.length > 0) {
+          for (const sector of position.sectors) {
+            const { name, weight } = sector;
 
-      if (position.sectors.length > 0) {
-        for (const sector of position.sectors) {
-          const { name, weight } = sector;
-
-          if (this.sectors[name]?.value) {
-            this.sectors[name].value += weight * position.value;
-          } else {
-            this.sectors[name] = {
-              name,
-              value:
-                weight *
-                (aPeriod === 'original'
-                  ? this.portfolioDetails.holdings[symbol].investment
-                  : this.portfolioDetails.holdings[symbol].value)
-            };
+            if (this.sectors[name]?.value) {
+              this.sectors[name].value += weight * position.value;
+            } else {
+              this.sectors[name] = {
+                name,
+                value:
+                  weight *
+                  (aPeriod === 'original'
+                    ? this.portfolioDetails.holdings[symbol].investment
+                    : this.portfolioDetails.holdings[symbol].value)
+              };
+            }
           }
+        } else {
+          this.sectors[UNKNOWN_KEY].value +=
+            aPeriod === 'original'
+              ? this.portfolioDetails.holdings[symbol].investment
+              : this.portfolioDetails.holdings[symbol].value;
         }
-      } else {
-        this.sectors[UNKNOWN_KEY].value +=
-          aPeriod === 'original'
-            ? this.portfolioDetails.holdings[symbol].investment
-            : this.portfolioDetails.holdings[symbol].value;
       }
     }
   }
