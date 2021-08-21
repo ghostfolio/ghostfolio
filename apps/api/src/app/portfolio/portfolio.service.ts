@@ -24,6 +24,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.se
 import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
+  PortfolioDetails,
   PortfolioPerformance,
   PortfolioPosition,
   PortfolioReport,
@@ -154,10 +155,7 @@ export class PortfolioService {
   public async getDetails(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<{
-    details: { [symbol: string]: PortfolioPosition };
-    hasErrors: boolean;
-  }> {
+  ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId);
 
     const userCurrency = this.request.user.Settings.currency;
@@ -171,7 +169,7 @@ export class PortfolioService {
     });
 
     if (transactionPoints?.length <= 0) {
-      return { details: {}, hasErrors: false };
+      return { accounts: {}, holdings: {}, hasErrors: false };
     }
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
@@ -187,7 +185,7 @@ export class PortfolioService {
       userCurrency
     );
 
-    const details: { [symbol: string]: PortfolioPosition } = {};
+    const holdings: PortfolioDetails['holdings'] = {};
     const totalInvestment = currentPositions.totalInvestment.plus(
       cashDetails.balance
     );
@@ -211,14 +209,12 @@ export class PortfolioService {
     for (const position of currentPositions.positions) {
       portfolioItemsNow[position.symbol] = position;
     }
-    const accounts = this.getAccounts(orders, portfolioItemsNow, userCurrency);
 
     for (const item of currentPositions.positions) {
       const value = item.quantity.mul(item.marketPrice);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
-      details[item.symbol] = {
-        accounts,
+      holdings[item.symbol] = {
         allocationCurrent: value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
         assetClass: symbolProfile.assetClass,
@@ -241,13 +237,20 @@ export class PortfolioService {
     }
 
     // TODO: Add a cash position for each currency
-    details[ghostfolioCashSymbol] = await this.getCashPosition({
+    holdings[ghostfolioCashSymbol] = await this.getCashPosition({
       cashDetails,
       investment: totalInvestment,
       value: totalValue
     });
 
-    return { details, hasErrors: currentPositions.hasErrors };
+    const accounts = await this.getAccounts(
+      orders,
+      portfolioItemsNow,
+      userCurrency,
+      userId
+    );
+
+    return { accounts, holdings, hasErrors: currentPositions.hasErrors };
   }
 
   public async getPosition(
@@ -604,7 +607,12 @@ export class PortfolioService {
     for (const position of currentPositions.positions) {
       portfolioItemsNow[position.symbol] = position;
     }
-    const accounts = this.getAccounts(orders, portfolioItemsNow, baseCurrency);
+    const accounts = await this.getAccounts(
+      orders,
+      portfolioItemsNow,
+      baseCurrency,
+      userId
+    );
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
@@ -704,18 +712,9 @@ export class PortfolioService {
     investment: Big;
     value: Big;
   }) {
-    const accounts = {};
     const cashValue = new Big(cashDetails.balance);
 
-    cashDetails.accounts.forEach((account) => {
-      accounts[account.name] = {
-        current: account.balance,
-        original: account.balance
-      };
-    });
-
     return {
-      accounts,
       allocationCurrent: cashValue.div(value).toNumber(),
       allocationInvestment: cashValue.div(investment).toNumber(),
       assetClass: AssetClass.CASH,
@@ -797,41 +796,67 @@ export class PortfolioService {
     };
   }
 
-  private getAccounts(
+  private async getAccounts(
     orders: OrderWithAccount[],
     portfolioItemsNow: { [p: string]: TimelinePosition },
-    userCurrency
+    userCurrency: Currency,
+    userId: string
   ) {
-    const accounts: PortfolioPosition['accounts'] = {};
-    for (const order of orders) {
-      let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
-        order.quantity * portfolioItemsNow[order.symbol].marketPrice,
-        order.currency,
-        userCurrency
-      );
-      let originalValueOfSymbol = this.exchangeRateDataService.toCurrency(
-        order.quantity * order.unitPrice,
-        order.currency,
-        userCurrency
-      );
+    const accounts: PortfolioDetails['accounts'] = {};
 
-      if (order.type === 'SELL') {
-        currentValueOfSymbol *= -1;
-        originalValueOfSymbol *= -1;
+    const currentAccounts = await this.accountService.getAccounts(userId);
+
+    for (const account of currentAccounts) {
+      const ordersByAccount = orders.filter(({ accountId }) => {
+        return accountId === account.id;
+      });
+
+      if (ordersByAccount.length <= 0) {
+        // Add account without orders
+        const balance = this.exchangeRateDataService.toCurrency(
+          account.balance,
+          account.currency,
+          userCurrency
+        );
+        accounts[account.name] = {
+          current: balance,
+          original: balance
+        };
+
+        continue;
       }
 
-      if (accounts[order.Account?.name || UNKNOWN_KEY]?.current) {
-        accounts[order.Account?.name || UNKNOWN_KEY].current +=
-          currentValueOfSymbol;
-        accounts[order.Account?.name || UNKNOWN_KEY].original +=
-          originalValueOfSymbol;
-      } else {
-        accounts[order.Account?.name || UNKNOWN_KEY] = {
-          current: currentValueOfSymbol,
-          original: originalValueOfSymbol
-        };
+      for (const order of ordersByAccount) {
+        let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
+          order.quantity * portfolioItemsNow[order.symbol].marketPrice,
+          order.currency,
+          userCurrency
+        );
+        let originalValueOfSymbol = this.exchangeRateDataService.toCurrency(
+          order.quantity * order.unitPrice,
+          order.currency,
+          userCurrency
+        );
+
+        if (order.type === 'SELL') {
+          currentValueOfSymbol *= -1;
+          originalValueOfSymbol *= -1;
+        }
+
+        if (accounts[order.Account?.name || UNKNOWN_KEY]?.current) {
+          accounts[order.Account?.name || UNKNOWN_KEY].current +=
+            currentValueOfSymbol;
+          accounts[order.Account?.name || UNKNOWN_KEY].original +=
+            originalValueOfSymbol;
+        } else {
+          accounts[order.Account?.name || UNKNOWN_KEY] = {
+            current: currentValueOfSymbol,
+            original: originalValueOfSymbol
+          };
+        }
       }
     }
+
     return accounts;
   }
 

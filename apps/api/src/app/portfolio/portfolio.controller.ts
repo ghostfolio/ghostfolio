@@ -5,8 +5,8 @@ import {
 } from '@ghostfolio/api/helper/object.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import {
+  PortfolioDetails,
   PortfolioPerformance,
-  PortfolioPosition,
   PortfolioReport,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
@@ -124,13 +124,11 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId,
     @Query('range') range,
     @Res() res: Response
-  ): Promise<{ [symbol: string]: PortfolioPosition }> {
-    const { details, hasErrors } = await this.portfolioService.getDetails(
-      impersonationId,
-      range
-    );
+  ): Promise<PortfolioDetails> {
+    const { accounts, holdings, hasErrors } =
+      await this.portfolioService.getDetails(impersonationId, range);
 
-    if (hasErrors || hasNotDefinedValuesInObject(details)) {
+    if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       res.status(StatusCodes.ACCEPTED);
     }
 
@@ -138,13 +136,13 @@ export class PortfolioController {
       impersonationId ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      const totalInvestment = Object.values(details)
+      const totalInvestment = Object.values(holdings)
         .map((portfolioPosition) => {
           return portfolioPosition.investment;
         })
         .reduce((a, b) => a + b, 0);
 
-      const totalValue = Object.values(details)
+      const totalValue = Object.values(holdings)
         .map((portfolioPosition) => {
           return this.exchangeRateDataService.toCurrency(
             portfolioPosition.quantity * portfolioPosition.marketPrice,
@@ -154,24 +152,21 @@ export class PortfolioController {
         })
         .reduce((a, b) => a + b, 0);
 
-      for (const [symbol, portfolioPosition] of Object.entries(details)) {
+      for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
         portfolioPosition.grossPerformance = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
 
-        for (const [account, { current, original }] of Object.entries(
-          portfolioPosition.accounts
-        )) {
-          portfolioPosition.accounts[account].current = current / totalValue;
-          portfolioPosition.accounts[account].original =
-            original / totalInvestment;
-        }
-
         portfolioPosition.quantity = null;
+      }
+
+      for (const [name, { current, original }] of Object.entries(accounts)) {
+        accounts[name].current = current / totalValue;
+        accounts[name].original = original / totalInvestment;
       }
     }
 
-    return <any>res.json(details);
+    return <any>res.json({ accounts, holdings });
   }
 
   @Get('performance')
