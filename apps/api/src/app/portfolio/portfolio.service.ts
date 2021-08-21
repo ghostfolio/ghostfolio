@@ -209,7 +209,6 @@ export class PortfolioService {
     for (const position of currentPositions.positions) {
       portfolioItemsNow[position.symbol] = position;
     }
-    const accounts = this.getAccounts(orders, portfolioItemsNow, userCurrency);
 
     for (const item of currentPositions.positions) {
       const value = item.quantity.mul(item.marketPrice);
@@ -243,6 +242,13 @@ export class PortfolioService {
       investment: totalInvestment,
       value: totalValue
     });
+
+    const accounts = await this.getAccounts(
+      orders,
+      portfolioItemsNow,
+      userCurrency,
+      userId
+    );
 
     return { accounts, holdings, hasErrors: currentPositions.hasErrors };
   }
@@ -601,7 +607,12 @@ export class PortfolioService {
     for (const position of currentPositions.positions) {
       portfolioItemsNow[position.symbol] = position;
     }
-    const accounts = this.getAccounts(orders, portfolioItemsNow, baseCurrency);
+    const accounts = await this.getAccounts(
+      orders,
+      portfolioItemsNow,
+      baseCurrency,
+      userId
+    );
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
@@ -785,41 +796,67 @@ export class PortfolioService {
     };
   }
 
-  private getAccounts(
+  private async getAccounts(
     orders: OrderWithAccount[],
     portfolioItemsNow: { [p: string]: TimelinePosition },
-    userCurrency
+    userCurrency: Currency,
+    userId: string
   ) {
     const accounts: PortfolioDetails['accounts'] = {};
-    for (const order of orders) {
-      let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
-        order.quantity * portfolioItemsNow[order.symbol].marketPrice,
-        order.currency,
-        userCurrency
-      );
-      let originalValueOfSymbol = this.exchangeRateDataService.toCurrency(
-        order.quantity * order.unitPrice,
-        order.currency,
-        userCurrency
-      );
 
-      if (order.type === 'SELL') {
-        currentValueOfSymbol *= -1;
-        originalValueOfSymbol *= -1;
+    const currentAccounts = await this.accountService.getAccounts(userId);
+
+    for (const account of currentAccounts) {
+      const ordersByAccount = orders.filter(({ accountId }) => {
+        return accountId === account.id;
+      });
+
+      if (ordersByAccount.length <= 0) {
+        // Add account without orders
+        const balance = this.exchangeRateDataService.toCurrency(
+          account.balance,
+          account.currency,
+          userCurrency
+        );
+        accounts[account.name] = {
+          current: balance,
+          original: balance
+        };
+
+        continue;
       }
 
-      if (accounts[order.Account?.name || UNKNOWN_KEY]?.current) {
-        accounts[order.Account?.name || UNKNOWN_KEY].current +=
-          currentValueOfSymbol;
-        accounts[order.Account?.name || UNKNOWN_KEY].original +=
-          originalValueOfSymbol;
-      } else {
-        accounts[order.Account?.name || UNKNOWN_KEY] = {
-          current: currentValueOfSymbol,
-          original: originalValueOfSymbol
-        };
+      for (const order of ordersByAccount) {
+        let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
+          order.quantity * portfolioItemsNow[order.symbol].marketPrice,
+          order.currency,
+          userCurrency
+        );
+        let originalValueOfSymbol = this.exchangeRateDataService.toCurrency(
+          order.quantity * order.unitPrice,
+          order.currency,
+          userCurrency
+        );
+
+        if (order.type === 'SELL') {
+          currentValueOfSymbol *= -1;
+          originalValueOfSymbol *= -1;
+        }
+
+        if (accounts[order.Account?.name || UNKNOWN_KEY]?.current) {
+          accounts[order.Account?.name || UNKNOWN_KEY].current +=
+            currentValueOfSymbol;
+          accounts[order.Account?.name || UNKNOWN_KEY].original +=
+            originalValueOfSymbol;
+        } else {
+          accounts[order.Account?.name || UNKNOWN_KEY] = {
+            current: currentValueOfSymbol,
+            original: originalValueOfSymbol
+          };
+        }
       }
     }
+
     return accounts;
   }
 
