@@ -21,7 +21,10 @@
             >.
             <ng-container *ngIf="lastPublish">
               This instance is running Ghostfolio {{ version }} and has been
-              last published on {{ lastPublish }}. Check the system status at
+              last published on {{ lastPublish }}.
+            </ng-container>
+            <ng-container *ngIf="hasPermissionForSubscription" i18n
+              >Check the system status at
               <a href="https://status.ghostfol.io" title="Ghostfolio status"
                 >status.ghostfol.io</a
               >.</ng-container
