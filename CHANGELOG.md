@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a link to the system status page
+
 ### Changed
 
 - Improved the wording for the _Restricted View_: _Presenter View_
