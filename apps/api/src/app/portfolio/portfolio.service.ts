@@ -24,6 +24,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.se
 import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
+  PortfolioDetails,
   PortfolioPerformance,
   PortfolioPosition,
   PortfolioReport,
@@ -154,10 +155,7 @@ export class PortfolioService {
   public async getDetails(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<{
-    details: { [symbol: string]: PortfolioPosition };
-    hasErrors: boolean;
-  }> {
+  ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId);
 
     const userCurrency = this.request.user.Settings.currency;
@@ -171,7 +169,7 @@ export class PortfolioService {
     });
 
     if (transactionPoints?.length <= 0) {
-      return { details: {}, hasErrors: false };
+      return { accounts: {}, holdings: {}, hasErrors: false };
     }
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
@@ -187,7 +185,7 @@ export class PortfolioService {
       userCurrency
     );
 
-    const details: { [symbol: string]: PortfolioPosition } = {};
+    const holdings: PortfolioDetails['holdings'] = {};
     const totalInvestment = currentPositions.totalInvestment.plus(
       cashDetails.balance
     );
@@ -217,7 +215,7 @@ export class PortfolioService {
       const value = item.quantity.mul(item.marketPrice);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
-      details[item.symbol] = {
+      holdings[item.symbol] = {
         accounts,
         allocationCurrent: value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
@@ -241,13 +239,13 @@ export class PortfolioService {
     }
 
     // TODO: Add a cash position for each currency
-    details[ghostfolioCashSymbol] = await this.getCashPosition({
+    holdings[ghostfolioCashSymbol] = await this.getCashPosition({
       cashDetails,
       investment: totalInvestment,
       value: totalValue
     });
 
-    return { details, hasErrors: currentPositions.hasErrors };
+    return { accounts, holdings, hasErrors: currentPositions.hasErrors };
   }
 
   public async getPosition(

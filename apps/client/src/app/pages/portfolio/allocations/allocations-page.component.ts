@@ -4,7 +4,11 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioDetails,
+  PortfolioPosition,
+  User
+} from '@ghostfolio/common/interfaces';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -31,7 +35,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     { label: 'Initial', value: 'original' },
     { label: 'Current', value: 'current' }
   ];
-  public portfolioPositions: { [symbol: string]: PortfolioPosition };
+  public portfolioDetails: PortfolioDetails;
   public positions: { [symbol: string]: any };
   public positionsArray: PortfolioPosition[];
   public sectors: {
@@ -66,11 +70,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchPortfolioPositions({})
+      .fetchPortfolioDetails({})
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response = {}) => {
-        this.portfolioPositions = response;
-        this.initializeAnalysisData(this.portfolioPositions, this.period);
+      .subscribe((portfolioDetails) => {
+        this.portfolioDetails = portfolioDetails;
+
+        this.initializeAnalysisData(this.period);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -86,12 +91,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public initializeAnalysisData(
-    aPortfolioPositions: {
-      [symbol: string]: PortfolioPosition;
-    },
-    aPeriod: string
-  ) {
+  public initializeAnalysisData(aPeriod: string) {
     this.accounts = {};
     this.continents = {
       [UNKNOWN_KEY]: {
@@ -114,7 +114,18 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
     };
 
-    for (const [symbol, position] of Object.entries(aPortfolioPositions)) {
+    for (const [name, { current, original }] of Object.entries(
+      this.portfolioDetails.accounts
+    )) {
+      this.accounts[name] = {
+        name,
+        value: aPeriod === 'original' ? original : current
+      };
+    }
+
+    for (const [symbol, position] of Object.entries(
+      this.portfolioDetails.holdings
+    )) {
       this.positions[symbol] = {
         assetClass: position.assetClass,
         currency: position.currency,
@@ -125,20 +136,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             : position.allocationCurrent
       };
       this.positionsArray.push(position);
-
-      for (const [account, { current, original }] of Object.entries(
-        position.accounts
-      )) {
-        if (this.accounts[account]?.value) {
-          this.accounts[account].value +=
-            aPeriod === 'original' ? original : current;
-        } else {
-          this.accounts[account] = {
-            name: account,
-            value: aPeriod === 'original' ? original : current
-          };
-        }
-      }
 
       if (position.countries.length > 0) {
         for (const country of position.countries) {
@@ -152,8 +149,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               value:
                 weight *
                 (aPeriod === 'original'
-                  ? this.portfolioPositions[symbol].investment
-                  : this.portfolioPositions[symbol].value)
+                  ? this.portfolioDetails.holdings[symbol].investment
+                  : this.portfolioDetails.holdings[symbol].value)
             };
           }
 
@@ -165,21 +162,21 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               value:
                 weight *
                 (aPeriod === 'original'
-                  ? this.portfolioPositions[symbol].investment
-                  : this.portfolioPositions[symbol].value)
+                  ? this.portfolioDetails.holdings[symbol].investment
+                  : this.portfolioDetails.holdings[symbol].value)
             };
           }
         }
       } else {
         this.continents[UNKNOWN_KEY].value +=
           aPeriod === 'original'
-            ? this.portfolioPositions[symbol].investment
-            : this.portfolioPositions[symbol].value;
+            ? this.portfolioDetails.holdings[symbol].investment
+            : this.portfolioDetails.holdings[symbol].value;
 
         this.countries[UNKNOWN_KEY].value +=
           aPeriod === 'original'
-            ? this.portfolioPositions[symbol].investment
-            : this.portfolioPositions[symbol].value;
+            ? this.portfolioDetails.holdings[symbol].investment
+            : this.portfolioDetails.holdings[symbol].value;
       }
 
       if (position.sectors.length > 0) {
@@ -194,16 +191,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               value:
                 weight *
                 (aPeriod === 'original'
-                  ? this.portfolioPositions[symbol].investment
-                  : this.portfolioPositions[symbol].value)
+                  ? this.portfolioDetails.holdings[symbol].investment
+                  : this.portfolioDetails.holdings[symbol].value)
             };
           }
         }
       } else {
         this.sectors[UNKNOWN_KEY].value +=
           aPeriod === 'original'
-            ? this.portfolioPositions[symbol].investment
-            : this.portfolioPositions[symbol].value;
+            ? this.portfolioDetails.holdings[symbol].investment
+            : this.portfolioDetails.holdings[symbol].value;
       }
     }
   }
@@ -211,7 +208,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public onChangePeriod(aValue: string) {
     this.period = aValue;
 
-    this.initializeAnalysisData(this.portfolioPositions, this.period);
+    this.initializeAnalysisData(this.period);
   }
 
   public ngOnDestroy() {

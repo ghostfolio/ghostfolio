@@ -20,8 +20,8 @@ import {
   AdminData,
   Export,
   InfoItem,
+  PortfolioDetails,
   PortfolioPerformance,
-  PortfolioPosition,
   PortfolioReport,
   PortfolioSummary,
   User
@@ -148,17 +148,16 @@ export class DataService {
     return this.http.get<InvestmentItem[]>('/api/portfolio/investments');
   }
 
-  public fetchPortfolioPerformance(aParams: { [param: string]: any }) {
-    return this.http.get<PortfolioPerformance>('/api/portfolio/performance', {
+  public fetchPortfolioDetails(aParams: { [param: string]: any }) {
+    return this.http.get<PortfolioDetails>('/api/portfolio/details', {
       params: aParams
     });
   }
 
-  public fetchPortfolioPositions(aParams: { [param: string]: any }) {
-    return this.http.get<{ [symbol: string]: PortfolioPosition }>(
-      '/api/portfolio/details',
-      { params: aParams }
-    );
+  public fetchPortfolioPerformance(aParams: { [param: string]: any }) {
+    return this.http.get<PortfolioPerformance>('/api/portfolio/performance', {
+      params: aParams
+    });
   }
 
   public fetchPortfolioReport() {
