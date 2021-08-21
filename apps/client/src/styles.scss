@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import './styles/bootstrap';
+@import './styles/table';
 
 @import '~angular-material-css-vars/main';
 
@@ -68,6 +69,10 @@ body {
       }
     }
 
+    .gf-table {
+      @include gf-table(true);
+    }
+
     .mat-card {
       background: var(--dark-background);
 
@@ -129,6 +134,10 @@ ngx-skeleton-loader {
   }
 }
 
+.gf-table {
+  @include gf-table;
+}
+
 .mat-fab,
 .mat-flat-button {
   &.mat-primary {
@@ -145,18 +154,6 @@ ngx-skeleton-loader {
 
 .mat-card-header-text {
   margin: 0 !important;
-}
-
-.mat-row {
-  &:last-child {
-    td.mat-cell {
-      border-bottom-width: 0;
-    }
-  }
-}
-
-.mat-table {
-  background: transparent !important;
 }
 
 .no-min-width {

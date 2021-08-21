@@ -1,0 +1,27 @@
+@mixin gf-table($darkTheme: false) {
+  background: transparent !important;
+
+  td {
+    border: 0 !important;
+  }
+
+  .mat-row {
+    &:nth-child(even) {
+      background-color: rgba(
+        var(--palette-foreground-base),
+        var(--palette-background-hover-alpha)
+      );
+    }
+  }
+
+  @if $darkTheme {
+    .mat-row {
+      &:nth-child(even) {
+        background-color: rgba(
+          var(--palette-foreground-base-dark),
+          var(--palette-background-hover-alpha)
+        );
+      }
+    }
+  }
+}
