@@ -16,6 +16,7 @@ import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';
 import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
+import * as Color from 'color';
 
 @Component({
   selector: 'gf-portfolio-proportion-chart',
@@ -28,7 +29,7 @@ export class PortfolioProportionChartComponent
 {
   @Input() baseCurrency: Currency;
   @Input() isInPercent: boolean;
-  @Input() key: string;
+  @Input() keys: string[];
   @Input() locale: string;
   @Input() maxItems?: number;
   @Input() positions: {
@@ -65,24 +66,54 @@ export class PortfolioProportionChartComponent
   private initialize() {
     this.isLoading = true;
     const chartData: {
-      [symbol: string]: { color?: string; value: number };
+      [symbol: string]: {
+        color?: string;
+        subCategory: { [symbol: string]: { value: number } };
+        value: number;
+      };
     } = {};
 
     Object.keys(this.positions).forEach((symbol) => {
-      if (this.positions[symbol][this.key]) {
-        if (chartData[this.positions[symbol][this.key]]) {
-          chartData[this.positions[symbol][this.key]].value +=
+      if (this.positions[symbol][this.keys[0]]) {
+        if (chartData[this.positions[symbol][this.keys[0]]]) {
+          chartData[this.positions[symbol][this.keys[0]]].value +=
             this.positions[symbol].value;
+
+          if (
+            chartData[this.positions[symbol][this.keys[0]]].subCategory[
+              this.positions[symbol][this.keys[1]]
+            ]
+          ) {
+            chartData[this.positions[symbol][this.keys[0]]].subCategory[
+              this.positions[symbol][this.keys[1]]
+            ].value += this.positions[symbol].value;
+          } else {
+            chartData[this.positions[symbol][this.keys[0]]].subCategory[
+              this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
+            ] = { value: this.positions[symbol].value };
+          }
         } else {
-          chartData[this.positions[symbol][this.key]] = {
+          chartData[this.positions[symbol][this.keys[0]]] = {
+            subCategory: {},
             value: this.positions[symbol].value
           };
+
+          if (this.positions[symbol][this.keys[1]]) {
+            chartData[this.positions[symbol][this.keys[0]]].subCategory = {
+              [this.positions[symbol][this.keys[1]]]: {
+                value: this.positions[symbol].value
+              }
+            };
+          }
         }
       } else {
         if (chartData[UNKNOWN_KEY]) {
           chartData[UNKNOWN_KEY].value += this.positions[symbol].value;
         } else {
           chartData[UNKNOWN_KEY] = {
+            subCategory: this.keys[1]
+              ? { [this.keys[1]]: { value: 0 } }
+              : undefined,
             value: this.positions[symbol].value
           };
         }
@@ -107,13 +138,17 @@ export class PortfolioProportionChartComponent
       });
 
       if (!unknownItem) {
-        const index = chartDataSorted.push([UNKNOWN_KEY, { value: 0 }]);
+        const index = chartDataSorted.push([
+          UNKNOWN_KEY,
+          { subCategory: {}, value: 0 }
+        ]);
         unknownItem = chartDataSorted[index];
       }
 
       rest.forEach((restItem) => {
         if (unknownItem?.[1]) {
           unknownItem[1] = {
+            subCategory: {},
             value: unknownItem[1].value + restItem[1].value
           };
         }
@@ -141,21 +176,53 @@ export class PortfolioProportionChartComponent
       }
     });
 
+    const backgroundColorSubCategory: string[] = [];
+    const dataSubCategory: number[] = [];
+    const labelSubCategory: string[] = [];
+
+    chartDataSorted.forEach(([, item]) => {
+      let lightnessRatio = 0.2;
+
+      Object.keys(item.subCategory).forEach((subCategory) => {
+        backgroundColorSubCategory.push(
+          Color(item.color).lighten(lightnessRatio).hex()
+        );
+        dataSubCategory.push(item.subCategory[subCategory].value);
+        labelSubCategory.push(subCategory);
+
+        lightnessRatio += 0.1;
+      });
+    });
+
+    const datasets = [
+      {
+        backgroundColor: chartDataSorted.map(([, item]) => {
+          return item.color;
+        }),
+        borderWidth: 0,
+        data: chartDataSorted.map(([, item]) => {
+          return item.value;
+        })
+      }
+    ];
+
+    let labels = chartDataSorted.map(([label]) => {
+      return label;
+    });
+
+    if (this.keys[1]) {
+      datasets.unshift({
+        backgroundColor: backgroundColorSubCategory,
+        borderWidth: 0,
+        data: dataSubCategory
+      });
+
+      labels = labelSubCategory.concat(labels);
+    }
+
     const data = {
-      datasets: [
-        {
-          backgroundColor: chartDataSorted.map(([, item]) => {
-            return item.color;
-          }),
-          borderWidth: 0,
-          data: chartDataSorted.map(([, item]) => {
-            return item.value;
-          })
-        }
-      ],
-      labels: chartDataSorted.map(([label]) => {
-        return label;
-      })
+      datasets,
+      labels
     };
 
     if (this.chartCanvas) {
@@ -166,13 +233,16 @@ export class PortfolioProportionChartComponent
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
+            cutout: '70%',
             plugins: {
               legend: { display: false },
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const label =
-                      context.label === UNKNOWN_KEY ? 'Other' : context.label;
+                    const labelIndex =
+                      (data.datasets[context.datasetIndex - 1]?.data?.length ??
+                        0) + context.dataIndex;
+                    const label = context.chart.data.labels[labelIndex];
 
                     if (this.isInPercent) {
                       const value = 100 * <number>context.raw;

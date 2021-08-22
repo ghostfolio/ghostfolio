@@ -3,7 +3,7 @@ import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/to
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioPosition,
@@ -129,6 +129,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     )) {
       this.positions[symbol] = {
         assetClass: position.assetClass,
+        assetSubClass: position.assetSubClass,
         currency: position.currency,
         exchange: position.exchange,
         value:

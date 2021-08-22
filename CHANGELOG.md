@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the subscription type to the users table of the admin control panel
+- Introduced the sub classification of assets
+
+### Todo
+
+- Apply data migration (`yarn database:push`)
 
 ## 1.41.0 - 21.08.2021
 

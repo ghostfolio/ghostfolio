@@ -117,17 +117,18 @@ model Settings {
 }
 
 model SymbolProfile {
-  assetClass AssetClass?
-  countries  Json?
-  createdAt  DateTime    @default(now())
-  currency   Currency?
-  dataSource DataSource
-  id         String      @id @default(uuid())
-  name       String?
-  Order      Order[]
-  updatedAt  DateTime    @updatedAt
-  sectors    Json?
-  symbol     String
+  assetClass    AssetClass?
+  assetSubClass AssetSubClass?
+  countries     Json?
+  createdAt     DateTime       @default(now())
+  currency      Currency?
+  dataSource    DataSource
+  id            String         @id @default(uuid())
+  name          String?
+  Order         Order[]
+  updatedAt     DateTime       @updatedAt
+  sectors       Json?
+  symbol        String
 
   @@unique([dataSource, symbol])
 }
@@ -172,6 +173,12 @@ enum AssetClass {
   CASH
   COMMODITY
   EQUITY
+}
+
+enum AssetSubClass {
+  CRYPTOCURRENCY
+  ETF
+  STOCK
 }
 
 enum Currency {

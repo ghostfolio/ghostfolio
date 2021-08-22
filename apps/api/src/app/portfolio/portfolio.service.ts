@@ -218,6 +218,7 @@ export class PortfolioService {
         allocationCurrent: value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
         assetClass: symbolProfile.assetClass,
+        assetSubClass: symbolProfile.assetSubClass,
         countries: symbolProfile.countries,
         currency: item.currency,
         exchange: dataProviderResponse.exchange,
