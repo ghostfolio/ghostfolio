@@ -1,3 +1,4 @@
+import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { locale } from '@ghostfolio/common/config';
@@ -6,7 +7,6 @@ import { getPermissions, permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
 import { Currency, Prisma, Provider, User, ViewMode } from '@prisma/client';
-import { isBefore } from 'date-fns';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 import { UserSettings } from './interfaces/user-settings.interface';
@@ -19,7 +19,8 @@ export class UserService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly subscriptionService: SubscriptionService
   ) {}
 
   public async getUser({
@@ -98,24 +99,9 @@ export class UserService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      if (userFromDatabase?.Subscription?.length > 0) {
-        const latestSubscription = userFromDatabase.Subscription.reduce(
-          (a, b) => {
-            return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
-          }
-        );
-
-        user.subscription = {
-          expiresAt: latestSubscription.expiresAt,
-          type: isBefore(new Date(), latestSubscription.expiresAt)
-            ? SubscriptionType.Premium
-            : SubscriptionType.Basic
-        };
-      } else {
-        user.subscription = {
-          type: SubscriptionType.Basic
-        };
-      }
+      user.subscription = this.subscriptionService.getSubscription(
+        userFromDatabase?.Subscription
+      );
 
       if (user.subscription.type === SubscriptionType.Basic) {
         user.permissions = user.permissions.filter((permission) => {

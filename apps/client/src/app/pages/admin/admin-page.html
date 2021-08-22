@@ -116,7 +116,20 @@
             <tr *ngFor="let userItem of users; let i = index" class="mat-row">
               <td class="mat-cell px-1 py-2 text-right">{{ i + 1 }}</td>
               <td class="mat-cell px-1 py-2">
-                {{ userItem.alias || userItem.id }}
+                <div class="d-flex align-items-center">
+                  <span class="d-none d-sm-inline-block"
+                    >{{ userItem.alias || userItem.id }}</span
+                  >
+                  <span class="d-inline-block d-sm-none"
+                    >{{ userItem.alias || (userItem.id | slice:0:5) +
+                    '...' }}</span
+                  >
+                  <ion-icon
+                    *ngIf="userItem?.subscription?.type === 'Premium'"
+                    class="ml-1 text-muted"
+                    name="diamond-outline"
+                  ></ion-icon>
+                </div>
               </td>
               <td class="mat-cell px-1 py-2 text-right">
                 {{ formatDistanceToNow(userItem.createdAt) }}
