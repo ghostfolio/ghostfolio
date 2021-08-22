@@ -35,12 +35,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private userService: UserService
-  ) {}
-
-  /**
-   * Initializes the controller
-   */
-  public ngOnInit() {
+  ) {
     const { globalPermissions, statistics } = this.dataService.fetchInfo();
 
     this.hasPermissionForBlog = hasPermission(
@@ -59,7 +54,12 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     );
 
     this.statistics = statistics;
+  }
 
+  /**
+   * Initializes the controller
+   */
+  public ngOnInit() {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
