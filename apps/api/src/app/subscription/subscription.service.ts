@@ -1,7 +1,9 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
-import { addDays } from 'date-fns';
+import { Subscription } from '@prisma/client';
+import { addDays, isBefore } from 'date-fns';
 import Stripe from 'stripe';
 
 @Injectable()
@@ -84,6 +86,25 @@ export class SubscriptionService {
       });
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  public getSubscription(aSubscriptions: Subscription[]) {
+    if (aSubscriptions.length > 0) {
+      const latestSubscription = aSubscriptions.reduce((a, b) => {
+        return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
+      });
+
+      return {
+        expiresAt: latestSubscription.expiresAt,
+        type: isBefore(new Date(), latestSubscription.expiresAt)
+          ? SubscriptionType.Premium
+          : SubscriptionType.Basic
+      };
+    } else {
+      return {
+        type: SubscriptionType.Basic
+      };
     }
   }
 }

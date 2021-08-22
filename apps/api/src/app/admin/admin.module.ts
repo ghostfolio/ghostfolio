@@ -1,3 +1,4 @@
+import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -14,9 +15,11 @@ import { AdminService } from './admin.service';
     DataGatheringModule,
     DataProviderModule,
     ExchangeRateDataModule,
-    PrismaModule
+    PrismaModule,
+    SubscriptionModule
   ],
   controllers: [AdminController],
-  providers: [AdminService]
+  providers: [AdminService],
+  exports: [AdminService]
 })
 export class AdminModule {}
