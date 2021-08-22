@@ -38,7 +38,7 @@ export class DataGatheringService {
 
     if (isDataGatheringNeeded) {
       console.log('7d data gathering has been started.');
-      console.time('7d-data-gathering');
+      console.time('data-gathering-7d');
 
       await this.prismaService.property.create({
         data: {
@@ -71,7 +71,7 @@ export class DataGatheringService {
       });
 
       console.log('7d data gathering has been completed.');
-      console.timeEnd('7d-data-gathering');
+      console.timeEnd('data-gathering-7d');
     }
   }
 
@@ -82,7 +82,7 @@ export class DataGatheringService {
 
     if (!isDataGatheringLocked) {
       console.log('Max data gathering has been started.');
-      console.time('max-data-gathering');
+      console.time('data-gathering-max');
 
       await this.prismaService.property.create({
         data: {
@@ -115,13 +115,13 @@ export class DataGatheringService {
       });
 
       console.log('Max data gathering has been completed.');
-      console.timeEnd('max-data-gathering');
+      console.timeEnd('data-gathering-max');
     }
   }
 
   public async gatherProfileData(aSymbols?: string[]) {
     console.log('Profile data gathering has been started.');
-    console.time('profile-data-gathering');
+    console.time('data-gathering-profile');
 
     let symbols = aSymbols;
 
@@ -136,12 +136,13 @@ export class DataGatheringService {
 
     for (const [
       symbol,
-      { assetClass, currency, dataSource, name }
+      { assetClass, assetSubClass, currency, dataSource, name }
     ] of Object.entries(currentData)) {
       try {
         await this.prismaService.symbolProfile.upsert({
           create: {
             assetClass,
+            assetSubClass,
             currency,
             dataSource,
             name,
@@ -149,6 +150,7 @@ export class DataGatheringService {
           },
           update: {
             assetClass,
+            assetSubClass,
             currency,
             name
           },
@@ -165,7 +167,7 @@ export class DataGatheringService {
     }
 
     console.log('Profile data gathering has been completed.');
-    console.timeEnd('profile-data-gathering');
+    console.timeEnd('data-gathering-profile');
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {

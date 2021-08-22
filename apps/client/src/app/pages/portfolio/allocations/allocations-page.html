@@ -18,9 +18,9 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="name"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="hasImpersonationId"
+            [keys]="['name']"
             [locale]="user?.settings?.locale"
             [positions]="accounts"
           ></gf-portfolio-proportion-chart>
@@ -40,9 +40,9 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="assetClass"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="true"
+            [keys]="['assetClass', 'assetSubClass']"
             [locale]="user?.settings?.locale"
             [positions]="positions"
           ></gf-portfolio-proportion-chart>
@@ -62,9 +62,9 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="currency"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="true"
+            [keys]="['currency']"
             [locale]="user?.settings?.locale"
             [positions]="positions"
           ></gf-portfolio-proportion-chart>
@@ -84,9 +84,9 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="name"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="false"
+            [keys]="['name']"
             [locale]="user?.settings?.locale"
             [maxItems]="10"
             [positions]="sectors"
@@ -107,9 +107,9 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="name"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="false"
+            [keys]="['name']"
             [locale]="user?.settings?.locale"
             [positions]="continents"
           ></gf-portfolio-proportion-chart>
@@ -129,7 +129,7 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            key="name"
+            [keys]="['name']"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="false"
             [locale]="user?.settings?.locale"

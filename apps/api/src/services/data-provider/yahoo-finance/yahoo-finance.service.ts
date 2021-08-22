@@ -8,7 +8,12 @@ import {
 } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { AssetClass, Currency, DataSource } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  Currency,
+  DataSource
+} from '@prisma/client';
 import * as bent from 'bent';
 import Big from 'big.js';
 import { format } from 'date-fns';
@@ -22,6 +27,7 @@ import {
 } from '../../interfaces/interfaces';
 import {
   IYahooFinanceHistoricalResponse,
+  IYahooFinancePrice,
   IYahooFinanceQuoteResponse
 } from './interfaces/interfaces';
 
@@ -60,8 +66,11 @@ export class YahooFinanceService implements DataProviderInterface {
         // Convert symbols back
         const symbol = convertFromYahooSymbol(yahooSymbol);
 
+        const { assetClass, assetSubClass } = this.parseAssetClass(value.price);
+
         response[symbol] = {
-          assetClass: this.parseAssetClass(value.price?.quoteType),
+          assetClass,
+          assetSubClass,
           currency: parseCurrency(value.price?.currency),
           dataSource: DataSource.YAHOO,
           exchange: this.parseExchange(value.price?.exchangeName),
@@ -229,20 +238,29 @@ export class YahooFinanceService implements DataProviderInterface {
     return aSymbol;
   }
 
-  private parseAssetClass(aString: string): AssetClass {
+  private parseAssetClass(aPrice: IYahooFinancePrice): {
+    assetClass: AssetClass;
+    assetSubClass: AssetSubClass;
+  } {
     let assetClass: AssetClass;
+    let assetSubClass: AssetSubClass;
 
-    switch (aString?.toLowerCase()) {
+    switch (aPrice?.quoteType?.toLowerCase()) {
       case 'cryptocurrency':
         assetClass = AssetClass.CASH;
+        assetSubClass = AssetSubClass.CRYPTOCURRENCY;
         break;
       case 'equity':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.STOCK;
+        break;
       case 'etf':
         assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.ETF;
         break;
     }
 
-    return assetClass;
+    return { assetClass, assetSubClass };
   }
 
   private parseExchange(aString: string): string {

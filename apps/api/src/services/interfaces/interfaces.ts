@@ -1,6 +1,7 @@
 import {
   Account,
   AssetClass,
+  AssetSubClass,
   Currency,
   DataSource,
   SymbolProfile
@@ -35,6 +36,7 @@ export interface IDataProviderHistoricalResponse {
 
 export interface IDataProviderResponse {
   assetClass?: AssetClass;
+  assetSubClass?: AssetSubClass;
   currency: Currency;
   dataSource: DataSource;
   exchange?: string;
