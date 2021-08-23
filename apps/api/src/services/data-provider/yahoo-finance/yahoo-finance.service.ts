@@ -99,11 +99,9 @@ export class YahooFinanceService implements DataProviderInterface {
           value.summaryProfile?.country
         ) {
           try {
-            const [code] = Object.entries(countries).find(
-              ([, currentCountry]) => {
-                return currentCountry.name === value.summaryProfile?.country;
-              }
-            );
+            const [code] = Object.entries(countries).find(([, country]) => {
+              return country.name === value.summaryProfile?.country;
+            });
 
             if (code) {
               response[symbol].countries = [{ code, weight: 1 }];
