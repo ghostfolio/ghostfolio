@@ -37,6 +37,7 @@ export interface IDataProviderHistoricalResponse {
 export interface IDataProviderResponse {
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
+  countries?: { code: string; weight: number }[];
   currency: Currency;
   dataSource: DataSource;
   exchange?: string;

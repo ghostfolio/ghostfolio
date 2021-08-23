@@ -136,13 +136,14 @@ export class DataGatheringService {
 
     for (const [
       symbol,
-      { assetClass, assetSubClass, currency, dataSource, name }
+      { assetClass, assetSubClass, countries, currency, dataSource, name }
     ] of Object.entries(currentData)) {
       try {
         await this.prismaService.symbolProfile.upsert({
           create: {
             assetClass,
             assetSubClass,
+            countries,
             currency,
             dataSource,
             name,
@@ -151,6 +152,7 @@ export class DataGatheringService {
           update: {
             assetClass,
             assetSubClass,
+            countries,
             currency,
             name
           },

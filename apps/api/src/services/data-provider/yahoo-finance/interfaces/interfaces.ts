@@ -25,6 +25,7 @@ export interface IYahooFinancePrice {
 }
 
 export interface IYahooFinanceSummaryProfile {
+  country?: string;
   industry?: string;
   sector?: string;
   website?: string;
