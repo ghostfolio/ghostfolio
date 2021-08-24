@@ -16,6 +16,7 @@ import {
 } from '@prisma/client';
 import * as bent from 'bent';
 import Big from 'big.js';
+import { countries } from 'countries-list';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
 
@@ -92,6 +93,23 @@ export class YahooFinanceService implements DataProviderInterface {
             .toNumber();
         }
 
+        // Add country if stock and available
+        if (
+          assetSubClass === AssetSubClass.STOCK &&
+          value.summaryProfile?.country
+        ) {
+          try {
+            const [code] = Object.entries(countries).find(([, country]) => {
+              return country.name === value.summaryProfile?.country;
+            });
+
+            if (code) {
+              response[symbol].countries = [{ code, weight: 1 }];
+            }
+          } catch {}
+        }
+
+        // Add url if available
         const url = value.summaryProfile?.website;
         if (url) {
           response[symbol].url = url;
