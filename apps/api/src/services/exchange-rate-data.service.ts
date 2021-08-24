@@ -3,7 +3,7 @@ import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Currency } from '@prisma/client';
 import { format } from 'date-fns';
-import { isNumber } from 'lodash';
+import { isEmpty, isNumber } from 'lodash';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 
@@ -34,6 +34,24 @@ export class ExchangeRateDataService {
       getYesterday(),
       getYesterday()
     );
+
+    if (isEmpty(result)) {
+      // Load currencies directly from data provider as a fallback
+      // if historical data is not yet available
+      const historicalData = await this.dataProviderService.get(
+        this.currencyPairs.map((currencyPair) => {
+          return currencyPair;
+        })
+      );
+
+      Object.keys(historicalData).forEach((key) => {
+        result[key] = {
+          [format(getYesterday(), DATE_FORMAT)]: {
+            marketPrice: historicalData[key].marketPrice
+          }
+        };
+      });
+    }
 
     const resultExtended = result;
 
