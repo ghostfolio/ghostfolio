@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the data management of symbol profile data by countries (automated for stocks)
+- Added a fallback for initially loading currencies if historical data is not yet available
 
 ## 1.42.0 - 22.08.2021
 
