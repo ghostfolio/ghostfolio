@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `svgmap` from version `2.1.1` to `2.6.0`
+
 ### Fixed
 
 - Filtered out positions without any quantity in the positions table
