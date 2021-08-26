@@ -211,6 +211,11 @@ export class PortfolioService {
     }
 
     for (const item of currentPositions.positions) {
+      if (item.quantity.lte(0)) {
+        // Ignore positions without any quantity
+        continue;
+      }
+
       const value = item.quantity.mul(item.marketPrice);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
