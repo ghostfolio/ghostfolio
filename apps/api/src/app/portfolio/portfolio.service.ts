@@ -724,6 +724,7 @@ export class PortfolioService {
       allocationCurrent: cashValue.div(value).toNumber(),
       allocationInvestment: cashValue.div(investment).toNumber(),
       assetClass: AssetClass.CASH,
+      assetSubClass: AssetClass.CASH,
       countries: [],
       currency: Currency.CHF,
       grossPerformance: 0,
