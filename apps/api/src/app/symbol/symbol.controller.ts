@@ -11,6 +11,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { isEmpty } from 'lodash';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
@@ -48,6 +49,15 @@ export class SymbolController {
   @Get(':symbol')
   @UseGuards(AuthGuard('jwt'))
   public async getPosition(@Param('symbol') symbol): Promise<SymbolItem> {
-    return this.symbolService.get(symbol);
+    const result = await this.symbolService.get(symbol);
+
+    if (!result || isEmpty(result)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return result;
   }
 }
