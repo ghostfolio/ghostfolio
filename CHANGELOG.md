@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Filtered out positions without any quantity in the positions table
+- Improved the symbol lookup: allow saving with valid symbol in create or edit transaction dialog
 
 ## 1.43.0 - 24.08.2021
 
