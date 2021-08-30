@@ -11,8 +11,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Currency } from '@prisma/client';
-import { Observable, Subject } from 'rxjs';
+import { EMPTY, Observable, Subject } from 'rxjs';
 import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
   startWith,
@@ -49,7 +50,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTransactionDialogParams
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     const { currencies, platforms } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
@@ -84,17 +85,45 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     this.data.transaction.unitPrice = this.currentMarketPrice;
   }
 
+  public onBlurSymbol() {
+    const symbol = this.searchSymbolCtrl.value;
+    this.updateSymbol(symbol);
+  }
+
   public onCancel(): void {
     this.dialogRef.close();
   }
 
   public onUpdateSymbol(event: MatAutocompleteSelectedEvent) {
+    this.updateSymbol(event.option.value);
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private updateSymbol(symbol: string) {
     this.isLoading = true;
-    this.data.transaction.symbol = event.option.value;
+
+    this.data.transaction.symbol = symbol;
 
     this.dataService
       .fetchSymbolItem(this.data.transaction.symbol)
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(
+        catchError(() => {
+          this.data.transaction.currency = null;
+          this.data.transaction.dataSource = null;
+          this.data.transaction.unitPrice = null;
+
+          this.isLoading = false;
+
+          this.changeDetectorRef.markForCheck();
+
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
       .subscribe(({ currency, dataSource, marketPrice }) => {
         this.data.transaction.currency = currency;
         this.data.transaction.dataSource = dataSource;
@@ -104,18 +133,5 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
-  }
-
-  public onUpdateSymbolByTyping(value: string) {
-    this.data.transaction.currency = null;
-    this.data.transaction.dataSource = null;
-    this.data.transaction.unitPrice = null;
-
-    this.data.transaction.symbol = value;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

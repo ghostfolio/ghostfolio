@@ -29,7 +29,7 @@
           required
           [formControl]="searchSymbolCtrl"
           [matAutocomplete]="auto"
-          (change)="onUpdateSymbolByTyping($event.target.value)"
+          (blur)="onBlurSymbol()"
         />
         <mat-autocomplete
           #auto="matAutocomplete"
