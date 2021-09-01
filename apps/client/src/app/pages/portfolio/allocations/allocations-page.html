@@ -19,7 +19,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="false"
+            [isInPercent]="hasImpersonationId"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
             [maxItems]="10"
