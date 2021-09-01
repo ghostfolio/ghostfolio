@@ -147,7 +147,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       };
       this.positionsArray.push(position);
 
-      if(this.symbols[symbol] === undefined) {
+      if (this.symbols[symbol] === undefined) {
         this.symbols[symbol] = { name: symbol, value: position.value };
       } else {
         this.symbols[symbol].value += position.value;
