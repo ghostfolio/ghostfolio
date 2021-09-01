@@ -45,6 +45,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public symbols: {
     [name: string]: { name: string; value: number };
   };
+
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -110,13 +111,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
     this.positions = {};
     this.positionsArray = [];
-    this.symbols = {
+    this.sectors = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
         value: 0
       }
     };
-    this.sectors = {
+    this.symbols = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
         value: 0
