@@ -49,6 +49,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
+
   /**
    * @constructor
    */
@@ -148,12 +149,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       };
       this.positionsArray.push(position);
 
-      if (this.symbols[symbol] === undefined) {
-        this.symbols[symbol] = { name: symbol, value: position.value };
-      } else {
-        this.symbols[symbol].value += position.value;
-      }
-
       if (position.assetClass !== AssetClass.CASH) {
         // Prepare analysis data by continents, countries and sectors except for cash
 
@@ -222,6 +217,15 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               ? this.portfolioDetails.holdings[symbol].investment
               : this.portfolioDetails.holdings[symbol].value;
         }
+      }
+
+      if (position.assetSubClass !== AssetClass.CASH) {
+        // Prepare analysis data by symbols except for cash
+
+        this.symbols[symbol] = {
+          name: symbol,
+          value: aPeriod === 'original' ? position.investment : position.value
+        };
       }
     }
   }

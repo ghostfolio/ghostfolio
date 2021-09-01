@@ -167,7 +167,8 @@ export class PortfolioProportionChartComponent
         // Reuse color
         item.color = this.colorMap[symbol];
       } else {
-        const color = this.getColorPalette()[index];
+        const color =
+          this.getColorPalette()[index % this.getColorPalette().length];
 
         // Store color for reuse
         this.colorMap[symbol] = color;
