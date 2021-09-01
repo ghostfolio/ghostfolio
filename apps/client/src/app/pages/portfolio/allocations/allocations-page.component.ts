@@ -42,10 +42,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+  public symbols: {
+    [name: string]: { name: string; value: number };
+  };
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
-
   /**
    * @constructor
    */
@@ -108,6 +110,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
     this.positions = {};
     this.positionsArray = [];
+    this.symbols = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      }
+    };
     this.sectors = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
@@ -138,6 +146,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             : position.allocationCurrent
       };
       this.positionsArray.push(position);
+
+      if(this.symbols[symbol] === undefined) {
+        this.symbols[symbol] = { name: symbol, value: position.value };
+      } else {
+        this.symbols[symbol].value += position.value;
+      }
 
       if (position.assetClass !== AssetClass.CASH) {
         // Prepare analysis data by continents, countries and sectors except for cash
