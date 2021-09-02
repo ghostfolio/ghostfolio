@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Unreleased
 
+### Added
+
+- Added a link below the holdings to manage the transactions
+
 ### Fixed
 
 - Fixed the value formatting for integers (transactions count)
