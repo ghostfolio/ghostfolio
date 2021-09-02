@@ -58,6 +58,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public fearAndGreedIndex: number;
   public hasImpersonationId: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
+  public hasPermissionToCreateOrder: boolean;
   public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
@@ -119,6 +120,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
               });
           }
 
+          this.hasPermissionToCreateOrder = hasPermission(
+            this.user.permissions,
+            permissions.createOrder
+          );
+
           this.changeDetectorRef.markForCheck();
         }
       });
@@ -135,6 +141,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dateRange =
