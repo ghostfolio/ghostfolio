@@ -19,8 +19,8 @@ export class ValueComponent implements OnChanges, OnInit {
   @Input() colorizeSign: boolean;
   @Input() currency: string;
   @Input() isCurrency: boolean;
-  @Input() isPercent: boolean;
   @Input() isInteger: boolean;
+  @Input() isPercent: boolean;
   @Input() label: string;
   @Input() locale: string;
   @Input() position: string;

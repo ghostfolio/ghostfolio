@@ -102,10 +102,10 @@
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          [label]="transactionCount == 1 ? 'Transaction' : 'Transactions'"
           size="medium"
           [isCurrency]="false"
           [isInteger]="true"
+          [label]="transactionCount === 1 ? 'Transaction' : 'Transactions'"
           [locale]="data.locale"
           [value]="transactionCount"
         ></gf-value>
