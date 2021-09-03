@@ -8,9 +8,8 @@ describe('ValueComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ValueComponent ]
-    })
-    .compileComponents();
+      declarations: [ValueComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

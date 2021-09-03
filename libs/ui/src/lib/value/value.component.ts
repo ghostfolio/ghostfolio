@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnChanges,
+  OnChanges
 } from '@angular/core';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { format, isDate } from 'date-fns';
