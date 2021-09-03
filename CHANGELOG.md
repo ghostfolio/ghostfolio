@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restructured the allocations page
 - Upgraded `prisma` from version `2.24.1` to `2.30.2`
 
+### Changed
+
+- Upgraded `angular` from version `12.0.4` to `12.2.4`
+- Upgraded `Nx` from version `12.5.4` to `12.8.0`
+
 ### Fixed
 
 - Fixed the value formatting for integers (transactions count)
