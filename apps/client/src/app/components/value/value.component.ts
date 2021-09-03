@@ -19,6 +19,7 @@ export class ValueComponent implements OnChanges, OnInit {
   @Input() colorizeSign: boolean;
   @Input() currency: string;
   @Input() isCurrency: boolean;
+  @Input() isInteger: boolean;
   @Input() isPercent: boolean;
   @Input() label: string;
   @Input() locale: string;
@@ -82,6 +83,13 @@ export class ValueComponent implements OnChanges, OnInit {
             this.formattedValue = this.value?.toLocaleString(this.locale, {
               maximumFractionDigits: 2,
               minimumFractionDigits: 2
+            });
+          } catch {}
+        } else if (this.isInteger) {
+          try {
+            this.formattedValue = this.value?.toLocaleString(this.locale, {
+              maximumFractionDigits: 0,
+              minimumFractionDigits: 0
             });
           } catch {}
         }
