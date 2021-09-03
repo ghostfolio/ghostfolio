@@ -10,4 +10,5 @@ export interface PortfolioOrder {
   symbol: string;
   type: OrderType;
   unitPrice: Big;
+  fee: Big;
 }

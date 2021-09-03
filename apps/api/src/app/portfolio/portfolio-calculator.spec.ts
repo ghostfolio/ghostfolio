@@ -142,6 +142,198 @@ describe('PortfolioCalculator', () => {
       );
     });
 
+    it('with orders of only one symbol and a fee', () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      const orders = [
+        {
+          date: '2019-02-01',
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+          quantity: new Big('10'),
+          symbol: 'VTI',
+          type: OrderType.Buy,
+          unitPrice: new Big('144.38'),
+          currency: Currency.USD,
+          fee: new Big('5')
+        },
+        {
+          date: '2019-08-03',
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+          quantity: new Big('10'),
+          symbol: 'VTI',
+          type: OrderType.Buy,
+          unitPrice: new Big('147.99'),
+          currency: Currency.USD,
+          fee: new Big('10')
+        },
+        {
+          date: '2020-02-02',
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+          quantity: new Big('15'),
+          symbol: 'VTI',
+          type: OrderType.Sell,
+          unitPrice: new Big('151.41'),
+          currency: Currency.USD,
+          fee: new Big('5')
+        }
+      ];
+      portfolioCalculator.computeTransactionPoints(orders);
+      const portfolioItemsAtTransactionPoints =
+        portfolioCalculator.getTransactionPoints();
+
+      expect(portfolioItemsAtTransactionPoints).toEqual([
+        {
+          date: '2019-02-01',
+          items: [
+            {
+              quantity: new Big('10'),
+              symbol: 'VTI',
+              investment: new Big('1443.8'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 1,
+              fee: new Big('5')
+            }
+          ]
+        },
+        {
+          date: '2019-08-03',
+          items: [
+            {
+              quantity: new Big('20'),
+              symbol: 'VTI',
+              investment: new Big('2923.7'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 2,
+              fee: new Big('10')
+            }
+          ]
+        },
+        {
+          date: '2020-02-02',
+          items: [
+            {
+              quantity: new Big('5'),
+              symbol: 'VTI',
+              investment: new Big('652.55'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 3,
+              fee: new Big('5')
+            }
+          ]
+        }
+      ]);
+    });
+
+    it('with orders of two different symbols and a fee', () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      const orders = [
+        {
+          date: '2019-02-01',
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+          quantity: new Big('10'),
+          symbol: 'VTI',
+          type: OrderType.Buy,
+          unitPrice: new Big('144.38'),
+          currency: Currency.USD,
+          fee: new Big('5')
+        },
+        {
+          date: '2019-08-03',
+          name: 'Something else',
+          quantity: new Big('10'),
+          symbol: 'VTX',
+          type: OrderType.Buy,
+          unitPrice: new Big('147.99'),
+          currency: Currency.USD,
+          fee: new Big('10')
+        },
+        {
+          date: '2020-02-02',
+          name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+          quantity: new Big('5'),
+          symbol: 'VTI',
+          type: OrderType.Sell,
+          unitPrice: new Big('151.41'),
+          currency: Currency.USD,
+          fee: new Big('5')
+        }
+      ];
+      portfolioCalculator.computeTransactionPoints(orders);
+      const portfolioItemsAtTransactionPoints =
+        portfolioCalculator.getTransactionPoints();
+
+      expect(portfolioItemsAtTransactionPoints).toEqual([
+        {
+          date: '2019-02-01',
+          items: [
+            {
+              quantity: new Big('10'),
+              symbol: 'VTI',
+              investment: new Big('1443.8'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 1,
+              fee: new Big('5')
+            }
+          ]
+        },
+        {
+          date: '2019-08-03',
+          items: [
+            {
+              quantity: new Big('10'),
+              symbol: 'VTI',
+              investment: new Big('1443.8'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 1,
+              fee: new Big('0')
+            },
+            {
+              quantity: new Big('10'),
+              symbol: 'VTX',
+              investment: new Big('1479.9'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-08-03',
+              transactionCount: 1,
+              fee: new Big('10')
+            }
+          ]
+        },
+        {
+          date: '2020-02-02',
+          items: [
+            {
+              quantity: new Big('5'),
+              symbol: 'VTI',
+              investment: new Big('686.75'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              transactionCount: 2,
+              fee: new Big('5')
+            },
+            {
+              quantity: new Big('10'),
+              symbol: 'VTX',
+              investment: new Big('1479.9'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-08-03',
+              transactionCount: 1,
+              fee: new Big('0')
+            }
+          ]
+        }
+      ]);
+    });
+
     it('with two orders at the same day of the same type', () => {
       const orders = [
         ...ordersVTI,
@@ -152,7 +344,8 @@ describe('PortfolioCalculator', () => {
           quantity: new Big('20'),
           symbol: 'VTI',
           type: OrderType.Buy,
-          unitPrice: new Big('197.15')
+          unitPrice: new Big('197.15'),
+          fee: new Big(0)
         }
       ];
       const portfolioCalculator = new PortfolioCalculator(
@@ -173,6 +366,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1443.8'),
               quantity: new Big('10'),
               symbol: 'VTI',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -186,6 +380,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2923.7'),
               quantity: new Big('20'),
               symbol: 'VTI',
+              fee: new Big(0),
               transactionCount: 2
             }
           ]
@@ -199,6 +394,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('652.55'),
               quantity: new Big('5'),
               symbol: 'VTI',
+              fee: new Big(0),
               transactionCount: 3
             }
           ]
@@ -212,6 +408,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('6627.05'),
               quantity: new Big('35'),
               symbol: 'VTI',
+              fee: new Big(0),
               transactionCount: 5
             }
           ]
@@ -225,6 +422,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('8403.95'),
               quantity: new Big('45'),
               symbol: 'VTI',
+              fee: new Big(0),
               transactionCount: 6
             }
           ]
@@ -242,7 +440,8 @@ describe('PortfolioCalculator', () => {
           quantity: new Big('5'),
           symbol: 'AMZN',
           type: OrderType.Buy,
-          unitPrice: new Big('2021.99')
+          unitPrice: new Big('2021.99'),
+          fee: new Big(0)
         }
       ];
       const portfolioCalculator = new PortfolioCalculator(
@@ -263,6 +462,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1443.8'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -276,6 +476,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2923.7'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 2
             }
           ]
@@ -289,6 +490,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('10109.95'),
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -297,6 +499,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2923.7'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 2
             }
           ]
@@ -310,6 +513,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('10109.95'),
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -318,6 +522,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('652.55'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 3
             }
           ]
@@ -331,6 +536,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('10109.95'),
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -339,6 +545,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2684.05'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 4
             }
           ]
@@ -352,6 +559,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('10109.95'),
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -360,6 +568,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('4460.95'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 5
             }
           ]
@@ -377,7 +586,8 @@ describe('PortfolioCalculator', () => {
           symbol: 'AMZN',
           type: OrderType.Buy,
           unitPrice: new Big('2021.99'),
-          currency: Currency.USD
+          currency: Currency.USD,
+          fee: new Big(0)
         },
         {
           date: '2020-08-02',
@@ -386,7 +596,8 @@ describe('PortfolioCalculator', () => {
           symbol: 'AMZN',
           type: OrderType.Sell,
           unitPrice: new Big('2412.23'),
-          currency: Currency.USD
+          currency: Currency.USD,
+          fee: new Big(0)
         }
       ];
       const portfolioCalculator = new PortfolioCalculator(
@@ -421,6 +632,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2148.5'),
               currency: Currency.USD,
               firstBuyDate: '2017-01-03',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -434,6 +646,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1999.9999999999998659756'),
               currency: Currency.USD,
               firstBuyDate: '2017-07-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -442,6 +655,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2148.5'),
               currency: Currency.USD,
               firstBuyDate: '2017-01-03',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -455,6 +669,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('10109.95'),
               currency: Currency.USD,
               firstBuyDate: '2018-09-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -463,6 +678,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1999.9999999999998659756'),
               currency: Currency.USD,
               firstBuyDate: '2017-07-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -471,6 +687,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2148.5'),
               currency: Currency.USD,
               firstBuyDate: '2017-01-03',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -702,6 +919,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('805.9'),
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -715,6 +933,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('0'),
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
+              fee: new Big(0),
               transactionCount: 2
             }
           ]
@@ -728,6 +947,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1013.9'),
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
+              fee: new Big(0),
               transactionCount: 3
             }
           ]
@@ -783,6 +1003,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1443.8'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -797,6 +1018,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2923.7'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 2
             }
           ]
@@ -864,6 +1086,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1000000'), // 1 million
               currency: Currency.USD,
               firstBuyDate: '2010-12-31',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -877,6 +1100,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1100000'), // 1,000,000 + 100,000
               currency: Currency.USD,
               firstBuyDate: '2010-12-31',
+              fee: new Big(0),
               transactionCount: 2
             }
           ]
@@ -933,6 +1157,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('200'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -941,6 +1166,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('300'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -954,6 +1180,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('200'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -962,6 +1189,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('300'),
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -1599,6 +1827,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('10109.95'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 1
             },
             {
@@ -1607,6 +1836,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('1443.8'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
+              fee: new Big(0),
               transactionCount: 1
             }
           ]
@@ -1650,7 +1880,8 @@ const ordersMixedSymbols: PortfolioOrder[] = [
     symbol: 'TSLA',
     type: OrderType.Buy,
     unitPrice: new Big('42.97'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   },
   {
     date: '2017-07-01',
@@ -1659,7 +1890,8 @@ const ordersMixedSymbols: PortfolioOrder[] = [
     symbol: 'BTCUSD',
     type: OrderType.Buy,
     unitPrice: new Big('3562.089535970158'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   },
   {
     date: '2018-09-01',
@@ -1668,7 +1900,8 @@ const ordersMixedSymbols: PortfolioOrder[] = [
     symbol: 'AMZN',
     type: OrderType.Buy,
     unitPrice: new Big('2021.99'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   }
 ];
 
@@ -1680,7 +1913,8 @@ const ordersVTI: PortfolioOrder[] = [
     symbol: 'VTI',
     type: OrderType.Buy,
     unitPrice: new Big('144.38'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   },
   {
     date: '2019-08-03',
@@ -1689,7 +1923,8 @@ const ordersVTI: PortfolioOrder[] = [
     symbol: 'VTI',
     type: OrderType.Buy,
     unitPrice: new Big('147.99'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   },
   {
     date: '2020-02-02',
@@ -1698,7 +1933,8 @@ const ordersVTI: PortfolioOrder[] = [
     symbol: 'VTI',
     type: OrderType.Sell,
     unitPrice: new Big('151.41'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   },
   {
     date: '2021-08-01',
@@ -1707,7 +1943,8 @@ const ordersVTI: PortfolioOrder[] = [
     symbol: 'VTI',
     type: OrderType.Buy,
     unitPrice: new Big('177.69'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   },
   {
     date: '2021-02-01',
@@ -1716,7 +1953,8 @@ const ordersVTI: PortfolioOrder[] = [
     symbol: 'VTI',
     type: OrderType.Buy,
     unitPrice: new Big('203.15'),
-    currency: Currency.USD
+    currency: Currency.USD,
+    fee: new Big(0)
   }
 ];
 
@@ -1730,6 +1968,7 @@ const orderTslaTransactionPoint: TransactionPoint[] = [
         investment: new Big('719.46'),
         currency: Currency.USD,
         firstBuyDate: '2021-01-01',
+        fee: new Big(0),
         transactionCount: 1
       }
     ]
@@ -1746,6 +1985,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         investment: new Big('1443.8'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 1
       }
     ]
@@ -1759,6 +1999,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         investment: new Big('2923.7'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 2
       }
     ]
@@ -1772,6 +2013,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         investment: new Big('652.55'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 3
       }
     ]
@@ -1785,6 +2027,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         investment: new Big('2684.05'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 4
       }
     ]
@@ -1798,6 +2041,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         investment: new Big('4460.95'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 5
       }
     ]
@@ -1814,6 +2058,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('1443.8'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 1
       }
     ]
@@ -1827,6 +2072,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('2923.7'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 2
       }
     ]
@@ -1840,6 +2086,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('10109.95'),
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
+        fee: new Big(0),
         transactionCount: 1
       },
       {
@@ -1848,6 +2095,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('2923.7'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 2
       }
     ]
@@ -1861,6 +2109,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('10109.95'),
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
+        fee: new Big(0),
         transactionCount: 1
       },
       {
@@ -1869,6 +2118,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('652.55'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 3
       }
     ]
@@ -1882,6 +2132,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('0'),
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
+        fee: new Big(0),
         transactionCount: 2
       },
       {
@@ -1890,6 +2141,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('652.55'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 3
       }
     ]
@@ -1903,6 +2155,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('0'),
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
+        fee: new Big(0),
         transactionCount: 2
       },
       {
@@ -1911,6 +2164,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('2684.05'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 4
       }
     ]
@@ -1924,6 +2178,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('0'),
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
+        fee: new Big(0),
         transactionCount: 2
       },
       {
@@ -1932,6 +2187,7 @@ const transactionPointsBuyAndSell = [
         investment: new Big('4460.95'),
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
+        fee: new Big(0),
         transactionCount: 5
       }
     ]
