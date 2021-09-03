@@ -712,27 +712,29 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        hasErrors: false,
-        currentValue: new Big('657.62'),
-        grossPerformance: new Big('-61.84'),
-        grossPerformancePercentage: new Big('-0.08595335390431712673'),
-        totalInvestment: new Big('719.46'),
-        positions: [
-          {
-            averagePrice: new Big('719.46'),
-            currency: 'USD',
-            firstBuyDate: '2021-01-01',
-            grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
-            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
-            investment: new Big('719.46'),
-            marketPrice: 657.62,
-            quantity: new Big('1'),
-            symbol: 'TSLA',
-            transactionCount: 1
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('657.62'),
+          grossPerformance: new Big('-61.84'),
+          grossPerformancePercentage: new Big('-0.08595335390431712673'),
+          totalInvestment: new Big('719.46'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('719.46'),
+              currency: 'USD',
+              firstBuyDate: '2021-01-01',
+              grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
+              grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
+              investment: new Big('719.46'),
+              marketPrice: 657.62,
+              quantity: new Big('1'),
+              symbol: 'TSLA',
+              transactionCount: 1
+            })
+          ]
+        })
+      );
     });
 
     it('with single TSLA and buy day start', async () => {
@@ -750,27 +752,29 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        hasErrors: false,
-        currentValue: new Big('657.62'),
-        grossPerformance: new Big('-61.84'),
-        grossPerformancePercentage: new Big('-0.08595335390431712673'),
-        totalInvestment: new Big('719.46'),
-        positions: [
-          {
-            averagePrice: new Big('719.46'),
-            currency: 'USD',
-            firstBuyDate: '2021-01-01',
-            grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
-            grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
-            investment: new Big('719.46'),
-            marketPrice: 657.62,
-            quantity: new Big('1'),
-            symbol: 'TSLA',
-            transactionCount: 1
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('657.62'),
+          grossPerformance: new Big('-61.84'),
+          grossPerformancePercentage: new Big('-0.08595335390431712673'),
+          totalInvestment: new Big('719.46'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('719.46'),
+              currency: 'USD',
+              firstBuyDate: '2021-01-01',
+              grossPerformance: new Big('-61.84'), // 657.62-719.46=-61.84
+              grossPerformancePercentage: new Big('-0.08595335390431712673'), // (657.62-719.46)/719.46=-0.08595335390431712673
+              investment: new Big('719.46'),
+              marketPrice: 657.62,
+              quantity: new Big('1'),
+              symbol: 'TSLA',
+              transactionCount: 1
+            })
+          ]
+        })
+      );
     });
 
     it('with single TSLA and late start', async () => {
@@ -788,27 +792,29 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        hasErrors: false,
-        currentValue: new Big('657.62'),
-        grossPerformance: new Big('-9.04'),
-        grossPerformancePercentage: new Big('-0.01356013560135601356'),
-        totalInvestment: new Big('719.46'),
-        positions: [
-          {
-            averagePrice: new Big('719.46'),
-            currency: 'USD',
-            firstBuyDate: '2021-01-01',
-            grossPerformance: new Big('-9.04'), // 657.62-666.66=-9.04
-            grossPerformancePercentage: new Big('-0.01356013560135601356'), // 657.62/666.66-1=-0.013560136
-            investment: new Big('719.46'),
-            marketPrice: 657.62,
-            quantity: new Big('1'),
-            symbol: 'TSLA',
-            transactionCount: 1
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('657.62'),
+          grossPerformance: new Big('-9.04'),
+          grossPerformancePercentage: new Big('-0.01356013560135601356'),
+          totalInvestment: new Big('719.46'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('719.46'),
+              currency: 'USD',
+              firstBuyDate: '2021-01-01',
+              grossPerformance: new Big('-9.04'), // 657.62-666.66=-9.04
+              grossPerformancePercentage: new Big('-0.01356013560135601356'), // 657.62/666.66-1=-0.013560136
+              investment: new Big('719.46'),
+              marketPrice: 657.62,
+              quantity: new Big('1'),
+              symbol: 'TSLA',
+              transactionCount: 1
+            })
+          ]
+        })
+      );
     });
 
     it('with VTI only', async () => {
@@ -826,30 +832,32 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        hasErrors: false,
-        currentValue: new Big('4871.5'),
-        grossPerformance: new Big('240.4'),
-        grossPerformancePercentage: new Big('0.08839407904876477102'),
-        totalInvestment: new Big('4460.95'),
-        positions: [
-          {
-            averagePrice: new Big('178.438'),
-            currency: 'USD',
-            firstBuyDate: '2019-02-01',
-            // see next test for details about how to calculate this
-            grossPerformance: new Big('240.4'),
-            grossPerformancePercentage: new Big(
-              '0.0883940790487647710162214425767848424215253864940558186258745429269647266073266478435285352186572448'
-            ),
-            investment: new Big('4460.95'),
-            marketPrice: 194.86,
-            quantity: new Big('25'),
-            symbol: 'VTI',
-            transactionCount: 5
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('4871.5'),
+          grossPerformance: new Big('240.4'),
+          grossPerformancePercentage: new Big('0.08839407904876477102'),
+          totalInvestment: new Big('4460.95'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('178.438'),
+              currency: 'USD',
+              firstBuyDate: '2019-02-01',
+              // see next test for details about how to calculate this
+              grossPerformance: new Big('240.4'),
+              grossPerformancePercentage: new Big(
+                '0.0883940790487647710162214425767848424215253864940558186258745429269647266073266478435285352186572448'
+              ),
+              investment: new Big('4460.95'),
+              marketPrice: 194.86,
+              quantity: new Big('25'),
+              symbol: 'VTI',
+              transactionCount: 5
+            })
+          ]
+        })
+      );
     });
 
     it('with buy and sell', async () => {
@@ -867,41 +875,43 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        hasErrors: false,
-        currentValue: new Big('4871.5'),
-        grossPerformance: new Big('240.4'),
-        grossPerformancePercentage: new Big('0.01104605615757711361'),
-        totalInvestment: new Big('4460.95'),
-        positions: [
-          {
-            averagePrice: new Big('0'),
-            currency: 'USD',
-            firstBuyDate: '2019-09-01',
-            grossPerformance: new Big('0'),
-            grossPerformancePercentage: new Big('0'),
-            investment: new Big('0'),
-            marketPrice: 2021.99,
-            quantity: new Big('0'),
-            symbol: 'AMZN',
-            transactionCount: 2
-          },
-          {
-            averagePrice: new Big('178.438'),
-            currency: 'USD',
-            firstBuyDate: '2019-02-01',
-            grossPerformance: new Big('240.4'),
-            grossPerformancePercentage: new Big(
-              '0.08839407904876477101219019935616297754969945667391763908415656216989674494965785538864363782688167989866968512455219637257546280462751601552'
-            ),
-            investment: new Big('4460.95'),
-            marketPrice: 194.86,
-            quantity: new Big('25'),
-            symbol: 'VTI',
-            transactionCount: 5
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('4871.5'),
+          grossPerformance: new Big('240.4'),
+          grossPerformancePercentage: new Big('0.01104605615757711361'),
+          totalInvestment: new Big('4460.95'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('0'),
+              currency: 'USD',
+              firstBuyDate: '2019-09-01',
+              grossPerformance: new Big('0'),
+              grossPerformancePercentage: new Big('0'),
+              investment: new Big('0'),
+              marketPrice: 2021.99,
+              quantity: new Big('0'),
+              symbol: 'AMZN',
+              transactionCount: 2
+            }),
+            expect.objectContaining({
+              averagePrice: new Big('178.438'),
+              currency: 'USD',
+              firstBuyDate: '2019-02-01',
+              grossPerformance: new Big('240.4'),
+              grossPerformancePercentage: new Big(
+                '0.08839407904876477101219019935616297754969945667391763908415656216989674494965785538864363782688167989866968512455219637257546280462751601552'
+              ),
+              investment: new Big('4460.95'),
+              marketPrice: 194.86,
+              quantity: new Big('25'),
+              symbol: 'VTI',
+              transactionCount: 5
+            })
+          ]
+        })
+      );
     });
 
     it('with buy, sell, buy', async () => {
@@ -962,29 +972,31 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        hasErrors: false,
-        currentValue: new Big('1086.7'),
-        grossPerformance: new Big('207.6'),
-        grossPerformancePercentage: new Big('0.2516103956224511062'),
-        totalInvestment: new Big('1013.9'),
-        positions: [
-          {
-            averagePrice: new Big('202.78'),
-            currency: 'USD',
-            firstBuyDate: '2019-09-01',
-            grossPerformance: new Big('207.6'),
-            grossPerformancePercentage: new Big(
-              '0.2516103956224511061954915466429950404846'
-            ),
-            investment: new Big('1013.9'),
-            marketPrice: 217.34,
-            quantity: new Big('5'),
-            symbol: 'VTI',
-            transactionCount: 3
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('1086.7'),
+          grossPerformance: new Big('207.6'),
+          grossPerformancePercentage: new Big('0.2516103956224511062'),
+          totalInvestment: new Big('1013.9'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('202.78'),
+              currency: 'USD',
+              firstBuyDate: '2019-09-01',
+              grossPerformance: new Big('207.6'),
+              grossPerformancePercentage: new Big(
+                '0.2516103956224511061954915466429950404846'
+              ),
+              investment: new Big('1013.9'),
+              marketPrice: 217.34,
+              quantity: new Big('5'),
+              symbol: 'VTI',
+              transactionCount: 3
+            })
+          ]
+        })
+      );
     });
 
     it('with performance since Jan 1st, 2020', async () => {
@@ -1043,11 +1055,100 @@ describe('PortfolioCalculator', () => {
       );
 
       spy.mockRestore();
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('3897.2'),
+          grossPerformance: new Big('303.2'),
+          grossPerformancePercentage: new Big('0.27537838148272398344'),
+          totalInvestment: new Big('2923.7'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('146.185'),
+              firstBuyDate: '2019-02-01',
+              quantity: new Big('20'),
+              symbol: 'VTI',
+              investment: new Big('2923.7'),
+              marketPrice: 194.86,
+              transactionCount: 2,
+              grossPerformance: new Big('303.2'),
+              grossPerformancePercentage: new Big(
+                '0.2753783814827239834392742298083677500037'
+              ),
+              currency: 'USD'
+            })
+          ]
+        })
+      );
+    });
+
+    it('with net performance since Jan 1st, 2020 - include fees', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      const transactionPoints = [
+        {
+          date: '2019-02-01',
+          items: [
+            {
+              quantity: new Big('10'),
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+              symbol: 'VTI',
+              investment: new Big('1443.8'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              fee: new Big(50),
+              transactionCount: 1
+            }
+          ]
+        },
+        {
+          date: '2020-08-03',
+          items: [
+            {
+              quantity: new Big('20'),
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+              symbol: 'VTI',
+              investment: new Big('2923.7'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              fee: new Big(50),
+              transactionCount: 2
+            }
+          ]
+        }
+      ];
+
+      portfolioCalculator.setTransactionPoints(transactionPoints);
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
+
+      // 2020-01-01         -> days 334 => value: VTI: 144.38+334*0.08=171.1  => 10*171.10=1711
+      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 10*188.30=1883 => 1883/1711 = 1.100526008
+      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 20*188.30=3766
+      // cash flow: 2923.7-1443.8=1479.9
+      // 2020-10-24 [today] -> days 631 => value: VTI: 144.38+631*0.08=194.86 => 20*194.86=3897.2 => 3897.2/(1883+1479.9) = 1.158880728
+      //                                                                                    and net: 3897.2/(1883+1479.9+50) = 1.14190278
+      // gross performance: 1883-1711 + 3897.2-3766 = 303.2
+      // gross performance percentage: 1.100526008 * 1.158880728 = 1.275378381 => 27.5378381 %
+      // net performance percentage:   1.100526008 * 1.14190278  = 1.25669371  => 25.669371 %
+
+      // more details: https://github.com/ghostfolio/ghostfolio/issues/324#issuecomment-910530823
+
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parseDate('2020-01-01')
+      );
+
+      spy.mockRestore();
       expect(currentPositions).toEqual({
         hasErrors: false,
         currentValue: new Big('3897.2'),
         grossPerformance: new Big('303.2'),
         grossPerformancePercentage: new Big('0.27537838148272398344'),
+        netPerformance: new Big('253.2'),
+        netPerformancePercentage: new Big('0.2566937088951485493'),
         totalInvestment: new Big('2923.7'),
         positions: [
           {
@@ -1062,10 +1163,99 @@ describe('PortfolioCalculator', () => {
             grossPerformancePercentage: new Big(
               '0.2753783814827239834392742298083677500037'
             ),
+            netPerformance: new Big('253.2'), // gross - 50 fees
+            netPerformancePercentage: new Big(
+              '0.2566937088951485493029975263687800261527'
+            ), // see details above
             currency: 'USD'
           }
         ]
       });
+    });
+
+    it('with net performance since Feb 1st, 2019 - include fees', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        Currency.USD
+      );
+      const transactionPoints = [
+        {
+          date: '2019-02-01',
+          items: [
+            {
+              quantity: new Big('10'),
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+              symbol: 'VTI',
+              investment: new Big('1443.8'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              fee: new Big(50),
+              transactionCount: 1
+            }
+          ]
+        },
+        {
+          date: '2020-08-03',
+          items: [
+            {
+              quantity: new Big('20'),
+              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
+              symbol: 'VTI',
+              investment: new Big('2923.7'),
+              currency: Currency.USD,
+              firstBuyDate: '2019-02-01',
+              fee: new Big(50),
+              transactionCount: 2
+            }
+          ]
+        }
+      ];
+
+      portfolioCalculator.setTransactionPoints(transactionPoints);
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2020, 9, 24)).getTime()); // 2020-10-24
+
+      // 2019-02-01         -> value: VTI: 1443.8
+      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 10*188.30=1883 => net: 1883/(1443.8+50) = 1.26054358
+      // 2020-08-03         -> days 549 => value: VTI: 144.38+549*0.08=188.3  => 20*188.30=3766
+      // cash flow: 2923.7-1443.8=1479.9
+      // 2020-10-24 [today] -> days 631 => value: VTI: 144.38+631*0.08=194.86 => 20*194.86=3897.2 => net: 3897.2/(1883+1479.9+50) = 1.14190278
+      // gross performance: 1883-1443.8 + 3897.2-3766 = 570.4 => net performance: 470.4
+      // net performance percentage:   1.26054358 * 1.14190278  = 1.43941822  => 43.941822 %
+
+      // more details: https://github.com/ghostfolio/ghostfolio/issues/324#issuecomment-910530823
+
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parseDate('2019-02-01')
+      );
+
+      spy.mockRestore();
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('3897.2'),
+          netPerformance: new Big('470.4'),
+          netPerformancePercentage: new Big('0.4394182192526437059'),
+          totalInvestment: new Big('2923.7'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('146.185'),
+              firstBuyDate: '2019-02-01',
+              quantity: new Big('20'),
+              symbol: 'VTI',
+              investment: new Big('2923.7'),
+              marketPrice: 194.86,
+              transactionCount: 2,
+              netPerformance: new Big('470.4'),
+              netPerformancePercentage: new Big(
+                '0.4394182192526437058970248283134805555953'
+              ), // see details above
+              currency: 'USD'
+            })
+          ]
+        })
+      );
     });
 
     /**
@@ -1116,27 +1306,31 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        hasErrors: false,
-        currentValue: new Big('1192327.999656600298238721'),
-        grossPerformance: new Big('92327.999656600898394721'),
-        grossPerformancePercentage: new Big('0.09788498099999947809'),
-        totalInvestment: new Big('1100000'),
-        positions: [
-          {
-            averagePrice: new Big('1.01287018290924923237'), // 1'100'000 / 1'086'022.689344542
-            firstBuyDate: '2010-12-31',
-            quantity: new Big('1086022.689344541'),
-            symbol: 'MFA',
-            investment: new Big('1100000'),
-            marketPrice: 1.097884981,
-            transactionCount: 2,
-            grossPerformance: new Big('92327.999656600898394721'), // 1'192'328 - 1'100'000 = 92'328
-            grossPerformancePercentage: new Big('0.09788498099999947808927632'), // 9.79 %
-            currency: 'USD'
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          hasErrors: false,
+          currentValue: new Big('1192327.999656600298238721'),
+          grossPerformance: new Big('92327.999656600898394721'),
+          grossPerformancePercentage: new Big('0.09788498099999947809'),
+          totalInvestment: new Big('1100000'),
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('1.01287018290924923237'), // 1'100'000 / 1'086'022.689344542
+              firstBuyDate: '2010-12-31',
+              quantity: new Big('1086022.689344541'),
+              symbol: 'MFA',
+              investment: new Big('1100000'),
+              marketPrice: 1.097884981,
+              transactionCount: 2,
+              grossPerformance: new Big('92327.999656600898394721'), // 1'192'328 - 1'100'000 = 92'328
+              grossPerformancePercentage: new Big(
+                '0.09788498099999947808927632'
+              ), // 9.79 %
+              currency: 'USD'
+            })
+          ]
+        })
+      );
     });
 
     /**
@@ -1205,39 +1399,41 @@ describe('PortfolioCalculator', () => {
       );
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        currentValue: new Big('517'),
-        grossPerformance: new Big('17'), // 517 - 500
-        grossPerformancePercentage: new Big('0.034'), // ((200 * 0.025) + (300 * 0.04)) / (200 + 300) = 3.4%
-        totalInvestment: new Big('500'),
-        hasErrors: false,
-        positions: [
-          {
-            averagePrice: new Big('1'),
-            firstBuyDate: '2012-12-31',
-            quantity: new Big('200'),
-            symbol: 'SPA',
-            investment: new Big('200'),
-            marketPrice: 1.025, // 205 / 200
-            transactionCount: 1,
-            grossPerformance: new Big('5'), // 205 - 200
-            grossPerformancePercentage: new Big('0.025'),
-            currency: 'CHF'
-          },
-          {
-            averagePrice: new Big('1'),
-            firstBuyDate: '2012-12-31',
-            quantity: new Big('300'),
-            symbol: 'SPB',
-            investment: new Big('300'),
-            marketPrice: 1.04, // 312 / 300
-            transactionCount: 1,
-            grossPerformance: new Big('12'), // 312 - 300
-            grossPerformancePercentage: new Big('0.04'),
-            currency: 'CHF'
-          }
-        ]
-      });
+      expect(currentPositions).toEqual(
+        expect.objectContaining({
+          currentValue: new Big('517'),
+          grossPerformance: new Big('17'), // 517 - 500
+          grossPerformancePercentage: new Big('0.034'), // ((200 * 0.025) + (300 * 0.04)) / (200 + 300) = 3.4%
+          totalInvestment: new Big('500'),
+          hasErrors: false,
+          positions: [
+            expect.objectContaining({
+              averagePrice: new Big('1'),
+              firstBuyDate: '2012-12-31',
+              quantity: new Big('200'),
+              symbol: 'SPA',
+              investment: new Big('200'),
+              marketPrice: 1.025, // 205 / 200
+              transactionCount: 1,
+              grossPerformance: new Big('5'), // 205 - 200
+              grossPerformancePercentage: new Big('0.025'),
+              currency: 'CHF'
+            }),
+            expect.objectContaining({
+              averagePrice: new Big('1'),
+              firstBuyDate: '2012-12-31',
+              quantity: new Big('300'),
+              symbol: 'SPB',
+              investment: new Big('300'),
+              marketPrice: 1.04, // 312 / 300
+              transactionCount: 1,
+              grossPerformance: new Big('12'), // 312 - 300
+              grossPerformancePercentage: new Big('0.04'),
+              currency: 'CHF'
+            })
+          ]
+        })
+      );
     });
   });
 
