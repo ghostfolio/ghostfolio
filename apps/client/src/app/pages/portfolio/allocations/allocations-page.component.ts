@@ -42,6 +42,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+  public symbols: {
+    [name: string]: { name: string; value: number };
+  };
+
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -109,6 +113,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.positions = {};
     this.positionsArray = [];
     this.sectors = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      }
+    };
+    this.symbols = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
         value: 0
@@ -207,6 +217,15 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               ? this.portfolioDetails.holdings[symbol].investment
               : this.portfolioDetails.holdings[symbol].value;
         }
+      }
+
+      if (position.assetSubClass !== AssetClass.CASH) {
+        // Prepare analysis data by symbols except for cash
+
+        this.symbols[symbol] = {
+          name: symbol,
+          value: aPeriod === 'original' ? position.investment : position.value
+        };
       }
     }
   }

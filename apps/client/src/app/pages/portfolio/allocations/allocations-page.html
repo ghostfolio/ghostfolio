@@ -8,6 +8,29 @@
     <div class="col-md-6">
       <mat-card class="mb-3">
         <mat-card-header class="w-100">
+          <mat-card-title i18n>By Symbol</mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="false"
+            [keys]="['name']"
+            [locale]="user?.settings?.locale"
+            [positions]="symbols"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header class="w-100">
           <mat-card-title i18n>By Account</mat-card-title>
           <gf-toggle
             [defaultValue]="period"
