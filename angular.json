@@ -245,9 +245,14 @@
     },
     "ui": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "libs/ui",
       "sourceRoot": "libs/ui/src",
-      "prefix": "ghostfolio",
+      "prefix": "gf",
       "architect": {
         "test": {
           "builder": "@nrwl/jest:jest",
