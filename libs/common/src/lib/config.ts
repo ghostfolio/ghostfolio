@@ -13,7 +13,7 @@ export const currencyPairs: Partial<
     currency1: Currency;
     currency2: Currency;
   }
->[] = Object.keys(Currency)
+>[] = (Object.keys(Currency) as Array<keyof typeof Currency>)
   .filter((currency) => {
     return currency !== Currency.USD;
   })
