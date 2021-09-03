@@ -6,6 +6,8 @@ export interface CurrentPositions {
   positions: TimelinePosition[];
   grossPerformance: Big;
   grossPerformancePercentage: Big;
+  netPerformance: Big;
+  netPerformancePercentage: Big;
   currentValue: Big;
   totalInvestment: Big;
 }
