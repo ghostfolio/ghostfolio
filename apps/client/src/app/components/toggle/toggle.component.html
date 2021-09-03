@@ -1,4 +1,8 @@
-<mat-radio-group [formControl]="option" (change)="onValueChange()">
+<mat-radio-group
+  class="text-nowrap"
+  [formControl]="option"
+  (change)="onValueChange()"
+>
   <mat-radio-button
     *ngFor="let option of options"
     [disabled]="isLoading"
