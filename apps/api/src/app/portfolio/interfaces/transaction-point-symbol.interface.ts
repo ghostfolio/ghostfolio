@@ -8,4 +8,5 @@ export interface TransactionPointSymbol {
   quantity: Big;
   symbol: string;
   transactionCount: number;
+  fee: Big;
 }

@@ -67,6 +67,7 @@ export class PortfolioCalculator {
                 .add(oldAccumulatedSymbol.investment),
           quantity: newQuantity,
           symbol: order.symbol,
+          fee: order.fee,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
@@ -76,6 +77,7 @@ export class PortfolioCalculator {
           investment: unitPrice.mul(order.quantity).mul(factor),
           quantity: order.quantity.mul(factor),
           symbol: order.symbol,
+          fee: order.fee,
           transactionCount: 1
         };
       }
@@ -83,9 +85,14 @@ export class PortfolioCalculator {
       symbols[order.symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
-      const newItems = items.filter(
-        (transactionPointItem) => transactionPointItem.symbol !== order.symbol
-      );
+      const newItems = items
+        .filter(
+          (transactionPointItem) => transactionPointItem.symbol !== order.symbol
+        )
+        .map((transactionPoint) => ({
+          ...transactionPoint,
+          fee: new Big(0)
+        }));
       newItems.push(currentTransactionPointItem);
       newItems.sort((a, b) => a.symbol.localeCompare(b.symbol));
       if (lastDate !== currentDate || lastTransactionPoint === null) {

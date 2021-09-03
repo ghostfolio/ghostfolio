@@ -296,7 +296,8 @@ export class PortfolioService {
       quantity: new Big(order.quantity),
       symbol: order.symbol,
       type: <OrderType>order.type,
-      unitPrice: new Big(order.unitPrice)
+      unitPrice: new Big(order.unitPrice),
+      fee: new Big(order.fee)
     }));
 
     const portfolioCalculator = new PortfolioCalculator(
@@ -786,6 +787,13 @@ export class PortfolioService {
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
           order.unitPrice,
+          order.currency,
+          userCurrency
+        )
+      ),
+      fee: new Big(
+        this.exchangeRateDataService.toCurrency(
+          order.fee,
           order.currency,
           userCurrency
         )
