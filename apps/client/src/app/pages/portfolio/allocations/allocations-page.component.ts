@@ -219,9 +219,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (position.assetSubClass !== AssetClass.CASH) {
-        // Prepare analysis data by symbols except for cash
-
+      if (position.assetClass === AssetClass.EQUITY) {
         this.symbols[symbol] = {
           name: symbol,
           value: aPeriod === 'original' ? position.investment : position.value

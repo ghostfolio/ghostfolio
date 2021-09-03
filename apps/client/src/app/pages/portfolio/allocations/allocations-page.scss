@@ -1,9 +1,7 @@
 :host {
-  .proportion-charts {
-    .mat-card {
-      .mat-card-content {
-        padding: 1rem 2rem;
-      }
+  .allocations-by-symbol {
+    gf-portfolio-proportion-chart {
+      max-width: 67vh;
     }
   }
 

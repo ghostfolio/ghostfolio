@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a link below the holdings to manage the transactions
 - Added the allocation chart by symbol
 
+### Changed
+
+- Restructured the allocations page
+
 ### Fixed
 
 - Fixed the value formatting for integers (transactions count)
