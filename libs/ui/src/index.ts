@@ -1,1 +1,1 @@
-export * from './lib/ui.module';
+export * from './lib/value/value.module';
