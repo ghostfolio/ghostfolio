@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the statistics section on the about page by the _GitHub_ contributors count
+- Set up _Storybook_
+- Added a story for the value component
 
 ## 1.45.0 - 04.09.2021
 
@@ -25,11 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `@angular/cdk` and `@angular/material` from version `12.0.6` to `12.2.4`
 - Upgraded `Nx` from version `12.5.4` to `12.8.0`
 - Upgraded `prisma` from version `2.24.1` to `2.30.2`
-
-### Changed
-
-- Upgraded `angular` from version `12.0.4` to `12.2.4`
-- Upgraded `Nx` from version `12.5.4` to `12.8.0`
 
 ### Fixed
 
