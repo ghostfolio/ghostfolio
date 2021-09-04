@@ -5,7 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
-import { GfValueModule } from '@ghostfolio/ui';
+import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
