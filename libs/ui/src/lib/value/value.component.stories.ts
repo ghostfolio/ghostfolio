@@ -22,6 +22,13 @@ Loading.args = {
   value: undefined
 };
 
+export const Currency = Template.bind({});
+Currency.args = {
+  currency: 'USD',
+  locale: 'en',
+  value: 7
+};
+
 export const Integer = Template.bind({});
 Integer.args = {
   isInteger: true,
@@ -29,9 +36,8 @@ Integer.args = {
   value: 7
 };
 
-export const Currency = Template.bind({});
-Currency.args = {
-  currency: 'USD',
+export const Label = Template.bind({});
+Label.args = {
   isInteger: true,
   label: 'Label',
   locale: 'en',
