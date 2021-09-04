@@ -148,7 +148,7 @@ export class PortfolioService {
       .map((timelineItem) => ({
         date: timelineItem.date,
         marketPrice: timelineItem.value,
-        value: timelineItem.grossPerformance.toNumber()
+        value: timelineItem.netPerformance.toNumber()
       }));
   }
 

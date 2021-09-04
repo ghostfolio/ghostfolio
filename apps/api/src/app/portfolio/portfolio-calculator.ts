@@ -522,7 +522,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const results = [];
+    const results: TimelinePeriod[] = [];
     for (
       let currentDate = startDate;
       isBefore(currentDate, endDate);
@@ -546,10 +546,11 @@ export class PortfolioCalculator {
       }
       if (!invalid) {
         const result = {
+          investment,
+          value,
           date: currentDateAsString,
           grossPerformance: value.minus(investment),
-          investment,
-          value
+          netPerformance: new Big(0) // TODO
         };
         results.push(result);
       }
