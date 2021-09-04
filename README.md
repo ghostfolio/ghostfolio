@@ -116,6 +116,10 @@ Please make sure you have completed the instructions from [_Setup_](#Setup).
 
 Run `yarn start:client`
 
+### Start _Storybook_
+
+Run `yarn start:storybook`
+
 ## Testing
 
 Run `yarn test`

@@ -1,0 +1,13 @@
+{
+  "fileServerFolder": ".",
+  "fixturesFolder": "./src/fixtures",
+  "integrationFolder": "./src/integration",
+  "modifyObstructiveCode": false,
+  "supportFile": "./src/support/index.ts",
+  "pluginsFile": "./src/plugins/index",
+  "video": true,
+  "videosFolder": "../../dist/cypress/apps/ui-e2e/videos",
+  "screenshotsFolder": "../../dist/cypress/apps/ui-e2e/screenshots",
+  "chromeWebSecurity": false,
+  "baseUrl": "http://localhost:4400"
+}

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the statistics section on the about page by the _GitHub_ contributors count
+- Set up _Storybook_
+- Added a story for the value component
 
 ## 1.45.0 - 04.09.2021
 

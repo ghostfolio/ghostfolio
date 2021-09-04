@@ -18,7 +18,8 @@
     "paths": {
       "@ghostfolio/api/*": ["apps/api/src/*"],
       "@ghostfolio/client/*": ["apps/client/src/app/*"],
-      "@ghostfolio/common/*": ["libs/common/src/lib/*"]
+      "@ghostfolio/common/*": ["libs/common/src/lib/*"],
+      "@ghostfolio/ui/*": ["libs/ui/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

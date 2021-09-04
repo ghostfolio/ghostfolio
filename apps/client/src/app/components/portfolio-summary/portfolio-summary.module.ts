@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { GfValueModule } from '@ghostfolio/ui/value';
 
-import { GfValueModule } from '../value/value.module';
 import { PortfolioSummaryComponent } from './portfolio-summary.component';
 
 @NgModule({

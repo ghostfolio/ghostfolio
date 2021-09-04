@@ -10,11 +10,11 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfPositionDetailDialogModule } from '../position/position-detail-dialog/position-detail-dialog.module';
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
-import { GfValueModule } from '../value/value.module';
 import { TransactionsTableComponent } from './transactions-table.component';
 
 @NgModule({
