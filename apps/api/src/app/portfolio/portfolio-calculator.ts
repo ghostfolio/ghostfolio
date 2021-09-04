@@ -58,6 +58,7 @@ export class PortfolioCalculator {
           .plus(oldAccumulatedSymbol.quantity);
         currentTransactionPointItem = {
           currency: order.currency,
+          fee: order.fee,
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           investment: newQuantity.eq(0)
             ? new Big(0)
@@ -67,17 +68,16 @@ export class PortfolioCalculator {
                 .add(oldAccumulatedSymbol.investment),
           quantity: newQuantity,
           symbol: order.symbol,
-          fee: order.fee,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
         currentTransactionPointItem = {
           currency: order.currency,
+          fee: order.fee,
           firstBuyDate: order.date,
           investment: unitPrice.mul(order.quantity).mul(factor),
           quantity: order.quantity.mul(factor),
           symbol: order.symbol,
-          fee: order.fee,
           transactionCount: 1
         };
       }
@@ -119,13 +119,13 @@ export class PortfolioCalculator {
   public async getCurrentPositions(start: Date): Promise<CurrentPositions> {
     if (!this.transactionPoints?.length) {
       return {
+        currentValue: new Big(0),
         hasErrors: false,
-        positions: [],
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
-        currentValue: new Big(0),
+        positions: [],
         totalInvestment: new Big(0)
       };
     }
@@ -300,13 +300,13 @@ export class PortfolioCalculator {
           isValid && holdingPeriodReturns[item.symbol]
             ? holdingPeriodReturns[item.symbol].minus(1)
             : null,
+        investment: item.investment,
+        marketPrice: marketValue?.toNumber() ?? null,
         netPerformance: isValid ? netPerformance[item.symbol] ?? null : null,
         netPerformancePercentage:
           isValid && netHoldingPeriodReturns[item.symbol]
             ? netHoldingPeriodReturns[item.symbol].minus(1)
             : null,
-        investment: item.investment,
-        marketPrice: marketValue?.toNumber() ?? null,
         quantity: item.quantity,
         symbol: item.symbol,
         transactionCount: item.transactionCount
@@ -461,9 +461,9 @@ export class PortfolioCalculator {
       currentValue,
       grossPerformance,
       grossPerformancePercentage,
+      hasErrors,
       netPerformance,
       netPerformancePercentage,
-      hasErrors,
       totalInvestment
     };
   }

@@ -7,10 +7,10 @@ export interface TimelinePosition {
   firstBuyDate: string;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
-  netPerformance: Big;
-  netPerformancePercentage: Big;
   investment: Big;
   marketPrice: number;
+  netPerformance: Big;
+  netPerformancePercentage: Big;
   quantity: Big;
   symbol: string;
   transactionCount: number;
