@@ -16,6 +16,8 @@ import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';
 import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { sum } from 'lodash';
 import * as Color from 'color';
 
 @Component({
@@ -32,6 +34,7 @@ export class PortfolioProportionChartComponent
   @Input() keys: string[];
   @Input() locale: string;
   @Input() maxItems?: number;
+  @Input() showLabels: boolean;
   @Input() positions: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & { value: number };
   };
@@ -48,7 +51,7 @@ export class PortfolioProportionChartComponent
   };
 
   public constructor() {
-    Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
+    Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip, ChartDataLabels);
   }
 
   public ngOnInit() {}
@@ -226,6 +229,8 @@ export class PortfolioProportionChartComponent
       labels
     };
 
+    const showLabels = this.showLabels || false;
+
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
@@ -234,6 +239,9 @@ export class PortfolioProportionChartComponent
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
+            layout: {
+              padding: 60,
+            },
             cutout: '70%',
             plugins: {
               legend: { display: false },
@@ -255,6 +263,27 @@ export class PortfolioProportionChartComponent
                         minimumFractionDigits: 2
                       })} ${this.baseCurrency})`;
                     }
+                  }
+                }
+              },
+              datalabels: {
+                display: function(ctx) {
+                  const value = ctx.dataset.data[ctx.dataIndex];
+                  return showLabels === true && ctx.datasetIndex === 0 && value > sum(ctx.dataset.data) / 10;
+                },
+                font: {
+                  weight: 'bold',
+                },
+                color: this.getColorPalette()[0],
+                labels: {
+                  index: {
+                    align: 'end',
+                    anchor: 'end',
+                    font: {size: 18},
+                    formatter: function(value, ctx) {
+                      return ctx.chart.data.labels[ctx.dataIndex];
+                    },
+                    offset: 8,
                   }
                 }
               }
