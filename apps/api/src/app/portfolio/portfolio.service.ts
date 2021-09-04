@@ -233,6 +233,8 @@ export class PortfolioService {
         marketPrice: item.marketPrice,
         marketState: dataProviderResponse.marketState,
         name: symbolProfile.name,
+        netPerformance: item.netPerformance?.toNumber() ?? 0,
+        netPerformancePercent: item.netPerformancePercentage?.toNumber() ?? 0,
         quantity: item.quantity.toNumber(),
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
@@ -280,6 +282,8 @@ export class PortfolioService {
         marketPrice: undefined,
         maxPrice: undefined,
         minPrice: undefined,
+        netPerformance: undefined,
+        netPerformancePercent: undefined,
         quantity: undefined,
         symbol: aSymbol,
         transactionCount: undefined
@@ -325,7 +329,7 @@ export class PortfolioService {
         transactionCount
       } = position;
 
-      // Convert investment and gross performance to currency of user
+      // Convert investment, gross and net performance to currency of user
       const userCurrency = this.request.user.Settings.currency;
       const investment = this.exchangeRateDataService.toCurrency(
         position.investment.toNumber(),
@@ -334,6 +338,11 @@ export class PortfolioService {
       );
       const grossPerformance = this.exchangeRateDataService.toCurrency(
         position.grossPerformance.toNumber(),
+        currency,
+        userCurrency
+      );
+      const netPerformance = this.exchangeRateDataService.toCurrency(
+        position.netPerformance.toNumber(),
         currency,
         userCurrency
       );
@@ -398,10 +407,12 @@ export class PortfolioService {
         marketPrice,
         maxPrice,
         minPrice,
+        netPerformance,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
         grossPerformancePercent: position.grossPerformancePercentage.toNumber(),
         historicalData: historicalDataArray,
+        netPerformancePercent: position.netPerformancePercentage.toNumber(),
         quantity: quantity.toNumber(),
         symbol: aSymbol
       };
@@ -451,6 +462,8 @@ export class PortfolioService {
         grossPerformancePercent: undefined,
         historicalData: historicalDataArray,
         investment: 0,
+        netPerformance: undefined,
+        netPerformancePercent: undefined,
         quantity: 0,
         symbol: aSymbol,
         transactionCount: undefined
@@ -514,6 +527,9 @@ export class PortfolioService {
           investment: new Big(position.investment).toNumber(),
           marketState: dataProviderResponses[position.symbol].marketState,
           name: symbolProfileMap[position.symbol].name,
+          netPerformance: position.netPerformance?.toNumber() ?? null,
+          netPerformancePercentage:
+            position.netPerformancePercentage?.toNumber() ?? null,
           quantity: new Big(position.quantity).toNumber()
         };
       })
@@ -539,6 +555,8 @@ export class PortfolioService {
         performance: {
           currentGrossPerformance: 0,
           currentGrossPerformancePercent: 0,
+          currentNetPerformance: 0,
+          currentNetPerformancePercent: 0,
           currentValue: 0
         }
       };
@@ -558,11 +576,17 @@ export class PortfolioService {
       currentPositions.grossPerformance.toNumber();
     const currentGrossPerformancePercent =
       currentPositions.grossPerformancePercentage.toNumber();
+    const currentNetPerformance = currentPositions.netPerformance.toNumber();
+    const currentNetPerformancePercent =
+      currentPositions.netPerformancePercentage.toNumber();
+
     return {
       hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
         currentGrossPerformance,
         currentGrossPerformancePercent,
+        currentNetPerformance,
+        currentNetPerformancePercent,
         currentValue: currentValue
       }
     };
@@ -733,6 +757,8 @@ export class PortfolioService {
       marketPrice: 0,
       marketState: MarketState.open,
       name: 'Cash',
+      netPerformance: 0,
+      netPerformancePercent: 0,
       quantity: 0,
       sectors: [],
       symbol: ghostfolioCashSymbol,
