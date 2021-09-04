@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Restructured the allocations page
+- Upgraded `prisma` from version `2.24.1` to `2.30.2`
 
 ### Fixed
 
