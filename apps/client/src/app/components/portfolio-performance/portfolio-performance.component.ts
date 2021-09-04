@@ -52,7 +52,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
 
         new CountUp(
           'value',
-          this.performance?.currentGrossPerformancePercent * 100,
+          this.performance?.currentNetPerformancePercent * 100,
           {
             decimalPlaces: 2,
             duration: 0.75,

@@ -34,6 +34,8 @@ export class PositionDetailDialog implements OnDestroy {
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
+  public netPerformance: number;
+  public netPerformancePercent: number;
   public quantity: number;
   public transactionCount: number;
 
@@ -60,6 +62,8 @@ export class PositionDetailDialog implements OnDestroy {
           marketPrice,
           maxPrice,
           minPrice,
+          netPerformance,
+          netPerformancePercent,
           quantity,
           transactionCount
         }) => {
@@ -86,6 +90,8 @@ export class PositionDetailDialog implements OnDestroy {
           this.marketPrice = marketPrice;
           this.maxPrice = maxPrice;
           this.minPrice = minPrice;
+          this.netPerformance = netPerformance;
+          this.netPerformancePercent = netPerformancePercent;
           this.quantity = quantity;
           this.transactionCount = transactionCount;
 

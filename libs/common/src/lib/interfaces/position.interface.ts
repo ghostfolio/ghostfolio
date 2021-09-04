@@ -13,6 +13,8 @@ export interface Position {
   marketPrice?: number;
   marketState?: MarketState;
   name?: string;
+  netPerformance?: number;
+  netPerformancePercentage?: number;
   quantity: number;
   symbol: string;
   transactionCount: number;

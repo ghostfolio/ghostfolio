@@ -11,7 +11,7 @@
           [isLoading]="isLoading"
           [marketState]="position?.marketState"
           [range]="range"
-          [value]="position?.grossPerformancePercentage"
+          [value]="position?.netPerformancePercentage"
         ></gf-trend-indicator>
       </div>
       <div *ngIf="isLoading" class="flex-grow-1">
@@ -47,13 +47,13 @@
             [colorizeSign]="true"
             [currency]="baseCurrency"
             [locale]="locale"
-            [value]="position?.grossPerformance"
+            [value]="position?.netPerformance"
           ></gf-value>
           <gf-value
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale"
-            [value]="position?.grossPerformancePercentage"
+            [value]="position?.netPerformancePercentage"
           ></gf-value>
         </div>
       </div>
