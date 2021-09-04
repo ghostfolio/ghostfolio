@@ -25,14 +25,14 @@ Loading.args = {
 export const Currency = Template.bind({});
 Currency.args = {
   currency: 'USD',
-  locale: 'en',
+  locale: 'en-US',
   value: 7
 };
 
 export const Integer = Template.bind({});
 Integer.args = {
   isInteger: true,
-  locale: 'en',
+  locale: 'en-US',
   value: 7
 };
 
@@ -40,6 +40,6 @@ export const Label = Template.bind({});
 Label.args = {
   isInteger: true,
   label: 'Label',
-  locale: 'en',
+  locale: 'en-US',
   value: 7
 };
