@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Switched from gross to net performance
+- Restructured the portfolio summary tab on the home page (fees and net performance)
 
 ### Fixed
 
