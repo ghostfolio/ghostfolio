@@ -90,6 +90,27 @@ export class InfoService {
     });
   }
 
+  private async countGitHubContributors(): Promise<number> {
+    try {
+      const get = bent(
+        `https://api.github.com/repos/ghostfolio/ghostfolio/contributors`,
+        'GET',
+        'json',
+        200,
+        {
+          'User-Agent': 'request'
+        }
+      );
+
+      const contributors = await get();
+      return contributors?.length;
+    } catch (error) {
+      console.error(error);
+
+      return undefined;
+    }
+  }
+
   private async countGitHubStargazers(): Promise<number> {
     try {
       const get = bent(
@@ -131,11 +152,13 @@ export class InfoService {
 
     const activeUsers1d = await this.countActiveUsers(1);
     const activeUsers30d = await this.countActiveUsers(30);
+    const gitHubContributors = await this.countGitHubContributors();
     const gitHubStargazers = await this.countGitHubStargazers();
 
     return {
       activeUsers1d,
       activeUsers30d,
+      gitHubContributors,
       gitHubStargazers
     };
   }
