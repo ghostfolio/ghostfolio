@@ -36,7 +36,7 @@
     "start": "node dist/apps/api/main",
     "start:client": "ng serve client --hmr -o",
     "start:prod": "node apps/api/main",
-    "start:server": "nx serve api",
+    "start:server": "nx serve api --watch",
     "test": "nx test",
     "ts-node": "ts-node --compiler-options '{\"module\":\"CommonJS\"}'",
     "update": "nx migrate latest",
