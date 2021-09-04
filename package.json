@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@angular/animations": "12.2.4",
-    "@angular/cdk": "12.0.6",
+    "@angular/cdk": "12.2.4",
     "@angular/common": "12.2.4",
     "@angular/compiler": "12.2.4",
     "@angular/core": "12.2.4",
@@ -109,12 +109,12 @@
     "zone.js": "0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "12.1.4",
+    "@angular-devkit/build-angular": "12.2.4",
     "@angular-eslint/eslint-plugin": "12.3.1",
-    "@angular/cli": "12.1.4",
+    "@angular/cli": "12.2.4",
     "@angular/compiler-cli": "12.2.4",
     "@angular/language-service": "12.2.4",
-    "@angular/localize": "12.0.5",
+    "@angular/localize": "12.2.4",
     "@nestjs/schematics": "7.3.1",
     "@nestjs/testing": "7.6.18",
     "@nrwl/cli": "12.8.0",
