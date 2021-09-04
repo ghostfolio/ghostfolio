@@ -292,12 +292,12 @@ export class PortfolioService {
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
       date: format(order.date, DATE_FORMAT),
+      fee: new Big(order.fee),
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.symbol,
       type: <OrderType>order.type,
-      unitPrice: new Big(order.unitPrice),
-      fee: new Big(order.fee)
+      unitPrice: new Big(order.unitPrice)
     }));
 
     const portfolioCalculator = new PortfolioCalculator(
@@ -780,6 +780,13 @@ export class PortfolioService {
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
       date: format(order.date, DATE_FORMAT),
+      fee: new Big(
+        this.exchangeRateDataService.toCurrency(
+          order.fee,
+          order.currency,
+          userCurrency
+        )
+      ),
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.symbol,
@@ -787,13 +794,6 @@ export class PortfolioService {
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
           order.unitPrice,
-          order.currency,
-          userCurrency
-        )
-      ),
-      fee: new Big(
-        this.exchangeRateDataService.toCurrency(
-          order.fee,
           order.currency,
           userCurrency
         )
