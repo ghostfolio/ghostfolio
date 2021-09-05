@@ -13,13 +13,12 @@ import {
   styleUrls: ['./logo.component.scss']
 })
 export class LogoComponent implements OnInit {
-  @HostBinding('class') @Input() size: 'large' | 'medium';
-  @Input() hideName: boolean;
+  @HostBinding('class') @Input() size: 'large' | 'medium' = 'medium';
+  @Input() hideName = false;
 
   public constructor() {}
 
   public ngOnInit() {
     this.hideName = this.hideName ?? false;
-    this.size = this.size ?? 'medium';
   }
 }
