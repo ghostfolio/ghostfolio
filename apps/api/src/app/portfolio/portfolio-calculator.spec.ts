@@ -194,8 +194,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               transactionCount: 1,
-              fee: new Big('5'),
-              feeAccumulated: new Big('5')
+              fee: new Big('5')
             }
           ]
         },
@@ -209,8 +208,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               transactionCount: 2,
-              fee: new Big('10'),
-              feeAccumulated: new Big('15')
+              fee: new Big('15')
             }
           ]
         },
@@ -224,8 +222,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               transactionCount: 3,
-              fee: new Big('5'),
-              feeAccumulated: new Big('20')
+              fee: new Big('20')
             }
           ]
         }
@@ -284,8 +281,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               transactionCount: 1,
-              fee: new Big('5'),
-              feeAccumulated: new Big('5')
+              fee: new Big('5')
             }
           ]
         },
@@ -299,8 +295,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               transactionCount: 1,
-              fee: new Big('0'),
-              feeAccumulated: new Big('5')
+              fee: new Big('5')
             },
             {
               quantity: new Big('10'),
@@ -309,8 +304,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-08-03',
               transactionCount: 1,
-              fee: new Big('10'),
-              feeAccumulated: new Big('10')
+              fee: new Big('10')
             }
           ]
         },
@@ -324,8 +318,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               transactionCount: 2,
-              fee: new Big('5'),
-              feeAccumulated: new Big('10')
+              fee: new Big('10')
             },
             {
               quantity: new Big('10'),
@@ -334,8 +327,7 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-08-03',
               transactionCount: 1,
-              fee: new Big('0'),
-              feeAccumulated: new Big('10')
+              fee: new Big('10')
             }
           ]
         }
@@ -375,7 +367,6 @@ describe('PortfolioCalculator', () => {
               quantity: new Big('10'),
               symbol: 'VTI',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -390,7 +381,6 @@ describe('PortfolioCalculator', () => {
               quantity: new Big('20'),
               symbol: 'VTI',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 2
             }
           ]
@@ -405,7 +395,6 @@ describe('PortfolioCalculator', () => {
               quantity: new Big('5'),
               symbol: 'VTI',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 3
             }
           ]
@@ -420,7 +409,6 @@ describe('PortfolioCalculator', () => {
               quantity: new Big('35'),
               symbol: 'VTI',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 5
             }
           ]
@@ -435,7 +423,6 @@ describe('PortfolioCalculator', () => {
               quantity: new Big('45'),
               symbol: 'VTI',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 6
             }
           ]
@@ -476,7 +463,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -491,7 +477,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 2
             }
           ]
@@ -506,7 +491,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -516,7 +500,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 2
             }
           ]
@@ -531,7 +514,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -541,7 +523,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 3
             }
           ]
@@ -556,7 +537,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -566,7 +546,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 4
             }
           ]
@@ -581,7 +560,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -591,7 +569,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 5
             }
           ]
@@ -656,7 +633,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2017-01-03',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -671,7 +647,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2017-07-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -681,7 +656,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2017-01-03',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -696,7 +670,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2018-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -706,7 +679,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2017-07-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -716,7 +688,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2017-01-03',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -959,7 +930,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -974,7 +944,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 2
             }
           ]
@@ -989,7 +958,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 3
             }
           ]
@@ -1048,7 +1016,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -1064,7 +1031,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 2
             }
           ]
@@ -1133,7 +1099,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(50),
-              feeAccumulated: new Big(50),
               transactionCount: 1
             }
           ]
@@ -1148,8 +1113,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2923.7'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
-              fee: new Big(50),
-              feeAccumulated: new Big(100),
+              fee: new Big(100),
               transactionCount: 2
             }
           ]
@@ -1226,7 +1190,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(50),
-              feeAccumulated: new Big(50),
               transactionCount: 1
             }
           ]
@@ -1241,8 +1204,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2923.7'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
-              fee: new Big(50),
-              feeAccumulated: new Big(100),
+              fee: new Big(100),
               transactionCount: 2
             }
           ]
@@ -1315,7 +1277,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2010-12-31',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -1330,7 +1291,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2010-12-31',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 2
             }
           ]
@@ -1392,7 +1352,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -1402,7 +1361,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -1417,7 +1375,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -1427,7 +1384,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.CHF,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -1541,7 +1497,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(50),
-              feeAccumulated: new Big(50),
               transactionCount: 1
             }
           ]
@@ -1555,8 +1510,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2923.7'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
-              fee: new Big(50),
-              feeAccumulated: new Big(100),
+              fee: new Big(100),
               transactionCount: 2
             }
           ]
@@ -1570,8 +1524,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('652.55'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
-              fee: new Big(50),
-              feeAccumulated: new Big(150),
+              fee: new Big(150),
               transactionCount: 3
             }
           ]
@@ -1585,8 +1538,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('2684.05'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
-              fee: new Big(50),
-              feeAccumulated: new Big(200),
+              fee: new Big(200),
               transactionCount: 4
             }
           ]
@@ -1600,8 +1552,7 @@ describe('PortfolioCalculator', () => {
               investment: new Big('4460.95'),
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
-              fee: new Big(50),
-              feeAccumulated: new Big(250),
+              fee: new Big(250),
               transactionCount: 5
             }
           ]
@@ -2266,7 +2217,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             },
             {
@@ -2276,7 +2226,6 @@ describe('PortfolioCalculator', () => {
               currency: Currency.USD,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
-              feeAccumulated: new Big(0),
               transactionCount: 1
             }
           ]
@@ -2411,7 +2360,6 @@ const orderTslaTransactionPoint: TransactionPoint[] = [
         currency: Currency.USD,
         firstBuyDate: '2021-01-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 1
       }
     ]
@@ -2429,7 +2377,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 1
       }
     ]
@@ -2444,7 +2391,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 2
       }
     ]
@@ -2459,7 +2405,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 3
       }
     ]
@@ -2474,7 +2419,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 4
       }
     ]
@@ -2489,7 +2433,6 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 5
       }
     ]
@@ -2507,7 +2450,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 1
       }
     ]
@@ -2522,7 +2464,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 2
       }
     ]
@@ -2537,7 +2478,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 1
       },
       {
@@ -2547,7 +2487,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 2
       }
     ]
@@ -2562,7 +2501,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 1
       },
       {
@@ -2572,7 +2510,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 3
       }
     ]
@@ -2587,7 +2524,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 2
       },
       {
@@ -2597,7 +2533,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 3
       }
     ]
@@ -2612,7 +2547,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 2
       },
       {
@@ -2622,7 +2556,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 4
       }
     ]
@@ -2637,7 +2570,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 2
       },
       {
@@ -2647,7 +2579,6 @@ const transactionPointsBuyAndSell = [
         currency: Currency.USD,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
-        feeAccumulated: new Big(0),
         transactionCount: 5
       }
     ]

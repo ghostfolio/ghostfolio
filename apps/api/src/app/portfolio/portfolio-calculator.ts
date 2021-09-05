@@ -58,8 +58,7 @@ export class PortfolioCalculator {
           .plus(oldAccumulatedSymbol.quantity);
         currentTransactionPointItem = {
           currency: order.currency,
-          fee: order.fee,
-          feeAccumulated: order.fee.plus(oldAccumulatedSymbol.feeAccumulated),
+          fee: order.fee.plus(oldAccumulatedSymbol.fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           investment: newQuantity.eq(0)
             ? new Big(0)
@@ -75,7 +74,6 @@ export class PortfolioCalculator {
         currentTransactionPointItem = {
           currency: order.currency,
           fee: order.fee,
-          feeAccumulated: order.fee,
           firstBuyDate: order.date,
           investment: unitPrice.mul(order.quantity).mul(factor),
           quantity: order.quantity.mul(factor),
@@ -87,14 +85,9 @@ export class PortfolioCalculator {
       symbols[order.symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
-      const newItems = items
-        .filter(
-          (transactionPointItem) => transactionPointItem.symbol !== order.symbol
-        )
-        .map((transactionPoint) => ({
-          ...transactionPoint,
-          fee: new Big(0)
-        }));
+      const newItems = items.filter(
+        (transactionPointItem) => transactionPointItem.symbol !== order.symbol
+      );
       newItems.push(currentTransactionPointItem);
       newItems.sort((a, b) => a.symbol.localeCompare(b.symbol));
       if (lastDate !== currentDate || lastTransactionPoint === null) {
@@ -203,6 +196,7 @@ export class PortfolioCalculator {
     const invalidSymbols = [];
     const lastInvestments: { [symbol: string]: Big } = {};
     const lastQuantities: { [symbol: string]: Big } = {};
+    const lastFees: { [symbol: string]: Big } = {};
     const initialValues: { [symbol: string]: Big } = {};
 
     for (let i = firstIndex; i < this.transactionPoints.length; i++) {
@@ -236,9 +230,10 @@ export class PortfolioCalculator {
         const isFirstOrderAndIsStartBeforeCurrentDate =
           i === firstIndex &&
           isBefore(parseDate(this.transactionPoints[i].date), start);
+        const lastFee: Big = lastFees[item.symbol] ?? new Big(0);
         const fee = isFirstOrderAndIsStartBeforeCurrentDate
           ? new Big(0)
-          : item.fee;
+          : item.fee.minus(lastFee);
         if (!isAfter(parseDate(currentDate), parseDate(item.firstBuyDate))) {
           initialValue = item.investment;
           investedValue = item.investment;
@@ -281,6 +276,7 @@ export class PortfolioCalculator {
         }
         lastInvestments[item.symbol] = item.investment;
         lastQuantities[item.symbol] = item.quantity;
+        lastFees[item.symbol] = item.fee;
       }
     }
 
@@ -489,7 +485,7 @@ export class PortfolioCalculator {
         currencies[item.symbol] = item.currency;
         symbols.push(item.symbol);
         investment = investment.add(item.investment);
-        fees = fees.add(item.feeAccumulated);
+        fees = fees.add(item.fee);
       }
 
       let marketSymbols: GetValueObject[] = [];
