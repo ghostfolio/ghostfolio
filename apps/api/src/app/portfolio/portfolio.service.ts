@@ -26,7 +26,6 @@ import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
   PortfolioPerformance,
-  PortfolioPosition,
   PortfolioReport,
   PortfolioSummary,
   Position,
