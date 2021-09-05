@@ -59,6 +59,7 @@ export class PortfolioCalculator {
         currentTransactionPointItem = {
           currency: order.currency,
           fee: order.fee,
+          feeAccumulated: order.fee.plus(oldAccumulatedSymbol.feeAccumulated),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           investment: newQuantity.eq(0)
             ? new Big(0)
@@ -74,6 +75,7 @@ export class PortfolioCalculator {
         currentTransactionPointItem = {
           currency: order.currency,
           fee: order.fee,
+          feeAccumulated: order.fee,
           firstBuyDate: order.date,
           investment: unitPrice.mul(order.quantity).mul(factor),
           quantity: order.quantity.mul(factor),
@@ -474,6 +476,7 @@ export class PortfolioCalculator {
     endDate: Date
   ): Promise<TimelinePeriod[]> {
     let investment: Big = new Big(0);
+    let fees: Big = new Big(0);
 
     const marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
@@ -486,6 +489,7 @@ export class PortfolioCalculator {
         currencies[item.symbol] = item.currency;
         symbols.push(item.symbol);
         investment = investment.add(item.investment);
+        fees = fees.add(item.feeAccumulated);
       }
 
       let marketSymbols: GetValueObject[] = [];
@@ -545,12 +549,13 @@ export class PortfolioCalculator {
         }
       }
       if (!invalid) {
+        const grossPerformance = value.minus(investment);
         const result = {
+          grossPerformance,
           investment,
           value,
           date: currentDateAsString,
-          grossPerformance: value.minus(investment),
-          netPerformance: new Big(0) // TODO
+          netPerformance: grossPerformance.minus(fees)
         };
         results.push(result);
       }
