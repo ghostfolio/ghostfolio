@@ -3,8 +3,8 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { GfRuleModule } from '@ghostfolio/client/components/rule/rule.module';
+import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
 
-import { GfNoTransactionsInfoModule } from '../no-transactions-info/no-transactions-info.module';
 import { GfPositionModule } from '../position/position.module';
 import { RulesComponent } from './rules.component';
 
