@@ -1,10 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 @Component({
   selector: 'gf-trend-indicator',
@@ -12,13 +8,11 @@ import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
   templateUrl: './trend-indicator.component.html',
   styleUrls: ['./trend-indicator.component.scss']
 })
-export class TrendIndicatorComponent implements OnInit {
-  @Input() isLoading: boolean;
-  @Input() marketState: MarketState;
-  @Input() range: string;
-  @Input() value: number;
+export class TrendIndicatorComponent {
+  @Input() isLoading = false;
+  @Input() marketState: MarketState = 'open';
+  @Input() range: DateRange = 'max';
+  @Input() value = 0;
 
   public constructor() {}
-
-  public ngOnInit() {}
 }
