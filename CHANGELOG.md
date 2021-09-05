@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up _Storybook_
   - Added a story for the logo component
   - Added a story for the no transactions info component
+  - Added a story for the trend indicator component
   - Added a story for the value component
 
 ## 1.45.0 - 04.09.2021
