@@ -58,6 +58,7 @@ export class PortfolioCalculator {
           .plus(oldAccumulatedSymbol.quantity);
         currentTransactionPointItem = {
           currency: order.currency,
+          fee: order.fee.plus(oldAccumulatedSymbol.fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           investment: newQuantity.eq(0)
             ? new Big(0)
@@ -72,6 +73,7 @@ export class PortfolioCalculator {
       } else {
         currentTransactionPointItem = {
           currency: order.currency,
+          fee: order.fee,
           firstBuyDate: order.date,
           investment: unitPrice.mul(order.quantity).mul(factor),
           quantity: order.quantity.mul(factor),
@@ -112,11 +114,13 @@ export class PortfolioCalculator {
   public async getCurrentPositions(start: Date): Promise<CurrentPositions> {
     if (!this.transactionPoints?.length) {
       return {
+        currentValue: new Big(0),
         hasErrors: false,
-        positions: [],
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
-        currentValue: new Big(0),
+        netPerformance: new Big(0),
+        netPerformancePercentage: new Big(0),
+        positions: [],
         totalInvestment: new Big(0)
       };
     }
@@ -181,7 +185,9 @@ export class PortfolioCalculator {
     const startString = format(start, DATE_FORMAT);
 
     const holdingPeriodReturns: { [symbol: string]: Big } = {};
+    const netHoldingPeriodReturns: { [symbol: string]: Big } = {};
     const grossPerformance: { [symbol: string]: Big } = {};
+    const netPerformance: { [symbol: string]: Big } = {};
     const todayString = format(today, DATE_FORMAT);
 
     if (firstIndex > 0) {
@@ -190,6 +196,7 @@ export class PortfolioCalculator {
     const invalidSymbols = [];
     const lastInvestments: { [symbol: string]: Big } = {};
     const lastQuantities: { [symbol: string]: Big } = {};
+    const lastFees: { [symbol: string]: Big } = {};
     const initialValues: { [symbol: string]: Big } = {};
 
     for (let i = firstIndex; i < this.transactionPoints.length; i++) {
@@ -202,10 +209,6 @@ export class PortfolioCalculator {
 
       const items = this.transactionPoints[i].items;
       for (const item of items) {
-        let oldHoldingPeriodReturn = holdingPeriodReturns[item.symbol];
-        if (!oldHoldingPeriodReturn) {
-          oldHoldingPeriodReturn = new Big(1);
-        }
         if (!marketSymbolMap[nextDate]?.[item.symbol]) {
           invalidSymbols.push(item.symbol);
           hasErrors = true;
@@ -224,6 +227,13 @@ export class PortfolioCalculator {
         const itemValue = marketSymbolMap[currentDate]?.[item.symbol];
         let initialValue = itemValue?.mul(lastQuantity);
         let investedValue = itemValue?.mul(item.quantity);
+        const isFirstOrderAndIsStartBeforeCurrentDate =
+          i === firstIndex &&
+          isBefore(parseDate(this.transactionPoints[i].date), start);
+        const lastFee: Big = lastFees[item.symbol] ?? new Big(0);
+        const fee = isFirstOrderAndIsStartBeforeCurrentDate
+          ? new Big(0)
+          : item.fee.minus(lastFee);
         if (!isAfter(parseDate(currentDate), parseDate(item.firstBuyDate))) {
           initialValue = item.investment;
           investedValue = item.investment;
@@ -247,18 +257,26 @@ export class PortfolioCalculator {
           );
 
           const holdingPeriodReturn = endValue.div(initialValue.plus(cashFlow));
-          holdingPeriodReturns[item.symbol] =
-            oldHoldingPeriodReturn.mul(holdingPeriodReturn);
-          let oldGrossPerformance = grossPerformance[item.symbol];
-          if (!oldGrossPerformance) {
-            oldGrossPerformance = new Big(0);
-          }
-          const currentPerformance = endValue.minus(investedValue);
-          grossPerformance[item.symbol] =
-            oldGrossPerformance.plus(currentPerformance);
+          holdingPeriodReturns[item.symbol] = (
+            holdingPeriodReturns[item.symbol] ?? new Big(1)
+          ).mul(holdingPeriodReturn);
+          grossPerformance[item.symbol] = (
+            grossPerformance[item.symbol] ?? new Big(0)
+          ).plus(endValue.minus(investedValue));
+
+          const netHoldingPeriodReturn = endValue.div(
+            initialValue.plus(cashFlow).plus(fee)
+          );
+          netHoldingPeriodReturns[item.symbol] = (
+            netHoldingPeriodReturns[item.symbol] ?? new Big(1)
+          ).mul(netHoldingPeriodReturn);
+          netPerformance[item.symbol] = (
+            netPerformance[item.symbol] ?? new Big(0)
+          ).plus(endValue.minus(investedValue).minus(fee));
         }
         lastInvestments[item.symbol] = item.investment;
         lastQuantities[item.symbol] = item.quantity;
+        lastFees[item.symbol] = item.fee;
       }
     }
 
@@ -282,15 +300,17 @@ export class PortfolioCalculator {
             : null,
         investment: item.investment,
         marketPrice: marketValue?.toNumber() ?? null,
+        netPerformance: isValid ? netPerformance[item.symbol] ?? null : null,
+        netPerformancePercentage:
+          isValid && netHoldingPeriodReturns[item.symbol]
+            ? netHoldingPeriodReturns[item.symbol].minus(1)
+            : null,
         quantity: item.quantity,
         symbol: item.symbol,
         transactionCount: item.transactionCount
       });
     }
-    const overall = this.calculateOverallGrossPerformance(
-      positions,
-      initialValues
-    );
+    const overall = this.calculateOverallPerformance(positions, initialValues);
 
     return {
       ...overall,
@@ -378,7 +398,7 @@ export class PortfolioCalculator {
     return flatten(timelinePeriods);
   }
 
-  private calculateOverallGrossPerformance(
+  private calculateOverallPerformance(
     positions: TimelinePosition[],
     initialValues: { [p: string]: Big }
   ) {
@@ -387,6 +407,8 @@ export class PortfolioCalculator {
     let totalInvestment = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformancePercentage = new Big(0);
+    let netPerformance = new Big(0);
+    let netPerformancePercentage = new Big(0);
     let completeInitialValue = new Big(0);
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
@@ -401,6 +423,7 @@ export class PortfolioCalculator {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
         );
+        netPerformance = netPerformance.plus(currentPosition.netPerformance);
       } else if (!currentPosition.quantity.eq(0)) {
         hasErrors = true;
       }
@@ -414,6 +437,9 @@ export class PortfolioCalculator {
         grossPerformancePercentage = grossPerformancePercentage.plus(
           currentPosition.grossPerformancePercentage.mul(currentInitialValue)
         );
+        netPerformancePercentage = netPerformancePercentage.plus(
+          currentPosition.netPerformancePercentage.mul(currentInitialValue)
+        );
       } else if (!currentPosition.quantity.eq(0)) {
         console.error(
           `Initial value is missing for symbol ${currentPosition.symbol}`
@@ -425,6 +451,8 @@ export class PortfolioCalculator {
     if (!completeInitialValue.eq(0)) {
       grossPerformancePercentage =
         grossPerformancePercentage.div(completeInitialValue);
+      netPerformancePercentage =
+        netPerformancePercentage.div(completeInitialValue);
     }
 
     return {
@@ -432,6 +460,8 @@ export class PortfolioCalculator {
       grossPerformance,
       grossPerformancePercentage,
       hasErrors,
+      netPerformance,
+      netPerformancePercentage,
       totalInvestment
     };
   }
@@ -442,6 +472,7 @@ export class PortfolioCalculator {
     endDate: Date
   ): Promise<TimelinePeriod[]> {
     let investment: Big = new Big(0);
+    let fees: Big = new Big(0);
 
     const marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
@@ -454,6 +485,7 @@ export class PortfolioCalculator {
         currencies[item.symbol] = item.currency;
         symbols.push(item.symbol);
         investment = investment.add(item.investment);
+        fees = fees.add(item.fee);
       }
 
       let marketSymbols: GetValueObject[] = [];
@@ -490,7 +522,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const results = [];
+    const results: TimelinePeriod[] = [];
     for (
       let currentDate = startDate;
       isBefore(currentDate, endDate);
@@ -513,11 +545,13 @@ export class PortfolioCalculator {
         }
       }
       if (!invalid) {
+        const grossPerformance = value.minus(investment);
         const result = {
-          date: currentDateAsString,
-          grossPerformance: value.minus(investment),
+          grossPerformance,
           investment,
-          value
+          value,
+          date: currentDateAsString,
+          netPerformance: grossPerformance.minus(fees)
         };
         results.push(result);
       }

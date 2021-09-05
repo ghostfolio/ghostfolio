@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added a story for the trend indicator component
   - Added a story for the value component
 
+### Changed
+
+- Switched from gross to net performance
+- Restructured the portfolio summary tab on the home page (fees and net performance)
+
 ## 1.45.0 - 04.09.2021
 
 ### Added

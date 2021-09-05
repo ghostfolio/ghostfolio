@@ -37,7 +37,7 @@
         [colorizeSign]="true"
         [isCurrency]="true"
         [locale]="locale"
-        [value]="isLoading ? undefined : performance?.currentGrossPerformance"
+        [value]="isLoading ? undefined : performance?.currentNetPerformance"
       ></gf-value>
     </div>
     <div class="col">
@@ -46,7 +46,7 @@
         [isPercent]="true"
         [locale]="locale"
         [value]="
-          isLoading ? undefined : performance?.currentGrossPerformancePercent
+          isLoading ? undefined : performance?.currentNetPerformancePercent
         "
       ></gf-value>
     </div>

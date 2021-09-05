@@ -9,6 +9,8 @@ export interface TimelinePosition {
   grossPerformancePercentage: Big;
   investment: Big;
   marketPrice: number;
+  netPerformance: Big;
+  netPerformancePercentage: Big;
   quantity: Big;
   symbol: string;
   transactionCount: number;

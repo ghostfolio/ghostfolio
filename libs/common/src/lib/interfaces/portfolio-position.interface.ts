@@ -20,6 +20,8 @@ export interface PortfolioPosition {
   marketPrice: number;
   marketState: MarketState;
   name: string;
+  netPerformance: number;
+  netPerformancePercent: number;
   quantity: number;
   sectors: Sector[];
   transactionCount: number;
