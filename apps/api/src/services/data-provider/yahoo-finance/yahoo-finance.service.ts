@@ -43,15 +43,11 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async get(
-    aSymbols: string[]
+    aYahooFinanceSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
+    if (aYahooFinanceSymbols.length <= 0) {
       return {};
     }
-
-    const yahooSymbols = aSymbols.map((symbol) => {
-      return this.convertToYahooSymbol(symbol);
-    });
 
     try {
       const response: { [symbol: string]: IDataProviderResponse } = {};
@@ -60,12 +56,12 @@ export class YahooFinanceService implements DataProviderInterface {
         [symbol: string]: IYahooFinanceQuoteResponse;
       } = await yahooFinance.quote({
         modules: ['price', 'summaryProfile'],
-        symbols: yahooSymbols
+        symbols: aYahooFinanceSymbols
       });
 
-      for (const [yahooSymbol, value] of Object.entries(data)) {
+      for (const [yahooFinanceSymbol, value] of Object.entries(data)) {
         // Convert symbols back
-        const symbol = convertFromYahooSymbol(yahooSymbol);
+        const symbol = convertFromYahooFinanceSymbol(yahooFinanceSymbol);
 
         const { assetClass, assetSubClass } = this.parseAssetClass(value.price);
 
@@ -136,15 +132,15 @@ export class YahooFinanceService implements DataProviderInterface {
       return {};
     }
 
-    const yahooSymbols = aSymbols.map((symbol) => {
-      return this.convertToYahooSymbol(symbol);
+    const yahooFinanceSymbols = aSymbols.map((symbol) => {
+      return convertToYahooFinanceSymbol(symbol);
     });
 
     try {
       const historicalData: {
         [symbol: string]: IYahooFinanceHistoricalResponse[];
       } = await yahooFinance.historical({
-        symbols: yahooSymbols,
+        symbols: yahooFinanceSymbols,
         from: format(from, DATE_FORMAT),
         to: format(to, DATE_FORMAT)
       });
@@ -153,9 +149,11 @@ export class YahooFinanceService implements DataProviderInterface {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
       } = {};
 
-      for (const [yahooSymbol, timeSeries] of Object.entries(historicalData)) {
+      for (const [yahooFinanceSymbol, timeSeries] of Object.entries(
+        historicalData
+      )) {
         // Convert symbols back
-        const symbol = convertFromYahooSymbol(yahooSymbol);
+        const symbol = convertFromYahooFinanceSymbol(yahooFinanceSymbol);
         response[symbol] = {};
 
         timeSeries.forEach((timeSerie) => {
@@ -175,7 +173,7 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
-    let items: LookupItem[] = [];
+    const items: LookupItem[] = [];
 
     try {
       const get = bent(
@@ -193,19 +191,6 @@ export class YahooFinanceService implements DataProviderInterface {
           return quote.symbol;
         })
         .filter(({ quoteType }) => {
-          return quoteType === 'EQUITY' || quoteType === 'ETF';
-        })
-        .map(({ symbol }) => {
-          return symbol;
-        });
-
-      const marketData = await this.get(symbols);
-
-      items = searchResult.quotes
-        .filter((quote) => {
-          return quote.isYahooFinance;
-        })
-        .filter(({ quoteType }) => {
           return (
             quoteType === 'CRYPTOCURRENCY' ||
             quoteType === 'EQUITY' ||
@@ -220,40 +205,23 @@ export class YahooFinanceService implements DataProviderInterface {
 
           return true;
         })
-        .map(({ longname, shortname, symbol }) => {
-          return {
-            currency: marketData[symbol]?.currency,
-            dataSource: DataSource.YAHOO,
-            name: longname || shortname,
-            symbol: convertFromYahooSymbol(symbol)
-          };
+        .map(({ symbol }) => {
+          return symbol;
         });
+
+      const marketData = await this.get(symbols);
+
+      for (const [symbol, value] of Object.entries(marketData)) {
+        items.push({
+          symbol,
+          currency: value.currency,
+          dataSource: DataSource.YAHOO,
+          name: value.name
+        });
+      }
     } catch {}
 
     return { items };
-  }
-
-  /**
-   * Converts a symbol to a Yahoo symbol
-   *
-   * Currency:        USDCHF=X
-   * Cryptocurrency:  BTC-USD
-   */
-  private convertToYahooSymbol(aSymbol: string) {
-    if (isCurrency(aSymbol)) {
-      if (isCrypto(aSymbol)) {
-        // Add a dash before the last three characters
-        // BTCUSD  -> BTC-USD
-        // DOGEUSD -> DOGE-USD
-        return `${aSymbol.substring(0, aSymbol.length - 3)}-${aSymbol.substring(
-          aSymbol.length - 3
-        )}`;
-      }
-
-      return `${aSymbol}=X`;
-    }
-
-    return aSymbol;
   }
 
   private parseAssetClass(aPrice: IYahooFinancePrice): {
@@ -290,7 +258,30 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 }
 
-export const convertFromYahooSymbol = (aSymbol: string) => {
-  const symbol = aSymbol.replace('-', '');
+export const convertFromYahooFinanceSymbol = (aYahooFinanceSymbol: string) => {
+  const symbol = aYahooFinanceSymbol.replace('-', '');
   return symbol.replace('=X', '');
+};
+
+/**
+ * Converts a symbol to a Yahoo Finance symbol
+ *
+ * Currency:        USDCHF=X
+ * Cryptocurrency:  BTC-USD
+ */
+export const convertToYahooFinanceSymbol = (aSymbol: string) => {
+  if (isCurrency(aSymbol)) {
+    if (isCrypto(aSymbol)) {
+      // Add a dash before the last three characters
+      // BTCUSD  -> BTC-USD
+      // DOGEUSD -> DOGE-USD
+      return `${aSymbol.substring(0, aSymbol.length - 3)}-${aSymbol.substring(
+        aSymbol.length - 3
+      )}`;
+    }
+
+    return `${aSymbol}=X`;
+  }
+
+  return aSymbol;
 };

@@ -19,7 +19,10 @@ import { format } from 'date-fns';
 import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from './yahoo-finance/yahoo-finance.service';
+import {
+  convertToYahooFinanceSymbol,
+  YahooFinanceService
+} from './yahoo-finance/yahoo-finance.service';
 
 @Injectable()
 export class DataProviderService {
@@ -44,6 +47,9 @@ export class DataProviderService {
         return this.ghostfolioScraperApiService.get(aSymbols);
       } else if (isRakutenRapidApiSymbol(symbol)) {
         return this.rakutenRapidApiService.get(aSymbols);
+      } else {
+        const yahooFinanceSymbol = convertToYahooFinanceSymbol(symbol);
+        return this.yahooFinanceService.get([yahooFinanceSymbol]);
       }
     }
 
