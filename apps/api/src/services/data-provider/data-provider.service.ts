@@ -47,18 +47,19 @@ export class DataProviderService {
         return this.ghostfolioScraperApiService.get(aSymbols);
       } else if (isRakutenRapidApiSymbol(symbol)) {
         return this.rakutenRapidApiService.get(aSymbols);
-      } else {
-        const yahooFinanceSymbol = convertToYahooFinanceSymbol(symbol);
-        return this.yahooFinanceService.get([yahooFinanceSymbol]);
       }
     }
 
-    const yahooFinanceSymbols = aSymbols.filter((symbol) => {
-      return (
-        !isGhostfolioScraperApiSymbol(symbol) &&
-        !isRakutenRapidApiSymbol(symbol)
-      );
-    });
+    const yahooFinanceSymbols = aSymbols
+      .filter((symbol) => {
+        return (
+          !isGhostfolioScraperApiSymbol(symbol) &&
+          !isRakutenRapidApiSymbol(symbol)
+        );
+      })
+      .map((symbol) => {
+        return convertToYahooFinanceSymbol(symbol);
+      });
 
     const response = await this.yahooFinanceService.get(yahooFinanceSymbols);
 
