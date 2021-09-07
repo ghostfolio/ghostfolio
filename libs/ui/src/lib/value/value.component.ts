@@ -23,6 +23,7 @@ export class ValueComponent implements OnChanges {
   @Input() label = '';
   @Input() locale = '';
   @Input() position = '';
+  @Input() precision = 0;
   @Input() size = '';
   @Input() value: number | string = '';
 
@@ -89,6 +90,13 @@ export class ValueComponent implements OnChanges {
               minimumFractionDigits: 0
             });
           } catch {}
+        } else if (this.precision) {
+          this.formattedValue = this.value?.toLocaleString(this.locale, {
+            maximumFractionDigits: this.precision,
+            minimumFractionDigits: this.precision
+          });
+        } else {
+          this.formattedValue = this.value.toString();
         }
       } else {
         try {
