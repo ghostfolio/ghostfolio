@@ -29,13 +29,6 @@ Currency.args = {
   value: 7
 };
 
-export const Integer = Template.bind({});
-Integer.args = {
-  isInteger: true,
-  locale: 'en-US',
-  value: 7
-};
-
 export const Label = Template.bind({});
 Label.args = {
   label: 'Label',
