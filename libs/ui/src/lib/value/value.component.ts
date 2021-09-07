@@ -18,11 +18,11 @@ export class ValueComponent implements OnChanges {
   @Input() colorizeSign = false;
   @Input() currency = '';
   @Input() isCurrency = false;
-  @Input() isInteger = false;
   @Input() isPercent = false;
   @Input() label = '';
   @Input() locale = '';
   @Input() position = '';
+  @Input() precision: number | undefined;
   @Input() size = '';
   @Input() value: number | string = '';
 
@@ -82,13 +82,15 @@ export class ValueComponent implements OnChanges {
               minimumFractionDigits: 2
             });
           } catch {}
-        } else if (this.isInteger) {
+        } else if (this.precision || this.precision === 0) {
           try {
             this.formattedValue = this.value?.toLocaleString(this.locale, {
-              maximumFractionDigits: 0,
-              minimumFractionDigits: 0
+              maximumFractionDigits: this.precision,
+              minimumFractionDigits: this.precision
             });
           } catch {}
+        } else {
+          this.formattedValue = this.value?.toString();
         }
       } else {
         try {

@@ -29,17 +29,16 @@ Currency.args = {
   value: 7
 };
 
-export const Integer = Template.bind({});
-Integer.args = {
-  isInteger: true,
-  locale: 'en-US',
-  value: 7
-};
-
 export const Label = Template.bind({});
 Label.args = {
-  isInteger: true,
   label: 'Label',
   locale: 'en-US',
-  value: 7
+  value: 7.25
+};
+
+export const Precision = Template.bind({});
+Precision.args = {
+  locale: 'en-US',
+  precision: 3,
+  value: 7.2534802394809285309
 };

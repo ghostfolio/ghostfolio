@@ -276,6 +276,7 @@ export class PortfolioController {
         position = nullifyValuesInObject(position, [
           'grossPerformance',
           'investment',
+          'netPerformance',
           'quantity'
         ]);
       }

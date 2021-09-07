@@ -80,7 +80,8 @@
         <gf-value
           label="Quantity"
           size="medium"
-          [isCurrency]="true"
+          [locale]="data.locale"
+          [precision]="2"
           [value]="quantity"
         ></gf-value>
       </div>
@@ -103,8 +104,6 @@
       <div class="col-6 mb-3">
         <gf-value
           size="medium"
-          [isCurrency]="false"
-          [isInteger]="true"
           [label]="transactionCount === 1 ? 'Transaction' : 'Transactions'"
           [locale]="data.locale"
           [value]="transactionCount"
