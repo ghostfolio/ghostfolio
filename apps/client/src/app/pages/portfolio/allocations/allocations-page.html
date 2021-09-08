@@ -68,7 +68,6 @@
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="true"
-            [showLabels]="true"
             [keys]="['currency']"
             [locale]="user?.settings?.locale"
             [positions]="positions"
@@ -92,10 +91,10 @@
             class="mx-auto"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="false"
-            [showLabels]="true"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
             [positions]="symbols"
+            [showLabels]="deviceType !== 'mobile'"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
