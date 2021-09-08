@@ -17,7 +17,6 @@ import { ArcElement } from 'chart.js';
 import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { sum } from 'lodash';
 import * as Color from 'color';
 
 @Component({
@@ -34,7 +33,7 @@ export class PortfolioProportionChartComponent
   @Input() keys: string[];
   @Input() locale: string;
   @Input() maxItems?: number;
-  @Input() showLabels: boolean;
+  @Input() showLabels = false;
   @Input() positions: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & { value: number };
   };
@@ -51,7 +50,13 @@ export class PortfolioProportionChartComponent
   };
 
   public constructor() {
-    Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip, ChartDataLabels);
+    Chart.register(
+      ArcElement,
+      ChartDataLabels,
+      DoughnutController,
+      LinearScale,
+      Tooltip
+    );
   }
 
   public ngOnInit() {}
@@ -229,8 +234,6 @@ export class PortfolioProportionChartComponent
       labels
     };
 
-    const showLabels = this.showLabels || false;
-
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
@@ -239,11 +242,31 @@ export class PortfolioProportionChartComponent
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
-            layout: {
-              padding: 60,
-            },
             cutout: '70%',
+            layout: {
+              padding: this.showLabels === true ? 100 : 0
+            },
             plugins: {
+              datalabels: {
+                color: (context) => {
+                  return this.getColorPalette()[
+                    context.dataIndex % this.getColorPalette().length
+                  ];
+                },
+                display: this.showLabels === true ? 'auto' : false,
+                labels: {
+                  index: {
+                    align: 'end',
+                    anchor: 'end',
+                    formatter: (value, context) => {
+                      return value > 0
+                        ? context.chart.data.labels[context.dataIndex]
+                        : '';
+                    },
+                    offset: 8
+                  }
+                }
+              },
               legend: { display: false },
               tooltip: {
                 callbacks: {
@@ -263,27 +286,6 @@ export class PortfolioProportionChartComponent
                         minimumFractionDigits: 2
                       })} ${this.baseCurrency})`;
                     }
-                  }
-                }
-              },
-              datalabels: {
-                display: function(ctx) {
-                  const value = ctx.dataset.data[ctx.dataIndex];
-                  return showLabels === true && ctx.datasetIndex === 0 && value > sum(ctx.dataset.data) / 10;
-                },
-                font: {
-                  weight: 'bold',
-                },
-                color: this.getColorPalette()[0],
-                labels: {
-                  index: {
-                    align: 'end',
-                    anchor: 'end',
-                    font: {size: 18},
-                    formatter: function(value, ctx) {
-                      return ctx.chart.data.labels[ctx.dataIndex];
-                    },
-                    offset: 8,
                   }
                 }
               }
