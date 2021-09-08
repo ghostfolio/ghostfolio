@@ -259,7 +259,9 @@ export class PortfolioProportionChartComponent
                     align: 'end',
                     anchor: 'end',
                     formatter: (value, context) => {
-                      return context.chart.data.labels[context.dataIndex];
+                      return value > 0
+                        ? context.chart.data.labels[context.dataIndex]
+                        : '';
                     },
                     offset: 8
                   }
