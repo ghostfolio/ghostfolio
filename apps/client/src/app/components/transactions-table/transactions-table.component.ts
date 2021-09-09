@@ -86,8 +86,7 @@ export class TransactionsTableComponent
       .subscribe((params) => {
         if (params['positionDetailDialog'] && params['symbol']) {
           this.openPositionDialog({
-            symbol: params['symbol'],
-            title: params['title']
+            symbol: params['symbol']
           });
         }
       });
@@ -196,15 +195,9 @@ export class TransactionsTableComponent
     this.import.emit();
   }
 
-  public onOpenPositionDialog({
-    symbol,
-    title
-  }: {
-    symbol: string;
-    title: string;
-  }): void {
+  public onOpenPositionDialog({ symbol }: { symbol: string }): void {
     this.router.navigate([], {
-      queryParams: { positionDetailDialog: true, symbol, title }
+      queryParams: { positionDetailDialog: true, symbol }
     });
   }
 
@@ -216,18 +209,11 @@ export class TransactionsTableComponent
     this.transactionToClone.emit(aTransaction);
   }
 
-  public openPositionDialog({
-    symbol,
-    title
-  }: {
-    symbol: string;
-    title: string;
-  }): void {
+  public openPositionDialog({ symbol }: { symbol: string }): void {
     const dialogRef = this.dialog.open(PositionDetailDialog, {
       autoFocus: false,
       data: {
         symbol,
-        title,
         baseCurrency: this.baseCurrency,
         deviceType: this.deviceType,
         locale: this.locale

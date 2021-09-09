@@ -64,8 +64,7 @@ export class PositionComponent implements OnDestroy, OnInit {
         baseCurrency: this.baseCurrency,
         deviceType: this.deviceType,
         locale: this.locale,
-        symbol: this.position?.symbol,
-        title: this.position?.name
+        symbol: this.position?.symbol
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

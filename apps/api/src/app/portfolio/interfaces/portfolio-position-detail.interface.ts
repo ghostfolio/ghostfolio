@@ -11,6 +11,7 @@ export interface PortfolioPositionDetail {
   marketPrice: number;
   maxPrice: number;
   minPrice: number;
+  name: string;
   netPerformance: number;
   netPerformancePercent: number;
   quantity: number;

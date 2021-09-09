@@ -282,6 +282,7 @@ export class PortfolioService {
         marketPrice: undefined,
         maxPrice: undefined,
         minPrice: undefined,
+        name: undefined,
         netPerformance: undefined,
         netPerformancePercent: undefined,
         quantity: undefined,
@@ -291,6 +292,7 @@ export class PortfolioService {
     }
 
     const positionCurrency = orders[0].currency;
+    const name = orders[0].SymbolProfile?.name ?? '';
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
@@ -407,6 +409,7 @@ export class PortfolioService {
         marketPrice,
         maxPrice,
         minPrice,
+        name,
         netPerformance,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
@@ -455,6 +458,7 @@ export class PortfolioService {
         marketPrice,
         maxPrice,
         minPrice,
+        name,
         averagePrice: 0,
         currency: currentData[aSymbol]?.currency,
         firstBuyDate: undefined,
