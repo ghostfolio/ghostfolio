@@ -1,5 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,

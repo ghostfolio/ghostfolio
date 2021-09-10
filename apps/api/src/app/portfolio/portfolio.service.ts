@@ -32,7 +32,7 @@ import {
   TimelinePosition
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import {
+import type {
   DateRange,
   OrderWithAccount,
   RequestWithUser

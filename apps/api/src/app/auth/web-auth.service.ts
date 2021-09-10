@@ -2,7 +2,7 @@ import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Inject,
   Injectable,
