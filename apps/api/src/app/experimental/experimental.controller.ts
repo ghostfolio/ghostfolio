@@ -1,7 +1,7 @@
 import { baseCurrency, benchmarks } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { isApiTokenAuthorized } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,

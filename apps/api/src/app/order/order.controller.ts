@@ -6,7 +6,7 @@ import {
   hasPermission,
   permissions
 } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
