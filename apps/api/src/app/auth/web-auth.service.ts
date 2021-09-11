@@ -11,16 +11,16 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import {
-  GenerateAssertionOptionsOpts,
-  GenerateAttestationOptionsOpts,
-  VerifiedAssertion,
-  VerifiedAttestation,
-  VerifyAssertionResponseOpts,
-  VerifyAttestationResponseOpts,
-  generateAssertionOptions,
-  generateAttestationOptions,
-  verifyAssertionResponse,
-  verifyAttestationResponse
+  GenerateAuthenticationOptionsOpts,
+  GenerateRegistrationOptionsOpts,
+  VerifiedAuthenticationResponse,
+  VerifiedRegistrationResponse,
+  VerifyAuthenticationResponseOpts,
+  VerifyRegistrationResponseOpts,
+  generateAuthenticationOptions,
+  generateRegistrationOptions,
+  verifyAuthenticationResponse,
+  verifyRegistrationResponse
 } from '@simplewebauthn/server';
 
 import {
@@ -46,10 +46,10 @@ export class WebAuthService {
     return this.configurationService.get('ROOT_URL');
   }
 
-  public async generateAttestationOptions() {
+  public async generateRegistrationOptions() {
     const user = this.request.user;
 
-    const opts: GenerateAttestationOptionsOpts = {
+    const opts: GenerateRegistrationOptionsOpts = {
       rpName: 'Ghostfolio',
       rpID: this.rpID,
       userID: user.id,
@@ -63,7 +63,7 @@ export class WebAuthService {
       }
     };
 
-    const options = generateAttestationOptions(opts);
+    const options = generateRegistrationOptions(opts);
 
     await this.userService.updateUser({
       data: {
@@ -84,27 +84,27 @@ export class WebAuthService {
     const user = this.request.user;
     const expectedChallenge = user.authChallenge;
 
-    let verification: VerifiedAttestation;
+    let verification: VerifiedRegistrationResponse;
     try {
-      const opts: VerifyAttestationResponseOpts = {
+      const opts: VerifyRegistrationResponseOpts = {
         credential,
         expectedChallenge,
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID
       };
-      verification = await verifyAttestationResponse(opts);
+      verification = await verifyRegistrationResponse(opts);
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException(error.message);
     }
 
-    const { verified, attestationInfo } = verification;
+    const { registrationInfo, verified } = verification;
 
     const devices = await this.deviceService.authDevices({
       where: { userId: user.id }
     });
-    if (verified && attestationInfo) {
-      const { credentialPublicKey, credentialID, counter } = attestationInfo;
+    if (registrationInfo && verified) {
+      const { counter, credentialID, credentialPublicKey } = registrationInfo;
 
       let existingDevice = devices.find(
         (device) => device.credentialId === credentialID
@@ -115,9 +115,9 @@ export class WebAuthService {
          * Add the returned device to the user's list of devices
          */
         existingDevice = await this.deviceService.createAuthDevice({
+          counter,
           credentialPublicKey,
           credentialId: credentialID,
-          counter,
           User: { connect: { id: user.id } }
         });
       }
@@ -138,20 +138,20 @@ export class WebAuthService {
       throw new Error('Device not found');
     }
 
-    const opts: GenerateAssertionOptionsOpts = {
-      timeout: 60000,
+    const opts: GenerateAuthenticationOptionsOpts = {
       allowCredentials: [
         {
           id: device.credentialId,
-          type: 'public-key',
-          transports: ['internal']
+          transports: ['internal'],
+          type: 'public-key'
         }
       ],
-      userVerification: 'preferred',
-      rpID: this.rpID
+      rpID: this.rpID,
+      timeout: 60000,
+      userVerification: 'preferred'
     };
 
-    const options = generateAssertionOptions(opts);
+    const options = generateAuthenticationOptions(opts);
 
     await this.userService.updateUser({
       data: {
@@ -177,29 +177,29 @@ export class WebAuthService {
 
     const user = await this.userService.user({ id: device.userId });
 
-    let verification: VerifiedAssertion;
+    let verification: VerifiedAuthenticationResponse;
     try {
-      const opts: VerifyAssertionResponseOpts = {
+      const opts: VerifyAuthenticationResponseOpts = {
         credential,
-        expectedChallenge: `${user.authChallenge}`,
-        expectedOrigin: this.expectedOrigin,
-        expectedRPID: this.rpID,
         authenticator: {
           credentialID: device.credentialId,
           credentialPublicKey: device.credentialPublicKey,
           counter: device.counter
-        }
+        },
+        expectedChallenge: `${user.authChallenge}`,
+        expectedOrigin: this.expectedOrigin,
+        expectedRPID: this.rpID
       };
-      verification = verifyAssertionResponse(opts);
+      verification = verifyAuthenticationResponse(opts);
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException({ error: error.message });
     }
 
-    const { verified, assertionInfo } = verification;
+    const { verified, authenticationInfo } = verification;
 
     if (verified) {
-      device.counter = assertionInfo.newCounter;
+      device.counter = authenticationInfo.newCounter;
 
       await this.deviceService.updateAuthDevice({
         data: device,

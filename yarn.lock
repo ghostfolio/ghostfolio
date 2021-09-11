@@ -2519,7 +2519,7 @@
     consola "^2.15.0"
     node-fetch "^2.6.1"
 
-"@peculiar/asn1-android@^2.0.26":
+"@peculiar/asn1-android@^2.0.38":
   version "2.0.38"
   resolved "https://registry.yarnpkg.com/@peculiar/asn1-android/-/asn1-android-2.0.38.tgz#193281f5a232e323d6f2c069c7a8e8e8f4a994bd"
   integrity sha512-krWyggV6FgYf3fEPKVNjHVecLcQWlAu3/YhOyN+/L43dNKcsmqiEvuhqplh3aiXF62Ds0pqzqttWmdvoVqmSVQ==
@@ -2528,7 +2528,7 @@
     asn1js "^2.1.1"
     tslib "^2.3.0"
 
-"@peculiar/asn1-schema@^2.0.26", "@peculiar/asn1-schema@^2.0.38":
+"@peculiar/asn1-schema@^2.0.38":
   version "2.0.38"
   resolved "https://registry.yarnpkg.com/@peculiar/asn1-schema/-/asn1-schema-2.0.38.tgz#98b6f12daad275ecd6774dfe31fb62f362900412"
   integrity sha512-zZ64UpCTm9me15nuCpPgJghSdbEm8atcDQPCyK+bKXjZAQ1735NCZXCSCfbckbQ4MH36Rm9403n/qMq77LFDzQ==
@@ -2538,7 +2538,7 @@
     pvtsutils "^1.2.0"
     tslib "^2.3.0"
 
-"@peculiar/asn1-x509@^2.0.26":
+"@peculiar/asn1-x509@^2.0.38":
   version "2.0.38"
   resolved "https://registry.yarnpkg.com/@peculiar/asn1-x509/-/asn1-x509-2.0.38.tgz#7ff3b5478d9c3784f0eb2fbe7693509da9de0a43"
   integrity sha512-10aK9fSxlc1DK9nEcwh+WPFNhAheXSE9RbI5MyS7FdBhgq+Mz4Z9JqFfaBZm1Qp+5mPtUMOP6cXVo7aaYlgq7A==
@@ -2613,32 +2613,32 @@
     "@angular-devkit/schematics" "12.1.4"
     jsonc-parser "3.0.0"
 
-"@simplewebauthn/browser@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@simplewebauthn/browser/-/browser-3.0.0.tgz#3d76b199c9f474408a7ed75d86004423dd6ae38a"
-  integrity sha512-P661gZX/QW0Rg2NRAMtW84Q3u4nhXkPef9LLU4btLJFYoXO8RBFfxcmyqwyf2QEb4B7+lFdp5EWfZV5T7FvuHw==
+"@simplewebauthn/browser@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@simplewebauthn/browser/-/browser-4.1.0.tgz#3e7fd66729405d6a2a2a187c93577b90a8e41786"
+  integrity sha512-tIsEfShC1rrqrsNb44tOFuSriAFCz4tkdDnCjHfn2rYxgz+t+yqEvuIRfJHQpFrWSnZPdsjrAHtasj6lzfGI6w==
 
-"@simplewebauthn/server@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@simplewebauthn/server/-/server-3.0.0.tgz#eb1a5bbe2ecdda54363b178f4bb3e134f25641f0"
-  integrity sha512-ymGX2obBrhY9R3OxrpCYaNGAovFHmMlQrGoNdVOe2R2JUBXC1Rg5JEUl1lGyaRykN1SyZqLgz86wAjDVuRITTA==
+"@simplewebauthn/server@4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@simplewebauthn/server/-/server-4.1.0.tgz#9ad2e32cffa83833ff8a633775b2ace5e6926fa0"
+  integrity sha512-52X5/U+5Fo0XYG1TuBBGgG0ap9c0ffpeq0GZfFio/DZDW4He0Arb7Q/XkHw96JK0X1sfRKNmnfC+NImplvIimA==
   dependencies:
-    "@peculiar/asn1-android" "^2.0.26"
-    "@peculiar/asn1-schema" "^2.0.26"
-    "@peculiar/asn1-x509" "^2.0.26"
-    "@simplewebauthn/typescript-types" "^3.0.0"
+    "@peculiar/asn1-android" "^2.0.38"
+    "@peculiar/asn1-schema" "^2.0.38"
+    "@peculiar/asn1-x509" "^2.0.38"
+    "@simplewebauthn/typescript-types" "^4.0.0"
     base64url "^3.0.1"
     cbor "^5.1.0"
     elliptic "^6.5.3"
-    jsrsasign "^10.2.0"
+    jsrsasign "^10.4.0"
     jwk-to-pem "^2.0.4"
     node-fetch "^2.6.0"
     node-rsa "^1.1.1"
 
-"@simplewebauthn/typescript-types@3.0.0", "@simplewebauthn/typescript-types@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@simplewebauthn/typescript-types/-/typescript-types-3.0.0.tgz#6712e9619d860f54f571cd27dbe167b2d9e5ab87"
-  integrity sha512-bsk3EQWzPOZwP9C+ETVhcFDpZywY5sTqmNuGkNm3aNpc9Xh/mqZjy8nL0Sm7xwrlhY0zWAlOaIWQ3LvN5SoFhg==
+"@simplewebauthn/typescript-types@4.0.0", "@simplewebauthn/typescript-types@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@simplewebauthn/typescript-types/-/typescript-types-4.0.0.tgz#46ae4e69cb07305c57093a3ed99555437dfe0d49"
+  integrity sha512-jqQ0bCeBO96CytB397vSrQ8ipozQzAmI57izA7izyglyu35JBV90I7+75fSX+ZGNHmMwDNnA3EGYtBLOIpkJEg==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
@@ -11343,7 +11343,7 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jsrsasign@^10.2.0:
+jsrsasign@^10.4.0:
   version "10.4.0"
   resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-10.4.0.tgz#362cc787079c03a363a958c03eb68d8545ba92f7"
   integrity sha512-C8qLhiAssh/b74KJpGhWuFGG9cFhJqMCVuuHXRibb3Z5vPuAW0ue0jUirpoExCdpdhv4nD3sZ1DAwJURYJTm9g==

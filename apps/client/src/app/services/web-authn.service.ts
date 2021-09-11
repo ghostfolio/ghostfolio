@@ -6,7 +6,10 @@ import {
   PublicKeyCredentialRequestOptionsJSON
 } from '@ghostfolio/api/app/auth/interfaces/simplewebauthn';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
-import { startAssertion, startAttestation } from '@simplewebauthn/browser';
+import {
+  startAuthentication,
+  startRegistration
+} from '@simplewebauthn/browser';
 import { of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 
@@ -32,7 +35,7 @@ export class WebAuthnService {
   public register() {
     return this.http
       .get<PublicKeyCredentialCreationOptionsJSON>(
-        `/api/auth/webauthn/generate-attestation-options`,
+        `/api/auth/webauthn/generate-registration-options`,
         {}
       )
       .pipe(
@@ -41,7 +44,7 @@ export class WebAuthnService {
           return of(null);
         }),
         switchMap((attOps) => {
-          return startAttestation(attOps);
+          return startRegistration(attOps);
         }),
         switchMap((attResp) => {
           return this.http.post<AuthDeviceDto>(
@@ -83,7 +86,7 @@ export class WebAuthnService {
         { deviceId }
       )
       .pipe(
-        switchMap(startAssertion),
+        switchMap(startAuthentication),
         switchMap((assertionResponse) => {
           return this.http.post<{ authToken: string }>(
             `/api/auth/webauthn/verify-assertion`,
