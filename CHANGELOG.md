@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the annualized performance to the portfolio summary tab on the home page
 - Added the Ghostfolio Slack channel to the about page
 
 ## 1.51.0 - 11.09.2021
