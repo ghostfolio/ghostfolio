@@ -57,6 +57,6 @@ describe('PortfolioService', () => {
         daysInMarket: 575, // > 1 year
         netPerformancePercent: 0.2374
       })
-    ).toEqual(0.1447846830315136);
+    ).toBeCloseTo(0.145);
   });
 });
