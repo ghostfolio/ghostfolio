@@ -7,6 +7,7 @@ import {
   addDays,
   addMonths,
   addYears,
+  differenceInDays,
   endOfDay,
   format,
   isAfter,
@@ -14,7 +15,7 @@ import {
   max,
   min
 } from 'date-fns';
-import { flatten } from 'lodash';
+import { flatten, isNumber } from 'lodash';
 
 import { CurrentRateService } from './current-rate.service';
 import { CurrentPositions } from './interfaces/current-positions.interface';
@@ -118,6 +119,7 @@ export class PortfolioCalculator {
         hasErrors: false,
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
+        netAnnualizedPerformance: new Big(0),
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         positions: [],
@@ -410,6 +412,11 @@ export class PortfolioCalculator {
     let netPerformance = new Big(0);
     let netPerformancePercentage = new Big(0);
     let completeInitialValue = new Big(0);
+    let netAnnualizedPerformance = new Big(0);
+
+    // use Date.now() to use the mock for today
+    const today = new Date(Date.now());
+
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
         currentValue = currentValue.add(
@@ -437,6 +444,15 @@ export class PortfolioCalculator {
         grossPerformancePercentage = grossPerformancePercentage.plus(
           currentPosition.grossPerformancePercentage.mul(currentInitialValue)
         );
+        netAnnualizedPerformance = netAnnualizedPerformance.plus(
+          this.getAnnualizedPerformancePercent({
+            daysInMarket: differenceInDays(
+              today,
+              parseDate(currentPosition.firstBuyDate)
+            ),
+            netPerformancePercent: currentPosition.netPerformancePercentage
+          }).mul(currentInitialValue)
+        );
         netPerformancePercentage = netPerformancePercentage.plus(
           currentPosition.netPerformancePercentage.mul(currentInitialValue)
         );
@@ -453,6 +469,8 @@ export class PortfolioCalculator {
         grossPerformancePercentage.div(completeInitialValue);
       netPerformancePercentage =
         netPerformancePercentage.div(completeInitialValue);
+      netAnnualizedPerformance =
+        netAnnualizedPerformance.div(completeInitialValue);
     }
 
     return {
@@ -460,6 +478,7 @@ export class PortfolioCalculator {
       grossPerformance,
       grossPerformancePercentage,
       hasErrors,
+      netAnnualizedPerformance,
       netPerformance,
       netPerformancePercentage,
       totalInvestment
@@ -598,5 +617,22 @@ export class PortfolioCalculator {
       i + 1 < timelineSpecification.length &&
       !isBefore(currentDate, parseDate(timelineSpecification[i + 1].start))
     );
+  }
+
+  public getAnnualizedPerformancePercent({
+    daysInMarket,
+    netPerformancePercent
+  }: {
+    daysInMarket: number;
+    netPerformancePercent: Big;
+  }): Big {
+    if (isNumber(daysInMarket) && daysInMarket > 0) {
+      const exponent = new Big(365).div(daysInMarket).toNumber();
+      return new Big(
+        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
+      ).minus(1);
+    }
+
+    return new Big(0);
   }
 }

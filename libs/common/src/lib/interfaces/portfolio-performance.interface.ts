@@ -1,4 +1,5 @@
 export interface PortfolioPerformance {
+  annualizedPerformancePercent: number;
   currentGrossPerformance: number;
   currentGrossPerformancePercent: number;
   currentNetPerformance: number;
