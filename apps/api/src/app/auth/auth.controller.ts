@@ -62,10 +62,10 @@ export class AuthController {
     }
   }
 
-  @Get('webauthn/generate-attestation-options')
+  @Get('webauthn/generate-registration-options')
   @UseGuards(AuthGuard('jwt'))
-  public async generateAttestationOptions() {
-    return this.webAuthService.generateAttestationOptions();
+  public async generateRegistrationOptions() {
+    return this.webAuthService.generateRegistrationOptions();
   }
 
   @Post('webauthn/verify-attestation')

@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the annualized performance to the portfolio summary tab on the home page
 - Added the Ghostfolio Slack channel to the about page
 
+### Changed
+
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `3.0.0` to `4.1.0`
+
+### Fixed
+
+- Fixed the sign in with fingerprint for some android devices
+
 ## 1.51.0 - 11.09.2021
 
 ### Changed
