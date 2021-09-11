@@ -12,6 +12,9 @@
     right: 0;
     top: 0;
 
+    margin-bottom: env(safe-area-inset-bottom);
+    margin-bottom: constant(safe-area-inset-bottom);
+
     ::ng-deep {
       .mat-tab-body-wrapper {
         height: 100%;
