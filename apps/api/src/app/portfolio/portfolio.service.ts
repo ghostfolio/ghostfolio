@@ -47,6 +47,7 @@ import {
 } from '@prisma/client';
 import Big from 'big.js';
 import {
+  differenceInDays,
   endOfToday,
   format,
   isAfter,
@@ -58,7 +59,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNumber } from 'lodash';
 
 import {
   HistoricalDataItem,
@@ -79,6 +80,21 @@ export class PortfolioService {
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public getAnnualizedPerformancePercent({
+    daysInMarket,
+    netPerformancePercent
+  }: {
+    daysInMarket: number;
+    netPerformancePercent: number;
+  }) {
+    if (isNumber(daysInMarket) && daysInMarket > 0) {
+      const exponent = new Big(365).div(daysInMarket).toNumber();
+      return Math.pow(1 + netPerformancePercent, exponent) - 1;
+    }
+
+    return 0;
+  }
 
   public async getInvestments(
     aImpersonationId: string
@@ -715,6 +731,12 @@ export class PortfolioService {
     const fees = this.getFees(orders);
     const firstOrderDate = orders[0]?.date;
 
+    const annualizedPerformancePercent = this.getAnnualizedPerformancePercent({
+      daysInMarket: differenceInDays(new Date(), firstOrderDate),
+      netPerformancePercent:
+        performanceInformation.performance.currentNetPerformancePercent
+    });
+
     const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
     const totalSell = this.getTotalByType(orders, currency, TypeOfOrder.SELL);
 
@@ -726,6 +748,7 @@ export class PortfolioService {
 
     return {
       ...performanceInformation.performance,
+      annualizedPerformancePercent,
       fees,
       firstOrderDate,
       netWorth,
