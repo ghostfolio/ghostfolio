@@ -17,13 +17,10 @@ describe('PortfolioService', () => {
     );
   });
 
-  /**
-   * Source: https://www.investopedia.com/terms/a/annualized-total-return.asp#annualized-return-formula-and-calculation
-   */
-  fit('Get annualized performance', async () => {
+  it('Get annualized performance', async () => {
     expect(
       portfolioService.getAnnualizedPerformancePercent({
-        daysInMarket: NaN,
+        daysInMarket: NaN, // differenceInDays of date-fns returns NaN for the same day
         netPerformancePercent: 0
       })
     ).toEqual(0);
@@ -35,6 +32,16 @@ describe('PortfolioService', () => {
       })
     ).toEqual(0);
 
+    expect(
+      portfolioService.getAnnualizedPerformancePercent({
+        daysInMarket: 365, // 1 year
+        netPerformancePercent: 0.05
+      })
+    ).toBeCloseTo(0.05);
+
+    /**
+     * Source: https://www.investopedia.com/terms/a/annualized-total-return.asp#annualized-return-formula-and-calculation
+     */
     expect(
       portfolioService.getAnnualizedPerformancePercent({
         daysInMarket: 575,
