@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the _Fear & Greed Index_ (market mood)
+- Fixed the overlap of the home button with tabs on iOS (_Add to Home Screen_)
 
 ## 1.49.0 - 08.09.2021
 
