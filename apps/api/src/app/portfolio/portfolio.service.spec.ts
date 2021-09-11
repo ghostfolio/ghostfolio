@@ -32,6 +32,16 @@ describe('PortfolioService', () => {
       })
     ).toEqual(0);
 
+    /**
+     * Source: https://www.readyratios.com/reference/analysis/annualized_rate.html
+     */
+    expect(
+      portfolioService.getAnnualizedPerformancePercent({
+        daysInMarket: 65, // < 1 year
+        netPerformancePercent: 0.1025
+      })
+    ).toBeCloseTo(0.729705);
+
     expect(
       portfolioService.getAnnualizedPerformancePercent({
         daysInMarket: 365, // 1 year
@@ -40,21 +50,11 @@ describe('PortfolioService', () => {
     ).toBeCloseTo(0.05);
 
     /**
-     * Source: https://www.readyratios.com/reference/analysis/annualized_rate.html
-     */
-    expect(
-      portfolioService.getAnnualizedPerformancePercent({
-        daysInMarket: 65,
-        netPerformancePercent: 0.1025
-      })
-    ).toBeCloseTo(0.729705);
-
-    /**
      * Source: https://www.investopedia.com/terms/a/annualized-total-return.asp#annualized-return-formula-and-calculation
      */
     expect(
       portfolioService.getAnnualizedPerformancePercent({
-        daysInMarket: 575,
+        daysInMarket: 575, // > 1 year
         netPerformancePercent: 0.2374
       })
     ).toEqual(0.1447846830315136);
