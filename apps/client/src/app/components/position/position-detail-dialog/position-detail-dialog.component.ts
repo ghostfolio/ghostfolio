@@ -34,9 +34,11 @@ export class PositionDetailDialog implements OnDestroy {
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
+  public name: string;
   public netPerformance: number;
   public netPerformancePercent: number;
   public quantity: number;
+  public symbol: string;
   public transactionCount: number;
 
   private unsubscribeSubject = new Subject<void>();
@@ -62,9 +64,11 @@ export class PositionDetailDialog implements OnDestroy {
           marketPrice,
           maxPrice,
           minPrice,
+          name,
           netPerformance,
           netPerformancePercent,
           quantity,
+          symbol,
           transactionCount
         }) => {
           this.averagePrice = averagePrice;
@@ -90,9 +94,11 @@ export class PositionDetailDialog implements OnDestroy {
           this.marketPrice = marketPrice;
           this.maxPrice = maxPrice;
           this.minPrice = minPrice;
+          this.name = name;
           this.netPerformance = netPerformance;
           this.netPerformancePercent = netPerformancePercent;
           this.quantity = quantity;
+          this.symbol = symbol;
           this.transactionCount = transactionCount;
 
           if (isToday(parseISO(this.firstBuyDate))) {
