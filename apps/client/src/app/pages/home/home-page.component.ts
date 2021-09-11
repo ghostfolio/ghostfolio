@@ -20,6 +20,7 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import {
   PortfolioPerformance,
   PortfolioSummary,
@@ -111,7 +112,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
 
           if (this.hasPermissionToAccessFearAndGreedIndex) {
             this.dataService
-              .fetchSymbolItem('GF.FEAR_AND_GREED_INDEX')
+              .fetchSymbolItem(ghostfolioFearAndGreedIndexSymbol)
               .pipe(takeUntil(this.unsubscribeSubject))
               .subscribe(({ marketPrice }) => {
                 this.fearAndGreedIndex = marketPrice;

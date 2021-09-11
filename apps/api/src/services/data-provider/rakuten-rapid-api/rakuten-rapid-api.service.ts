@@ -1,6 +1,7 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getToday,
@@ -47,11 +48,11 @@ export class RakutenRapidApiService implements DataProviderInterface {
     try {
       const symbol = aSymbols[0];
 
-      if (symbol === 'GF.FEAR_AND_GREED_INDEX') {
+      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
 
         return {
-          'GF.FEAR_AND_GREED_INDEX': {
+          [ghostfolioFearAndGreedIndexSymbol]: {
             currency: undefined,
             dataSource: DataSource.RAKUTEN,
             marketPrice: fgi.now.value,
@@ -82,7 +83,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
     try {
       const symbol = aSymbols[0];
 
-      if (symbol === 'GF.FEAR_AND_GREED_INDEX') {
+      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
 
         try {
@@ -118,7 +119,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
         } catch {}
 
         return {
-          'GF.FEAR_AND_GREED_INDEX': {
+          [ghostfolioFearAndGreedIndexSymbol]: {
             [format(getYesterday(), DATE_FORMAT)]: {
               marketPrice: fgi.previousClose.value
             }

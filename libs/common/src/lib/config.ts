@@ -28,6 +28,7 @@ export const currencyPairs: Partial<
 
 export const ghostfolioScraperApiSymbolPrefix = '_GF_';
 export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;
+export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
 
 export const locale = 'de-CH';
 

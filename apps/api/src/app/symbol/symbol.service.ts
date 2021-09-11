@@ -17,7 +17,7 @@ export class SymbolService {
     const response = await this.dataProviderService.get([aSymbol]);
     const { currency, dataSource, marketPrice } = response[aSymbol] ?? {};
 
-    if (currency && dataSource && marketPrice) {
+    if (dataSource && marketPrice) {
       return {
         dataSource,
         marketPrice,

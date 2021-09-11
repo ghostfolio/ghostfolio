@@ -1,4 +1,8 @@
-import { benchmarks, currencyPairs } from '@ghostfolio/common/config';
+import {
+  benchmarks,
+  currencyPairs,
+  ghostfolioFearAndGreedIndexSymbol
+} from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getUtc,
@@ -295,7 +299,7 @@ export class DataGatheringService {
       benchmarksToGather.push({
         dataSource: DataSource.RAKUTEN,
         date: startDate,
-        symbol: 'GF.FEAR_AND_GREED_INDEX'
+        symbol: ghostfolioFearAndGreedIndexSymbol
       });
     }
 
