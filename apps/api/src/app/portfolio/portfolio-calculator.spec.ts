@@ -1,3 +1,4 @@
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
@@ -1147,6 +1148,7 @@ describe('PortfolioCalculator', () => {
         currentValue: new Big('3897.2'),
         grossPerformance: new Big('303.2'),
         grossPerformancePercentage: new Big('0.27537838148272398344'),
+        netAnnualizedPerformance: new Big('0.1412977563032074'),
         netPerformance: new Big('253.2'),
         netPerformancePercentage: new Big('0.2566937088951485493'),
         totalInvestment: new Big('2923.7'),
@@ -2259,6 +2261,66 @@ describe('PortfolioCalculator', () => {
           value: new Big('11820.95') // 10 * (144.38 + days=334 * 0.08) + 5 * 2021.99
         }
       ]);
+    });
+  });
+
+  describe('annualized performance percentage', () => {
+    const portfolioCalculator = new PortfolioCalculator(
+      currentRateService,
+      Currency.USD
+    );
+
+    it('Get annualized performance', async () => {
+      expect(
+        portfolioCalculator
+          .getAnnualizedPerformancePercent({
+            daysInMarket: NaN, // differenceInDays of date-fns returns NaN for the same day
+            netPerformancePercent: new Big(0)
+          })
+          .toNumber()
+      ).toEqual(0);
+
+      expect(
+        portfolioCalculator
+          .getAnnualizedPerformancePercent({
+            daysInMarket: 0,
+            netPerformancePercent: new Big(0)
+          })
+          .toNumber()
+      ).toEqual(0);
+
+      /**
+       * Source: https://www.readyratios.com/reference/analysis/annualized_rate.html
+       */
+      expect(
+        portfolioCalculator
+          .getAnnualizedPerformancePercent({
+            daysInMarket: 65, // < 1 year
+            netPerformancePercent: new Big(0.1025)
+          })
+          .toNumber()
+      ).toBeCloseTo(0.729705);
+
+      expect(
+        portfolioCalculator
+          .getAnnualizedPerformancePercent({
+            daysInMarket: 365, // 1 year
+            netPerformancePercent: new Big(0.05)
+          })
+          .toNumber()
+      ).toBeCloseTo(0.05);
+
+      /**
+       * Source: https://www.investopedia.com/terms/a/annualized-total-return.asp#annualized-return-formula-and-calculation
+       */
+      expect(
+        portfolioCalculator
+          .getAnnualizedPerformancePercent({
+            daysInMarket: 575, // > 1 year
+            netPerformancePercent: new Big(0.2374)
+          })
+          .toNumber()
+      ).toBeCloseTo(0.145);
     });
   });
 });
