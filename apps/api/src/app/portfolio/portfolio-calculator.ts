@@ -104,6 +104,23 @@ export class PortfolioCalculator {
     }
   }
 
+  public getAnnualizedPerformancePercent({
+    daysInMarket,
+    netPerformancePercent
+  }: {
+    daysInMarket: number;
+    netPerformancePercent: Big;
+  }): Big {
+    if (isNumber(daysInMarket) && daysInMarket > 0) {
+      const exponent = new Big(365).div(daysInMarket).toNumber();
+      return new Big(
+        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
+      ).minus(1);
+    }
+
+    return new Big(0);
+  }
+
   public getTransactionPoints(): TransactionPoint[] {
     return this.transactionPoints;
   }
@@ -617,22 +634,5 @@ export class PortfolioCalculator {
       i + 1 < timelineSpecification.length &&
       !isBefore(currentDate, parseDate(timelineSpecification[i + 1].start))
     );
-  }
-
-  public getAnnualizedPerformancePercent({
-    daysInMarket,
-    netPerformancePercent
-  }: {
-    daysInMarket: number;
-    netPerformancePercent: Big;
-  }): Big {
-    if (isNumber(daysInMarket) && daysInMarket > 0) {
-      const exponent = new Big(365).div(daysInMarket).toNumber();
-      return new Big(
-        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
-      ).minus(1);
-    }
-
-    return new Big(0);
   }
 }

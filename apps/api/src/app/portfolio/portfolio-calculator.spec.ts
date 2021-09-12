@@ -1,3 +1,4 @@
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { Currency } from '@prisma/client';
@@ -18,7 +19,6 @@ import { TimelinePeriod } from './interfaces/timeline-period.interface';
 import { TimelineSpecification } from './interfaces/timeline-specification.interface';
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 import { PortfolioCalculator } from './portfolio-calculator';
-import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 
 function mockGetValue(symbol: string, date: Date) {
   switch (symbol) {
