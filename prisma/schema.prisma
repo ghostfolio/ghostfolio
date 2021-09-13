@@ -76,7 +76,7 @@ model Order {
   accountId       String?
   accountUserId   String?
   createdAt       DateTime       @default(now())
-  currency        Currency
+  currency        Currency?
   dataSource      DataSource     @default(YAHOO)
   date            DateTime
   fee             Float

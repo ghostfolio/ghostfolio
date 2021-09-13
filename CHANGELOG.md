@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Optimized the annualized performance calculation
+- Changed the data gathering selection from distinct orders to symbol profiles
 
 ## 1.52.0 - 11.09.2021
 
