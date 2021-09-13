@@ -309,27 +309,20 @@ export class DataGatheringService {
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
-    const distinctOrders = await this.prismaService.order.findMany({
-      distinct: ['symbol'],
-      orderBy: [{ symbol: 'asc' }],
-      select: { dataSource: true, symbol: true },
-      where: {
-        date: {
-          lt: endOfToday() // no draft
+    const symbolProfilesToGather = (
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: [{ symbol: 'asc' }],
+        select: {
+          dataSource: true,
+          symbol: true
         }
-      }
-    });
-
-    const distinctOrdersWithDate: IDataGatheringItem[] = distinctOrders
-      .filter((distinctOrder) => {
-        return !isGhostfolioScraperApiSymbol(distinctOrder.symbol);
       })
-      .map((distinctOrder) => {
-        return {
-          ...distinctOrder,
-          date: startDate
-        };
-      });
+    ).map((symbolProfile) => {
+      return {
+        ...symbolProfile,
+        date: startDate
+      };
+    });
 
     const currencyPairsToGather = currencyPairs.map(
       ({ dataSource, symbol }) => {
@@ -348,7 +341,7 @@ export class DataGatheringService {
       ...this.getBenchmarksToGather(startDate),
       ...customSymbolsToGather,
       ...currencyPairsToGather,
-      ...distinctOrdersWithDate
+      ...symbolProfilesToGather
     ];
   }
 
@@ -368,22 +361,20 @@ export class DataGatheringService {
       }
     );
 
-    const distinctOrders = await this.prismaService.order.findMany({
-      distinct: ['symbol'],
-      orderBy: [{ date: 'asc' }],
-      select: { dataSource: true, date: true, symbol: true },
-      where: {
-        date: {
-          lt: endOfToday() // no draft
+    const symbolProfilesToGather =
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: [{ symbol: 'asc' }],
+        select: {
+          dataSource: true,
+          symbol: true
         }
-      }
-    });
+      });
 
     return [
       ...this.getBenchmarksToGather(startDate),
       ...customSymbolsToGather,
       ...currencyPairsToGather,
-      ...distinctOrders
+      ...symbolProfilesToGather
     ];
   }
 
