@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hid the net performance in the _Presenter View_ (portfolio holdings and summary tab on the home page)
 - Hid the sign if the performance is zero in the value component
 
+### Changed
+
+- Respected the data source attribute in the symbol data endpoint
+
 ## 1.53.0 - 13.09.2021
 
 ### Changed
