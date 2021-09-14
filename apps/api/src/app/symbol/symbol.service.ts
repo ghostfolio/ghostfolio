@@ -13,9 +13,15 @@ export class SymbolService {
     private readonly prismaService: PrismaService
   ) {}
 
-  public async get(aSymbol: string): Promise<SymbolItem> {
-    const response = await this.dataProviderService.get([aSymbol]);
-    const { currency, dataSource, marketPrice } = response[aSymbol] ?? {};
+  public async get({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): Promise<SymbolItem> {
+    const response = await this.dataProviderService.get([symbol]);
+    const { currency, marketPrice } = response[symbol] ?? {};
 
     if (dataSource && marketPrice) {
       return {

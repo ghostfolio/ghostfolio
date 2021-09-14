@@ -3,7 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnDestroy
+  OnDestroy,
+  ViewChild
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -11,6 +12,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Currency } from '@prisma/client';
+import { isString } from 'lodash';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import {
   catchError,
@@ -31,13 +33,18 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-transaction-dialog.html'
 })
 export class CreateOrUpdateTransactionDialog implements OnDestroy {
+  @ViewChild('autocomplete') autocomplete;
+
   public currencies: Currency[] = [];
   public currentMarketPrice = null;
   public filteredLookupItems: Observable<LookupItem[]>;
   public isLoading = false;
   public platforms: { id: string; name: string }[];
   public searchSymbolCtrl = new FormControl(
-    this.data.transaction.symbol,
+    {
+      dataSource: this.data.transaction.dataSource,
+      name: this.data.transaction.symbol
+    },
     Validators.required
   );
 
@@ -60,9 +67,9 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
-      switchMap((aQuery: string) => {
-        if (aQuery) {
-          return this.dataService.fetchSymbols(aQuery);
+      switchMap((query: string) => {
+        if (isString(query)) {
+          return this.dataService.fetchSymbols(query);
         }
 
         return [];
@@ -71,7 +78,10 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
     if (this.data.transaction.symbol) {
       this.dataService
-        .fetchSymbolItem(this.data.transaction.symbol)
+        .fetchSymbolItem({
+          dataSource: this.data.transaction.dataSource,
+          symbol: this.data.transaction.symbol
+        })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(({ marketPrice }) => {
           this.currentMarketPrice = marketPrice;
@@ -85,9 +95,21 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     this.data.transaction.unitPrice = this.currentMarketPrice;
   }
 
+  public displayFn(aLookupItem: LookupItem) {
+    return aLookupItem?.name ?? '';
+  }
+
   public onBlurSymbol() {
-    const symbol = this.searchSymbolCtrl.value;
-    this.updateSymbol(symbol);
+    this.data.transaction.currency = null;
+    this.data.transaction.dataSource = null;
+
+    if (this.autocomplete.isOpen) {
+      this.searchSymbolCtrl.setErrors({ incorrect: true });
+    } else {
+      this.data.transaction.unitPrice = null;
+    }
+
+    this.changeDetectorRef.markForCheck();
   }
 
   public onCancel(): void {
@@ -95,7 +117,8 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   }
 
   public onUpdateSymbol(event: MatAutocompleteSelectedEvent) {
-    this.updateSymbol(event.option.value);
+    this.data.transaction.dataSource = event.option.value.dataSource;
+    this.updateSymbol(event.option.value.symbol);
   }
 
   public ngOnDestroy() {
@@ -106,10 +129,15 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   private updateSymbol(symbol: string) {
     this.isLoading = true;
 
+    this.searchSymbolCtrl.setErrors(null);
+
     this.data.transaction.symbol = symbol;
 
     this.dataService
-      .fetchSymbolItem(this.data.transaction.symbol)
+      .fetchSymbolItem({
+        dataSource: this.data.transaction.dataSource,
+        symbol: this.data.transaction.symbol
+      })
       .pipe(
         catchError(() => {
           this.data.transaction.currency = null;
