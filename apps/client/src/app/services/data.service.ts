@@ -29,8 +29,11 @@ import {
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
-import { Order as OrderModel } from '@prisma/client';
-import { Account as AccountModel } from '@prisma/client';
+import {
+  Account as AccountModel,
+  DataSource,
+  Order as OrderModel
+} from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
@@ -108,8 +111,14 @@ export class DataService {
     return info;
   }
 
-  public fetchSymbolItem(aSymbol: string) {
-    return this.http.get<SymbolItem>(`/api/symbol/${aSymbol}`);
+  public fetchSymbolItem({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`);
   }
 
   public fetchPositions({

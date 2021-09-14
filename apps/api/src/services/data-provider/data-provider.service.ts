@@ -20,8 +20,8 @@ import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
 import {
-  convertToYahooFinanceSymbol,
-  YahooFinanceService
+  YahooFinanceService,
+  convertToYahooFinanceSymbol
 } from './yahoo-finance/yahoo-finance.service';
 
 @Injectable()
