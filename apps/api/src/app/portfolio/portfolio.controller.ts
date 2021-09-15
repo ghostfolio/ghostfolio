@@ -246,6 +246,7 @@ export class PortfolioController {
         'cash',
         'committedFunds',
         'currentGrossPerformance',
+        'currentNetPerformance',
         'currentValue',
         'fees',
         'netWorth',
