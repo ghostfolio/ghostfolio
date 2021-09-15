@@ -6,11 +6,7 @@ import {
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import {
-  DATE_FORMAT,
-  isGhostfolioScraperApiSymbol,
-  isRakutenRapidApiSymbol
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
@@ -37,53 +33,32 @@ export class DataProviderService {
     this.rakutenRapidApiService?.setPrisma(this.prismaService);
   }
 
-  public async get(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length === 1) {
-      const symbol = aSymbols[0];
+  public async get(items: IDataGatheringItem[]): Promise<{
+    [symbol: string]: IDataProviderResponse;
+  }> {
+    const response: {
+      [symbol: string]: IDataProviderResponse;
+    } = {};
 
-      if (isGhostfolioScraperApiSymbol(symbol)) {
-        return this.ghostfolioScraperApiService.get(aSymbols);
-      } else if (isRakutenRapidApiSymbol(symbol)) {
-        return this.rakutenRapidApiService.get(aSymbols);
-      }
-    }
-
-    const yahooFinanceSymbols = aSymbols
-      .filter((symbol) => {
-        return (
-          !isGhostfolioScraperApiSymbol(symbol) &&
-          !isRakutenRapidApiSymbol(symbol)
-        );
-      })
-      .map((symbol) => {
-        return convertToYahooFinanceSymbol(symbol);
-      });
-
-    const response = await this.yahooFinanceService.get(yahooFinanceSymbols);
-
-    const ghostfolioScraperApiSymbols = aSymbols.filter((symbol) => {
-      return isGhostfolioScraperApiSymbol(symbol);
-    });
-
-    for (const symbol of ghostfolioScraperApiSymbols) {
-      if (symbol) {
-        const ghostfolioScraperApiResult =
-          await this.ghostfolioScraperApiService.get([symbol]);
-        response[symbol] = ghostfolioScraperApiResult[symbol];
-      }
-    }
-
-    const rakutenRapidApiSymbols = aSymbols.filter((symbol) => {
-      return isRakutenRapidApiSymbol(symbol);
-    });
-
-    for (const symbol of rakutenRapidApiSymbols) {
-      if (symbol) {
-        const rakutenRapidApiResult =
-          await this.ghostfolioScraperApiService.get([symbol]);
-        response[symbol] = rakutenRapidApiResult[symbol];
+    for (const item of items) {
+      if (item.dataSource === DataSource.ALPHA_VANTAGE) {
+        response[item.symbol] = (
+          await this.alphaVantageService.get([item.symbol])
+        )[item.symbol];
+      } else if (item.dataSource === DataSource.GHOSTFOLIO) {
+        response[item.symbol] = (
+          await this.ghostfolioScraperApiService.get([item.symbol])
+        )[item.symbol];
+      } else if (item.dataSource === DataSource.RAKUTEN) {
+        response[item.symbol] = (
+          await this.rakutenRapidApiService.get([item.symbol])
+        )[item.symbol];
+      } else if (item.dataSource === DataSource.YAHOO) {
+        response[item.symbol] = (
+          await this.yahooFinanceService.get([
+            convertToYahooFinanceSymbol(item.symbol)
+          ])
+        )[item.symbol];
       }
     }
 

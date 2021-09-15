@@ -191,12 +191,18 @@ export class PortfolioService {
     );
     const totalValue = currentPositions.currentValue.plus(cashDetails.balance);
 
+    const dataGatheringItems = currentPositions.positions.map((position) => {
+      return {
+        dataSource: position.dataSource,
+        symbol: position.symbol
+      };
+    });
     const symbols = currentPositions.positions.map(
       (position) => position.symbol
     );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.get(symbols),
+      this.dataProviderService.get(dataGatheringItems),
       this.symbolProfileService.getSymbolProfiles(symbols)
     ]);
 
@@ -297,6 +303,7 @@ export class PortfolioService {
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
+      dataSource: order.dataSource,
       date: format(order.date, DATE_FORMAT),
       fee: new Big(order.fee),
       name: order.SymbolProfile?.name,
@@ -421,7 +428,9 @@ export class PortfolioService {
         symbol: aSymbol
       };
     } else {
-      const currentData = await this.dataProviderService.get([aSymbol]);
+      const currentData = await this.dataProviderService.get([
+        { dataSource: DataSource.YAHOO, symbol: aSymbol }
+      ]);
       const marketPrice = currentData[aSymbol]?.marketPrice;
 
       let historicalData = await this.dataProviderService.getHistorical(
@@ -507,10 +516,16 @@ export class PortfolioService {
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
     );
+    const dataGatheringItem = positions.map((position) => {
+      return {
+        dataSource: position.dataSource,
+        symbol: position.symbol
+      };
+    });
     const symbols = positions.map((position) => position.symbol);
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.get(symbols),
+      this.dataProviderService.get(dataGatheringItem),
       this.symbolProfileService.getSymbolProfiles(symbols)
     ]);
 
@@ -813,6 +828,7 @@ export class PortfolioService {
     const userCurrency = this.request.user.Settings.currency;
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
+      dataSource: order.dataSource,
       date: format(order.date, DATE_FORMAT),
       fee: new Big(
         this.exchangeRateDataService.toCurrency(

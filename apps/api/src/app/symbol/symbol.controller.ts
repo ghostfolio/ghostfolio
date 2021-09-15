@@ -53,6 +53,13 @@ export class SymbolController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<SymbolItem> {
+    if (!DataSource[dataSource]) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
     const result = await this.symbolService.get({ dataSource, symbol });
 
     if (!result || isEmpty(result)) {
