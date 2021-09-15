@@ -1,7 +1,7 @@
 import { currencyPairs } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
-import { Currency } from '@prisma/client';
+import { Currency, DataSource } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty, isNumber } from 'lodash';
 
@@ -40,7 +40,7 @@ export class ExchangeRateDataService {
       // if historical data is not yet available
       const historicalData = await this.dataProviderService.get(
         this.currencyPairs.map((currencyPair) => {
-          return currencyPair;
+          return { dataSource: DataSource.YAHOO, symbol: currencyPair };
         })
       );
 

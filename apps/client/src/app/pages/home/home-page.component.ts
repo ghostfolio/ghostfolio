@@ -114,7 +114,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
           if (this.hasPermissionToAccessFearAndGreedIndex) {
             this.dataService
               .fetchSymbolItem({
-                dataSource: DataSource.GHOSTFOLIO,
+                dataSource: DataSource.RAKUTEN,
                 symbol: ghostfolioFearAndGreedIndexSymbol
               })
               .pipe(takeUntil(this.unsubscribeSubject))
