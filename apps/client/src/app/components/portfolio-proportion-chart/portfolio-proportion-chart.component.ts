@@ -11,7 +11,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Currency } from '@prisma/client';
-import { Tooltip } from 'chart.js';
+import { ChartData, Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';
 import { DoughnutController } from 'chart.js';
@@ -236,8 +236,7 @@ export class PortfolioProportionChartComponent
 
     if (this.chartCanvas) {
       if (this.chart) {
-        this.chart.data = data;
-        this.chart.update();
+        this.updateChart(data);
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
@@ -297,6 +296,22 @@ export class PortfolioProportionChartComponent
 
       this.isLoading = false;
     }
+  }
+
+  private updateChart(newData: ChartData) {
+    const currentLabels = this.chart.data.labels;
+    const currentDatasets = this.chart.data.datasets;
+    if (
+      newData.labels.length === currentLabels.length &&
+      newData.datasets.length === currentDatasets.length
+    ) {
+      currentDatasets.forEach((set, idx) => {
+        set.data = newData.datasets[idx].data;
+      });
+    } else {
+      this.chart.data = newData;
+    }
+    this.chart.update();
   }
 
   /**
