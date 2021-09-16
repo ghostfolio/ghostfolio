@@ -14,6 +14,7 @@ jest.mock('./market-data.service', () => {
             date,
             symbol,
             createdAt: date,
+            dataSource: DataSource.YAHOO,
             id: 'aefcbe3a-ee10-4c4f-9f2d-8ffad7b05584',
             marketPrice: 1847.839966
           });
@@ -30,6 +31,7 @@ jest.mock('./market-data.service', () => {
           return Promise.resolve<MarketData[]>([
             {
               createdAt: dateRangeStart,
+              dataSource: DataSource.YAHOO,
               date: dateRangeStart,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902,
@@ -37,6 +39,7 @@ jest.mock('./market-data.service', () => {
             },
             {
               createdAt: dateRangeEnd,
+              dataSource: DataSource.YAHOO,
               date: dateRangeEnd,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966,

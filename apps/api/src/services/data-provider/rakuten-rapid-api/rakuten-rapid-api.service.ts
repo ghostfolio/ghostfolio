@@ -94,6 +94,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
+              dataSource: DataSource.RAKUTEN,
               date: subWeeks(getToday(), 1),
               marketPrice: fgi.oneWeekAgo.value
             }
@@ -102,6 +103,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
+              dataSource: DataSource.RAKUTEN,
               date: subMonths(getToday(), 1),
               marketPrice: fgi.oneMonthAgo.value
             }
@@ -110,6 +112,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
+              dataSource: DataSource.RAKUTEN,
               date: subYears(getToday(), 1),
               marketPrice: fgi.oneYearAgo.value
             }
