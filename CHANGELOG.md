@@ -7,10 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the data source attribute to the symbol profile model
+
 ### Changed
 
+- Respected the data source attribute in the data provider service
 - Respected the data source attribute in the symbol data endpoint
 - Improved the search functionality of the data management (multiple data sources)
+
+### Todo
+
+- Apply data migration (`yarn database:push`)
 
 ## 1.53.0 - 13.09.2021
 
