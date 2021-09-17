@@ -43,7 +43,6 @@ export class ValueComponent implements OnChanges {
         this.absoluteValue = Math.abs(<number>this.value);
 
         if (this.colorizeSign) {
-          this.useAbsoluteValue = true;
           if (this.currency || this.isCurrency) {
             try {
               this.formattedValue = this.absoluteValue.toLocaleString(
@@ -105,6 +104,10 @@ export class ValueComponent implements OnChanges {
           }
         } catch {}
       }
+    }
+
+    if (this.formattedValue === '0.00') {
+      this.useAbsoluteValue = true;
     }
   }
 }

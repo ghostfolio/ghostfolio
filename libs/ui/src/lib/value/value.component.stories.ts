@@ -36,6 +36,33 @@ Label.args = {
   value: 7.25
 };
 
+export const PerformancePositive = Template.bind({});
+PerformancePositive.args = {
+  locale: 'en-US',
+  colorizeSign: true,
+  isPercent: true,
+  value: 0.0136810853673890378
+};
+PerformancePositive.storyName = 'Performance (positive)';
+
+export const PerformanceNegative = Template.bind({});
+PerformanceNegative.args = {
+  locale: 'en-US',
+  colorizeSign: true,
+  isPercent: true,
+  value: -0.0136810853673890378
+};
+PerformanceNegative.storyName = 'Performance (negative)';
+
+export const PerformanceCloseToZero = Template.bind({});
+PerformanceCloseToZero.args = {
+  locale: 'en-US',
+  colorizeSign: true,
+  isPercent: true,
+  value: -2.388915360475e-8
+};
+PerformanceCloseToZero.storyName = 'Performance (negative zero)';
+
 export const Precision = Template.bind({});
 Precision.args = {
   locale: 'en-US',
