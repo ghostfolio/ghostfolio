@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Respected the data source attribute in the symbol data endpoint
+- Improved the search functionality of the data management (multiple data sources)
 
 ## 1.53.0 - 13.09.2021
 

@@ -150,13 +150,24 @@ export class DataProviderService {
   }
 
   public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
-    const { items } = await this.getDataProvider(
-      <DataSource>this.configurationService.get('DATA_SOURCES')[0]
-    ).search(aSymbol);
+    const promises: Promise<{ items: LookupItem[] }>[] = [];
+    let lookupItems: LookupItem[] = [];
 
-    const filteredItems = items.filter((item) => {
+    for (const dataSource of this.configurationService.get('DATA_SOURCES')) {
+      promises.push(
+        this.getDataProvider(DataSource[dataSource]).search(aSymbol)
+      );
+    }
+
+    const searchResults = await Promise.all(promises);
+
+    searchResults.forEach((searchResult) => {
+      lookupItems = lookupItems.concat(searchResult.items);
+    });
+
+    const filteredItems = lookupItems.filter((lookupItem) => {
       // Only allow symbols with supported currency
-      return item.currency ? true : false;
+      return lookupItem.currency ? true : false;
     });
 
     return {
