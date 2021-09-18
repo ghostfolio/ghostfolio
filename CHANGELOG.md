@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Hid the net performance in the _Holdings_ overview (tab on the home page)
 - Hid the net performance in the _Presenter View_ (portfolio summary tab on the home page)
 - Hid the sign if the performance is zero in the value component
 
