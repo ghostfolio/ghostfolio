@@ -206,6 +206,7 @@ export class DataGatheringService {
           try {
             await this.prismaService.marketData.create({
               data: {
+                dataSource,
                 symbol,
                 date: currentDate,
                 marketPrice: lastMarketPrice

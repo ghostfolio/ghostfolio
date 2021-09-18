@@ -61,9 +61,10 @@ model AuthDevice {
 }
 
 model MarketData {
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
+  dataSource  DataSource @default(YAHOO)
   date        DateTime
-  id          String   @default(uuid())
+  id          String     @default(uuid())
   symbol      String
   marketPrice Float
 

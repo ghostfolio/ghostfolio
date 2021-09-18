@@ -66,7 +66,7 @@ export class DataProviderService {
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aItems: IDataGatheringItem[],
     aGranularity: Granularity = 'month',
     from: Date,
     to: Date
@@ -90,8 +90,17 @@ export class DataProviderService {
           )}'`
         : '';
 
+    const dataSources = aItems.map((item) => {
+      return item.dataSource;
+    });
+    const symbols = aItems.map((item) => {
+      return item.symbol;
+    });
+
     try {
-      const queryRaw = `SELECT * FROM "MarketData" WHERE "symbol" IN ('${aSymbols.join(
+      const queryRaw = `SELECT * FROM "MarketData" WHERE "dataSource" IN ('${dataSources.join(
+        `','`
+      )}') AND "symbol" IN ('${symbols.join(
         `','`
       )}') ${granularityQuery} ${rangeQuery} ORDER BY date;`;
 

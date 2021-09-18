@@ -333,6 +333,7 @@ export class PortfolioService {
       const {
         averagePrice,
         currency,
+        dataSource,
         firstBuyDate,
         marketPrice,
         quantity,
@@ -358,7 +359,7 @@ export class PortfolioService {
       );
 
       const historicalData = await this.dataProviderService.getHistorical(
-        [aSymbol],
+        [{ dataSource, symbol: aSymbol }],
         'day',
         parseISO(firstBuyDate),
         new Date()
@@ -434,7 +435,7 @@ export class PortfolioService {
       const marketPrice = currentData[aSymbol]?.marketPrice;
 
       let historicalData = await this.dataProviderService.getHistorical(
-        [aSymbol],
+        [{ dataSource: DataSource.YAHOO, symbol: aSymbol }],
         'day',
         portfolioStart,
         new Date()
