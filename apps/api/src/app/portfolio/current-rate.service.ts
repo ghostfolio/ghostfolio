@@ -2,6 +2,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import { isBefore, isToday } from 'date-fns';
 import { flatten } from 'lodash';
 
@@ -25,7 +26,9 @@ export class CurrentRateService {
     userCurrency
   }: GetValueParams): Promise<GetValueObject> {
     if (isToday(date)) {
-      const dataProviderResult = await this.dataProviderService.get([symbol]);
+      const dataProviderResult = await this.dataProviderService.get([
+        { symbol, dataSource: DataSource.YAHOO }
+      ]);
       return {
         date: resetHours(date),
         marketPrice: dataProviderResult?.[symbol]?.marketPrice ?? 0,
@@ -55,8 +58,8 @@ export class CurrentRateService {
 
   public async getValues({
     currencies,
+    dataGatheringItems,
     dateQuery,
-    symbols,
     userCurrency
   }: GetValuesParams): Promise<GetValueObject[]> {
     const includeToday =
@@ -75,23 +78,30 @@ export class CurrentRateService {
     if (includeToday) {
       const today = resetHours(new Date());
       promises.push(
-        this.dataProviderService.get(symbols).then((dataResultProvider) => {
-          const result = [];
-          for (const symbol of symbols) {
-            result.push({
-              symbol,
-              date: today,
-              marketPrice: this.exchangeRateDataService.toCurrency(
-                dataResultProvider?.[symbol]?.marketPrice ?? 0,
-                dataResultProvider?.[symbol]?.currency,
-                userCurrency
-              )
-            });
-          }
-          return result;
-        })
+        this.dataProviderService
+          .get(dataGatheringItems)
+          .then((dataResultProvider) => {
+            const result = [];
+            for (const dataGatheringItem of dataGatheringItems) {
+              result.push({
+                date: today,
+                marketPrice: this.exchangeRateDataService.toCurrency(
+                  dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice ??
+                    0,
+                  dataResultProvider?.[dataGatheringItem.symbol]?.currency,
+                  userCurrency
+                ),
+                symbol: dataGatheringItem.symbol
+              });
+            }
+            return result;
+          })
       );
     }
+
+    const symbols = dataGatheringItems.map((dataGatheringItem) => {
+      return dataGatheringItem.symbol;
+    });
 
     promises.push(
       this.marketDataService

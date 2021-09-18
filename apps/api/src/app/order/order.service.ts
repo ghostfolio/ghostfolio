@@ -56,7 +56,9 @@ export class OrderService {
       ]);
     }
 
-    this.dataGatheringService.gatherProfileData([data.symbol]);
+    this.dataGatheringService.gatherProfileData([
+      { dataSource: data.dataSource, symbol: data.symbol }
+    ]);
 
     await this.cacheService.flush();
 

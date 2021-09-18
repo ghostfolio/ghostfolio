@@ -1,4 +1,5 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Currency, DataSource } from '@prisma/client';
@@ -13,15 +14,15 @@ export class SymbolService {
     private readonly prismaService: PrismaService
   ) {}
 
-  public async get(aSymbol: string): Promise<SymbolItem> {
-    const response = await this.dataProviderService.get([aSymbol]);
-    const { currency, dataSource, marketPrice } = response[aSymbol] ?? {};
+  public async get(dataGatheringItem: IDataGatheringItem): Promise<SymbolItem> {
+    const response = await this.dataProviderService.get([dataGatheringItem]);
+    const { currency, marketPrice } = response[dataGatheringItem.symbol] ?? {};
 
-    if (dataSource && marketPrice) {
+    if (dataGatheringItem.dataSource && marketPrice) {
       return {
-        dataSource,
         marketPrice,
-        currency: <Currency>(<unknown>currency)
+        currency: <Currency>(<unknown>currency),
+        dataSource: dataGatheringItem.dataSource
       };
     }
 

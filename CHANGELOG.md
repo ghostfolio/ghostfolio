@@ -7,10 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the data source attribute to the symbol profile model
+
+### Changed
+
+- Respected the data source attribute in the data provider service
+- Respected the data source attribute in the symbol data endpoint
+- Improved the search functionality of the data management (multiple data sources)
+
 ### Fixed
 
 - Hid the net performance in the _Presenter View_ (portfolio holdings and summary tab on the home page)
 - Hid the sign if the performance is zero in the value component
+
+### Todo
+
+- Apply data migration (`yarn database:push`)
 
 ## 1.53.0 - 13.09.2021
 

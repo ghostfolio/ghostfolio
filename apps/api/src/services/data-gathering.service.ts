@@ -3,17 +3,11 @@ import {
   currencyPairs,
   ghostfolioFearAndGreedIndexSymbol
 } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  getUtc,
-  isGhostfolioScraperApiSymbol,
-  resetHours
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getUtc, resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
   differenceInHours,
-  endOfToday,
   format,
   getDate,
   getMonth,
@@ -123,20 +117,17 @@ export class DataGatheringService {
     }
   }
 
-  public async gatherProfileData(aSymbols?: string[]) {
+  public async gatherProfileData(aDataGatheringItems?: IDataGatheringItem[]) {
     console.log('Profile data gathering has been started.');
     console.time('data-gathering-profile');
 
-    let symbols = aSymbols;
+    let dataGatheringItems = aDataGatheringItems;
 
-    if (!symbols) {
-      const dataGatheringItems = await this.getSymbolsProfileData();
-      symbols = dataGatheringItems.map((dataGatheringItem) => {
-        return dataGatheringItem.symbol;
-      });
+    if (!dataGatheringItems) {
+      dataGatheringItems = await this.getSymbolsProfileData();
     }
 
-    const currentData = await this.dataProviderService.get(symbols);
+    const currentData = await this.dataProviderService.get(dataGatheringItems);
 
     for (const [
       symbol,
@@ -215,6 +206,7 @@ export class DataGatheringService {
           try {
             await this.prismaService.marketData.create({
               data: {
+                dataSource,
                 symbol,
                 date: currentDate,
                 marketPrice: lastMarketPrice

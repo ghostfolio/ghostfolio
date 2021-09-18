@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isEmpty } from 'lodash';
 
@@ -46,10 +47,20 @@ export class SymbolController {
   /**
    * Must be after /lookup
    */
-  @Get(':symbol')
+  @Get(':dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
-  public async getPosition(@Param('symbol') symbol): Promise<SymbolItem> {
-    const result = await this.symbolService.get(symbol);
+  public async getSymbolData(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<SymbolItem> {
+    if (!DataSource[dataSource]) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    const result = await this.symbolService.get({ dataSource, symbol });
 
     if (!result || isEmpty(result)) {
       throw new HttpException(

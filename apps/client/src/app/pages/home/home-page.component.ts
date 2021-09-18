@@ -29,6 +29,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
+import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -112,7 +113,10 @@ export class HomePageComponent implements OnDestroy, OnInit {
 
           if (this.hasPermissionToAccessFearAndGreedIndex) {
             this.dataService
-              .fetchSymbolItem(ghostfolioFearAndGreedIndexSymbol)
+              .fetchSymbolItem({
+                dataSource: DataSource.RAKUTEN,
+                symbol: ghostfolioFearAndGreedIndexSymbol
+              })
               .pipe(takeUntil(this.unsubscribeSubject))
               .subscribe(({ marketPrice }) => {
                 this.fearAndGreedIndex = marketPrice;

@@ -1,6 +1,6 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { Currency, MarketData } from '@prisma/client';
+import { Currency, DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
 import { MarketDataService } from './market-data.service';
@@ -14,6 +14,7 @@ jest.mock('./market-data.service', () => {
             date,
             symbol,
             createdAt: date,
+            dataSource: DataSource.YAHOO,
             id: 'aefcbe3a-ee10-4c4f-9f2d-8ffad7b05584',
             marketPrice: 1847.839966
           });
@@ -30,6 +31,7 @@ jest.mock('./market-data.service', () => {
           return Promise.resolve<MarketData[]>([
             {
               createdAt: dateRangeStart,
+              dataSource: DataSource.YAHOO,
               date: dateRangeStart,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902,
@@ -37,6 +39,7 @@ jest.mock('./market-data.service', () => {
             },
             {
               createdAt: dateRangeEnd,
+              dataSource: DataSource.YAHOO,
               date: dateRangeEnd,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966,
@@ -106,11 +109,11 @@ describe('CurrentRateService', () => {
     expect(
       await currentRateService.getValues({
         currencies: { AMZN: Currency.USD },
+        dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
         dateQuery: {
           lt: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
           gte: new Date(Date.UTC(2020, 0, 1, 0, 0, 0))
         },
-        symbols: ['AMZN'],
         userCurrency: Currency.CHF
       })
     ).toMatchObject([

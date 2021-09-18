@@ -1,7 +1,8 @@
 import { OrderType } from '@ghostfolio/api/models/order-type';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
-import { Currency } from '@prisma/client';
+import { Currency, DataSource } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
@@ -59,6 +60,7 @@ export class PortfolioCalculator {
           .plus(oldAccumulatedSymbol.quantity);
         currentTransactionPointItem = {
           currency: order.currency,
+          dataSource: order.dataSource,
           fee: order.fee.plus(oldAccumulatedSymbol.fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           investment: newQuantity.eq(0)
@@ -74,6 +76,7 @@ export class PortfolioCalculator {
       } else {
         currentTransactionPointItem = {
           currency: order.currency,
+          dataSource: order.dataSource,
           fee: order.fee,
           firstBuyDate: order.date,
           investment: unitPrice.mul(order.quantity).mul(factor),
@@ -153,12 +156,15 @@ export class PortfolioCalculator {
     let firstTransactionPoint: TransactionPoint = null;
     let firstIndex = this.transactionPoints.length;
     const dates = [];
-    const symbols = new Set<string>();
+    const dataGatheringItems: IDataGatheringItem[] = [];
     const currencies: { [symbol: string]: Currency } = {};
 
     dates.push(resetHours(start));
     for (const item of this.transactionPoints[firstIndex - 1].items) {
-      symbols.add(item.symbol);
+      dataGatheringItems.push({
+        dataSource: item.dataSource,
+        symbol: item.symbol
+      });
       currencies[item.symbol] = item.currency;
     }
     for (let i = 0; i < this.transactionPoints.length; i++) {
@@ -178,10 +184,10 @@ export class PortfolioCalculator {
 
     const marketSymbols = await this.currentRateService.getValues({
       currencies,
+      dataGatheringItems,
       dateQuery: {
         in: dates
       },
-      symbols: Array.from(symbols),
       userCurrency: this.currency
     });
 
@@ -309,6 +315,7 @@ export class PortfolioCalculator {
           ? new Big(0)
           : item.investment.div(item.quantity),
         currency: item.currency,
+        dataSource: item.dataSource,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: isValid
           ? grossPerformance[item.symbol] ?? null
@@ -515,25 +522,28 @@ export class PortfolioCalculator {
     } = {};
     if (j >= 0) {
       const currencies: { [name: string]: Currency } = {};
-      const symbols: string[] = [];
+      const dataGatheringItems: IDataGatheringItem[] = [];
 
       for (const item of this.transactionPoints[j].items) {
         currencies[item.symbol] = item.currency;
-        symbols.push(item.symbol);
+        dataGatheringItems.push({
+          dataSource: item.dataSource,
+          symbol: item.symbol
+        });
         investment = investment.add(item.investment);
         fees = fees.add(item.fee);
       }
 
       let marketSymbols: GetValueObject[] = [];
-      if (symbols.length > 0) {
+      if (dataGatheringItems.length > 0) {
         try {
           marketSymbols = await this.currentRateService.getValues({
+            currencies,
+            dataGatheringItems,
             dateQuery: {
               gte: startDate,
               lt: endOfDay(endDate)
             },
-            symbols,
-            currencies,
             userCurrency: this.currency
           });
         } catch (error) {

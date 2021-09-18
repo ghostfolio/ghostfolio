@@ -1,7 +1,7 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
-import { Currency } from '@prisma/client';
+import { Currency, DataSource } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
@@ -85,7 +85,7 @@ jest.mock('./current-rate.service', () => {
         getValues: ({
           currencies,
           dateQuery,
-          symbols,
+          dataGatheringItems,
           userCurrency
         }: GetValuesParams) => {
           const result = [];
@@ -95,21 +95,23 @@ jest.mock('./current-rate.service', () => {
               isBefore(date, endOfDay(dateQuery.lt));
               date = addDays(date, 1)
             ) {
-              for (const symbol of symbols) {
+              for (const dataGatheringItem of dataGatheringItems) {
                 result.push({
                   date,
-                  symbol,
-                  marketPrice: mockGetValue(symbol, date).marketPrice
+                  marketPrice: mockGetValue(dataGatheringItem.symbol, date)
+                    .marketPrice,
+                  symbol: dataGatheringItem.symbol
                 });
               }
             }
           } else {
             for (const date of dateQuery.in) {
-              for (const symbol of symbols) {
+              for (const dataGatheringItem of dataGatheringItems) {
                 result.push({
                   date,
-                  symbol,
-                  marketPrice: mockGetValue(symbol, date).marketPrice
+                  marketPrice: mockGetValue(dataGatheringItem.symbol, date)
+                    .marketPrice,
+                  symbol: dataGatheringItem.symbol
                 });
               }
             }
@@ -148,7 +150,7 @@ describe('PortfolioCalculator', () => {
         currentRateService,
         Currency.USD
       );
-      const orders = [
+      const orders: PortfolioOrder[] = [
         {
           date: '2019-02-01',
           name: 'Vanguard Total Stock Market Index Fund ETF Shares',
@@ -157,6 +159,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Buy,
           unitPrice: new Big('144.38'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big('5')
         },
         {
@@ -167,6 +170,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Buy,
           unitPrice: new Big('147.99'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big('10')
         },
         {
@@ -177,6 +181,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Sell,
           unitPrice: new Big('151.41'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big('5')
         }
       ];
@@ -189,6 +194,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -203,6 +209,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -217,6 +224,7 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -235,7 +243,7 @@ describe('PortfolioCalculator', () => {
         currentRateService,
         Currency.USD
       );
-      const orders = [
+      const orders: PortfolioOrder[] = [
         {
           date: '2019-02-01',
           name: 'Vanguard Total Stock Market Index Fund ETF Shares',
@@ -244,6 +252,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Buy,
           unitPrice: new Big('144.38'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big('5')
         },
         {
@@ -254,6 +263,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Buy,
           unitPrice: new Big('147.99'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big('10')
         },
         {
@@ -264,6 +274,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Sell,
           unitPrice: new Big('151.41'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big('5')
         }
       ];
@@ -276,6 +287,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -290,6 +302,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -299,6 +312,7 @@ describe('PortfolioCalculator', () => {
               fee: new Big('5')
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('10'),
               symbol: 'VTX',
               investment: new Big('1479.9'),
@@ -313,6 +327,7 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('686.75'),
@@ -322,6 +337,7 @@ describe('PortfolioCalculator', () => {
               fee: new Big('10')
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('10'),
               symbol: 'VTX',
               investment: new Big('1479.9'),
@@ -336,10 +352,11 @@ describe('PortfolioCalculator', () => {
     });
 
     it('with two orders at the same day of the same type', () => {
-      const orders = [
+      const orders: PortfolioOrder[] = [
         ...ordersVTI,
         {
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           date: '2021-02-01',
           name: 'Vanguard Total Stock Market Index Fund ETF Shares',
           quantity: new Big('20'),
@@ -363,6 +380,7 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               investment: new Big('1443.8'),
               quantity: new Big('10'),
@@ -377,6 +395,7 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               investment: new Big('2923.7'),
               quantity: new Big('20'),
@@ -391,6 +410,7 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               investment: new Big('652.55'),
               quantity: new Big('5'),
@@ -405,6 +425,7 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               investment: new Big('6627.05'),
               quantity: new Big('35'),
@@ -419,6 +440,7 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               investment: new Big('8403.95'),
               quantity: new Big('45'),
@@ -432,10 +454,11 @@ describe('PortfolioCalculator', () => {
     });
 
     it('with additional order', () => {
-      const orders = [
+      const orders: PortfolioOrder[] = [
         ...ordersVTI,
         {
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           date: '2019-09-01',
           name: 'Amazon.com, Inc.',
           quantity: new Big('5'),
@@ -458,6 +481,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-02-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('10'),
               symbol: 'VTI',
               investment: new Big('1443.8'),
@@ -472,6 +496,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-08-03',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -486,6 +511,7 @@ describe('PortfolioCalculator', () => {
           date: '2019-09-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -495,6 +521,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('20'),
               symbol: 'VTI',
               investment: new Big('2923.7'),
@@ -509,6 +536,7 @@ describe('PortfolioCalculator', () => {
           date: '2020-02-02',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -518,6 +546,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'VTI',
               investment: new Big('652.55'),
@@ -532,6 +561,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-02-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -541,6 +571,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('15'),
               symbol: 'VTI',
               investment: new Big('2684.05'),
@@ -555,6 +586,7 @@ describe('PortfolioCalculator', () => {
           date: '2021-08-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -564,6 +596,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('25'),
               symbol: 'VTI',
               investment: new Big('4460.95'),
@@ -578,7 +611,7 @@ describe('PortfolioCalculator', () => {
     });
 
     it('with additional buy & sell', () => {
-      const orders = [
+      const orders: PortfolioOrder[] = [
         ...ordersVTI,
         {
           date: '2019-09-01',
@@ -588,6 +621,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Buy,
           unitPrice: new Big('2021.99'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big(0)
         },
         {
@@ -598,6 +632,7 @@ describe('PortfolioCalculator', () => {
           type: OrderType.Sell,
           unitPrice: new Big('2412.23'),
           currency: Currency.USD,
+          dataSource: DataSource.YAHOO,
           fee: new Big(0)
         }
       ];
@@ -628,6 +663,7 @@ describe('PortfolioCalculator', () => {
           date: '2017-01-03',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -642,6 +678,7 @@ describe('PortfolioCalculator', () => {
           date: '2017-07-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('0.5614682'),
               symbol: 'BTCUSD',
               investment: new Big('1999.9999999999998659756'),
@@ -651,6 +688,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -665,6 +703,7 @@ describe('PortfolioCalculator', () => {
           date: '2018-09-01',
           items: [
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('5'),
               symbol: 'AMZN',
               investment: new Big('10109.95'),
@@ -674,6 +713,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('0.5614682'),
               symbol: 'BTCUSD',
               investment: new Big('1999.9999999999998659756'),
@@ -683,6 +723,7 @@ describe('PortfolioCalculator', () => {
               transactionCount: 1
             },
             {
+              dataSource: DataSource.YAHOO,
               quantity: new Big('50'),
               symbol: 'TSLA',
               investment: new Big('2148.5'),
@@ -929,6 +970,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('805.9'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
               transactionCount: 1
@@ -943,6 +985,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('0'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
               transactionCount: 2
@@ -957,6 +1000,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('1013.9'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-09-01',
               fee: new Big(0),
               transactionCount: 3
@@ -1005,16 +1049,16 @@ describe('PortfolioCalculator', () => {
         currentRateService,
         Currency.USD
       );
-      const transactionPoints = [
+      const transactionPoints: TransactionPoint[] = [
         {
           date: '2019-02-01',
           items: [
             {
               quantity: new Big('10'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               symbol: 'VTI',
               investment: new Big('1443.8'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
               transactionCount: 1
@@ -1026,10 +1070,10 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               quantity: new Big('20'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               symbol: 'VTI',
               investment: new Big('2923.7'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
               transactionCount: 2
@@ -1088,16 +1132,16 @@ describe('PortfolioCalculator', () => {
         currentRateService,
         Currency.USD
       );
-      const transactionPoints = [
+      const transactionPoints: TransactionPoint[] = [
         {
           date: '2019-02-01',
           items: [
             {
               quantity: new Big('10'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               symbol: 'VTI',
               investment: new Big('1443.8'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(50),
               transactionCount: 1
@@ -1109,10 +1153,10 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               quantity: new Big('20'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               symbol: 'VTI',
               investment: new Big('2923.7'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(100),
               transactionCount: 2
@@ -1155,6 +1199,7 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             averagePrice: new Big('146.185'),
+            dataSource: DataSource.YAHOO,
             firstBuyDate: '2019-02-01',
             quantity: new Big('20'),
             symbol: 'VTI',
@@ -1180,16 +1225,16 @@ describe('PortfolioCalculator', () => {
         currentRateService,
         Currency.USD
       );
-      const transactionPoints = [
+      const transactionPoints: TransactionPoint[] = [
         {
           date: '2019-02-01',
           items: [
             {
               quantity: new Big('10'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               symbol: 'VTI',
               investment: new Big('1443.8'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(50),
               transactionCount: 1
@@ -1201,10 +1246,10 @@ describe('PortfolioCalculator', () => {
           items: [
             {
               quantity: new Big('20'),
-              name: 'Vanguard Total Stock Market Index Fund ETF Shares',
               symbol: 'VTI',
               investment: new Big('2923.7'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(100),
               transactionCount: 2
@@ -1277,6 +1322,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'MFA', // Mutual Fund A
               investment: new Big('1000000'), // 1 million
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2010-12-31',
               fee: new Big(0),
               transactionCount: 1
@@ -1291,6 +1337,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'MFA', // Mutual Fund A
               investment: new Big('1100000'), // 1,000,000 + 100,000
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2010-12-31',
               fee: new Big(0),
               transactionCount: 2
@@ -1352,6 +1399,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'SPA', // Sub Portfolio A
               investment: new Big('200'),
               currency: Currency.CHF,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
               transactionCount: 1
@@ -1361,6 +1409,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'SPB', // Sub Portfolio B
               investment: new Big('300'),
               currency: Currency.CHF,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
               transactionCount: 1
@@ -1375,6 +1424,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'SPA', // Sub Portfolio A
               investment: new Big('200'),
               currency: Currency.CHF,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
               transactionCount: 1
@@ -1384,6 +1434,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'SPB', // Sub Portfolio B
               investment: new Big('300'),
               currency: Currency.CHF,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2012-12-31',
               fee: new Big(0),
               transactionCount: 1
@@ -1488,7 +1539,7 @@ describe('PortfolioCalculator', () => {
         currentRateService,
         Currency.USD
       );
-      const transactionPoints = [
+      const transactionPoints: TransactionPoint[] = [
         {
           date: '2019-02-01',
           items: [
@@ -1497,6 +1548,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('1443.8'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(50),
               transactionCount: 1
@@ -1511,6 +1563,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('2923.7'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(100),
               transactionCount: 2
@@ -1525,6 +1578,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('652.55'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(150),
               transactionCount: 3
@@ -1539,6 +1593,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('2684.05'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(200),
               transactionCount: 4
@@ -1553,6 +1608,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('4460.95'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(250),
               transactionCount: 5
@@ -2217,6 +2273,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'AMZN',
               investment: new Big('10109.95'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
               transactionCount: 1
@@ -2226,6 +2283,7 @@ describe('PortfolioCalculator', () => {
               symbol: 'VTI',
               investment: new Big('1443.8'),
               currency: Currency.USD,
+              dataSource: DataSource.YAHOO,
               firstBuyDate: '2019-02-01',
               fee: new Big(0),
               transactionCount: 1
@@ -2334,6 +2392,7 @@ const ordersMixedSymbols: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('42.97'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   },
   {
@@ -2344,6 +2403,7 @@ const ordersMixedSymbols: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('3562.089535970158'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   },
   {
@@ -2354,6 +2414,7 @@ const ordersMixedSymbols: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('2021.99'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   }
 ];
@@ -2367,6 +2428,7 @@ const ordersVTI: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('144.38'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   },
   {
@@ -2377,6 +2439,7 @@ const ordersVTI: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('147.99'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   },
   {
@@ -2387,6 +2450,7 @@ const ordersVTI: PortfolioOrder[] = [
     type: OrderType.Sell,
     unitPrice: new Big('151.41'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   },
   {
@@ -2397,6 +2461,7 @@ const ordersVTI: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('177.69'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   },
   {
@@ -2407,6 +2472,7 @@ const ordersVTI: PortfolioOrder[] = [
     type: OrderType.Buy,
     unitPrice: new Big('203.15'),
     currency: Currency.USD,
+    dataSource: DataSource.YAHOO,
     fee: new Big(0)
   }
 ];
@@ -2420,6 +2486,7 @@ const orderTslaTransactionPoint: TransactionPoint[] = [
         symbol: 'TSLA',
         investment: new Big('719.46'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2021-01-01',
         fee: new Big(0),
         transactionCount: 1
@@ -2437,6 +2504,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         symbol: 'VTI',
         investment: new Big('1443.8'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 1
@@ -2451,6 +2519,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         symbol: 'VTI',
         investment: new Big('2923.7'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 2
@@ -2465,6 +2534,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         symbol: 'VTI',
         investment: new Big('652.55'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 3
@@ -2479,6 +2549,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         symbol: 'VTI',
         investment: new Big('2684.05'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 4
@@ -2493,6 +2564,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
         symbol: 'VTI',
         investment: new Big('4460.95'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 5
@@ -2501,7 +2573,7 @@ const ordersVTITransactionPoints: TransactionPoint[] = [
   }
 ];
 
-const transactionPointsBuyAndSell = [
+const transactionPointsBuyAndSell: TransactionPoint[] = [
   {
     date: '2019-02-01',
     items: [
@@ -2510,6 +2582,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'VTI',
         investment: new Big('1443.8'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 1
@@ -2524,6 +2597,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'VTI',
         investment: new Big('2923.7'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 2
@@ -2538,6 +2612,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'AMZN',
         investment: new Big('10109.95'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
         transactionCount: 1
@@ -2547,6 +2622,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'VTI',
         investment: new Big('2923.7'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 2
@@ -2561,6 +2637,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'AMZN',
         investment: new Big('10109.95'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
         transactionCount: 1
@@ -2570,6 +2647,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'VTI',
         investment: new Big('652.55'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 3
@@ -2584,6 +2662,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'AMZN',
         investment: new Big('0'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
         transactionCount: 2
@@ -2593,6 +2672,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'VTI',
         investment: new Big('652.55'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 3
@@ -2607,6 +2687,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'AMZN',
         investment: new Big('0'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
         transactionCount: 2
@@ -2616,6 +2697,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'VTI',
         investment: new Big('2684.05'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 4
@@ -2630,6 +2712,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'AMZN',
         investment: new Big('0'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-09-01',
         fee: new Big(0),
         transactionCount: 2
@@ -2639,6 +2722,7 @@ const transactionPointsBuyAndSell = [
         symbol: 'VTI',
         investment: new Big('4460.95'),
         currency: Currency.USD,
+        dataSource: DataSource.YAHOO,
         firstBuyDate: '2019-02-01',
         fee: new Big(0),
         transactionCount: 5

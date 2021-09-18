@@ -28,18 +28,19 @@
           matInput
           required
           [formControl]="searchSymbolCtrl"
-          [matAutocomplete]="auto"
+          [matAutocomplete]="autocomplete"
           (blur)="onBlurSymbol()"
         />
         <mat-autocomplete
-          #auto="matAutocomplete"
+          #autocomplete="matAutocomplete"
+          [displayWith]="displayFn"
           (optionSelected)="onUpdateSymbol($event)"
         >
           <ng-container>
             <mat-option
               *ngFor="let lookupItem of filteredLookupItems | async"
               class="autocomplete"
-              [value]="lookupItem.symbol"
+              [value]="lookupItem"
             >
               <span class="mr-2 symbol">{{ lookupItem.symbol | gfSymbol }}</span
               ><span><b>{{ lookupItem.name }}</b></span>
