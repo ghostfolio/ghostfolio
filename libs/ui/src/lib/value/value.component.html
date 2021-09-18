@@ -4,8 +4,10 @@
     [ngClass]="position === 'end' ? 'justify-content-end' : ''"
   >
     <ng-container *ngIf="isNumber || value === null">
-      <div *ngIf="colorizeSign && value > 0" class="mr-1 text-success">+</div>
-      <div *ngIf="colorizeSign && value < 0" class="mr-1 text-danger">-</div>
+      <ng-container *ngIf="colorizeSign && !useAbsoluteValue">
+        <div *ngIf="value > 0" class="mr-1 text-success">+</div>
+        <div *ngIf="value < 0" class="mr-1 text-danger">-</div>
+      </ng-container>
       <div *ngIf="isPercent" [ngClass]="size === 'medium' ? 'h4 mb-0' : ''">
         {{ formattedValue }}%
       </div>
