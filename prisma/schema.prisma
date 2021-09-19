@@ -62,7 +62,7 @@ model AuthDevice {
 
 model MarketData {
   createdAt   DateTime   @default(now())
-  dataSource  DataSource @default(YAHOO)
+  dataSource  DataSource
   date        DateTime
   id          String     @default(uuid())
   symbol      String
@@ -78,7 +78,7 @@ model Order {
   accountUserId   String?
   createdAt       DateTime       @default(now())
   currency        Currency?
-  dataSource      DataSource     @default(YAHOO)
+  dataSource      DataSource
   date            DateTime
   fee             Float
   id              String         @default(uuid())
