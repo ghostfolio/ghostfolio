@@ -7,7 +7,7 @@
         [deviceType]="deviceType"
         [hasPermissionToImportOrders]="hasPermissionToImportOrders"
         [locale]="user?.settings?.locale"
-        [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder"
+        [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder && !user.settings.isRestrictedView"
         [transactions]="transactions"
         (export)="onExport()"
         (import)="onImport()"
@@ -19,7 +19,7 @@
   </div>
 
   <div
-    *ngIf="!hasImpersonationId && hasPermissionToCreateOrder"
+    *ngIf="!hasImpersonationId && hasPermissionToCreateOrder && !user.settings.isRestrictedView"
     class="fab-container"
   >
     <a

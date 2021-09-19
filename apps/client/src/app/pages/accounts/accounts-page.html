@@ -7,7 +7,7 @@
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
         [locale]="user?.settings?.locale"
-        [showActions]="!hasImpersonationId && hasPermissionToDeleteAccount"
+        [showActions]="!hasImpersonationId && hasPermissionToDeleteAccount && !user.settings.isRestrictedView"
         (accountDeleted)="onDeleteAccount($event)"
         (accountToUpdate)="onUpdateAccount($event)"
       ></gf-accounts-table>
@@ -15,7 +15,7 @@
   </div>
 
   <div
-    *ngIf="!hasImpersonationId && hasPermissionToCreateAccount"
+    *ngIf="!hasImpersonationId && hasPermissionToCreateAccount && !user.settings.isRestrictedView"
     class="fab-container"
   >
     <a
