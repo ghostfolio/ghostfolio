@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the navigation to always show the portfolio page
 
+### Fixed
+
+- Hid the actions from the accounts table in the _Presenter View_
+- Hid the actions from the transactions table in the _Presenter View_
+
 ## 1.55.0 - 20.09.2021
 
 ### Changed
