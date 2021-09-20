@@ -1,10 +1,11 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
@@ -26,19 +27,19 @@ import * as Color from 'color';
   styleUrls: ['./portfolio-proportion-chart.component.scss']
 })
 export class PortfolioProportionChartComponent
-  implements OnChanges, OnDestroy, OnInit
+  implements AfterViewInit, OnChanges, OnDestroy
 {
   @Input() baseCurrency: Currency;
-  @Input() isInPercent: boolean;
-  @Input() keys: string[];
-  @Input() locale: string;
+  @Input() isInPercent = false;
+  @Input() keys: string[] = [];
+  @Input() locale = '';
   @Input() maxItems?: number;
   @Input() showLabels = false;
   @Input() positions: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & { value: number };
-  };
+  } = {};
 
-  @ViewChild('chartCanvas') chartCanvas;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public chart: Chart;
   public isLoading = true;
@@ -59,7 +60,11 @@ export class PortfolioProportionChartComponent
     );
   }
 
-  public ngOnInit() {}
+  public ngAfterViewInit() {
+    if (this.positions) {
+      this.initialize();
+    }
+  }
 
   public ngOnChanges() {
     if (this.positions) {
@@ -260,7 +265,7 @@ export class PortfolioProportionChartComponent
                     anchor: 'end',
                     formatter: (value, context) => {
                       return value > 0
-                        ? context.chart.data.labels[context.dataIndex]
+                        ? context.chart.data.labels?.[context.dataIndex]
                         : '';
                     },
                     offset: 8
@@ -274,7 +279,7 @@ export class PortfolioProportionChartComponent
                     const labelIndex =
                       (data.datasets[context.datasetIndex - 1]?.data?.length ??
                         0) + context.dataIndex;
-                    const label = context.chart.data.labels[labelIndex];
+                    const label = context.chart.data.labels?.[labelIndex] ?? '';
 
                     if (this.isInPercent) {
                       const value = 100 * <number>context.raw;

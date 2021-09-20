@@ -123,7 +123,7 @@ export function resolveFearAndGreedIndex(aValue: number) {
     return { emoji: '😐', text: 'Neutral' };
   } else if (aValue < 75) {
     return { emoji: '😜', text: 'Greed' };
-  } else if (aValue >= 75) {
+  } else {
     return { emoji: '🤪', text: 'Extreme Greed' };
   }
 }
