@@ -38,7 +38,7 @@
         >
           <ng-container>
             <mat-option
-              *ngFor="let lookupItem of filteredLookupItems | async"
+              *ngFor="let lookupItem of filteredLookupItemsObservable | async"
               class="autocomplete"
               [value]="lookupItem"
             >
