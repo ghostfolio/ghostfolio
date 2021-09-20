@@ -10,7 +10,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LineChartItem } from '@ghostfolio/client/components/line-chart/interfaces/line-chart.interface';
 import { PerformanceChartDialog } from '@ghostfolio/client/components/performance-chart-dialog/performance-chart-dialog.component';
 import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -29,6 +28,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
+import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';

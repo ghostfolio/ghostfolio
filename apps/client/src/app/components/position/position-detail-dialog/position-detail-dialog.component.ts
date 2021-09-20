@@ -8,11 +8,11 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { LineChartItem } from '../../line-chart/interfaces/line-chart.interface';
 import { PositionDetailDialogParams } from './interfaces/interfaces';
 
 @Component({

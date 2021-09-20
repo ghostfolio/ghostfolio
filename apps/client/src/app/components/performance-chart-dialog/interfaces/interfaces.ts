@@ -1,4 +1,4 @@
-import { LineChartItem } from '../../line-chart/interfaces/line-chart.interface';
+import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 
 export interface PositionDetailDialogParams {
   deviceType: string;
