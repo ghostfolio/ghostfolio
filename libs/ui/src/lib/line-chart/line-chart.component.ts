@@ -1,13 +1,13 @@
 import 'chartjs-adapter-date-fns';
 
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
@@ -30,14 +30,15 @@ import { LineChartItem } from './interfaces/line-chart.interface';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss']
 })
-export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
+export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
   @Input() historicalDataItems: LineChartItem[];
-  @Input() showLegend: boolean;
+  @Input() showGradient = false;
+  @Input() showLegend = false;
   @Input() showLoader = true;
-  @Input() showXAxis: boolean;
-  @Input() showYAxis: boolean;
+  @Input() showXAxis = false;
+  @Input() showYAxis = false;
   @Input() symbol: string;
 
   @ViewChild('chartCanvas') chartCanvas;
@@ -56,7 +57,16 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
     );
   }
 
-  public ngOnInit() {}
+  public ngAfterViewInit() {
+    if (this.historicalDataItems) {
+      setTimeout(() => {
+        // Wait for the chartCanvas
+        this.initialize();
+
+        this.changeDetectorRef.markForCheck();
+      });
+    }
+  }
 
   public ngOnChanges() {
     if (this.historicalDataItems) {
@@ -94,7 +104,7 @@ export class LineChartComponent implements OnChanges, OnDestroy, OnInit {
         (this.chartCanvas.nativeElement.parentNode.offsetHeight * 4) / 5
       );
 
-    if (gradient) {
+    if (gradient && this.showGradient) {
       gradient.addColorStop(
         0,
         `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.01)`
