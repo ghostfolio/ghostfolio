@@ -1,10 +1,11 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
@@ -25,7 +26,9 @@ import * as Color from 'color';
   templateUrl: './portfolio-proportion-chart.component.html',
   styleUrls: ['./portfolio-proportion-chart.component.scss']
 })
-export class PortfolioProportionChartComponent implements OnChanges, OnDestroy {
+export class PortfolioProportionChartComponent
+  implements AfterViewInit, OnChanges, OnDestroy
+{
   @Input() baseCurrency: Currency;
   @Input() isInPercent = false;
   @Input() keys: string[] = [];
@@ -36,7 +39,7 @@ export class PortfolioProportionChartComponent implements OnChanges, OnDestroy {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & { value: number };
   } = {};
 
-  @ViewChild('chartCanvas') chartCanvas;
+  @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
   public chart: Chart;
   public isLoading = true;
@@ -55,6 +58,12 @@ export class PortfolioProportionChartComponent implements OnChanges, OnDestroy {
       LinearScale,
       Tooltip
     );
+  }
+
+  public ngAfterViewInit() {
+    if (this.positions) {
+      this.initialize();
+    }
   }
 
   public ngOnChanges() {
