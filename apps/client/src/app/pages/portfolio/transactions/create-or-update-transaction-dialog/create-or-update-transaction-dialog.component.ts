@@ -37,13 +37,14 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
   public currencies: Currency[] = [];
   public currentMarketPrice = null;
-  public filteredLookupItems: Observable<LookupItem[]>;
+  public filteredLookupItems: LookupItem[];
+  public filteredLookupItemsObservable: Observable<LookupItem[]>;
   public isLoading = false;
   public platforms: { id: string; name: string }[];
   public searchSymbolCtrl = new FormControl(
     {
       dataSource: this.data.transaction.dataSource,
-      name: this.data.transaction.symbol
+      symbol: this.data.transaction.symbol
     },
     Validators.required
   );
@@ -63,18 +64,26 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     this.currencies = currencies;
     this.platforms = platforms;
 
-    this.filteredLookupItems = this.searchSymbolCtrl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((query: string) => {
-        if (isString(query)) {
-          return this.dataService.fetchSymbols(query);
-        }
+    this.filteredLookupItemsObservable =
+      this.searchSymbolCtrl.valueChanges.pipe(
+        startWith(''),
+        debounceTime(400),
+        distinctUntilChanged(),
+        switchMap((query: string) => {
+          if (isString(query)) {
+            const filteredLookupItemsObservable =
+              this.dataService.fetchSymbols(query);
 
-        return [];
-      })
-    );
+            filteredLookupItemsObservable.subscribe((filteredLookupItems) => {
+              this.filteredLookupItems = filteredLookupItems;
+            });
+
+            return filteredLookupItemsObservable;
+          }
+
+          return [];
+        })
+      );
 
     if (this.data.transaction.symbol) {
       this.dataService
@@ -96,17 +105,22 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   }
 
   public displayFn(aLookupItem: LookupItem) {
-    return aLookupItem?.name ?? '';
+    return aLookupItem?.symbol ?? '';
   }
 
   public onBlurSymbol() {
-    this.data.transaction.currency = null;
-    this.data.transaction.dataSource = null;
+    const currentLookupItem = this.filteredLookupItems.find((lookupItem) => {
+      return lookupItem.symbol === this.data.transaction.symbol;
+    });
 
-    if (this.autocomplete.isOpen) {
-      this.searchSymbolCtrl.setErrors({ incorrect: true });
+    if (currentLookupItem) {
+      this.updateSymbol(currentLookupItem.symbol);
     } else {
-      this.data.transaction.unitPrice = null;
+      this.searchSymbolCtrl.setErrors({ incorrect: true });
+
+      this.data.transaction.currency = null;
+      this.data.transaction.dataSource = null;
+      this.data.transaction.symbol = null;
     }
 
     this.changeDetectorRef.markForCheck();
