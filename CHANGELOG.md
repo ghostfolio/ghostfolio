@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a story for the line chart component
 - Added a story for the portfolio proportion chart component
 
 ## 1.55.0 - 20.09.2021

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
+import { Currency } from '@prisma/client';
 import { Meta, Story, moduleMetadata } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { PortfolioProportionChartComponent } from './portfolio-proportion-chart.component';
-import { Currency } from '.prisma/client';
 
 export default {
   title: 'Portfolio Proportion Chart',
