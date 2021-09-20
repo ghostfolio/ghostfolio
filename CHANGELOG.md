@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the default value of the data source attribute
 - Upgraded `@storybook` dependencies
 
+### Fixed
+
+- Fixed an issue in the create or edit transaction dialog
+
 ### Todo
 
 - Apply data migration (`yarn prisma migrate deploy`)
