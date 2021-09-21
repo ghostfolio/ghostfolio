@@ -15,11 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the navigation to always show the portfolio page
+- Migrated the data type of currencies from `enum` to `string` in the database
+- Supported unlimited currencies (instead of `CHF`, `EUR`, `GBP` and `USD`)
 
 ### Fixed
 
 - Hid the actions from the accounts table in the _Presenter View_
 - Hid the actions from the transactions table in the _Presenter View_
+
+### Todo
+
+- Apply data migration (`yarn prisma migrate deploy`)
 
 ## 1.55.0 - 20.09.2021
 
