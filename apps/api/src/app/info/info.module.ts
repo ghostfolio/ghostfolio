@@ -5,6 +5,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
@@ -25,6 +26,7 @@ import { InfoService } from './info.service';
     ConfigurationService,
     DataGatheringService,
     DataProviderService,
+    ExchangeRateDataService,
     GhostfolioScraperApiService,
     InfoService,
     PrismaService,

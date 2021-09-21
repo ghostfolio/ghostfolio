@@ -2,7 +2,6 @@ import {
   Account,
   AssetClass,
   AssetSubClass,
-  Currency,
   DataSource,
   SymbolProfile
 } from '@prisma/client';
@@ -17,7 +16,7 @@ export const MarketState = {
 
 export interface IOrder {
   account: Account;
-  currency: Currency;
+  currency: string;
   date: string;
   fee: number;
   id?: string;
@@ -38,7 +37,7 @@ export interface IDataProviderResponse {
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
   countries?: { code: string; weight: number }[];
-  currency: Currency;
+  currency: string;
   dataSource: DataSource;
   exchange?: string;
   marketChange?: number;

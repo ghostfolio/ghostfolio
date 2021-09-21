@@ -1,5 +1,3 @@
-import { Currency } from '@prisma/client';
-
 export interface UserSettings {
-  baseCurrency: Currency;
+  baseCurrency: string;
 }

@@ -2,8 +2,6 @@ import { CurrentPositions } from '@ghostfolio/api/app/portfolio/interfaces/curre
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
-import { Currency } from '@prisma/client';
 
 import { Rule } from '../../rule';
 
@@ -69,5 +67,5 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
 }
 
 interface Settings extends RuleSettings {
-  baseCurrency: Currency;
+  baseCurrency: string;
 }

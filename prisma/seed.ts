@@ -1,6 +1,5 @@
 import {
   AccountType,
-  Currency,
   DataSource,
   PrismaClient,
   Role,
@@ -88,7 +87,7 @@ async function main() {
           {
             accountType: AccountType.SECURITIES,
             balance: 0,
-            currency: Currency.USD,
+            currency: 'USD',
             id: 'f4425b66-9ba9-4ac4-93d7-fdf9a145e8cb',
             isDefault: true,
             name: 'Default Account'
@@ -112,7 +111,7 @@ async function main() {
           {
             accountType: AccountType.SECURITIES,
             balance: 0,
-            currency: Currency.USD,
+            currency: 'USD',
             id: 'd804de69-0429-42dc-b6ca-b308fd7dd926',
             name: 'Coinbase Account',
             platformId: platformCoinbase.id
@@ -120,7 +119,7 @@ async function main() {
           {
             accountType: AccountType.SECURITIES,
             balance: 0,
-            currency: Currency.EUR,
+            currency: 'EUR',
             id: '65cfb79d-b6c7-4591-9d46-73426bc62094',
             name: 'DEGIRO Account',
             platformId: platformDegiro.id
@@ -128,7 +127,7 @@ async function main() {
           {
             accountType: AccountType.SECURITIES,
             balance: 0,
-            currency: Currency.USD,
+            currency: 'USD',
             id: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
             isDefault: true,
             name: 'Interactive Brokers Account',
@@ -201,7 +200,7 @@ async function main() {
       {
         accountId: '65cfb79d-b6c7-4591-9d46-73426bc62094',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2017, 0, 3, 0, 0, 0)),
         fee: 30,
@@ -216,7 +215,7 @@ async function main() {
       {
         accountId: 'd804de69-0429-42dc-b6ca-b308fd7dd926',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2017, 7, 16, 0, 0, 0)),
         fee: 29.9,
@@ -231,7 +230,7 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2018, 9, 1, 0, 0, 0)),
         fee: 80.79,
@@ -246,7 +245,7 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2019, 2, 1, 0, 0, 0)),
         fee: 19.9,
@@ -261,7 +260,7 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2019, 8, 3, 0, 0, 0)),
         fee: 19.9,
@@ -276,7 +275,7 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2020, 2, 2, 0, 0, 0)),
         fee: 19.9,
@@ -291,7 +290,7 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2020, 8, 1, 0, 0, 0)),
         fee: 19.9,
@@ -306,7 +305,7 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: Currency.USD,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2020, 2, 1, 0, 0, 0)),
         fee: 19.9,

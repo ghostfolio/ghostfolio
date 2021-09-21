@@ -1,7 +1,6 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { Injectable } from '@nestjs/common';
-import { Currency } from '@prisma/client';
 
 @Injectable()
 export class RulesService {
@@ -9,7 +8,7 @@ export class RulesService {
 
   public async evaluate<T extends RuleSettings>(
     aRules: Rule<T>[],
-    aUserSettings: { baseCurrency: Currency }
+    aUserSettings: { baseCurrency: string }
   ) {
     return aRules
       .filter((rule) => {

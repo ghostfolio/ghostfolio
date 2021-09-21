@@ -39,15 +39,9 @@ import type {
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import {
-  AssetClass,
-  Currency,
-  DataSource,
-  Type as TypeOfOrder
-} from '@prisma/client';
+import { AssetClass, DataSource, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
-  differenceInDays,
   endOfToday,
   format,
   isAfter,
@@ -59,7 +53,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, isNumber } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import {
   HistoricalDataItem,
@@ -775,7 +769,7 @@ export class PortfolioService {
       assetClass: AssetClass.CASH,
       assetSubClass: AssetClass.CASH,
       countries: [],
-      currency: Currency.CHF,
+      currency: 'CHF',
       grossPerformance: 0,
       grossPerformancePercent: 0,
       investment: cashValue.toNumber(),
@@ -865,7 +859,7 @@ export class PortfolioService {
   private async getAccounts(
     orders: OrderWithAccount[],
     portfolioItemsNow: { [p: string]: TimelinePosition },
-    userCurrency: Currency,
+    userCurrency: string,
     userId: string
   ) {
     const accounts: PortfolioDetails['accounts'] = {};
@@ -938,7 +932,7 @@ export class PortfolioService {
 
   private getTotalByType(
     orders: OrderWithAccount[],
-    currency: Currency,
+    currency: string,
     type: TypeOfOrder
   ) {
     return orders

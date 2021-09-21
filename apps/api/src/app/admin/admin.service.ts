@@ -5,7 +5,6 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { AdminData } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
-import { Currency } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 
 @Injectable()
@@ -22,49 +21,29 @@ export class AdminService {
     return {
       exchangeRates: [
         {
-          label1: Currency.EUR,
-          label2: Currency.CHF,
-          value: await this.exchangeRateDataService.toCurrency(
-            1,
-            Currency.EUR,
-            Currency.CHF
-          )
+          label1: 'EUR',
+          label2: 'CHF',
+          value: await this.exchangeRateDataService.toCurrency(1, 'EUR', 'CHF')
         },
         {
-          label1: Currency.GBP,
-          label2: Currency.CHF,
-          value: await this.exchangeRateDataService.toCurrency(
-            1,
-            Currency.GBP,
-            Currency.CHF
-          )
+          label1: 'GBP',
+          label2: 'CHF',
+          value: await this.exchangeRateDataService.toCurrency(1, 'GBP', 'CHF')
         },
         {
-          label1: Currency.USD,
-          label2: Currency.CHF,
-          value: await this.exchangeRateDataService.toCurrency(
-            1,
-            Currency.USD,
-            Currency.CHF
-          )
+          label1: 'USD',
+          label2: 'CHF',
+          value: await this.exchangeRateDataService.toCurrency(1, 'USD', 'CHF')
         },
         {
-          label1: Currency.USD,
-          label2: Currency.EUR,
-          value: await this.exchangeRateDataService.toCurrency(
-            1,
-            Currency.USD,
-            Currency.EUR
-          )
+          label1: 'USD',
+          label2: 'EUR',
+          value: await this.exchangeRateDataService.toCurrency(1, 'USD', 'EUR')
         },
         {
-          label1: Currency.USD,
-          label2: Currency.GBP,
-          value: await this.exchangeRateDataService.toCurrency(
-            1,
-            Currency.USD,
-            Currency.GBP
-          )
+          label1: 'USD',
+          label2: 'GBP',
+          value: await this.exchangeRateDataService.toCurrency(1, 'USD', 'GBP')
         }
       ],
       lastDataGathering: await this.getLastDataGathering(),

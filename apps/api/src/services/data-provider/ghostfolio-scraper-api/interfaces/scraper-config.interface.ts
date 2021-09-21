@@ -1,7 +1,5 @@
-import { Currency } from '@prisma/client';
-
 export interface ScraperConfig {
-  currency: Currency;
+  currency: string;
   selector: string;
   symbol: string;
   url: string;

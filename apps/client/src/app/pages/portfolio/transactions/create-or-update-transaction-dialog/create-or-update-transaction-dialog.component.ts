@@ -11,7 +11,6 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { Currency } from '@prisma/client';
 import { isString } from 'lodash';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import {
@@ -35,7 +34,7 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 export class CreateOrUpdateTransactionDialog implements OnDestroy {
   @ViewChild('autocomplete') autocomplete;
 
-  public currencies: Currency[] = [];
+  public currencies: string[] = [];
   public currentMarketPrice = null;
   public filteredLookupItems: LookupItem[];
   public filteredLookupItemsObservable: Observable<LookupItem[]>;

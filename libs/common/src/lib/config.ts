@@ -1,30 +1,11 @@
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { Currency } from '@prisma/client';
 import { DataSource } from '@prisma/client';
 
-export const baseCurrency = Currency.USD;
+export const baseCurrency = 'USD';
 
 export const benchmarks: Partial<IDataGatheringItem>[] = [
   { dataSource: DataSource.YAHOO, symbol: 'VOO' }
 ];
-
-export const currencyPairs: Partial<
-  IDataGatheringItem & {
-    currency1: Currency;
-    currency2: Currency;
-  }
->[] = (Object.keys(Currency) as Array<keyof typeof Currency>)
-  .filter((currency) => {
-    return currency !== Currency.USD;
-  })
-  .map((currency) => {
-    return {
-      currency1: Currency.USD,
-      currency2: Currency[currency],
-      dataSource: DataSource.YAHOO,
-      symbol: `${Currency.USD}${Currency[currency]}`
-    };
-  });
 
 export const ghostfolioScraperApiSymbolPrefix = '_GF_';
 export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;

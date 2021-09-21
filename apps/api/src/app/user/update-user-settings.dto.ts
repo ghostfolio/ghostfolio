@@ -1,9 +1,9 @@
-import { Currency, ViewMode } from '@prisma/client';
+import { ViewMode } from '@prisma/client';
 import { IsString } from 'class-validator';
 
 export class UpdateUserSettingsDto {
   @IsString()
-  baseCurrency: Currency;
+  baseCurrency: string;
 
   @IsString()
   viewMode: ViewMode;

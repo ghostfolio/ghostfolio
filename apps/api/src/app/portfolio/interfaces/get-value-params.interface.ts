@@ -1,8 +1,6 @@
-import { Currency } from '@prisma/client';
-
 export interface GetValueParams {
-  currency: Currency;
+  currency: string;
   date: Date;
   symbol: string;
-  userCurrency: Currency;
+  userCurrency: string;
 }

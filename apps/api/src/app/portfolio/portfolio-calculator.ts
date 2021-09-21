@@ -2,7 +2,6 @@ import { OrderType } from '@ghostfolio/api/models/order-type';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
-import { Currency, DataSource } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
@@ -35,7 +34,7 @@ export class PortfolioCalculator {
 
   public constructor(
     private currentRateService: CurrentRateService,
-    private currency: Currency
+    private currency: string
   ) {}
 
   public computeTransactionPoints(orders: PortfolioOrder[]) {
@@ -157,7 +156,7 @@ export class PortfolioCalculator {
     let firstIndex = this.transactionPoints.length;
     const dates = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
-    const currencies: { [symbol: string]: Currency } = {};
+    const currencies: { [symbol: string]: string } = {};
 
     dates.push(resetHours(start));
     for (const item of this.transactionPoints[firstIndex - 1].items) {
@@ -521,7 +520,7 @@ export class PortfolioCalculator {
       [date: string]: { [symbol: string]: Big };
     } = {};
     if (j >= 0) {
-      const currencies: { [name: string]: Currency } = {};
+      const currencies: { [name: string]: string } = {};
       const dataGatheringItems: IDataGatheringItem[] = [];
 
       for (const item of this.transactionPoints[j].items) {

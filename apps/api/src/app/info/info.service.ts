@@ -1,12 +1,12 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
 import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Currency } from '@prisma/client';
 import * as bent from 'bent';
 import { subDays } from 'date-fns';
 
@@ -16,6 +16,7 @@ export class InfoService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService
@@ -56,7 +57,7 @@ export class InfoService {
       ...info,
       globalPermissions,
       platforms,
-      currencies: Object.values(Currency),
+      currencies: this.exchangeRateDataService.getCurrencies(),
       demoAuthToken: this.getDemoAuthToken(),
       lastDataGathering: await this.getLastDataGathering(),
       statistics: await this.getStatistics(),
