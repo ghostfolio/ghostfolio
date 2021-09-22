@@ -3,6 +3,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { baseCurrency } from '@ghostfolio/common/config';
 import { AdminData } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { differenceInDays } from 'date-fns';
@@ -19,33 +20,22 @@ export class AdminService {
 
   public async get(): Promise<AdminData> {
     return {
-      exchangeRates: [
-        {
-          label1: 'EUR',
-          label2: 'CHF',
-          value: await this.exchangeRateDataService.toCurrency(1, 'EUR', 'CHF')
-        },
-        {
-          label1: 'GBP',
-          label2: 'CHF',
-          value: await this.exchangeRateDataService.toCurrency(1, 'GBP', 'CHF')
-        },
-        {
-          label1: 'USD',
-          label2: 'CHF',
-          value: await this.exchangeRateDataService.toCurrency(1, 'USD', 'CHF')
-        },
-        {
-          label1: 'USD',
-          label2: 'EUR',
-          value: await this.exchangeRateDataService.toCurrency(1, 'USD', 'EUR')
-        },
-        {
-          label1: 'USD',
-          label2: 'GBP',
-          value: await this.exchangeRateDataService.toCurrency(1, 'USD', 'GBP')
-        }
-      ],
+      exchangeRates: this.exchangeRateDataService
+        .getCurrencies()
+        .filter((currency) => {
+          return currency !== baseCurrency;
+        })
+        .map((currency) => {
+          return {
+            label1: baseCurrency,
+            label2: currency,
+            value: this.exchangeRateDataService.toCurrency(
+              1,
+              baseCurrency,
+              currency
+            )
+          };
+        }),
       lastDataGathering: await this.getLastDataGathering(),
       transactionCount: await this.prismaService.order.count(),
       userCount: await this.prismaService.user.count(),
