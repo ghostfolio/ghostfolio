@@ -23,7 +23,7 @@ export class ExchangeRateDataService {
   }
 
   public getCurrencies() {
-    return this.currencies;
+    return this.currencies?.length > 0 ? this.currencies : [baseCurrency];
   }
 
   public getCurrencyPairs() {
@@ -192,7 +192,7 @@ export class ExchangeRateDataService {
       }
     });
 
-    return uniq(currencies);
+    return uniq(currencies).sort();
   }
 
   private prepareCurrencyPairs(aCurrencies: string[]) {

@@ -1,4 +1,3 @@
-import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
@@ -11,7 +10,6 @@ import { ExportService } from './export.service';
 
 @Module({
   imports: [
-    CacheModule,
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,

@@ -231,6 +231,8 @@ export class DataGatheringService {
       }
     }
 
+    await this.exchangeRateDataService.initialize();
+
     if (hasError) {
       throw '';
     }
