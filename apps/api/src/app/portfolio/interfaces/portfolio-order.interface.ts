@@ -1,9 +1,9 @@
 import { OrderType } from '@ghostfolio/api/models/order-type';
-import { Currency, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 
 export interface PortfolioOrder {
-  currency: Currency;
+  currency: string;
   date: string;
   dataSource: DataSource;
   fee: Big;

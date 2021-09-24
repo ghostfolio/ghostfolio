@@ -1,4 +1,4 @@
-import { Account, Currency, SymbolProfile } from '@prisma/client';
+import { Account, SymbolProfile } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IOrder } from '../services/interfaces/interfaces';
@@ -6,7 +6,7 @@ import { OrderType } from './order-type';
 
 export class Order {
   private account: Account;
-  private currency: Currency;
+  private currency: string;
   private fee: number;
   private date: string;
   private id: string;

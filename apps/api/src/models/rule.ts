@@ -3,7 +3,6 @@ import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.in
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { groupBy } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
-import { Currency } from '@prisma/client';
 
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
@@ -29,7 +28,7 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   public groupCurrentPositionsByAttribute(
     positions: TimelinePosition[],
     attribute: keyof TimelinePosition,
-    baseCurrency: Currency
+    baseCurrency: string
   ) {
     return Array.from(groupBy(attribute, positions).entries()).map(
       ([attributeValue, objs]) => ({

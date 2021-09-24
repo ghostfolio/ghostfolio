@@ -1,6 +1,6 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { Currency, DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
 import { MarketDataService } from './market-data.service';
@@ -80,7 +80,7 @@ describe('CurrentRateService', () => {
       null,
       null
     );
-    exchangeRateDataService = new ExchangeRateDataService(null);
+    exchangeRateDataService = new ExchangeRateDataService(null, null);
     marketDataService = new MarketDataService(null);
 
     await exchangeRateDataService.initialize();
@@ -95,10 +95,10 @@ describe('CurrentRateService', () => {
   it('getValue', async () => {
     expect(
       await currentRateService.getValue({
-        currency: Currency.USD,
+        currency: 'USD',
         date: new Date(Date.UTC(2020, 0, 1, 0, 0, 0)),
         symbol: 'AMZN',
-        userCurrency: Currency.CHF
+        userCurrency: 'CHF'
       })
     ).toMatchObject({
       marketPrice: 1847.839966
@@ -108,13 +108,13 @@ describe('CurrentRateService', () => {
   it('getValues', async () => {
     expect(
       await currentRateService.getValues({
-        currencies: { AMZN: Currency.USD },
+        currencies: { AMZN: 'USD' },
         dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
         dateQuery: {
           lt: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
           gte: new Date(Date.UTC(2020, 0, 1, 0, 0, 0))
         },
-        userCurrency: Currency.CHF
+        userCurrency: 'CHF'
       })
     ).toMatchObject([
       {

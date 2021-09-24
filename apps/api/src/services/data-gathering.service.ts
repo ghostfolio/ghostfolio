@@ -1,6 +1,5 @@
 import {
   benchmarks,
-  currencyPairs,
   ghostfolioFearAndGreedIndexSymbol
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getUtc, resetHours } from '@ghostfolio/common/helper';
@@ -19,6 +18,7 @@ import {
 import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider/data-provider.service';
 import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
+import { ExchangeRateDataService } from './exchange-rate-data.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
 import { PrismaService } from './prisma.service';
 
@@ -27,6 +27,7 @@ export class DataGatheringService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly ghostfolioScraperApi: GhostfolioScraperApiService,
     private readonly prismaService: PrismaService
   ) {}
@@ -230,6 +231,8 @@ export class DataGatheringService {
       }
     }
 
+    await this.exchangeRateDataService.initialize();
+
     if (hasError) {
       throw '';
     }
@@ -316,15 +319,15 @@ export class DataGatheringService {
       };
     });
 
-    const currencyPairsToGather = currencyPairs.map(
-      ({ dataSource, symbol }) => {
+    const currencyPairsToGather = this.exchangeRateDataService
+      .getCurrencyPairs()
+      .map(({ dataSource, symbol }) => {
         return {
           dataSource,
           symbol,
           date: startDate
         };
-      }
-    );
+      });
 
     const customSymbolsToGather =
       await this.ghostfolioScraperApi.getCustomSymbolsToGather(startDate);
@@ -343,15 +346,15 @@ export class DataGatheringService {
     const customSymbolsToGather =
       await this.ghostfolioScraperApi.getCustomSymbolsToGather(startDate);
 
-    const currencyPairsToGather = currencyPairs.map(
-      ({ dataSource, symbol }) => {
+    const currencyPairsToGather = this.exchangeRateDataService
+      .getCurrencyPairs()
+      .map(({ dataSource, symbol }) => {
         return {
           dataSource,
           symbol,
           date: startDate
         };
-      }
-    );
+      });
 
     const symbolProfilesToGather =
       await this.prismaService.symbolProfile.findMany({

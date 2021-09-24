@@ -6,7 +6,6 @@ import {
   OnInit
 } from '@angular/core';
 import { PortfolioSummary } from '@ghostfolio/common/interfaces';
-import { Currency } from '@prisma/client';
 import { formatDistanceToNow } from 'date-fns';
 
 @Component({
@@ -16,7 +15,7 @@ import { formatDistanceToNow } from 'date-fns';
   styleUrls: ['./portfolio-summary.component.scss']
 })
 export class PortfolioSummaryComponent implements OnChanges, OnInit {
-  @Input() baseCurrency: Currency;
+  @Input() baseCurrency: string;
   @Input() isLoading: boolean;
   @Input() locale: string;
   @Input() summary: PortfolioSummary;

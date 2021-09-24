@@ -11,7 +11,6 @@ import {
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
-import { Currency } from '@prisma/client';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';
@@ -29,7 +28,7 @@ import * as Color from 'color';
 export class PortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() baseCurrency: Currency;
+  @Input() baseCurrency: string;
   @Input() isInPercent = false;
   @Input() keys: string[] = [];
   @Input() locale = '';

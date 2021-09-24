@@ -4,8 +4,15 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
+import { ExchangeRateDataModule } from './exchange-rate-data.module';
+
 @Module({
-  imports: [ConfigurationModule, DataProviderModule, PrismaModule],
+  imports: [
+    ConfigurationModule,
+    DataProviderModule,
+    ExchangeRateDataModule,
+    PrismaModule
+  ],
   providers: [DataGatheringService],
   exports: [DataGatheringService]
 })

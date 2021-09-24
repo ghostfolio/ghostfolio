@@ -2,7 +2,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Currency, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
@@ -20,8 +20,8 @@ export class SymbolService {
 
     if (dataGatheringItem.dataSource && marketPrice) {
       return {
+        currency,
         marketPrice,
-        currency: <Currency>(<unknown>currency),
         dataSource: dataGatheringItem.dataSource
       };
     }

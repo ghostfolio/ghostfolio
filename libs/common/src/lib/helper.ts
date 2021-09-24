@@ -1,4 +1,3 @@
-import { Currency } from '@prisma/client';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
 import { ghostfolioScraperApiSymbolPrefix } from './config';
@@ -87,9 +86,9 @@ export function isCrypto(aSymbol = '') {
 
 export function isCurrency(aSymbol = '') {
   return (
-    (aSymbol.includes(Currency.CHF) ||
-      aSymbol.includes(Currency.EUR) ||
-      aSymbol.includes(Currency.USD)) &&
+    (aSymbol.includes('CHF') ||
+      aSymbol.includes('EUR') ||
+      aSymbol.includes('USD')) &&
     aSymbol.length >= 6
   );
 }
@@ -100,10 +99,6 @@ export function isGhostfolioScraperApiSymbol(aSymbol = '') {
 
 export function isRakutenRapidApiSymbol(aSymbol = '') {
   return aSymbol === 'GF.FEAR_AND_GREED_INDEX';
-}
-
-export function parseCurrency(aCurrency: string): Currency {
-  return Currency[aCurrency];
 }
 
 export function resetHours(aDate: Date) {

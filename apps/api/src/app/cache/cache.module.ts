@@ -7,13 +7,14 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
+import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Module } from '@nestjs/common';
 
 import { CacheController } from './cache.controller';
 
 @Module({
-  imports: [RedisCacheModule],
+  imports: [ExchangeRateDataModule, RedisCacheModule],
   controllers: [CacheController],
   providers: [
     AlphaVantageService,

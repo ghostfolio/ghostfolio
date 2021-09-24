@@ -1,12 +1,12 @@
-import { Currency, DataSource, Type } from '@prisma/client';
-import { IsISO8601, IsNumber, IsString, ValidateIf } from 'class-validator';
+import { DataSource, Type } from '@prisma/client';
+import { IsISO8601, IsNumber, IsString } from 'class-validator';
 
 export class UpdateOrderDto {
   @IsString()
   accountId: string;
 
   @IsString()
-  currency: Currency;
+  currency: string;
 
   @IsString()
   dataSource: DataSource;

@@ -1,19 +1,9 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  isCrypto,
-  isCurrency,
-  parseCurrency
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, isCrypto, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import {
-  AssetClass,
-  AssetSubClass,
-  Currency,
-  DataSource
-} from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import Big from 'big.js';
 import { countries } from 'countries-list';
@@ -68,7 +58,7 @@ export class YahooFinanceService implements DataProviderInterface {
         response[symbol] = {
           assetClass,
           assetSubClass,
-          currency: parseCurrency(value.price?.currency),
+          currency: value.price?.currency,
           dataSource: DataSource.YAHOO,
           exchange: this.parseExchange(value.price?.exchangeName),
           marketState:
@@ -81,7 +71,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
         if (value.price?.currency === 'GBp') {
           // Convert GBp (pence) to GBP
-          response[symbol].currency = Currency.GBP;
+          response[symbol].currency = 'GBP';
           response[symbol].marketPrice = new Big(
             value.price?.regularMarketPrice ?? 0
           )
@@ -200,7 +190,7 @@ export class YahooFinanceService implements DataProviderInterface {
         .filter(({ quoteType, symbol }) => {
           if (quoteType === 'CRYPTOCURRENCY') {
             // Only allow cryptocurrencies in USD
-            return symbol.includes(Currency.USD);
+            return symbol.includes('USD');
           }
 
           return true;

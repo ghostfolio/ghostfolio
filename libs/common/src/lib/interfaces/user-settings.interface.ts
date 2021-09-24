@@ -1,7 +1,7 @@
-import { Currency, ViewMode } from '@prisma/client';
+import { ViewMode } from '@prisma/client';
 
 export interface UserSettings {
-  baseCurrency?: Currency;
+  baseCurrency?: string;
   isRestrictedView?: boolean;
   locale: string;
   viewMode?: ViewMode;

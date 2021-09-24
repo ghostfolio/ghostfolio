@@ -15,7 +15,6 @@ import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { DEFAULT_DATE_FORMAT, baseCurrency } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Currency } from '@prisma/client';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
@@ -33,7 +32,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public baseCurrency = baseCurrency;
   public coupon: number;
   public couponId: string;
-  public currencies: Currency[] = [];
+  public currencies: string[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateViewMode: boolean;

@@ -1,7 +1,7 @@
-import { Currency, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 
 export interface SymbolItem {
-  currency: Currency;
+  currency: string;
   dataSource: DataSource;
   marketPrice: number;
 }

@@ -1,27 +1,45 @@
-import { currencyPairs } from '@ghostfolio/common/config';
+import { baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
-import { Currency, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { format } from 'date-fns';
-import { isEmpty, isNumber } from 'lodash';
+import { isEmpty, isNumber, uniq } from 'lodash';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
+import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class ExchangeRateDataService {
+  private currencies: string[] = [];
   private currencyPairs: IDataGatheringItem[] = [];
   private exchangeRates: { [currencyPair: string]: number } = {};
 
-  public constructor(private dataProviderService: DataProviderService) {
+  public constructor(
+    private readonly dataProviderService: DataProviderService,
+    private readonly prismaService: PrismaService
+  ) {
     this.initialize();
   }
 
+  public getCurrencies() {
+    return this.currencies?.length > 0 ? this.currencies : [baseCurrency];
+  }
+
+  public getCurrencyPairs() {
+    return this.currencyPairs;
+  }
+
   public async initialize() {
+    this.currencies = await this.prepareCurrencies();
     this.currencyPairs = [];
     this.exchangeRates = {};
 
-    for (const { currency1, currency2, dataSource } of currencyPairs) {
+    for (const {
+      currency1,
+      currency2,
+      dataSource
+    } of this.prepareCurrencyPairs(this.currencies)) {
       this.addCurrencyPairs({ currency1, currency2, dataSource });
     }
 
@@ -77,8 +95,8 @@ export class ExchangeRateDataService {
       if (!this.exchangeRates[symbol]) {
         // Not found, calculate indirectly via USD
         this.exchangeRates[symbol] =
-          resultExtended[`${currency1}${Currency.USD}`]?.[date]?.marketPrice *
-          resultExtended[`${Currency.USD}${currency2}`]?.[date]?.marketPrice;
+          resultExtended[`${currency1}${'USD'}`]?.[date]?.marketPrice *
+          resultExtended[`${'USD'}${currency2}`]?.[date]?.marketPrice;
 
         // Calculate the opposite direction
         this.exchangeRates[`${currency2}${currency1}`] =
@@ -89,10 +107,14 @@ export class ExchangeRateDataService {
 
   public toCurrency(
     aValue: number,
-    aFromCurrency: Currency,
-    aToCurrency: Currency
+    aFromCurrency: string,
+    aToCurrency: string
   ) {
-    if (isNaN(this.exchangeRates[`${Currency.USD}${Currency.CHF}`])) {
+    const hasNaN = Object.values(this.exchangeRates).some((exchangeRate) => {
+      return isNaN(exchangeRate);
+    });
+
+    if (hasNaN) {
       // Reinitialize if data is not loaded correctly
       this.initialize();
     }
@@ -104,8 +126,8 @@ export class ExchangeRateDataService {
         factor = this.exchangeRates[`${aFromCurrency}${aToCurrency}`];
       } else {
         // Calculate indirectly via USD
-        const factor1 = this.exchangeRates[`${aFromCurrency}${Currency.USD}`];
-        const factor2 = this.exchangeRates[`${Currency.USD}${aToCurrency}`];
+        const factor1 = this.exchangeRates[`${aFromCurrency}${'USD'}`];
+        const factor2 = this.exchangeRates[`${'USD'}${aToCurrency}`];
 
         factor = factor1 * factor2;
 
@@ -129,8 +151,8 @@ export class ExchangeRateDataService {
     currency2,
     dataSource
   }: {
-    currency1: Currency;
-    currency2: Currency;
+    currency1: string;
+    currency2: string;
     dataSource: DataSource;
   }) {
     this.currencyPairs.push({
@@ -141,5 +163,50 @@ export class ExchangeRateDataService {
       dataSource,
       symbol: `${currency2}${currency1}`
     });
+  }
+
+  private async prepareCurrencies(): Promise<string[]> {
+    const currencies: string[] = [];
+
+    const settings = await this.prismaService.settings.findMany({
+      distinct: ['currency'],
+      orderBy: [{ currency: 'asc' }],
+      select: { currency: true }
+    });
+
+    settings.forEach((settingsItem) => {
+      if (settingsItem.currency) {
+        currencies.push(settingsItem.currency);
+      }
+    });
+
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      distinct: ['currency'],
+      orderBy: [{ currency: 'asc' }],
+      select: { currency: true }
+    });
+
+    symbolProfiles.forEach((symbolProfile) => {
+      if (symbolProfile.currency) {
+        currencies.push(symbolProfile.currency);
+      }
+    });
+
+    return uniq(currencies).sort();
+  }
+
+  private prepareCurrencyPairs(aCurrencies: string[]) {
+    return aCurrencies
+      .filter((currency) => {
+        return currency !== baseCurrency;
+      })
+      .map((currency) => {
+        return {
+          currency1: baseCurrency,
+          currency2: currency,
+          dataSource: DataSource.YAHOO,
+          symbol: `${baseCurrency}${currency}`
+        };
+      });
   }
 }

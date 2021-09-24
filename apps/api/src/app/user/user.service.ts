@@ -1,12 +1,12 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { locale } from '@ghostfolio/common/config';
+import { baseCurrency, locale } from '@ghostfolio/common/config';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
 import { getPermissions, permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
-import { Currency, Prisma, Provider, User, ViewMode } from '@prisma/client';
+import { Prisma, Provider, User, ViewMode } from '@prisma/client';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 import { UserSettings } from './interfaces/user-settings.interface';
@@ -15,7 +15,7 @@ const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
-  public static DEFAULT_CURRENCY = Currency.USD;
+  public static DEFAULT_CURRENCY = 'USD';
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -144,8 +144,14 @@ export class UserService {
         ...data,
         Account: {
           create: {
+            currency: baseCurrency,
             isDefault: true,
             name: 'Default Account'
+          }
+        },
+        Settings: {
+          create: {
+            currency: baseCurrency
           }
         }
       }

@@ -8,7 +8,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { PortfolioPerformance } from '@ghostfolio/common/interfaces';
-import { Currency } from '@prisma/client';
 import { CountUp } from 'countup.js';
 import { isNumber } from 'lodash';
 
@@ -19,7 +18,7 @@ import { isNumber } from 'lodash';
   styleUrls: ['./portfolio-performance.component.scss']
 })
 export class PortfolioPerformanceComponent implements OnChanges, OnInit {
-  @Input() baseCurrency: Currency;
+  @Input() baseCurrency: string;
   @Input() isLoading: boolean;
   @Input() locale: string;
   @Input() performance: PortfolioPerformance;

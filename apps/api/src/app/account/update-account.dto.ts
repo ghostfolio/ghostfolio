@@ -1,4 +1,4 @@
-import { AccountType, Currency } from '@prisma/client';
+import { AccountType } from '@prisma/client';
 import { IsNumber, IsString, ValidateIf } from 'class-validator';
 
 export class UpdateAccountDto {
@@ -9,7 +9,7 @@ export class UpdateAccountDto {
   balance: number;
 
   @IsString()
-  currency: Currency;
+  currency: string;
 
   @IsString()
   id: string;

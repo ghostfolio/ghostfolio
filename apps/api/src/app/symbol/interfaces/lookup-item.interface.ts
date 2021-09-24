@@ -1,7 +1,7 @@
-import { Currency, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 
 export interface LookupItem {
-  currency: Currency;
+  currency: string;
   dataSource: DataSource;
   name: string;
   symbol: string;

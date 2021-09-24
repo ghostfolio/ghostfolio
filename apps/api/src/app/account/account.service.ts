@@ -1,7 +1,7 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Account, Currency, Order, Platform, Prisma } from '@prisma/client';
+import { Account, Order, Platform, Prisma } from '@prisma/client';
 
 import { CashDetails } from './interfaces/cash-details.interface';
 
@@ -95,7 +95,7 @@ export class AccountService {
 
   public async getCashDetails(
     aUserId: string,
-    aCurrency: Currency
+    aCurrency: string
   ): Promise<CashDetails> {
     let totalCashBalance = 0;
 

@@ -7,7 +7,6 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { Currency } from '@prisma/client';
 import svgMap from 'svgmap';
 
 @Component({
@@ -17,7 +16,7 @@ import svgMap from 'svgmap';
   styleUrls: ['./world-map-chart.component.scss']
 })
 export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
-  @Input() baseCurrency: Currency;
+  @Input() baseCurrency: string;
   @Input() countries: { [code: string]: { name: string; value: number } };
 
   public isLoading = true;

@@ -1,8 +1,8 @@
-import { Currency, DataSource } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 
 export interface TransactionPointSymbol {
-  currency: Currency;
+  currency: string;
   dataSource: DataSource;
   fee: Big;
   firstBuyDate: string;

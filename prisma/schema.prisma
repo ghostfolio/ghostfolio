@@ -28,7 +28,7 @@ model Account {
   accountType AccountType @default(SECURITIES)
   balance     Float       @default(0)
   createdAt   DateTime    @default(now())
-  currency    Currency    @default(USD)
+  currency    String?
   id          String      @default(uuid())
   isDefault   Boolean     @default(false)
   name        String?
@@ -77,7 +77,7 @@ model Order {
   accountId       String?
   accountUserId   String?
   createdAt       DateTime       @default(now())
-  currency        Currency?
+  currency        String?
   dataSource      DataSource
   date            DateTime
   fee             Float
@@ -109,7 +109,7 @@ model Property {
 }
 
 model Settings {
-  currency  Currency?
+  currency  String?
   settings  Json?
   updatedAt DateTime  @updatedAt
   viewMode  ViewMode?
@@ -122,7 +122,7 @@ model SymbolProfile {
   assetSubClass AssetSubClass?
   countries     Json?
   createdAt     DateTime       @default(now())
-  currency      Currency?
+  currency      String?
   dataSource    DataSource
   id            String         @id @default(uuid())
   name          String?
@@ -180,13 +180,6 @@ enum AssetSubClass {
   CRYPTOCURRENCY
   ETF
   STOCK
-}
-
-enum Currency {
-  CHF
-  EUR
-  GBP
-  USD
 }
 
 enum DataSource {
