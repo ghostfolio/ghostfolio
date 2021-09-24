@@ -17,7 +17,6 @@
       >Overview</a
     >
     <a
-      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
@@ -27,18 +26,6 @@
       }"
       [routerLink]="['/portfolio']"
       >Portfolio</a
-    >
-    <a
-      *ngIf="user?.settings?.viewMode !== 'DEFAULT'"
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'portfolio',
-        'text-decoration-underline': currentRoute === 'portfolio'
-      }"
-      [routerLink]="['/portfolio', 'transactions']"
-      >Transactions</a
     >
     <a
       class="d-none d-sm-block mx-1"
@@ -166,7 +153,6 @@
         >Overview</a
       >
       <a
-        *ngIf="user?.settings?.viewMode === 'DEFAULT'"
         class="d-block d-sm-none"
         i18n
         mat-menu-item
@@ -175,17 +161,6 @@
         }"
         [routerLink]="['/portfolio']"
         >Portfolio</a
-      >
-      <a
-        *ngIf="user?.settings?.viewMode !== 'DEFAULT'"
-        class="d-block d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{
-          'font-weight-bold': currentRoute === 'portfolio'
-        }"
-        [routerLink]="['/portfolio', 'transactions']"
-        >Transactions</a
       >
       <a
         class="d-block d-sm-none"

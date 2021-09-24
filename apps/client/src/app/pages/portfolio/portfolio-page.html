@@ -17,18 +17,23 @@
         </p>
       </mat-card>
     </div>
-    <div
-      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
-      class="col-xs-12 col-md-6"
-    >
+    <div class="col-xs-12 col-md-6">
       <mat-card class="mb-3">
-        <h4 i18n>Allocations</h4>
+        <h4 class="align-items-center d-flex">
+          <span i18n>Allocations</span>
+          <ion-icon
+            *ngIf="hasPermissionForSubscription"
+            class="ml-1 text-muted"
+            name="diamond-outline"
+          ></ion-icon>
+        </h4>
         <p class="mb-0">Check the allocations of your portfolio.</p>
         <p class="text-right">
           <a
             color="primary"
             i18n
             mat-button
+            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
             [routerLink]="['/portfolio', 'allocations']"
           >
             Open Allocations →
@@ -38,18 +43,23 @@
     </div>
   </div>
   <div class="row">
-    <div
-      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
-      class="col-xs-12 col-md-6"
-    >
+    <div class="col-xs-12 col-md-6">
       <mat-card class="mb-3">
-        <h4 i18n>Analysis</h4>
+        <h4 class="align-items-center d-flex">
+          <span i18n>Analysis</span>
+          <ion-icon
+            *ngIf="hasPermissionForSubscription"
+            class="ml-1 text-muted"
+            name="diamond-outline"
+          ></ion-icon>
+        </h4>
         <p class="mb-0">Ghostfolio Analysis visualizes your portfolio.</p>
         <p class="text-right">
           <a
             color="primary"
             i18n
             mat-button
+            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
             [routerLink]="['/portfolio', 'analysis']"
           >
             Open Analysis →
@@ -57,12 +67,16 @@
         </p>
       </mat-card>
     </div>
-    <div
-      *ngIf="user?.settings?.viewMode === 'DEFAULT'"
-      class="col-xs-12 col-md-6"
-    >
+    <div class="col-xs-12 col-md-6">
       <mat-card class="mb-3">
-        <h4 i18n>X-ray</h4>
+        <h4 class="align-items-center d-flex">
+          <span i18n>X-ray</span>
+          <ion-icon
+            *ngIf="hasPermissionForSubscription"
+            class="ml-1 text-muted"
+            name="diamond-outline"
+          ></ion-icon>
+        </h4>
         <p class="mb-0">
           Ghostfolio X-ray uses static analysis to identify potential issues and
           risks in your portfolio.
@@ -72,6 +86,7 @@
             color="primary"
             i18n
             mat-button
+            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
             [routerLink]="['/portfolio', 'report']"
           >
             Open X-ray →
