@@ -6,7 +6,7 @@
       </h3>
       <mat-card class="mb-3">
         <mat-card-content>
-          <div class="d-flex my-3">
+          <div *ngIf="exchangeRates?.length > 0" class="d-flex my-3">
             <div class="w-50" i18n>Exchange Rates</div>
             <div class="w-50">
               <div *ngFor="let exchangeRate of exchangeRates" class="mb-1">

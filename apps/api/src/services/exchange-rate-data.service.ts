@@ -135,7 +135,7 @@ export class ExchangeRateDataService {
       }
     }
 
-    if (isNumber(factor)) {
+    if (isNumber(factor) && !isNaN(factor)) {
       return factor * aValue;
     }
 
