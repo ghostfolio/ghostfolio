@@ -146,34 +146,50 @@ async function main() {
   await prisma.symbolProfile.createMany({
     data: [
       {
+        assetClass: 'EQUITY',
+        assetSubClass: 'STOCK',
         countries: [{ code: 'US', weight: 1 }],
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         id: '2bd26362-136e-411c-b578-334084b4cdcc',
+        name: 'Amazon.com Inc.',
         sectors: [{ name: 'Consumer Cyclical', weight: 1 }],
         symbol: 'AMZN'
       },
       {
+        assetClass: 'CASH',
+        assetSubClass: 'CRYPTOCURRENCY',
         countries: null,
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         id: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e',
+        name: 'Bitcoin USD',
         sectors: null,
         symbol: 'BTCUSD'
       },
       {
+        assetClass: 'EQUITY',
+        assetSubClass: 'STOCK',
         countries: [{ code: 'US', weight: 1 }],
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         id: 'd1ee9681-fb21-4f99-a3b7-afd4fc04df2e',
+        name: 'Tesla Inc.',
         sectors: [{ name: 'Consumer Cyclical', weight: 1 }],
         symbol: 'TSLA'
       },
       {
+        assetClass: 'EQUITY',
+        assetSubClass: 'ETF',
         countries: [
           { code: 'US', weight: 0.9886789999999981 },
           { code: 'NL', weight: 0.000203 },
           { code: 'CA', weight: 0.000362 }
         ],
+        currency: 'USD',
         dataSource: DataSource.YAHOO,
         id: '7d9c8540-061e-4e7e-b019-0d0f4a84e796',
+        name: 'Vanguard Total Stock Market Index Fund ETF',
         sectors: [
           { name: 'Technology', weight: 0.31393799999999955 },
           { name: 'Consumer Cyclical', weight: 0.149224 },
