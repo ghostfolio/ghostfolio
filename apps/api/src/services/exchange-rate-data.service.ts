@@ -168,28 +168,34 @@ export class ExchangeRateDataService {
   private async prepareCurrencies(): Promise<string[]> {
     const currencies: string[] = [];
 
-    const settings = await this.prismaService.settings.findMany({
-      distinct: ['currency'],
-      orderBy: [{ currency: 'asc' }],
-      select: { currency: true }
+    (
+      await this.prismaService.account.findMany({
+        distinct: ['currency'],
+        orderBy: [{ currency: 'asc' }],
+        select: { currency: true }
+      })
+    ).forEach((account) => {
+      currencies.push(account.currency);
     });
 
-    settings.forEach((settingsItem) => {
-      if (settingsItem.currency) {
-        currencies.push(settingsItem.currency);
-      }
+    (
+      await this.prismaService.settings.findMany({
+        distinct: ['currency'],
+        orderBy: [{ currency: 'asc' }],
+        select: { currency: true }
+      })
+    ).forEach((userSettings) => {
+      currencies.push(userSettings.currency);
     });
 
-    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      distinct: ['currency'],
-      orderBy: [{ currency: 'asc' }],
-      select: { currency: true }
-    });
-
-    symbolProfiles.forEach((symbolProfile) => {
-      if (symbolProfile.currency) {
-        currencies.push(symbolProfile.currency);
-      }
+    (
+      await this.prismaService.symbolProfile.findMany({
+        distinct: ['currency'],
+        orderBy: [{ currency: 'asc' }],
+        select: { currency: true }
+      })
+    ).forEach((symbolProfile) => {
+      currencies.push(symbolProfile.currency);
     });
 
     return uniq(currencies).sort();
