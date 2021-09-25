@@ -3654,10 +3654,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/big.js@6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@types/big.js/-/big.js-6.1.1.tgz#c2be5e81e0cf0c1c31704e3b12f750712f647414"
-  integrity sha512-Zns+nT0hj96ie+GDbL5NeHxhL4wNz8QMxCHqBvxgc4x0hhgQ/o92rPwqxvPBhY3ZYnH8TJGw/8oCkjhOy2Rfzw==
+"@types/big.js@6.1.2":
+  version "6.1.2"
+  resolved "https://registry.yarnpkg.com/@types/big.js/-/big.js-6.1.2.tgz#68a952b629a6aaa2b5855a2f63363d1e77f6dd91"
+  integrity sha512-h24JIZ52rvSvi2jkpYDk2yLH99VzZoCJiSfDWwjst7TwJVuXN61XVCUlPCzRl7mxKEMsGf8z42Q+J4TZwU3z2w==
 
 "@types/body-parser@*":
   version "1.19.1"
@@ -3672,10 +3672,10 @@
   resolved "https://registry.yarnpkg.com/@types/braces/-/braces-3.0.1.tgz#5a284d193cfc61abb2e5a50d36ebbc50d942a32b"
   integrity sha512-+euflG6ygo4bn0JHtn4pYqcXwRtLvElQ7/nnjDu7iYG56H0+OhCd7d6Ug0IE3WcFpZozBKW2+80FUbv5QGk5AQ==
 
-"@types/cache-manager@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-3.4.0.tgz#414136ea3807a8cd071b8f20370c5df5dbffd382"
-  integrity sha512-XVbn2HS+O+Mk2SKRCjr01/8oD5p2Tv1fxxdBqJ0+Cl+UBNiz0WVY5rusHpMGx+qF6Vc2pnRwPVwSKbGaDApCpw==
+"@types/cache-manager@3.4.2":
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/@types/cache-manager/-/cache-manager-3.4.2.tgz#d57e7e5e6374d1037bdce753a05c9703e4483401"
+  integrity sha512-1IwA74t5ID4KWo0Kndal16MhiPSZgMe1fGc+MLT6j5r+Ab7jku36PFTl4PP6MiWw0BJscM9QpZEo00qixNQoRg==
 
 "@types/color-convert@*", "@types/color-convert@^2.0.0":
   version "2.0.0"
@@ -3829,10 +3829,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@4.14.168":
-  version "4.14.168"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
-  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
+"@types/lodash@4.14.174":
+  version "4.14.174"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.174.tgz#b4b06b6eced9850eed6b6a8f1abdd0f5192803c1"
+  integrity sha512-KMBLT6+g9qrGXpDt7ohjWPUD34WA/jasrtjTEHStF0NPdEwJ1N9SZ+4GaMVDeuk/y0+X5j9xFm6mNiXS7UoaLQ==
 
 "@types/markdown-to-jsx@^6.11.3":
   version "6.11.3"
