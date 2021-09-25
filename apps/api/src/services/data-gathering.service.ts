@@ -2,7 +2,7 @@ import {
   benchmarks,
   ghostfolioFearAndGreedIndexSymbol
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getUtc, resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
@@ -341,7 +341,12 @@ export class DataGatheringService {
   }
 
   private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
-    const startDate = new Date(getUtc('2015-01-01'));
+    const startDate =
+      (
+        await this.prismaService.order.findFirst({
+          orderBy: [{ date: 'asc' }]
+        })
+      )?.date ?? new Date();
 
     const customSymbolsToGather =
       await this.ghostfolioScraperApi.getCustomSymbolsToGather(startDate);
@@ -356,14 +361,26 @@ export class DataGatheringService {
         };
       });
 
-    const symbolProfilesToGather =
+    const symbolProfilesToGather = (
       await this.prismaService.symbolProfile.findMany({
         orderBy: [{ symbol: 'asc' }],
         select: {
           dataSource: true,
+          Order: {
+            orderBy: [{ date: 'asc' }],
+            select: { date: true },
+            take: 1
+          },
           symbol: true
         }
-      });
+      })
+    ).map((item) => {
+      return {
+        dataSource: item.dataSource,
+        date: item.Order?.[0]?.date ?? startDate,
+        symbol: item.symbol
+      };
+    });
 
     return [
       ...this.getBenchmarksToGather(startDate),

@@ -11,6 +11,7 @@ import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
+import { isEmpty } from 'lodash';
 
 import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
@@ -76,6 +77,10 @@ export class DataProviderService {
     let response: {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
+
+    if (isEmpty(aItems)) {
+      return response;
+    }
 
     const granularityQuery =
       aGranularity === 'month'
