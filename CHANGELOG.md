@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hid the actions from the accounts table in the _Presenter View_
 - Hid the actions from the transactions table in the _Presenter View_
+- Fixed the data gathering of the initial project setup (database seeding)
 
 ### Todo
 
