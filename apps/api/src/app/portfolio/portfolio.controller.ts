@@ -79,7 +79,7 @@ export class PortfolioController {
       }));
     }
 
-    return investments;
+    return <any>res.json(investments);
   }
 
   @Get('chart')
@@ -325,6 +325,8 @@ export class PortfolioController {
       return <any>res.json({ rules: [] });
     }
 
-    return await this.portfolioService.getReport(impersonationId);
+    return <any>(
+      res.json(await this.portfolioService.getReport(impersonationId))
+    );
   }
 }
