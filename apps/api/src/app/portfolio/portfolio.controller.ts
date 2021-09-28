@@ -3,6 +3,7 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import {
   PortfolioDetails,
@@ -38,6 +39,7 @@ import { PortfolioService } from './portfolio.service';
 @Controller('portfolio')
 export class PortfolioController {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
@@ -47,8 +49,17 @@ export class PortfolioController {
   @Get('investments')
   @UseGuards(AuthGuard('jwt'))
   public async findAll(
-    @Headers('impersonation-id') impersonationId
+    @Headers('impersonation-id') impersonationId,
+    @Res() res: Response
   ): Promise<InvestmentItem[]> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      res.status(StatusCodes.FORBIDDEN);
+      return <any>res.json([]);
+    }
+
     let investments = await this.portfolioService.getInvestments(
       impersonationId
     );
@@ -68,7 +79,7 @@ export class PortfolioController {
       }));
     }
 
-    return investments;
+    return <any>res.json(investments);
   }
 
   @Get('chart')
@@ -125,6 +136,14 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioDetails> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      res.status(StatusCodes.FORBIDDEN);
+      return <any>res.json({ accounts: {}, holdings: {} });
+    }
+
     const { accounts, holdings, hasErrors } =
       await this.portfolioService.getDetails(impersonationId, range);
 
@@ -295,8 +314,19 @@ export class PortfolioController {
   @Get('report')
   @UseGuards(AuthGuard('jwt'))
   public async getReport(
-    @Headers('impersonation-id') impersonationId
+    @Headers('impersonation-id') impersonationId,
+    @Res() res: Response
   ): Promise<PortfolioReport> {
-    return await this.portfolioService.getReport(impersonationId);
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      res.status(StatusCodes.FORBIDDEN);
+      return <any>res.json({ rules: [] });
+    }
+
+    return <any>(
+      res.json(await this.portfolioService.getReport(impersonationId))
+    );
   }
 }

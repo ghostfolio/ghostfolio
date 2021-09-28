@@ -61,7 +61,23 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         return event;
       }),
       catchError((error: HttpErrorResponse) => {
-        if (error.status === StatusCodes.INTERNAL_SERVER_ERROR) {
+        if (error.status === StatusCodes.FORBIDDEN) {
+          if (!this.snackBarRef) {
+            this.snackBarRef = this.snackBar.open(
+              'This feature requires a subscription.',
+              'Upgrade Plan',
+              { duration: 6000 }
+            );
+
+            this.snackBarRef.afterDismissed().subscribe(() => {
+              this.snackBarRef = undefined;
+            });
+
+            this.snackBarRef.onAction().subscribe(() => {
+              this.router.navigate(['/pricing']);
+            });
+          }
+        } else if (error.status === StatusCodes.INTERNAL_SERVER_ERROR) {
           if (!this.snackBarRef) {
             this.snackBarRef = this.snackBar.open(
               'Oops! Something went wrong. Please try again later.',
