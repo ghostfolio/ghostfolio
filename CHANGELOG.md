@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a protection for endpoints (subscriptions)
+
 ### Changed
 
 - Reformatted the exchange rates table in the admin control panel
