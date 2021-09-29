@@ -1,4 +1,6 @@
 :host {
+  display: block;
+
   .allocations-by-symbol {
     gf-portfolio-proportion-chart {
       max-width: 80vh;
