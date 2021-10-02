@@ -18,6 +18,7 @@ import svgMap from 'svgmap';
 export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() countries: { [code: string]: { name: string; value: number } };
+  @Input() isInPercent = false;
 
   public isLoading = true;
   public svgMapElement;
@@ -41,6 +42,20 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private initialize() {
+    if (this.isInPercent) {
+      // Convert value of countries to percentage
+      let sum = 0;
+      Object.keys(this.countries).map((country) => {
+        sum += this.countries[country].value;
+      });
+
+      Object.keys(this.countries).map((country) => {
+        this.countries[country].value = Number(
+          ((this.countries[country].value * 100) / sum).toFixed(2)
+        );
+      });
+    }
+
     this.svgMapElement = new svgMap({
       colorMax: '#22bdb9',
       colorMin: '#c3f1f0',
@@ -49,7 +64,7 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
         applyData: 'value',
         data: {
           value: {
-            format: `{0} ${this.baseCurrency}`
+            format: this.isInPercent ? `{0}%` : `{0} ${this.baseCurrency}`
           }
         },
         values: this.countries

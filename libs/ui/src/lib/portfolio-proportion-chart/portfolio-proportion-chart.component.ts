@@ -35,7 +35,10 @@ export class PortfolioProportionChartComponent
   @Input() maxItems?: number;
   @Input() showLabels = false;
   @Input() positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'type'> & { value: number };
+    [symbol: string]: Pick<PortfolioPosition, 'type'> & {
+      name: string;
+      value: number;
+    };
   } = {};
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
@@ -80,6 +83,7 @@ export class PortfolioProportionChartComponent
     const chartData: {
       [symbol: string]: {
         color?: string;
+        name: string;
         subCategory: { [symbol: string]: { value: number } };
         value: number;
       };
@@ -106,6 +110,7 @@ export class PortfolioProportionChartComponent
           }
         } else {
           chartData[this.positions[symbol][this.keys[0]]] = {
+            name: this.positions[symbol].name,
             subCategory: {},
             value: this.positions[symbol].value
           };
@@ -123,6 +128,7 @@ export class PortfolioProportionChartComponent
           chartData[UNKNOWN_KEY].value += this.positions[symbol].value;
         } else {
           chartData[UNKNOWN_KEY] = {
+            name: this.positions[symbol].name,
             subCategory: this.keys[1]
               ? { [this.keys[1]]: { value: 0 } }
               : undefined,
@@ -152,7 +158,7 @@ export class PortfolioProportionChartComponent
       if (!unknownItem) {
         const index = chartDataSorted.push([
           UNKNOWN_KEY,
-          { subCategory: {}, value: 0 }
+          { name: UNKNOWN_KEY, subCategory: {}, value: 0 }
         ]);
         unknownItem = chartDataSorted[index];
       }
@@ -160,6 +166,7 @@ export class PortfolioProportionChartComponent
       rest.forEach((restItem) => {
         if (unknownItem?.[1]) {
           unknownItem[1] = {
+            name: UNKNOWN_KEY,
             subCategory: {},
             value: unknownItem[1].value + restItem[1].value
           };
@@ -278,17 +285,29 @@ export class PortfolioProportionChartComponent
                     const labelIndex =
                       (data.datasets[context.datasetIndex - 1]?.data?.length ??
                         0) + context.dataIndex;
-                    const label = context.chart.data.labels?.[labelIndex] ?? '';
+                    const symbol =
+                      context.chart.data.labels?.[labelIndex] ?? '';
+
+                    const name = this.positions[<string>symbol]?.name;
+
+                    let sum = 0;
+                    context.dataset.data.map((item) => {
+                      sum += item;
+                    });
+
+                    const percentage = (context.parsed * 100) / sum;
 
                     if (this.isInPercent) {
-                      const value = 100 * <number>context.raw;
-                      return `${label} (${value.toFixed(2)}%)`;
+                      return `${name ?? symbol} (${percentage.toFixed(2)}%)`;
                     } else {
                       const value = <number>context.raw;
-                      return `${label} (${value.toLocaleString(this.locale, {
-                        maximumFractionDigits: 2,
-                        minimumFractionDigits: 2
-                      })} ${this.baseCurrency})`;
+                      return `${name ?? symbol}: ${value.toLocaleString(
+                        this.locale,
+                        {
+                          maximumFractionDigits: 2,
+                          minimumFractionDigits: 2
+                        }
+                      )} ${this.baseCurrency} (${percentage.toFixed(2)}%)`;
                     }
                   }
                 }
