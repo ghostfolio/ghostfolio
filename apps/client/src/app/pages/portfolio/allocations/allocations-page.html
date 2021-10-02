@@ -19,7 +19,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="hasImpersonationId"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
             [positions]="accounts"
@@ -43,7 +43,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="true"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['assetClass', 'assetSubClass']"
             [locale]="user?.settings?.locale"
             [positions]="positions"
@@ -67,7 +67,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="true"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['currency']"
             [locale]="user?.settings?.locale"
             [positions]="positions"
@@ -90,8 +90,8 @@
           <gf-portfolio-proportion-chart
             class="mx-auto"
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="false"
-            [keys]="['name']"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['symbol']"
             [locale]="user?.settings?.locale"
             [positions]="symbols"
             [showLabels]="deviceType !== 'mobile'"
@@ -113,7 +113,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="false"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
             [maxItems]="10"
@@ -138,7 +138,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="false"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
             [positions]="continents"
@@ -161,7 +161,7 @@
           <gf-portfolio-proportion-chart
             [keys]="['name']"
             [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="false"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [locale]="user?.settings?.locale"
             [maxItems]="10"
             [positions]="countries"
@@ -186,6 +186,7 @@
           <gf-world-map-chart
             [baseCurrency]="user?.settings?.baseCurrency"
             [countries]="countries"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           ></gf-world-map-chart>
         </mat-card-content>
       </mat-card>

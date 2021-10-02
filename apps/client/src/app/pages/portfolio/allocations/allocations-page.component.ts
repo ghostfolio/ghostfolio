@@ -37,13 +37,23 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     { label: 'Current', value: 'current' }
   ];
   public portfolioDetails: PortfolioDetails;
-  public positions: { [symbol: string]: any };
+  public positions: {
+    [symbol: string]: Pick<
+      PortfolioPosition,
+      | 'assetClass'
+      | 'assetSubClass'
+      | 'currency'
+      | 'exchange'
+      | 'name'
+      | 'value'
+    >;
+  };
   public positionsArray: PortfolioPosition[];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
   public symbols: {
-    [name: string]: { name: string; value: number };
+    [name: string]: { name: string; symbol: string; value: number };
   };
 
   public user: User;
@@ -121,6 +131,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.symbols = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
+        symbol: UNKNOWN_KEY,
         value: 0
       }
     };
@@ -137,15 +148,29 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
+      let value = 0;
+
+      if (aPeriod === 'original') {
+        if (this.hasImpersonationId) {
+          value = position.allocationInvestment;
+        } else {
+          value = position.investment;
+        }
+      } else {
+        if (this.hasImpersonationId) {
+          value = position.allocationCurrent;
+        } else {
+          value = position.value;
+        }
+      }
+
       this.positions[symbol] = {
+        value,
         assetClass: position.assetClass,
         assetSubClass: position.assetSubClass,
         currency: position.currency,
         exchange: position.exchange,
-        value:
-          aPeriod === 'original'
-            ? position.allocationInvestment
-            : position.allocationCurrent
+        name: position.name
       };
       this.positionsArray.push(position);
 
@@ -221,7 +246,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
       if (position.assetClass === AssetClass.EQUITY) {
         this.symbols[symbol] = {
-          name: symbol,
+          symbol,
+          name: position.name,
           value: aPeriod === 'original' ? position.investment : position.value
         };
       }
