@@ -43,7 +43,7 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
 
   private initialize() {
     if (this.isInPercent) {
-      // Convert countries value to percentage
+      // Convert value of countries to percentage
       let sum = 0;
       Object.keys(this.countries).map((country) => {
         sum += this.countries[country].value;
