@@ -256,18 +256,19 @@ export const convertFromYahooFinanceSymbol = (aYahooFinanceSymbol: string) => {
 /**
  * Converts a symbol to a Yahoo Finance symbol
  *
- * Currency:        USDCHF=X
- * Cryptocurrency:  BTC-USD
+ * Currency:        USDCHF  -> USDCHF=X
+ * Cryptocurrency:  BTCUSD  -> BTC-USD
+ *                  DOGEUSD -> DOGE-USD
+ *                  SOL1USD -> SOL1-USD
  */
 export const convertToYahooFinanceSymbol = (aSymbol: string) => {
   if (isCurrency(aSymbol)) {
-    if (isCrypto(aSymbol)) {
+    if (isCrypto(aSymbol) || isCrypto(aSymbol.replace('1', ''))) {
       // Add a dash before the last three characters
       // BTCUSD  -> BTC-USD
       // DOGEUSD -> DOGE-USD
-      return `${aSymbol.substring(0, aSymbol.length - 3)}-${aSymbol.substring(
-        aSymbol.length - 3
-      )}`;
+      // SOL1USD -> SOL1-USD
+      return aSymbol.replace('USD', '-USD');
     }
 
     return `${aSymbol}=X`;
