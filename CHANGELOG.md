@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the symbol conversion for _Yahoo Finance_: Support for _Solana USD_ (`SOL1-USD`)
 - Upgraded `envalid` from version `7.1.0` to `7.2.1`
 
 ## 1.57.0 - 29.09.2021
