@@ -1,3 +1,4 @@
+import * as currencies from '@dinero.js/currencies';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
 import { ghostfolioScraperApiSymbolPrefix } from './config';
@@ -85,12 +86,7 @@ export function isCrypto(aSymbol = '') {
 }
 
 export function isCurrency(aSymbol = '') {
-  return (
-    (aSymbol.includes('CHF') ||
-      aSymbol.includes('EUR') ||
-      aSymbol.includes('USD')) &&
-    aSymbol.length >= 6
-  );
+  return currencies[aSymbol];
 }
 
 export function isGhostfolioScraperApiSymbol(aSymbol = '') {

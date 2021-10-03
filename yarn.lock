@@ -1681,6 +1681,11 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
+"@dinero.js/currencies@2.0.0-alpha.8":
+  version "2.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@dinero.js/currencies/-/currencies-2.0.0-alpha.8.tgz#aa02a04ce3685a9b06a7ce12f8c924726386c3fd"
+  integrity sha512-zApiqtuuPwjiM9LJA5/kNcT48VSHRiz2/mktkXjIpfxrJKzthXybUAgEenExIH6dYhLDgVmsLQZtZFOsdYl0Ag==
+
 "@discoveryjs/json-ext@0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.3.tgz#90420f9f9c6d3987f176a19a7d8e764271a2f55d"
