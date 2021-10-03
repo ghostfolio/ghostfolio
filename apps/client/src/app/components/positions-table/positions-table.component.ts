@@ -42,7 +42,7 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   public dataSource: MatTableDataSource<PortfolioPosition> =
     new MatTableDataSource();
   public displayedColumns = [];
-  public ignoreAssetClasses = [AssetClass.CASH.toString()];
+  public ignoreAssetSubClasses = [AssetClass.CASH.toString()];
   public isLoading = true;
   public pageSize = 7;
   public routeQueryParams: Subscription;

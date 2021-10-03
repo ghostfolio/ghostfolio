@@ -175,8 +175,9 @@ export class PortfolioController {
         portfolioPosition.grossPerformance = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
-
+        portfolioPosition.netPerformance = null;
         portfolioPosition.quantity = null;
+        portfolioPosition.value = portfolioPosition.value / totalValue;
       }
 
       for (const [name, { current, original }] of Object.entries(accounts)) {
