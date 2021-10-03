@@ -262,16 +262,21 @@ export const convertFromYahooFinanceSymbol = (aYahooFinanceSymbol: string) => {
  *                  SOL1USD -> SOL1-USD
  */
 export const convertToYahooFinanceSymbol = (aSymbol: string) => {
-  if (isCurrency(aSymbol)) {
-    if (isCrypto(aSymbol) || isCrypto(aSymbol.replace('1', ''))) {
+  if (
+    (aSymbol.includes('CHF') ||
+      aSymbol.includes('EUR') ||
+      aSymbol.includes('USD')) &&
+    aSymbol.length >= 6
+  ) {
+    if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
+      return `${aSymbol}=X`;
+    } else if (isCrypto(aSymbol) || isCrypto(aSymbol.replace('1', ''))) {
       // Add a dash before the last three characters
       // BTCUSD  -> BTC-USD
       // DOGEUSD -> DOGE-USD
       // SOL1USD -> SOL1-USD
       return aSymbol.replace('USD', '-USD');
     }
-
-    return `${aSymbol}=X`;
   }
 
   return aSymbol;
