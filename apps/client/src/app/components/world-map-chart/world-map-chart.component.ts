@@ -54,6 +54,13 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
           ((this.countries[country].value * 100) / sum).toFixed(2)
         );
       });
+    } else {
+      // Convert value to fixed-point notation
+      Object.keys(this.countries).map((country) => {
+        this.countries[country].value = Number(
+          this.countries[country].value.toFixed(2)
+        );
+      });
     }
 
     this.svgMapElement = new svgMap({
