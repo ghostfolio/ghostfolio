@@ -25,7 +25,11 @@ export class TrackinsightEnhancerService implements DataEnhancerInterface {
 
     const holdings = await getJSON(
       `https://data.trackinsight.com/holdings/${symbol}.json`
-    );
+    ).catch(() => {
+      return getJSON(
+        `https://data.trackinsight.com/holdings/${symbol.split('.')[0]}.json`
+      );
+    });
 
     if (!response.countries || response.countries.length === 0) {
       response.countries = [];
