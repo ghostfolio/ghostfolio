@@ -16,10 +16,7 @@ import { isEmpty } from 'lodash';
 import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
-import {
-  YahooFinanceService,
-  convertToYahooFinanceSymbol
-} from './yahoo-finance/yahoo-finance.service';
+import { YahooFinanceService } from './yahoo-finance/yahoo-finance.service';
 
 @Injectable()
 export class DataProviderService {
@@ -42,25 +39,10 @@ export class DataProviderService {
     } = {};
 
     for (const item of items) {
-      if (item.dataSource === DataSource.ALPHA_VANTAGE) {
-        response[item.symbol] = (
-          await this.alphaVantageService.get([item.symbol])
-        )[item.symbol];
-      } else if (item.dataSource === DataSource.GHOSTFOLIO) {
-        response[item.symbol] = (
-          await this.ghostfolioScraperApiService.get([item.symbol])
-        )[item.symbol];
-      } else if (item.dataSource === DataSource.RAKUTEN) {
-        response[item.symbol] = (
-          await this.rakutenRapidApiService.get([item.symbol])
-        )[item.symbol];
-      } else if (item.dataSource === DataSource.YAHOO) {
-        response[item.symbol] = (
-          await this.yahooFinanceService.get([
-            convertToYahooFinanceSymbol(item.symbol)
-          ])
-        )[item.symbol];
-      }
+      const dataProvider = this.getDataProvider(item.dataSource);
+      response[item.symbol] = (await dataProvider.get([item.symbol]))[
+        item.symbol
+      ];
     }
 
     return response;
@@ -103,11 +85,13 @@ export class DataProviderService {
     });
 
     try {
-      const queryRaw = `SELECT * FROM "MarketData" WHERE "dataSource" IN ('${dataSources.join(
-        `','`
-      )}') AND "symbol" IN ('${symbols.join(
-        `','`
-      )}') ${granularityQuery} ${rangeQuery} ORDER BY date;`;
+      const queryRaw = `SELECT *
+                        FROM "MarketData"
+                        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
+                          AND "symbol" IN ('${symbols.join(
+                            `','`
+                          )}') ${granularityQuery} ${rangeQuery}
+                        ORDER BY date;`;
 
       const marketDataByGranularity: MarketData[] =
         await this.prismaService.$queryRaw(queryRaw);

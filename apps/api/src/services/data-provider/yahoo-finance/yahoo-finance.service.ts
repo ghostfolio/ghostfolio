@@ -33,11 +33,14 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async get(
-    aYahooFinanceSymbols: string[]
+    aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aYahooFinanceSymbols.length <= 0) {
+    if (aSymbols.length <= 0) {
       return {};
     }
+    const yahooFinanceSymbols = aSymbols.map((symbol) =>
+      convertToYahooFinanceSymbol(symbol)
+    );
 
     try {
       const response: { [symbol: string]: IDataProviderResponse } = {};
@@ -46,7 +49,7 @@ export class YahooFinanceService implements DataProviderInterface {
         [symbol: string]: IYahooFinanceQuoteResponse;
       } = await yahooFinance.quote({
         modules: ['price', 'summaryProfile'],
-        symbols: aYahooFinanceSymbols
+        symbols: yahooFinanceSymbols
       });
 
       for (const [yahooFinanceSymbol, value] of Object.entries(data)) {
@@ -261,7 +264,7 @@ export const convertFromYahooFinanceSymbol = (aYahooFinanceSymbol: string) => {
  *                  DOGEUSD -> DOGE-USD
  *                  SOL1USD -> SOL1-USD
  */
-export const convertToYahooFinanceSymbol = (aSymbol: string) => {
+const convertToYahooFinanceSymbol = (aSymbol: string) => {
   if (
     (aSymbol.includes('CHF') ||
       aSymbol.includes('EUR') ||
