@@ -8,7 +8,7 @@ import {
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -17,6 +17,7 @@ import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from './yahoo-finance/yahoo-finance.service';
+import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 
 @Injectable()
 export class DataProviderService {
@@ -26,7 +27,9 @@ export class DataProviderService {
     private readonly ghostfolioScraperApiService: GhostfolioScraperApiService,
     private readonly prismaService: PrismaService,
     private readonly rakutenRapidApiService: RakutenRapidApiService,
-    private readonly yahooFinanceService: YahooFinanceService
+    private readonly yahooFinanceService: YahooFinanceService,
+    @Inject('DataEnhancers')
+    private readonly dataEnhancers: DataEnhancerInterface[]
   ) {
     this.rakutenRapidApiService?.setPrisma(this.prismaService);
   }
@@ -44,6 +47,22 @@ export class DataProviderService {
         item.symbol
       ];
     }
+
+    const promises = [];
+    for (const symbol of Object.keys(response)) {
+      let promise = Promise.resolve(response[symbol]);
+      for (const dataEnhancer of this.dataEnhancers) {
+        promise = promise.then((r) =>
+          dataEnhancer.enhance(symbol, r).catch((e) => {
+            console.error(`Failed to enhance data for symbol ${symbol}`, e);
+            return r;
+          })
+        );
+      }
+      promises.push(promise.then((r) => (response[symbol] = r)));
+    }
+
+    await Promise.all(promises);
 
     return response;
   }

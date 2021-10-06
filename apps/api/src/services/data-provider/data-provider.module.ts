@@ -7,6 +7,7 @@ import { Module } from '@nestjs/common';
 
 import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { DataProviderService } from './data-provider.service';
+import { TrackinsightEnhancerService } from '@ghostfolio/api/services/data-provider/trackinsight-enhancer/trackinsight-enhancer.service';
 
 @Module({
   imports: [ConfigurationModule, PrismaModule],
@@ -15,7 +16,13 @@ import { DataProviderService } from './data-provider.service';
     DataProviderService,
     GhostfolioScraperApiService,
     RakutenRapidApiService,
-    YahooFinanceService
+    TrackinsightEnhancerService,
+    YahooFinanceService,
+    {
+      provide: 'DataEnhancers',
+      useFactory: (trackinsight) => [trackinsight],
+      inject: [TrackinsightEnhancerService]
+    }
   ],
   exports: [DataProviderService, GhostfolioScraperApiService]
 })
