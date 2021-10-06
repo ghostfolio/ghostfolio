@@ -96,6 +96,12 @@ export class YahooFinanceService implements DataProviderInterface {
               response[symbol].countries = [{ code, weight: 1 }];
             }
           } catch {}
+
+          if (value.summaryProfile?.sector) {
+            response[symbol].sectors = [
+              { name: value.summaryProfile?.sector, weight: 1 }
+            ];
+          }
         }
 
         // Add url if available
