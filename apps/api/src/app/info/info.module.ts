@@ -1,10 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Module } from '@nestjs/common';
@@ -12,9 +7,11 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { InfoController } from './info.controller';
 import { InfoService } from './info.service';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 
 @Module({
   imports: [
+    DataProviderModule,
     ExchangeRateDataModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
@@ -23,15 +20,10 @@ import { InfoService } from './info.service';
   ],
   controllers: [InfoController],
   providers: [
-    AlphaVantageService,
     ConfigurationService,
     DataGatheringService,
-    DataProviderService,
-    GhostfolioScraperApiService,
     InfoService,
-    PrismaService,
-    RakutenRapidApiService,
-    YahooFinanceService
+    PrismaService
   ]
 })
 export class InfoModule {}
