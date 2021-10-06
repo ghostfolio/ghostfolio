@@ -4,7 +4,7 @@ import { Granularity } from '@ghostfolio/common/types';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
-} from './interfaces';
+} from '../../interfaces/interfaces';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;

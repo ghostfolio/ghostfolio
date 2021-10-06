@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { isAfter, isBefore, parse } from 'date-fns';
 
-import { DataProviderInterface } from '../../interfaces/data-provider.interface';
+import { DataProviderInterface } from '../interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
