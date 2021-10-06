@@ -45,6 +45,7 @@ export interface IDataProviderResponse {
   marketPrice: number;
   marketState: MarketState;
   name?: string;
+  sectors?: { name: string; weight: number }[];
   url?: string;
 }
 

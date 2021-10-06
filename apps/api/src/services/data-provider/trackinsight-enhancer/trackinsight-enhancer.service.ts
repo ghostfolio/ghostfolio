@@ -5,6 +5,13 @@ import bent from 'bent';
 const countries = require('countries-list/dist/countries.json');
 const getJSON = bent('json');
 
+const sectorsMapping = {
+  'Consumer Discretionary': 'Consumer Cyclical',
+  'Consumer Defensive': 'Consumer Staples',
+  'Health Care': 'Healthcare',
+  'Information Technology': 'Technology'
+};
+
 export class TrackinsightEnhancerService implements DataEnhancerInterface {
   public async enhance(
     symbol: string,
@@ -34,6 +41,16 @@ export class TrackinsightEnhancerService implements DataEnhancerInterface {
 
         response.countries.push({
           code: countryCode,
+          weight: value.weight
+        });
+      }
+    }
+
+    if (!response.sectors || response.sectors.length === 0) {
+      response.sectors = [];
+      for (const [name, value] of Object.entries<any>(holdings.sectors)) {
+        response.sectors.push({
+          name: sectorsMapping[name] ?? name,
           weight: value.weight
         });
       }
