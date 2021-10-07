@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a data enhancer for symbol profile data (countries and sectors) via _Trackinsight_
+
 ### Changed
 
 - Changed the values of the global heat map to fixed-point notation
