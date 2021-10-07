@@ -10,12 +10,12 @@ import { countries } from 'countries-list';
 import { format } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
 
-import { DataProviderInterface } from '../interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
   MarketState
 } from '../../interfaces/interfaces';
+import { DataProviderInterface } from '../interfaces/data-provider.interface';
 import {
   IYahooFinanceHistoricalResponse,
   IYahooFinancePrice,

@@ -130,6 +130,10 @@ export class DataGatheringService {
 
     const currentData = await this.dataProviderService.get(dataGatheringItems);
 
+    Object.entries(currentData).forEach((symbol) => {
+      console.log(symbol[0], symbol[1]);
+    });
+
     for (const [
       symbol,
       {

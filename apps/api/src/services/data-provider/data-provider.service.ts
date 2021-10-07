@@ -1,5 +1,6 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse,
@@ -17,7 +18,6 @@ import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from './yahoo-finance/yahoo-finance.service';
-import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 
 @Injectable()
 export class DataProviderService {
@@ -52,14 +52,21 @@ export class DataProviderService {
     for (const symbol of Object.keys(response)) {
       let promise = Promise.resolve(response[symbol]);
       for (const dataEnhancer of this.dataEnhancers) {
-        promise = promise.then((r) =>
-          dataEnhancer.enhance(symbol, r).catch((e) => {
-            console.error(`Failed to enhance data for symbol ${symbol}`, e);
-            return r;
-          })
+        promise = promise.then((currentResponse) =>
+          dataEnhancer
+            .enhance({ symbol, response: currentResponse })
+            .catch((error) => {
+              console.error(
+                `Failed to enhance data for symbol ${symbol}`,
+                error
+              );
+              return currentResponse;
+            })
         );
       }
-      promises.push(promise.then((r) => (response[symbol] = r)));
+      promises.push(
+        promise.then((currentResponse) => (response[symbol] = currentResponse))
+      );
     }
 
     await Promise.all(promises);
