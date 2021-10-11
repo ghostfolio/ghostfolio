@@ -5,6 +5,7 @@ import bent from 'bent';
 const getJSON = bent('json');
 
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
+  private static baseUrl = 'https://data.trackinsight.com/holdings';
   private static countries = require('countries-list/dist/countries.json');
   private static sectorsMapping = {
     'Consumer Discretionary': 'Consumer Cyclical',
@@ -27,10 +28,12 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     }
 
     const holdings = await getJSON(
-      `https://data.trackinsight.com/holdings/${symbol}.json`
+      `${TrackinsightDataEnhancerService.baseUrl}/${symbol}.json`
     ).catch(() => {
       return getJSON(
-        `https://data.trackinsight.com/holdings/${symbol.split('.')[0]}.json`
+        `${TrackinsightDataEnhancerService.baseUrl}/${
+          symbol.split('.')[0]
+        }.json`
       );
     });
 
