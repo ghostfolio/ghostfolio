@@ -39,7 +39,7 @@ export class YahooFinanceService implements DataProviderInterface {
       return {};
     }
     const yahooFinanceSymbols = aSymbols.map((symbol) =>
-      convertToYahooFinanceSymbol(symbol)
+      this.convertToYahooFinanceSymbol(symbol)
     );
 
     try {
@@ -54,7 +54,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       for (const [yahooFinanceSymbol, value] of Object.entries(data)) {
         // Convert symbols back
-        const symbol = convertFromYahooFinanceSymbol(yahooFinanceSymbol);
+        const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
 
         const { assetClass, assetSubClass } = this.parseAssetClass(value.price);
 
@@ -132,7 +132,7 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     const yahooFinanceSymbols = aSymbols.map((symbol) => {
-      return convertToYahooFinanceSymbol(symbol);
+      return this.convertToYahooFinanceSymbol(symbol);
     });
 
     try {
@@ -152,7 +152,7 @@ export class YahooFinanceService implements DataProviderInterface {
         historicalData
       )) {
         // Convert symbols back
-        const symbol = convertFromYahooFinanceSymbol(yahooFinanceSymbol);
+        const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
         response[symbol] = {};
 
         timeSeries.forEach((timeSerie) => {
@@ -223,6 +223,40 @@ export class YahooFinanceService implements DataProviderInterface {
     return { items };
   }
 
+  private convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
+    const symbol = aYahooFinanceSymbol.replace('-', '');
+    return symbol.replace('=X', '');
+  }
+
+  /**
+   * Converts a symbol to a Yahoo Finance symbol
+   *
+   * Currency:        USDCHF  -> USDCHF=X
+   * Cryptocurrency:  BTCUSD  -> BTC-USD
+   *                  DOGEUSD -> DOGE-USD
+   *                  SOL1USD -> SOL1-USD
+   */
+  private convertToYahooFinanceSymbol(aSymbol: string) {
+    if (
+      (aSymbol.includes('CHF') ||
+        aSymbol.includes('EUR') ||
+        aSymbol.includes('USD')) &&
+      aSymbol.length >= 6
+    ) {
+      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
+        return `${aSymbol}=X`;
+      } else if (isCrypto(aSymbol) || isCrypto(aSymbol.replace('1', ''))) {
+        // Add a dash before the last three characters
+        // BTCUSD  -> BTC-USD
+        // DOGEUSD -> DOGE-USD
+        // SOL1USD -> SOL1-USD
+        return aSymbol.replace('USD', '-USD');
+      }
+    }
+
+    return aSymbol;
+  }
+
   private parseAssetClass(aPrice: IYahooFinancePrice): {
     assetClass: AssetClass;
     assetSubClass: AssetSubClass;
@@ -256,37 +290,3 @@ export class YahooFinanceService implements DataProviderInterface {
     return aString;
   }
 }
-
-export const convertFromYahooFinanceSymbol = (aYahooFinanceSymbol: string) => {
-  const symbol = aYahooFinanceSymbol.replace('-', '');
-  return symbol.replace('=X', '');
-};
-
-/**
- * Converts a symbol to a Yahoo Finance symbol
- *
- * Currency:        USDCHF  -> USDCHF=X
- * Cryptocurrency:  BTCUSD  -> BTC-USD
- *                  DOGEUSD -> DOGE-USD
- *                  SOL1USD -> SOL1-USD
- */
-const convertToYahooFinanceSymbol = (aSymbol: string) => {
-  if (
-    (aSymbol.includes('CHF') ||
-      aSymbol.includes('EUR') ||
-      aSymbol.includes('USD')) &&
-    aSymbol.length >= 6
-  ) {
-    if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
-      return `${aSymbol}=X`;
-    } else if (isCrypto(aSymbol) || isCrypto(aSymbol.replace('1', ''))) {
-      // Add a dash before the last three characters
-      // BTCUSD  -> BTC-USD
-      // DOGEUSD -> DOGE-USD
-      // SOL1USD -> SOL1-USD
-      return aSymbol.replace('USD', '-USD');
-    }
-  }
-
-  return aSymbol;
-};
