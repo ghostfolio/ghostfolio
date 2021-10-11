@@ -12,13 +12,13 @@ import * as bent from 'bent';
 import * as cheerio from 'cheerio';
 import { format } from 'date-fns';
 
-import { DataProviderInterface } from '../../interfaces/data-provider.interface';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
   MarketState
 } from '../../interfaces/interfaces';
+import { DataProviderInterface } from '../interfaces/data-provider.interface';
 import { ScraperConfig } from './interfaces/scraper-config.interface';
 
 @Injectable()

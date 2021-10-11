@@ -14,12 +14,12 @@ import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
 
-import { DataProviderInterface } from '../../interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
   MarketState
 } from '../../interfaces/interfaces';
+import { DataProviderInterface } from '../interfaces/data-provider.interface';
 
 @Injectable()
 export class RakutenRapidApiService implements DataProviderInterface {

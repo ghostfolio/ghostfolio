@@ -1,5 +1,6 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse,
@@ -8,7 +9,7 @@ import {
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -16,16 +17,15 @@ import { isEmpty } from 'lodash';
 import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
-import {
-  YahooFinanceService,
-  convertToYahooFinanceSymbol
-} from './yahoo-finance/yahoo-finance.service';
+import { YahooFinanceService } from './yahoo-finance/yahoo-finance.service';
 
 @Injectable()
 export class DataProviderService {
   public constructor(
     private readonly alphaVantageService: AlphaVantageService,
     private readonly configurationService: ConfigurationService,
+    @Inject('DataEnhancers')
+    private readonly dataEnhancers: DataEnhancerInterface[],
     private readonly ghostfolioScraperApiService: GhostfolioScraperApiService,
     private readonly prismaService: PrismaService,
     private readonly rakutenRapidApiService: RakutenRapidApiService,
@@ -42,26 +42,34 @@ export class DataProviderService {
     } = {};
 
     for (const item of items) {
-      if (item.dataSource === DataSource.ALPHA_VANTAGE) {
-        response[item.symbol] = (
-          await this.alphaVantageService.get([item.symbol])
-        )[item.symbol];
-      } else if (item.dataSource === DataSource.GHOSTFOLIO) {
-        response[item.symbol] = (
-          await this.ghostfolioScraperApiService.get([item.symbol])
-        )[item.symbol];
-      } else if (item.dataSource === DataSource.RAKUTEN) {
-        response[item.symbol] = (
-          await this.rakutenRapidApiService.get([item.symbol])
-        )[item.symbol];
-      } else if (item.dataSource === DataSource.YAHOO) {
-        response[item.symbol] = (
-          await this.yahooFinanceService.get([
-            convertToYahooFinanceSymbol(item.symbol)
-          ])
-        )[item.symbol];
-      }
+      const dataProvider = this.getDataProvider(item.dataSource);
+      response[item.symbol] = (await dataProvider.get([item.symbol]))[
+        item.symbol
+      ];
     }
+
+    const promises = [];
+    for (const symbol of Object.keys(response)) {
+      let promise = Promise.resolve(response[symbol]);
+      for (const dataEnhancer of this.dataEnhancers) {
+        promise = promise.then((currentResponse) =>
+          dataEnhancer
+            .enhance({ symbol, response: currentResponse })
+            .catch((error) => {
+              console.error(
+                `Failed to enhance data for symbol ${symbol}`,
+                error
+              );
+              return currentResponse;
+            })
+        );
+      }
+      promises.push(
+        promise.then((currentResponse) => (response[symbol] = currentResponse))
+      );
+    }
+
+    await Promise.all(promises);
 
     return response;
   }
@@ -103,11 +111,13 @@ export class DataProviderService {
     });
 
     try {
-      const queryRaw = `SELECT * FROM "MarketData" WHERE "dataSource" IN ('${dataSources.join(
-        `','`
-      )}') AND "symbol" IN ('${symbols.join(
-        `','`
-      )}') ${granularityQuery} ${rangeQuery} ORDER BY date;`;
+      const queryRaw = `SELECT *
+                        FROM "MarketData"
+                        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
+                          AND "symbol" IN ('${symbols.join(
+                            `','`
+                          )}') ${granularityQuery} ${rangeQuery}
+                        ORDER BY date;`;
 
       const marketDataByGranularity: MarketData[] =
         await this.prismaService.$queryRaw(queryRaw);

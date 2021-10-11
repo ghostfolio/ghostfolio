@@ -75,6 +75,7 @@ describe('CurrentRateService', () => {
     dataProviderService = new DataProviderService(
       null,
       null,
+      [],
       null,
       null,
       null,
