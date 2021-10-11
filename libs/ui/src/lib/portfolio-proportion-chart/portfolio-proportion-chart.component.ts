@@ -75,6 +75,7 @@ export class PortfolioProportionChartComponent
   }
 
   public ngOnDestroy() {
+    Chart.unregister(ChartDataLabels);
     this.chart?.destroy();
   }
 
