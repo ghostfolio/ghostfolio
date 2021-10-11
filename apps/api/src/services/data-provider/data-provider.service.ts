@@ -24,12 +24,12 @@ export class DataProviderService {
   public constructor(
     private readonly alphaVantageService: AlphaVantageService,
     private readonly configurationService: ConfigurationService,
+    @Inject('DataEnhancers')
+    private readonly dataEnhancers: DataEnhancerInterface[],
     private readonly ghostfolioScraperApiService: GhostfolioScraperApiService,
     private readonly prismaService: PrismaService,
     private readonly rakutenRapidApiService: RakutenRapidApiService,
-    private readonly yahooFinanceService: YahooFinanceService,
-    @Inject('DataEnhancers')
-    private readonly dataEnhancers: DataEnhancerInterface[]
+    private readonly yahooFinanceService: YahooFinanceService
   ) {
     this.rakutenRapidApiService?.setPrisma(this.prismaService);
   }
