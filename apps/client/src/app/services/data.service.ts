@@ -39,18 +39,13 @@ import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { SettingsStorageService } from './settings-storage.service';
-
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
   private info: InfoItem;
 
-  public constructor(
-    private http: HttpClient,
-    private settingsStorageService: SettingsStorageService
-  ) {}
+  public constructor(private http: HttpClient) {}
 
   public createCheckoutSession({
     couponId,

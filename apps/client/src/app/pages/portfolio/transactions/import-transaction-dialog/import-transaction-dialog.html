@@ -1,0 +1,23 @@
+<gf-dialog-header
+  mat-dialog-title
+  title="Import Transactions Error"
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onCancel()"
+></gf-dialog-header>
+
+<div class="flex-grow-1" mat-dialog-content>
+  <ul class="list-unstyled">
+    <li *ngFor="let message of data.messages" class="d-flex">
+      <div class="align-items-center d-flex px-2">
+        <ion-icon name="warning-outline"></ion-icon>
+      </div>
+      <div>{{ message }}</div>
+    </li>
+  </ul>
+</div>
+
+<gf-dialog-footer
+  mat-dialog-actions
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onCancel()"
+></gf-dialog-footer>

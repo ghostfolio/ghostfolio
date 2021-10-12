@@ -1,5 +1,5 @@
 import { DataSource, Type } from '@prisma/client';
-import { IsISO8601, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsISO8601, IsNumber, IsString } from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
@@ -8,7 +8,7 @@ export class CreateOrderDto {
   @IsString()
   currency: string;
 
-  @IsString()
+  @IsEnum(DataSource, { each: true })
   dataSource: DataSource;
 
   @IsISO8601()
@@ -23,7 +23,7 @@ export class CreateOrderDto {
   @IsString()
   symbol: string;
 
-  @IsString()
+  @IsEnum(Type, { each: true })
   type: Type;
 
   @IsNumber()
