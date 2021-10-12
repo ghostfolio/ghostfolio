@@ -1,0 +1,23 @@
+import { CommonModule } from '@angular/common';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
+import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+
+import { ImportTransactionDialog } from './import-transaction-dialog.component';
+
+@NgModule({
+  declarations: [ImportTransactionDialog],
+  exports: [],
+  imports: [
+    CommonModule,
+    GfDialogFooterModule,
+    GfDialogHeaderModule,
+    MatButtonModule,
+    MatDialogModule
+  ],
+  providers: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class GfImportTransactionDialogModule {}

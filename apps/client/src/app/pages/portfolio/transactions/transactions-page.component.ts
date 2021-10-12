@@ -16,6 +16,7 @@ import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.component';
+import { ImportTransactionDialog } from './import-transaction-dialog/import-transaction-dialog.component';
 
 @Component({
   selector: 'gf-transactions-page',
@@ -23,6 +24,7 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
   styleUrls: ['./transactions-page.scss']
 })
 export class TransactionsPageComponent implements OnDestroy, OnInit {
+  public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
@@ -92,6 +94,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.defaultAccountId = this.user?.accounts.find((account) => {
+            return account.isDefault;
+          })?.id;
 
           this.hasPermissionToCreateOrder = hasPermission(
             this.user.permissions,
@@ -175,7 +181,9 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
           this.dataService
             .postImport({
-              orders: content.orders
+              orders: content.orders.map((order) => {
+                return { ...order, accountId: this.defaultAccountId };
+              })
             })
             .pipe(
               catchError((error) => {
@@ -195,7 +203,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
               }
             });
         } catch (error) {
-          this.handleImportError(error);
+          this.handleImportError({ error: { message: ['Unexpected format'] } });
         }
       };
     };
@@ -281,20 +289,23 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     a.click();
   }
 
-  private handleImportError(aError: unknown) {
-    console.error(aError);
-    this.snackBar.open('❌ Oops, something went wrong...');
+  private handleImportError(aError: any) {
+    this.snackBar.dismiss();
+
+    this.dialog.open(ImportTransactionDialog, {
+      data: {
+        deviceType: this.deviceType,
+        messages: aError?.error?.message
+      },
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
   }
 
   private openCreateTransactionDialog(aTransaction?: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
         transaction: {
-          accountId:
-            aTransaction?.accountId ??
-            this.user?.accounts.find((account) => {
-              return account.isDefault;
-            })?.id,
+          accountId: aTransaction?.accountId ?? this.defaultAccountId,
           currency: aTransaction?.currency ?? null,
           dataSource: aTransaction?.dataSource ?? null,
           date: new Date(),

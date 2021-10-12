@@ -35,4 +35,4 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class CreateOrUpdateTransactionDialogModule {}
+export class GfCreateOrUpdateTransactionDialogModule {}

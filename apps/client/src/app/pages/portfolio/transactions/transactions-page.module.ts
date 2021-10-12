@@ -5,7 +5,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { GfTransactionsTableModule } from '@ghostfolio/client/components/transactions-table/transactions-table.module';
 
-import { CreateOrUpdateTransactionDialogModule } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.module';
+import { GfCreateOrUpdateTransactionDialogModule } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.module';
+import { GfImportTransactionDialogModule } from './import-transaction-dialog/import-transaction-dialog.module';
 import { TransactionsPageRoutingModule } from './transactions-page-routing.module';
 import { TransactionsPageComponent } from './transactions-page.component';
 
@@ -14,7 +15,8 @@ import { TransactionsPageComponent } from './transactions-page.component';
   exports: [],
   imports: [
     CommonModule,
-    CreateOrUpdateTransactionDialogModule,
+    GfCreateOrUpdateTransactionDialogModule,
+    GfImportTransactionDialogModule,
     GfTransactionsTableModule,
     MatButtonModule,
     MatSnackBarModule,

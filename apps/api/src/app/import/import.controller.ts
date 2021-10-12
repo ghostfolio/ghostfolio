@@ -42,7 +42,10 @@ export class ImportController {
       console.error(error);
 
       throw new HttpException(
-        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        {
+          error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+          message: [error.message]
+        },
         StatusCodes.BAD_REQUEST
       );
     }
