@@ -30,9 +30,9 @@ export class CurrentRateService {
         { symbol, dataSource: DataSource.YAHOO }
       ]);
       return {
+        symbol,
         date: resetHours(date),
-        marketPrice: dataProviderResult?.[symbol]?.marketPrice ?? 0,
-        symbol: symbol
+        marketPrice: dataProviderResult?.[symbol]?.marketPrice ?? 0
       };
     }
 

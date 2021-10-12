@@ -59,7 +59,7 @@ export class ImportService {
 
     for (const { dataSource, symbol } of orders) {
       const result = await this.dataProviderService.get([
-        { dataSource: dataSource, symbol: symbol }
+        { dataSource, symbol }
       ]);
 
       if (result[symbol] === undefined) {
