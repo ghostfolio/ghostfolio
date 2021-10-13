@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the validation of the import functionality for transactions
   - Valid data types
   - Maximum number of orders
+  - No duplicate orders
   - Data provider service returns data for the `dataSource` / `symbol` pair
 
 ### Changed

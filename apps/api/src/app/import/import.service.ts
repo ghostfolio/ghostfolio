@@ -2,7 +2,7 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { Injectable } from '@nestjs/common';
 import { Order } from '@prisma/client';
-import { parseISO } from 'date-fns';
+import { isSameDay, parseISO } from 'date-fns';
 
 @Injectable()
 export class ImportService {
@@ -20,7 +20,7 @@ export class ImportService {
     orders: Partial<Order>[];
     userId: string;
   }): Promise<void> {
-    await this.validateOrders(orders);
+    await this.validateOrders({ orders, userId });
 
     for (const {
       accountId,
@@ -52,12 +52,43 @@ export class ImportService {
     }
   }
 
-  private async validateOrders(orders: Partial<Order>[]) {
+  private async validateOrders({
+    orders,
+    userId
+  }: {
+    orders: Partial<Order>[];
+    userId: string;
+  }) {
     if (orders?.length > ImportService.MAX_ORDERS_TO_IMPORT) {
       throw new Error('Too many transactions');
     }
 
-    for (const { dataSource, symbol } of orders) {
+    const existingOrders = await this.orderService.orders({
+      orderBy: { date: 'desc' },
+      where: { userId }
+    });
+
+    for (const [
+      index,
+      { currency, dataSource, date, fee, quantity, symbol, type, unitPrice }
+    ] of orders.entries()) {
+      const duplicateOrder = existingOrders.find((order) => {
+        return (
+          order.currency === currency &&
+          order.dataSource === dataSource &&
+          isSameDay(order.date, parseISO(<string>(<unknown>date))) &&
+          order.fee === fee &&
+          order.quantity === quantity &&
+          order.symbol === symbol &&
+          order.type === type &&
+          order.unitPrice === unitPrice
+        );
+      });
+
+      if (duplicateOrder) {
+        throw new Error(`orders.${index} is a duplicate transaction`);
+      }
+
       const result = await this.dataProviderService.get([
         { dataSource, symbol }
       ]);
