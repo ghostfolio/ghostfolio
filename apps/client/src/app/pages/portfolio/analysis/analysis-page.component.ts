@@ -10,9 +10,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-analysis-page',
-  templateUrl: './analysis-page.html',
-  styleUrls: ['./analysis-page.scss']
+  styleUrls: ['./analysis-page.scss'],
+  templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
   public accounts: {

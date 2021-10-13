@@ -6,9 +6,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-webauthn-page',
-  templateUrl: './webauthn-page.html',
-  styleUrls: ['./webauthn-page.scss']
+  styleUrls: ['./webauthn-page.scss'],
+  templateUrl: './webauthn-page.html'
 })
 export class WebauthnPageComponent implements OnDestroy, OnInit {
   public hasError = false;

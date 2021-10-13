@@ -20,9 +20,10 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-account-page',
-  templateUrl: './account-page.html',
-  styleUrls: ['./account-page.scss']
+  styleUrls: ['./account-page.scss'],
+  templateUrl: './account-page.html'
 })
 export class AccountPageComponent implements OnDestroy, OnInit {
   @ViewChild('toggleSignInWithFingerprintEnabledElement')

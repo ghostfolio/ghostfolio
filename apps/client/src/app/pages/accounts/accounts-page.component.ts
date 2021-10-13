@@ -16,9 +16,10 @@ import { takeUntil } from 'rxjs/operators';
 import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-accounts-page',
-  templateUrl: './accounts-page.html',
-  styleUrls: ['./accounts-page.scss']
+  styleUrls: ['./accounts-page.scss'],
+  templateUrl: './accounts-page.html'
 })
 export class AccountsPageComponent implements OnDestroy, OnInit {
   public accounts: AccountModel[];

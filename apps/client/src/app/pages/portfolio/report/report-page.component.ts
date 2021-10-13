@@ -5,9 +5,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-report-page',
-  templateUrl: './report-page.html',
-  styleUrls: ['./report-page.scss']
+  styleUrls: ['./report-page.scss'],
+  templateUrl: './report-page.html'
 })
 export class ReportPageComponent implements OnDestroy, OnInit {
   public accountClusterRiskRules: PortfolioReportRule[];
