@@ -11,9 +11,10 @@ import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-about-page',
-  templateUrl: './about-page.html',
-  styleUrls: ['./about-page.scss']
+  styleUrls: ['./about-page.scss'],
+  templateUrl: './about-page.html'
 })
 export class AboutPageComponent implements OnDestroy, OnInit {
   public baseCurrency = baseCurrency;

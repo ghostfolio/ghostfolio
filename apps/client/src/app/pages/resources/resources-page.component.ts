@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-resources-page',
-  templateUrl: './resources-page.html',
-  styleUrls: ['./resources-page.scss']
+  styleUrls: ['./resources-page.scss'],
+  templateUrl: './resources-page.html'
 })
 export class ResourcesPageComponent implements OnInit {
   private unsubscribeSubject = new Subject<void>();

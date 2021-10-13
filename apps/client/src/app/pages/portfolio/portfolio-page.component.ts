@@ -7,9 +7,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-portfolio-page',
-  templateUrl: './portfolio-page.html',
-  styleUrls: ['./portfolio-page.scss']
+  styleUrls: ['./portfolio-page.scss'],
+  templateUrl: './portfolio-page.html'
 })
 export class PortfolioPageComponent implements OnDestroy, OnInit {
   public hasPermissionForSubscription: boolean;

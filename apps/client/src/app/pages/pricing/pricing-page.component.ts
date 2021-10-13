@@ -7,9 +7,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-pricing-page',
-  templateUrl: './pricing-page.html',
-  styleUrls: ['./pricing-page.scss']
+  styleUrls: ['./pricing-page.scss'],
+  templateUrl: './pricing-page.html'
 })
 export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency = baseCurrency;

@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Maximum number of orders
   - Data provider service returns data for the `dataSource` / `symbol` pair
 
+### Changed
+
+- Harmonized the page layouts
+
 ### Fixed
 
 - Fixed the broken line charts showing value labels

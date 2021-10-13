@@ -36,8 +36,8 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-home-page',
-  templateUrl: './home-page.html',
-  styleUrls: ['./home-page.scss']
+  styleUrls: ['./home-page.scss'],
+  templateUrl: './home-page.html'
 })
 export class HomePageComponent implements OnDestroy, OnInit {
   @HostBinding('class.with-create-account-container') get isDemo() {

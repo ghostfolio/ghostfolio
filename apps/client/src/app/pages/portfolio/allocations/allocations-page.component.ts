@@ -15,9 +15,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-allocations-page',
-  templateUrl: './allocations-page.html',
-  styleUrls: ['./allocations-page.scss']
+  styleUrls: ['./allocations-page.scss'],
+  templateUrl: './allocations-page.html'
 })
 export class AllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {

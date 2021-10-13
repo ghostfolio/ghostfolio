@@ -19,9 +19,10 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
 import { ImportTransactionDialog } from './import-transaction-dialog/import-transaction-dialog.component';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-transactions-page',
-  templateUrl: './transactions-page.html',
-  styleUrls: ['./transactions-page.scss']
+  styleUrls: ['./transactions-page.scss'],
+  templateUrl: './transactions-page.html'
 })
 export class TransactionsPageComponent implements OnDestroy, OnInit {
   public defaultAccountId: string;

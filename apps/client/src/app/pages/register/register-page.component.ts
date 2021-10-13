@@ -12,9 +12,10 @@ import { takeUntil } from 'rxjs/operators';
 import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-register-page',
-  templateUrl: './register-page.html',
-  styleUrls: ['./register-page.scss']
+  styleUrls: ['./register-page.scss'],
+  templateUrl: './register-page.html'
 })
 export class RegisterPageComponent implements OnDestroy, OnInit {
   public currentYear = format(new Date(), 'yyyy');

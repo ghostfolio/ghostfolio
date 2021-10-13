@@ -7,9 +7,10 @@ import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-landing-page',
-  templateUrl: './landing-page.html',
-  styleUrls: ['./landing-page.scss']
+  styleUrls: ['./landing-page.scss'],
+  templateUrl: './landing-page.html'
 })
 export class LandingPageComponent implements OnDestroy, OnInit {
   public currentYear = format(new Date(), 'yyyy');

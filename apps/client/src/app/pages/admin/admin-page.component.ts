@@ -15,9 +15,10 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'mb-5' },
   selector: 'gf-admin-page',
-  templateUrl: './admin-page.html',
-  styleUrls: ['./admin-page.scss']
+  styleUrls: ['./admin-page.scss'],
+  templateUrl: './admin-page.html'
 })
 export class AdminPageComponent implements OnDestroy, OnInit {
   public dataGatheringInProgress: boolean;
