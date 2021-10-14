@@ -6,14 +6,15 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { EMPTY, Subject, Subscription } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.component';
 import { ImportTransactionDialog } from './import-transaction-dialog/import-transaction-dialog.component';
@@ -46,6 +47,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private importTransactionsService: ImportTransactionsService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -58,8 +60,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           this.openCreateTransactionDialog();
         } else if (params['editDialog']) {
           if (this.transactions) {
-            const transaction = this.transactions.find((transaction) => {
-              return transaction.id === params['transactionId'];
+            const transaction = this.transactions.find(({ id }) => {
+              return id === params['transactionId'];
             });
 
             this.openUpdateTransactionDialog(transaction);
@@ -167,6 +169,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     input.type = 'file';
 
     input.onchange = (event) => {
+      this.snackBar.open('⏳ Importing data...');
+
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files[0];
 
@@ -174,35 +178,42 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       const reader = new FileReader();
       reader.readAsText(file, 'UTF-8');
 
-      reader.onload = (readerEvent) => {
+      reader.onload = async (readerEvent) => {
+        const fileContent = readerEvent.target.result as string;
+
         try {
-          const content = JSON.parse(readerEvent.target.result as string);
+          if (file.type === 'application/json') {
+            const content = JSON.parse(fileContent);
+            try {
+              await this.importTransactionsService.importJson({
+                content: content.orders,
+                defaultAccountId: this.defaultAccountId
+              });
 
-          this.snackBar.open('⏳ Importing data...');
+              this.handleImportSuccess();
+            } catch (error) {
+              this.handleImportError(error);
+            }
 
-          this.dataService
-            .postImport({
-              orders: content.orders.map((order) => {
-                return { ...order, accountId: this.defaultAccountId };
-              })
-            })
-            .pipe(
-              catchError((error) => {
-                this.handleImportError(error);
+            return;
+          } else if (file.type === 'text/csv') {
+            try {
+              await this.importTransactionsService.importCsv({
+                fileContent,
+                defaultAccountId: this.defaultAccountId
+              });
 
-                return EMPTY;
-              }),
-              takeUntil(this.unsubscribeSubject)
-            )
-            .subscribe({
-              next: () => {
-                this.fetchOrders();
+              this.handleImportSuccess();
+            } catch (error) {
+              this.handleImportError({
+                error: { message: error?.error?.message ?? [error?.message] }
+              });
+            }
 
-                this.snackBar.open('✅ Import has been completed', undefined, {
-                  duration: 3000
-                });
-              }
-            });
+            return;
+          }
+
+          throw new Error();
         } catch (error) {
           this.handleImportError({ error: { message: ['Unexpected format'] } });
         }
@@ -299,6 +310,14 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         messages: aError?.error?.message
       },
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+  }
+
+  private handleImportSuccess() {
+    this.fetchOrders();
+
+    this.snackBar.open('✅ Import has been completed', undefined, {
+      duration: 3000
     });
   }
 
