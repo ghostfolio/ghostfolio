@@ -14,11 +14,11 @@ import { catchError } from 'rxjs/operators';
 export class ImportTransactionsService {
   private static CURRENCY_KEYS = ['ccy', 'currency'];
   private static DATE_KEYS = ['date'];
-  private static FEE_KEYS = ['fee'];
-  private static QUANTITY_KEYS = ['qty', 'quantity'];
+  private static FEE_KEYS = ['commission', 'fee'];
+  private static QUANTITY_KEYS = ['qty', 'quantity', 'shares'];
   private static SYMBOL_KEYS = ['code', 'symbol'];
   private static TYPE_KEYS = ['action', 'type'];
-  private static UNIT_PRICE_KEYS = ['price', 'unitprice'];
+  private static UNIT_PRICE_KEYS = ['price', 'unitprice', 'value'];
 
   public constructor(private http: HttpClient) {}
 
