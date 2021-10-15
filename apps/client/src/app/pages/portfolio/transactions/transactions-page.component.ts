@@ -166,6 +166,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
   public onImport() {
     const input = document.createElement('input');
+    input.accept = 'application/JSON, .csv';
     input.type = 'file';
 
     input.onchange = (event) => {
