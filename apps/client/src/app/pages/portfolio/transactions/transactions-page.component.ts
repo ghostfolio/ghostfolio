@@ -10,7 +10,7 @@ import { ImportTransactionsService } from '@ghostfolio/client/services/import-tr
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Order as OrderModel } from '@prisma/client';
+import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -36,6 +36,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public transactions: OrderModel[];
   public user: User;
 
+  private primaryDataSource: DataSource;
   private unsubscribeSubject = new Subject<void>();
 
   /**
@@ -53,6 +54,9 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {
+    const { primaryDataSource } = this.dataService.fetchInfo();
+    this.primaryDataSource = primaryDataSource;
+
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
@@ -201,7 +205,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             try {
               await this.importTransactionsService.importCsv({
                 fileContent,
-                defaultAccountId: this.defaultAccountId
+                defaultAccountId: this.defaultAccountId,
+                primaryDataSource: this.primaryDataSource
               });
 
               this.handleImportSuccess();

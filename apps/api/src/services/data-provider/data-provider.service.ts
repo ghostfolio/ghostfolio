@@ -199,6 +199,10 @@ export class DataProviderService {
     };
   }
 
+  public getPrimaryDataSource(): DataSource {
+    return DataSource[this.configurationService.get('DATA_SOURCES')[0]];
+  }
+
   private getDataProvider(providerName: DataSource) {
     switch (providerName) {
       case DataSource.ALPHA_VANTAGE:

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Type } from '@prisma/client';
+import { DataSource, Type } from '@prisma/client';
 import { parse } from 'date-fns';
 import { isNumber } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
@@ -24,10 +24,12 @@ export class ImportTransactionsService {
 
   public async importCsv({
     defaultAccountId,
-    fileContent
+    fileContent,
+    primaryDataSource
   }: {
     defaultAccountId: string;
     fileContent: string;
+    primaryDataSource: DataSource;
   }) {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
@@ -41,7 +43,7 @@ export class ImportTransactionsService {
       orders.push({
         accountId: defaultAccountId,
         currency: this.parseCurrency(item),
-        dataSource: 'YAHOO',
+        dataSource: primaryDataSource,
         date: this.parseDate(item),
         fee: this.parseFee(item),
         quantity: this.parseQuantity(item),

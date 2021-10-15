@@ -2,7 +2,6 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { isBefore, isToday } from 'date-fns';
 import { flatten } from 'lodash';
 
@@ -27,7 +26,10 @@ export class CurrentRateService {
   }: GetValueParams): Promise<GetValueObject> {
     if (isToday(date)) {
       const dataProviderResult = await this.dataProviderService.get([
-        { symbol, dataSource: DataSource.YAHOO }
+        {
+          symbol,
+          dataSource: this.dataProviderService.getPrimaryDataSource()
+        }
       ]);
       return {
         symbol,
