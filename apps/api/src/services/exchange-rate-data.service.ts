@@ -210,7 +210,7 @@ export class ExchangeRateDataService {
         return {
           currency1: baseCurrency,
           currency2: currency,
-          dataSource: DataSource.YAHOO,
+          dataSource: this.dataProviderService.getPrimaryDataSource(),
           symbol: `${baseCurrency}${currency}`
         };
       });

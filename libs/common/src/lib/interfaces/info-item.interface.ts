@@ -1,3 +1,4 @@
+import { DataSource } from '@prisma/client';
 import { Statistics } from './statistics.interface';
 import { Subscription } from './subscription.interface';
 
@@ -11,6 +12,7 @@ export interface InfoItem {
     type: string;
   };
   platforms: { id: string; name: string }[];
+  primaryDataSource: DataSource;
   statistics: Statistics;
   stripePublicKey?: string;
   subscriptions: Subscription[];

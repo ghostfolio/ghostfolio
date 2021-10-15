@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
@@ -16,6 +17,7 @@ export class InfoService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly jwtService: JwtService,
@@ -60,6 +62,7 @@ export class InfoService {
       currencies: this.exchangeRateDataService.getCurrencies(),
       demoAuthToken: this.getDemoAuthToken(),
       lastDataGathering: await this.getLastDataGathering(),
+      primaryDataSource: this.dataProviderService.getPrimaryDataSource(),
       statistics: await this.getStatistics(),
       subscriptions: await this.getSubscriptions()
     };

@@ -194,10 +194,6 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/account`, aAccount);
   }
 
-  public postImport(aImportData: ImportDataDto) {
-    return this.http.post<void>('/api/import', aImportData);
-  }
-
   public postOrder(aOrder: CreateOrderDto) {
     return this.http.post<OrderModel>(`/api/order`, aOrder);
   }
