@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Restricted the import functionality for transactions to `csv` and `json` files
+- Restricted the file selector of the import functionality for transactions to `csv` and `json`
 
 ## 1.60.0 - 13.10.2021
 
