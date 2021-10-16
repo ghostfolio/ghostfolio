@@ -1,3 +1,12 @@
 :host {
   display: block;
+
+  .mat-expansion-panel {
+    background: none;
+    box-shadow: none;
+
+    .mat-expansion-panel-header {
+      color: inherit;
+    }
+  }
 }

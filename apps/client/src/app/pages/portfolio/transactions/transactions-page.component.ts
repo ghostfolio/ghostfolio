@@ -197,7 +197,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
               this.handleImportSuccess();
             } catch (error) {
-              this.handleImportError(error);
+              this.handleImportError({ error, orders: content.orders });
             }
 
             return;
@@ -212,7 +212,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
               this.handleImportSuccess();
             } catch (error) {
               this.handleImportError({
-                error: { message: error?.error?.message ?? [error?.message] }
+                error: {
+                  error: { message: error?.error?.message ?? [error?.message] }
+                },
+                orders: error?.orders ?? []
               });
             }
 
@@ -221,7 +224,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
           throw new Error();
         } catch (error) {
-          this.handleImportError({ error: { message: ['Unexpected format'] } });
+          this.handleImportError({
+            error: { error: { message: ['Unexpected format'] } },
+            orders: []
+          });
         }
       };
     };
@@ -307,13 +313,14 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     a.click();
   }
 
-  private handleImportError(aError: any) {
+  private handleImportError({ error, orders }: { error: any; orders: any[] }) {
     this.snackBar.dismiss();
 
     this.dialog.open(ImportTransactionDialog, {
       data: {
+        orders,
         deviceType: this.deviceType,
-        messages: aError?.error?.message
+        messages: error?.error?.message
       },
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });

@@ -39,17 +39,17 @@ export class ImportTransactionsService {
 
     const orders: CreateOrderDto[] = [];
 
-    for (const item of content) {
+    for (const [index, item] of content.entries()) {
       orders.push({
         accountId: defaultAccountId,
-        currency: this.parseCurrency(item),
+        currency: this.parseCurrency({ content, index, item }),
         dataSource: primaryDataSource,
-        date: this.parseDate(item),
-        fee: this.parseFee(item),
-        quantity: this.parseQuantity(item),
-        symbol: this.parseSymbol(item),
-        type: this.parseType(item),
-        unitPrice: this.parseUnitPrice(item)
+        date: this.parseDate({ content, index, item }),
+        fee: this.parseFee({ content, index, item }),
+        quantity: this.parseQuantity({ content, index, item }),
+        symbol: this.parseSymbol({ content, index, item }),
+        type: this.parseType({ content, index, item }),
+        unitPrice: this.parseUnitPrice({ content, index, item })
       });
     }
 
@@ -90,8 +90,16 @@ export class ImportTransactionsService {
     }, {});
   }
 
-  private parseCurrency(aItem: any) {
-    const item = this.lowercaseKeys(aItem);
+  private parseCurrency({
+    content,
+    index,
+    item
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.CURRENCY_KEYS) {
       if (item[key]) {
@@ -99,11 +107,19 @@ export class ImportTransactionsService {
       }
     }
 
-    throw new Error('Could not parse currency');
+    throw { message: `orders.${index}.currency is not valid`, orders: content };
   }
 
-  private parseDate(aItem: any) {
-    const item = this.lowercaseKeys(aItem);
+  private parseDate({
+    content,
+    index,
+    item
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
     let date: string;
 
     for (const key of ImportTransactionsService.DATE_KEYS) {
@@ -122,11 +138,19 @@ export class ImportTransactionsService {
       }
     }
 
-    throw new Error('Could not parse date');
+    throw { message: `orders.${index}.date is not valid`, orders: content };
   }
 
-  private parseFee(aItem: any) {
-    const item = this.lowercaseKeys(aItem);
+  private parseFee({
+    content,
+    index,
+    item
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.FEE_KEYS) {
       if ((item[key] || item[key] === 0) && isNumber(item[key])) {
@@ -134,11 +158,19 @@ export class ImportTransactionsService {
       }
     }
 
-    throw new Error('Could not parse fee');
+    throw { message: `orders.${index}.fee is not valid`, orders: content };
   }
 
-  private parseQuantity(aItem: any) {
-    const item = this.lowercaseKeys(aItem);
+  private parseQuantity({
+    content,
+    index,
+    item
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.QUANTITY_KEYS) {
       if (item[key] && isNumber(item[key])) {
@@ -146,11 +178,19 @@ export class ImportTransactionsService {
       }
     }
 
-    throw new Error('Could not parse quantity');
+    throw { message: `orders.${index}.quantity is not valid`, orders: content };
   }
 
-  private parseSymbol(aItem: any) {
-    const item = this.lowercaseKeys(aItem);
+  private parseSymbol({
+    content,
+    index,
+    item
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.SYMBOL_KEYS) {
       if (item[key]) {
@@ -158,11 +198,19 @@ export class ImportTransactionsService {
       }
     }
 
-    throw new Error('Could not parse symbol');
+    throw { message: `orders.${index}.symbol is not valid`, orders: content };
   }
 
-  private parseType(aItem: any) {
-    const item = this.lowercaseKeys(aItem);
+  private parseType({
+    content,
+    index,
+    item
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.TYPE_KEYS) {
       if (item[key]) {
@@ -174,11 +222,19 @@ export class ImportTransactionsService {
       }
     }
 
-    throw new Error('Could not parse type');
+    throw { message: `orders.${index}.type is not valid`, orders: content };
   }
 
-  private parseUnitPrice(aItem: any) {
-    const item = this.lowercaseKeys(aItem);
+  private parseUnitPrice({
+    content,
+    index,
+    item
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.UNIT_PRICE_KEYS) {
       if (item[key] && isNumber(item[key])) {
@@ -186,7 +242,10 @@ export class ImportTransactionsService {
       }
     }
 
-    throw new Error('Could not parse unit price (unitPrice)');
+    throw {
+      message: `orders.${index}.unitPrice is not valid`,
+      orders: content
+    };
   }
 
   private postImport(aImportData: { orders: CreateOrderDto[] }) {

@@ -6,14 +6,27 @@
 ></gf-dialog-header>
 
 <div class="flex-grow-1" mat-dialog-content>
-  <ul class="list-unstyled">
-    <li *ngFor="let message of data.messages" class="d-flex">
-      <div class="align-items-center d-flex px-2">
-        <ion-icon name="warning-outline"></ion-icon>
-      </div>
-      <div>{{ message }}</div>
-    </li>
-  </ul>
+  <mat-accordion displayMode="flat">
+    <mat-expansion-panel
+      *ngFor="let message of data.messages; let i = index"
+      [disabled]="!details[i]"
+    >
+      <mat-expansion-panel-header class="pl-1">
+        <mat-panel-title>
+          <div class="d-flex">
+            <div class="align-items-center d-flex mr-2">
+              <ion-icon name="warning-outline"></ion-icon>
+            </div>
+            <div>{{ message }}</div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <pre
+        *ngIf="details[i]"
+        class="m-0"
+      ><code>{{ details[i] | json }}</code></pre>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>
 
 <gf-dialog-footer
