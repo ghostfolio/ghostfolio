@@ -16,6 +16,8 @@ import { ImportTransactionDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-transaction-dialog.html'
 })
 export class ImportTransactionDialog implements OnDestroy {
+  public details: any[] = [];
+
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -23,7 +25,19 @@ export class ImportTransactionDialog implements OnDestroy {
     public dialogRef: MatDialogRef<ImportTransactionDialog>
   ) {}
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    for (const message of this.data.messages) {
+      if (message.includes('orders.')) {
+        let [index] = message.split(' ');
+        index = index.replace('orders.', '');
+        [index] = index.split('.');
+
+        this.details.push(this.data.orders[index]);
+      } else {
+        this.details.push('');
+      }
+    }
+  }
 
   public onCancel(): void {
     this.dialogRef.close();

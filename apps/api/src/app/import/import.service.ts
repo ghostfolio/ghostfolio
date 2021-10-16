@@ -94,7 +94,9 @@ export class ImportService {
       ]);
 
       if (result[symbol] === undefined) {
-        throw new Error(`${symbol} is not a valid symbol for ${dataSource}`);
+        throw new Error(
+          `orders.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+        );
       }
     }
   }
