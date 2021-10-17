@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "date": "2021-01-01T00:00:00.000Z",
+    "version": "dev"
+  },
+  "orders": [
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2021-01-01T00:00:00.000Z",
+      "fee": 0,
+      "quantity": 20,
+      "symbol": "<invalid>",
+      "type": "BUY",
+      "unitPrice": 100.0
+    }
+  ]
+}
