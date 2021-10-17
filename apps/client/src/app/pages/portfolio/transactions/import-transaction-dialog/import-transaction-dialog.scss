@@ -7,6 +7,10 @@
 
     .mat-expansion-panel-header {
       color: inherit;
+
+      &[aria-disabled='true'] {
+        cursor: default;
+      }
     }
   }
 }
