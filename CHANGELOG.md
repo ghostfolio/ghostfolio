@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a public page to share your portfolio
+
 ### Changed
 
 - Improved the skeleton loader size of the portfolio proportion chart component
+
+### Todo
+
+- Apply data migration (`yarn prisma migrate deploy`)
 
 ## 1.62.0 - 17.10.2021
 
