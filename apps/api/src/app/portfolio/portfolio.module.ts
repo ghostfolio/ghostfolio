@@ -1,3 +1,4 @@
+import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
@@ -18,6 +19,7 @@ import { RulesService } from './rules.service';
 
 @Module({
   imports: [
+    AccessModule,
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,

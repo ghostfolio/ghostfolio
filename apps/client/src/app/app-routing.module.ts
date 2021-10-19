@@ -53,6 +53,13 @@ const routes: Routes = [
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
   {
+    path: 'p',
+    loadChildren: () =>
+      import('./pages/public/public-page.module').then(
+        (m) => m.PublicPageModule
+      )
+  },
+  {
     path: 'portfolio',
     loadChildren: () =>
       import('./pages/portfolio/portfolio-page.module').then(

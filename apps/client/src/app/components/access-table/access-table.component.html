@@ -9,8 +9,14 @@
   <ng-container matColumnDef="type">
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Type</th>
     <td *matCellDef="let element" class="px-1" mat-cell>
-      <ion-icon class="mr-1" name="lock-closed-outline"></ion-icon>
-      Restricted View
+      <ng-container *ngIf="element.type === 'PUBLIC'">
+        <ion-icon class="mr-1" name="link-outline"></ion-icon>
+        {{ baseUrl }}/p/{{ element.id }}
+      </ng-container>
+      <ng-container *ngIf="element.type === 'RESTRICTED_VIEW'">
+        <ion-icon class="mr-1" name="lock-closed-outline"></ion-icon>
+        Restricted View
+      </ng-container>
     </td></ng-container
   >
 

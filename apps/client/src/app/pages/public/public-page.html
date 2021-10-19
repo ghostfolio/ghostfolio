@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>Portfolio</h3>
+    </div>
+  </div>
+  <div class="proportion-charts row">
+    <div class="col-md-12 allocations-by-symbol">
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            class="mx-auto"
+            [isInPercent]="true"
+            [keys]="['symbol']"
+            [positions]="symbols"
+            [showLabels]="deviceType !== 'mobile'"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row my-5">
+    <div class="col-md-8 offset-md-2">
+      <h2 class="h4 mb-1 text-center">
+        Would you like to <strong>refine</strong> your
+        <strong>personal investment strategy</strong>?
+      </h2>
+      <p class="lead mb-3 text-center" i18n>
+        Ghostfolio empowers you to keep track of your wealth.
+      </p>
+      <div class="py-2 text-center">
+        <a color="primary" i18n mat-flat-button [routerLink]="['/']">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

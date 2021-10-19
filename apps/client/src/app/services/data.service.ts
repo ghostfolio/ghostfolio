@@ -22,6 +22,7 @@ import {
   InfoItem,
   PortfolioDetails,
   PortfolioPerformance,
+  PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary,
   User
@@ -162,6 +163,12 @@ export class DataService {
     return this.http.get<PortfolioPerformance>('/api/portfolio/performance', {
       params: aParams
     });
+  }
+
+  public fetchPortfolioPublic(aId: string) {
+    return this.http.get<PortfolioPublicDetails>(
+      `/api/portfolio/public/${aId}`
+    );
   }
 
   public fetchPortfolioReport() {

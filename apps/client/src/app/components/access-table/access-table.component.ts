@@ -17,6 +17,7 @@ import { Access } from '@ghostfolio/common/interfaces';
 export class AccessTableComponent implements OnChanges, OnInit {
   @Input() accesses: Access[];
 
+  public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
   public displayedColumns = ['granteeAlias', 'type'];
 

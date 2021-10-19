@@ -1,3 +1,4 @@
+import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
   hasNotDefinedValuesInObject,
@@ -5,9 +6,11 @@ import {
 } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { baseCurrency } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioPerformance,
+  PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
@@ -39,6 +42,7 @@ import { PortfolioService } from './portfolio.service';
 @Controller('portfolio')
 export class PortfolioController {
   public constructor(
+    private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioService: PortfolioService,
@@ -145,7 +149,11 @@ export class PortfolioController {
     }
 
     const { accounts, holdings, hasErrors } =
-      await this.portfolioService.getDetails(impersonationId, range);
+      await this.portfolioService.getDetails(
+        impersonationId,
+        this.request.user.id,
+        range
+      );
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       res.status(StatusCodes.ACCEPTED);
@@ -250,6 +258,59 @@ export class PortfolioController {
     }
 
     return <any>res.json(result);
+  }
+
+  @Get('public/:accessId')
+  public async getPublic(
+    @Param('accessId') accessId,
+    @Res() res: Response
+  ): Promise<PortfolioPublicDetails> {
+    const access = await this.accessService.access({ id: accessId });
+
+    if (!access) {
+      res.status(StatusCodes.NOT_FOUND);
+      return <any>res.json({ accounts: {}, holdings: {} });
+    }
+
+    const { hasErrors, holdings } = await this.portfolioService.getDetails(
+      access.userId,
+      access.userId
+    );
+
+    const portfolioPublicDetails: PortfolioPublicDetails = {
+      holdings: {}
+    };
+
+    if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
+      res.status(StatusCodes.ACCEPTED);
+    }
+
+    const totalValue = Object.values(holdings)
+      .filter((holding) => {
+        return holding.assetClass === 'EQUITY';
+      })
+      .map((portfolioPosition) => {
+        return this.exchangeRateDataService.toCurrency(
+          portfolioPosition.quantity * portfolioPosition.marketPrice,
+          portfolioPosition.currency,
+          this.request.user?.Settings?.currency ?? baseCurrency
+        );
+      })
+      .reduce((a, b) => a + b, 0);
+
+    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+      if (portfolioPosition.assetClass === 'EQUITY') {
+        portfolioPublicDetails.holdings[symbol] = {
+          allocationCurrent: portfolioPosition.allocationCurrent,
+          countries: [],
+          name: portfolioPosition.name,
+          sectors: [],
+          value: portfolioPosition.value / totalValue
+        };
+      }
+    }
+
+    return <any>res.json(portfolioPublicDetails);
   }
 
   @Get('summary')
