@@ -5,8 +5,9 @@ import { AccessController } from './access.controller';
 import { AccessService } from './access.service';
 
 @Module({
-  imports: [],
   controllers: [AccessController],
+  exports: [AccessService],
+  imports: [],
   providers: [AccessService, PrismaService]
 })
 export class AccessModule {}

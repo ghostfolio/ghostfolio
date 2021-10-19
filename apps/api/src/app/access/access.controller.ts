@@ -24,8 +24,18 @@ export class AccessController {
     });
 
     return accessesWithGranteeUser.map((access) => {
+      if (access.GranteeUser) {
+        return {
+          granteeAlias: access.GranteeUser?.alias,
+          id: access.id,
+          type: 'RESTRICTED_VIEW'
+        };
+      }
+
       return {
-        granteeAlias: access.GranteeUser.alias
+        granteeAlias: 'Public',
+        id: access.id,
+        type: 'PUBLIC'
       };
     });
   }

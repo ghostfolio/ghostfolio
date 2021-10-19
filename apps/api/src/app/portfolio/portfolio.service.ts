@@ -1,3 +1,5 @@
+// TODO ///////////
+
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
@@ -21,7 +23,11 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { UNKNOWN_KEY, ghostfolioCashSymbol } from '@ghostfolio/common/config';
+import {
+  UNKNOWN_KEY,
+  baseCurrency,
+  ghostfolioCashSymbol
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
@@ -78,7 +84,7 @@ export class PortfolioService {
   public async getInvestments(
     aImpersonationId: string
   ): Promise<InvestmentItem[]> {
-    const userId = await this.getUserId(aImpersonationId);
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
@@ -106,7 +112,7 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<HistoricalDataItem[]> {
-    const userId = await this.getUserId(aImpersonationId);
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
@@ -148,11 +154,12 @@ export class PortfolioService {
 
   public async getDetails(
     aImpersonationId: string,
+    aUserId: string,
     aDateRange: DateRange = 'max'
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
-    const userId = await this.getUserId(aImpersonationId);
+    const userId = await this.getUserId(aImpersonationId, aUserId);
 
-    const userCurrency = this.request.user.Settings.currency;
+    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
       userCurrency
@@ -265,7 +272,7 @@ export class PortfolioService {
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
-    const userId = await this.getUserId(aImpersonationId);
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const orders = (await this.orderService.getOrders({ userId })).filter(
       (order) => order.symbol === aSymbol
@@ -484,7 +491,7 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<{ hasErrors: boolean; positions: Position[] }> {
-    const userId = await this.getUserId(aImpersonationId);
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
@@ -555,7 +562,7 @@ export class PortfolioService {
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
-    const userId = await this.getUserId(aImpersonationId);
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
@@ -628,8 +635,8 @@ export class PortfolioService {
   }
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
-    const userId = await this.getUserId(impersonationId);
-    const baseCurrency = this.request.user.Settings.currency;
+    const currency = this.request.user.Settings.currency;
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { orders, transactionPoints } = await this.getTransactionPoints({
       userId
@@ -643,7 +650,7 @@ export class PortfolioService {
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
-      this.request.user.Settings.currency
+      currency
     );
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
@@ -659,7 +666,7 @@ export class PortfolioService {
     const accounts = await this.getAccounts(
       orders,
       portfolioItemsNow,
-      baseCurrency,
+      currency,
       userId
     );
     return {
@@ -679,7 +686,7 @@ export class PortfolioService {
               accounts
             )
           ],
-          { baseCurrency }
+          { baseCurrency: currency }
         ),
         currencyClusterRisk: await this.rulesService.evaluate(
           [
@@ -700,7 +707,7 @@ export class PortfolioService {
               currentPositions
             )
           ],
-          { baseCurrency }
+          { baseCurrency: currency }
         ),
         fees: await this.rulesService.evaluate(
           [
@@ -710,7 +717,7 @@ export class PortfolioService {
               this.getFees(orders)
             )
           ],
-          { baseCurrency }
+          { baseCurrency: currency }
         )
       }
     };
@@ -718,7 +725,7 @@ export class PortfolioService {
 
   public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
     const currency = this.request.user.Settings.currency;
-    const userId = await this.getUserId(aImpersonationId);
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const performanceInformation = await this.getPerformance(aImpersonationId);
 
@@ -820,7 +827,7 @@ export class PortfolioService {
       return { transactionPoints: [], orders: [] };
     }
 
-    const userCurrency = this.request.user.Settings.currency;
+    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
       dataSource: order.dataSource,
@@ -920,14 +927,14 @@ export class PortfolioService {
     return accounts;
   }
 
-  private async getUserId(aImpersonationId: string) {
+  private async getUserId(aImpersonationId: string, aUserId: string) {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         aImpersonationId,
-        this.request.user.id
+        aUserId
       );
 
-    return impersonationUserId || this.request.user.id;
+    return impersonationUserId || aUserId;
   }
 
   private getTotalByType(

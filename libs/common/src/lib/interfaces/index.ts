@@ -7,6 +7,7 @@ import { PortfolioItem } from './portfolio-item.interface';
 import { PortfolioOverview } from './portfolio-overview.interface';
 import { PortfolioPerformance } from './portfolio-performance.interface';
 import { PortfolioPosition } from './portfolio-position.interface';
+import { PortfolioPublicDetails } from './portfolio-public-details.interface';
 import { PortfolioReportRule } from './portfolio-report-rule.interface';
 import { PortfolioReport } from './portfolio-report.interface';
 import { PortfolioSummary } from './portfolio-summary.interface';
@@ -26,6 +27,7 @@ export {
   PortfolioOverview,
   PortfolioPerformance,
   PortfolioPosition,
+  PortfolioPublicDetails,
   PortfolioReport,
   PortfolioReportRule,
   PortfolioSummary,

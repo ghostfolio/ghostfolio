@@ -7,6 +7,17 @@ import { Prisma } from '@prisma/client';
 export class AccessService {
   public constructor(private readonly prismaService: PrismaService) {}
 
+  public async access(
+    accessWhereInput: Prisma.AccessWhereInput
+  ): Promise<AccessWithGranteeUser | null> {
+    return this.prismaService.access.findFirst({
+      include: {
+        GranteeUser: true
+      },
+      where: accessWhereInput
+    });
+  }
+
   public async accesses(params: {
     include?: Prisma.AccessInclude;
     skip?: number;

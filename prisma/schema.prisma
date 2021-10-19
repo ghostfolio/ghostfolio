@@ -14,8 +14,8 @@ generator client {
 
 model Access {
   createdAt     DateTime @default(now())
-  GranteeUser   User     @relation(fields: [granteeUserId], name: "accessGet", references: [id])
-  granteeUserId String
+  GranteeUser   User?    @relation(fields: [granteeUserId], name: "accessGet", references: [id])
+  granteeUserId String?
   id            String   @default(uuid())
   updatedAt     DateTime @updatedAt
   User          User     @relation(fields: [userId], name: "accessGive", references: [id])
