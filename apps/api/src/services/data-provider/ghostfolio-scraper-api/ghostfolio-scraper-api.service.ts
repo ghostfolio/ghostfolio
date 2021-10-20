@@ -144,6 +144,10 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return [];
   }
 
+  public getName(): DataSource {
+    return DataSource.GHOSTFOLIO;
+  }
+
   public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
