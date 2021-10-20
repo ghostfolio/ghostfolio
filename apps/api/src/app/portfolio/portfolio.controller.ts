@@ -91,10 +91,12 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioChart> {
-    let chartData = await this.portfolioService.getChart(
+    const historicalDataContainer = await this.portfolioService.getChart(
       impersonationId,
       range
     );
+
+    let chartData = historicalDataContainer.items;
 
     let hasNullValue = false;
 
@@ -129,8 +131,8 @@ export class PortfolioController {
     }
 
     return <any>res.json({
-      isAllTimeHigh: true,
-      isAllTimeLow: false,
+      isAllTimeHigh: historicalDataContainer.isAllTimeHigh,
+      isAllTimeLow: historicalDataContainer.isAllTimeLow,
       chart: chartData
     });
   }

@@ -21,6 +21,12 @@ export interface PortfolioPositionDetail {
   transactionCount: number;
 }
 
+export interface HistoricalDataContainer {
+  isAllTimeHigh: boolean;
+  isAllTimeLow: boolean;
+  items: HistoricalDataItem[];
+}
+
 export interface HistoricalDataItem {
   averagePrice?: number;
   date: string;

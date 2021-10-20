@@ -62,6 +62,7 @@ import {
 import { isEmpty } from 'lodash';
 
 import {
+  HistoricalDataContainer,
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
@@ -164,7 +165,7 @@ export class PortfolioService {
   public async getChart(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<HistoricalDataItem[]> {
+  ): Promise<HistoricalDataContainer> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const portfolioCalculator = new PortfolioCalculator(
@@ -175,7 +176,11 @@ export class PortfolioService {
     const { transactionPoints } = await this.getTransactionPoints({ userId });
     portfolioCalculator.setTransactionPoints(transactionPoints);
     if (transactionPoints.length === 0) {
-      return [];
+      return {
+        isAllTimeHigh: false,
+        isAllTimeLow: false,
+        items: []
+      };
     }
     let portfolioStart = parse(
       transactionPoints[0].date,
@@ -191,18 +196,41 @@ export class PortfolioService {
       }
     ];
 
-    const timeline = await portfolioCalculator.calculateTimeline(
+    const timelineInfo = await portfolioCalculator.calculateTimeline(
       timelineSpecification,
       format(new Date(), DATE_FORMAT)
     );
 
-    return timeline
+    const timeline = timelineInfo.timelinePeriods;
+
+    const items = timeline
       .filter((timelineItem) => timelineItem !== null)
       .map((timelineItem) => ({
         date: timelineItem.date,
         marketPrice: timelineItem.value,
         value: timelineItem.netPerformance.toNumber()
       }));
+
+    let lastItem = null;
+    if (timeline.length > 0) {
+      lastItem = timeline[timeline.length - 1];
+    }
+
+    let isAllTimeHigh = timelineInfo.maxNetPerformance?.eq(
+      lastItem?.netPerformance
+    );
+    let isAllTimeLow = timelineInfo.minNetPerformance?.eq(
+      lastItem?.netPerformance
+    );
+    if (isAllTimeHigh && isAllTimeLow) {
+      isAllTimeHigh = false;
+      isAllTimeLow = false;
+    }
+    return {
+      isAllTimeHigh,
+      isAllTimeLow,
+      items
+    };
   }
 
   public async getDetails(
