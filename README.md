@@ -81,7 +81,36 @@ The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://
 
 The frontend is built with [Angular](https://angular.io) and uses [Angular Material](https://material.angular.io) with utility classes from [Bootstrap](https://getbootstrap.com).
 
-## Getting Started
+## Run with Docker
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop)
+
+### Setup
+
+To run it with docker you can simply execute:
+
+```bash
+docker-compose -f docker/docker-compose-all.yml build
+docker-compose -f docker/docker-compose-all.yml up
+```
+
+This will build a docker image of ghostfolio locally on your machine and start it up, including dependencies and the database.
+
+To initialize the database, you can run the following command once ghostfolio is started:
+```bash
+docker-compose -f docker/docker-compose-all.yml exec ghostfolio yarn setup:database
+```
+
+After this, go to http://localhost:3333/ and follow those steps:
+
+1. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
+1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+1. Click _Sign out_ and check out the _Live Demo_
+
+
+## Development
 
 ### Prerequisites
 
@@ -100,10 +129,6 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 1. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
 1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
-
-## Development
-
-Please make sure you have completed the instructions from [_Setup_](#Setup).
 
 ### Start server
 
