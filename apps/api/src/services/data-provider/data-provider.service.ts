@@ -13,26 +13,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
-
-import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
-import { GhostfolioScraperApiService } from './ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { RakutenRapidApiService } from './rakuten-rapid-api/rakuten-rapid-api.service';
-import { YahooFinanceService } from './yahoo-finance/yahoo-finance.service';
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 
 @Injectable()
 export class DataProviderService {
   public constructor(
-    private readonly alphaVantageService: AlphaVantageService,
     private readonly configurationService: ConfigurationService,
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
-    private readonly ghostfolioScraperApiService: GhostfolioScraperApiService,
-    private readonly prismaService: PrismaService,
-    private readonly rakutenRapidApiService: RakutenRapidApiService,
-    private readonly yahooFinanceService: YahooFinanceService
-  ) {
-    this.rakutenRapidApiService?.setPrisma(this.prismaService);
-  }
+    @Inject('DataProviderInterfaces')
+    private readonly dataProviderInterfaces: DataProviderInterface[],
+    private readonly prismaService: PrismaService
+  ) {}
 
   public async get(items: IDataGatheringItem[]): Promise<{
     [symbol: string]: IDataProviderResponse;
@@ -204,17 +196,11 @@ export class DataProviderService {
   }
 
   private getDataProvider(providerName: DataSource) {
-    switch (providerName) {
-      case DataSource.ALPHA_VANTAGE:
-        return this.alphaVantageService;
-      case DataSource.GHOSTFOLIO:
-        return this.ghostfolioScraperApiService;
-      case DataSource.RAKUTEN:
-        return this.rakutenRapidApiService;
-      case DataSource.YAHOO:
-        return this.yahooFinanceService;
-      default:
-        throw new Error('No data provider has been found.');
+    for (const dataProviderInterface of this.dataProviderInterfaces) {
+      if (dataProviderInterface.getName() === providerName) {
+        return dataProviderInterface;
+      }
     }
+    throw new Error('No data provider has been found.');
   }
 }

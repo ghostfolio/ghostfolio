@@ -84,6 +84,10 @@ export class AlphaVantageService implements DataProviderInterface {
     }
   }
 
+  public getName(): DataSource {
+    return DataSource.ALPHA_VANTAGE;
+  }
+
   public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
     const result = await this.alphaVantage.data.search(aSymbol);
 

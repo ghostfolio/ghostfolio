@@ -22,6 +22,26 @@ import { DataProviderService } from './data-provider.service';
       inject: [TrackinsightDataEnhancerService],
       provide: 'DataEnhancers',
       useFactory: (trackinsight) => [trackinsight]
+    },
+    {
+      inject: [
+        AlphaVantageService,
+        GhostfolioScraperApiService,
+        RakutenRapidApiService,
+        YahooFinanceService
+      ],
+      provide: 'DataProviderInterfaces',
+      useFactory: (
+        alphaVantageService,
+        ghostfolioScraperApiService,
+        rakutenRapidApiService,
+        yahooFinanceService
+      ) => [
+        alphaVantageService,
+        ghostfolioScraperApiService,
+        rakutenRapidApiService,
+        yahooFinanceService
+      ]
     }
   ],
   exports: [DataProviderService, GhostfolioScraperApiService]

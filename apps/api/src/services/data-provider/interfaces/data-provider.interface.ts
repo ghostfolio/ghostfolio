@@ -5,6 +5,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '../../interfaces/interfaces';
+import { DataSource } from '@prisma/client';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;
@@ -19,6 +20,8 @@ export interface DataProviderInterface {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }>;
+
+  getName(): DataSource;
 
   search(aSymbol: string): Promise<{ items: LookupItem[] }>;
 }

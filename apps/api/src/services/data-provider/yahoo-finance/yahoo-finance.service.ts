@@ -171,6 +171,10 @@ export class YahooFinanceService implements DataProviderInterface {
     }
   }
 
+  public getName(): DataSource {
+    return DataSource.YAHOO;
+  }
+
   public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
     const items: LookupItem[] = [];
 

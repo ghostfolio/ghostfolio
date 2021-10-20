@@ -25,10 +25,9 @@ import { DataProviderInterface } from '../interfaces/data-provider.interface';
 export class RakutenRapidApiService implements DataProviderInterface {
   public static FEAR_AND_GREED_INDEX_NAME = 'Fear & Greed Index';
 
-  private prismaService: PrismaService;
-
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly prismaService: PrismaService
   ) {}
 
   public canHandle(symbol: string) {
@@ -134,12 +133,12 @@ export class RakutenRapidApiService implements DataProviderInterface {
     return {};
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
-    return { items: [] };
+  public getName(): DataSource {
+    return DataSource.RAKUTEN;
   }
 
-  public setPrisma(aPrismaService: PrismaService) {
-    this.prismaService = aPrismaService;
+  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+    return { items: [] };
   }
 
   private async getFearAndGreedIndex(): Promise<{
