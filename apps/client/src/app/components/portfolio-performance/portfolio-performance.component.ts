@@ -19,6 +19,8 @@ import { isNumber } from 'lodash';
 })
 export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
+  @Input() isAllTimeHigh: boolean;
+  @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;
   @Input() locale: string;
   @Input() performance: PortfolioPerformance;

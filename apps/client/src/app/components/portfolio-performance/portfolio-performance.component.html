@@ -2,8 +2,8 @@
   <div
     class="row no-gutters"
     [ngClass]="{
-      'text-success': performance?.isAllTimeHigh,
-      'text-danger': performance?.isAllTimeLow
+      'text-danger': isAllTimeLow,
+      'text-success': isAllTimeHigh
     }"
   >
     <div class="flex-grow-1"></div>

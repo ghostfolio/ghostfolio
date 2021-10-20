@@ -55,6 +55,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
   ];
   public deviceType: string;
   public fearAndGreedIndex: number;
+  public isAllTimeHigh: boolean;
+  public isAllTimeLow: boolean;
   public hasImpersonationId: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateOrder: boolean;
@@ -172,6 +174,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
               value: chartDataItem.value
             };
           });
+          this.isAllTimeHigh = chartData.isAllTimeHigh;
+          this.isAllTimeLow = chartData.isAllTimeLow;
 
           this.changeDetectorRef.markForCheck();
         });

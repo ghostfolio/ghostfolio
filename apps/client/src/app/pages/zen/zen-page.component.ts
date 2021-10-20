@@ -39,6 +39,8 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public historicalDataItems: LineChartItem[];
+  public isAllTimeHigh: boolean;
+  public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
   public positions: Position[];
@@ -120,6 +122,8 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
               value: chartDataItem.value
             };
           });
+          this.isAllTimeHigh = chartData.isAllTimeHigh;
+          this.isAllTimeLow = chartData.isAllTimeLow;
 
           this.changeDetectorRef.markForCheck();
         });
