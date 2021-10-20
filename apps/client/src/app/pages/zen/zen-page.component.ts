@@ -114,7 +114,7 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
         .fetchChart({ range: this.dateRange })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe((chartData) => {
-          this.historicalDataItems = chartData.map((chartDataItem) => {
+          this.historicalDataItems = chartData.chart.map((chartDataItem) => {
             return {
               date: chartDataItem.date,
               value: chartDataItem.value

@@ -21,6 +21,7 @@ import {
   AdminData,
   Export,
   InfoItem,
+  PortfolioChart,
   PortfolioDetails,
   PortfolioPerformance,
   PortfolioPublicDetails,
@@ -91,7 +92,7 @@ export class DataService {
   }
 
   public fetchChart({ range }: { range: DateRange }) {
-    return this.http.get<HistoricalDataItem[]>('/api/portfolio/chart', {
+    return this.http.get<PortfolioChart>('/api/portfolio/chart', {
       params: { range }
     });
   }
