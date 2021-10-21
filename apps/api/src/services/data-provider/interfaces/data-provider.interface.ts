@@ -1,11 +1,11 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { Granularity } from '@ghostfolio/common/types';
+import { DataSource } from '@prisma/client';
 
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '../../interfaces/interfaces';
-import { DataSource } from '@prisma/client';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;

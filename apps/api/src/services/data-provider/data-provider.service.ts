@@ -1,6 +1,7 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse,
@@ -13,7 +14,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 
 @Injectable()
 export class DataProviderService {

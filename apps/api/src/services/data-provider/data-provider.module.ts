@@ -1,4 +1,5 @@
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.module';
 import { TrackinsightDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/trackinsight/trackinsight.service';
 import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
@@ -10,7 +11,7 @@ import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { DataProviderService } from './data-provider.service';
 
 @Module({
-  imports: [ConfigurationModule, PrismaModule],
+  imports: [ConfigurationModule, CryptocurrencyModule, PrismaModule],
   providers: [
     AlphaVantageService,
     DataProviderService,
