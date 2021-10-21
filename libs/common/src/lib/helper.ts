@@ -5,6 +5,9 @@ import { ghostfolioScraperApiSymbolPrefix } from './config';
 
 const cryptocurrencies = require('cryptocurrencies');
 
+const customSymbolList = require('./customCryptocurrencies.json')
+customSymbolList.symbols = () => Object.keys(customSymbolList);
+
 export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
 
 export function capitalize(aString: string) {
@@ -81,8 +84,7 @@ export function groupBy<T, K extends keyof T>(
 
 export function isCrypto(aSymbol = '') {
   const cryptocurrencySymbol = aSymbol.substring(0, aSymbol.length - 3);
-
-  return cryptocurrencies.symbols().includes(cryptocurrencySymbol);
+  return cryptocurrencies.symbols().includes(cryptocurrencySymbol) || customSymbolList.symbols().includes(cryptocurrencySymbol);
 }
 
 export function isCurrency(aSymbol = '') {
