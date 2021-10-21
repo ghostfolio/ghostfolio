@@ -1,6 +1,7 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { DATE_FORMAT, isCrypto, isCurrency } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
@@ -26,7 +27,9 @@ import {
 export class YahooFinanceService implements DataProviderInterface {
   private yahooFinanceHostname = 'https://query1.finance.yahoo.com';
 
-  public constructor() {}
+  public constructor(
+    private readonly cryptocurrencyService: CryptocurrencyService
+  ) {}
 
   public canHandle(symbol: string) {
     return true;
@@ -65,7 +68,8 @@ export class YahooFinanceService implements DataProviderInterface {
           dataSource: DataSource.YAHOO,
           exchange: this.parseExchange(value.price?.exchangeName),
           marketState:
-            value.price?.marketState === 'REGULAR' || isCrypto(symbol)
+            value.price?.marketState === 'REGULAR' ||
+            this.cryptocurrencyService.isCrypto(symbol)
               ? MarketState.open
               : MarketState.closed,
           marketPrice: value.price?.regularMarketPrice || 0,
@@ -249,7 +253,10 @@ export class YahooFinanceService implements DataProviderInterface {
     ) {
       if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
         return `${aSymbol}=X`;
-      } else if (isCrypto(aSymbol) || isCrypto(aSymbol.replace('1', ''))) {
+      } else if (
+        this.cryptocurrencyService.isCrypto(aSymbol) ||
+        this.cryptocurrencyService.isCrypto(aSymbol.replace('1', ''))
+      ) {
         // Add a dash before the last three characters
         // BTCUSD  -> BTC-USD
         // DOGEUSD -> DOGE-USD

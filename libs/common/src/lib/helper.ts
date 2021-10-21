@@ -3,11 +3,6 @@ import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
 import { ghostfolioScraperApiSymbolPrefix } from './config';
 
-const cryptocurrencies = require('cryptocurrencies');
-
-const customSymbolList = require('./customCryptocurrencies.json')
-customSymbolList.symbols = () => Object.keys(customSymbolList);
-
 export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
 
 export function capitalize(aString: string) {
@@ -53,9 +48,9 @@ export function getUtc(aDateString: string) {
 
   return new Date(
     Date.UTC(
-      parseInt(yearString),
-      parseInt(monthString) - 1,
-      parseInt(dayString)
+      parseInt(yearString, 10),
+      parseInt(monthString, 10) - 1,
+      parseInt(dayString, 10)
     )
   );
 }
@@ -80,11 +75,6 @@ export function groupBy<T, K extends keyof T>(
     map.get(t[key])!.push(t);
   });
   return map;
-}
-
-export function isCrypto(aSymbol = '') {
-  const cryptocurrencySymbol = aSymbol.substring(0, aSymbol.length - 3);
-  return cryptocurrencies.symbols().includes(cryptocurrencySymbol) || customSymbolList.symbols().includes(cryptocurrencySymbol);
 }
 
 export function isCurrency(aSymbol = '') {

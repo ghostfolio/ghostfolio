@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for more cryptocurrency symbols like _Avalanche_, _Polygon_, _SHIBA INU_ etc.
+
 ### Changed
 
 - Changed the data provider service to handle a dynamic list of services
