@@ -1,10 +1,10 @@
-import {
+const {
   AccountType,
   DataSource,
   PrismaClient,
   Role,
   Type
-} from '@prisma/client';
+} = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {

@@ -15,7 +15,7 @@ services:
     env_file:
       - ../.env
     environment:
-      REDIS_HOST: "redis"
+      REDIS_HOST: 'redis'
       DATABASE_URL: postgresql://user:password@postgres:5432/ghostfolio-db?sslmode=prefer
     ports:
       - 3333:3333
