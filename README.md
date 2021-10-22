@@ -108,7 +108,7 @@ Please make sure you have completed the instructions from [_Setup_](#Setup).
 ### Start server
 
 <ol type="a">
-  <li>Debug: Run <code>yarn watch:server</code> and click "Launch Program" in [Visual Studio Code](https://code.visualstudio.com)</li>
+  <li>Debug: Run <code>yarn watch:server</code> and click "Launch Program" in <a href="https://code.visualstudio.com">Visual Studio Code</a></li>
   <li>Serve: Run <code>yarn start:server</code></li>
 </ol>
 
