@@ -55,12 +55,12 @@ export class HomePageComponent implements OnDestroy, OnInit {
   ];
   public deviceType: string;
   public fearAndGreedIndex: number;
-  public isAllTimeHigh: boolean;
-  public isAllTimeLow: boolean;
   public hasImpersonationId: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateOrder: boolean;
   public historicalDataItems: LineChartItem[];
+  public isAllTimeHigh: boolean;
+  public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
   public isLoadingSummary = true;
   public performance: PortfolioPerformance;

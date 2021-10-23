@@ -131,9 +131,9 @@ export class PortfolioController {
     }
 
     return <any>res.json({
+      chart: chartData,
       isAllTimeHigh: historicalDataContainer.isAllTimeHigh,
-      isAllTimeLow: historicalDataContainer.isAllTimeLow,
-      chart: chartData
+      isAllTimeLow: historicalDataContainer.isAllTimeLow
     });
   }
 

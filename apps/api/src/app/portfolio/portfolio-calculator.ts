@@ -1,3 +1,4 @@
+import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
@@ -29,7 +30,6 @@ import {
 } from './interfaces/timeline-specification.interface';
 import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from './interfaces/transaction-point.interface';
-import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 
 export class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
@@ -369,9 +369,9 @@ export class PortfolioCalculator {
   ): Promise<TimelineInfoInterface> {
     if (timelineSpecification.length === 0) {
       return {
-        timelinePeriods: [],
         maxNetPerformance: new Big(0),
-        minNetPerformance: new Big(0)
+        minNetPerformance: new Big(0),
+        timelinePeriods: []
       };
     }
 
@@ -642,8 +642,8 @@ export class PortfolioCalculator {
 
         const result = {
           grossPerformance,
-          netPerformance,
           investment,
+          netPerformance,
           value,
           date: currentDateAsString
         };
