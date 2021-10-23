@@ -72,7 +72,7 @@ describe('CurrentRateService', () => {
   let marketDataService: MarketDataService;
 
   beforeAll(async () => {
-    dataProviderService = new DataProviderService(null, [], [], null);
+    dataProviderService = new DataProviderService(null, [], null);
     exchangeRateDataService = new ExchangeRateDataService(null, null);
     marketDataService = new MarketDataService(null);
 
