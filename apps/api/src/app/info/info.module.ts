@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
@@ -11,6 +12,7 @@ import { InfoService } from './info.service';
 
 @Module({
   imports: [
+    DataGatheringModule,
     DataProviderModule,
     ExchangeRateDataModule,
     JwtModule.register({
