@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the data enhancer calls from the data provider (`get()`) to the data gathering service to reduce traffic to 3rd party data providers
+- Changed the profile data gathering from every 12 hours to once every weekend
 
 ## 1.64.0 - 21.10.2021
 
