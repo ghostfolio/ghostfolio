@@ -2,7 +2,14 @@ import { TrackinsightDataEnhancerService } from '@ghostfolio/api/services/data-p
 import { Module } from '@nestjs/common';
 
 @Module({
-  exports: [TrackinsightDataEnhancerService],
-  providers: [TrackinsightDataEnhancerService]
+  exports: ['DataEnhancers', TrackinsightDataEnhancerService],
+  providers: [
+    {
+      inject: [TrackinsightDataEnhancerService],
+      provide: 'DataEnhancers',
+      useFactory: (trackinsight) => [trackinsight]
+    },
+    TrackinsightDataEnhancerService
+  ]
 })
 export class DataEnhancerModule {}
