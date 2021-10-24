@@ -5,19 +5,25 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import {
   MatSlideToggle,
   MatSlideToggleChange
 } from '@angular/material/slide-toggle';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { DEFAULT_DATE_FORMAT, baseCurrency } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+
+import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
 
 @Component({
   host: { class: 'mb-5' },
@@ -35,7 +41,10 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public couponId: string;
   public currencies: string[] = [];
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public deviceType: string;
   public hasPermissionForSubscription: boolean;
+  public hasPermissionToCreateAccess: boolean;
+  public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
@@ -50,6 +59,10 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
     private stripeService: StripeService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
@@ -65,6 +78,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       permissions.enableSubscription
     );
 
+    this.hasPermissionToDeleteAccess = hasPermission(
+      globalPermissions,
+      permissions.deleteAccess
+    );
+
     this.price = subscriptions?.[0]?.price;
     this.priceId = subscriptions?.[0]?.priceId;
 
@@ -73,6 +91,16 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateAccess = hasPermission(
+            this.user.permissions,
+            permissions.createAccess
+          );
+
+          this.hasPermissionToDeleteAccess = hasPermission(
+            this.user.permissions,
+            permissions.deleteAccess
+          );
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
@@ -87,12 +115,22 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (params['createDialog']) {
+          this.openCreateAccessDialog();
+        }
+      });
   }
 
   /**
    * Initializes the controller
    */
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.update();
   }
 
@@ -136,6 +174,17 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onDeleteAccess(aId: string) {
+    this.dataService
+      .deleteAccess(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.update();
+        }
+      });
+  }
+
   public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isRestrictedView: aEvent.checked })
@@ -173,6 +222,38 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private openCreateAccessDialog(): void {
+    const dialogRef = this.dialog.open(CreateOrUpdateAccessDialog, {
+      data: {
+        access: {
+          type: 'PUBLIC'
+        }
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data: any) => {
+        const access: CreateAccessDto = data?.access;
+
+        if (access) {
+          this.dataService
+            .postAccess({})
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe({
+              next: () => {
+                this.update();
+              }
+            });
+        }
+
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   private deregisterDevice() {

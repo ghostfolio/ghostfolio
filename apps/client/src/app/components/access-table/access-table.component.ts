@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Access } from '@ghostfolio/common/interfaces';
@@ -16,18 +18,37 @@ import { Access } from '@ghostfolio/common/interfaces';
 })
 export class AccessTableComponent implements OnChanges, OnInit {
   @Input() accesses: Access[];
+  @Input() showActions: boolean;
+
+  @Output() accessDeleted = new EventEmitter<string>();
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
-  public displayedColumns = ['granteeAlias', 'type'];
+  public displayedColumns = [];
 
   public constructor() {}
 
   public ngOnInit() {}
 
   public ngOnChanges() {
+    this.displayedColumns = ['granteeAlias', 'type', 'details'];
+
+    if (this.showActions) {
+      this.displayedColumns.push('actions');
+    }
+
     if (this.accesses) {
       this.dataSource = new MatTableDataSource(this.accesses);
+    }
+  }
+
+  public onDeleteAccess(aId: string) {
+    const confirmation = confirm(
+      'Do you really want to revoke this granted access?'
+    );
+
+    if (confirmation) {
+      this.accessDeleted.emit(aId);
     }
   }
 }

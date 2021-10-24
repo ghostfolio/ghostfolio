@@ -45,7 +45,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    this.routeQueryParams = route.queryParams
+    this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['createDialog']) {

@@ -2,4 +2,12 @@
 
 :host {
   display: block;
+
+  a {
+    color: rgba(var(--palette-primary-500), 1);
+
+    &:hover {
+      color: rgba(var(--palette-primary-300), 1);
+    }
+  }
 }
