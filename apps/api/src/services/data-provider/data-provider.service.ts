@@ -1,6 +1,5 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataGatheringItem,
@@ -19,8 +18,6 @@ import { isEmpty } from 'lodash';
 export class DataProviderService {
   public constructor(
     private readonly configurationService: ConfigurationService,
-    @Inject('DataEnhancers')
-    private readonly dataEnhancers: DataEnhancerInterface[],
     @Inject('DataProviderInterfaces')
     private readonly dataProviderInterfaces: DataProviderInterface[],
     private readonly prismaService: PrismaService
@@ -42,20 +39,7 @@ export class DataProviderService {
 
     const promises = [];
     for (const symbol of Object.keys(response)) {
-      let promise = Promise.resolve(response[symbol]);
-      for (const dataEnhancer of this.dataEnhancers) {
-        promise = promise.then((currentResponse) =>
-          dataEnhancer
-            .enhance({ symbol, response: currentResponse })
-            .catch((error) => {
-              console.error(
-                `Failed to enhance data for symbol ${symbol}`,
-                error
-              );
-              return currentResponse;
-            })
-        );
-      }
+      const promise = Promise.resolve(response[symbol]);
       promises.push(
         promise.then((currentResponse) => (response[symbol] = currentResponse))
       );

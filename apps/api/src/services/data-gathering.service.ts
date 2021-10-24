@@ -3,7 +3,7 @@ import {
   ghostfolioFearAndGreedIndexSymbol
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
   differenceInHours,
@@ -18,6 +18,7 @@ import {
 import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider/data-provider.service';
 import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
+import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from './exchange-rate-data.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
 import { PrismaService } from './prisma.service';
@@ -26,6 +27,8 @@ import { PrismaService } from './prisma.service';
 export class DataGatheringService {
   public constructor(
     private readonly configurationService: ConfigurationService,
+    @Inject('DataEnhancers')
+    private readonly dataEnhancers: DataEnhancerInterface[],
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly ghostfolioScraperApi: GhostfolioScraperApiService,
@@ -130,9 +133,19 @@ export class DataGatheringService {
 
     const currentData = await this.dataProviderService.get(dataGatheringItems);
 
-    for (const [
-      symbol,
-      {
+    for (const [symbol, response] of Object.entries(currentData)) {
+      for (const dataEnhancer of this.dataEnhancers) {
+        try {
+          currentData[symbol] = await dataEnhancer.enhance({
+            response,
+            symbol
+          });
+        } catch (error) {
+          console.error(`Failed to enhance data for symbol ${symbol}`, error);
+        }
+      }
+
+      const {
         assetClass,
         assetSubClass,
         countries,
@@ -140,8 +153,8 @@ export class DataGatheringService {
         dataSource,
         name,
         sectors
-      }
-    ] of Object.entries(currentData)) {
+      } = currentData[symbol];
+
       try {
         await this.prismaService.symbolProfile.upsert({
           create: {

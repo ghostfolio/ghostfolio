@@ -18,7 +18,11 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_12_HOURS)
   public async runEveryTwelveHours() {
-    await this.dataGatheringService.gatherProfileData();
     await this.exchangeRateDataService.loadCurrencies();
+  }
+
+  @Cron(CronExpression.EVERY_WEEKEND)
+  public async runEveryWeekend() {
+    await this.dataGatheringService.gatherProfileData();
   }
 }
