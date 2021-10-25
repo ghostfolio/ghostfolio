@@ -5,13 +5,3 @@
     max-height: unset;
   }
 }
-
-:host-context(.is-dark-theme) {
-  .mat-dialog-content {
-    .mat-datepicker-input {
-      &.mat-input-element:disabled {
-        color: var(--light-primary-text);
-      }
-    }
-  }
-}
