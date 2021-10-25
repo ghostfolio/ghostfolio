@@ -7,9 +7,11 @@ export function isApiTokenAuthorized(aApiToken: string) {
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
   accessFearAndGreedIndex: 'accessFearAndGreedIndex',
+  createAccess: 'createAccess',
   createAccount: 'createAccount',
   createOrder: 'createOrder',
   createUserAccount: 'createUserAccount',
+  deleteAccess: 'deleteAccess',
   deleteAccount: 'deleteAcccount',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
@@ -38,8 +40,10 @@ export function getPermissions(aRole: Role): string[] {
     case 'ADMIN':
       return [
         permissions.accessAdminControl,
+        permissions.createAccess,
         permissions.createAccount,
         permissions.createOrder,
+        permissions.deleteAccess,
         permissions.deleteAccount,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
@@ -56,8 +60,10 @@ export function getPermissions(aRole: Role): string[] {
 
     case 'USER':
       return [
+        permissions.createAccess,
         permissions.createAccount,
         permissions.createOrder,
+        permissions.deleteAccess,
         permissions.deleteAccount,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,

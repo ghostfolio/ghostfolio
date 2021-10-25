@@ -132,10 +132,26 @@
       </mat-card>
     </div>
   </div>
-  <div *ngIf="accesses?.length > 0" class="row">
+  <div class="row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Granted Access</h3>
-      <gf-access-table [accesses]="accesses"></gf-access-table>
+      <gf-access-table
+        [accesses]="accesses"
+        [showActions]="hasPermissionToDeleteAccess"
+        (accessDeleted)="onDeleteAccess($event)"
+      ></gf-access-table>
     </div>
+  </div>
+
+  <div *ngIf="hasPermissionToCreateAccess" class="fab-container">
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [routerLink]="[]"
+      [queryParams]="{ createDialog: true }"
+    >
+      <ion-icon name="add-outline" size="large"></ion-icon>
+    </a>
   </div>
 </div>

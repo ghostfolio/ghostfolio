@@ -1,0 +1,25 @@
+<form #addAccessForm="ngForm" class="d-flex flex-column h-100">
+  <h1 i18n mat-dialog-title>Grant access</h1>
+  <div class="flex-grow-1" mat-dialog-content>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Type</mat-label>
+        <mat-select name="type" required [(value)]="data.access.type">
+          <mat-option i18n value="PUBLIC">Public</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="justify-content-end" mat-dialog-actions>
+    <button i18n mat-button (click)="onCancel()">Cancel</button>
+    <button
+      color="primary"
+      i18n
+      mat-flat-button
+      [disabled]="!addAccessForm.form.valid"
+      [mat-dialog-close]="data"
+    >
+      Save
+    </button>
+  </div>
+</form>

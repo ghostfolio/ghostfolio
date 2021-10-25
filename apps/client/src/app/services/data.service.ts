@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
-import { ImportDataDto } from '@ghostfolio/api/app/import/import-data.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import {
@@ -67,6 +67,10 @@ export class DataService {
 
   public fetchAdminData() {
     return this.http.get<AdminData>('/api/admin');
+  }
+
+  public deleteAccess(aId: string) {
+    return this.http.delete<any>(`/api/access/${aId}`);
   }
 
   public deleteAccount(aId: string) {
@@ -195,6 +199,10 @@ export class DataService {
 
   public loginAnonymous(accessToken: string) {
     return this.http.get<any>(`/api/auth/anonymous/${accessToken}`);
+  }
+
+  public postAccess(aAccess: CreateAccessDto) {
+    return this.http.post<OrderModel>(`/api/access`, aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {

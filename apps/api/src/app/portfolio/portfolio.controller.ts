@@ -272,7 +272,7 @@ export class PortfolioController {
       return <any>res.json({ accounts: {}, holdings: {} });
     }
 
-    const { hasErrors, holdings } = await this.portfolioService.getDetails(
+    const { holdings } = await this.portfolioService.getDetails(
       access.userId,
       access.userId
     );
@@ -280,10 +280,6 @@ export class PortfolioController {
     const portfolioPublicDetails: PortfolioPublicDetails = {
       holdings: {}
     };
-
-    if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
-      res.status(StatusCodes.ACCEPTED);
-    }
 
     const totalValue = Object.values(holdings)
       .filter((holding) => {

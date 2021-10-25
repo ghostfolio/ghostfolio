@@ -2,6 +2,26 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
+  gf-access-table {
+    overflow-x: auto;
+
+    table {
+      min-width: 100%;
+
+      .mat-row,
+      .mat-header-row {
+        width: 100%;
+      }
+    }
+  }
+
+  .fab-container {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    z-index: 999;
+  }
+
   .hint-text {
     font-size: 90%;
     line-height: 1.2;

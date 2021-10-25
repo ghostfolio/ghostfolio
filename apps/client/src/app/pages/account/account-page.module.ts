@@ -12,6 +12,7 @@ import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/acce
 
 import { AccountPageRoutingModule } from './account-page-routing.module';
 import { AccountPageComponent } from './account-page.component';
+import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-dialog/create-or-update-access-dialog.module';
 
 @NgModule({
   declarations: [AccountPageComponent],
@@ -20,6 +21,7 @@ import { AccountPageComponent } from './account-page.component';
     AccountPageRoutingModule,
     CommonModule,
     FormsModule,
+    GfCreateOrUpdateAccessDialogModule,
     GfPortfolioAccessTableModule,
     MatButtonModule,
     MatCardModule,

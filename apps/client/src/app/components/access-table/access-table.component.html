@@ -1,24 +1,52 @@
 <table class="gf-table w-100" mat-table [dataSource]="dataSource">
   <ng-container matColumnDef="granteeAlias">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>User</th>
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Grantee</th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       {{ element.granteeAlias }}
-    </td></ng-container
-  >
+    </td>
+  </ng-container>
 
   <ng-container matColumnDef="type">
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Type</th>
-    <td *matCellDef="let element" class="px-1" mat-cell>
-      <ng-container *ngIf="element.type === 'PUBLIC'">
-        <ion-icon class="mr-1" name="link-outline"></ion-icon>
-        {{ baseUrl }}/p/{{ element.id }}
-      </ng-container>
-      <ng-container *ngIf="element.type === 'RESTRICTED_VIEW'">
+    <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+      <ng-container>
         <ion-icon class="mr-1" name="lock-closed-outline"></ion-icon>
         Restricted View
       </ng-container>
-    </td></ng-container
-  >
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="details">
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
+    <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+      <ng-container *ngIf="element.type === 'PUBLIC'">
+        <ion-icon class="mr-1" name="link-outline"></ion-icon>
+        <a href="{{ baseUrl }}/p/{{ element.id }}" target="_blank"
+          >{{ baseUrl }}/p/{{ element.id }}</a
+        >
+      </ng-container>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
+
+    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <button
+        class="mx-1 no-min-width px-2"
+        mat-button
+        [matMenuTriggerFor]="transactionMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </button>
+      <mat-menu #transactionMenu="matMenu" xPosition="before">
+        <button i18n mat-menu-item (click)="onDeleteAccess(element.id)">
+          Revoke
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

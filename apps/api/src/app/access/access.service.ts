@@ -1,7 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { AccessWithGranteeUser } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Access, Prisma } from '@prisma/client';
 
 @Injectable()
 export class AccessService {
@@ -34,6 +34,20 @@ export class AccessService {
       orderBy,
       skip,
       take,
+      where
+    });
+  }
+
+  public async createAccess(data: Prisma.AccessCreateInput): Promise<Access> {
+    return this.prismaService.access.create({
+      data
+    });
+  }
+
+  public async deleteAccess(
+    where: Prisma.AccessWhereUniqueInput
+  ): Promise<Access> {
+    return this.prismaService.access.delete({
       where
     });
   }
