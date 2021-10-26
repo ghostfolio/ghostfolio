@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the landing page
+- Ordered the granted accesses by type
 
 ## 1.65.0 - 25.10.2021
 
