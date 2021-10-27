@@ -2,17 +2,6 @@
   display: block;
 
   .button-container {
-    aspect-ratio: 16 / 9;
-
-    gf-line-chart {
-      bottom: 0;
-      left: 0;
-      opacity: 0.67;
-      right: 0;
-      top: 0;
-      z-index: -1;
-    }
-
     .mat-stroked-button {
       background-color: var(--light-background);
     }
@@ -22,6 +11,15 @@
     img {
       height: 2.5rem;
     }
+  }
+
+  .intro {
+    aspect-ratio: 16 / 9;
+    background-image: url('/assets/intro.png');
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-top: -5rem;
   }
 }
 

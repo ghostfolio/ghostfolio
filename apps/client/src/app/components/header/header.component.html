@@ -1,4 +1,4 @@
-<mat-toolbar class="p-0">
+<mat-toolbar class="px-2">
   <ng-container *ngIf="user">
     <a [routerLink]="['/']" class="no-min-width px-2" mat-button>
       <gf-logo></gf-logo>
@@ -220,13 +220,8 @@
     </mat-menu>
   </ng-container>
   <ng-container *ngIf="user === null">
-    <a
-      *ngIf="currentRoute && currentRoute !== 'start'"
-      class="mx-2 no-min-width px-2"
-      mat-button
-      [routerLink]="['/']"
-    >
-      <gf-logo></gf-logo>
+    <a class="mx-2 no-min-width px-2" mat-button [routerLink]="['/']">
+      <gf-logo [hideName]="!currentRoute || currentRoute === 'start'"></gf-logo>
     </a>
     <span class="spacer"></span>
     <a
