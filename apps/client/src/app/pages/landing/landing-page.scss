@@ -13,13 +13,21 @@
     }
   }
 
-  .intro {
-    aspect-ratio: 16 / 9;
-    background-image: url('/assets/intro.png');
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  .intro-container {
+    background-color: #ffffff;
     margin-top: -5rem;
+
+    .intro-inner-container {
+      aspect-ratio: 16 / 9;
+      max-height: 66vh;
+
+      .intro {
+        background-image: url('/assets/intro.jpg');
+        background-position: top left;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    }
   }
 }
 
