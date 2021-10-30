@@ -34,7 +34,7 @@
 
 Our official **[Ghostfolio Premium](https://ghostfol.io/pricing)** cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs.
 
-If you prefer to run Ghostfolio on your own infrastructure, please find the source code and further instructions here on _GitHub_ or use the [setup](https://github.com/psychowood/ghostfolio-docker) by [psychowood](https://github.com/psychowood).
+If you prefer to run Ghostfolio on your own infrastructure, please find further instructions in the section [Run with Docker](#run-with-docker).
 
 ## Why Ghostfolio?
 
@@ -81,13 +81,44 @@ The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://
 
 The frontend is built with [Angular](https://angular.io) and uses [Angular Material](https://material.angular.io) with utility classes from [Bootstrap](https://getbootstrap.com).
 
-## Getting Started
+## Run with Docker
 
 ### Prerequisites
 
+- [Docker](https://www.docker.com/products/docker-desktop)
+
+### Setup Docker Image
+
+Run the following commands to build and start the Docker image:
+
+```bash
+docker-compose -f docker/docker-compose-build-local.yml build
+docker-compose -f docker/docker-compose-build-local.yml up
+```
+
+### Setup Database
+
+Run the following command to setup the database once Ghostfolio is running:
+
+```bash
+docker-compose -f docker/docker-compose-build-local.yml exec ghostfolio yarn setup:database
+```
+
+### Fetch Historical Data
+
+Open http://localhost:3333 in your browser and accomplish these steps:
+
+1. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
+1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+1. Click _Sign out_ and check out the _Live Demo_
+
+## Development
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop)
 - [Node.js](https://nodejs.org/en/download) (version 14+)
 - [Yarn](https://yarnpkg.com/en/docs/install)
-- [Docker](https://www.docker.com/products/docker-desktop)
 
 ### Setup
 
@@ -101,18 +132,14 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
 
-## Development
-
-Please make sure you have completed the instructions from [_Setup_](#Setup).
-
-### Start server
+### Start Server
 
 <ol type="a">
   <li>Debug: Run <code>yarn watch:server</code> and click "Launch Program" in <a href="https://code.visualstudio.com">Visual Studio Code</a></li>
   <li>Serve: Run <code>yarn start:server</code></li>
 </ol>
 
-### Start client
+### Start Client
 
 Run `yarn start:client`
 

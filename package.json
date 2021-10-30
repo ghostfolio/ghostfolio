@@ -175,5 +175,8 @@
       "parser": "typescript",
       "style": "module"
     }
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }
