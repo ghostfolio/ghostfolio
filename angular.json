@@ -100,12 +100,12 @@
               {
                 "glob": "CHANGELOG.md",
                 "input": "",
-                "output": "./"
+                "output": "./assets"
               },
               {
                 "glob": "LICENSE",
                 "input": "",
-                "output": "./"
+                "output": "./assets"
               },
               {
                 "glob": "robots.txt",
