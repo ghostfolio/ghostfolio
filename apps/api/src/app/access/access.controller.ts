@@ -39,6 +39,7 @@ export class AccessController {
       include: {
         GranteeUser: true
       },
+      orderBy: { granteeUserId: 'asc' },
       where: { userId: this.request.user.id }
     });
 
