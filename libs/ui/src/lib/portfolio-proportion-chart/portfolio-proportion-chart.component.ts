@@ -318,9 +318,9 @@ export class PortfolioProportionChartComponent
           type: 'doughnut'
         });
       }
-
-      this.isLoading = false;
     }
+
+    this.isLoading = false;
   }
 
   /**

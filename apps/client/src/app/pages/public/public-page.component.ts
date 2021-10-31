@@ -27,7 +27,7 @@ export class PublicPageComponent implements OnInit {
   public deviceType: string;
   public portfolioPublicDetails: PortfolioPublicDetails;
   public positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'name' | 'value'>;
+    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name' | 'value'>;
   };
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -117,6 +117,7 @@ export class PublicPageComponent implements OnInit {
 
       this.positions[symbol] = {
         value,
+        currency: position.currency,
         name: position.name
       };
 

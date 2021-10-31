@@ -266,10 +266,18 @@ export class PortfolioController {
     @Res() res: Response
   ): Promise<PortfolioPublicDetails> {
     const access = await this.accessService.access({ id: accessId });
+    const user = await this.userService.user({
+      id: access.userId
+    });
 
     if (!access) {
       res.status(StatusCodes.NOT_FOUND);
       return <any>res.json({ accounts: {}, holdings: {} });
+    }
+
+    let hasDetails = true;
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      hasDetails = user.subscription.type === 'Premium';
     }
 
     const { holdings } = await this.portfolioService.getDetails(
@@ -278,6 +286,7 @@ export class PortfolioController {
     );
 
     const portfolioPublicDetails: PortfolioPublicDetails = {
+      hasDetails,
       holdings: {}
     };
 
@@ -298,9 +307,10 @@ export class PortfolioController {
       if (portfolioPosition.assetClass === 'EQUITY') {
         portfolioPublicDetails.holdings[symbol] = {
           allocationCurrent: portfolioPosition.allocationCurrent,
-          countries: [],
+          countries: hasDetails ? portfolioPosition.countries : [],
+          currency: portfolioPosition.currency,
           name: portfolioPosition.name,
-          sectors: [],
+          sectors: hasDetails ? portfolioPosition.sectors : [],
           value: portfolioPosition.value / totalValue
         };
       }

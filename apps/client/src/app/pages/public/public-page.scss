@@ -2,8 +2,18 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  gf-portfolio-proportion-chart {
-    max-width: 80vh;
+  .allocations-by-symbol {
+    gf-portfolio-proportion-chart {
+      max-width: 80vh;
+    }
+  }
+
+  .world-map-chart {
+    .mat-card {
+      .mat-card-content {
+        aspect-ratio: 16 / 9;
+      }
+    }
   }
 }
 

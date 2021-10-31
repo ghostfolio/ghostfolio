@@ -9,6 +9,9 @@
   <div class="proportion-charts row">
     <div class="col-md-12 allocations-by-symbol">
       <mat-card class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n>Symbols</mat-card-title>
+        </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
             class="mx-auto"
@@ -17,6 +20,65 @@
             [positions]="symbols"
             [showLabels]="deviceType !== 'mobile'"
           ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
+      <mat-card class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n>Currencies</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [isInPercent]="true"
+            [keys]="['currency']"
+            [maxItems]="10"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
+      <mat-card class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n>Sectors</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [isInPercent]="true"
+            [keys]="['name']"
+            [maxItems]="10"
+            [positions]="sectors"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
+      <mat-card class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n>Continents</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [isInPercent]="true"
+            [keys]="['name']"
+            [positions]="continents"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div *ngIf="portfolioPublicDetails?.hasDetails" class="row world-map-chart">
+    <div class="col-lg">
+      <mat-card class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n>Regions</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-world-map-chart
+            [countries]="countries"
+            [isInPercent]="true"
+          ></gf-world-map-chart>
         </mat-card-content>
       </mat-card>
     </div>
