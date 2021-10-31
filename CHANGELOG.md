@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for more cryptocurrency symbols like _Avalanche_, _Polygon_, _SHIBA INU_ etc.
+- Added support for more cryptocurrency symbols like _Avalanche_, _Polygon_, _Shiba Inu_ etc.
 
 ### Changed
 
