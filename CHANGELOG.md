@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added more details to the public page (currencies, sectors, continents and regions)
 - Added a `Dockerfile` and documentation to build a _Docker_ image
 
 ## 1.66.0 - 30.10.2021
