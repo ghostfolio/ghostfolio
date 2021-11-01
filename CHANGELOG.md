@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Prettified the generic scraper symbols in the portfolio proportion chart component
+- Extended the statistics section on the about page by the active users count (7d)
+- Extended the statistics section on the about page by the new users count
 
 ## 1.67.0 - 31.10.2021
 
