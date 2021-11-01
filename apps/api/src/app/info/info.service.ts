@@ -136,6 +136,28 @@ export class InfoService {
     }
   }
 
+  private async countNewUsers(aDays: number) {
+    return await this.prismaService.user.count({
+      orderBy: {
+        createdAt: 'desc'
+      },
+      where: {
+        AND: [
+          {
+            NOT: {
+              Analytics: null
+            }
+          },
+          {
+            createdAt: {
+              gt: subDays(new Date(), aDays)
+            }
+          }
+        ]
+      }
+    });
+  }
+
   private getDemoAuthToken() {
     return this.jwtService.sign({
       id: InfoService.DEMO_USER_ID
@@ -155,15 +177,19 @@ export class InfoService {
     }
 
     const activeUsers1d = await this.countActiveUsers(1);
+    const activeUsers7d = await this.countActiveUsers(7);
     const activeUsers30d = await this.countActiveUsers(30);
+    const newUsers30d = await this.countNewUsers(30);
     const gitHubContributors = await this.countGitHubContributors();
     const gitHubStargazers = await this.countGitHubStargazers();
 
     return {
       activeUsers1d,
+      activeUsers7d,
       activeUsers30d,
       gitHubContributors,
-      gitHubStargazers
+      gitHubStargazers,
+      newUsers30d
     };
   }
 
