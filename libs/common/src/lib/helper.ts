@@ -116,3 +116,7 @@ export const DATE_FORMAT = 'yyyy-MM-dd';
 export function parseDate(date: string) {
   return parse(date, DATE_FORMAT, new Date());
 }
+
+export function prettifySymbol(aSymbol: string): string {
+  return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
+}

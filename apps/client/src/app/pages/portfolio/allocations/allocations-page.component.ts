@@ -4,6 +4,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
   PortfolioPosition,
@@ -246,9 +247,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
 
       if (position.assetClass === AssetClass.EQUITY) {
-        this.symbols[symbol] = {
-          symbol,
+        this.symbols[prettifySymbol(symbol)] = {
           name: position.name,
+          symbol: prettifySymbol(symbol),
           value: aPeriod === 'original' ? position.investment : position.value
         };
       }
