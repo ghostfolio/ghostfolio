@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
   PortfolioPublicDetails
@@ -169,9 +170,9 @@ export class PublicPageComponent implements OnInit {
           this.portfolioPublicDetails.holdings[symbol].value;
       }
 
-      this.symbols[symbol] = {
-        symbol,
+      this.symbols[prettifySymbol(symbol)] = {
         name: position.name,
+        symbol: prettifySymbol(symbol),
         value: position.value
       };
     }
