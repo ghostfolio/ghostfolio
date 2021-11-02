@@ -1,30 +1,46 @@
+<div class="intro-container mb-5">
+  <div class="intro-inner-container mx-auto">
+    <div class="h-100 intro w-100"></div>
+  </div>
+</div>
+
 <div class="container">
   <div class="row">
-    <div class="col">
-      <h3 class="d-flex justify-content-center mb-3 text-center" i18n>
-        Create your Account
-      </h3>
-      <mat-card class="mb-4">
-        <mat-card-content class="text-center">
-          <button
-            class="d-inline-block"
-            color="primary"
+    <div
+      class="align-items-center d-flex flex-column justify-content-center w-100"
+    >
+      <gf-logo size="large"></gf-logo>
+      <p class="lead m-0">Wealth Management Software</p>
+    </div>
+  </div>
+
+  <div class="button-container row">
+    <div class="align-items-center col d-flex justify-content-center">
+      <div class="py-5 text-center">
+        <button
+          class="d-inline-block"
+          color="primary"
+          i18n
+          mat-flat-button
+          [disabled]="!demoAuthToken"
+          (click)="createAccount()"
+        >
+          Create Account
+        </button>
+        <ng-container *ngIf="hasPermissionForSocialLogin">
+          <div
+            class="m-3 text-muted"
             i18n
-            mat-flat-button
-            [disabled]="!demoAuthToken"
-            (click)="createAccount()"
+            [ngClass]="{'d-inline': deviceType !== 'mobile' }"
           >
-            Create Account
-          </button>
-          <ng-container *ngIf="hasPermissionForSocialLogin">
-            <div class="my-3 text-muted" i18n>or</div>
-            <a color="accent" href="/api/auth/google" mat-flat-button
-              ><ion-icon class="mr-1" name="logo-google"></ion-icon
-              ><span i18n>Continue with Google</span></a
-            >
-          </ng-container>
-        </mat-card-content>
-      </mat-card>
+            or
+          </div>
+          <a color="accent" href="/api/auth/google" mat-flat-button
+            ><ion-icon class="mr-1" name="logo-google"></ion-icon
+            ><span i18n>Continue with Google</span></a
+          >
+        </ng-container>
+      </div>
     </div>
   </div>
 </div>

@@ -229,7 +229,13 @@
       mat-button
       [routerLink]="['/']"
     >
-      <gf-logo [hideName]="!currentRoute || currentRoute === 'start'"></gf-logo>
+      <gf-logo
+        [hideName]="
+          !currentRoute ||
+          currentRoute === 'register' ||
+          currentRoute === 'start'
+        "
+      ></gf-logo>
     </a>
     <span class="spacer"></span>
     <a

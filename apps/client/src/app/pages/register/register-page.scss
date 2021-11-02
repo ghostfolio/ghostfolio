@@ -1,3 +1,26 @@
 :host {
   display: block;
+
+  .button-container {
+    .mat-stroked-button {
+      background-color: var(--light-background);
+    }
+  }
+
+  .intro-container {
+    background-color: #ffffff;
+    margin-top: -5rem;
+
+    .intro-inner-container {
+      aspect-ratio: 16 / 9;
+      max-height: 66vh;
+
+      .intro {
+        background-image: url('/assets/intro.jpg');
+        background-position: top left;
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    }
+  }
 }

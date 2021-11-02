@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -6,6 +6,7 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { format } from 'date-fns';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -20,6 +21,7 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-to
 export class RegisterPageComponent implements OnDestroy, OnInit {
   public currentYear = format(new Date(), 'yyyy');
   public demoAuthToken: string;
+  public deviceType: string;
   public hasPermissionForSocialLogin: boolean;
   public historicalDataItems: LineChartItem[];
 
@@ -29,8 +31,8 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
    * @constructor
    */
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private router: Router,
     private tokenStorageService: TokenStorageService
@@ -45,6 +47,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     const { demoAuthToken, globalPermissions } = this.dataService.fetchInfo();
 
     this.demoAuthToken = demoAuthToken;
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.hasPermissionForSocialLogin = hasPermission(
       globalPermissions,
       permissions.enableSocialLogin
