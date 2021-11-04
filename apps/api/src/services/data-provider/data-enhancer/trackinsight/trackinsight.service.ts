@@ -70,4 +70,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     return Promise.resolve(response);
   }
+
+  public getName() {
+    return 'TRACKINSIGHT';
+  }
 }

@@ -127,6 +127,7 @@ model SymbolProfile {
   id            String         @id @default(uuid())
   name          String?
   Order         Order[]
+  settings      Json?
   updatedAt     DateTime       @updatedAt
   sectors       Json?
   symbol        String

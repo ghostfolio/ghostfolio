@@ -6,6 +6,7 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
 import { ExchangeRateDataModule } from './exchange-rate-data.module';
+import { SymbolProfileModule } from './symbol-profile.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { ExchangeRateDataModule } from './exchange-rate-data.module';
     DataEnhancerModule,
     DataProviderModule,
     ExchangeRateDataModule,
-    PrismaModule
+    PrismaModule,
+    SymbolProfileModule
   ],
   providers: [DataGatheringService],
   exports: [DataEnhancerModule, DataGatheringService]

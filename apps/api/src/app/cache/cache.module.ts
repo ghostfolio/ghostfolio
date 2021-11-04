@@ -6,6 +6,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { CacheController } from './cache.controller';
@@ -15,7 +16,8 @@ import { CacheController } from './cache.controller';
     DataGatheringModule,
     DataProviderModule,
     ExchangeRateDataModule,
-    RedisCacheModule
+    RedisCacheModule,
+    SymbolProfileModule
   ],
   controllers: [CacheController],
   providers: [

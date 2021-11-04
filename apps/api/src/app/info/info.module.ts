@@ -4,6 +4,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -18,7 +19,8 @@ import { InfoService } from './info.service';
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '30 days' }
-    })
+    }),
+    SymbolProfileModule
   ],
   controllers: [InfoController],
   providers: [

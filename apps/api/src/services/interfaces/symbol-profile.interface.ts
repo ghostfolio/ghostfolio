@@ -11,7 +11,12 @@ export interface EnhancedSymbolProfile {
   id: string;
   name: string | null;
   updatedAt: Date;
+  settings?: SymbolProfileSettings;
   symbol: string;
   countries: Country[];
   sectors: Sector[];
+}
+
+export interface SymbolProfileSettings {
+  symbolMapping: { [key: string]: string };
 }
