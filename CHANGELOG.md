@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the symbol mapping attribute to the symbol profile model
+
 ### Changed
 
 - Improved the registration page
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.68.0 - 01.11.2021
 
@@ -66,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Apply data migration (`yarn prisma migrate deploy`)
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.62.0 - 17.10.2021
 
@@ -164,7 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Apply data migration (`yarn prisma migrate deploy`)
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.55.0 - 20.09.2021
 
@@ -179,7 +187,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Apply data migration (`yarn prisma migrate deploy`)
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.54.0 - 18.09.2021
 
@@ -200,7 +208,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Apply data migration (`yarn prisma migrate deploy`)
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.53.0 - 13.09.2021
 
@@ -322,7 +330,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Apply data migration (`yarn prisma migrate deploy`)
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.41.0 - 21.08.2021
 
@@ -375,7 +383,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Apply data migration (`yarn prisma migrate deploy`)
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.38.0 - 14.08.2021
 
@@ -435,7 +443,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-- Apply data migration (`yarn prisma migrate deploy`)
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.34.0 - 07.08.2021
 
