@@ -9,7 +9,7 @@ import {
   isRakutenRapidApiSymbol
 } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
@@ -61,7 +61,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
     }
 
     return {};
@@ -166,7 +166,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
       const { fgi } = await get();
       return fgi;
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       return undefined;
     }

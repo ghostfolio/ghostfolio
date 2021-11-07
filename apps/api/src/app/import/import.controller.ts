@@ -5,6 +5,7 @@ import {
   Controller,
   HttpException,
   Inject,
+  Logger,
   Post,
   UseGuards
 } from '@nestjs/common';
@@ -39,7 +40,7 @@ export class ImportController {
         userId: this.request.user.id
       });
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       throw new HttpException(
         {

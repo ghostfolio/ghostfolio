@@ -6,6 +6,7 @@ import {
   Get,
   HttpException,
   Inject,
+  Logger,
   Post,
   Req,
   Res,
@@ -46,7 +47,7 @@ export class SubscriptionController {
         userId: this.request.user.id
       });
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),

@@ -4,7 +4,7 @@ import {
   ghostfolioFearAndGreedIndexSymbol
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
   differenceInHours,
@@ -41,7 +41,7 @@ export class DataGatheringService {
     const isDataGatheringNeeded = await this.isDataGatheringNeeded();
 
     if (isDataGatheringNeeded) {
-      console.log('7d data gathering has been started.');
+      Logger.log('7d data gathering has been started.');
       console.time('data-gathering-7d');
 
       await this.prismaService.property.create({
@@ -65,7 +65,7 @@ export class DataGatheringService {
           where: { key: 'LAST_DATA_GATHERING' }
         });
       } catch (error) {
-        console.error(error);
+        Logger.error(error);
       }
 
       await this.prismaService.property.delete({
@@ -74,7 +74,7 @@ export class DataGatheringService {
         }
       });
 
-      console.log('7d data gathering has been completed.');
+      Logger.log('7d data gathering has been completed.');
       console.timeEnd('data-gathering-7d');
     }
   }
@@ -85,7 +85,7 @@ export class DataGatheringService {
     });
 
     if (!isDataGatheringLocked) {
-      console.log('Max data gathering has been started.');
+      Logger.log('Max data gathering has been started.');
       console.time('data-gathering-max');
 
       await this.prismaService.property.create({
@@ -109,7 +109,7 @@ export class DataGatheringService {
           where: { key: 'LAST_DATA_GATHERING' }
         });
       } catch (error) {
-        console.error(error);
+        Logger.error(error);
       }
 
       await this.prismaService.property.delete({
@@ -118,13 +118,13 @@ export class DataGatheringService {
         }
       });
 
-      console.log('Max data gathering has been completed.');
+      Logger.log('Max data gathering has been completed.');
       console.timeEnd('data-gathering-max');
     }
   }
 
   public async gatherProfileData(aDataGatheringItems?: IDataGatheringItem[]) {
-    console.log('Profile data gathering has been started.');
+    Logger.log('Profile data gathering has been started.');
     console.time('data-gathering-profile');
 
     let dataGatheringItems = aDataGatheringItems;
@@ -152,7 +152,7 @@ export class DataGatheringService {
             symbol: symbolMapping[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
-          console.error(`Failed to enhance data for symbol ${symbol}`, error);
+          Logger.error(`Failed to enhance data for symbol ${symbol}`, error);
         }
       }
 
@@ -194,11 +194,11 @@ export class DataGatheringService {
           }
         });
       } catch (error) {
-        console.error(`${symbol}: ${error?.meta?.cause}`);
+        Logger.error(`${symbol}: ${error?.meta?.cause}`);
       }
     }
 
-    console.log('Profile data gathering has been completed.');
+    Logger.log('Profile data gathering has been completed.');
     console.timeEnd('data-gathering-profile');
   }
 
@@ -261,7 +261,7 @@ export class DataGatheringService {
         }
       } catch (error) {
         hasError = true;
-        console.error(error);
+        Logger.error(error);
       }
     }
 
@@ -291,7 +291,7 @@ export class DataGatheringService {
   }
 
   public async reset() {
-    console.log('Data gathering has been reset.');
+    Logger.log('Data gathering has been reset.');
 
     await this.prismaService.property.deleteMany({
       where: {

@@ -2,6 +2,7 @@ import { OrderType } from '@ghostfolio/api/models/order-type';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
+import { Logger } from '@nestjs/common';
 import Big from 'big.js';
 import {
   addDays,
@@ -236,7 +237,7 @@ export class PortfolioCalculator {
         if (!marketSymbolMap[nextDate]?.[item.symbol]) {
           invalidSymbols.push(item.symbol);
           hasErrors = true;
-          console.error(
+          Logger.error(
             `Missing value for symbol ${item.symbol} at ${nextDate}`
           );
           continue;
@@ -269,7 +270,7 @@ export class PortfolioCalculator {
           if (!initialValue) {
             invalidSymbols.push(item.symbol);
             hasErrors = true;
-            console.error(
+            Logger.error(
               `Missing value for symbol ${item.symbol} at ${currentDate}`
             );
             continue;
@@ -480,7 +481,7 @@ export class PortfolioCalculator {
           currentPosition.netPerformancePercentage.mul(currentInitialValue)
         );
       } else if (!currentPosition.quantity.eq(0)) {
-        console.error(
+        Logger.error(
           `Initial value is missing for symbol ${currentPosition.symbol}`
         );
         hasErrors = true;
@@ -546,7 +547,7 @@ export class PortfolioCalculator {
             userCurrency: this.currency
           });
         } catch (error) {
-          console.error(
+          Logger.error(
             `Failed to fetch info for date ${startDate} with exception`,
             error
           );

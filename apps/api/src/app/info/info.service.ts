@@ -6,7 +6,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
 import { permissions } from '@ghostfolio/common/permissions';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bent from 'bent';
 import { subDays } from 'date-fns';
@@ -109,7 +109,7 @@ export class InfoService {
       const contributors = await get();
       return contributors?.length;
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       return undefined;
     }
@@ -130,7 +130,7 @@ export class InfoService {
       const { stargazers_count } = await get();
       return stargazers_count;
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       return undefined;
     }
