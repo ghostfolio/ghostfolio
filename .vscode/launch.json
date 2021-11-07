@@ -26,7 +26,8 @@
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"
-      ]
+      ],
+      "console": "integratedTerminal"
     }
   ]
 }

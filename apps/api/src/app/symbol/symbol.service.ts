@@ -1,7 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
@@ -67,7 +67,7 @@ export class SymbolService {
 
       return results;
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       throw error;
     }

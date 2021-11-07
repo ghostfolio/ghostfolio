@@ -3,7 +3,7 @@ import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/c
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import Big from 'big.js';
@@ -117,7 +117,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       return {};
     }
@@ -169,7 +169,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
 
       return {};
     }

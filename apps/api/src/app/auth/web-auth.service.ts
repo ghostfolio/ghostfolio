@@ -6,7 +6,8 @@ import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Inject,
   Injectable,
-  InternalServerErrorException
+  InternalServerErrorException,
+  Logger
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -94,7 +95,7 @@ export class WebAuthService {
       };
       verification = await verifyRegistrationResponse(opts);
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
       throw new InternalServerErrorException(error.message);
     }
 
@@ -192,7 +193,7 @@ export class WebAuthService {
       };
       verification = verifyAuthenticationResponse(opts);
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
       throw new InternalServerErrorException({ error: error.message });
     }
 

@@ -9,7 +9,7 @@ import {
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -109,7 +109,7 @@ export class DataProviderService {
         return r;
       }, {});
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
     } finally {
       return response;
     }

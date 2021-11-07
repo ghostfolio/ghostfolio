@@ -7,7 +7,7 @@ import {
   isGhostfolioScraperApiSymbol
 } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import * as cheerio from 'cheerio';
@@ -64,7 +64,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         }
       };
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
     }
 
     return {};
@@ -106,7 +106,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         }
       };
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
     }
 
     return {};

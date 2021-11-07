@@ -12,7 +12,7 @@ export interface EnhancedSymbolProfile {
   dataSource: DataSource;
   id: string;
   name: string | null;
-  scraperConfiguration?: ScraperConfiguration;
+  scraperConfiguration?: ScraperConfiguration | null;
   sectors: Sector[];
   symbol: string;
   symbolMapping?: { [key: string]: string };

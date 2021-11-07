@@ -1,5 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
 import { Strategy } from 'passport-google-oauth20';
@@ -41,9 +41,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       };
 
       done(null, user);
-    } catch (err) {
-      console.error(err);
-      done(err, false);
+    } catch (error) {
+      Logger.error(error);
+      done(error, false);
     }
   }
 }

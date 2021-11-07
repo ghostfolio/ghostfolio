@@ -59,10 +59,14 @@ export class SymbolProfileService {
     const scraperConfiguration =
       symbolProfile.scraperConfiguration as Prisma.JsonObject;
 
-    return {
-      selector: scraperConfiguration.selector as string,
-      url: scraperConfiguration.url as string
-    };
+    if (scraperConfiguration) {
+      return {
+        selector: scraperConfiguration.selector as string,
+        url: scraperConfiguration.url as string
+      };
+    }
+
+    return null;
   }
 
   private getSectors(symbolProfile: SymbolProfile): Sector[] {

@@ -1,6 +1,6 @@
 import { baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty, isNumber, uniq } from 'lodash';
@@ -140,7 +140,7 @@ export class ExchangeRateDataService {
     }
 
     // Fallback with error, if currencies are not available
-    console.error(
+    Logger.error(
       `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
     );
     return aValue;

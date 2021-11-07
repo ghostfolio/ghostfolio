@@ -29,5 +29,5 @@ import { environment } from './environments/environment';
     .bootstrapModule(AppModule, {
       providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }]
     })
-    .catch((err) => console.error(err));
+    .catch((error) => console.error(error));
 })();

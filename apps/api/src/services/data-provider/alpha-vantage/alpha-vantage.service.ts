@@ -2,7 +2,7 @@ import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.in
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { isAfter, isBefore, parse } from 'date-fns';
 
@@ -78,7 +78,7 @@ export class AlphaVantageService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      console.error(error, symbol);
+      Logger.error(error, symbol);
 
       return {};
     }

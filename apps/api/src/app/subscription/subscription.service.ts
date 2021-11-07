@@ -1,7 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
 import { addDays, isBefore } from 'date-fns';
 import Stripe from 'stripe';
@@ -85,7 +85,7 @@ export class SubscriptionService {
         description: session.client_reference_id
       });
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
     }
   }
 
