@@ -141,10 +141,9 @@ export class DataGatheringService {
     );
 
     for (const [symbol, response] of Object.entries(currentData)) {
-      const symbolMapping =
-        symbolProfiles.find((symbolProfile) => {
-          return symbolProfile.symbol === symbol;
-        })?.settings?.symbolMapping ?? {};
+      const symbolMapping = symbolProfiles.find((symbolProfile) => {
+        return symbolProfile.symbol === symbol;
+      })?.symbolMapping;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {

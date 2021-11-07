@@ -1,7 +1,4 @@
-import {
-  EnhancedSymbolProfile,
-  SymbolProfileSettings
-} from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
+import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
@@ -33,7 +30,7 @@ export class SymbolProfileService {
       ...symbolProfile,
       countries: this.getCountries(symbolProfile),
       sectors: this.getSectors(symbolProfile),
-      settings: this.getSettings(symbolProfile)
+      symbolMapping: this.getSymbolMapping(symbolProfile)
     }));
   }
 
@@ -66,7 +63,11 @@ export class SymbolProfileService {
     );
   }
 
-  private getSettings(symbolProfile: SymbolProfile): SymbolProfileSettings {
-    return { symbolMapping: symbolProfile.settings['symbolMapping'] };
+  private getSymbolMapping(symbolProfile: SymbolProfile) {
+    return (
+      (symbolProfile['symbolMapping'] as {
+        [key: string]: string;
+      }) ?? {}
+    );
   }
 }

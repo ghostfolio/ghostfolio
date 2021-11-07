@@ -5,18 +5,14 @@ import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 export interface EnhancedSymbolProfile {
   assetClass: AssetClass;
   assetSubClass: AssetSubClass;
+  countries: Country[];
   createdAt: Date;
   currency: string | null;
   dataSource: DataSource;
   id: string;
   name: string | null;
-  updatedAt: Date;
-  settings?: SymbolProfileSettings;
-  symbol: string;
-  countries: Country[];
   sectors: Sector[];
-}
-
-export interface SymbolProfileSettings {
-  symbolMapping: { [key: string]: string };
+  symbol: string;
+  symbolMapping?: { [key: string]: string };
+  updatedAt: Date;
 }
