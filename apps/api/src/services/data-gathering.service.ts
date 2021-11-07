@@ -272,21 +272,6 @@ export class DataGatheringService {
     }
   }
 
-  public async getCustomSymbolsToGather(
-    startDate?: Date
-  ): Promise<IDataGatheringItem[]> {
-    const scraperConfigurations =
-      await this.ghostfolioScraperApi.getScraperConfigurations();
-
-    return scraperConfigurations.map((scraperConfiguration) => {
-      return {
-        dataSource: DataSource.GHOSTFOLIO,
-        date: startDate,
-        symbol: scraperConfiguration.symbol
-      };
-    });
-  }
-
   public async getIsInProgress() {
     return await this.prismaService.property.findUnique({
       where: { key: 'LOCKED_DATA_GATHERING' }
@@ -343,6 +328,7 @@ export class DataGatheringService {
         orderBy: [{ symbol: 'asc' }],
         select: {
           dataSource: true,
+          scraperConfiguration: true,
           symbol: true
         }
       })
@@ -363,12 +349,8 @@ export class DataGatheringService {
         };
       });
 
-    const customSymbolsToGather =
-      await this.ghostfolioScraperApi.getCustomSymbolsToGather(startDate);
-
     return [
       ...this.getBenchmarksToGather(startDate),
-      ...customSymbolsToGather,
       ...currencyPairsToGather,
       ...symbolProfilesToGather
     ];
@@ -381,9 +363,6 @@ export class DataGatheringService {
           orderBy: [{ date: 'asc' }]
         })
       )?.date ?? new Date();
-
-    const customSymbolsToGather =
-      await this.ghostfolioScraperApi.getCustomSymbolsToGather(startDate);
 
     const currencyPairsToGather = this.exchangeRateDataService
       .getCurrencyPairs()
@@ -405,20 +384,19 @@ export class DataGatheringService {
             select: { date: true },
             take: 1
           },
+          scraperConfiguration: true,
           symbol: true
         }
       })
-    ).map((item) => {
+    ).map((symbolProfile) => {
       return {
-        dataSource: item.dataSource,
-        date: item.Order?.[0]?.date ?? startDate,
-        symbol: item.symbol
+        ...symbolProfile,
+        date: symbolProfile.Order?.[0]?.date ?? startDate
       };
     });
 
     return [
       ...this.getBenchmarksToGather(startDate),
-      ...customSymbolsToGather,
       ...currencyPairsToGather,
       ...symbolProfilesToGather
     ];

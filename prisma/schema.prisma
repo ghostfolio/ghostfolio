@@ -118,19 +118,20 @@ model Settings {
 }
 
 model SymbolProfile {
-  assetClass    AssetClass?
-  assetSubClass AssetSubClass?
-  countries     Json?
-  createdAt     DateTime       @default(now())
-  currency      String?
-  dataSource    DataSource
-  id            String         @id @default(uuid())
-  name          String?
-  Order         Order[]
-  updatedAt     DateTime       @updatedAt
-  sectors       Json?
-  symbol        String
-  symbolMapping Json?
+  assetClass           AssetClass?
+  assetSubClass        AssetSubClass?
+  countries            Json?
+  createdAt            DateTime       @default(now())
+  currency             String?
+  dataSource           DataSource
+  id                   String         @id @default(uuid())
+  name                 String?
+  Order                Order[]
+  updatedAt            DateTime       @updatedAt
+  scraperConfiguration Json?
+  sectors              Json?
+  symbol               String
+  symbolMapping        Json?
 
   @@unique([dataSource, symbol])
 }

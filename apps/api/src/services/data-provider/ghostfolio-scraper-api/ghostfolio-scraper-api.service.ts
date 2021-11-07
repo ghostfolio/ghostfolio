@@ -1,5 +1,6 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   DATE_FORMAT,
   getYesterday,
@@ -13,19 +14,20 @@ import * as cheerio from 'cheerio';
 import { format } from 'date-fns';
 
 import {
-  IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
   MarketState
 } from '../../interfaces/interfaces';
 import { DataProviderInterface } from '../interfaces/data-provider.interface';
-import { ScraperConfig } from './interfaces/scraper-config.interface';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
   private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly prismaService: PrismaService,
+    private readonly symbolProfileService: SymbolProfileService
+  ) {}
 
   public canHandle(symbol: string) {
     return isGhostfolioScraperApiSymbol(symbol);
@@ -39,9 +41,10 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
 
     try {
-      const symbol = aSymbols[0];
-
-      const scraperConfig = await this.getScraperConfigurationBySymbol(symbol);
+      const [symbol] = aSymbols;
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [symbol]
+      );
 
       const { marketPrice } = await this.prismaService.marketData.findFirst({
         orderBy: {
@@ -55,7 +58,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
       return {
         [symbol]: {
           marketPrice,
-          currency: scraperConfig?.currency,
+          currency: symbolProfile?.currency,
           dataSource: DataSource.GHOSTFOLIO,
           marketState: MarketState.delayed
         }
@@ -65,25 +68,6 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
 
     return {};
-  }
-
-  public async getCustomSymbolsToGather(
-    startDate?: Date
-  ): Promise<IDataGatheringItem[]> {
-    const ghostfolioSymbolProfiles =
-      await this.prismaService.symbolProfile.findMany({
-        where: {
-          dataSource: DataSource.GHOSTFOLIO
-        }
-      });
-
-    return ghostfolioSymbolProfiles.map(({ dataSource, symbol }) => {
-      return {
-        dataSource,
-        symbol,
-        date: startDate
-      };
-    });
   }
 
   public async getHistorical(
@@ -99,11 +83,11 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
 
     try {
-      const symbol = aSymbols[0];
-
-      const scraperConfiguration = await this.getScraperConfigurationBySymbol(
-        symbol
+      const [symbol] = aSymbols;
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [symbol]
       );
+      const scraperConfiguration = symbolProfile?.scraperConfiguration;
 
       const get = bent(scraperConfiguration?.url, 'GET', 'string', 200, {});
 
@@ -128,22 +112,6 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return {};
   }
 
-  public async getScraperConfigurations(): Promise<ScraperConfig[]> {
-    try {
-      const { value: scraperConfigString } =
-        await this.prismaService.property.findFirst({
-          select: {
-            value: true
-          },
-          where: { key: 'SCRAPER_CONFIG' }
-        });
-
-      return JSON.parse(scraperConfigString);
-    } catch {}
-
-    return [];
-  }
-
   public getName(): DataSource {
     return DataSource.GHOSTFOLIO;
   }
@@ -161,12 +129,5 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     } catch {
       return undefined;
     }
-  }
-
-  private async getScraperConfigurationBySymbol(aSymbol: string) {
-    const scraperConfigurations = await this.getScraperConfigurations();
-    return scraperConfigurations.find((scraperConfiguration) => {
-      return scraperConfiguration.symbol === aSymbol;
-    });
   }
 }

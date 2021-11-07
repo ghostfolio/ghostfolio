@@ -7,6 +7,8 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, SymbolProfile } from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
+import { ScraperConfiguration } from './data-provider/ghostfolio-scraper-api/interfaces/scraper-configuration.interface';
+
 @Injectable()
 export class SymbolProfileService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -29,6 +31,7 @@ export class SymbolProfileService {
     return symbolProfiles.map((symbolProfile) => ({
       ...symbolProfile,
       countries: this.getCountries(symbolProfile),
+      scraperConfiguration: this.getScraperConfiguration(symbolProfile),
       sectors: this.getSectors(symbolProfile),
       symbolMapping: this.getSymbolMapping(symbolProfile)
     }));
@@ -48,6 +51,18 @@ export class SymbolProfileService {
         };
       }
     );
+  }
+
+  private getScraperConfiguration(
+    symbolProfile: SymbolProfile
+  ): ScraperConfiguration {
+    const scraperConfiguration =
+      symbolProfile.scraperConfiguration as Prisma.JsonObject;
+
+    return {
+      selector: scraperConfiguration.selector as string,
+      url: scraperConfiguration.url as string
+    };
   }
 
   private getSectors(symbolProfile: SymbolProfile): Sector[] {

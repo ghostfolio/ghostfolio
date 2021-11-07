@@ -4,13 +4,19 @@ import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provi
 import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { AlphaVantageService } from './alpha-vantage/alpha-vantage.service';
 import { DataProviderService } from './data-provider.service';
 
 @Module({
-  imports: [ConfigurationModule, CryptocurrencyModule, PrismaModule],
+  imports: [
+    ConfigurationModule,
+    CryptocurrencyModule,
+    PrismaModule,
+    SymbolProfileModule
+  ],
   providers: [
     AlphaVantageService,
     DataProviderService,

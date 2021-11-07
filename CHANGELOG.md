@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the validation of `json` files in the import functionality for transactions
+- Moved the scraper configuration to the symbol profile model
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.69.0 - 07.11.2021
 
