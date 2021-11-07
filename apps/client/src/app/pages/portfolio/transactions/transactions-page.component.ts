@@ -12,6 +12,7 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
+import { isArray } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -189,6 +190,11 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         try {
           if (file.type === 'application/json') {
             const content = JSON.parse(fileContent);
+
+            if (!isArray(content.orders)) {
+              throw new Error();
+            }
+
             try {
               await this.importTransactionsService.importJson({
                 content: content.orders,
