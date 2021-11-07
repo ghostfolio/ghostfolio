@@ -130,6 +130,7 @@ model SymbolProfile {
   updatedAt     DateTime       @updatedAt
   sectors       Json?
   symbol        String
+  symbolMapping Json?
 
   @@unique([dataSource, symbol])
 }

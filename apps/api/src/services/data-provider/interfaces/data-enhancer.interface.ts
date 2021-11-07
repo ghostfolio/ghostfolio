@@ -8,4 +8,6 @@ export interface DataEnhancerInterface {
     response: IDataProviderResponse;
     symbol: string;
   }): Promise<IDataProviderResponse>;
+
+  getName(): string;
 }

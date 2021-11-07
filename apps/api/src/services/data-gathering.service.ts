@@ -1,3 +1,4 @@
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   benchmarks,
   ghostfolioFearAndGreedIndexSymbol
@@ -32,7 +33,8 @@ export class DataGatheringService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly ghostfolioScraperApi: GhostfolioScraperApiService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public async gather7Days() {
@@ -132,13 +134,22 @@ export class DataGatheringService {
     }
 
     const currentData = await this.dataProviderService.get(dataGatheringItems);
+    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+      dataGatheringItems.map(({ symbol }) => {
+        return symbol;
+      })
+    );
 
     for (const [symbol, response] of Object.entries(currentData)) {
+      const symbolMapping = symbolProfiles.find((symbolProfile) => {
+        return symbolProfile.symbol === symbol;
+      })?.symbolMapping;
+
       for (const dataEnhancer of this.dataEnhancers) {
         try {
           currentData[symbol] = await dataEnhancer.enhance({
             response,
-            symbol
+            symbol: symbolMapping[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
           console.error(`Failed to enhance data for symbol ${symbol}`, error);

@@ -8,7 +8,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { CurrentRateService } from './current-rate.service';
@@ -27,6 +27,7 @@ import { RulesService } from './rules.service';
     ImpersonationModule,
     OrderModule,
     PrismaModule,
+    SymbolProfileModule,
     UserModule
   ],
   controllers: [PortfolioController],
@@ -35,8 +36,7 @@ import { RulesService } from './rules.service';
     CurrentRateService,
     MarketDataService,
     PortfolioService,
-    RulesService,
-    SymbolProfileService
+    RulesService
   ]
 })
 export class PortfolioModule {}

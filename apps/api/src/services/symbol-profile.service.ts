@@ -29,7 +29,8 @@ export class SymbolProfileService {
     return symbolProfiles.map((symbolProfile) => ({
       ...symbolProfile,
       countries: this.getCountries(symbolProfile),
-      sectors: this.getSectors(symbolProfile)
+      sectors: this.getSectors(symbolProfile),
+      symbolMapping: this.getSymbolMapping(symbolProfile)
     }));
   }
 
@@ -59,6 +60,14 @@ export class SymbolProfileService {
           weight: weight as number
         };
       }
+    );
+  }
+
+  private getSymbolMapping(symbolProfile: SymbolProfile) {
+    return (
+      (symbolProfile['symbolMapping'] as {
+        [key: string]: string;
+      }) ?? {}
     );
   }
 }
