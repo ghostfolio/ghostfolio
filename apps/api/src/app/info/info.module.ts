@@ -1,3 +1,4 @@
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
@@ -20,6 +21,7 @@ import { InfoService } from './info.service';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '30 days' }
     }),
+    RedisCacheModule,
     SymbolProfileModule
   ],
   controllers: [InfoController],

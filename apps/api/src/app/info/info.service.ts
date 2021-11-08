@@ -1,9 +1,11 @@
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
+import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
 import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable, Logger } from '@nestjs/common';
@@ -14,6 +16,7 @@ import { subDays } from 'date-fns';
 @Injectable()
 export class InfoService {
   private static DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
+  private static CACHE_KEY_STATISTICS = 'STATISTICS';
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -21,7 +24,8 @@ export class InfoService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly jwtService: JwtService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly redisCacheService: RedisCacheService
   ) {}
 
   public async get(): Promise<InfoItem> {
@@ -176,6 +180,18 @@ export class InfoService {
       return undefined;
     }
 
+    let statistics: Statistics;
+
+    try {
+      statistics = JSON.parse(
+        await this.redisCacheService.get(InfoService.CACHE_KEY_STATISTICS)
+      );
+
+      if (statistics) {
+        return statistics;
+      }
+    } catch {}
+
     const activeUsers1d = await this.countActiveUsers(1);
     const activeUsers7d = await this.countActiveUsers(7);
     const activeUsers30d = await this.countActiveUsers(30);
@@ -183,7 +199,7 @@ export class InfoService {
     const gitHubContributors = await this.countGitHubContributors();
     const gitHubStargazers = await this.countGitHubStargazers();
 
-    return {
+    statistics = {
       activeUsers1d,
       activeUsers7d,
       activeUsers30d,
@@ -191,6 +207,13 @@ export class InfoService {
       gitHubStargazers,
       newUsers30d
     };
+
+    await this.redisCacheService.set(
+      InfoService.CACHE_KEY_STATISTICS,
+      JSON.stringify(statistics)
+    );
+
+    return statistics;
   }
 
   private async getSubscriptions(): Promise<Subscription[]> {

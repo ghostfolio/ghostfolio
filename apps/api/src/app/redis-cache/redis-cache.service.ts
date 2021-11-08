@@ -21,9 +21,9 @@ export class RedisCacheService {
     await this.cache.reset();
   }
 
-  public async set(key: string, value: string) {
+  public async set(key: string, value: string, ttlInSeconds?: number) {
     await this.cache.set(key, value, {
-      ttl: this.configurationService.get('CACHE_TTL')
+      ttl: ttlInSeconds ?? this.configurationService.get('CACHE_TTL')
     });
   }
 }
