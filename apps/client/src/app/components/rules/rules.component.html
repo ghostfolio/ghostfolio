@@ -2,7 +2,9 @@
   <div class="row no-gutters">
     <div class="col">
       <mat-card *ngIf="rules === null" class="my-2 text-center">
-        <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+        <gf-no-transactions-info-indicator
+          [hasBorder]="false"
+        ></gf-no-transactions-info-indicator>
       </mat-card>
 
       <gf-rule *ngIf="rules === undefined" [isLoading]="true"></gf-rule>

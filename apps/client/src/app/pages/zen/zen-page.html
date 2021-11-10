@@ -65,35 +65,25 @@
       <h3 class="d-flex justify-content-center mb-3" i18n>Holdings</h3>
       <div class="row">
         <div class="align-items-center col">
-          <ng-container *ngIf="hasPositions === true">
-            <mat-card class="p-0">
-              <mat-card-content>
-                <gf-positions
-                  [baseCurrency]="user?.settings?.baseCurrency"
-                  [deviceType]="deviceType"
-                  [locale]="user?.settings?.locale"
-                  [positions]="positions"
-                  [range]="dateRange"
-                ></gf-positions>
-              </mat-card-content>
-            </mat-card>
-            <div *ngIf="hasPermissionToCreateOrder" class="text-center">
-              <a
-                class="mt-3"
-                i18n
-                mat-button
-                [routerLink]="['/portfolio', 'transactions']"
-                >Manage Transactions...</a
-              >
-            </div>
-          </ng-container>
-          <div
-            *ngIf="hasPositions === false"
-            class="d-flex justify-content-center"
-          >
-            <div>
-              <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
-            </div>
+          <mat-card class="p-0">
+            <mat-card-content>
+              <gf-positions
+                [baseCurrency]="user?.settings?.baseCurrency"
+                [deviceType]="deviceType"
+                [locale]="user?.settings?.locale"
+                [positions]="positions"
+                [range]="dateRange"
+              ></gf-positions>
+            </mat-card-content>
+          </mat-card>
+          <div *ngIf="hasPermissionToCreateOrder" class="text-center">
+            <a
+              class="mt-3"
+              i18n
+              mat-button
+              [routerLink]="['/portfolio', 'transactions']"
+              >Manage Transactions...</a
+            >
           </div>
         </div>
       </div>

@@ -61,7 +61,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateOrder: boolean;
-  public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
   public isLoadingSummary = true;
@@ -225,7 +224,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe((response) => {
           this.positions = response.positions;
-          this.hasPositions = this.positions?.length > 0;
 
           this.changeDetectorRef.markForCheck();
         });
