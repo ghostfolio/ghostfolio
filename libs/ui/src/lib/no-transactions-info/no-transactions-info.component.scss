@@ -1,7 +1,10 @@
 :host {
-  border: 1px solid rgba(var(--dark-dividers));
-  border-radius: 0.25rem;
   display: block;
+
+  &.has-border {
+    border: 1px solid rgba(var(--dark-dividers));
+    border-radius: 0.25rem;
+  }
 
   gf-logo {
     opacity: 0.25;

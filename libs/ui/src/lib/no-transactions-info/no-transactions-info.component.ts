@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input
+} from '@angular/core';
 
 @Component({
   selector: 'gf-no-transactions-info-indicator',
@@ -6,8 +11,8 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
   templateUrl: './no-transactions-info.component.html',
   styleUrls: ['./no-transactions-info.component.scss']
 })
-export class NoTransactionsInfoComponent implements OnInit {
-  public constructor() {}
+export class NoTransactionsInfoComponent {
+  @HostBinding('class.has-border') @Input() hasBorder = true;
 
-  public ngOnInit() {}
+  public constructor() {}
 }

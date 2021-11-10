@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the info messages to add the first transaction
+
+### Fixed
+
+- Fixed the skeleton loader of the portfolio holdings
+
 ## 1.72.0 - 08.11.2021
 
 ### Changed

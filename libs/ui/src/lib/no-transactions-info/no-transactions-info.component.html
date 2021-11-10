@@ -6,6 +6,7 @@
     class="align-items-center justify-content-center"
     color="primary"
     [routerLink]="['/portfolio', 'transactions']"
+    [queryParams]="{ createDialog: true }"
     mat-button
   >
     <span i18n>Time to add your first transaction.</span>

@@ -24,7 +24,9 @@
           ></gf-position>
         </ng-container>
         <div *ngIf="!hasPositions" class="p-3 text-center">
-          <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+          <gf-no-transactions-info-indicator
+            [hasBorder]="false"
+          ></gf-no-transactions-info-indicator>
         </div>
       </ng-container>
     </div>

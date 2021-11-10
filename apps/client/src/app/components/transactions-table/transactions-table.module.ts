@@ -10,6 +10,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -22,6 +23,7 @@ import { TransactionsTableComponent } from './transactions-table.component';
   exports: [TransactionsTableComponent],
   imports: [
     CommonModule,
+    GfNoTransactionsInfoModule,
     GfPositionDetailDialogModule,
     GfSymbolIconModule,
     GfSymbolModule,

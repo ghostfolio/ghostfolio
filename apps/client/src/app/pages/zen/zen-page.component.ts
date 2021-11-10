@@ -38,7 +38,6 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
-  public hasPositions: boolean;
   public historicalDataItems: LineChartItem[];
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
@@ -140,7 +139,6 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe((response) => {
           this.positions = response.positions;
-          this.hasPositions = this.positions?.length > 0;
 
           this.changeDetectorRef.markForCheck();
         });
