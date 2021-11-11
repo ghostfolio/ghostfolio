@@ -1,7 +1,7 @@
 <gf-dialog-header
   mat-dialog-title
+  title="Performance"
   [deviceType]="data.deviceType"
-  [title]="title"
   (closeButtonClicked)="onClose()"
 ></gf-dialog-header>
 
@@ -11,20 +11,12 @@
       class="mb-4"
       symbol="Performance"
       [benchmarkDataItems]="benchmarkDataItems"
-      [benchmarkLabel]="benchmarkLabel"
       [historicalDataItems]="historicalDataItems"
       [showGradient]="true"
       [showLegend]="true"
       [showXAxis]="true"
       [showYAxis]="false"
     ></gf-line-chart>
-  </div>
-
-  <div *ngIf="data.fearAndGreedIndex" class="container p-0">
-    <gf-fear-and-greed-index
-      class="d-flex flex-column justify-content-center"
-      [fearAndGreedIndex]="data.fearAndGreedIndex"
-    ></gf-fear-and-greed-index>
   </div>
 </div>
 
