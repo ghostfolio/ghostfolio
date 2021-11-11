@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Adapted the decimal places for cryptocurrencies in the position detail dialog
+- Moved the _Fear & Greed Index_ (market mood) to a new tab on the home page
 
 ## 1.73.0 - 10.11.2021
 

@@ -2,6 +2,5 @@ import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.i
 
 export interface PositionDetailDialogParams {
   deviceType: string;
-  fearAndGreedIndex: number;
   historicalDataItems: LineChartItem[];
 }

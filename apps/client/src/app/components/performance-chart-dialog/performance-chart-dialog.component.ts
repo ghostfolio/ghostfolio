@@ -22,13 +22,11 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
 })
 export class PerformanceChartDialog {
   public benchmarkDataItems: LineChartItem[];
-  public benchmarkLabel = 'S&P 500';
   public benchmarkSymbol = 'VOO';
   public currency: string;
   public firstBuyDate: string;
   public marketPrice: number;
   public historicalDataItems: LineChartItem[];
-  public title: string;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -83,8 +81,6 @@ export class PerformanceChartDialog {
 
         this.changeDetectorRef.markForCheck();
       });
-
-    this.title = `Performance vs. ${this.benchmarkLabel}`;
   }
 
   public onClose(): void {

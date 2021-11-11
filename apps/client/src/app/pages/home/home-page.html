@@ -23,12 +23,7 @@
       "
     >
       <div class="row w-100">
-        <a
-          *ngIf="historicalDataItems?.length !== 0"
-          class="chart-container col"
-          [routerLink]="[]"
-          [queryParams]="{performanceChartDialog: true}"
-        >
+        <div class="chart-container col">
           <gf-line-chart
             class="mr-3"
             symbol="Performance"
@@ -38,19 +33,19 @@
             [showXAxis]="false"
             [showYAxis]="false"
           ></gf-line-chart>
-        </a>
-        <div
-          *ngIf="historicalDataItems?.length === 0"
-          class="
-            align-items-center
-            chart-container
-            d-flex
-            justify-content-center
-            w-100
-          "
-        >
-          <div class="d-flex justify-content-center">
-            <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+          <div
+            *ngIf="historicalDataItems?.length === 0"
+            class="
+              align-items-center
+              chart-container
+              d-flex
+              justify-content-center
+              w-100
+            "
+          >
+            <div class="d-flex justify-content-center">
+              <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+            </div>
           </div>
         </div>
       </div>
@@ -134,6 +129,35 @@
                 [locale]="user?.settings?.locale"
                 [summary]="summary"
               ></gf-portfolio-summary>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab *ngIf="hasPermissionToAccessFearAndGreedIndex">
+    <ng-template mat-tab-label>
+      <ion-icon name="newspaper-outline" size="large"></ion-icon>
+    </ng-template>
+    <div
+      class="
+        align-items-center
+        container
+        d-flex
+        flex-grow-1
+        h-100
+        justify-content-center
+        w-100
+      "
+    >
+      <div class="row w-100">
+        <div class="col-xs-12 col-md-8 offset-md-2">
+          <mat-card class="h-100">
+            <mat-card-content>
+              <gf-fear-and-greed-index
+                class="d-flex justify-content-center"
+                [fearAndGreedIndex]="fearAndGreedIndex"
+              ></gf-fear-and-greed-index>
             </mat-card-content>
           </mat-card>
         </div>

@@ -7,10 +7,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PerformanceChartDialog } from '@ghostfolio/client/components/performance-chart-dialog/performance-chart-dialog.component';
 import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -79,21 +76,10 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
-    private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
-    private route: ActivatedRoute,
-    private router: Router,
     private settingsStorageService: SettingsStorageService,
     private userService: UserService
   ) {
-    this.routeQueryParams = this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (params['performanceChartDialog']) {
-          this.openDialog();
-        }
-      });
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -170,25 +156,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  private openDialog(): void {
-    const dialogRef = this.dialog.open(PerformanceChartDialog, {
-      autoFocus: false,
-      data: {
-        deviceType: this.deviceType,
-        fearAndGreedIndex: this.fearAndGreedIndex,
-        historicalDataItems: this.historicalDataItems
-      },
-      width: '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
   }
 
   private update() {
