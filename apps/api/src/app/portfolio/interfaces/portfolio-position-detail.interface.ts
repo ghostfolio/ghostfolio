@@ -1,4 +1,8 @@
+import { AssetClass, AssetSubClass } from '@prisma/client';
+
 export interface PortfolioPositionDetail {
+  assetClass?: AssetClass;
+  assetSubClass?: AssetSubClass;
   averagePrice: number;
   currency: string;
   firstBuyDate: string;

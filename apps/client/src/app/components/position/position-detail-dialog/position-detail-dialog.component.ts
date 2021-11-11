@@ -9,6 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
+import { AssetSubClass } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,6 +24,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./position-detail-dialog.component.scss']
 })
 export class PositionDetailDialog implements OnDestroy {
+  public assetSubClass: AssetSubClass;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
   public currency: string;
@@ -54,6 +56,7 @@ export class PositionDetailDialog implements OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
+          assetSubClass,
           averagePrice,
           currency,
           firstBuyDate,
@@ -71,6 +74,7 @@ export class PositionDetailDialog implements OnDestroy {
           symbol,
           transactionCount
         }) => {
+          this.assetSubClass = assetSubClass;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.currency = currency;
