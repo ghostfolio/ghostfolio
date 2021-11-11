@@ -1,5 +1,3 @@
-// TODO ///////////
-
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
@@ -299,6 +297,8 @@ export class PortfolioService {
       };
     }
 
+    const assetClass = orders[0].SymbolProfile?.assetClass;
+    const assetSubClass = orders[0].SymbolProfile?.assetSubClass;
     const positionCurrency = orders[0].currency;
     const name = orders[0].SymbolProfile?.name ?? '';
 
@@ -412,6 +412,8 @@ export class PortfolioService {
       }
 
       return {
+        assetClass,
+        assetSubClass,
         currency,
         firstBuyDate,
         grossPerformance,
@@ -467,6 +469,8 @@ export class PortfolioService {
       }
 
       return {
+        assetClass,
+        assetSubClass,
         marketPrice,
         maxPrice,
         minPrice,

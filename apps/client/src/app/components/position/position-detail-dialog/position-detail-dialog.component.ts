@@ -9,6 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
+import { AssetSubClass } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,6 +24,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./position-detail-dialog.component.scss']
 })
 export class PositionDetailDialog implements OnDestroy {
+  public assetSubClass: AssetSubClass;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
   public currency: string;
@@ -38,6 +40,7 @@ export class PositionDetailDialog implements OnDestroy {
   public netPerformance: number;
   public netPerformancePercent: number;
   public quantity: number;
+  public quantityPrecision = 2;
   public symbol: string;
   public transactionCount: number;
 
@@ -54,6 +57,7 @@ export class PositionDetailDialog implements OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
+          assetSubClass,
           averagePrice,
           currency,
           firstBuyDate,
@@ -71,6 +75,7 @@ export class PositionDetailDialog implements OnDestroy {
           symbol,
           transactionCount
         }) => {
+          this.assetSubClass = assetSubClass;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.currency = currency;
@@ -144,6 +149,18 @@ export class PositionDetailDialog implements OnDestroy {
             isSameMonth(parseISO(this.firstBuyDate), new Date())
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
+          }
+
+          if (Number.isInteger(this.quantity)) {
+            this.quantityPrecision = 0;
+          } else if (assetSubClass === 'CRYPTOCURRENCY') {
+            if (this.quantity < 1) {
+              this.quantityPrecision = 7;
+            } else if (this.quantity < 1000) {
+              this.quantityPrecision = 5;
+            } else if (this.quantity > 10000000) {
+              this.quantityPrecision = 0;
+            }
           }
 
           this.changeDetectorRef.markForCheck();
