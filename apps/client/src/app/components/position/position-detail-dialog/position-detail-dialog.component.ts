@@ -40,6 +40,7 @@ export class PositionDetailDialog implements OnDestroy {
   public netPerformance: number;
   public netPerformancePercent: number;
   public quantity: number;
+  public quantityPrecision = 2;
   public symbol: string;
   public transactionCount: number;
 
@@ -148,6 +149,18 @@ export class PositionDetailDialog implements OnDestroy {
             isSameMonth(parseISO(this.firstBuyDate), new Date())
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
+          }
+
+          if (Number.isInteger(this.quantity)) {
+            this.quantityPrecision = 0;
+          } else if (assetSubClass === 'CRYPTOCURRENCY') {
+            if (this.quantity < 1) {
+              this.quantityPrecision = 7;
+            } else if (this.quantity < 1000) {
+              this.quantityPrecision = 5;
+            } else if (this.quantity > 10000000) {
+              this.quantityPrecision = 0;
+            }
           }
 
           this.changeDetectorRef.markForCheck();

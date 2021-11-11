@@ -82,7 +82,7 @@
           label="Quantity"
           size="medium"
           [locale]="data.locale"
-          [precision]="assetSubClass === 'CRYPTOCURRENCY' ? 5 : 2"
+          [precision]="quantityPrecision"
           [value]="quantity"
         ></gf-value>
       </div>
