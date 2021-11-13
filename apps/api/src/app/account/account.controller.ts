@@ -1,3 +1,4 @@
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
@@ -6,7 +7,10 @@ import {
   hasPermission,
   permissions
 } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type {
+  AccountWithValue,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -34,6 +38,7 @@ export class AccountController {
   public constructor(
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
+    private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
@@ -85,14 +90,14 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'))
   public async getAllAccounts(
     @Headers('impersonation-id') impersonationId
-  ): Promise<AccountModel[]> {
+  ): Promise<AccountWithValue[]> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         impersonationId,
         this.request.user.id
       );
 
-    let accounts = await this.accountService.getAccounts(
+    let accounts = await this.portfolioService.getAccounts(
       impersonationUserId || this.request.user.id
     );
 
@@ -102,9 +107,11 @@ export class AccountController {
     ) {
       accounts = nullifyValuesInObjects(accounts, [
         'balance',
+        'convertedBalance',
         'fee',
         'quantity',
-        'unitPrice'
+        'unitPrice',
+        'value'
       ]);
     }
 

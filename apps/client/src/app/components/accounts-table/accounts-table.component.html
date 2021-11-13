@@ -17,6 +17,20 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="currency">
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell px-1"
+      i18n
+      mat-header-cell
+    >
+      Currency
+    </th>
+    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
+      {{ element.currency }}
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="platform">
     <th
       *matHeaderCellDef
@@ -45,7 +59,9 @@
       <span class="d-none d-sm-block" i18n>Transactions</span>
     </th>
     <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-      {{ element.transactionCount }}
+      <ng-container *ngIf="element.accountType === 'SECURITIES'">{{
+        element.transactionCount
+      }}</ng-container>
     </td>
   </ng-container>
 
@@ -56,9 +72,23 @@
     <td *matCellDef="let element" class="px-1 text-right" mat-cell>
       <gf-value
         class="d-inline-block justify-content-end"
-        [currency]="element.currency"
+        [isCurrency]="true"
         [locale]="locale"
-        [value]="element.balance"
+        [value]="element.convertedBalance"
+      ></gf-value>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="value">
+    <th *matHeaderCellDef class="px-1 text-right" i18n mat-header-cell>
+      Value
+    </th>
+    <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      <gf-value
+        class="d-inline-block justify-content-end"
+        [isCurrency]="true"
+        [locale]="locale"
+        [value]="element.value"
       ></gf-value>
     </td>
   </ng-container>

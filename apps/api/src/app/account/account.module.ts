@@ -1,3 +1,4 @@
+import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
@@ -11,16 +12,17 @@ import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
 
 @Module({
+  controllers: [AccountController],
   imports: [
     ConfigurationModule,
     DataProviderModule,
     ExchangeRateDataModule,
     ImpersonationModule,
-    RedisCacheModule,
+    PortfolioModule,
     PrismaModule,
+    RedisCacheModule,
     UserModule
   ],
-  controllers: [AccountController],
   providers: [AccountService]
 })
 export class AccountModule {}

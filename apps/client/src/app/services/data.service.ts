@@ -29,7 +29,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { permissions } from '@ghostfolio/common/permissions';
-import { DateRange } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 import {
   Account as AccountModel,
   DataSource,
@@ -62,7 +62,7 @@ export class DataService {
   }
 
   public fetchAccounts() {
-    return this.http.get<AccountModel[]>('/api/account');
+    return this.http.get<AccountWithValue[]>('/api/account');
   }
 
   public fetchAdminData() {

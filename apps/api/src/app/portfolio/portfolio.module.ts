@@ -18,6 +18,7 @@ import { PortfolioService } from './portfolio.service';
 import { RulesService } from './rules.service';
 
 @Module({
+  exports: [PortfolioService],
   imports: [
     AccessModule,
     ConfigurationModule,
