@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a logo to the log on the server start
 - Added the data gathering progress to the log and the admin control panel
+- Added the value column to the accounts table
 
 ## 1.74.0 - 11.11.2021
 
