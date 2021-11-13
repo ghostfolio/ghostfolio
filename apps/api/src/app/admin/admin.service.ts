@@ -20,6 +20,8 @@ export class AdminService {
 
   public async get(): Promise<AdminData> {
     return {
+      dataGatheringProgress:
+        await this.dataGatheringService.getDataGatheringProgress(),
       exchangeRates: this.exchangeRateDataService
         .getCurrencies()
         .filter((currency) => {
@@ -58,7 +60,7 @@ export class AdminService {
       return 'IN_PROGRESS';
     }
 
-    return null;
+    return undefined;
   }
 
   private async getUsersWithAnalytics(): Promise<AdminData['users']> {

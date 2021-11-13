@@ -22,6 +22,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AdminPageComponent implements OnDestroy, OnInit {
   public dataGatheringInProgress: boolean;
+  public dataGatheringProgress: number;
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public exchangeRates: { label1: string; label2: string; value: number }[];
   public lastDataGathering: string;
@@ -134,12 +135,14 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
+          dataGatheringProgress,
           exchangeRates,
           lastDataGathering,
           transactionCount,
           userCount,
           users
         }) => {
+          this.dataGatheringProgress = dataGatheringProgress;
           this.exchangeRates = exchangeRates;
           this.users = users;
 
