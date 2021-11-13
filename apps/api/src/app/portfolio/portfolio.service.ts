@@ -37,6 +37,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import type {
+  AccountWithValue,
   DateRange,
   OrderWithAccount,
   RequestWithUser
@@ -78,6 +79,36 @@ export class PortfolioService {
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async getAccounts(aUserId: string): Promise<AccountWithValue[]> {
+    const [accounts, details] = await Promise.all([
+      this.accountService.accounts({
+        include: { Order: true, Platform: true },
+        orderBy: { name: 'asc' },
+        where: { userId: aUserId }
+      }),
+      this.getDetails(aUserId, aUserId)
+    ]);
+
+    const userCurrency = this.request.user.Settings.currency;
+
+    return accounts.map((account) => {
+      const result = {
+        ...account,
+        convertedBalance: this.exchangeRateDataService.toCurrency(
+          account.balance,
+          account.currency,
+          userCurrency
+        ),
+        transactionCount: account.Order.length,
+        value: details.accounts[account.name].current
+      };
+
+      delete result.Order;
+
+      return result;
+    });
+  }
 
   public async getInvestments(
     aImpersonationId: string
@@ -256,7 +287,7 @@ export class PortfolioService {
       value: totalValue
     });
 
-    const accounts = await this.getAccounts(
+    const accounts = await this.getValueOfAccounts(
       orders,
       portfolioItemsNow,
       userCurrency,
@@ -617,7 +648,7 @@ export class PortfolioService {
         currentGrossPerformancePercent,
         currentNetPerformance,
         currentNetPerformancePercent,
-        currentValue: currentValue
+        currentValue
       }
     };
   }
@@ -667,7 +698,7 @@ export class PortfolioService {
     for (const position of currentPositions.positions) {
       portfolioItemsNow[position.symbol] = position;
     }
-    const accounts = await this.getAccounts(
+    const accounts = await this.getValueOfAccounts(
       orders,
       portfolioItemsNow,
       currency,
@@ -867,7 +898,7 @@ export class PortfolioService {
     };
   }
 
-  private async getAccounts(
+  private async getValueOfAccounts(
     orders: OrderWithAccount[],
     portfolioItemsNow: { [p: string]: TimelinePosition },
     userCurrency: string,
@@ -882,20 +913,15 @@ export class PortfolioService {
         return accountId === account.id;
       });
 
-      if (ordersByAccount.length <= 0) {
-        // Add account without orders
-        const balance = this.exchangeRateDataService.toCurrency(
-          account.balance,
-          account.currency,
-          userCurrency
-        );
-        accounts[account.name] = {
-          current: balance,
-          original: balance
-        };
-
-        continue;
-      }
+      const convertedBalance = this.exchangeRateDataService.toCurrency(
+        account.balance,
+        account.currency,
+        userCurrency
+      );
+      accounts[account.name] = {
+        current: convertedBalance,
+        original: convertedBalance
+      };
 
       for (const order of ordersByAccount) {
         let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
