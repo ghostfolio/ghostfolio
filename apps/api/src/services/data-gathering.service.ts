@@ -18,7 +18,6 @@ import {
 
 import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider/data-provider.service';
-import { GhostfolioScraperApiService } from './data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from './exchange-rate-data.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
@@ -26,13 +25,14 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class DataGatheringService {
+  private dataGatheringProgress: number;
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly ghostfolioScraperApi: GhostfolioScraperApiService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -204,8 +204,11 @@ export class DataGatheringService {
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
     let hasError = false;
+    let symbolCounter = 0;
 
     for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
+      this.dataGatheringProgress = symbolCounter / aSymbolsWithStartDate.length;
+
       try {
         const historicalData = await this.dataProviderService.getHistoricalRaw(
           [{ dataSource, symbol }],
@@ -263,6 +266,16 @@ export class DataGatheringService {
         hasError = true;
         Logger.error(error);
       }
+
+      if (symbolCounter > 0 && symbolCounter % 100 === 0) {
+        Logger.log(
+          `Data gathering progress: ${(
+            this.dataGatheringProgress * 100
+          ).toFixed(2)}%`
+        );
+      }
+
+      symbolCounter += 1;
     }
 
     await this.exchangeRateDataService.initialize();
@@ -270,6 +283,16 @@ export class DataGatheringService {
     if (hasError) {
       throw '';
     }
+  }
+
+  public async getDataGatheringProgress() {
+    const isInProgress = await this.getIsInProgress();
+
+    if (isInProgress) {
+      return this.dataGatheringProgress;
+    }
+
+    return undefined;
   }
 
   public async getIsInProgress() {

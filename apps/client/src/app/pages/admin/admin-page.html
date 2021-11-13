@@ -35,14 +35,15 @@
             </div>
           </div>
           <div class="d-flex my-3">
-            <div class="w-50" i18n>Last Data Gathering</div>
+            <div class="w-50" i18n>Data Gathering</div>
             <div class="w-50">
               <div>
                 <ng-container *ngIf="lastDataGathering"
                   >{{ lastDataGathering }}</ng-container
                 >
                 <ng-container *ngIf="dataGatheringInProgress" i18n
-                  >In Progress</ng-container
+                  >In Progress ({{ dataGatheringProgress | percent : '1.2-2'
+                  }})</ng-container
                 >
               </div>
               <div class="mt-2 overflow-hidden">
