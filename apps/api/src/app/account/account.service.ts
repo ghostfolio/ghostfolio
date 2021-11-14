@@ -85,7 +85,15 @@ export class AccountService {
     });
 
     return accounts.map((account) => {
-      const result = { ...account, transactionCount: account.Order.length };
+      let transactionCount = 0;
+
+      for (const order of account.Order) {
+        if (!order.isDraft) {
+          transactionCount += 1;
+        }
+      }
+
+      const result = { ...account, transactionCount };
 
       delete result.Order;
 
