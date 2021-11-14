@@ -94,14 +94,22 @@ export class PortfolioService {
     const userCurrency = this.request.user.Settings.currency;
 
     return accounts.map((account) => {
+      let transactionCount = 0;
+
+      for (const order of account.Order) {
+        if (!order.isDraft) {
+          transactionCount += 1;
+        }
+      }
+
       const result = {
         ...account,
+        transactionCount,
         convertedBalance: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
           userCurrency
         ),
-        transactionCount: account.Order.length,
         value: details.accounts[account.name]?.current ?? 0
       };
 
