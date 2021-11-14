@@ -1,16 +1,17 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
+import {
+  nullifyValuesInObject,
+  nullifyValuesInObjects
+} from '@ghostfolio/api/helper/object.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
+import { Accounts } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasPermission,
   permissions
 } from '@ghostfolio/common/permissions';
-import type {
-  AccountWithValue,
-  RequestWithUser
-} from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -90,32 +91,39 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'))
   public async getAllAccounts(
     @Headers('impersonation-id') impersonationId
-  ): Promise<AccountWithValue[]> {
+  ): Promise<Accounts> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         impersonationId,
         this.request.user.id
       );
 
-    let accounts = await this.portfolioService.getAccounts(
-      impersonationUserId || this.request.user.id
-    );
+    let accountsWithAggregations =
+      await this.portfolioService.getAccountsWithAggregations(
+        impersonationUserId || this.request.user.id
+      );
 
     if (
       impersonationUserId ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      accounts = nullifyValuesInObjects(accounts, [
-        'balance',
-        'convertedBalance',
-        'fee',
-        'quantity',
-        'unitPrice',
-        'value'
-      ]);
+      accountsWithAggregations = {
+        ...nullifyValuesInObject(accountsWithAggregations, [
+          'totalBalance',
+          'totalValue'
+        ]),
+        accounts: nullifyValuesInObjects(accountsWithAggregations.accounts, [
+          'balance',
+          'convertedBalance',
+          'fee',
+          'quantity',
+          'unitPrice',
+          'value'
+        ])
+      };
     }
 
-    return accounts;
+    return accountsWithAggregations;
   }
 
   @Get(':id')

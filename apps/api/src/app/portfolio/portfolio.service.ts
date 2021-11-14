@@ -28,6 +28,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
+  Accounts,
   PortfolioDetails,
   PortfolioPerformance,
   PortfolioReport,
@@ -101,13 +102,28 @@ export class PortfolioService {
           userCurrency
         ),
         transactionCount: account.Order.length,
-        value: details.accounts[account.name].current
+        value: details.accounts[account.name]?.current ?? 0
       };
 
       delete result.Order;
 
       return result;
     });
+  }
+
+  public async getAccountsWithAggregations(aUserId: string): Promise<Accounts> {
+    const accounts = await this.getAccounts(aUserId);
+    let totalBalance = 0;
+    let totalValue = 0;
+    let transactionCount = 0;
+
+    for (const account of accounts) {
+      totalBalance += account.convertedBalance;
+      totalValue += account.value;
+      transactionCount += account.transactionCount;
+    }
+
+    return { accounts, totalBalance, totalValue, transactionCount };
   }
 
   public async getInvestments(
@@ -924,16 +940,9 @@ export class PortfolioService {
       };
 
       for (const order of ordersByAccount) {
-        let currentValueOfSymbol = this.exchangeRateDataService.toCurrency(
-          order.quantity * portfolioItemsNow[order.symbol].marketPrice,
-          order.currency,
-          userCurrency
-        );
-        let originalValueOfSymbol = this.exchangeRateDataService.toCurrency(
-          order.quantity * order.unitPrice,
-          order.currency,
-          userCurrency
-        );
+        let currentValueOfSymbol =
+          order.quantity * portfolioItemsNow[order.symbol].marketPrice;
+        let originalValueOfSymbol = order.quantity * order.unitPrice;
 
         if (order.type === 'SELL') {
           currentValueOfSymbol *= -1;

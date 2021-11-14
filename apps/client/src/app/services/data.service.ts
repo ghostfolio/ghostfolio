@@ -17,6 +17,7 @@ import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setti
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import {
   Access,
+  Accounts,
   AdminData,
   Export,
   InfoItem,
@@ -62,7 +63,7 @@ export class DataService {
   }
 
   public fetchAccounts() {
-    return this.http.get<AccountWithValue[]>('/api/account');
+    return this.http.get<Accounts>('/api/account');
   }
 
   public fetchAdminData() {

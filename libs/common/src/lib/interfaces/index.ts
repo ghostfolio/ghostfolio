@@ -1,4 +1,5 @@
 import { Access } from './access.interface';
+import { Accounts } from './accounts.interface';
 import { AdminData } from './admin-data.interface';
 import { Export } from './export.interface';
 import { InfoItem } from './info-item.interface';
@@ -19,6 +20,7 @@ import { User } from './user.interface';
 
 export {
   Access,
+  Accounts,
   AdminData,
   Export,
   InfoItem,
