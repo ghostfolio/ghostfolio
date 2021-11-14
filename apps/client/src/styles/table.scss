@@ -1,8 +1,12 @@
 @mixin gf-table($darkTheme: false) {
   background: transparent !important;
 
-  td {
-    border: 0 !important;
+  .mat-footer-row,
+  .mat-row {
+    .mat-cell,
+    .mat-footer-cell {
+      border-bottom: 0;
+    }
   }
 
   .mat-row {

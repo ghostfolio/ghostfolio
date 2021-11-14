@@ -28,6 +28,9 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateAccount: boolean;
   public hasPermissionToDeleteAccount: boolean;
   public routeQueryParams: Subscription;
+  public totalBalance = 0;
+  public totalValue = 0;
+  public transactionCount = 0;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -103,8 +106,11 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchAccounts()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.accounts = response;
+      .subscribe(({ accounts, totalBalance, totalValue, transactionCount }) => {
+        this.accounts = accounts;
+        this.totalBalance = totalBalance;
+        this.totalValue = totalValue;
+        this.transactionCount = transactionCount;
 
         if (this.accounts?.length <= 0) {
           this.router.navigate([], { queryParams: { createDialog: true } });

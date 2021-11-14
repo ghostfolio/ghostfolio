@@ -8,6 +8,9 @@
         [deviceType]="deviceType"
         [locale]="user?.settings?.locale"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteAccount && !user.settings.isRestrictedView"
+        [totalBalance]="totalBalance"
+        [totalValue]="totalValue"
+        [transactionCount]="transactionCount"
         (accountDeleted)="onDeleteAccount($event)"
         (accountToUpdate)="onUpdateAccount($event)"
       ></gf-accounts-table>

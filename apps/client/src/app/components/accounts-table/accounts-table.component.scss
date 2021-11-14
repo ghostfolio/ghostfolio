@@ -10,6 +10,16 @@
   }
 
   .mat-table {
+    td {
+      &.mat-footer-cell {
+        border-top: 1px solid
+          rgba(
+            var(--palette-foreground-divider),
+            var(--palette-foreground-divider-alpha)
+          );
+      }
+    }
+
     th {
       ::ng-deep {
         .mat-sort-header-container {
