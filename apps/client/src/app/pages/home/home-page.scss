@@ -27,7 +27,6 @@
           &.overview {
             .chart-container {
               aspect-ratio: 16 / 9;
-              cursor: pointer;
               max-height: 50vh;
 
               // Fallback for aspect-ratio (using padding hack)
