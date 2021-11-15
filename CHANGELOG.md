@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Hid the _Get Started_ button on the registration page
+
 ### Fixed
 
 - Fixed the transactions count in the accounts table (exclude drafts)
