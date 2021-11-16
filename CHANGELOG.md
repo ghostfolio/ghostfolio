@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the transactions count in the accounts table (exclude drafts)
+- Fixed the footer row of the accounts table on mobile
+- Fixed the transactions count calculation in the accounts table (exclude drafts)
 
 ## 1.76.0 - 14.11.2021
 
