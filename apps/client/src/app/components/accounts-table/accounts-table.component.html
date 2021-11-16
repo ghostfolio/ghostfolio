@@ -30,7 +30,9 @@
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       {{ element.currency }}
     </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell>{{ baseCurrency }}</td>
+    <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
+      {{ baseCurrency }}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="platform">
@@ -53,7 +55,11 @@
         <span>{{ element.Platform?.name }}</span>
       </div>
     </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    <td
+      *matFooterCellDef
+      class="d-none d-lg-table-cell px-1"
+      mat-footer-cell
+    ></td>
   </ng-container>
 
   <ng-container matColumnDef="transactions">
