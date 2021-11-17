@@ -31,7 +31,14 @@
 }
 
 :host-context(.is-dark-theme) {
-  .mat-form-field {
-    color: rgba(var(--light-primary-text));
+  .mat-table {
+    td {
+      &.mat-footer-cell {
+        border-top-color: rgba(
+          var(--palette-foreground-divider-dark),
+          var(--palette-foreground-divider-dark-alpha)
+        );
+      }
+    }
   }
 }
