@@ -261,6 +261,9 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   }: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
+        accounts: this.user.accounts.filter((account) => {
+          return account.accountType === 'SECURITIES';
+        }),
         transaction: {
           accountId,
           currency,
@@ -343,6 +346,9 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   private openCreateTransactionDialog(aTransaction?: OrderModel): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
+        accounts: this.user.accounts.filter((account) => {
+          return account.accountType === 'SECURITIES';
+        }),
         transaction: {
           accountId: aTransaction?.accountId ?? this.defaultAccountId,
           currency: aTransaction?.currency ?? null,

@@ -10,9 +10,7 @@
           required
           [(value)]="data.transaction.accountId"
         >
-          <mat-option
-            *ngFor="let account of data.user?.accounts"
-            [value]="account.id"
+          <mat-option *ngFor="let account of data.accounts" [value]="account.id"
             >{{ account.name }}</mat-option
           >
         </mat-select>

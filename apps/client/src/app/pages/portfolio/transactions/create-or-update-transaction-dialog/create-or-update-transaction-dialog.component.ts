@@ -84,6 +84,10 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
         })
       );
 
+    if (this.data.transaction.id) {
+      this.searchSymbolCtrl.disable();
+    }
+
     if (this.data.transaction.symbol) {
       this.dataService
         .fetchSymbolItem({
