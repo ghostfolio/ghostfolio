@@ -23,7 +23,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     {
       author: 'Onur',
       country: 'Switzerland 🇨🇭',
-      quote: `Ghostfolio looks like the perfect portfolio tracker that I've been searching for all these years.`
+      quote: `Ghostfolio looks like the perfect portfolio tracker I've been searching for all these years.`
     },
     {
       author: 'Ivo',
