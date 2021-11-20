@@ -14,6 +14,28 @@ import { Subject } from 'rxjs';
 export class LandingPageComponent implements OnDestroy, OnInit {
   public currentYear = format(new Date(), 'yyyy');
   public demoAuthToken: string;
+  public testimonials = [
+    {
+      author: 'Philipp',
+      country: 'Germany 🇩🇪',
+      quote: `Super slim app with a great user interface. On top of that, it's open source.`
+    },
+    {
+      author: 'Onur',
+      country: 'Switzerland 🇨🇭',
+      quote: `Ghostfolio looks like the perfect portfolio tracker that I've been searching for all these years.`
+    },
+    {
+      author: 'Ivo',
+      country: 'Netherlands 🇳🇱',
+      quote: `A fantastic open source app to track my investments across platforms. Love the simplicity of its design and the depth of the insights.`
+    },
+    {
+      author: 'Damjan',
+      country: 'Slovenia 🇸🇮',
+      quote: `Ghostfolio helps me track all my investments in one place, it has a built-in portfolio analyzer and a very neat, seamless user interface.`
+    }
+  ];
 
   private unsubscribeSubject = new Subject<void>();
 
