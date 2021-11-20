@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a testimonial section to the landing page
+
 ### Fixed
 
 - Fixed the footer row border of the accounts table in dark mode

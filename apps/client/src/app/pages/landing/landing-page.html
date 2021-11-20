@@ -108,6 +108,31 @@
   </div>
 
   <div class="row my-5">
+    <div class="col-12">
+      <h2 class="h4 mb-1 text-center">
+        What our <strong>users</strong> are saying
+      </h2>
+    </div>
+    <div *ngFor="let testimonial of testimonials" class="col-md-6">
+      <div class="d-flex flex-row py-3">
+        <div class="d-flex justify-content-center">
+          <gf-logo
+            class="mr-3 mt-2 pt-1"
+            size="medium"
+            [hideName]="true"
+          ></gf-logo>
+        </div>
+        <div>
+          <div>{{ testimonial.quote }}</div>
+          <div class="mt-2 text-muted">
+            — {{ testimonial.author }}, {{ testimonial.country }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row my-5">
     <div class="col-md-6 offset-md-3">
       <h2 class="h4 mb-1 text-center">
         How does <strong>Ghostfolio</strong> work?
