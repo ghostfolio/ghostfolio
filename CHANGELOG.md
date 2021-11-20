@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a testimonial to the landing page
+- Added a testimonial section to the landing page
 
 ### Fixed
 
