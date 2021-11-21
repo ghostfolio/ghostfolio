@@ -15,6 +15,27 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="value">
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell justify-content-end px-1"
+      i18n
+      mat-header-cell
+      mat-sort-header
+    >
+      Value
+    </th>
+    <td class="d-none d-lg-table-cell px-1" mat-cell *matCellDef="let element">
+      <div class="d-flex justify-content-end">
+        <gf-value
+          [isCurrency]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : element.value"
+        ></gf-value>
+      </div>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="performance">
     <th
       *matHeaderCellDef

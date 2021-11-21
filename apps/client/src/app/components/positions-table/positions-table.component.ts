@@ -70,6 +70,7 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnChanges() {
     this.displayedColumns = [
       'symbol',
+      'value',
       'performance',
       'allocationInvestment',
       'allocationCurrent'
