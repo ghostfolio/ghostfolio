@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for cryptocurrency _Algorand_
+
 ### Changed
 
 - Locked the symbol input in the edit transaction dialog
 - Filtered the account selector by account type (`SECURITIES`) in the create or edit transaction dialog
+
+### Fixed
+
+- Fixed the search functionality for cryptocurrency symbols (do not show unsupported symbols)
 
 ## 1.78.0 - 20.11.2021
 
