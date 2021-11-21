@@ -5,4 +5,6 @@ export interface PortfolioPerformance {
   currentNetPerformance: number;
   currentNetPerformancePercent: number;
   currentValue: number;
+  isAllTimeHigh: boolean;
+  isAllTimeLow: boolean;
 }
