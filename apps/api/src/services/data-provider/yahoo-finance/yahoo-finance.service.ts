@@ -199,7 +199,10 @@ export class YahooFinanceService implements DataProviderInterface {
         })
         .filter(({ quoteType, symbol }) => {
           return (
-            (quoteType === 'CRYPTOCURRENCY' && this.isCryptoCurrency(symbol)) ||
+            (quoteType === 'CRYPTOCURRENCY' &&
+              this.cryptocurrencyService.isCrypto(
+                symbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
+              )) ||
             quoteType === 'EQUITY' ||
             quoteType === 'ETF'
           );
@@ -254,7 +257,11 @@ export class YahooFinanceService implements DataProviderInterface {
     ) {
       if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
         return `${aSymbol}=X`;
-      } else if (this.isCryptoCurrency(aSymbol)) {
+      } else if (
+        this.cryptocurrencyService.isCrypto(
+          aSymbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
+        )
+      ) {
         // Add a dash before the last three characters
         // BTCUSD  -> BTC-USD
         // DOGEUSD -> DOGE-USD
@@ -264,14 +271,6 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return aSymbol;
-  }
-
-  private isCryptoCurrency(aSymbol: string) {
-    const symbol = aSymbol.replace(new RegExp('-USD$'), 'USD');
-    return (
-      this.cryptocurrencyService.isCrypto(symbol) ||
-      this.cryptocurrencyService.isCrypto(symbol.replace('1', ''))
-    );
   }
 
   private parseAssetClass(aPrice: IYahooFinancePrice): {
