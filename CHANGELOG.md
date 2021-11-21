@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the value column to the positions table
 - Added support for cryptocurrency _Algorand_
 
 ### Changed
