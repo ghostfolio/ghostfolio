@@ -5,10 +5,7 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import {
-  HistoricalDataItem,
-  PortfolioPositionDetail
-} from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
@@ -21,6 +18,7 @@ import {
   AdminData,
   Export,
   InfoItem,
+  PortfolioChart,
   PortfolioDetails,
   PortfolioPerformance,
   PortfolioPublicDetails,
@@ -30,12 +28,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { permissions } from '@ghostfolio/common/permissions';
-import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
-import {
-  Account as AccountModel,
-  DataSource,
-  Order as OrderModel
-} from '@prisma/client';
+import { DateRange } from '@ghostfolio/common/types';
+import { DataSource, Order as OrderModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';
@@ -91,7 +85,7 @@ export class DataService {
   }
 
   public fetchChart({ range }: { range: DateRange }) {
-    return this.http.get<HistoricalDataItem[]>('/api/portfolio/chart', {
+    return this.http.get<PortfolioChart>('/api/portfolio/chart', {
       params: { range }
     });
   }

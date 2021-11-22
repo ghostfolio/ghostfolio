@@ -1,3 +1,4 @@
+import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
@@ -365,16 +366,20 @@ export class PortfolioCalculator {
   public async calculateTimeline(
     timelineSpecification: TimelineSpecification[],
     endDate: string
-  ): Promise<TimelinePeriod[]> {
+  ): Promise<TimelineInfoInterface> {
     if (timelineSpecification.length === 0) {
-      return [];
+      return {
+        maxNetPerformance: new Big(0),
+        minNetPerformance: new Big(0),
+        timelinePeriods: []
+      };
     }
 
     const startDate = timelineSpecification[0].start;
     const start = parseDate(startDate);
     const end = parseDate(endDate);
 
-    const timelinePeriodPromises: Promise<TimelinePeriod[]>[] = [];
+    const timelinePeriodPromises: Promise<TimelineInfoInterface>[] = [];
     let i = 0;
     let j = -1;
     for (
@@ -417,11 +422,40 @@ export class PortfolioCalculator {
       }
     }
 
-    const timelinePeriods: TimelinePeriod[][] = await Promise.all(
+    const timelineInfoInterfaces: TimelineInfoInterface[] = await Promise.all(
       timelinePeriodPromises
     );
+    const minNetPerformance = timelineInfoInterfaces
+      .map((timelineInfo) => timelineInfo.minNetPerformance)
+      .filter((performance) => performance !== null)
+      .reduce((minPerformance, current) => {
+        if (minPerformance.lt(current)) {
+          return minPerformance;
+        } else {
+          return current;
+        }
+      });
 
-    return flatten(timelinePeriods);
+    const maxNetPerformance = timelineInfoInterfaces
+      .map((timelineInfo) => timelineInfo.maxNetPerformance)
+      .filter((performance) => performance !== null)
+      .reduce((maxPerformance, current) => {
+        if (maxPerformance.gt(current)) {
+          return maxPerformance;
+        } else {
+          return current;
+        }
+      });
+
+    const timelinePeriods = timelineInfoInterfaces.map(
+      (timelineInfo) => timelineInfo.timelinePeriods
+    );
+
+    return {
+      maxNetPerformance,
+      minNetPerformance,
+      timelinePeriods: flatten(timelinePeriods)
+    };
   }
 
   private calculateOverallPerformance(
@@ -513,7 +547,7 @@ export class PortfolioCalculator {
     j: number,
     startDate: Date,
     endDate: Date
-  ): Promise<TimelinePeriod[]> {
+  ): Promise<TimelineInfoInterface> {
     let investment: Big = new Big(0);
     let fees: Big = new Big(0);
 
@@ -569,6 +603,8 @@ export class PortfolioCalculator {
     }
 
     const results: TimelinePeriod[] = [];
+    let maxNetPerformance: Big = null;
+    let minNetPerformance: Big = null;
     for (
       let currentDate = startDate;
       isBefore(currentDate, endDate);
@@ -592,18 +628,36 @@ export class PortfolioCalculator {
       }
       if (!invalid) {
         const grossPerformance = value.minus(investment);
+        const netPerformance = grossPerformance.minus(fees);
+        if (
+          minNetPerformance === null ||
+          minNetPerformance.gt(netPerformance)
+        ) {
+          minNetPerformance = netPerformance;
+        }
+        if (
+          maxNetPerformance === null ||
+          maxNetPerformance.lt(netPerformance)
+        ) {
+          maxNetPerformance = netPerformance;
+        }
+
         const result = {
           grossPerformance,
           investment,
+          netPerformance,
           value,
-          date: currentDateAsString,
-          netPerformance: grossPerformance.minus(fees)
+          date: currentDateAsString
         };
         results.push(result);
       }
     }
 
-    return results;
+    return {
+      maxNetPerformance,
+      minNetPerformance,
+      timelinePeriods: results
+    };
   }
 
   private getFactor(type: OrderType) {

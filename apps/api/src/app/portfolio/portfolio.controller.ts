@@ -8,6 +8,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { baseCurrency } from '@ghostfolio/common/config';
 import {
+  PortfolioChart,
   PortfolioDetails,
   PortfolioPerformance,
   PortfolioPublicDetails,
@@ -32,10 +33,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import {
-  HistoricalDataItem,
-  PortfolioPositionDetail
-} from './interfaces/portfolio-position-detail.interface';
+import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
 
@@ -92,11 +90,13 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId,
     @Query('range') range,
     @Res() res: Response
-  ): Promise<HistoricalDataItem[]> {
-    let chartData = await this.portfolioService.getChart(
+  ): Promise<PortfolioChart> {
+    const historicalDataContainer = await this.portfolioService.getChart(
       impersonationId,
       range
     );
+
+    let chartData = historicalDataContainer.items;
 
     let hasNullValue = false;
 
@@ -130,7 +130,11 @@ export class PortfolioController {
       });
     }
 
-    return <any>res.json(chartData);
+    return <any>res.json({
+      chart: chartData,
+      isAllTimeHigh: historicalDataContainer.isAllTimeHigh,
+      isAllTimeLow: historicalDataContainer.isAllTimeLow
+    });
   }
 
   @Get('details')

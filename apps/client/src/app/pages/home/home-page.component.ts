@@ -59,6 +59,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateOrder: boolean;
   public historicalDataItems: LineChartItem[];
+  public isAllTimeHigh: boolean;
+  public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
   public isLoadingSummary = true;
   public performance: PortfolioPerformance;
@@ -166,12 +168,14 @@ export class HomePageComponent implements OnDestroy, OnInit {
         .fetchChart({ range: this.dateRange })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe((chartData) => {
-          this.historicalDataItems = chartData.map((chartDataItem) => {
+          this.historicalDataItems = chartData.chart.map((chartDataItem) => {
             return {
               date: chartDataItem.date,
               value: chartDataItem.value
             };
           });
+          this.isAllTimeHigh = chartData.isAllTimeHigh;
+          this.isAllTimeLow = chartData.isAllTimeLow;
 
           this.changeDetectorRef.markForCheck();
         });

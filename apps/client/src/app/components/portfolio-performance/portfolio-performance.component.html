@@ -1,5 +1,11 @@
 <div class="container p-0">
-  <div class="row no-gutters">
+  <div
+    class="no-gutters row"
+    [ngClass]="{
+      'text-danger': isAllTimeLow,
+      'text-success': isAllTimeHigh
+    }"
+  >
     <div class="flex-grow-1"></div>
     <div *ngIf="isLoading" class="align-items-center d-flex">
       <ngx-skeleton-loader
@@ -12,8 +18,8 @@
       ></ngx-skeleton-loader>
     </div>
     <div
-      [hidden]="isLoading"
       class="display-4 font-weight-bold m-0 text-center value-container"
+      [hidden]="isLoading"
     >
       <span #value id="value"></span>
     </div>

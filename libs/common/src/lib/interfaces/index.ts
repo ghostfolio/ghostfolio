@@ -3,6 +3,7 @@ import { Accounts } from './accounts.interface';
 import { AdminData } from './admin-data.interface';
 import { Export } from './export.interface';
 import { InfoItem } from './info-item.interface';
+import { PortfolioChart } from './portfolio-chart.interface';
 import { PortfolioDetails } from './portfolio-details.interface';
 import { PortfolioItem } from './portfolio-item.interface';
 import { PortfolioOverview } from './portfolio-overview.interface';
@@ -24,6 +25,7 @@ export {
   AdminData,
   Export,
   InfoItem,
+  PortfolioChart,
   PortfolioDetails,
   PortfolioItem,
   PortfolioOverview,

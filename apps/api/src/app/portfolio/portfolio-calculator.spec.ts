@@ -1502,11 +1502,11 @@ describe('PortfolioCalculator', () => {
           accuracy: 'year'
         }
       ];
-      const timeline: TimelinePeriod[] =
-        await portfolioCalculator.calculateTimeline(
-          timelineSpecification,
-          '2021-06-30'
-        );
+      const timelineInfo = await portfolioCalculator.calculateTimeline(
+        timelineSpecification,
+        '2021-06-30'
+      );
+      const timeline: TimelinePeriod[] = timelineInfo.timelinePeriods;
 
       expect(timeline).toEqual([
         {
@@ -1622,11 +1622,11 @@ describe('PortfolioCalculator', () => {
           accuracy: 'year'
         }
       ];
-      const timeline: TimelinePeriod[] =
-        await portfolioCalculator.calculateTimeline(
-          timelineSpecification,
-          '2021-06-30'
-        );
+      const timelineInfo = await portfolioCalculator.calculateTimeline(
+        timelineSpecification,
+        '2021-06-30'
+      );
+      const timeline: TimelinePeriod[] = timelineInfo.timelinePeriods;
 
       expect(timeline).toEqual([
         {
@@ -1665,11 +1665,11 @@ describe('PortfolioCalculator', () => {
           accuracy: 'month'
         }
       ];
-      const timeline: TimelinePeriod[] =
-        await portfolioCalculator.calculateTimeline(
-          timelineSpecification,
-          '2021-06-30'
-        );
+      const timelineInfo = await portfolioCalculator.calculateTimeline(
+        timelineSpecification,
+        '2021-06-30'
+      );
+      const timeline: TimelinePeriod[] = timelineInfo.timelinePeriods;
 
       expect(timeline).toEqual([
         {
@@ -1883,6 +1883,9 @@ describe('PortfolioCalculator', () => {
           value: new Big('3186.9') // 15 * (144.38 + days=851 * 0.08)
         }
       ]);
+
+      expect(timelineInfo.maxNetPerformance).toEqual(new Big('547.9'));
+      expect(timelineInfo.minNetPerformance).toEqual(new Big('0'));
     });
 
     it('with yearly and monthly mixed', async () => {
@@ -1901,11 +1904,11 @@ describe('PortfolioCalculator', () => {
           accuracy: 'month'
         }
       ];
-      const timeline: TimelinePeriod[] =
-        await portfolioCalculator.calculateTimeline(
-          timelineSpecification,
-          '2021-06-30'
-        );
+      const timelineInfo = await portfolioCalculator.calculateTimeline(
+        timelineSpecification,
+        '2021-06-30'
+      );
+      const timeline: TimelinePeriod[] = timelineInfo.timelinePeriods;
 
       expect(timeline).toEqual([
         {
@@ -1987,11 +1990,11 @@ describe('PortfolioCalculator', () => {
           accuracy: 'day'
         }
       ];
-      const timeline: TimelinePeriod[] =
-        await portfolioCalculator.calculateTimeline(
-          timelineSpecification,
-          '2021-06-30'
-        );
+      const timelineInfo = await portfolioCalculator.calculateTimeline(
+        timelineSpecification,
+        '2021-06-30'
+      );
+      const timeline: TimelinePeriod[] = timelineInfo.timelinePeriods;
 
       expect(timeline).toEqual(
         expect.objectContaining([
@@ -2296,11 +2299,11 @@ describe('PortfolioCalculator', () => {
           accuracy: 'year'
         }
       ];
-      const timeline: TimelinePeriod[] =
-        await portfolioCalculator.calculateTimeline(
-          timelineSpecification,
-          '2020-01-01'
-        );
+      const timelineInfo = await portfolioCalculator.calculateTimeline(
+        timelineSpecification,
+        '2020-01-01'
+      );
+      const timeline: TimelinePeriod[] = timelineInfo.timelinePeriods;
 
       expect(timeline).toEqual([
         {

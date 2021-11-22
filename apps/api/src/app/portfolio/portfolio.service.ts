@@ -56,12 +56,14 @@ import {
   parse,
   parseISO,
   setDayOfYear,
+  startOfDay,
   subDays,
   subYears
 } from 'date-fns';
 import { isEmpty } from 'lodash';
 
 import {
+  HistoricalDataContainer,
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
@@ -164,7 +166,7 @@ export class PortfolioService {
   public async getChart(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<HistoricalDataItem[]> {
+  ): Promise<HistoricalDataContainer> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const portfolioCalculator = new PortfolioCalculator(
@@ -175,14 +177,21 @@ export class PortfolioService {
     const { transactionPoints } = await this.getTransactionPoints({ userId });
     portfolioCalculator.setTransactionPoints(transactionPoints);
     if (transactionPoints.length === 0) {
-      return [];
+      return {
+        isAllTimeHigh: false,
+        isAllTimeLow: false,
+        items: []
+      };
     }
     let portfolioStart = parse(
       transactionPoints[0].date,
       DATE_FORMAT,
       new Date()
     );
-    portfolioStart = this.getStartDate(aDateRange, portfolioStart);
+
+    // Get start date for the full portfolio because of because of the
+    // min and max calculation
+    portfolioStart = this.getStartDate('max', portfolioStart);
 
     const timelineSpecification: TimelineSpecification[] = [
       {
@@ -191,18 +200,52 @@ export class PortfolioService {
       }
     ];
 
-    const timeline = await portfolioCalculator.calculateTimeline(
+    const timelineInfo = await portfolioCalculator.calculateTimeline(
       timelineSpecification,
       format(new Date(), DATE_FORMAT)
     );
 
-    return timeline
+    const timeline = timelineInfo.timelinePeriods;
+
+    const items = timeline
       .filter((timelineItem) => timelineItem !== null)
       .map((timelineItem) => ({
         date: timelineItem.date,
         marketPrice: timelineItem.value,
         value: timelineItem.netPerformance.toNumber()
       }));
+
+    let lastItem = null;
+    if (timeline.length > 0) {
+      lastItem = timeline[timeline.length - 1];
+    }
+
+    let isAllTimeHigh = timelineInfo.maxNetPerformance?.eq(
+      lastItem?.netPerformance
+    );
+    let isAllTimeLow = timelineInfo.minNetPerformance?.eq(
+      lastItem?.netPerformance
+    );
+    if (isAllTimeHigh && isAllTimeLow) {
+      isAllTimeHigh = false;
+      isAllTimeLow = false;
+    }
+
+    portfolioStart = startOfDay(
+      this.getStartDate(
+        aDateRange,
+        parse(transactionPoints[0].date, DATE_FORMAT, new Date())
+      )
+    );
+
+    return {
+      isAllTimeHigh,
+      isAllTimeLow,
+      items: items.filter((item) => {
+        // Filter items of date range
+        return !isAfter(portfolioStart, parseDate(item.date));
+      })
+    };
   }
 
   public async getDetails(
@@ -639,7 +682,9 @@ export class PortfolioService {
           currentGrossPerformancePercent: 0,
           currentNetPerformance: 0,
           currentNetPerformancePercent: 0,
-          currentValue: 0
+          currentValue: 0,
+          isAllTimeHigh: false,
+          isAllTimeLow: false
         }
       };
     }
@@ -672,7 +717,9 @@ export class PortfolioService {
         currentGrossPerformancePercent,
         currentNetPerformance,
         currentNetPerformancePercent,
-        currentValue
+        currentValue,
+        isAllTimeHigh: true, // TODO
+        isAllTimeLow: false // TODO
       }
     };
   }

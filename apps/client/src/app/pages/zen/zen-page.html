@@ -47,6 +47,8 @@
           <gf-portfolio-performance
             class="pb-4"
             [baseCurrency]="user?.settings?.baseCurrency"
+            [isAllTimeHigh]="isAllTimeHigh"
+            [isAllTimeLow]="isAllTimeLow"
             [isLoading]="isLoadingPerformance"
             [locale]="user?.settings?.locale"
             [performance]="performance"
