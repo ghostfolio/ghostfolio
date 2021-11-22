@@ -56,6 +56,7 @@ import {
   parse,
   parseISO,
   setDayOfYear,
+  startOfDay,
   subDays,
   subYears
 } from 'date-fns';
@@ -230,9 +231,11 @@ export class PortfolioService {
       isAllTimeLow = false;
     }
 
-    portfolioStart = this.getStartDate(
-      aDateRange,
-      parse(transactionPoints[0].date, DATE_FORMAT, new Date())
+    portfolioStart = startOfDay(
+      this.getStartDate(
+        aDateRange,
+        parse(transactionPoints[0].date, DATE_FORMAT, new Date())
+      )
     );
 
     return {
@@ -240,7 +243,7 @@ export class PortfolioService {
       isAllTimeLow,
       items: items.filter((item) => {
         // Filter items of date range
-        return isBefore(portfolioStart, parseDate(item.date));
+        return !isAfter(portfolioStart, parseDate(item.date));
       })
     };
   }
