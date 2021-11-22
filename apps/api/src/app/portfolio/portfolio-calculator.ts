@@ -427,6 +427,7 @@ export class PortfolioCalculator {
     );
     const minNetPerformance = timelineInfoInterfaces
       .map((timelineInfo) => timelineInfo.minNetPerformance)
+      .filter(performance => performance !== null)
       .reduce((minPerformance, current) => {
         if (minPerformance.lt(current)) {
           return minPerformance;
@@ -437,6 +438,7 @@ export class PortfolioCalculator {
 
     const maxNetPerformance = timelineInfoInterfaces
       .map((timelineInfo) => timelineInfo.maxNetPerformance)
+      .filter(performance => performance !== null)
       .reduce((maxPerformance, current) => {
         if (maxPerformance.gt(current)) {
           return maxPerformance;
