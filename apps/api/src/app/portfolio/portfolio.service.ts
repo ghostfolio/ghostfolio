@@ -187,7 +187,10 @@ export class PortfolioService {
       DATE_FORMAT,
       new Date()
     );
-    portfolioStart = this.getStartDate(aDateRange, portfolioStart);
+
+    // Get start date for the full portfolio because of because of the
+    // min and max calculation
+    portfolioStart = this.getStartDate('max', portfolioStart);
 
     const timelineSpecification: TimelineSpecification[] = [
       {
@@ -226,10 +229,19 @@ export class PortfolioService {
       isAllTimeHigh = false;
       isAllTimeLow = false;
     }
+
+    portfolioStart = this.getStartDate(
+      aDateRange,
+      parse(transactionPoints[0].date, DATE_FORMAT, new Date())
+    );
+
     return {
       isAllTimeHigh,
       isAllTimeLow,
-      items
+      items: items.filter((item) => {
+        // Filter items of date range
+        return isBefore(portfolioStart, parseDate(item.date));
+      })
     };
   }
 
