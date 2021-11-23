@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { Currency } from '@prisma/client';
 import { Meta, Story, moduleMetadata } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -24,7 +23,7 @@ const Template: Story<PortfolioProportionChartComponent> = (
 
 export const Simple = Template.bind({});
 Simple.args = {
-  baseCurrency: Currency.USD,
+  baseCurrency: 'USD',
   keys: ['name'],
   locale: 'en-US',
   positions: {
