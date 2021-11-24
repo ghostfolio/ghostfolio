@@ -1,6 +1,6 @@
-import { GfLogoModule } from '@ghostfolio/ui/logo';
 import { Meta, Story, moduleMetadata } from '@storybook/angular';
 
+import { GfLogoModule } from '../../../../ui/src/lib/logo'; // TODO: @ghostfolio/ui/logo
 import { NoTransactionsInfoComponent } from './no-transactions-info.component';
 
 export default {
