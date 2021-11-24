@@ -1,7 +1,7 @@
 :host {
   .logo {
     background-color: rgba(var(--dark-primary-text));
-    mask: url(~apps/client/src/assets/ghost.svg) no-repeat center;
+    mask: url('/assets/ghost.svg') no-repeat center;
   }
 
   .name {
