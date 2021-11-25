@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Upgraded `angular` from version `12.2.4` to `13.0.2`
+- Upgraded `angular-material-css-vars` from version `2.1.2` to `3.0.0`
+- Upgraded `nestjs` from version `7.6.18` to `8.2.3`
+- Upgraded `Nx` from version `12.8.0` to `13.2.2`
+- Upgraded `rxjs` from version `6.6.7` to `7.4.0`
+- Upgraded `storybook` from version `6.3.8` to `6.4.0-rc.3`
+
 ## 1.80.0 - 23.11.2021
 
 ### Added

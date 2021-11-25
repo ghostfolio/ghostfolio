@@ -1,22 +1,5 @@
 {
   "version": 1,
-  "cli": {
-    "defaultCollection": "@nrwl/nest"
-  },
-  "defaultProject": "api",
-  "schematics": {
-    "@nrwl/angular:application": {
-      "linter": "eslint",
-      "unitTestRunner": "jest",
-      "e2eTestRunner": "cypress"
-    },
-    "@nrwl/angular:library": {
-      "linter": "eslint",
-      "unitTestRunner": "jest"
-    },
-    "@nrwl/nest": {},
-    "@nrwl/angular:component": {}
-  },
   "projects": {
     "api": {
       "root": "apps/api",
@@ -69,7 +52,8 @@
           },
           "outputs": ["coverage/apps/api"]
         }
-      }
+      },
+      "tags": []
     },
     "client": {
       "projectType": "application",
@@ -201,7 +185,8 @@
           },
           "outputs": ["coverage/apps/client"]
         }
-      }
+      },
+      "tags": []
     },
     "client-e2e": {
       "root": "apps/client-e2e",
@@ -221,7 +206,9 @@
             }
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["client"]
     },
     "common": {
       "root": "libs/common",
@@ -242,7 +229,8 @@
             "passWithNoTests": true
           }
         }
-      }
+      },
+      "tags": []
     },
     "ui": {
       "projectType": "library",
@@ -300,7 +288,8 @@
             }
           }
         }
-      }
+      },
+      "tags": []
     },
     "ui-e2e": {
       "root": "apps/ui-e2e",
@@ -326,7 +315,9 @@
             "lintFilePatterns": ["apps/ui-e2e/**/*.{js,ts}"]
           }
         }
-      }
+      },
+      "tags": [],
+      "implicitDependencies": ["ui"]
     }
   }
 }

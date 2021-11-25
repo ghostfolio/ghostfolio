@@ -23,6 +23,7 @@
 !.vscode/settings.json
 
 # misc
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage

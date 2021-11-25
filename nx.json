@@ -23,30 +23,9 @@
           "test",
           "e2e",
           "build-storybook"
-        ]
+        ],
+        "parallel": 1
       }
-    }
-  },
-  "projects": {
-    "api": {
-      "tags": []
-    },
-    "client": {
-      "tags": []
-    },
-    "client-e2e": {
-      "tags": [],
-      "implicitDependencies": ["client"]
-    },
-    "common": {
-      "tags": []
-    },
-    "ui": {
-      "tags": []
-    },
-    "ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["ui"]
     }
   },
   "targetDependencies": {
@@ -56,5 +35,22 @@
         "projects": "dependencies"
       }
     ]
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/nest"
+  },
+  "defaultProject": "api",
+  "generators": {
+    "@nrwl/angular:application": {
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/nest": {},
+    "@nrwl/angular:component": {}
   }
 }

@@ -20,22 +20,20 @@ async function bootstrap() {
   const port = process.env.PORT || 3333;
   await app.listen(port, () => {
     logLogo();
-    Logger.log(`Listening at http://localhost:${port}`, '', false);
-    Logger.log('', '', false);
+    Logger.log(`Listening at http://localhost:${port}`);
+    Logger.log('');
   });
 }
 
 function logLogo() {
-  Logger.log('   ________               __  ____      ___', '', false);
-  Logger.log('  / ____/ /_  ____  _____/ /_/ __/___  / (_)___', '', false);
-  Logger.log(' / / __/ __ \\/ __ \\/ ___/ __/ /_/ __ \\/ / / __ \\', '', false);
-  Logger.log('/ /_/ / / / / /_/ (__  ) /_/ __/ /_/ / / / /_/ /', '', false);
+  Logger.log('   ________               __  ____      ___');
+  Logger.log('  / ____/ /_  ____  _____/ /_/ __/___  / (_)___');
+  Logger.log(' / / __/ __ \\/ __ \\/ ___/ __/ /_/ __ \\/ / / __ \\');
+  Logger.log('/ /_/ / / / / /_/ (__  ) /_/ __/ /_/ / / / /_/ /');
   Logger.log(
-    `\\____/_/ /_/\\____/____/\\__/_/  \\____/_/_/\\____/ ${environment.version}`,
-    '',
-    false
+    `\\____/_/ /_/\\____/____/\\__/_/  \\____/_/_/\\____/ ${environment.version}`
   );
-  Logger.log('', '', false);
+  Logger.log('');
 }
 
 bootstrap();

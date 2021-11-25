@@ -4,9 +4,10 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { format, isDate } from 'date-fns';
 import { isNumber } from 'lodash';
+
+import { DEFAULT_DATE_FORMAT } from '../../../../common/src/lib/config'; // TODO: @ghostfolio/common/config
 
 @Component({
   selector: 'gf-value',
