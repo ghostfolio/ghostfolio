@@ -254,10 +254,12 @@
     *matRowDef="let row; columns: displayedColumns"
     mat-row
     (click)="
-      onOpenPositionDialog({
-        symbol: row.symbol
-      })
+      !row.isDraft &&
+        onOpenPositionDialog({
+          symbol: row.symbol
+        })
     "
+    [ngClass]="{ 'is-draft': row.isDraft }"
   ></tr>
 </table>
 
