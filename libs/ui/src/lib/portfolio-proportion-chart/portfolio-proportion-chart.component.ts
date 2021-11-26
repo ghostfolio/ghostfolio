@@ -54,13 +54,7 @@ export class PortfolioProportionChartComponent
   };
 
   public constructor() {
-    Chart.register(
-      ArcElement,
-      ChartDataLabels,
-      DoughnutController,
-      LinearScale,
-      Tooltip
-    );
+    Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
   }
 
   public ngAfterViewInit() {
@@ -76,7 +70,6 @@ export class PortfolioProportionChartComponent
   }
 
   public ngOnDestroy() {
-    Chart.unregister(ChartDataLabels);
     this.chart?.destroy();
   }
 
@@ -254,7 +247,7 @@ export class PortfolioProportionChartComponent
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
-          options: {
+          options: <unknown>{
             cutout: '70%',
             layout: {
               padding: this.showLabels === true ? 100 : 0
@@ -316,6 +309,7 @@ export class PortfolioProportionChartComponent
               }
             }
           },
+          plugins: [ChartDataLabels],
           type: 'doughnut'
         });
       }
