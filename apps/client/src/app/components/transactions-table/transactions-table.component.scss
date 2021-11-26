@@ -24,7 +24,9 @@
     }
 
     .mat-row {
-      cursor: pointer;
+      &:not(.is-draft) {
+        cursor: pointer;
+      }
 
       .type-badge {
         background-color: rgba(var(--palette-foreground-text), 0.05);
