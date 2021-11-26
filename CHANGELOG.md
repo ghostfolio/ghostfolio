@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `rxjs` from version `6.6.7` to `7.4.0`
 - Upgraded `storybook` from version `6.3.8` to `6.4.0-rc.3`
 
+### Fixed
+
+- Fixed the broken line charts showing value labels if openend from the allocations page
+- Fixed the click event for drafts in the transactions table
+
 ## 1.80.0 - 23.11.2021
 
 ### Added
