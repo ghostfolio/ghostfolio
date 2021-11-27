@@ -19,6 +19,7 @@ export interface PortfolioPositionDetail {
   quantity: number;
   symbol: string;
   transactionCount: number;
+  value: number;
 }
 
 export interface HistoricalDataContainer {

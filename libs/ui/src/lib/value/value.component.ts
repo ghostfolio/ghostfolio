@@ -24,7 +24,7 @@ export class ValueComponent implements OnChanges {
   @Input() locale = '';
   @Input() position = '';
   @Input() precision: number | undefined;
-  @Input() size = '';
+  @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() value: number | string = '';
 
   public absoluteValue = 0;

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the value to the position detail dialog
+
 ### Changed
 
 - Upgraded `angular` from version `12.2.4` to `13.0.2`

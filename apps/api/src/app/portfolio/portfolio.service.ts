@@ -391,7 +391,8 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         quantity: undefined,
         symbol: aSymbol,
-        transactionCount: undefined
+        transactionCount: undefined,
+        value: undefined
       };
     }
 
@@ -527,7 +528,12 @@ export class PortfolioService {
         historicalData: historicalDataArray,
         netPerformancePercent: position.netPerformancePercentage.toNumber(),
         quantity: quantity.toNumber(),
-        symbol: aSymbol
+        symbol: aSymbol,
+        value: this.exchangeRateDataService.toCurrency(
+          quantity.mul(marketPrice).toNumber(),
+          currency,
+          userCurrency
+        )
       };
     } else {
       const currentData = await this.dataProviderService.get([
@@ -584,7 +590,8 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         quantity: 0,
         symbol: aSymbol,
-        transactionCount: undefined
+        transactionCount: undefined,
+        value: 0
       };
     }
   }

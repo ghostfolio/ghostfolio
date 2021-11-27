@@ -16,6 +16,7 @@ import {
 })
 export class DialogHeaderComponent implements OnInit {
   @Input() deviceType: string;
+  @Input() position: 'center' | 'left' = 'left';
   @Input() title: string;
 
   @Output() closeButtonClicked = new EventEmitter<void>();

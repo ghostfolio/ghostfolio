@@ -1,4 +1,8 @@
-<span class="flex-grow-1 text-truncate">{{ title }}</span>
+<span
+  class="flex-grow-1 text-truncate"
+  [ngClass]="{ 'text-center': position === 'center' }"
+  >{{ title }}</span
+>
 <button
   *ngIf="deviceType !== 'mobile'"
   class="no-min-width px-0"

@@ -370,7 +370,8 @@ export class PortfolioController {
           'grossPerformance',
           'investment',
           'netPerformance',
-          'quantity'
+          'quantity',
+          'value'
         ]);
       }
 
