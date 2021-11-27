@@ -8,10 +8,18 @@
         <div *ngIf="value > 0" class="mr-1 text-success">+</div>
         <div *ngIf="value < 0" class="mr-1 text-danger">-</div>
       </ng-container>
-      <div *ngIf="isPercent" [ngClass]="size === 'medium' ? 'h4 mb-0' : ''">
+      <div
+        *ngIf="isPercent"
+        class="mb-0"
+        [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+      >
         {{ formattedValue }}%
       </div>
-      <div *ngIf="!isPercent" [ngClass]="size === 'medium' ? 'h4 mb-0' : ''">
+      <div
+        *ngIf="!isPercent"
+        class="mb-0"
+        [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+      >
         <ng-container *ngIf="value === null">
           <span class="text-monospace text-muted">***</span>
         </ng-container>
@@ -27,7 +35,10 @@
       </div>
     </ng-container>
     <ng-container *ngIf="isDate">
-      <div [ngClass]="size === 'medium' ? 'h4 mb-0' : ''">
+      <div
+        class="mb-0"
+        [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+      >
         {{ formattedDate }}
       </div>
     </ng-container>
@@ -41,7 +52,7 @@
   *ngIf="value === undefined"
   animation="pulse"
   [theme]="{
-    height: '1.5rem',
+    height: size === 'large' ? '2.5rem' : '1.5rem',
     width: '5rem'
   }"
 ></ngx-skeleton-loader>

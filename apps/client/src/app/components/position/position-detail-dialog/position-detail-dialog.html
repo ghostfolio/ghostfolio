@@ -1,5 +1,6 @@
 <gf-dialog-header
   mat-dialog-title
+  position="center"
   [deviceType]="data.deviceType"
   [title]="name ?? symbol"
   (closeButtonClicked)="onClose()"
@@ -7,6 +8,17 @@
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center mb-3">
+        <gf-value
+          size="large"
+          [currency]="data.baseCurrency"
+          [locale]="data.locale"
+          [value]="value"
+        ></gf-value>
+      </div>
+    </div>
+
     <gf-line-chart
       class="mb-4"
       benchmarkLabel="Buy Price"

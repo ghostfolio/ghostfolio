@@ -43,6 +43,7 @@ export class PositionDetailDialog implements OnDestroy {
   public quantityPrecision = 2;
   public symbol: string;
   public transactionCount: number;
+  public value: number;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -73,7 +74,8 @@ export class PositionDetailDialog implements OnDestroy {
           netPerformancePercent,
           quantity,
           symbol,
-          transactionCount
+          transactionCount,
+          value
         }) => {
           this.assetSubClass = assetSubClass;
           this.averagePrice = averagePrice;
@@ -105,6 +107,7 @@ export class PositionDetailDialog implements OnDestroy {
           this.quantity = quantity;
           this.symbol = symbol;
           this.transactionCount = transactionCount;
+          this.value = value;
 
           if (isToday(parseISO(this.firstBuyDate))) {
             // Add average price
