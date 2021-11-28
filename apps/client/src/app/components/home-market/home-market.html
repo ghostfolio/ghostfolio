@@ -1,0 +1,25 @@
+<div
+  class="
+    align-items-center
+    container
+    d-flex
+    flex-grow-1
+    h-100
+    justify-content-center
+    w-100
+  "
+>
+  <div class="row w-100">
+    <div class="col-xs-12 col-md-8 offset-md-2">
+      <mat-card class="h-100">
+        <mat-card-content>
+          <gf-fear-and-greed-index
+            class="d-flex justify-content-center"
+            [fearAndGreedIndex]="fearAndGreedIndex"
+            [hidden]="isLoading"
+          ></gf-fear-and-greed-index>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

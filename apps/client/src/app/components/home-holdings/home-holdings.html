@@ -1,0 +1,26 @@
+<div class="container justify-content-center pb-3 px-3">
+  <div class="row">
+    <div class="align-items-center col-xs-12 col-md-8 offset-md-2">
+      <mat-card class="p-0">
+        <mat-card-content>
+          <gf-positions
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [deviceType]="deviceType"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+            [range]="dateRange"
+          ></gf-positions>
+        </mat-card-content>
+      </mat-card>
+      <div *ngIf="hasPermissionToCreateOrder" class="text-center">
+        <a
+          class="mt-3"
+          i18n
+          mat-button
+          [routerLink]="['/portfolio', 'transactions']"
+          >Manage Transactions...</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

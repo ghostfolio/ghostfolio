@@ -1,0 +1,19 @@
+<div class="container pb-3 px-3">
+  <div class="row">
+    <div class="col-xs-12 col-md-8 offset-md-2">
+      <mat-card class="h-100">
+        <mat-card-header>
+          <mat-card-title i18n>Summary</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-summary
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isLoading]="isLoading"
+            [locale]="user?.settings?.locale"
+            [summary]="summary"
+          ></gf-portfolio-summary>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

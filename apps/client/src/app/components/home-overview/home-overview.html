@@ -1,0 +1,55 @@
+<div
+  class="
+    align-items-center
+    container
+    d-flex
+    flex-column
+    h-100
+    justify-content-center
+    overview
+    position-relative
+  "
+>
+  <div class="row w-100">
+    <div class="chart-container col">
+      <gf-line-chart
+        symbol="Performance"
+        [historicalDataItems]="historicalDataItems"
+        [showGradient]="true"
+        [showLoader]="false"
+        [showXAxis]="false"
+        [showYAxis]="false"
+      ></gf-line-chart>
+      <div
+        *ngIf="historicalDataItems?.length === 0"
+        class="align-items-center d-flex h-100 justify-content-center w-100"
+      >
+        <div class="d-flex justify-content-center">
+          <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="overview-container row mt-1">
+    <div class="col">
+      <gf-portfolio-performance
+        class="pb-4"
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [isAllTimeHigh]="isAllTimeHigh"
+        [isAllTimeLow]="isAllTimeLow"
+        [isLoading]="isLoadingPerformance"
+        [locale]="user?.settings?.locale"
+        [performance]="performance"
+        [showDetails]="!hasImpersonationId && !user.settings.isRestrictedView"
+      ></gf-portfolio-performance>
+      <div class="text-center">
+        <gf-toggle
+          [defaultValue]="dateRange"
+          [isLoading]="isLoadingPerformance"
+          [options]="dateRangeOptions"
+          (change)="onChangeDateRange($event.value)"
+        ></gf-toggle>
+      </div>
+    </div>
+  </div>
+</div>

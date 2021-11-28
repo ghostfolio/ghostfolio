@@ -2,72 +2,31 @@
 
 :host {
   color: rgb(var(--dark-primary-text));
-  display: block;
-  min-height: calc(100vh - 5rem);
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 5rem);
+  overflow-y: auto;
 
-  .mat-tab-group {
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: constant(safe-area-inset-bottom);
 
-    margin-bottom: env(safe-area-inset-bottom);
-    margin-bottom: constant(safe-area-inset-bottom);
+  ::ng-deep {
+    gf-home-holdings,
+    gf-home-overview {
+      flex: 1 1 auto;
+      overflow-y: auto;
+    }
 
-    ::ng-deep {
-      .mat-tab-body-wrapper {
-        height: 100%;
+    .mat-tab-header {
+      border-bottom: 0;
 
-        .container {
-          &.overview {
-            .chart-container {
-              aspect-ratio: 16 / 9;
-              max-height: 50vh;
-
-              // Fallback for aspect-ratio (using padding hack)
-              @supports not (aspect-ratio: 16 / 9) {
-                &::before {
-                  float: left;
-                  padding-top: 56.25%;
-                  content: '';
-                }
-
-                &::after {
-                  display: block;
-                  content: '';
-                  clear: both;
-                }
-              }
-
-              gf-line-chart {
-                bottom: 0;
-                left: 0;
-                position: absolute;
-                right: 0;
-                top: 0;
-                z-index: -1;
-              }
-            }
-          }
-
-          &.positions {
-            min-height: 100%;
-          }
-        }
+      .mat-ink-bar {
+        visibility: hidden !important;
       }
 
-      .mat-tab-header {
-        border-top: 0;
-
-        .mat-ink-bar {
-          visibility: hidden !important;
-        }
-
-        .mat-tab-label-active {
-          color: rgba(var(--palette-primary-500), 1);
-          opacity: 1;
-        }
+      .mat-tab-label-active {
+        color: rgba(var(--palette-primary-500), 1);
+        opacity: 1;
       }
     }
   }
@@ -75,14 +34,4 @@
 
 :host-context(.is-dark-theme) {
   color: rgb(var(--light-primary-text));
-
-  .container {
-    &.overview {
-      .button-container {
-        .mat-flat-button {
-          background-color: rgba(255, 255, 255, $alpha-hover);
-        }
-      }
-    }
-  }
 }
