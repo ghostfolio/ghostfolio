@@ -1,0 +1,17 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
+:host {
+  display: block;
+
+  .mat-flat-button {
+    ::ng-deep {
+      .mat-button-wrapper {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+      }
+    }
+  }
+}

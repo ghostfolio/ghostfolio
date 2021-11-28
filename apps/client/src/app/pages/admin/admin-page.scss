@@ -2,29 +2,31 @@
 
 :host {
   color: rgb(var(--dark-primary-text));
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 5rem);
+  overflow-y: auto;
 
-  .users {
-    overflow-x: auto;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: constant(safe-area-inset-bottom);
 
-    table {
-      min-width: 100%;
-
-      .mat-row,
-      .mat-header-row {
-        width: 100%;
-      }
+  ::ng-deep {
+    gf-admin-overview,
+    gf-admin-users {
+      flex: 1 1 auto;
+      overflow-y: auto;
     }
-  }
 
-  .mat-flat-button {
-    ::ng-deep {
-      .mat-button-wrapper {
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
+    .mat-tab-header {
+      border-bottom: 0;
+
+      .mat-ink-bar {
+        visibility: hidden !important;
+      }
+
+      .mat-tab-label-active {
+        color: rgba(var(--palette-primary-500), 1);
+        opacity: 1;
       }
     }
   }
