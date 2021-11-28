@@ -1,0 +1,16 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
+:host {
+  display: block;
+
+  .day {
+    background-color: var(--danger);
+    height: 0.5rem;
+    margin-right: 0.25rem;
+    width: 0.5rem;
+
+    &.available {
+      background-color: var(--success);
+    }
+  }
+}

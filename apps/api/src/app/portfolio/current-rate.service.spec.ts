@@ -1,11 +1,11 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
-import { MarketDataService } from './market-data.service';
 
-jest.mock('./market-data.service', () => {
+jest.mock('@ghostfolio/api/services/market-data.service', () => {
   return {
     MarketDataService: jest.fn().mockImplementation(() => {
       return {

@@ -1,5 +1,9 @@
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { AdminData } from '@ghostfolio/common/interfaces';
+import {
+  AdminData,
+  AdminMarketData,
+  AdminMarketDataDetails
+} from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasPermission,
@@ -11,6 +15,7 @@ import {
   Get,
   HttpException,
   Inject,
+  Param,
   Post,
   UseGuards
 } from '@nestjs/common';
@@ -85,5 +90,43 @@ export class AdminController {
     this.dataGatheringService.gatherProfileData();
 
     return;
+  }
+
+  @Get('market-data')
+  @UseGuards(AuthGuard('jwt'))
+  public async getMarketData(): Promise<AdminMarketData> {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.getMarketData();
+  }
+
+  @Get('market-data/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async getMarketDataBySymbol(
+    @Param('symbol') symbol
+  ): Promise<AdminMarketDataDetails> {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.getMarketDataBySymbol(symbol);
   }
 }

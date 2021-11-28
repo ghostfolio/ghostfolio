@@ -2,9 +2,14 @@ import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscripti
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { baseCurrency } from '@ghostfolio/common/config';
-import { AdminData } from '@ghostfolio/common/interfaces';
+import {
+  AdminData,
+  AdminMarketData,
+  AdminMarketDataDetails
+} from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { differenceInDays } from 'date-fns';
 
@@ -14,6 +19,7 @@ export class AdminService {
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly subscriptionService: SubscriptionService
   ) {}
@@ -42,6 +48,31 @@ export class AdminService {
       transactionCount: await this.prismaService.order.count(),
       userCount: await this.prismaService.user.count(),
       users: await this.getUsersWithAnalytics()
+    };
+  }
+
+  public async getMarketData(): Promise<AdminMarketData> {
+    return {
+      marketData: await (
+        await this.dataGatheringService.getSymbolsMax()
+      ).map((symbol) => {
+        return symbol;
+      })
+    };
+  }
+
+  public async getMarketDataBySymbol(
+    aSymbol: string
+  ): Promise<AdminMarketDataDetails> {
+    return {
+      marketData: await this.marketDataService.marketDataItems({
+        orderBy: {
+          date: 'asc'
+        },
+        where: {
+          symbol: aSymbol
+        }
+      })
     };
   }
 

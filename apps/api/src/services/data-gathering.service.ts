@@ -313,6 +313,52 @@ export class DataGatheringService {
     return undefined;
   }
 
+  public async getSymbolsMax(): Promise<IDataGatheringItem[]> {
+    const startDate =
+      (
+        await this.prismaService.order.findFirst({
+          orderBy: [{ date: 'asc' }]
+        })
+      )?.date ?? new Date();
+
+    const currencyPairsToGather = this.exchangeRateDataService
+      .getCurrencyPairs()
+      .map(({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol,
+          date: startDate
+        };
+      });
+
+    const symbolProfilesToGather = (
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: [{ symbol: 'asc' }],
+        select: {
+          dataSource: true,
+          Order: {
+            orderBy: [{ date: 'asc' }],
+            select: { date: true },
+            take: 1
+          },
+          scraperConfiguration: true,
+          symbol: true
+        }
+      })
+    ).map((symbolProfile) => {
+      return {
+        ...symbolProfile,
+        date: symbolProfile.Order?.[0]?.date ?? startDate
+      };
+    });
+
+    return [
+      ...this.getBenchmarksToGather(startDate),
+      ...currencyPairsToGather,
+      ...symbolProfilesToGather
+    ];
+  }
+
   public async reset() {
     Logger.log('Data gathering has been reset.');
 
@@ -371,52 +417,6 @@ export class DataGatheringService {
           date: startDate
         };
       });
-
-    return [
-      ...this.getBenchmarksToGather(startDate),
-      ...currencyPairsToGather,
-      ...symbolProfilesToGather
-    ];
-  }
-
-  private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
-    const startDate =
-      (
-        await this.prismaService.order.findFirst({
-          orderBy: [{ date: 'asc' }]
-        })
-      )?.date ?? new Date();
-
-    const currencyPairsToGather = this.exchangeRateDataService
-      .getCurrencyPairs()
-      .map(({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol,
-          date: startDate
-        };
-      });
-
-    const symbolProfilesToGather = (
-      await this.prismaService.symbolProfile.findMany({
-        orderBy: [{ symbol: 'asc' }],
-        select: {
-          dataSource: true,
-          Order: {
-            orderBy: [{ date: 'asc' }],
-            select: { date: true },
-            take: 1
-          },
-          scraperConfiguration: true,
-          symbol: true
-        }
-      })
-    ).map((symbolProfile) => {
-      return {
-        ...symbolProfile,
-        date: symbolProfile.Order?.[0]?.date ?? startDate
-      };
-    });
 
     return [
       ...this.getBenchmarksToGather(startDate),

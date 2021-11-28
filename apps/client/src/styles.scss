@@ -134,6 +134,10 @@ ngx-skeleton-loader {
   }
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .gf-table {
   @include gf-table;
 }
