@@ -1,94 +1,14 @@
-<mat-tab-group
-  animationDuration="0ms"
-  class="position-absolute"
-  headerPosition="below"
-  mat-align-tabs="center"
-  [disablePagination]="true"
-  (selectedTabChange)="onTabChanged($event)"
->
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <ion-icon name="analytics-outline" size="large"></ion-icon>
-    </ng-template>
-    <div
-      class="
-        container
-        d-flex
-        flex-column
-        h-100
-        justify-content-center
-        overview
-        position-relative
-      "
-    >
-      <div class="row">
-        <div
-          class="chart-container d-flex flex-column col justify-content-center"
-        >
-          <gf-line-chart
-            class="mr-3"
-            symbol="Performance"
-            [historicalDataItems]="historicalDataItems"
-            [showGradient]="true"
-            [showLoader]="false"
-            [showXAxis]="false"
-            [showYAxis]="false"
-          ></gf-line-chart>
-          <div
-            *ngIf="historicalDataItems?.length === 0"
-            class="d-flex justify-content-center"
-          >
-            <gf-no-transactions-info-indicator></gf-no-transactions-info-indicator>
-          </div>
-        </div>
-      </div>
-      <div class="overview-container row mb-5 mt-1">
-        <div class="col">
-          <gf-portfolio-performance
-            class="pb-4"
-            [baseCurrency]="user?.settings?.baseCurrency"
-            [isAllTimeHigh]="isAllTimeHigh"
-            [isAllTimeLow]="isAllTimeLow"
-            [isLoading]="isLoadingPerformance"
-            [locale]="user?.settings?.locale"
-            [performance]="performance"
-            [showDetails]="!hasImpersonationId && !user.settings.isRestrictedView"
-          ></gf-portfolio-performance>
-        </div>
-      </div>
-    </div>
-  </mat-tab>
+<router-outlet></router-outlet>
 
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <ion-icon name="wallet-outline" size="large"></ion-icon>
-    </ng-template>
-    <div class="container justify-content-center pb-3 px-3 positions">
-      <h3 class="d-flex justify-content-center mb-3" i18n>Holdings</h3>
-      <div class="row">
-        <div class="align-items-center col">
-          <mat-card class="p-0">
-            <mat-card-content>
-              <gf-positions
-                [baseCurrency]="user?.settings?.baseCurrency"
-                [deviceType]="deviceType"
-                [locale]="user?.settings?.locale"
-                [positions]="positions"
-                [range]="dateRange"
-              ></gf-positions>
-            </mat-card-content>
-          </mat-card>
-          <div *ngIf="hasPermissionToCreateOrder" class="text-center">
-            <a
-              class="mt-3"
-              i18n
-              mat-button
-              [routerLink]="['/portfolio', 'transactions']"
-              >Manage Transactions...</a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+<nav mat-align-tabs="center" mat-tab-nav-bar>
+  <a
+    *ngFor="let tab of tabs"
+    #rla="routerLinkActive"
+    mat-tab-link
+    routerLinkActive
+    [active]="rla.isActive"
+    [routerLink]="tab.path"
+  >
+    <ion-icon size="large" [name]="tab.iconName"></ion-icon>
+  </a>
+</nav>
