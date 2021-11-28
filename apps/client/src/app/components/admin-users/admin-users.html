@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="users">
+        <table class="gf-table">
+          <thead>
+            <tr class="mat-header-row">
+              <th class="mat-header-cell px-1 py-2 text-right" i18n>#</th>
+              <th class="mat-header-cell px-1 py-2" i18n>User</th>
+              <th class="mat-header-cell px-1 py-2 text-right" i18n>
+                Registration
+              </th>
+              <th class="mat-header-cell px-1 py-2 text-right" i18n>
+                Accounts
+              </th>
+              <th class="mat-header-cell px-1 py-2 text-right" i18n>
+                Transactions
+              </th>
+              <th class="mat-header-cell px-1 py-2 text-right" i18n>
+                Engagement per Day
+              </th>
+              <th class="mat-header-cell px-1 py-2" i18n>Last Activitiy</th>
+              <th class="mat-header-cell px-1 py-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let userItem of users; let i = index" class="mat-row">
+              <td class="mat-cell px-1 py-2 text-right">{{ i + 1 }}</td>
+              <td class="mat-cell px-1 py-2">
+                <div class="d-flex align-items-center">
+                  <span class="d-none d-sm-inline-block"
+                    >{{ userItem.alias || userItem.id }}</span
+                  >
+                  <span class="d-inline-block d-sm-none"
+                    >{{ userItem.alias || (userItem.id | slice:0:5) +
+                    '...' }}</span
+                  >
+                  <ion-icon
+                    *ngIf="userItem?.subscription?.type === 'Premium'"
+                    class="ml-1 text-muted"
+                    name="diamond-outline"
+                  ></ion-icon>
+                </div>
+              </td>
+              <td class="mat-cell px-1 py-2 text-right">
+                {{ formatDistanceToNow(userItem.createdAt) }}
+              </td>
+              <td class="mat-cell px-1 py-2 text-right">
+                {{ userItem.accountCount }}
+              </td>
+              <td class="mat-cell px-1 py-2 text-right">
+                {{ userItem.transactionCount }}
+              </td>
+              <td class="mat-cell px-1 py-2 text-right">
+                {{ userItem.engagement | number: '1.0-0' }}
+              </td>
+              <td class="mat-cell px-1 py-2">
+                {{ formatDistanceToNow(userItem.lastActivity) }}
+              </td>
+              <td class="mat-cell px-1 py-2">
+                <button
+                  class="mx-1 no-min-width px-2"
+                  mat-button
+                  [matMenuTriggerFor]="accountMenu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ion-icon name="ellipsis-vertical"></ion-icon>
+                </button>
+                <mat-menu #accountMenu="matMenu" xPosition="before">
+                  <button
+                    i18n
+                    mat-menu-item
+                    [disabled]="userItem.id === user?.id"
+                    (click)="onDeleteUser(userItem.id)"
+                  >
+                    Delete
+                  </button>
+                </mat-menu>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

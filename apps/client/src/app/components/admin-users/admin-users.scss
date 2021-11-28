@@ -1,0 +1,18 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
+:host {
+  display: block;
+
+  .users {
+    overflow-x: auto;
+
+    table {
+      min-width: 100%;
+
+      .mat-row,
+      .mat-header-row {
+        width: 100%;
+      }
+    }
+  }
+}
