@@ -1,0 +1,18 @@
+<div>
+  <div *ngFor="let itemByMonth of marketDataByMonth | keyvalue" class="d-flex">
+    <div>{{ itemByMonth.key }}</div>
+    <div class="align-items-center d-flex flex-grow-1 justify-content-end">
+      <div
+        *ngFor="let dayItem of days; let i = index"
+        class="day"
+        [title]="
+          (marketDataByMonth[itemByMonth.key][i + 1]?.date
+            | date: defaultDateFormat) ?? ''
+        "
+        [ngClass]="{
+          available: marketDataByMonth[itemByMonth.key][i + 1]?.day == i + 1
+        }"
+      ></div>
+    </div>
+  </div>
+</div>

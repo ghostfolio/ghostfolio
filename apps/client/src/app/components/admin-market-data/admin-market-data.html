@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table class="gf-table w-100">
+        <thead>
+          <tr class="mat-header-row">
+            <th class="mat-header-cell px-1 py-2 text-right" i18n>#</th>
+            <th class="mat-header-cell px-1 py-2" i18n>Symbol</th>
+            <th class="mat-header-cell px-1 py-2" i18n>First transaction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of marketData; let i = index">
+            <tr
+              class="cursor-pointer mat-row"
+              (click)="setCurrentSymbol(item.symbol)"
+            >
+              <td class="mat-cell px-1 py-2 text-right">{{ i + 1 }}</td>
+              <td class="mat-cell px-1 py-2">{{ item.symbol }}</td>
+              <td class="mat-cell px-1 py-2">
+                {{ (item.date | date: defaultDateFormat) ?? '' }}
+              </td>
+            </tr>
+            <tr *ngIf="currentSymbol === item.symbol" class="mat-row">
+              <td></td>
+              <td colspan="2">
+                <gf-admin-market-data-detail
+                  [marketData]="marketDataDetails"
+                ></gf-admin-market-data-detail>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

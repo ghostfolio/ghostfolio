@@ -3,6 +3,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration.modu
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
+import { MarketDataModule } from '@ghostfolio/api/services/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
@@ -15,6 +16,7 @@ import { AdminService } from './admin.service';
     DataGatheringModule,
     DataProviderModule,
     ExchangeRateDataModule,
+    MarketDataModule,
     PrismaModule,
     SubscriptionModule
   ],

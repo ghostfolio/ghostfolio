@@ -1,9 +1,8 @@
+import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
-import { MarketData } from '@prisma/client';
-
-import { DateQuery } from './interfaces/date-query.interface';
+import { MarketData, Prisma } from '@prisma/client';
 
 @Injectable()
 export class MarketDataService {
@@ -46,6 +45,24 @@ export class MarketDataService {
           in: symbols
         }
       }
+    });
+  }
+
+  public async marketDataItems(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.MarketDataWhereUniqueInput;
+    where?: Prisma.MarketDataWhereInput;
+    orderBy?: Prisma.MarketDataOrderByInput;
+  }): Promise<MarketData[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+
+    return this.prismaService.marketData.findMany({
+      cursor,
+      orderBy,
+      skip,
+      take,
+      where
     });
   }
 }

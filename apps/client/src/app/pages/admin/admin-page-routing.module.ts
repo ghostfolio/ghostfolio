@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminMarketDataComponent } from '@ghostfolio/client/components/admin-market-data/admin-market-data.component';
 import { AdminOverviewComponent } from '@ghostfolio/client/components/admin-overview/admin-overview.component';
 import { AdminUsersComponent } from '@ghostfolio/client/components/admin-users/admin-users.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
@@ -13,6 +14,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'market-data', component: AdminMarketDataComponent },
       { path: 'overview', component: AdminOverviewComponent },
       { path: 'users', component: AdminUsersComponent }
     ]

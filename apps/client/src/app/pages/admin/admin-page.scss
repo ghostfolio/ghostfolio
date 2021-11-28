@@ -11,6 +11,7 @@
   padding-bottom: constant(safe-area-inset-bottom);
 
   ::ng-deep {
+    gf-admin-market-data,
     gf-admin-overview,
     gf-admin-users {
       flex: 1 1 auto;

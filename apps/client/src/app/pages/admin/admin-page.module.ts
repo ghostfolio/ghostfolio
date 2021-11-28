@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
+import { GfAdminMarketDataModule } from '@ghostfolio/client/components/admin-market-data/admin-market-data.module';
 import { GfAdminOverviewModule } from '@ghostfolio/client/components/admin-overview/admin-overview.module';
 import { GfAdminUsersModule } from '@ghostfolio/client/components/admin-users/admin-users.module';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
@@ -18,6 +19,7 @@ import { AdminPageComponent } from './admin-page.component';
   imports: [
     AdminPageRoutingModule,
     CommonModule,
+    GfAdminMarketDataModule,
     GfAdminOverviewModule,
     GfAdminUsersModule,
     GfValueModule,
