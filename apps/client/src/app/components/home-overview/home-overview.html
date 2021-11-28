@@ -7,6 +7,7 @@
     h-100
     justify-content-center
     overview
+    p-0
     position-relative
   "
 >
@@ -15,6 +16,7 @@
       <gf-line-chart
         symbol="Performance"
         [historicalDataItems]="historicalDataItems"
+        [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
         [showGradient]="true"
         [showLoader]="false"
         [showXAxis]="false"

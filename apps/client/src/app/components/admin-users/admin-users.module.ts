@@ -11,4 +11,4 @@ import { AdminUsersComponent } from './admin-users.component';
   imports: [CommonModule, MatButtonModule, MatMenuModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AdminUsersModule {}
+export class GfAdminUsersModule {}
