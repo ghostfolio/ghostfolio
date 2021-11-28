@@ -10,6 +10,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { PortfolioPerformance, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -27,6 +28,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     { label: '5Y', value: '5y' },
     { label: 'Max', value: 'max' }
   ];
+  public deviceType: string;
   public hasImpersonationId: boolean;
   public historicalDataItems: LineChartItem[];
   public isAllTimeHigh: boolean;
@@ -43,6 +45,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private settingsStorageService: SettingsStorageService,
     private userService: UserService
@@ -62,6 +65,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))

@@ -14,4 +14,4 @@ import { AdminOverviewComponent } from './admin-overview.component';
   providers: [CacheService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AdminOverviewModule {}
+export class GfAdminOverviewModule {}
