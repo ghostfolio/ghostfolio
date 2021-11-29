@@ -1,8 +1,5 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import {
-  benchmarks,
-  ghostfolioFearAndGreedIndexSymbol
-} from '@ghostfolio/common/config';
+import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -370,13 +367,7 @@ export class DataGatheringService {
   }
 
   private getBenchmarksToGather(startDate: Date): IDataGatheringItem[] {
-    const benchmarksToGather = benchmarks.map(({ dataSource, symbol }) => {
-      return {
-        dataSource,
-        symbol,
-        date: startDate
-      };
-    });
+    const benchmarksToGather: IDataGatheringItem[] = [];
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       benchmarksToGather.push({
