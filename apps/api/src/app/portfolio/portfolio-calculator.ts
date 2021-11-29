@@ -516,7 +516,7 @@ export class PortfolioCalculator {
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.error(
-          `Initial value is missing for symbol ${currentPosition.symbol}`
+          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`
         );
         hasErrors = true;
       }
