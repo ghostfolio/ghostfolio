@@ -1,7 +1,6 @@
 import { baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { format } from 'date-fns';
 import { isEmpty, isNumber, uniq } from 'lodash';
 
@@ -40,7 +39,10 @@ export class ExchangeRateDataService {
       currency2,
       dataSource
     } of this.prepareCurrencyPairs(this.currencies)) {
-      this.addCurrencyPairs({ currency1, currency2, dataSource });
+      this.currencyPairs.push({
+        dataSource,
+        symbol: `${currency1}${currency2}`
+      });
     }
 
     await this.loadCurrencies();
@@ -86,7 +88,7 @@ export class ExchangeRateDataService {
       };
     });
 
-    this.currencyPairs.forEach(({ symbol }) => {
+    Object.keys(resultExtended).forEach((symbol) => {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
       const date = format(getYesterday(), DATE_FORMAT);
 
@@ -144,25 +146,6 @@ export class ExchangeRateDataService {
       `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
     );
     return aValue;
-  }
-
-  private addCurrencyPairs({
-    currency1,
-    currency2,
-    dataSource
-  }: {
-    currency1: string;
-    currency2: string;
-    dataSource: DataSource;
-  }) {
-    this.currencyPairs.push({
-      dataSource,
-      symbol: `${currency1}${currency2}`
-    });
-    this.currencyPairs.push({
-      dataSource,
-      symbol: `${currency2}${currency1}`
-    });
   }
 
   private async prepareCurrencies(): Promise<string[]> {

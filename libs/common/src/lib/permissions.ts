@@ -1,9 +1,5 @@
 import { Role } from '@prisma/client';
 
-export function isApiTokenAuthorized(aApiToken: string) {
-  return aApiToken === 'Bearer fc804dead6ff45b98da4e5530f6aa3cb';
-}
-
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
   accessFearAndGreedIndex: 'accessFearAndGreedIndex',
