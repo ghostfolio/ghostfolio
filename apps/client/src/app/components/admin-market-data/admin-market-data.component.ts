@@ -5,10 +5,11 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
-import { MarketData } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -30,6 +31,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
    * @constructor
    */
   public constructor(
+    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService
   ) {}
@@ -39,6 +41,19 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
    */
   public ngOnInit() {
     this.fetchAdminMarketData();
+  }
+
+  public onGatherSymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.adminService
+      .gatherSymbol({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
   }
 
   public setCurrentSymbol(aSymbol: string) {

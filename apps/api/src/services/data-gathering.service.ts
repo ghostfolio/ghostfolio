@@ -120,6 +120,63 @@ export class DataGatheringService {
     }
   }
 
+  public async gatherSymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    const isDataGatheringLocked = await this.prismaService.property.findUnique({
+      where: { key: 'LOCKED_DATA_GATHERING' }
+    });
+
+    if (!isDataGatheringLocked) {
+      Logger.log(`Symbol data gathering for ${symbol} has been started.`);
+      console.time('data-gathering-symbol');
+
+      await this.prismaService.property.create({
+        data: {
+          key: 'LOCKED_DATA_GATHERING',
+          value: new Date().toISOString()
+        }
+      });
+
+      const symbols = (await this.getSymbolsMax()).filter(
+        (dataGatheringItem) => {
+          return (
+            dataGatheringItem.dataSource === dataSource &&
+            dataGatheringItem.symbol === symbol
+          );
+        }
+      );
+
+      try {
+        await this.gatherSymbols(symbols);
+
+        await this.prismaService.property.upsert({
+          create: {
+            key: 'LAST_DATA_GATHERING',
+            value: new Date().toISOString()
+          },
+          update: { value: new Date().toISOString() },
+          where: { key: 'LAST_DATA_GATHERING' }
+        });
+      } catch (error) {
+        Logger.error(error);
+      }
+
+      await this.prismaService.property.delete({
+        where: {
+          key: 'LOCKED_DATA_GATHERING'
+        }
+      });
+
+      Logger.log(`Symbol data gathering for ${symbol} has been completed.`);
+      console.timeEnd('data-gathering-symbol');
+    }
+  }
+
   public async gatherProfileData(aDataGatheringItems?: IDataGatheringItem[]) {
     Logger.log('Profile data gathering has been started.');
     console.time('data-gathering-profile');

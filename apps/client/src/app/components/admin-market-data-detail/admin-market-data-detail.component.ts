@@ -5,9 +5,14 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { MarketData } from '@prisma/client';
 import { format } from 'date-fns';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { Subject, takeUntil } from 'rxjs';
+
+import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-detail-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,11 +25,19 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
 
   public days = Array(31);
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public deviceType: string;
   public marketDataByMonth: {
     [yearMonth: string]: { [day: string]: MarketData & { day: number } };
   } = {};
 
-  public constructor() {}
+  private unsubscribeSubject = new Subject<void>();
+
+  public constructor(
+    private deviceService: DeviceDetectorService,
+    private dialog: MatDialog
+  ) {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
 
   public ngOnInit() {}
 
@@ -44,5 +57,27 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         day: currentDay
       };
     }
+  }
+
+  public onOpenMarketDataDetail({ date, marketPrice, symbol }: MarketData) {
+    const dialogRef = this.dialog.open(MarketDataDetailDialog, {
+      data: {
+        marketPrice,
+        symbol,
+        date: format(date, DEFAULT_DATE_FORMAT)
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }
