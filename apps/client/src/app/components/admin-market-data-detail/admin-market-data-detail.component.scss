@@ -2,6 +2,12 @@
 
 :host {
   display: block;
+  font-size: 0.9rem;
+
+  .date {
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+  }
 
   .day {
     background-color: var(--danger);

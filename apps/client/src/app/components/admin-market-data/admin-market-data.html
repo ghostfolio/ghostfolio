@@ -8,6 +8,7 @@
             <th class="mat-header-cell px-1 py-2" i18n>Symbol</th>
             <th class="mat-header-cell px-1 py-2" i18n>Data Source</th>
             <th class="mat-header-cell px-1 py-2" i18n>First Transaction</th>
+            <th class="mat-header-cell px-1 py-2"></th>
           </tr>
         </thead>
         <tbody>
@@ -22,10 +23,29 @@
               <td class="mat-cell px-1 py-2">
                 {{ (item.date | date: defaultDateFormat) ?? '' }}
               </td>
+              <td class="mat-cell px-1 py-2">
+                <button
+                  class="mx-1 no-min-width px-2"
+                  mat-button
+                  [matMenuTriggerFor]="accountMenu"
+                  (click)="$event.stopPropagation()"
+                >
+                  <ion-icon name="ellipsis-vertical"></ion-icon>
+                </button>
+                <mat-menu #accountMenu="matMenu" xPosition="before">
+                  <button
+                    i18n
+                    mat-menu-item
+                    (click)="onGatherSymbol({dataSource: item.dataSource, symbol: item.symbol})"
+                  >
+                    Gather Data
+                  </button>
+                </mat-menu>
+              </td>
             </tr>
             <tr *ngIf="currentSymbol === item.symbol" class="mat-row">
               <td></td>
-              <td colspan="3">
+              <td colspan="4">
                 <gf-admin-market-data-detail
                   [marketData]="marketDataDetails"
                 ></gf-admin-market-data-detail>

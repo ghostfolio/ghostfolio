@@ -21,6 +21,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
@@ -68,6 +69,29 @@ export class AdminController {
 
     await this.dataGatheringService.gatherProfileData();
     this.dataGatheringService.gatherMax();
+
+    return;
+  }
+
+  @Post('gather/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherSymbol(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    this.dataGatheringService.gatherSymbol({ dataSource, symbol });
 
     return;
   }

@@ -1,7 +1,7 @@
-<div>
+<div class="py-2">
   <div *ngFor="let itemByMonth of marketDataByMonth | keyvalue" class="d-flex">
-    <div>{{ itemByMonth.key }}</div>
-    <div class="align-items-center d-flex flex-grow-1 justify-content-end">
+    <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>
+    <div class="align-items-center d-flex flex-grow-1 px-1">
       <div
         *ngFor="let dayItem of days; let i = index"
         class="day"
@@ -10,8 +10,13 @@
             | date: defaultDateFormat) ?? ''
         "
         [ngClass]="{
-          available: marketDataByMonth[itemByMonth.key][i + 1]?.day == i + 1
+          'available cursor-pointer':
+            marketDataByMonth[itemByMonth.key][i + 1]?.day == i + 1
         }"
+        (click)="
+          marketDataByMonth[itemByMonth.key][i + 1] &&
+            onOpenMarketDataDetail(marketDataByMonth[itemByMonth.key][i + 1])
+        "
       ></div>
     </div>
   </div>

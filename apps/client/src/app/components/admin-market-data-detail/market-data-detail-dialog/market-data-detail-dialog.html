@@ -1,0 +1,25 @@
+<form class="d-flex flex-column h-100">
+  <h1 mat-dialog-title i18n>Details for {{ data.symbol }}</h1>
+  <div class="flex-grow-1" mat-dialog-content>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Date</mat-label>
+        <input matInput name="date" readonly [(ngModel)]="data.date" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>MarketPrice</mat-label>
+        <input
+          matInput
+          name="marketPrice"
+          readonly
+          [(ngModel)]="data.marketPrice"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="justify-content-end" mat-dialog-actions>
+    <button i18n mat-button (click)="onCancel()">Cancel</button>
+  </div>
+</form>
