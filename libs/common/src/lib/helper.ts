@@ -85,10 +85,6 @@ export function isGhostfolioScraperApiSymbol(aSymbol = '') {
   return aSymbol.startsWith(ghostfolioScraperApiSymbolPrefix);
 }
 
-export function isRakutenRapidApiSymbol(aSymbol = '') {
-  return aSymbol === 'GF.FEAR_AND_GREED_INDEX';
-}
-
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);

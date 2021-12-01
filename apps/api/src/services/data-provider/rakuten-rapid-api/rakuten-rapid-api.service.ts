@@ -2,12 +2,7 @@ import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.in
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  getToday,
-  getYesterday,
-  isRakutenRapidApiSymbol
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getToday, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -31,10 +26,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
   ) {}
 
   public canHandle(symbol: string) {
-    return (
-      isRakutenRapidApiSymbol(symbol) &&
-      !!this.configurationService.get('RAKUTEN_RAPID_API_KEY')
-    );
+    return !!this.configurationService.get('RAKUTEN_RAPID_API_KEY');
   }
 
   public async get(
