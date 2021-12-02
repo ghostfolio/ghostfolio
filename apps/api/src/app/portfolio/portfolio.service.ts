@@ -347,12 +347,16 @@ export class PortfolioService {
       };
     }
 
-    // TODO: Add a cash position for each currency
-    holdings[ghostfolioCashSymbol] = await this.getCashPosition({
+    const cashPositions = await this.getCashPositions({
       cashDetails,
+      userCurrency,
       investment: totalInvestment,
       value: totalValue
     });
+
+    for (const symbol of Object.keys(cashPositions)) {
+      holdings[symbol] = cashPositions[symbol];
+    }
 
     const accounts = await this.getValueOfAccounts(
       orders,
@@ -872,38 +876,73 @@ export class PortfolioService {
     };
   }
 
-  private async getCashPosition({
+  private async getCashPositions({
     cashDetails,
     investment,
+    userCurrency,
     value
   }: {
     cashDetails: CashDetails;
     investment: Big;
     value: Big;
+    userCurrency: string;
   }) {
-    const cashValue = new Big(cashDetails.balance);
+    const cashPositions = {};
 
-    return {
-      allocationCurrent: cashValue.div(value).toNumber(),
-      allocationInvestment: cashValue.div(investment).toNumber(),
-      assetClass: AssetClass.CASH,
-      assetSubClass: AssetClass.CASH,
-      countries: [],
-      currency: 'CHF',
-      grossPerformance: 0,
-      grossPerformancePercent: 0,
-      investment: cashValue.toNumber(),
-      marketPrice: 0,
-      marketState: MarketState.open,
-      name: 'Cash',
-      netPerformance: 0,
-      netPerformancePercent: 0,
-      quantity: 0,
-      sectors: [],
-      symbol: ghostfolioCashSymbol,
-      transactionCount: 0,
-      value: cashValue.toNumber()
-    };
+    for (const account of cashDetails.accounts) {
+      const convertedBalance = this.exchangeRateDataService.toCurrency(
+        account.balance,
+        account.currency,
+        userCurrency
+      );
+
+      if (convertedBalance === 0) {
+        continue;
+      }
+
+      if (cashPositions[account.currency]) {
+        cashPositions[account.currency].investment += convertedBalance;
+        cashPositions[account.currency].value += convertedBalance;
+      } else {
+        cashPositions[account.currency] = {
+          allocationCurrent: 0,
+          allocationInvestment: 0,
+          assetClass: AssetClass.CASH,
+          assetSubClass: AssetClass.CASH,
+          countries: [],
+          currency: account.currency,
+          grossPerformance: 0,
+          grossPerformancePercent: 0,
+          investment: convertedBalance,
+          marketPrice: 0,
+          marketState: MarketState.open,
+          name: account.currency,
+          netPerformance: 0,
+          netPerformancePercent: 0,
+          quantity: 0,
+          sectors: [],
+          symbol: account.currency,
+          transactionCount: 0,
+          value: convertedBalance
+        };
+      }
+    }
+
+    for (const symbol of Object.keys(cashPositions)) {
+      // Calculate allocations for each currency
+      cashPositions[symbol].allocationCurrent = new Big(
+        cashPositions[symbol].value
+      )
+        .div(value)
+        .toNumber();
+      cashPositions[symbol].allocationInvestment = new Big(
+        cashPositions[symbol].investment
+      )
+        .div(investment)
+        .toNumber();
+    }
+
+    return cashPositions;
   }
 
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
@@ -997,6 +1036,8 @@ export class PortfolioService {
         userCurrency
       );
       accounts[account.name] = {
+        balance: convertedBalance,
+        currency: account.currency,
         current: convertedBalance,
         original: convertedBalance
       };
@@ -1018,6 +1059,8 @@ export class PortfolioService {
             originalValueOfSymbol;
         } else {
           accounts[order.Account?.name || UNKNOWN_KEY] = {
+            balance: 0,
+            currency: order.Account?.currency,
             current: currentValueOfSymbol,
             original: originalValueOfSymbol
           };
