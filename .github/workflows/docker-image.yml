@@ -28,7 +28,8 @@ jobs:
           images: leonstoldt/ghostfolio
           tags: |
             type=semver,pattern={{version}}
-            type=semver,pattern=latest
+          flavor: |
+            latest=true
 
       - name: Build and push
         uses: docker/build-push-action@v2
