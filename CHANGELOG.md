@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the historical data view in the admin control panel (hide invalid and future dates)
+
 ### Fixed
 
 - Improved the allocations by currency in combination with cash balances
