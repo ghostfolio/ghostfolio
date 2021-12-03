@@ -7,8 +7,9 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { MarketData } from '@prisma/client';
-import { format } from 'date-fns';
+import { format, isBefore, isValid, parse } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -57,6 +58,12 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         day: currentDay
       };
     }
+  }
+
+  public isDateOfInterest(aDateString: string) {
+    // Date is valid and in the past
+    const date = parse(aDateString, DATE_FORMAT, new Date());
+    return isValid(date) && isBefore(date, new Date());
   }
 
   public onOpenMarketDataDetail({ date, marketPrice, symbol }: MarketData) {
