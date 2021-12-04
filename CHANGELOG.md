@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the historical data view in the admin control panel (hide invalid and future dates)
 - Enabled the import functionality for transactions by default
+- Converted the symbols to uppercase to avoid case-sensitive duplicates in the symbol profile model
 
 ### Fixed
 
