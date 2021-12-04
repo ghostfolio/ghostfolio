@@ -1,5 +1,9 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
+import {
+  PROPERTY_LAST_DATA_GATHERING,
+  PROPERTY_LOCKED_DATA_GATHERING,
+  ghostfolioFearAndGreedIndexSymbol
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -43,7 +47,7 @@ export class DataGatheringService {
 
       await this.prismaService.property.create({
         data: {
-          key: 'LOCKED_DATA_GATHERING',
+          key: PROPERTY_LOCKED_DATA_GATHERING,
           value: new Date().toISOString()
         }
       });
@@ -55,11 +59,11 @@ export class DataGatheringService {
 
         await this.prismaService.property.upsert({
           create: {
-            key: 'LAST_DATA_GATHERING',
+            key: PROPERTY_LAST_DATA_GATHERING,
             value: new Date().toISOString()
           },
           update: { value: new Date().toISOString() },
-          where: { key: 'LAST_DATA_GATHERING' }
+          where: { key: PROPERTY_LAST_DATA_GATHERING }
         });
       } catch (error) {
         Logger.error(error);
@@ -67,7 +71,7 @@ export class DataGatheringService {
 
       await this.prismaService.property.delete({
         where: {
-          key: 'LOCKED_DATA_GATHERING'
+          key: PROPERTY_LOCKED_DATA_GATHERING
         }
       });
 
@@ -78,7 +82,7 @@ export class DataGatheringService {
 
   public async gatherMax() {
     const isDataGatheringLocked = await this.prismaService.property.findUnique({
-      where: { key: 'LOCKED_DATA_GATHERING' }
+      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
     });
 
     if (!isDataGatheringLocked) {
@@ -87,7 +91,7 @@ export class DataGatheringService {
 
       await this.prismaService.property.create({
         data: {
-          key: 'LOCKED_DATA_GATHERING',
+          key: PROPERTY_LOCKED_DATA_GATHERING,
           value: new Date().toISOString()
         }
       });
@@ -99,11 +103,11 @@ export class DataGatheringService {
 
         await this.prismaService.property.upsert({
           create: {
-            key: 'LAST_DATA_GATHERING',
+            key: PROPERTY_LAST_DATA_GATHERING,
             value: new Date().toISOString()
           },
           update: { value: new Date().toISOString() },
-          where: { key: 'LAST_DATA_GATHERING' }
+          where: { key: PROPERTY_LAST_DATA_GATHERING }
         });
       } catch (error) {
         Logger.error(error);
@@ -111,7 +115,7 @@ export class DataGatheringService {
 
       await this.prismaService.property.delete({
         where: {
-          key: 'LOCKED_DATA_GATHERING'
+          key: PROPERTY_LOCKED_DATA_GATHERING
         }
       });
 
@@ -128,7 +132,7 @@ export class DataGatheringService {
     symbol: string;
   }) {
     const isDataGatheringLocked = await this.prismaService.property.findUnique({
-      where: { key: 'LOCKED_DATA_GATHERING' }
+      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
     });
 
     if (!isDataGatheringLocked) {
@@ -137,7 +141,7 @@ export class DataGatheringService {
 
       await this.prismaService.property.create({
         data: {
-          key: 'LOCKED_DATA_GATHERING',
+          key: PROPERTY_LOCKED_DATA_GATHERING,
           value: new Date().toISOString()
         }
       });
@@ -156,11 +160,11 @@ export class DataGatheringService {
 
         await this.prismaService.property.upsert({
           create: {
-            key: 'LAST_DATA_GATHERING',
+            key: PROPERTY_LAST_DATA_GATHERING,
             value: new Date().toISOString()
           },
           update: { value: new Date().toISOString() },
-          where: { key: 'LAST_DATA_GATHERING' }
+          where: { key: PROPERTY_LAST_DATA_GATHERING }
         });
       } catch (error) {
         Logger.error(error);
@@ -168,7 +172,7 @@ export class DataGatheringService {
 
       await this.prismaService.property.delete({
         where: {
-          key: 'LOCKED_DATA_GATHERING'
+          key: PROPERTY_LOCKED_DATA_GATHERING
         }
       });
 
@@ -351,13 +355,13 @@ export class DataGatheringService {
 
   public async getIsInProgress() {
     return await this.prismaService.property.findUnique({
-      where: { key: 'LOCKED_DATA_GATHERING' }
+      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
     });
   }
 
   public async getLastDataGathering() {
     const lastDataGathering = await this.prismaService.property.findUnique({
-      where: { key: 'LAST_DATA_GATHERING' }
+      where: { key: PROPERTY_LAST_DATA_GATHERING }
     });
 
     if (lastDataGathering?.value) {
@@ -418,7 +422,10 @@ export class DataGatheringService {
 
     await this.prismaService.property.deleteMany({
       where: {
-        OR: [{ key: 'LAST_DATA_GATHERING' }, { key: 'LOCKED_DATA_GATHERING' }]
+        OR: [
+          { key: PROPERTY_LAST_DATA_GATHERING },
+          { key: PROPERTY_LOCKED_DATA_GATHERING }
+        ]
       }
     });
   }
@@ -496,7 +503,7 @@ export class DataGatheringService {
     const lastDataGathering = await this.getLastDataGathering();
 
     const isDataGatheringLocked = await this.prismaService.property.findUnique({
-      where: { key: 'LOCKED_DATA_GATHERING' }
+      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
     });
 
     const diffInHours = differenceInHours(new Date(), lastDataGathering);

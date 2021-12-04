@@ -30,4 +30,9 @@ export const warnColorRgb = {
 export const DEFAULT_DATE_FORMAT = 'dd.MM.yyyy';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 
+export const PROPERTY_CURRENCIES = 'CURRENCIES';
+export const PROPERTY_LAST_DATA_GATHERING = 'LAST_DATA_GATHERING';
+export const PROPERTY_LOCKED_DATA_GATHERING = 'LOCKED_DATA_GATHERING';
+export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
+
 export const UNKNOWN_KEY = 'UNKNOWN';

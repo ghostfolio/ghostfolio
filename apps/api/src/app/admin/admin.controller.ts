@@ -1,4 +1,7 @@
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
@@ -11,12 +14,14 @@ import {
 } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   Inject,
   Param,
   Post,
+  Put,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -31,6 +36,7 @@ export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -152,5 +158,26 @@ export class AdminController {
     }
 
     return this.adminService.getMarketDataBySymbol(symbol);
+  }
+
+  @Put('settings/:key')
+  @UseGuards(AuthGuard('jwt'))
+  public async updateProperty(
+    @Param('key') key: string,
+    @Body() data: PropertyDto
+  ) {
+    if (
+      !hasPermission(
+        getPermissions(this.request.user.role),
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return await this.adminService.putSetting(key, data.value);
   }
 }

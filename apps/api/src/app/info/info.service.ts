@@ -4,6 +4,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PROPERTY_STRIPE_CONFIG } from '@ghostfolio/common/config';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
@@ -222,7 +223,7 @@ export class InfoService {
     }
 
     const stripeConfig = await this.prismaService.property.findUnique({
-      where: { key: 'STRIPE_CONFIG' }
+      where: { key: PROPERTY_STRIPE_CONFIG }
     });
 
     if (stripeConfig) {
