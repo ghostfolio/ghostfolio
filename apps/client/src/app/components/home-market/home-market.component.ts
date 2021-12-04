@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { HistoricalDataItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
+import { resetHours } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource } from '@prisma/client';
@@ -16,6 +18,7 @@ import { takeUntil } from 'rxjs/operators';
 export class HomeMarketComponent implements OnDestroy, OnInit {
   public fearAndGreedIndex: number;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
+  public historicalData: HistoricalDataItem[];
   public isLoading = true;
   public user: User;
 
@@ -46,11 +49,19 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
             this.dataService
               .fetchSymbolItem({
                 dataSource: DataSource.RAKUTEN,
+                includeHistoricalData: true,
                 symbol: ghostfolioFearAndGreedIndexSymbol
               })
               .pipe(takeUntil(this.unsubscribeSubject))
-              .subscribe(({ marketPrice }) => {
+              .subscribe(({ historicalData, marketPrice }) => {
                 this.fearAndGreedIndex = marketPrice;
+                this.historicalData = [
+                  ...historicalData,
+                  {
+                    date: resetHours(new Date()).toISOString(),
+                    value: marketPrice
+                  }
+                ];
                 this.isLoading = false;
 
                 this.changeDetectorRef.markForCheck();

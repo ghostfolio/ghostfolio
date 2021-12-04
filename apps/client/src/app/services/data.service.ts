@@ -127,12 +127,16 @@ export class DataService {
 
   public fetchSymbolItem({
     dataSource,
+    includeHistoricalData = false,
     symbol
   }: {
     dataSource: DataSource;
+    includeHistoricalData?: boolean;
     symbol: string;
   }) {
-    return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`);
+    return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`, {
+      params: { includeHistoricalData }
+    });
   }
 
   public fetchPositions({
