@@ -1,10 +1,12 @@
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
+  DefaultValuePipe,
   Get,
   HttpException,
   Inject,
   Param,
+  ParseBoolPipe,
   Query,
   UseGuards
 } from '@nestjs/common';
@@ -51,7 +53,9 @@ export class SymbolController {
   @UseGuards(AuthGuard('jwt'))
   public async getSymbolData(
     @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
+    @Param('symbol') symbol: string,
+    @Query('includeHistoricalData', new DefaultValuePipe(false), ParseBoolPipe)
+    includeHistoricalData: boolean
   ): Promise<SymbolItem> {
     if (!DataSource[dataSource]) {
       throw new HttpException(
@@ -60,7 +64,10 @@ export class SymbolController {
       );
     }
 
-    const result = await this.symbolService.get({ dataSource, symbol });
+    const result = await this.symbolService.get({
+      includeHistoricalData,
+      dataGatheringItem: { dataSource, symbol }
+    });
 
     if (!result || isEmpty(result)) {
       throw new HttpException(
