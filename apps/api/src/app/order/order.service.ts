@@ -45,19 +45,22 @@ export class OrderService {
   public async createOrder(data: Prisma.OrderCreateInput): Promise<Order> {
     const isDraft = isAfter(data.date as Date, endOfToday());
 
+    // Convert the symbol to uppercase to avoid case-sensitive duplicates
+    const symbol = data.symbol.toUpperCase();
+
     if (!isDraft) {
       // Gather symbol data of order in the background, if not draft
       this.dataGatheringService.gatherSymbols([
         {
+          symbol,
           dataSource: data.dataSource,
-          date: <Date>data.date,
-          symbol: data.symbol
+          date: <Date>data.date
         }
       ]);
     }
 
     this.dataGatheringService.gatherProfileData([
-      { dataSource: data.dataSource, symbol: data.symbol }
+      { symbol, dataSource: data.dataSource }
     ]);
 
     await this.cacheService.flush();
@@ -65,7 +68,8 @@ export class OrderService {
     return this.prismaService.order.create({
       data: {
         ...data,
-        isDraft
+        isDraft,
+        symbol
       }
     });
   }
