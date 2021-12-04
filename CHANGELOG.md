@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the historical data chart of the _Fear & Greed Index_ (market mood)
+
 ### Changed
 
 - Improved the historical data view in the admin control panel (hide invalid and future dates)
