@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { bool, cleanEnv, host, json, num, port, str } from 'envalid';
 
-import { environment } from '../environments/environment';
 import { Environment } from './interfaces/environment.interface';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class ConfigurationService {
       ENABLE_FEATURE_BLOG: bool({ default: false }),
       ENABLE_FEATURE_CUSTOM_SYMBOLS: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
-      ENABLE_FEATURE_IMPORT: bool({ default: !environment.production }),
+      ENABLE_FEATURE_IMPORT: bool({ default: true }),
       ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
       ENABLE_FEATURE_SUBSCRIPTION: bool({ default: false }),
