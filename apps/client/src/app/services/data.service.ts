@@ -239,7 +239,6 @@ export class DataService {
   }
 
   public putAdminSetting(key: string, aData: PropertyDto) {
-    console.log(key, aData);
     return this.http.put<void>(`/api/admin/settings/${key}`, aData);
   }
 
