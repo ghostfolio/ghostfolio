@@ -53,7 +53,7 @@ export class MarketDataService {
     take?: number;
     cursor?: Prisma.MarketDataWhereUniqueInput;
     where?: Prisma.MarketDataWhereInput;
-    orderBy?: Prisma.MarketDataOrderByInput;
+    orderBy?: Prisma.MarketDataOrderByWithRelationInput;
   }): Promise<MarketData[]> {
     const { skip, take, cursor, where, orderBy } = params;
 

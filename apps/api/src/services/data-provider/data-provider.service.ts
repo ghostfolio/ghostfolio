@@ -11,7 +11,7 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { isEmpty } from 'lodash';
 
 @Injectable()
@@ -62,7 +62,7 @@ export class DataProviderService {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
 
-    if (isEmpty(aItems)) {
+    if (isEmpty(aItems) || !isValid(from) || !isValid(to)) {
       return response;
     }
 
@@ -96,7 +96,7 @@ export class DataProviderService {
                         ORDER BY date;`;
 
       const marketDataByGranularity: MarketData[] =
-        await this.prismaService.$queryRaw(queryRaw);
+        await this.prismaService.$queryRawUnsafe(queryRaw);
 
       response = marketDataByGranularity.reduce((r, marketData) => {
         const { date, marketPrice, symbol } = marketData;
