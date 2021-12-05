@@ -42,8 +42,6 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DataService {
-  private info: InfoItem;
-
   public constructor(private http: HttpClient) {}
 
   public createCheckoutSession({

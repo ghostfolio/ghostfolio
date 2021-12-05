@@ -118,6 +118,34 @@
               </div>
             </div>
           </div>
+          <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">
+            <div class="w-50" i18n>System Message</div>
+            <div class="w-50">
+              <div *ngIf="info.systemMessage">
+                <span>{{ info.systemMessage }}</span>
+                <button
+                  class="mini-icon mx-1 no-min-width px-2"
+                  mat-button
+                  [disabled]="dataGatheringInProgress"
+                  (click)="onDeleteSystemMessage()"
+                >
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
+              <button
+                *ngIf="!info.systemMessage"
+                color="accent"
+                mat-flat-button
+                (click)="onSetSystemMessage()"
+              >
+                <ion-icon
+                  class="mr-1"
+                  name="information-circle-outline"
+                ></ion-icon>
+                <span i18n>Set System Message</span>
+              </button>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

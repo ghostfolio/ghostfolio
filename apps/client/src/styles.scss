@@ -175,3 +175,7 @@ ngx-skeleton-loader {
 .text-decoration-underline {
   text-decoration: underline !important;
 }
+
+.with-info-message {
+  height: calc(100vh - 5rem - 3.5rem) !important;
+}

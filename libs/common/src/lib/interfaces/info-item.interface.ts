@@ -8,10 +8,7 @@ export interface InfoItem {
   demoAuthToken: string;
   globalPermissions: string[];
   lastDataGathering?: Date;
-  message?: {
-    text: string;
-    type: string;
-  };
+  systemMessage?: string;
   platforms: { id: string; name: string }[];
   primaryDataSource: DataSource;
   statistics: Statistics;
