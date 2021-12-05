@@ -23,7 +23,7 @@ export class AuthDeviceService {
     take?: number;
     cursor?: Prisma.AuthDeviceWhereUniqueInput;
     where?: Prisma.AuthDeviceWhereInput;
-    orderBy?: Prisma.AuthDeviceOrderByInput;
+    orderBy?: Prisma.AuthDeviceOrderByWithRelationInput;
   }): Promise<AuthDevice[]> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prismaService.authDevice.findMany({

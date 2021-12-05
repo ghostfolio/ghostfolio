@@ -4,7 +4,8 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { baseCurrency } from '@ghostfolio/common/config';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
@@ -21,6 +22,7 @@ export class AdminService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
+    private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService
   ) {}
 
@@ -45,6 +47,7 @@ export class AdminService {
           };
         }),
       lastDataGathering: await this.getLastDataGathering(),
+      settings: await this.propertyService.get(),
       transactionCount: await this.prismaService.order.count(),
       userCount: await this.prismaService.user.count(),
       users: await this.getUsersWithAnalytics()
@@ -74,6 +77,17 @@ export class AdminService {
         }
       })
     };
+  }
+
+  public async putSetting(key: string, value: string) {
+    const response = await this.propertyService.put({ key, value });
+
+    if (key === PROPERTY_CURRENCIES) {
+      await this.exchangeRateDataService.initialize();
+      await this.dataGatheringService.reset();
+    }
+
+    return response;
   }
 
   private async getLastDataGathering() {

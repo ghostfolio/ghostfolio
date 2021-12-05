@@ -3,7 +3,10 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import {
+  DEFAULT_DATE_FORMAT,
+  PROPERTY_CURRENCIES
+} from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
 import {
   differenceInSeconds,
@@ -11,6 +14,7 @@ import {
   isValid,
   parseISO
 } from 'date-fns';
+import { uniq } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -20,6 +24,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-overview.html'
 })
 export class AdminOverviewComponent implements OnDestroy, OnInit {
+  public customCurrencies: string[];
   public dataGatheringInProgress: boolean;
   public dataGatheringProgress: number;
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
@@ -55,6 +60,26 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.user = state.user;
         }
       });
+  }
+
+  public onAddCurrency() {
+    const currency = prompt('Please add a currency:');
+
+    if (currency) {
+      const currencies = uniq([...this.customCurrencies, currency]);
+      this.putCurrencies(currencies);
+    }
+  }
+
+  public onDeleteCurrency(aCurrency: string) {
+    const confirmation = confirm('Do you really want to delete this currency?');
+
+    if (confirmation) {
+      const currencies = this.customCurrencies.filter((currency) => {
+        return currency !== aCurrency;
+      });
+      this.putCurrencies(currencies);
+    }
   }
 
   public onFlushCache() {
@@ -121,9 +146,11 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           dataGatheringProgress,
           exchangeRates,
           lastDataGathering,
+          settings,
           transactionCount,
           userCount
         }) => {
+          this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
           this.dataGatheringProgress = dataGatheringProgress;
           this.exchangeRates = exchangeRates;
 
@@ -146,5 +173,18 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
+  }
+
+  private putCurrencies(aCurrencies: string[]) {
+    this.dataService
+      .putAdminSetting(PROPERTY_CURRENCIES, {
+        value: JSON.stringify(aCurrencies)
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
   }
 }

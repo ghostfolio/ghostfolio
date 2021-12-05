@@ -3,10 +3,75 @@
     <div class="col">
       <mat-card class="mb-3">
         <mat-card-content>
-          <div
-            *ngIf="exchangeRates?.length > 0"
-            class="align-items-start d-flex my-3"
-          >
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>User Count</div>
+            <div class="w-50">{{ userCount }}</div>
+          </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>Transaction Count</div>
+            <div class="w-50">
+              <ng-container *ngIf="transactionCount">
+                {{ transactionCount }} ({{ transactionCount / userCount | number
+                : '1.2-2' }} <span i18n>per User</span>)
+              </ng-container>
+            </div>
+          </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>Data Gathering</div>
+            <div class="w-50">
+              <div>
+                <ng-container *ngIf="lastDataGathering"
+                  >{{ lastDataGathering }}</ng-container
+                >
+                <ng-container *ngIf="dataGatheringInProgress" i18n
+                  >In Progress ({{ dataGatheringProgress | percent : '1.2-2'
+                  }})</ng-container
+                >
+              </div>
+              <div class="mt-2 overflow-hidden">
+                <div class="mb-2">
+                  <button
+                    color="accent"
+                    mat-flat-button
+                    (click)="onFlushCache()"
+                  >
+                    <ion-icon
+                      class="mr-1"
+                      name="close-circle-outline"
+                    ></ion-icon>
+                    <span i18n>Reset Data Gathering</span>
+                  </button>
+                </div>
+                <div class="mb-2">
+                  <button
+                    color="warn"
+                    mat-flat-button
+                    [disabled]="dataGatheringInProgress"
+                    (click)="onGatherMax()"
+                  >
+                    <ion-icon class="mr-1" name="warning-outline"></ion-icon>
+                    <span i18n>Gather All Data</span>
+                  </button>
+                </div>
+                <div>
+                  <button
+                    class="mb-2 mr-2"
+                    color="accent"
+                    mat-flat-button
+                    [disabled]="dataGatheringInProgress"
+                    (click)="onGatherProfileData()"
+                  >
+                    <ion-icon
+                      class="mr-1"
+                      name="cloud-download-outline"
+                    ></ion-icon>
+                    <span i18n>Gather Profile Data</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="align-items-start d-flex my-3">
             <div class="w-50" i18n>Exchange Rates</div>
             <div class="w-50">
               <table>
@@ -27,77 +92,30 @@
                     ></gf-value>
                   </td>
                   <td class="pl-1">{{ exchangeRate.label2 }}</td>
+                  <td>
+                    <button
+                      *ngIf="customCurrencies.includes(exchangeRate.label2)"
+                      class="mini-icon mx-1 no-min-width px-2"
+                      mat-button
+                      [disabled]="dataGatheringInProgress"
+                      (click)="onDeleteCurrency(exchangeRate.label2)"
+                    >
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </button>
+                  </td>
                 </tr>
               </table>
-            </div>
-          </div>
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>Data Gathering</div>
-            <div class="w-50">
-              <div>
-                <ng-container *ngIf="lastDataGathering"
-                  >{{ lastDataGathering }}</ng-container
+              <div class="mt-2">
+                <button
+                  color="primary"
+                  mat-flat-button
+                  [disabled]="dataGatheringInProgress"
+                  (click)="onAddCurrency()"
                 >
-                <ng-container *ngIf="dataGatheringInProgress" i18n
-                  >In Progress ({{ dataGatheringProgress | percent : '1.2-2'
-                  }})</ng-container
-                >
+                  <ion-icon class="mr-1" name="add-outline"></ion-icon>
+                  <span i18n>Add Currency</span>
+                </button>
               </div>
-              <div class="mt-2 overflow-hidden">
-                <div class="mb-2">
-                  <button
-                    class="mw-100"
-                    color="accent"
-                    mat-flat-button
-                    (click)="onFlushCache()"
-                  >
-                    <ion-icon
-                      class="mr-1"
-                      name="close-circle-outline"
-                    ></ion-icon>
-                    <span i18n>Reset Data Gathering</span>
-                  </button>
-                </div>
-                <div class="mb-2">
-                  <button
-                    class="mw-100"
-                    color="warn"
-                    mat-flat-button
-                    [disabled]="dataGatheringInProgress"
-                    (click)="onGatherMax()"
-                  >
-                    <ion-icon class="mr-1" name="warning-outline"></ion-icon>
-                    <span i18n>Gather All Data</span>
-                  </button>
-                </div>
-                <div>
-                  <button
-                    class="mb-2 mr-2 mw-100"
-                    color="accent"
-                    mat-flat-button
-                    (click)="onGatherProfileData()"
-                  >
-                    <ion-icon
-                      class="mr-1"
-                      name="cloud-download-outline"
-                    ></ion-icon>
-                    <span i18n>Gather Profile Data</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>User Count</div>
-            <div class="w-50">{{ userCount }}</div>
-          </div>
-          <div class="d-flex my-3">
-            <div class="w-50" i18n>Transaction Count</div>
-            <div class="w-50">
-              <ng-container *ngIf="transactionCount">
-                {{ transactionCount }} ({{ transactionCount / userCount | number
-                : '1.2-2' }} <span i18n>per User</span>)
-              </ng-container>
             </div>
           </div>
         </mat-card-content>

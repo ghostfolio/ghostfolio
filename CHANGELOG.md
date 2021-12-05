@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Supported the management of additional currencies in the admin control panel
+
+### Changed
+
+- Upgraded `prisma` from version `2.30.2` to `3.6.0`
+
+## 1.86.0 - 04.12.2021
+
+### Added
+
+- Added the historical data chart of the _Fear & Greed Index_ (market mood)
+
+### Changed
+
+- Improved the historical data view in the admin control panel (hide invalid and future dates)
+- Enabled the import functionality for transactions by default
+- Converted the symbols to uppercase to avoid case-sensitive duplicates in the symbol profile model
+
 ### Fixed
 
 - Improved the allocations by currency in combination with cash balances

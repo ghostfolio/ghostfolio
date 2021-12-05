@@ -40,7 +40,7 @@ export class AccountService {
     take?: number;
     cursor?: Prisma.AccountWhereUniqueInput;
     where?: Prisma.AccountWhereInput;
-    orderBy?: Prisma.AccountOrderByInput;
+    orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
     (Account & {
       Order?: Order[];

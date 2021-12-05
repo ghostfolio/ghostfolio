@@ -1,4 +1,4 @@
-import { baseCurrency } from '@ghostfolio/common/config';
+import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format } from 'date-fns';
@@ -7,6 +7,7 @@ import { isEmpty, isNumber, uniq } from 'lodash';
 import { DataProviderService } from './data-provider/data-provider.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
 import { PrismaService } from './prisma.service';
+import { PropertyService } from './property/property.service';
 
 @Injectable()
 export class ExchangeRateDataService {
@@ -16,7 +17,8 @@ export class ExchangeRateDataService {
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly propertyService: PropertyService
   ) {
     this.initialize();
   }
@@ -149,7 +151,7 @@ export class ExchangeRateDataService {
   }
 
   private async prepareCurrencies(): Promise<string[]> {
-    const currencies: string[] = [];
+    let currencies: string[] = [];
 
     (
       await this.prismaService.account.findMany({
@@ -180,6 +182,14 @@ export class ExchangeRateDataService {
     ).forEach((symbolProfile) => {
       currencies.push(symbolProfile.currency);
     });
+
+    const customCurrencies = (await this.propertyService.getByKey(
+      PROPERTY_CURRENCIES
+    )) as string[];
+
+    if (customCurrencies?.length > 0) {
+      currencies = currencies.concat(customCurrencies);
+    }
 
     return uniq(currencies).sort();
   }

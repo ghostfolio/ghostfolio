@@ -12,6 +12,7 @@ import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.in
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
+import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
   Access,
   Accounts,
@@ -127,12 +128,16 @@ export class DataService {
 
   public fetchSymbolItem({
     dataSource,
+    includeHistoricalData = false,
     symbol
   }: {
     dataSource: DataSource;
+    includeHistoricalData?: boolean;
     symbol: string;
   }) {
-    return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`);
+    return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`, {
+      params: { includeHistoricalData }
+    });
   }
 
   public fetchPositions({
@@ -233,6 +238,11 @@ export class DataService {
 
   public putAccount(aAccount: UpdateAccountDto) {
     return this.http.put<UserItem>(`/api/account/${aAccount.id}`, aAccount);
+  }
+
+  public putAdminSetting(key: string, aData: PropertyDto) {
+    console.log(key, aData);
+    return this.http.put<void>(`/api/admin/settings/${key}`, aData);
   }
 
   public putOrder(aOrder: UpdateOrderDto) {

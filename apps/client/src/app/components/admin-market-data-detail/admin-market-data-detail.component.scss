@@ -10,10 +10,13 @@
   }
 
   .day {
-    background-color: var(--danger);
     height: 0.5rem;
     margin-right: 0.25rem;
     width: 0.5rem;
+
+    &.valid {
+      background-color: var(--danger);
+    }
 
     &.available {
       background-color: var(--success);

@@ -3,6 +3,12 @@
 :host {
   display: block;
 
+  .mat-button {
+    &.mini-icon {
+      line-height: 1.5;
+    }
+  }
+
   .mat-flat-button {
     ::ng-deep {
       .mat-button-wrapper {

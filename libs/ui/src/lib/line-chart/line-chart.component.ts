@@ -43,6 +43,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() showXAxis = false;
   @Input() showYAxis = false;
   @Input() symbol: string;
+  @Input() yMax: number;
+  @Input() yMaxLabel: string;
+  @Input() yMin: number;
+  @Input() yMinLabel: string;
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -170,11 +174,22 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
                 grid: {
                   display: false
                 },
+                max: this.yMax,
+                min: this.yMin,
                 ticks: {
                   display: this.showYAxis,
-                  callback: function (tickValue, index, ticks) {
+                  callback: (tickValue, index, ticks) => {
                     if (index === 0 || index === ticks.length - 1) {
                       // Only print last and first legend entry
+
+                      if (index === 0 && this.yMinLabel) {
+                        return this.yMinLabel;
+                      }
+
+                      if (index === ticks.length - 1 && this.yMaxLabel) {
+                        return this.yMaxLabel;
+                      }
+
                       if (typeof tickValue === 'number') {
                         return tickValue.toFixed(2);
                       }
