@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported the management of additional currencies in the admin control panel
 
+### Changed
+
+- Upgraded `prisma` from version `2.30.2` to `3.6.0`
+
 ## 1.86.0 - 04.12.2021
 
 ### Added
