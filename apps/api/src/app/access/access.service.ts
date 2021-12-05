@@ -24,7 +24,7 @@ export class AccessService {
     take?: number;
     cursor?: Prisma.AccessWhereUniqueInput;
     where?: Prisma.AccessWhereInput;
-    orderBy?: Prisma.AccessOrderByInput;
+    orderBy?: Prisma.AccessOrderByWithRelationInput;
   }): Promise<AccessWithGranteeUser[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 

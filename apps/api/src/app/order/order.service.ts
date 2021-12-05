@@ -28,7 +28,7 @@ export class OrderService {
     take?: number;
     cursor?: Prisma.OrderWhereUniqueInput;
     where?: Prisma.OrderWhereInput;
-    orderBy?: Prisma.OrderOrderByInput;
+    orderBy?: Prisma.OrderOrderByWithRelationInput;
   }): Promise<OrderWithAccount[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 
