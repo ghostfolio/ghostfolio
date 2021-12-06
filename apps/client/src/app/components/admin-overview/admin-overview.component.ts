@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -6,6 +7,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_FORMAT,
   PROPERTY_CURRENCIES,
+  PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE
 } from '@ghostfolio/common/config';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
@@ -32,6 +34,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public exchangeRates: { label1: string; label2: string; value: number }[];
   public hasPermissionForSystemMessage: boolean;
+  public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
   public lastDataGathering: string;
   public transactionCount: number;
@@ -52,10 +55,23 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   ) {
     this.info = this.dataService.fetchInfo();
 
-    this.hasPermissionForSystemMessage = hasPermission(
-      this.info.globalPermissions,
-      permissions.enableSystemMessage
-    );
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.hasPermissionForSystemMessage = hasPermission(
+            this.info.globalPermissions,
+            permissions.enableSystemMessage
+          );
+
+          this.hasPermissionToToggleReadOnlyMode = hasPermission(
+            this.user.permissions,
+            permissions.toggleReadOnlyMode
+          );
+        }
+      });
   }
 
   /**
@@ -63,14 +79,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
    */
   public ngOnInit() {
     this.fetchAdminData();
-
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-        }
-      });
   }
 
   public formatDistanceToNow(aDateString: string) {
@@ -145,6 +153,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       .gatherProfileData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
+  }
+
+  public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
+    this.setReadOnlyMode(aEvent.checked);
   }
 
   public onSetSystemMessage() {
@@ -222,5 +234,14 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           window.location.reload();
         }, 300);
       });
+  }
+
+  private setReadOnlyMode(aValue: boolean) {
+    this.dataService
+      .putAdminSetting(PROPERTY_IS_READ_ONLY_MODE, {
+        value: aValue ? 'true' : ''
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
   }
 }

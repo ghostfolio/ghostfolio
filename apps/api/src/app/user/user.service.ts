@@ -3,10 +3,14 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { baseCurrency, locale } from '@ghostfolio/common/config';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
-import { getPermissions, permissions } from '@ghostfolio/common/permissions';
+import {
+  getPermissions,
+  hasRole,
+  permissions
+} from '@ghostfolio/common/permissions';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Provider, User, ViewMode } from '@prisma/client';
+import { Prisma, Provider, Role, User, ViewMode } from '@prisma/client';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 import { UserSettings } from './interfaces/user-settings.interface';
@@ -78,6 +82,13 @@ export class UserService {
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       currentPermissions.push(permissions.accessFearAndGreedIndex);
+    }
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE') &&
+      hasRole(user, Role.ADMIN)
+    ) {
+      currentPermissions.push(permissions.toggleReadOnlyMode);
     }
 
     user.permissions = currentPermissions;

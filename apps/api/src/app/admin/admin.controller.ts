@@ -1,7 +1,6 @@
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,

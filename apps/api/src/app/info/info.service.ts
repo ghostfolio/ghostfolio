@@ -6,6 +6,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE
 } from '@ghostfolio/common/config';
@@ -36,6 +37,7 @@ export class InfoService {
 
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
+    let isReadOnlyMode: boolean;
     const platforms = await this.prismaService.platform.findMany({
       orderBy: { name: 'asc' },
       select: { id: true, name: true }
@@ -50,6 +52,12 @@ export class InfoService {
 
     if (this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
       globalPermissions.push(permissions.enableImport);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
+      isReadOnlyMode = (await this.propertyService.getByKey(
+        PROPERTY_IS_READ_ONLY_MODE
+      )) as boolean;
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
@@ -77,6 +85,7 @@ export class InfoService {
     return {
       ...info,
       globalPermissions,
+      isReadOnlyMode,
       platforms,
       systemMessage,
       currencies: this.exchangeRateDataService.getCurrencies(),
