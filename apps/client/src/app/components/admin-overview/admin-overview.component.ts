@@ -5,9 +5,11 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_FORMAT,
-  PROPERTY_CURRENCIES
+  PROPERTY_CURRENCIES,
+  PROPERTY_SYSTEM_MESSAGE
 } from '@ghostfolio/common/config';
-import { User } from '@ghostfolio/common/interfaces';
+import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   differenceInSeconds,
   formatDistanceToNowStrict,
@@ -29,6 +31,8 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public dataGatheringProgress: number;
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public exchangeRates: { label1: string; label2: string; value: number }[];
+  public hasPermissionForSystemMessage: boolean;
+  public info: InfoItem;
   public lastDataGathering: string;
   public transactionCount: number;
   public userCount: number;
@@ -45,7 +49,14 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private userService: UserService
-  ) {}
+  ) {
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSystemMessage = hasPermission(
+      this.info.globalPermissions,
+      permissions.enableSystemMessage
+    );
+  }
 
   /**
    * Initializes the controller
@@ -60,6 +71,21 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.user = state.user;
         }
       });
+  }
+
+  public formatDistanceToNow(aDateString: string) {
+    if (aDateString) {
+      const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
+        addSuffix: true
+      });
+
+      return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
+        60
+        ? 'just now'
+        : distanceString;
+    }
+
+    return '';
   }
 
   public onAddCurrency() {
@@ -80,6 +106,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       });
       this.putCurrencies(currencies);
     }
+  }
+
+  public onDeleteSystemMessage() {
+    this.putSystemMessage('');
   }
 
   public onFlushCache() {
@@ -117,19 +147,12 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
-  public formatDistanceToNow(aDateString: string) {
-    if (aDateString) {
-      const distanceString = formatDistanceToNowStrict(parseISO(aDateString), {
-        addSuffix: true
-      });
+  public onSetSystemMessage() {
+    const systemMessage = prompt('Please set your system message:');
 
-      return Math.abs(differenceInSeconds(parseISO(aDateString), new Date())) <
-        60
-        ? 'just now'
-        : distanceString;
+    if (systemMessage) {
+      this.putSystemMessage(systemMessage);
     }
-
-    return '';
   }
 
   public ngOnDestroy() {
@@ -179,6 +202,19 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     this.dataService
       .putAdminSetting(PROPERTY_CURRENCIES, {
         value: JSON.stringify(aCurrencies)
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
+  }
+
+  private putSystemMessage(aSystemMessage: string) {
+    this.dataService
+      .putAdminSetting(PROPERTY_SYSTEM_MESSAGE, {
+        value: aSystemMessage
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {

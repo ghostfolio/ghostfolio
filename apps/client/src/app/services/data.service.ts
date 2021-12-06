@@ -42,8 +42,6 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DataService {
-  private info: InfoItem;
-
   public constructor(private http: HttpClient) {}
 
   public createCheckoutSession({
@@ -241,7 +239,6 @@ export class DataService {
   }
 
   public putAdminSetting(key: string, aData: PropertyDto) {
-    console.log(key, aData);
     return this.http.put<void>(`/api/admin/settings/${key}`, aData);
   }
 

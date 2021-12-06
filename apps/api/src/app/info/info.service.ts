@@ -4,7 +4,11 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { PROPERTY_STRIPE_CONFIG } from '@ghostfolio/common/config';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import {
+  PROPERTY_STRIPE_CONFIG,
+  PROPERTY_SYSTEM_MESSAGE
+} from '@ghostfolio/common/config';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
@@ -16,8 +20,8 @@ import { subDays } from 'date-fns';
 
 @Injectable()
 export class InfoService {
-  private static DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
   private static CACHE_KEY_STATISTICS = 'STATISTICS';
+  private static DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -26,6 +30,7 @@ export class InfoService {
     private readonly dataGatheringService: DataGatheringService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
+    private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService
   ) {}
 
@@ -35,6 +40,7 @@ export class InfoService {
       orderBy: { name: 'asc' },
       select: { id: true, name: true }
     });
+    let systemMessage: string;
 
     const globalPermissions: string[] = [];
 
@@ -60,10 +66,19 @@ export class InfoService {
       info.stripePublicKey = this.configurationService.get('STRIPE_PUBLIC_KEY');
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_SYSTEM_MESSAGE')) {
+      globalPermissions.push(permissions.enableSystemMessage);
+
+      systemMessage = (await this.propertyService.getByKey(
+        PROPERTY_SYSTEM_MESSAGE
+      )) as string;
+    }
+
     return {
       ...info,
       globalPermissions,
       platforms,
+      systemMessage,
       currencies: this.exchangeRateDataService.getCurrencies(),
       demoAuthToken: this.getDemoAuthToken(),
       lastDataGathering: await this.getLastDataGathering(),

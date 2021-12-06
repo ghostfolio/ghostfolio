@@ -5,11 +5,10 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,11 +18,11 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-page.html'
 })
 export class HomePageComponent implements OnDestroy, OnInit {
-  @HostBinding('class.with-create-account-container') get isDemo() {
-    return this.canCreateAccount;
+  @HostBinding('class.with-info-message') get getHasMessage() {
+    return this.hasMessage;
   }
 
-  public canCreateAccount: boolean;
+  public hasMessage: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public tabs: { iconName: string; path: string }[] = [];
   public user: User;
@@ -35,10 +34,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
    */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private deviceService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
+    private dataService: DataService,
     private userService: UserService
   ) {
+    const { systemMessage } = this.dataService.fetchInfo();
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -50,10 +50,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
           ];
           this.user = state.user;
 
-          this.canCreateAccount = hasPermission(
-            this.user?.permissions,
-            permissions.createUserAccount
-          );
+          this.hasMessage =
+            hasPermission(
+              this.user?.permissions,
+              permissions.createUserAccount
+            ) || !!systemMessage;
 
           this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
             this.user.permissions,

@@ -8,14 +8,13 @@
     min-height: 100vh;
     padding-top: 5rem;
 
-    .create-account-container {
+    .info-message-container {
       height: 3.5rem;
       margin-top: -0.5rem;
 
-      .create-account-box {
+      .info-message {
         background-color: rgba(0, 0, 0, $alpha-hover);
         border-radius: 2rem;
-        cursor: pointer;
         font-size: 80%;
 
         a {

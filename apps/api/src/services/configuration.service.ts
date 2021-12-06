@@ -21,6 +21,7 @@ export class ConfigurationService {
       ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
       ENABLE_FEATURE_SUBSCRIPTION: bool({ default: false }),
+      ENABLE_FEATURE_SYSTEM_MESSAGE: bool({ default: false }),
       GOOGLE_CLIENT_ID: str({ default: 'dummyClientId' }),
       GOOGLE_SECRET: str({ default: 'dummySecret' }),
       JWT_SECRET_KEY: str({}),

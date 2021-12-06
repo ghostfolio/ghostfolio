@@ -17,6 +17,7 @@ export const permissions = {
   enableSocialLogin: 'enableSocialLogin',
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',
+  enableSystemMessage: 'enableSystemMessage',
   updateAccount: 'updateAccount',
   updateAuthDevice: 'updateAuthDevice',
   updateOrder: 'updateOrder',

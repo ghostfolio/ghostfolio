@@ -12,6 +12,7 @@ import {
   AdminMarketDataDetails
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
+import { Property } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 
 @Injectable()
@@ -80,7 +81,13 @@ export class AdminService {
   }
 
   public async putSetting(key: string, value: string) {
-    const response = await this.propertyService.put({ key, value });
+    let response: Property;
+
+    if (value === '') {
+      response = await this.propertyService.delete({ key });
+    } else {
+      response = await this.propertyService.put({ key, value });
+    }
 
     if (key === PROPERTY_CURRENCIES) {
       await this.exchangeRateDataService.initialize();

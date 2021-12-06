@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Supported the management of additional currencies in the admin control panel
+- Introduced the system message
 
 ### Changed
 
