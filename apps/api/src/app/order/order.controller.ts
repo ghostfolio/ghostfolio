@@ -1,11 +1,7 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -43,10 +39,7 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'))
   public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.deleteOrder
-      )
+      !hasPermission(this.request.user.permissions, permissions.deleteOrder)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -115,10 +108,7 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'))
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.createOrder
-      )
+      !hasPermission(this.request.user.permissions, permissions.createOrder)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -161,10 +151,7 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'))
   public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.updateOrder
-      )
+      !hasPermission(this.request.user.permissions, permissions.updateOrder)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

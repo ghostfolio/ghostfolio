@@ -5,6 +5,7 @@
       <gf-transactions-table
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
+        [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
         [hasPermissionToImportOrders]="hasPermissionToImportOrders"
         [locale]="user?.settings?.locale"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder && !user.settings.isRestrictedView"

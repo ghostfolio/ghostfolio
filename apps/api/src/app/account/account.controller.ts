@@ -6,11 +6,7 @@ import {
 } from '@ghostfolio/api/helper/object.helper';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { Accounts } from '@ghostfolio/common/interfaces';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -48,10 +44,7 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'))
   public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.deleteAccount
-      )
+      !hasPermission(this.request.user.permissions, permissions.deleteAccount)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -143,10 +136,7 @@ export class AccountController {
     @Body() data: CreateAccountDto
   ): Promise<AccountModel> {
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.createAccount
-      )
+      !hasPermission(this.request.user.permissions, permissions.createAccount)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -183,10 +173,7 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'))
   public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.updateAccount
-      )
+      !hasPermission(this.request.user.permissions, permissions.updateAccount)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

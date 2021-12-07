@@ -146,6 +146,16 @@
               </button>
             </div>
           </div>
+          <div *ngIf="hasPermissionToToggleReadOnlyMode" class="d-flex my-3">
+            <div class="w-50" i18n>Read-only Mode</div>
+            <div class="w-50">
+              <mat-slide-toggle
+                color="primary"
+                [checked]="info?.isReadOnlyMode"
+                (change)="onReadOnlyModeChange($event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

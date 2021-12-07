@@ -22,7 +22,7 @@
           color="primary"
           i18n
           mat-flat-button
-          [disabled]="!demoAuthToken"
+          [disabled]="!demoAuthToken || info?.isReadOnlyMode"
           (click)="createAccount()"
         >
           Create Account

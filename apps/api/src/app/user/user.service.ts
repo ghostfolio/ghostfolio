@@ -1,12 +1,21 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { baseCurrency, locale } from '@ghostfolio/common/config';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import {
+  PROPERTY_IS_READ_ONLY_MODE,
+  baseCurrency,
+  locale
+} from '@ghostfolio/common/config';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
-import { getPermissions, permissions } from '@ghostfolio/common/permissions';
+import {
+  getPermissions,
+  hasRole,
+  permissions
+} from '@ghostfolio/common/permissions';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Provider, User, ViewMode } from '@prisma/client';
+import { Prisma, Provider, Role, User, ViewMode } from '@prisma/client';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 import { UserSettings } from './interfaces/user-settings.interface';
@@ -20,6 +29,7 @@ export class UserService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
+    private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService
   ) {}
 
@@ -74,10 +84,30 @@ export class UserService {
 
     const user: UserWithSettings = userFromDatabase;
 
-    const currentPermissions = getPermissions(userFromDatabase.role);
+    let currentPermissions = getPermissions(userFromDatabase.role);
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       currentPermissions.push(permissions.accessFearAndGreedIndex);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
+      if (hasRole(user, Role.ADMIN)) {
+        currentPermissions.push(permissions.toggleReadOnlyMode);
+      }
+
+      const isReadOnlyMode = (await this.propertyService.getByKey(
+        PROPERTY_IS_READ_ONLY_MODE
+      )) as boolean;
+
+      if (isReadOnlyMode) {
+        currentPermissions = currentPermissions.filter((permission) => {
+          return !(
+            permission.startsWith('create') ||
+            permission.startsWith('delete') ||
+            permission.startsWith('update')
+          );
+        });
+      }
     }
 
     user.permissions = currentPermissions;

@@ -51,7 +51,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['createDialog']) {
+        if (params['createDialog'] && this.hasPermissionToCreateAccount) {
           this.openCreateAccountDialog();
         } else if (params['editDialog']) {
           if (this.accounts) {

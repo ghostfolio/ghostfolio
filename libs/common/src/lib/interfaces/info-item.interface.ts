@@ -7,11 +7,12 @@ export interface InfoItem {
   currencies: string[];
   demoAuthToken: string;
   globalPermissions: string[];
+  isReadOnlyMode?: boolean;
   lastDataGathering?: Date;
-  systemMessage?: string;
   platforms: { id: string; name: string }[];
   primaryDataSource: DataSource;
   statistics: Statistics;
   stripePublicKey?: string;
   subscriptions: Subscription[];
+  systemMessage?: string;
 }

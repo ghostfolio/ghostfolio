@@ -43,6 +43,7 @@ export class TransactionsTableComponent
 {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
+  @Input() hasPermissionToCreateOrder: boolean;
   @Input() hasPermissionToImportOrders: boolean;
   @Input() locale: string;
   @Input() showActions: boolean;
