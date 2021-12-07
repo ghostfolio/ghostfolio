@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 10 days
 - Upgraded `prisma` from version `2.30.2` to `3.6.0`
 
 ## 1.86.0 - 04.12.2021
