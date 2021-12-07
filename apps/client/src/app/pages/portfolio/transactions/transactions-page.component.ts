@@ -61,7 +61,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['createDialog']) {
+        if (params['createDialog'] && this.hasPermissionToCreateOrder) {
           this.openCreateTransactionDialog();
         } else if (params['editDialog']) {
           if (this.transactions) {
@@ -130,7 +130,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .subscribe((response) => {
         this.transactions = response;
 
-        if (this.transactions?.length <= 0) {
+        if (this.hasPermissionToCreateOrder && this.transactions?.length <= 0) {
           this.router.navigate([], { queryParams: { createDialog: true } });
         }
 

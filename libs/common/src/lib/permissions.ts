@@ -1,4 +1,5 @@
 import { Role } from '@prisma/client';
+
 import { UserWithSettings } from './interfaces';
 
 export const permissions = {
@@ -26,13 +27,6 @@ export const permissions = {
   updateUserSettings: 'updateUserSettings',
   updateViewMode: 'updateViewMode'
 };
-
-export function hasPermission(
-  aPermissions: string[] = [],
-  aPermission: string
-) {
-  return aPermissions.includes(aPermission);
-}
 
 export function getPermissions(aRole: Role): string[] {
   switch (aRole) {
@@ -76,6 +70,13 @@ export function getPermissions(aRole: Role): string[] {
     default:
       return [];
   }
+}
+
+export function hasPermission(
+  aPermissions: string[] = [],
+  aPermission: string
+) {
+  return aPermissions.includes(aPermission);
 }
 
 export function hasRole(aUser: UserWithSettings, aRole: Role): boolean {

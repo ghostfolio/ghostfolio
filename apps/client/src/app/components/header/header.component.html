@@ -270,7 +270,7 @@
       Sign In
     </button>
     <a
-      *ngIf="currentRoute !== 'register'"
+      *ngIf="currentRoute !== 'register' && !info?.isReadOnlyMode"
       class="d-none d-sm-block"
       color="primary"
       i18n

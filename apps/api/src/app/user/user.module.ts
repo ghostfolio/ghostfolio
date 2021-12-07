@@ -1,6 +1,7 @@
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -13,6 +14,7 @@ import { UserService } from './user.service';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '30 days' }
     }),
+    PropertyModule,
     SubscriptionModule
   ],
   controllers: [UserController],

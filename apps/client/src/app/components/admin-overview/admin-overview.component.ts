@@ -242,6 +242,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
         value: aValue ? 'true' : ''
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
   }
 }

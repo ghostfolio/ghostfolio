@@ -6,11 +6,7 @@ import {
   AdminMarketData,
   AdminMarketDataDetails
 } from '@ghostfolio/common/interfaces';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -44,7 +40,7 @@ export class AdminController {
   public async getAdminData(): Promise<AdminData> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -62,7 +58,7 @@ export class AdminController {
   public async gatherMax(): Promise<void> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -86,7 +82,7 @@ export class AdminController {
   ): Promise<void> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -106,7 +102,7 @@ export class AdminController {
   public async gatherProfileData(): Promise<void> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -126,7 +122,7 @@ export class AdminController {
   public async getMarketData(): Promise<AdminMarketData> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -146,7 +142,7 @@ export class AdminController {
   ): Promise<AdminMarketDataDetails> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -167,7 +163,7 @@ export class AdminController {
   ) {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {

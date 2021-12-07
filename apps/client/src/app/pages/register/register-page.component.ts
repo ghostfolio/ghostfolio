@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { format } from 'date-fns';
@@ -24,6 +25,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionForSocialLogin: boolean;
   public historicalDataItems: LineChartItem[];
+  public info: InfoItem;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -37,6 +39,8 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private tokenStorageService: TokenStorageService
   ) {
+    this.info = this.dataService.fetchInfo();
+
     this.tokenStorageService.signOut();
   }
 
