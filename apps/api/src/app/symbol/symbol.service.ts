@@ -32,7 +32,7 @@ export class SymbolService {
       let historicalData: HistoricalDataItem[];
 
       if (includeHistoricalData) {
-        const days = 7;
+        const days = 10;
 
         const marketData = await this.marketDataService.getRange({
           dateQuery: { gte: subDays(new Date(), days) },
