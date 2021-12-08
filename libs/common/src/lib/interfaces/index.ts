@@ -3,6 +3,7 @@ import { Accounts } from './accounts.interface';
 import { AdminData } from './admin-data.interface';
 import { AdminMarketDataDetails } from './admin-market-data-details.interface';
 import { AdminMarketData } from './admin-market-data.interface';
+import { Coupon } from './coupon.interface';
 import { Export } from './export.interface';
 import { InfoItem } from './info-item.interface';
 import { PortfolioChart } from './portfolio-chart.interface';
@@ -27,6 +28,7 @@ export {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
+  Coupon,
   Export,
   InfoItem,
   PortfolioChart,

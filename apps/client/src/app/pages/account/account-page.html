@@ -47,6 +47,14 @@
                   <ng-container *ngIf="!coupon">{{ price }}</ng-container>
                   <span i18n> per year</span>
                 </div>
+                <button
+                  color="primary"
+                  i18n
+                  mat-button
+                  (click)="onRedeemCoupon()"
+                >
+                  Redeem Coupon
+                </button>
               </div>
             </div>
           </div>

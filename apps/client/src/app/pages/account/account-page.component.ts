@@ -18,6 +18,7 @@ import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { DEFAULT_DATE_FORMAT, baseCurrency } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { StatusCodes } from 'http-status-codes';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
@@ -183,6 +184,26 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.update();
         }
       });
+  }
+
+  public onRedeemCoupon() {
+    const couponCode = prompt('Please add your coupon code:');
+
+    if (couponCode) {
+      this.dataService
+        .redeemCoupon(couponCode)
+        .pipe(
+          takeUntil(this.unsubscribeSubject),
+          catchError(() => {
+            // TODO: show error notification
+
+            return EMPTY;
+          })
+        )
+        .subscribe(() => {
+          // TODO: show success notification
+        });
+    }
   }
 
   public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
