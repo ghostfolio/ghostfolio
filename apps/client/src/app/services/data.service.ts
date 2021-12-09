@@ -253,4 +253,10 @@ export class DataService {
   public putUserSettings(aData: UpdateUserSettingsDto) {
     return this.http.put<User>(`/api/user/settings`, aData);
   }
+
+  public redeemCoupon(couponCode: string) {
+    return this.http.post('/api/subscription/redeem-coupon', {
+      couponCode
+    });
+  }
 }

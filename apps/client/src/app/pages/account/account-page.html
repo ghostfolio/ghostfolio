@@ -47,6 +47,13 @@
                   <ng-container *ngIf="!coupon">{{ price }}</ng-container>
                   <span i18n> per year</span>
                 </div>
+                <a
+                  class="cursor-pointer d-block mt-2"
+                  i18n
+                  [routerLink]=""
+                  (click)="onRedeemCoupon()"
+                  >Redeem Coupon</a
+                >
               </div>
             </div>
           </div>

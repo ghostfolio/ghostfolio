@@ -10,6 +10,11 @@ import {
   MatSlideToggle,
   MatSlideToggleChange
 } from '@angular/material/slide-toggle';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar
+} from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -49,6 +54,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
+  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -61,6 +67,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router,
     private stripeService: StripeService,
@@ -183,6 +190,49 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.update();
         }
       });
+  }
+
+  public onRedeemCoupon() {
+    let couponCode = prompt('Please enter your coupon code:');
+    couponCode = couponCode?.trim();
+
+    if (couponCode) {
+      this.dataService
+        .redeemCoupon(couponCode)
+        .pipe(
+          takeUntil(this.unsubscribeSubject),
+          catchError(() => {
+            this.snackBar.open('😞 Could not redeem coupon code', undefined, {
+              duration: 3000
+            });
+
+            return EMPTY;
+          })
+        )
+        .subscribe(() => {
+          this.snackBarRef = this.snackBar.open(
+            '✅ Coupon code has been redeemed',
+            'Reload',
+            {
+              duration: 3000
+            }
+          );
+
+          this.snackBarRef
+            .afterDismissed()
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe(() => {
+              window.location.reload();
+            });
+
+          this.snackBarRef
+            .onAction()
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe(() => {
+              window.location.reload();
+            });
+        });
+    }
   }
 
   public onRestrictedViewChange(aEvent: MatSlideToggleChange) {

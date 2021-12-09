@@ -142,7 +142,7 @@
                   class="mr-1"
                   name="information-circle-outline"
                 ></ion-icon>
-                <span i18n>Set System Message</span>
+                <span i18n>Set Message</span>
               </button>
             </div>
           </div>
@@ -154,6 +154,27 @@
                 [checked]="info?.isReadOnlyMode"
                 (change)="onReadOnlyModeChange($event)"
               ></mat-slide-toggle>
+            </div>
+          </div>
+          <div *ngIf="hasPermissionForSubscription" class="d-flex my-3">
+            <div class="w-50" i18n>Coupons</div>
+            <div class="w-50">
+              <div *ngFor="let coupon of coupons">
+                <span>{{ coupon.code }}</span>
+                <button
+                  class="mini-icon mx-1 no-min-width px-2"
+                  mat-button
+                  (click)="onDeleteCoupon(coupon.code)"
+                >
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
+              <div class="mt-2">
+                <button color="primary" mat-flat-button (click)="onAddCoupon()">
+                  <ion-icon class="mr-1" name="add-outline"></ion-icon>
+                  <span i18n>Add Coupon</span>
+                </button>
+              </div>
             </div>
           </div>
         </mat-card-content>

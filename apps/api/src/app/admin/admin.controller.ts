@@ -31,7 +31,6 @@ export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
     private readonly dataGatheringService: DataGatheringService,
-    private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 

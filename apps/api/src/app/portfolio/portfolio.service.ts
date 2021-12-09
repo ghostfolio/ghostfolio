@@ -729,8 +729,8 @@ export class PortfolioService {
         currentNetPerformance,
         currentNetPerformancePercent,
         currentValue,
-        isAllTimeHigh: true, // TODO
-        isAllTimeLow: false // TODO
+        isAllTimeHigh: true,
+        isAllTimeLow: false
       }
     };
   }

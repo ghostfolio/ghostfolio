@@ -6,11 +6,12 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_DATE_FORMAT,
+  PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE
 } from '@ghostfolio/common/config';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { Coupon, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   differenceInSeconds,
@@ -28,11 +29,13 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-overview.html'
 })
 export class AdminOverviewComponent implements OnDestroy, OnInit {
+  public coupons: Coupon[];
   public customCurrencies: string[];
   public dataGatheringInProgress: boolean;
   public dataGatheringProgress: number;
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public exchangeRates: { label1: string; label2: string; value: number }[];
+  public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
@@ -60,6 +63,11 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionForSubscription = hasPermission(
+            this.info.globalPermissions,
+            permissions.enableSubscription
+          );
 
           this.hasPermissionForSystemMessage = hasPermission(
             this.info.globalPermissions,
@@ -96,12 +104,28 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     return '';
   }
 
+  public onAddCoupon() {
+    const coupons = [...this.coupons, { code: this.generateCouponCode(16) }];
+    this.putCoupons(coupons);
+  }
+
   public onAddCurrency() {
     const currency = prompt('Please add a currency:');
 
     if (currency) {
       const currencies = uniq([...this.customCurrencies, currency]);
       this.putCurrencies(currencies);
+    }
+  }
+
+  public onDeleteCoupon(aCouponCode: string) {
+    const confirmation = confirm('Do you really want to delete this coupon?');
+
+    if (confirmation) {
+      const coupons = this.coupons.filter((coupon) => {
+        return coupon.code !== aCouponCode;
+      });
+      this.putCoupons(coupons);
     }
   }
 
@@ -185,6 +209,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           transactionCount,
           userCount
         }) => {
+          this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
           this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
           this.dataGatheringProgress = dataGatheringProgress;
           this.exchangeRates = exchangeRates;
@@ -208,6 +233,32 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
+  }
+
+  private generateCouponCode(aLength: number) {
+    const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
+    let couponCode = '';
+
+    for (let i = 0; i < aLength; i++) {
+      couponCode += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+
+    return couponCode;
+  }
+
+  private putCoupons(aCoupons: Coupon[]) {
+    this.dataService
+      .putAdminSetting(PROPERTY_COUPONS, {
+        value: JSON.stringify(aCoupons)
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
   }
 
   private putCurrencies(aCurrencies: string[]) {
