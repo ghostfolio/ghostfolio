@@ -10,6 +10,11 @@ import {
   MatSlideToggle,
   MatSlideToggleChange
 } from '@angular/material/slide-toggle';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar
+} from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -18,7 +23,6 @@ import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { DEFAULT_DATE_FORMAT, baseCurrency } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { StatusCodes } from 'http-status-codes';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
@@ -50,6 +54,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
+  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -62,6 +67,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router,
     private stripeService: StripeService,
@@ -187,7 +193,8 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   }
 
   public onRedeemCoupon() {
-    const couponCode = prompt('Please add your coupon code:');
+    let couponCode = prompt('Please enter your coupon code:');
+    couponCode = couponCode?.trim();
 
     if (couponCode) {
       this.dataService
@@ -195,13 +202,35 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         .pipe(
           takeUntil(this.unsubscribeSubject),
           catchError(() => {
-            // TODO: show error notification
+            this.snackBar.open('😞 Could not redeem coupon code', undefined, {
+              duration: 3000
+            });
 
             return EMPTY;
           })
         )
         .subscribe(() => {
-          // TODO: show success notification
+          this.snackBarRef = this.snackBar.open(
+            '✅ Coupon code has been redeemed',
+            'Reload',
+            {
+              duration: 3000
+            }
+          );
+
+          this.snackBarRef
+            .afterDismissed()
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe(() => {
+              window.location.reload();
+            });
+
+          this.snackBarRef
+            .onAction()
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe(() => {
+              window.location.reload();
+            });
         });
     }
   }

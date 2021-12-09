@@ -236,7 +236,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   private generateCouponCode(aLength: number) {
-    const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
+    const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
     let couponCode = '';
 
     for (let i = 0; i < aLength; i++) {

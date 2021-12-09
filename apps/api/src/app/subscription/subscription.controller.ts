@@ -44,7 +44,7 @@ export class SubscriptionController {
       );
     }
 
-    const coupons =
+    let coupons =
       ((await this.propertyService.getByKey(PROPERTY_COUPONS)) as Coupon[]) ??
       [];
 
@@ -59,7 +59,18 @@ export class SubscriptionController {
       );
     }
 
-    // TODO: Add subscription
+    await this.subscriptionService.createSubscription(this.request.user.id);
+
+    // Destroy coupon
+    coupons = coupons.filter((coupon) => {
+      return coupon.code !== couponCode;
+    });
+    await this.propertyService.put({
+      key: PROPERTY_COUPONS,
+      value: JSON.stringify(coupons)
+    });
+
+    Logger.log(`Coupon with code '${couponCode}' has been redeemed`);
 
     res.status(StatusCodes.OK);
 
@@ -71,7 +82,7 @@ export class SubscriptionController {
 
   @Get('stripe/callback')
   public async stripeCallback(@Req() req, @Res() res) {
-    await this.subscriptionService.createSubscription(
+    await this.subscriptionService.createSubscriptionViaStripe(
       req.query.checkoutSessionId
     );
 
