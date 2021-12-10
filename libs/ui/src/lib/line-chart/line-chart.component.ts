@@ -10,6 +10,8 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import { getBackgroundColor } from '@ghostfolio/common/helper';
 import {
   Chart,
   Filler,
@@ -20,11 +22,6 @@ import {
   TimeScale
 } from 'chart.js';
 
-import {
-  primaryColorRgb,
-  secondaryColorRgb
-} from '../../../../common/src/lib/config'; // TODO: @ghostfolio/common/config
-import { getBackgroundColor } from '../../../../common/src/lib/helper'; // TODO: @ghostfolio/common/helper
 import { LineChartItem } from './interfaces/line-chart.interface';
 
 @Component({

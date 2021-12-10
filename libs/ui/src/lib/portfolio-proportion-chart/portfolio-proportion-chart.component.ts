@@ -8,6 +8,8 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
@@ -16,9 +18,6 @@ import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as Color from 'color';
-
-import { UNKNOWN_KEY } from '../../../../common/src/lib/config'; // TODO: @ghostfolio/common/config
-import { getTextColor } from '../../../../common/src/lib/helper'; // TODO: @ghostfolio/common/helper
 
 @Component({
   selector: 'gf-portfolio-proportion-chart',
