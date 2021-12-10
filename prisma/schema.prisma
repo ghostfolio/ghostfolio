@@ -9,7 +9,7 @@ datasource db {
 generator client {
   provider        = "prisma-client-js"
   binaryTargets   = ["debian-openssl-1.1.x", "native"]
-  previewFeatures = ["orderByRelation", "selectRelationCount"]
+  previewFeatures = []
 }
 
 model Access {
