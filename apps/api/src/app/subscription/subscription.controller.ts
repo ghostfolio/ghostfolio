@@ -70,7 +70,9 @@ export class SubscriptionController {
       value: JSON.stringify(coupons)
     });
 
-    Logger.log(`Coupon with code '${couponCode}' has been redeemed`);
+    Logger.log(
+      `Subscription for user '${this.request.user.id}' has been created with coupon`
+    );
 
     res.status(StatusCodes.OK);
 
@@ -82,9 +84,11 @@ export class SubscriptionController {
 
   @Get('stripe/callback')
   public async stripeCallback(@Req() req, @Res() res) {
-    await this.subscriptionService.createSubscriptionViaStripe(
+    const userId = await this.subscriptionService.createSubscriptionViaStripe(
       req.query.checkoutSessionId
     );
+
+    Logger.log(`Subscription for user '${userId}' has been created via Stripe`);
 
     res.redirect(`${this.configurationService.get('ROOT_URL')}/account`);
   }

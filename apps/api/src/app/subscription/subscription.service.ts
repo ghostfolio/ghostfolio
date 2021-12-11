@@ -75,8 +75,6 @@ export class SubscriptionService {
         }
       }
     });
-
-    Logger.log(`Subscription for user '${aUserId}' has been created`);
   }
 
   public async createSubscriptionViaStripe(aCheckoutSessionId: string) {
@@ -90,6 +88,8 @@ export class SubscriptionService {
       await this.stripe.customers.update(session.customer as string, {
         description: session.client_reference_id
       });
+
+      return session.client_reference_id;
     } catch (error) {
       Logger.error(error);
     }
