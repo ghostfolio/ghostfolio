@@ -8,7 +8,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { MarketData } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 import { format, isBefore, isValid, parse } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,7 +22,9 @@ import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-
   templateUrl: './admin-market-data-detail.component.html'
 })
 export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
+  @Input() dataSource: DataSource;
   @Input() marketData: MarketData[];
+  @Input() symbol: string;
 
   public days = Array(31);
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
@@ -53,7 +55,9 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         this.marketDataByMonth[key] = {};
       }
 
-      this.marketDataByMonth[key][currentDay] = {
+      this.marketDataByMonth[key][
+        currentDay < 10 ? `0${currentDay}` : currentDay
+      ] = {
         ...marketDataItem,
         day: currentDay
       };
@@ -66,12 +70,21 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     return isValid(date) && isBefore(date, new Date());
   }
 
-  public onOpenMarketDataDetail({ date, marketPrice, symbol }: MarketData) {
+  public onOpenMarketDataDetail({
+    day,
+    yearMonth
+  }: {
+    day: string;
+    yearMonth: string;
+  }) {
+    const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
+
     const dialogRef = this.dialog.open(MarketDataDetailDialog, {
       data: {
         marketPrice,
-        symbol,
-        date: format(date, DEFAULT_DATE_FORMAT)
+        dataSource: this.dataSource,
+        date: new Date(`${yearMonth}-${day}`),
+        symbol: this.symbol
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

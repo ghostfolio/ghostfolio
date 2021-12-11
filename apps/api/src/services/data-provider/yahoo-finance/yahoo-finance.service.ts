@@ -8,7 +8,7 @@ import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import Big from 'big.js';
 import { countries } from 'countries-list';
-import { format } from 'date-fns';
+import { addDays, format, isSameDay } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
 
 import {
@@ -133,6 +133,10 @@ export class YahooFinanceService implements DataProviderInterface {
   }> {
     if (aSymbols.length <= 0) {
       return {};
+    }
+
+    if (isSameDay(from, to)) {
+      to = addDays(to, 1);
     }
 
     const yahooFinanceSymbols = aSymbols.map((symbol) => {

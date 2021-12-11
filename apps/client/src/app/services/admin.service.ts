@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DataSource } from '@prisma/client';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DataSource, MarketData } from '@prisma/client';
+import { format } from 'date-fns';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +20,19 @@ export class AdminService {
 
   public gatherSymbol({
     dataSource,
+    date,
     symbol
   }: {
     dataSource: DataSource;
+    date?: Date;
     symbol: string;
   }) {
-    return this.http.post<void>(
-      `/api/admin/gather/${dataSource}/${symbol}`,
-      {}
-    );
+    let url = `/api/admin/gather/${dataSource}/${symbol}`;
+
+    if (date) {
+      url = `${url}/${format(date, DATE_FORMAT)}`;
+    }
+
+    return this.http.post<MarketData | void>(url, {});
   }
 }

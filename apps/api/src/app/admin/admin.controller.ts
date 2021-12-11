@@ -21,7 +21,8 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
+import { isDate, isValid } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
@@ -73,6 +74,26 @@ export class AdminController {
     return;
   }
 
+  @Post('gather/profile-data')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherProfileData(): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    this.dataGatheringService.gatherProfileData();
+
+    return;
+  }
+
   @Post('gather/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async gatherSymbol(
@@ -96,9 +117,13 @@ export class AdminController {
     return;
   }
 
-  @Post('gather/profile-data')
+  @Post('gather/:dataSource/:symbol/:dateString')
   @UseGuards(AuthGuard('jwt'))
-  public async gatherProfileData(): Promise<void> {
+  public async gatherSymbolForDate(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('dateString') dateString: string,
+    @Param('symbol') symbol: string
+  ): Promise<MarketData> {
     if (
       !hasPermission(
         this.request.user.permissions,
@@ -111,9 +136,20 @@ export class AdminController {
       );
     }
 
-    this.dataGatheringService.gatherProfileData();
+    const date = new Date(dateString);
 
-    return;
+    if (!isDate(date)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return this.dataGatheringService.gatherSymbolForDate({
+      dataSource,
+      date,
+      symbol
+    });
   }
 
   @Get('market-data')

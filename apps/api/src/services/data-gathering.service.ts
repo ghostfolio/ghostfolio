@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 import {
   differenceInHours,
   format,
@@ -178,6 +178,44 @@ export class DataGatheringService {
 
       Logger.log(`Symbol data gathering for ${symbol} has been completed.`);
       console.timeEnd('data-gathering-symbol');
+    }
+  }
+
+  public async gatherSymbolForDate({
+    dataSource,
+    date,
+    symbol
+  }: {
+    dataSource: DataSource;
+    date: Date;
+    symbol: string;
+  }) {
+    try {
+      const historicalData = await this.dataProviderService.getHistoricalRaw(
+        [{ dataSource, symbol }],
+        date,
+        date
+      );
+
+      const marketPrice =
+        historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
+
+      if (marketPrice) {
+        return await this.prismaService.marketData.upsert({
+          create: {
+            dataSource,
+            date,
+            marketPrice,
+            symbol
+          },
+          update: { marketPrice },
+          where: { date_symbol: { date, symbol } }
+        });
+      }
+    } catch (error) {
+      Logger.error(error);
+    } finally {
+      return undefined;
     }
   }
 
