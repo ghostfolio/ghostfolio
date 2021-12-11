@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the data gathering by symbol endpoint with an optional date
+
 ### Changed
 
 - Upgraded `Nx` from version `13.2.2` to `13.3.0`
