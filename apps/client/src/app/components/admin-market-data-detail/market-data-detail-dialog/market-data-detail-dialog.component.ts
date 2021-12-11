@@ -1,11 +1,14 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
   OnDestroy
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { MarketData } from '@prisma/client';
+import { Subject, takeUntil } from 'rxjs';
 
 import { MarketDataDetailDialogParams } from './interfaces/interfaces';
 
@@ -20,6 +23,8 @@ export class MarketDataDetailDialog implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminService: AdminService,
+    private changeDetectorRef: ChangeDetectorRef,
     public dialogRef: MatDialogRef<MarketDataDetailDialog>,
     @Inject(MAT_DIALOG_DATA) public data: MarketDataDetailDialogParams
   ) {}
@@ -28,6 +33,21 @@ export class MarketDataDetailDialog implements OnDestroy {
 
   public onCancel(): void {
     this.dialogRef.close();
+  }
+
+  public onGatherData() {
+    this.adminService
+      .gatherSymbol({
+        dataSource: this.data.dataSource,
+        date: this.data.date,
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((marketData: MarketData) => {
+        this.data.marketPrice = marketData.marketPrice;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public ngOnDestroy() {

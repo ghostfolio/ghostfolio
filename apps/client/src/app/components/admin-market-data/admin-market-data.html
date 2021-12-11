@@ -47,7 +47,9 @@
               <td></td>
               <td colspan="4">
                 <gf-admin-market-data-detail
+                  [dataSource]="item.dataSource"
                   [marketData]="marketDataDetails"
+                  [symbol]="item.symbol"
                 ></gf-admin-market-data-detail>
               </td>
             </tr>
