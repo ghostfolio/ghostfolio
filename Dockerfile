@@ -12,7 +12,8 @@ COPY ./package.json package.json
 COPY ./yarn.lock yarn.lock
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN yarn
+RUN apk add --no-cache python3 g++ make openssl
+RUN yarn install
 
 # See https://github.com/nrwl/nx/issues/6586 for further details
 COPY ./decorate-angular-cli.js decorate-angular-cli.js

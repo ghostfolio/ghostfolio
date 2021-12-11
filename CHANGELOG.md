@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleasd
+
+### Fixed
+
+- Fixed `/bin/sh: prisma: not found` in docker build
+- Added `apk` in `Dockerfile` (`python3 g++ make openssl`)
+
 ## 1.89.0 - 11.12.2021
 
 ### Added
