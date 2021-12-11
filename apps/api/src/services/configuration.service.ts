@@ -27,6 +27,7 @@ export class ConfigurationService {
       GOOGLE_SECRET: str({ default: 'dummySecret' }),
       JWT_SECRET_KEY: str({}),
       MAX_ITEM_IN_CACHE: num({ default: 9999 }),
+      MAX_ORDERS_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       PORT: port({ default: 3333 }),
       RAKUTEN_RAPID_API_KEY: str({ default: '' }),
       REDIS_HOST: str({ default: 'localhost' }),

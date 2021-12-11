@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleasd
 
+### Changed
+
+- Removed the default transactions import limit
+
 ### Fixed
 
 - Fixed `/bin/sh: prisma: not found` in docker build

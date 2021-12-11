@@ -1,4 +1,5 @@
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { Injectable } from '@nestjs/common';
 import { Order } from '@prisma/client';
@@ -6,9 +7,8 @@ import { isSameDay, parseISO } from 'date-fns';
 
 @Injectable()
 export class ImportService {
-  private static MAX_ORDERS_TO_IMPORT = 20;
-
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly orderService: OrderService
   ) {}
@@ -59,8 +59,14 @@ export class ImportService {
     orders: Partial<Order>[];
     userId: string;
   }) {
-    if (orders?.length > ImportService.MAX_ORDERS_TO_IMPORT) {
-      throw new Error('Too many transactions');
+    if (
+      orders?.length > this.configurationService.get('MAX_ORDERS_TO_IMPORT')
+    ) {
+      throw new Error(
+        `Too many transactions (${this.configurationService.get(
+          'MAX_ORDERS_TO_IMPORT'
+        )} at most)`
+      );
     }
 
     const existingOrders = await this.orderService.orders({
