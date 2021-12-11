@@ -18,6 +18,7 @@ export interface Environment extends CleanedEnvAccessors {
   GOOGLE_SECRET: string;
   JWT_SECRET_KEY: string;
   MAX_ITEM_IN_CACHE: number;
+  MAX_ORDERS_TO_IMPORT: number;
   PORT: number;
   RAKUTEN_RAPID_API_KEY: string;
   REDIS_HOST: string;
