@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleasd
 
+### Added
+
+- Extended the validation in the import functionality for transactions by checking the currency of the data provider service
+
 ### Changed
 
 - Removed the default transactions import limit
