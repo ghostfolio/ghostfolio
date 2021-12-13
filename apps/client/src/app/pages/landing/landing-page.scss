@@ -14,7 +14,6 @@
   }
 
   .intro-container {
-    background-color: #ffffff;
     margin-top: -5rem;
 
     .intro-inner-container {
@@ -35,6 +34,12 @@
   .button-container {
     .mat-stroked-button {
       background-color: var(--dark-background);
+    }
+  }
+
+  .intro-container {
+    .intro {
+      background-image: url('/assets/intro-dark.jpg') !important;
     }
   }
 }
