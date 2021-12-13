@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the validation in the import functionality for transactions by checking the currency of the data provider service
+- Added support for cryptocurrency _Uniswap_
 
 ### Changed
 
