@@ -104,6 +104,12 @@ export class ImportService {
           `orders.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
         );
       }
+
+      if (result[symbol].currency !== currency) {
+        throw new Error(
+          `orders.${index}.currency ("${currency}") does not match with "${result[symbol].currency}"`
+        );
+      }
     }
   }
 }
