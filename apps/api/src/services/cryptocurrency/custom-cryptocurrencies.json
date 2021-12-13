@@ -3,5 +3,6 @@
   "ALGO": "Algorand",
   "AVAX": "Avalanche",
   "MATIC": "Polygon",
-  "SHIB": "Shiba Inu"
+  "SHIB": "Shiba Inu",
+  "UNI3": "Uniswap"
 }
