@@ -8,7 +8,6 @@
   }
 
   .intro-container {
-    background-color: #ffffff;
     margin-top: -5rem;
 
     .intro-inner-container {
@@ -21,6 +20,20 @@
         background-repeat: no-repeat;
         background-size: contain;
       }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .button-container {
+    .mat-stroked-button {
+      background-color: var(--dark-background);
+    }
+  }
+
+  .intro-container {
+    .intro {
+      background-image: url('/assets/intro-dark.jpg') !important;
     }
   }
 }
