@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the default transactions import limit
+- Improved the landing page in dark mode
 
 ### Fixed
 
