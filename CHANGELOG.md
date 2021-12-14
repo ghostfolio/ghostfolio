@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleasd
+## 1.90.0 - 14.12.2021
 
 ### Added
 
 - Extended the validation in the import functionality for transactions by checking the currency of the data provider service
 - Added support for cryptocurrency _Uniswap_
+- Set up pipeline for docker build
 
 ### Changed
 
