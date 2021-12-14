@@ -13,18 +13,18 @@ if: (type = pull_request) OR (tag IS present)
 
 jobs:
   include:
-    - stage: download dependencies
+    - stage: Install dependencies
       if: type = pull_request
       script: yarn --frozen-lockfile
-    - stage: check formatting
+    - stage: Check formatting
       if: type = pull_request
       script: yarn format:check
-    - stage: execute tests
+    - stage: Execute tests
       if: type = pull_request
       script: yarn test
-    - stage: build
+    - stage: Build application
       if: type = pull_request
       script: yarn build:all
-    - stage: build and push docker images
+    - stage: Build and publish docker image
       if: tag IS present
       script: ./publish-docker-image.sh
