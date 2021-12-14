@@ -3,9 +3,28 @@ git:
   depth: false
 node_js:
   - 14
-before_script:
-  - yarn
-script:
-  - yarn format:check
-  - yarn test
-  - yarn build:all
+
+services:
+  - docker
+
+cache: yarn
+
+if: (type = pull_request) OR (tag IS present)
+
+jobs:
+  include:
+    - stage: download dependencies
+      if: type = pull_request
+      script: yarn --frozen-lockfile
+    - stage: check formatting
+      if: type = pull_request
+      script: yarn format:check
+    - stage: execute tests
+      if: type = pull_request
+      script: yarn test
+    - stage: build
+      if: type = pull_request
+      script: yarn build:all
+    - stage: build and push docker images
+      if: tag IS present
+      script: ./publish-docker-image.sh
