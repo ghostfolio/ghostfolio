@@ -159,12 +159,12 @@ async function main() {
       {
         assetClass: 'CASH',
         assetSubClass: 'CRYPTOCURRENCY',
-        countries: null,
+        countries: undefined,
         currency: 'USD',
         dataSource: DataSource.YAHOO,
         id: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e',
         name: 'Bitcoin USD',
-        sectors: null,
+        sectors: undefined,
         symbol: 'BTCUSD'
       },
       {
