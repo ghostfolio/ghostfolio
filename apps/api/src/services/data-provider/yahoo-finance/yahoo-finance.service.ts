@@ -240,7 +240,7 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   private convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
-    const symbol = aYahooFinanceSymbol.replace('-', '');
+    const symbol = aYahooFinanceSymbol.replace('-USD', 'USD');
     return symbol.replace('=X', '');
   }
 
