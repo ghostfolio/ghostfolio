@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Fixed the symbol conversion from _Yahoo Finance_ including a hyphen
+
 ### Todo
 
 - Apply data migration (`yarn database:migrate`)
