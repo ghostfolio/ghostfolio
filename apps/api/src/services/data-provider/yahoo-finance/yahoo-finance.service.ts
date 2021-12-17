@@ -35,6 +35,44 @@ export class YahooFinanceService implements DataProviderInterface {
     return true;
   }
 
+  public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
+    const symbol = aYahooFinanceSymbol.replace('-USD', 'USD');
+    return symbol.replace('=X', '');
+  }
+
+  /**
+   * Converts a symbol to a Yahoo Finance symbol
+   *
+   * Currency:        USDCHF  -> USDCHF=X
+   * Cryptocurrency:  BTCUSD  -> BTC-USD
+   *                  DOGEUSD -> DOGE-USD
+   *                  SOL1USD -> SOL1-USD
+   */
+  public convertToYahooFinanceSymbol(aSymbol: string) {
+    if (
+      (aSymbol.includes('CHF') ||
+        aSymbol.includes('EUR') ||
+        aSymbol.includes('USD')) &&
+      aSymbol.length >= 6
+    ) {
+      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
+        return `${aSymbol}=X`;
+      } else if (
+        this.cryptocurrencyService.isCrypto(
+          aSymbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
+        )
+      ) {
+        // Add a dash before the last three characters
+        // BTCUSD  -> BTC-USD
+        // DOGEUSD -> DOGE-USD
+        // SOL1USD -> SOL1-USD
+        return aSymbol.replace(new RegExp('-?USD$'), '-USD');
+      }
+    }
+
+    return aSymbol;
+  }
+
   public async get(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
@@ -237,44 +275,6 @@ export class YahooFinanceService implements DataProviderInterface {
     } catch {}
 
     return { items };
-  }
-
-  private convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
-    const symbol = aYahooFinanceSymbol.replace('-USD', 'USD');
-    return symbol.replace('=X', '');
-  }
-
-  /**
-   * Converts a symbol to a Yahoo Finance symbol
-   *
-   * Currency:        USDCHF  -> USDCHF=X
-   * Cryptocurrency:  BTCUSD  -> BTC-USD
-   *                  DOGEUSD -> DOGE-USD
-   *                  SOL1USD -> SOL1-USD
-   */
-  private convertToYahooFinanceSymbol(aSymbol: string) {
-    if (
-      (aSymbol.includes('CHF') ||
-        aSymbol.includes('EUR') ||
-        aSymbol.includes('USD')) &&
-      aSymbol.length >= 6
-    ) {
-      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
-        return `${aSymbol}=X`;
-      } else if (
-        this.cryptocurrencyService.isCrypto(
-          aSymbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
-        )
-      ) {
-        // Add a dash before the last three characters
-        // BTCUSD  -> BTC-USD
-        // DOGEUSD -> DOGE-USD
-        // SOL1USD -> SOL1-USD
-        return aSymbol.replace(new RegExp('-?USD$'), '-USD');
-      }
-    }
-
-    return aSymbol;
   }
 
   private parseAssetClass(aPrice: IYahooFinancePrice): {
