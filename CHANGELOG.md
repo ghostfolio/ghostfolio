@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the symbol conversion from _Yahoo Finance_ including a hyphen
+- Fixed hidden values (`0`) in the statistics section on the about page
 
 ### Todo
 

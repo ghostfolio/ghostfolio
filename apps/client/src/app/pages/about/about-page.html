@@ -108,8 +108,11 @@
         <mat-card-content>
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.activeUsers1d">
-                {{ statistics?.activeUsers1d ?? '-' }}
+              <h3
+                class="mb-0"
+                [hidden]="statistics?.activeUsers1d === undefined"
+              >
+                {{ statistics?.activeUsers1d || '-' }}
               </h3>
               <div class="h6 mb-0">
                 <span i18n>Active Users</span>&nbsp;<small class="text-muted"
@@ -118,7 +121,10 @@
               </div>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.activeUsers7d">
+              <h3
+                class="mb-0"
+                [hidden]="statistics?.activeUsers7d === undefined"
+              >
                 {{ statistics?.activeUsers7d ?? '-' }}
               </h3>
               <div class="h6 mb-0">
@@ -128,7 +134,10 @@
               </div>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.activeUsers30d">
+              <h3
+                class="mb-0"
+                [hidden]="statistics?.activeUsers30d === undefined"
+              >
                 {{ statistics?.activeUsers30d ?? '-' }}
               </h3>
               <div class="h6 mb-0">
@@ -138,7 +147,7 @@
               </div>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.newUsers30d">
+              <h3 class="mb-0" [hidden]="statistics?.newUsers30d === undefined">
                 {{ statistics?.newUsers30d ?? '-' }}
               </h3>
               <div class="h6 mb-0">
@@ -148,13 +157,19 @@
               </div>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.gitHubContributors">
+              <h3
+                class="mb-0"
+                [hidden]="statistics?.gitHubContributors === undefined"
+              >
                 {{ statistics?.gitHubContributors ?? '-' }}
               </h3>
               <div class="h6 mb-0" i18n>Contributors on GitHub</div>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.gitHubStargazers">
+              <h3
+                class="mb-0"
+                [hidden]="statistics?.gitHubStargazers === undefined"
+              >
                 {{ statistics?.gitHubStargazers ?? '-' }}
               </h3>
               <div class="h6 mb-0" i18n>Stars on GitHub</div>
