@@ -7,7 +7,7 @@ jest.mock(
     return {
       CryptocurrencyService: jest.fn().mockImplementation(() => {
         return {
-          isCrypto: (symbol: string) => {
+          isCryptocurrency: (symbol: string) => {
             switch (symbol) {
               case 'BTCUSD':
                 return true;
