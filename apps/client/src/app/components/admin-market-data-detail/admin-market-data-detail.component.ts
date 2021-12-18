@@ -8,6 +8,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DataSource, MarketData } from '@prisma/client';
 import { format, isBefore, isValid, parse } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -29,6 +30,7 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
   public days = Array(31);
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public deviceType: string;
+  public historicalDataItems: LineChartItem[];
   public marketDataByMonth: {
     [yearMonth: string]: { [day: string]: MarketData & { day: number } };
   } = {};
@@ -45,6 +47,12 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
+    this.historicalDataItems = this.marketData.map((marketDataItem) => {
+      return {
+        date: format(marketDataItem.date, DATE_FORMAT),
+        value: marketDataItem.marketPrice
+      };
+    });
     this.marketDataByMonth = {};
 
     for (const marketDataItem of this.marketData) {

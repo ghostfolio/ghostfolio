@@ -4,7 +4,6 @@
       <table class="gf-table w-100">
         <thead>
           <tr class="mat-header-row">
-            <th class="mat-header-cell px-1 py-2 text-right" i18n>#</th>
             <th class="mat-header-cell px-1 py-2" i18n>Symbol</th>
             <th class="mat-header-cell px-1 py-2" i18n>Data Source</th>
             <th class="mat-header-cell px-1 py-2" i18n>First Transaction</th>
@@ -17,7 +16,6 @@
               class="cursor-pointer mat-row"
               (click)="setCurrentSymbol(item.symbol)"
             >
-              <td class="mat-cell px-1 py-2 text-right">{{ i + 1 }}</td>
               <td class="mat-cell px-1 py-2">{{ item.symbol }}</td>
               <td class="mat-cell px-1 py-2">{{ item.dataSource}}</td>
               <td class="mat-cell px-1 py-2">
@@ -44,8 +42,7 @@
               </td>
             </tr>
             <tr *ngIf="currentSymbol === item.symbol" class="mat-row">
-              <td></td>
-              <td colspan="4">
+              <td class="p-1" colspan="4">
                 <gf-admin-market-data-detail
                   [dataSource]="item.dataSource"
                   [marketData]="marketDataDetails"
