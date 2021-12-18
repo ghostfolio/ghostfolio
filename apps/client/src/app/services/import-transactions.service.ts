@@ -218,6 +218,8 @@ export class ImportTransactionsService {
           return Type.BUY;
         } else if (item[key].toLowerCase() === 'sell') {
           return Type.SELL;
+        } else if (item[key].toLowerCase() === 'dividend') {
+          return Type.DIVIDEND;
         }
       }
     }
