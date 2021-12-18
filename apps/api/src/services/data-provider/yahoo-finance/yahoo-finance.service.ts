@@ -1,6 +1,6 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { baseCurrency, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -33,6 +33,47 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public canHandle(symbol: string) {
     return true;
+  }
+
+  public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
+    const symbol = aYahooFinanceSymbol.replace(
+      new RegExp(`-${baseCurrency}$`),
+      baseCurrency
+    );
+    return symbol.replace('=X', '');
+  }
+
+  /**
+   * Converts a symbol to a Yahoo Finance symbol
+   *
+   * Currency:        USDCHF  -> USDCHF=X
+   * Cryptocurrency:  BTCUSD  -> BTC-USD
+   *                  DOGEUSD -> DOGE-USD
+   *                  SOL1USD -> SOL1-USD
+   */
+  public convertToYahooFinanceSymbol(aSymbol: string) {
+    if (aSymbol.includes(baseCurrency) && aSymbol.length >= 6) {
+      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
+        return `${aSymbol}=X`;
+      } else if (
+        this.cryptocurrencyService.isCryptocurrency(
+          aSymbol
+            .replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
+            .replace('1', '')
+        )
+      ) {
+        // Add a dash before the last three characters
+        // BTCUSD  -> BTC-USD
+        // DOGEUSD -> DOGE-USD
+        // SOL1USD -> SOL1-USD
+        return aSymbol.replace(
+          new RegExp(`-?${baseCurrency}$`),
+          `-${baseCurrency}`
+        );
+      }
+    }
+
+    return aSymbol;
   }
 
   public async get(
@@ -69,7 +110,7 @@ export class YahooFinanceService implements DataProviderInterface {
           exchange: this.parseExchange(value.price?.exchangeName),
           marketState:
             value.price?.marketState === 'REGULAR' ||
-            this.cryptocurrencyService.isCrypto(symbol)
+            this.cryptocurrencyService.isCryptocurrency(symbol)
               ? MarketState.open
               : MarketState.closed,
           marketPrice: value.price?.regularMarketPrice || 0,
@@ -204,8 +245,10 @@ export class YahooFinanceService implements DataProviderInterface {
         .filter(({ quoteType, symbol }) => {
           return (
             (quoteType === 'CRYPTOCURRENCY' &&
-              this.cryptocurrencyService.isCrypto(
-                symbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
+              this.cryptocurrencyService.isCryptocurrency(
+                symbol
+                  .replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
+                  .replace('1', '')
               )) ||
             quoteType === 'EQUITY' ||
             quoteType === 'ETF'
@@ -213,9 +256,9 @@ export class YahooFinanceService implements DataProviderInterface {
         })
         .filter(({ quoteType, symbol }) => {
           if (quoteType === 'CRYPTOCURRENCY') {
-            // Only allow cryptocurrencies in USD to avoid having redundancy in the database.
-            // Trades need to be converted manually before to USD (or a UI converter needs to be developed)
-            return symbol.includes('USD');
+            // Only allow cryptocurrencies in base currency to avoid having redundancy in the database.
+            // Transactions need to be converted manually to the base currency before
+            return symbol.includes(baseCurrency);
           }
 
           return true;
@@ -237,44 +280,6 @@ export class YahooFinanceService implements DataProviderInterface {
     } catch {}
 
     return { items };
-  }
-
-  private convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
-    const symbol = aYahooFinanceSymbol.replace('-USD', 'USD');
-    return symbol.replace('=X', '');
-  }
-
-  /**
-   * Converts a symbol to a Yahoo Finance symbol
-   *
-   * Currency:        USDCHF  -> USDCHF=X
-   * Cryptocurrency:  BTCUSD  -> BTC-USD
-   *                  DOGEUSD -> DOGE-USD
-   *                  SOL1USD -> SOL1-USD
-   */
-  private convertToYahooFinanceSymbol(aSymbol: string) {
-    if (
-      (aSymbol.includes('CHF') ||
-        aSymbol.includes('EUR') ||
-        aSymbol.includes('USD')) &&
-      aSymbol.length >= 6
-    ) {
-      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
-        return `${aSymbol}=X`;
-      } else if (
-        this.cryptocurrencyService.isCrypto(
-          aSymbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
-        )
-      ) {
-        // Add a dash before the last three characters
-        // BTCUSD  -> BTC-USD
-        // DOGEUSD -> DOGE-USD
-        // SOL1USD -> SOL1-USD
-        return aSymbol.replace(new RegExp('-?USD$'), '-USD');
-      }
-    }
-
-    return aSymbol;
   }
 
   private parseAssetClass(aPrice: IYahooFinancePrice): {
