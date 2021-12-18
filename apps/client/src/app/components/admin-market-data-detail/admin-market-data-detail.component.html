@@ -1,4 +1,10 @@
-<div class="py-2">
+<div>
+  <gf-line-chart
+    class="mb-4"
+    [historicalDataItems]="historicalDataItems"
+    [showXAxis]="true"
+    [showYAxis]="true"
+  ></gf-line-chart>
   <div *ngFor="let itemByMonth of marketDataByMonth | keyvalue" class="d-flex">
     <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>
     <div class="align-items-center d-flex flex-grow-1 px-1">
