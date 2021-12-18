@@ -693,9 +693,7 @@ export class PortfolioService {
           currentGrossPerformancePercent: 0,
           currentNetPerformance: 0,
           currentNetPerformancePercent: 0,
-          currentValue: 0,
-          isAllTimeHigh: false,
-          isAllTimeLow: false
+          currentValue: 0
         }
       };
     }
@@ -728,9 +726,7 @@ export class PortfolioService {
         currentGrossPerformancePercent,
         currentNetPerformance,
         currentNetPerformancePercent,
-        currentValue,
-        isAllTimeHigh: true,
-        isAllTimeLow: false
+        currentValue
       }
     };
   }

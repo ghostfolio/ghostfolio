@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Removed the redundant all time high and all time low from the performance endpoint
+
 ### Fixed
 
 - Fixed the symbol conversion from _Yahoo Finance_ including a hyphen
