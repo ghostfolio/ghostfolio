@@ -3,7 +3,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { DataSource, Order, Prisma } from '@prisma/client';
+import { DataSource, Order, Prisma, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
 
@@ -85,15 +85,27 @@ export class OrderService {
 
   public async getOrders({
     includeDrafts = false,
+    types,
     userId
   }: {
     includeDrafts?: boolean;
+    types?: TypeOfOrder[];
     userId: string;
   }) {
     const where: Prisma.OrderWhereInput = { userId };
 
     if (includeDrafts === false) {
       where.isDraft = false;
+    }
+
+    if (types) {
+      where.OR = types.map((type) => {
+        return {
+          type: {
+            equals: type
+          }
+        };
+      });
     }
 
     return (

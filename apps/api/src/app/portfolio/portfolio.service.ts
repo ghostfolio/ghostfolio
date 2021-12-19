@@ -369,9 +369,9 @@ export class PortfolioService {
   ): Promise<PortfolioPositionDetail> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
-    const orders = (await this.orderService.getOrders({ userId })).filter(
-      (order) => order.symbol === aSymbol
-    );
+    const orders = (
+      await this.orderService.getOrders({ userId, types: ['BUY', 'SELL'] })
+    ).filter((order) => order.symbol === aSymbol);
 
     if (orders.length <= 0) {
       return {
@@ -828,7 +828,10 @@ export class PortfolioService {
       userId,
       currency
     );
-    const orders = await this.orderService.getOrders({ userId });
+    const orders = await this.orderService.getOrders({
+      userId,
+      types: ['BUY', 'SELL']
+    });
     const dividend = this.getDividend(orders).toNumber();
     const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
@@ -994,7 +997,11 @@ export class PortfolioService {
     transactionPoints: TransactionPoint[];
     orders: OrderWithAccount[];
   }> {
-    const orders = await this.orderService.getOrders({ includeDrafts, userId });
+    const orders = await this.orderService.getOrders({
+      includeDrafts,
+      userId,
+      types: ['BUY', 'SELL']
+    });
 
     if (orders.length <= 0) {
       return { transactionPoints: [], orders: [] };
