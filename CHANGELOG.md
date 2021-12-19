@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a line chart to the historical data view in the admin control panel
+- Supported the update of historical data in the admin control panel
 
 ## 1.91.0 - 18.12.2021
 
