@@ -829,8 +829,7 @@ export class PortfolioService {
       currency
     );
     const orders = await this.orderService.getOrders({
-      userId,
-      types: ['BUY', 'SELL']
+      userId
     });
     const dividend = this.getDividend(orders).toNumber();
     const fees = this.getFees(orders).toNumber();
@@ -851,11 +850,13 @@ export class PortfolioService {
       fees,
       firstOrderDate,
       netWorth,
+      totalBuy,
+      totalSell,
       cash: balance,
       committedFunds: committedFunds.toNumber(),
-      ordersCount: orders.length,
-      totalBuy: totalBuy,
-      totalSell: totalSell
+      ordersCount: orders.filter((order) => {
+        return order.type === 'BUY' || order.type === 'SELL';
+      }).length
     };
   }
 
