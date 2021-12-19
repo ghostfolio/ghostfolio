@@ -6,7 +6,6 @@ import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfol
 import { TimelineSpecification } from '@ghostfolio/api/app/portfolio/interfaces/timeline-specification.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/portfolio-calculator';
-import { OrderType } from '@ghostfolio/api/models/order-type';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -21,11 +20,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import {
-  UNKNOWN_KEY,
-  baseCurrency,
-  ghostfolioCashSymbol
-} from '@ghostfolio/common/config';
+import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
@@ -413,7 +408,7 @@ export class PortfolioService {
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.symbol,
-      type: <OrderType>order.type,
+      type: order.type,
       unitPrice: new Big(order.unitPrice)
     }));
 
@@ -850,8 +845,8 @@ export class PortfolioService {
     const fees = this.getFees(orders);
     const firstOrderDate = orders[0]?.date;
 
-    const totalBuy = this.getTotalByType(orders, currency, TypeOfOrder.BUY);
-    const totalSell = this.getTotalByType(orders, currency, TypeOfOrder.SELL);
+    const totalBuy = this.getTotalByType(orders, currency, 'BUY');
+    const totalSell = this.getTotalByType(orders, currency, 'SELL');
 
     const committedFunds = new Big(totalBuy).sub(totalSell);
 
@@ -990,7 +985,7 @@ export class PortfolioService {
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.symbol,
-      type: <OrderType>order.type,
+      type: order.type,
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
           order.unitPrice,

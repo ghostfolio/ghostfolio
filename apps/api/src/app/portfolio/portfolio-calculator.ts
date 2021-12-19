@@ -1,9 +1,9 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
-import { OrderType } from '@ghostfolio/api/models/order-type';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Logger } from '@nestjs/common';
+import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
@@ -660,14 +660,14 @@ export class PortfolioCalculator {
     };
   }
 
-  private getFactor(type: OrderType) {
+  private getFactor(type: TypeOfOrder) {
     let factor: number;
 
     switch (type) {
-      case OrderType.Buy:
+      case 'BUY':
         factor = 1;
         break;
-      case OrderType.Sell:
+      case 'SELL':
         factor = -1;
         break;
       default:
