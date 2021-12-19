@@ -37,6 +37,10 @@
           color: var(--green);
         }
 
+        &.dividend {
+          color: var(--blue);
+        }
+
         &.sell {
           color: var(--orange);
         }
