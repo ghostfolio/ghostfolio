@@ -1,5 +1,4 @@
-import { OrderType } from '@ghostfolio/api/models/order-type';
-import { DataSource } from '@prisma/client';
+import { DataSource, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 
 export interface PortfolioOrder {
@@ -10,6 +9,6 @@ export interface PortfolioOrder {
   name: string;
   quantity: Big;
   symbol: string;
-  type: OrderType;
+  type: TypeOfOrder;
   unitPrice: Big;
 }

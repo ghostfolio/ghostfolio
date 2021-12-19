@@ -3,10 +3,9 @@ import {
   AssetClass,
   AssetSubClass,
   DataSource,
-  SymbolProfile
+  SymbolProfile,
+  Type as TypeOfOrder
 } from '@prisma/client';
-
-import { OrderType } from '../../models/order-type';
 
 export const MarketState = {
   closed: 'closed',
@@ -24,7 +23,7 @@ export interface IOrder {
   quantity: number;
   symbol: string;
   symbolProfile: SymbolProfile;
-  type: OrderType;
+  type: TypeOfOrder;
   unitPrice: number;
 }
 
