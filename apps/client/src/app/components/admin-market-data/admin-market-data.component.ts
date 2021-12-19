@@ -68,6 +68,13 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     }
   }
 
+  public onMarketDataChanged(withRefresh: boolean = false) {
+    if (withRefresh) {
+      this.fetchAdminMarketData();
+      this.fetchAdminMarketDataBySymbol(this.currentSymbol);
+    }
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

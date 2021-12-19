@@ -1,4 +1,5 @@
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
+
 import { YahooFinanceService } from './yahoo-finance.service';
 
 jest.mock(

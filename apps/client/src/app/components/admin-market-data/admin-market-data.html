@@ -47,6 +47,7 @@
                   [dataSource]="item.dataSource"
                   [marketData]="marketDataDetails"
                   [symbol]="item.symbol"
+                  (marketDataChanged)="onMarketDataChanged($event)"
                 ></gf-admin-market-data-detail>
               </td>
             </tr>

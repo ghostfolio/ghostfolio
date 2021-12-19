@@ -65,4 +65,16 @@ export class MarketDataService {
       where
     });
   }
+
+  public async updateMarketData(params: {
+    data: Prisma.MarketDataUpdateInput;
+    where: Prisma.MarketDataWhereUniqueInput;
+  }): Promise<MarketData> {
+    const { data, where } = params;
+
+    return this.prismaService.marketData.update({
+      data,
+      where
+    });
+  }
 }

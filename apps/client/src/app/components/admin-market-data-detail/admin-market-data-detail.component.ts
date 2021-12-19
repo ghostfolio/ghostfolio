@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
@@ -26,6 +28,8 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
   @Input() dataSource: DataSource;
   @Input() marketData: MarketData[];
   @Input() symbol: string;
+
+  @Output() marketDataChanged = new EventEmitter<boolean>();
 
   public days = Array(31);
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
@@ -101,7 +105,9 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe(({ withRefresh }) => {
+        this.marketDataChanged.next(withRefresh);
+      });
   }
 
   public ngOnDestroy() {
