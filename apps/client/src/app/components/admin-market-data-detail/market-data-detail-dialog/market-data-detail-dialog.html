@@ -21,22 +21,30 @@
         <mat-datepicker #date disabled="true"></mat-datepicker>
       </mat-form-field>
     </div>
-    <div class="align-items-center d-flex">
-      <mat-form-field appearance="outline" class="flex-grow-1 mr-2">
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Market Price</mat-label>
         <input
           matInput
           name="marketPrice"
-          readonly
+          type="number"
           [(ngModel)]="data.marketPrice"
         />
+        <button
+          mat-icon-button
+          matSuffix
+          title="Fetch market price"
+          (click)="onFetchSymbolForDate()"
+        >
+          <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+        </button>
       </mat-form-field>
-      <button color="accent" i18n mat-flat-button (click)="onGatherData()">
-        Gather Data
-      </button>
     </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button i18n mat-button (click)="onCancel()">Cancel</button>
+    <button color="primary" i18n mat-flat-button (click)="onUpdate()">
+      Save
+    </button>
   </div>
 </form>

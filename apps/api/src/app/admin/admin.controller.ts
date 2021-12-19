@@ -1,6 +1,6 @@
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   AdminData,
   AdminMarketData,
@@ -22,16 +22,18 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData } from '@prisma/client';
-import { isDate, isValid } from 'date-fns';
+import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
+import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
 export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -173,7 +175,7 @@ export class AdminController {
   @Get('market-data/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async getMarketDataBySymbol(
-    @Param('symbol') symbol
+    @Param('symbol') symbol: string
   ): Promise<AdminMarketDataDetails> {
     if (
       !hasPermission(
@@ -188,6 +190,39 @@ export class AdminController {
     }
 
     return this.adminService.getMarketDataBySymbol(symbol);
+  }
+
+  @Put('market-data/:dataSource/:symbol/:dateString')
+  @UseGuards(AuthGuard('jwt'))
+  public async update(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('dateString') dateString: string,
+    @Param('symbol') symbol: string,
+    @Body() data: UpdateMarketDataDto
+  ) {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const date = new Date(dateString);
+
+    return this.marketDataService.updateMarketData({
+      data,
+      where: {
+        date_symbol: {
+          date,
+          symbol
+        }
+      }
+    });
   }
 
   @Put('settings/:key')

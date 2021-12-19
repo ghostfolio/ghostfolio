@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataSource, MarketData } from '@prisma/client';
 import { format } from 'date-fns';
@@ -34,5 +36,41 @@ export class AdminService {
     }
 
     return this.http.post<MarketData | void>(url, {});
+  }
+
+  public fetchSymbolForDate({
+    dataSource,
+    date,
+    symbol
+  }: {
+    dataSource: DataSource;
+    date: Date;
+    symbol: string;
+  }) {
+    const url = `/api/symbol/${dataSource}/${symbol}/${format(
+      date,
+      DATE_FORMAT
+    )}`;
+
+    return this.http.get<IDataProviderHistoricalResponse>(url);
+  }
+
+  public putMarketData({
+    dataSource,
+    date,
+    marketData,
+    symbol
+  }: {
+    dataSource: DataSource;
+    date: Date;
+    marketData: UpdateMarketDataDto;
+    symbol: string;
+  }) {
+    const url = `/api/admin/market-data/${dataSource}/${symbol}/${format(
+      date,
+      DATE_FORMAT
+    )}`;
+
+    return this.http.put<MarketData>(url, marketData);
   }
 }

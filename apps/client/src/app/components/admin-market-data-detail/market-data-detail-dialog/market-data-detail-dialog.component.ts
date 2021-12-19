@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { MarketData } from '@prisma/client';
 import { Subject, takeUntil } from 'rxjs';
 
 import { MarketDataDetailDialogParams } from './interfaces/interfaces';
@@ -32,21 +31,35 @@ export class MarketDataDetailDialog implements OnDestroy {
   public ngOnInit() {}
 
   public onCancel(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({ withRefresh: false });
   }
 
-  public onGatherData() {
+  public onFetchSymbolForDate() {
     this.adminService
-      .gatherSymbol({
+      .fetchSymbolForDate({
         dataSource: this.data.dataSource,
         date: this.data.date,
         symbol: this.data.symbol
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((marketData: MarketData) => {
-        this.data.marketPrice = marketData.marketPrice;
+      .subscribe(({ marketPrice }) => {
+        this.data.marketPrice = marketPrice;
 
         this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  public onUpdate() {
+    this.adminService
+      .putMarketData({
+        dataSource: this.data.dataSource,
+        date: this.data.date,
+        marketData: { marketPrice: this.data.marketPrice },
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.dialogRef.close({ withRefresh: true });
       });
   }
 

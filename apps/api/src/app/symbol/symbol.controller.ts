@@ -1,3 +1,4 @@
+import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
@@ -12,9 +13,9 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { isEmpty } from 'lodash';
+import { isDate, isEmpty } from 'lodash';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
@@ -77,5 +78,28 @@ export class SymbolController {
     }
 
     return result;
+  }
+
+  @Get(':dataSource/:symbol/:dateString')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherSymbolForDate(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('dateString') dateString: string,
+    @Param('symbol') symbol: string
+  ): Promise<IDataProviderHistoricalResponse> {
+    const date = new Date(dateString);
+
+    if (!isDate(date)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return this.symbolService.getForDate({
+      dataSource,
+      date,
+      symbol
+    });
   }
 }
