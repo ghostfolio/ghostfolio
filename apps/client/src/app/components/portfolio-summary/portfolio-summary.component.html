@@ -49,6 +49,20 @@
     </div>
   </div>
   <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Dividend</div>
+    <div class="d-flex justify-content-end">
+      <span *ngIf="summary?.dividend || summary?.dividend === 0" class="mr-1"
+        >+</span
+      >
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.dividend"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
     <div class="d-flex flex-grow-1" i18n>Absolute Gross Performance</div>
     <div class="d-flex justify-content-end">
       <gf-value
