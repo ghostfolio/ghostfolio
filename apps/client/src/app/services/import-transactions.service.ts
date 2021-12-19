@@ -214,12 +214,15 @@ export class ImportTransactionsService {
 
     for (const key of ImportTransactionsService.TYPE_KEYS) {
       if (item[key]) {
-        if (item[key].toLowerCase() === 'buy') {
-          return Type.BUY;
-        } else if (item[key].toLowerCase() === 'sell') {
-          return Type.SELL;
-        } else if (item[key].toLowerCase() === 'dividend') {
-          return Type.DIVIDEND;
+        switch (item[key].toLowerCase()) {
+          case 'buy':
+            return Type.BUY;
+          case 'dividend':
+            return Type.DIVIDEND;
+          case 'sell':
+            return Type.SELL;
+          default:
+            break;
         }
       }
     }
