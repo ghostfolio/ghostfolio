@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved the redirection on logout
+- Fixed the permission for the system status page
 
 ## 1.91.0 - 18.12.2021
 
