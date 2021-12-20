@@ -238,9 +238,7 @@ export class PortfolioCalculator {
         if (!marketSymbolMap[nextDate]?.[item.symbol]) {
           invalidSymbols.push(item.symbol);
           hasErrors = true;
-          Logger.error(
-            `Missing value for symbol ${item.symbol} at ${nextDate}`
-          );
+          Logger.warn(`Missing value for symbol ${item.symbol} at ${nextDate}`);
           continue;
         }
         let lastInvestment: Big = new Big(0);
@@ -271,7 +269,7 @@ export class PortfolioCalculator {
           if (!initialValue) {
             invalidSymbols.push(item.symbol);
             hasErrors = true;
-            Logger.error(
+            Logger.warn(
               `Missing value for symbol ${item.symbol} at ${currentDate}`
             );
             continue;
@@ -515,7 +513,7 @@ export class PortfolioCalculator {
           currentPosition.netPerformancePercentage.mul(currentInitialValue)
         );
       } else if (!currentPosition.quantity.eq(0)) {
-        Logger.error(
+        Logger.warn(
           `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`
         );
         hasErrors = true;
