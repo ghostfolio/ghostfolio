@@ -49,7 +49,6 @@ export class YahooFinanceService implements DataProviderInterface {
    * Currency:        USDCHF  -> USDCHF=X
    * Cryptocurrency:  BTCUSD  -> BTC-USD
    *                  DOGEUSD -> DOGE-USD
-   *                  SOL1USD -> SOL1-USD
    */
   public convertToYahooFinanceSymbol(aSymbol: string) {
     if (aSymbol.includes(baseCurrency) && aSymbol.length >= 6) {
@@ -57,9 +56,7 @@ export class YahooFinanceService implements DataProviderInterface {
         return `${aSymbol}=X`;
       } else if (
         this.cryptocurrencyService.isCryptocurrency(
-          aSymbol
-            .replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
-            .replace('1', '')
+          aSymbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
         )
       ) {
         // Add a dash before the last three characters
@@ -246,9 +243,7 @@ export class YahooFinanceService implements DataProviderInterface {
           return (
             (quoteType === 'CRYPTOCURRENCY' &&
               this.cryptocurrencyService.isCryptocurrency(
-                symbol
-                  .replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
-                  .replace('1', '')
+                symbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
               )) ||
             quoteType === 'EQUITY' ||
             quoteType === 'ETF'
