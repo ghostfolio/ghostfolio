@@ -14,8 +14,6 @@ jest.mock(
                 return true;
               case 'DOGEUSD':
                 return true;
-              case 'SOLUSD':
-                return true;
               default:
                 return false;
             }
@@ -55,9 +53,6 @@ describe('YahooFinanceService', () => {
     expect(
       await yahooFinanceService.convertToYahooFinanceSymbol('DOGEUSD')
     ).toEqual('DOGE-USD');
-    expect(
-      await yahooFinanceService.convertToYahooFinanceSymbol('SOL1USD')
-    ).toEqual('SOL1-USD');
     expect(
       await yahooFinanceService.convertToYahooFinanceSymbol('USDCHF')
     ).toEqual('USDCHF=X');
