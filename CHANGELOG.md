@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for cryptocurrency _Solana_ (`SOL-USD`)
+
 ### Fixed
 
 - Converted errors to warnings in portfolio calculator
