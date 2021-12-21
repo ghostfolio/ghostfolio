@@ -95,6 +95,14 @@ Run the following command to start the Docker images from [Docker Hub](https://h
 docker-compose -f docker/docker-compose.yml up
 ```
 
+#### Setup Database
+
+Run the following command to setup the database once Ghostfolio is running:
+
+```bash
+docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:setup
+```
+
 ### b. Build and run environment
 
 Run the following commands to build and start the Docker images:
@@ -104,12 +112,12 @@ docker-compose -f docker/docker-compose.build.yml build
 docker-compose -f docker/docker-compose.build.yml up
 ```
 
-### Setup Database
+#### Setup Database
 
 Run the following command to setup the database once Ghostfolio is running:
 
 ```bash
-docker-compose -f docker/docker-compose-build-local.yml exec ghostfolio yarn database:setup
+docker-compose -f docker/docker-compose.build.yml exec ghostfolio yarn database:setup
 ```
 
 ### Fetch Historical Data
