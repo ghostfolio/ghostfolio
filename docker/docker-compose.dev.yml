@@ -2,6 +2,10 @@ version: '3.7'
 services:
   postgres:
     image: postgres:12
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - 5432:5432
     env_file:
       - ../.env
     volumes:
@@ -9,16 +13,10 @@ services:
 
   redis:
     image: 'redis:alpine'
-
-  ghostfolio:
-    build: ../
-    env_file:
-      - ../.env
-    environment:
-      REDIS_HOST: 'redis'
-      DATABASE_URL: postgresql://user:password@postgres:5432/ghostfolio-db?sslmode=prefer
+    container_name: redis
+    restart: unless-stopped
     ports:
-      - 3333:3333
+      - 6379:6379
 
 volumes:
   postgres:
