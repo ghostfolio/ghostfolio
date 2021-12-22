@@ -153,9 +153,7 @@ docker-compose -f docker/docker-compose-build-local.yml exec ghostfolio yarn dat
 ### Setup
 
 1. Run `yarn install`
-1. Run `cd docker`
-1. Run `docker compose up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
-1. Run `cd -` to go back to the project root directory
+1. Run `docker-compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
 1. Start server and client (see [_Development_](#Development))
 1. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
