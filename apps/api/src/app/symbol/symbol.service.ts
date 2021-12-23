@@ -8,7 +8,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data.service'
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { format, subDays } from 'date-fns';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
@@ -36,17 +36,17 @@ export class SymbolService {
       let historicalData: HistoricalDataItem[];
 
       if (includeHistoricalData) {
-        const days = 10;
+        const days = 30;
 
         const marketData = await this.marketDataService.getRange({
           dateQuery: { gte: subDays(new Date(), days) },
           symbols: [dataGatheringItem.symbol]
         });
 
-        historicalData = marketData.map(({ date, marketPrice }) => {
+        historicalData = marketData.map(({ date, marketPrice: value }) => {
           return {
-            date: date.toISOString(),
-            value: marketPrice
+            value,
+            date: date.toISOString()
           };
         });
       }
