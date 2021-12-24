@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 30 days
+- Made the import functionality for transactions by `csv` files more flexible
 
 ## 1.93.0 - 21.12.2021
 
