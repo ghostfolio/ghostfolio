@@ -62,6 +62,19 @@ function mockGetValue(symbol: string, date: Date) {
           )
           .toNumber()
       };
+    case 'BALN.SW':
+      if (isSameDay(parseDate('2021-11-12'), date)) {
+        return { marketPrice: 146 };
+      } else if (isSameDay(parseDate('2021-11-22'), date)) {
+        return { marketPrice: 142.9 };
+      } else if (isSameDay(parseDate('2021-11-26'), date)) {
+        return { marketPrice: 139.9 };
+      } else if (isSameDay(parseDate('2021-11-30'), date)) {
+        return { marketPrice: 136.6 };
+      } else if (isSameDay(parseDate('2021-12-18'), date)) {
+        return { marketPrice: 143.9 };
+      }
+
     default:
       return { marketPrice: 0 };
   }
@@ -1484,6 +1497,126 @@ describe('PortfolioCalculator', () => {
             })
           ]
         })
+      );
+    });
+
+    it('with BALN.SW', async () => {
+      const portfolioCalculator = new PortfolioCalculator(
+        currentRateService,
+        'CHF'
+      );
+
+      // date,type,ticker,currency,units,price,fee
+      portfolioCalculator.setTransactionPoints([
+        // 12.11.2021,BUY,BALN.SW,CHF,2.00,146.00,1.65
+        {
+          date: '2021-11-12',
+          items: [
+            {
+              quantity: new Big('2'),
+              symbol: 'BALN.SW',
+              investment: new Big('292'),
+              currency: 'CHF',
+              dataSource: DataSource.YAHOO,
+              firstBuyDate: '2021-11-12',
+              fee: new Big('1.65'),
+              transactionCount: 1
+            }
+          ]
+        },
+        // HWR: (End Value - (Initial Value + Cash Flow)) / (Initial Value + Cash Flow)
+        // End Value: 142.9 * 2 = 285.8
+        // Initial Value: 292 (Investment)
+        // Cash Flow: 0
+        // HWR_n0: (285.8 - 292) / 292 = -0.021232877
+
+        // 22.11.2021,BUY,BALN.SW,CHF,7.00,142.90,5.75
+        {
+          date: '2021-11-22',
+          items: [
+            {
+              quantity: new Big('9'), // 7 + 2
+              symbol: 'BALN.SW',
+              investment: new Big('1292.3'), // 142.9 * 7 + 146 * 2
+              currency: 'CHF',
+              dataSource: DataSource.YAHOO,
+              firstBuyDate: '2021-11-12',
+              fee: new Big('7.4'), // 1.65 + 5.75
+              transactionCount: 2
+            }
+          ]
+        },
+        // HWR: (End Value - (Initial Value + Cash Flow)) / (Initial Value + Cash Flow)
+        // End Value: 139.9 * 9 = 1259.1
+        // Initial Value: 285.8 (End Value n0)
+        // Cash Flow: 1000.3
+        // Initial Value + Cash Flow: 285.8 + 1000.3 = 1286.1
+        // HWR_n1: (1259.1 - 1286.1) / 1286.1 = -0.020993702
+
+        // 26.11.2021,BUY,BALN.SW,CHF,3.00,139.90,2.40
+        {
+          date: '2021-11-26',
+          items: [
+            {
+              quantity: new Big('12'), // 3 + 7 + 2
+              symbol: 'BALN.SW',
+              investment: new Big('1712'), // 139.9 * 3 + 142.9 * 7 + 146 * 2
+              currency: 'CHF',
+              dataSource: DataSource.YAHOO,
+              firstBuyDate: '2021-11-12',
+              fee: new Big('9.8'), // 2.40 + 1.65 + 5.75
+              transactionCount: 3
+            }
+          ]
+        },
+        // HWR: (End Value - (Initial Value + Cash Flow)) / (Initial Value + Cash Flow)
+        // End Value: 136.6 * 12 = 1639.2
+        // Initial Value: 1259.1 (End Value n1)
+        // Cash Flow: 139.9 * 3 = 419.7
+        // Initial Value + Cash Flow: 1259.1 + 419.7 = 1678.8
+        // HWR_n2: (1639.2 - 1678.8) / 1678.8 = -0.023588277
+
+        // 30.11.2021,BUY,BALN.SW,CHF,2.00,136.60,1.55
+        {
+          date: '2021-11-30',
+          items: [
+            {
+              quantity: new Big('14'), // 2 + 3 + 7 + 2
+              symbol: 'BALN.SW',
+              investment: new Big('1985.2'), // 136.6 * 2 + 139.9 * 3 + 142.9 * 7 + 146 * 2
+              currency: 'CHF',
+              dataSource: DataSource.YAHOO,
+              firstBuyDate: '2021-11-12',
+              fee: new Big('11.35'), // 1.55 + 2.40 + 1.65 + 5.75
+              transactionCount: 4
+            }
+          ]
+        }
+        // HWR: (End Value - (Initial Value + Cash Flow)) / (Initial Value + Cash Flow)
+        // End Value: 143.9 * 14 = 2014.6
+        // Initial Value: 1639.2 (End Value n2)
+        // Cash Flow: 136.6 * 2 = 273.2
+        // Initial Value + Cash Flow: 1639.2 + 273.2 = 1912.4
+        // HWR_n3: (2014.6 - 1912.4) / 1912.4 = 0.053440703
+      ]);
+
+      // HWR_total = 1 - (HWR_n0 + 1) * (HWR_n1 + 1) * (HWR_n2 + 1) * (HWR_n3 + 1)
+      // HWR_total = 1 - (-0.021232877 + 1) * (-0.020993702 + 1) * (-0.023588277 + 1) * (0.053440703 + 1) = 0.014383561
+
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => new Date(Date.UTC(2021, 11, 18)).getTime()); // 2021-12-18
+
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        parseDate('2021-11-01')
+      );
+      spy.mockRestore();
+
+      expect(currentPositions).toBeDefined();
+      expect(currentPositions.grossPerformance).toEqual(new Big('29.4'));
+      expect(currentPositions.netPerformance).toEqual(new Big('18.05'));
+      expect(currentPositions.grossPerformancePercentage).toEqual(
+        new Big('-0.01438356164383561644')
       );
     });
   });
