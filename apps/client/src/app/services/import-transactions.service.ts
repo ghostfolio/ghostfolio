@@ -15,8 +15,8 @@ export class ImportTransactionsService {
   private static CURRENCY_KEYS = ['ccy', 'currency'];
   private static DATE_KEYS = ['date'];
   private static FEE_KEYS = ['commission', 'fee'];
-  private static QUANTITY_KEYS = ['qty', 'quantity', 'shares'];
-  private static SYMBOL_KEYS = ['code', 'symbol'];
+  private static QUANTITY_KEYS = ['qty', 'quantity', 'shares', 'units'];
+  private static SYMBOL_KEYS = ['code', 'symbol', 'ticker'];
   private static TYPE_KEYS = ['action', 'type'];
   private static UNIT_PRICE_KEYS = ['price', 'unitprice', 'value'];
 
