@@ -22,6 +22,20 @@ function mockGetValue(symbol: string, date: Date) {
   switch (symbol) {
     case 'AMZN':
       return { marketPrice: 2021.99 };
+    case 'BALN.SW':
+      if (isSameDay(parseDate('2021-11-12'), date)) {
+        return { marketPrice: 146 };
+      } else if (isSameDay(parseDate('2021-11-22'), date)) {
+        return { marketPrice: 142.9 };
+      } else if (isSameDay(parseDate('2021-11-26'), date)) {
+        return { marketPrice: 139.9 };
+      } else if (isSameDay(parseDate('2021-11-30'), date)) {
+        return { marketPrice: 136.6 };
+      } else if (isSameDay(parseDate('2021-12-18'), date)) {
+        return { marketPrice: 143.9 };
+      }
+
+      return { marketPrice: 0 };
     case 'MFA':
       if (isSameDay(parseDate('2010-12-31'), date)) {
         return { marketPrice: 1 };
@@ -45,10 +59,10 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
     case 'TSLA':
-      if (isSameDay(parseDate('2021-07-26'), date)) {
-        return { marketPrice: 657.62 };
-      } else if (isSameDay(parseDate('2021-01-02'), date)) {
+      if (isSameDay(parseDate('2021-01-02'), date)) {
         return { marketPrice: 666.66 };
+      } else if (isSameDay(parseDate('2021-07-26'), date)) {
+        return { marketPrice: 657.62 };
       }
 
       return { marketPrice: 0 };
@@ -62,18 +76,6 @@ function mockGetValue(symbol: string, date: Date) {
           )
           .toNumber()
       };
-    case 'BALN.SW':
-      if (isSameDay(parseDate('2021-11-12'), date)) {
-        return { marketPrice: 146 };
-      } else if (isSameDay(parseDate('2021-11-22'), date)) {
-        return { marketPrice: 142.9 };
-      } else if (isSameDay(parseDate('2021-11-26'), date)) {
-        return { marketPrice: 139.9 };
-      } else if (isSameDay(parseDate('2021-11-30'), date)) {
-        return { marketPrice: 136.6 };
-      } else if (isSameDay(parseDate('2021-12-18'), date)) {
-        return { marketPrice: 143.9 };
-      }
 
     default:
       return { marketPrice: 0 };
@@ -85,20 +87,10 @@ jest.mock('./current-rate.service', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     CurrentRateService: jest.fn().mockImplementation(() => {
       return {
-        getValue: ({
-          currency,
-          date,
-          symbol,
-          userCurrency
-        }: GetValueParams) => {
+        getValue: ({ date, symbol }: GetValueParams) => {
           return Promise.resolve(mockGetValue(symbol, date));
         },
-        getValues: ({
-          currencies,
-          dateQuery,
-          dataGatheringItems,
-          userCurrency
-        }: GetValuesParams) => {
+        getValues: ({ dataGatheringItems, dateQuery }: GetValuesParams) => {
           const result = [];
           if (dateQuery.lt) {
             for (
