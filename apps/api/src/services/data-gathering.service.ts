@@ -464,6 +464,24 @@ export class DataGatheringService {
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
+    // Only consider symbols with incomplete market data for the last
+    // 7 days
+    const symbolsToGather = (
+      await this.prismaService.marketData.groupBy({
+        _count: true,
+        by: ['symbol'],
+        where: {
+          date: { gt: startDate }
+        }
+      })
+    )
+      .filter((group) => {
+        return group._count < 6;
+      })
+      .map((group) => {
+        return group.symbol;
+      });
+
     const symbolProfilesToGather = (
       await this.prismaService.symbolProfile.findMany({
         orderBy: [{ symbol: 'asc' }],
@@ -473,12 +491,16 @@ export class DataGatheringService {
           symbol: true
         }
       })
-    ).map((symbolProfile) => {
-      return {
-        ...symbolProfile,
-        date: startDate
-      };
-    });
+    )
+      .filter((symbolProfile) => {
+        return symbolsToGather.includes(symbolProfile.symbol);
+      })
+      .map((symbolProfile) => {
+        return {
+          ...symbolProfile,
+          date: startDate
+        };
+      });
 
     const currencyPairsToGather = this.exchangeRateDataService
       .getCurrencyPairs()
