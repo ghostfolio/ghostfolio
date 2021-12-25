@@ -1,7 +1,9 @@
 {
   "1INCH": "1inch",
   "ALGO": "Algorand",
+  "ATOM": "Cosmos",
   "AVAX": "Avalanche",
+  "DOT": "Polkadot",
   "MATIC": "Polygon",
   "SHIB": "Shiba Inu",
   "SOL": "Solana",
