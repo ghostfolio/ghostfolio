@@ -157,7 +157,12 @@ export class ExchangeRateDataService {
       await this.prismaService.account.findMany({
         distinct: ['currency'],
         orderBy: [{ currency: 'asc' }],
-        select: { currency: true }
+        select: { currency: true },
+        where: {
+          currency: {
+            not: null
+          }
+        }
       })
     ).forEach((account) => {
       currencies.push(account.currency);
@@ -167,7 +172,12 @@ export class ExchangeRateDataService {
       await this.prismaService.settings.findMany({
         distinct: ['currency'],
         orderBy: [{ currency: 'asc' }],
-        select: { currency: true }
+        select: { currency: true },
+        where: {
+          currency: {
+            not: null
+          }
+        }
       })
     ).forEach((userSettings) => {
       currencies.push(userSettings.currency);
@@ -177,7 +187,12 @@ export class ExchangeRateDataService {
       await this.prismaService.symbolProfile.findMany({
         distinct: ['currency'],
         orderBy: [{ currency: 'asc' }],
-        select: { currency: true }
+        select: { currency: true },
+        where: {
+          currency: {
+            not: null
+          }
+        }
       })
     ).forEach((symbolProfile) => {
       currencies.push(symbolProfile.currency);
