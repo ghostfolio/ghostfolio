@@ -1,12 +1,11 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   PROPERTY_LAST_DATA_GATHERING,
-  PROPERTY_LOCKED_DATA_GATHERING,
-  ghostfolioFearAndGreedIndexSymbol
+  PROPERTY_LOCKED_DATA_GATHERING
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import {
   differenceInHours,
   format,
@@ -17,7 +16,6 @@ import {
   subDays
 } from 'date-fns';
 
-import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from './exchange-rate-data.service';
@@ -29,7 +27,6 @@ export class DataGatheringService {
   private dataGatheringProgress: number;
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
     private readonly dataProviderService: DataProviderService,
@@ -448,11 +445,7 @@ export class DataGatheringService {
       };
     });
 
-    return [
-      ...this.getBenchmarksToGather(startDate),
-      ...currencyPairsToGather,
-      ...symbolProfilesToGather
-    ];
+    return [...currencyPairsToGather, ...symbolProfilesToGather];
   }
 
   public async reset() {
@@ -466,20 +459,6 @@ export class DataGatheringService {
         ]
       }
     });
-  }
-
-  private getBenchmarksToGather(startDate: Date): IDataGatheringItem[] {
-    const benchmarksToGather: IDataGatheringItem[] = [];
-
-    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      benchmarksToGather.push({
-        dataSource: DataSource.RAKUTEN,
-        date: startDate,
-        symbol: ghostfolioFearAndGreedIndexSymbol
-      });
-    }
-
-    return benchmarksToGather;
   }
 
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
@@ -511,30 +490,22 @@ export class DataGatheringService {
         };
       });
 
-    return [
-      ...this.getBenchmarksToGather(startDate),
-      ...currencyPairsToGather,
-      ...symbolProfilesToGather
-    ];
+    return [...currencyPairsToGather, ...symbolProfilesToGather];
   }
 
   private async getSymbolsProfileData(): Promise<IDataGatheringItem[]> {
-    const startDate = subDays(resetHours(new Date()), 7);
-
     const distinctOrders = await this.prismaService.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
       select: { dataSource: true, symbol: true }
     });
 
-    return [...this.getBenchmarksToGather(startDate), ...distinctOrders].filter(
-      (distinctOrder) => {
-        return (
-          distinctOrder.dataSource !== DataSource.GHOSTFOLIO &&
-          distinctOrder.dataSource !== DataSource.RAKUTEN
-        );
-      }
-    );
+    return distinctOrders.filter((distinctOrder) => {
+      return (
+        distinctOrder.dataSource !== DataSource.GHOSTFOLIO &&
+        distinctOrder.dataSource !== DataSource.RAKUTEN
+      );
+    });
   }
 
   private async isDataGatheringNeeded() {
