@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for cryptocurrencies _Cosmos_ (`ATOM-USD`) and _Polkadot_ (`DOT-USD`)
+
 ### Changed
 
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 30 days
