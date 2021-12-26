@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a warning to the log if the data gathering fails
+
 ### Fixed
 
 - Filtered potential `null` currencies
+- Improved the 7d data gathering optimization for currencies
 
 ## 1.94.0 - 25.12.2021
 

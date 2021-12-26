@@ -334,16 +334,25 @@ export class DataGatheringService {
                 ?.marketPrice;
           }
 
-          try {
-            await this.prismaService.marketData.create({
-              data: {
-                dataSource,
-                symbol,
-                date: currentDate,
-                marketPrice: lastMarketPrice
-              }
-            });
-          } catch {}
+          if (lastMarketPrice) {
+            try {
+              await this.prismaService.marketData.create({
+                data: {
+                  dataSource,
+                  symbol,
+                  date: currentDate,
+                  marketPrice: lastMarketPrice
+                }
+              });
+            } catch {}
+          } else {
+            Logger.warn(
+              `Failed to gather data for symbol ${symbol} at ${format(
+                currentDate,
+                DATE_FORMAT
+              )}.`
+            );
+          }
 
           // Count month one up for iteration
           currentDate = new Date(
@@ -492,8 +501,8 @@ export class DataGatheringService {
         }
       })
     )
-      .filter((symbolProfile) => {
-        return symbolsToGather.includes(symbolProfile.symbol);
+      .filter(({ symbol }) => {
+        return symbolsToGather.includes(symbol);
       })
       .map((symbolProfile) => {
         return {
@@ -504,6 +513,9 @@ export class DataGatheringService {
 
     const currencyPairsToGather = this.exchangeRateDataService
       .getCurrencyPairs()
+      .filter(({ symbol }) => {
+        return symbolsToGather.includes(symbol);
+      })
       .map(({ dataSource, symbol }) => {
         return {
           dataSource,
