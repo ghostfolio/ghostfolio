@@ -5,15 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Upgraded `prisma` from version `3.6.0` to `3.7.0`
+
+### Fixed
+
+- Fixed the file type detection in the import functionality for transactions
+
 ## 1.95.0 - 26.12.2021
 
 ### Added
 
 - Added a warning to the log if the data gathering fails
-
-### Changed
-
-- Upgraded `prisma` from version `3.6.0` to `3.7.0`
 
 ### Fixed
 

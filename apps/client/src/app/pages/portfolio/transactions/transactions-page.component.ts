@@ -188,7 +188,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         const fileContent = readerEvent.target.result as string;
 
         try {
-          if (file.type === 'application/json') {
+          if (file.name.endsWith('.json')) {
             const content = JSON.parse(fileContent);
 
             if (!isArray(content.orders)) {
@@ -203,11 +203,12 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
               this.handleImportSuccess();
             } catch (error) {
+              console.error(error);
               this.handleImportError({ error, orders: content.orders });
             }
 
             return;
-          } else if (file.type === 'text/csv') {
+          } else if (file.name.endsWith('.csv')) {
             try {
               await this.importTransactionsService.importCsv({
                 fileContent,
@@ -217,6 +218,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
               this.handleImportSuccess();
             } catch (error) {
+              console.error(error);
               this.handleImportError({
                 error: {
                   error: { message: error?.error?.message ?? [error?.message] }
@@ -230,6 +232,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
           throw new Error();
         } catch (error) {
+          console.error(error);
           this.handleImportError({
             error: { error: { message: ['Unexpected format'] } },
             orders: []
