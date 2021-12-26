@@ -6688,10 +6688,15 @@ commander@^5.1.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
   integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
 
-commander@^6.0.0, commander@^6.2.1:
+commander@^6.2.1:
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
   integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
+
+commander@^8.0.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
+  integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
 
 common-tags@^1.8.0:
   version "1.8.0"
@@ -7799,7 +7804,7 @@ emoji-regex@^8.0.0:
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
 
-emoji-toolkit@^6.5.0:
+emoji-toolkit@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/emoji-toolkit/-/emoji-toolkit-6.6.0.tgz#e7287c43a96f940ec4c5428cd7100a40e57518f1"
   integrity sha512-pEu0kow2p1N8zCKnn/L6H0F3rWUBB3P3hVjr/O5yl1fK7N9jU4vO4G7EFapC5Y3XwZLUCY0FZbOPyTkH+4V2eQ==
@@ -11859,12 +11864,12 @@ karma-source-map-support@1.4.0:
   dependencies:
     source-map-support "^0.5.5"
 
-katex@^0.13.0:
-  version "0.13.18"
-  resolved "https://registry.yarnpkg.com/katex/-/katex-0.13.18.tgz#ba89e8e4b70cc2325e25e019a62b9fe71e5c2931"
-  integrity sha512-a3dC4NSVSDU3O1WZbTnOiA8rVNJ2lSiomOl0kmckCIGObccIHXof7gAseIY0o1gjEspe+34ZeSEX2D1ChFKIvA==
+katex@^0.15.1:
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.15.1.tgz#cf4ce2fa1257c3279cc7a7fe0c8d1fab40800893"
+  integrity sha512-KIk+gizli0gl1XaJlCYS8/donGMbzXYTka6BbH3AgvDJTOwyDY4hJ+YmzJ1F0y/3XzX5B9ED8AqB2Hmn2AZ0uA==
   dependencies:
-    commander "^6.0.0"
+    commander "^8.0.0"
 
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"
@@ -12821,24 +12826,24 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-ngx-device-detector@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-2.1.1.tgz#a22a9477f382d02edf28786c5609878a57d2834f"
-  integrity sha512-eTuQLAmc2XRRbxDnO9h1QVV0piSyPjstXT5G8fo1rvXy7Ly3MAiniEM2WvTiN7FjtY/VdhEeuBmu/ErSm5cLJg==
+ngx-device-detector@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-3.0.0.tgz#9c5b1db66e03837d5de0e93fe4a1de93948c9c81"
+  integrity sha512-mzegvxnNTDkHTxh+UeWnCUgZ91/XDOcN2kj8aCupvA7wNgDc/NZ0L90feKJsc+wES7IWq0/DIIKq2F732WOkfw==
   dependencies:
     tslib "^2.0.0"
 
-ngx-markdown@12.0.1:
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-12.0.1.tgz#94345e99176533c17396f93e97ff5dc172d8ebcc"
-  integrity sha512-vMp9SyqmVQZCX374MiCV4sRR1SIv5m3xR2HZ39b3+6/BGjAb46mb4wRXKdIxYUoPba7NYZ8GAt5moUCyVZcCyA==
+ngx-markdown@13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-13.0.0.tgz#07c9ef46db6827290fc533c0ee64d3856e964bfd"
+  integrity sha512-XIFCoqffGUHoc8mpHphVskFBHck6hUBocyGVHNBznk7dzHdy6+Ir08jECDQa6xhsoU4dTDgo9aofjK+yvzGIXw==
   dependencies:
     "@types/marked" "^2.0.0"
-    emoji-toolkit "^6.5.0"
-    katex "^0.13.0"
+    emoji-toolkit "^6.6.0"
+    katex "^0.15.1"
     marked "^2.0.0"
-    prismjs "^1.23.0"
-    tslib "^2.1.0"
+    prismjs "^1.25.0"
+    tslib "^2.3.0"
 
 ngx-skeleton-loader@2.9.1:
   version "2.9.1"
@@ -12848,12 +12853,12 @@ ngx-skeleton-loader@2.9.1:
     perf-marks "^1.13.4"
     tslib "^1.10.0"
 
-ngx-stripe@12.0.2:
-  version "12.0.2"
-  resolved "https://registry.yarnpkg.com/ngx-stripe/-/ngx-stripe-12.0.2.tgz#b250acc2a08dc96dac035fc0a67b4a8cbeca3efb"
-  integrity sha512-/arfIi996yv3EpzqjYsb20TUdQ9t+GVMNVIx1mdsiWcpiNjL36tO3lG45T0hyiBJNAds87Ag40Fm8PfsuHFCUw==
+ngx-stripe@13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-stripe/-/ngx-stripe-13.0.0.tgz#d5ed50590447aa74012de4e75ac9bcdafc68b1c8"
+  integrity sha512-SImKvoC/mZZrtzh2UUmxFdkqMLKX2y+BtcvMAPdHD4D7miXWEjCTZeXt8h85mcfy7y1NKKwIipH4CSr9eBzZ4w==
   dependencies:
-    tslib "^2.1.0"
+    tslib "^2.3.0"
 
 nice-napi@^1.0.2:
   version "1.0.2"
@@ -14443,10 +14448,15 @@ prisma@3.7.0:
   dependencies:
     "@prisma/engines" "3.7.0-31.8746e055198f517658c08a0c426c7eec87f5a85f"
 
-prismjs@^1.21.0, prismjs@^1.23.0, prismjs@~1.24.0:
+prismjs@^1.21.0, prismjs@~1.24.0:
   version "1.24.1"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.24.1.tgz#c4d7895c4d6500289482fa8936d9cdd192684036"
   integrity sha512-mNPsedLuk90RVJioIky8ANZEwYm5w9LcvCXrxHlwf4fNVSn8jEipMybMkWUyyF0JhnC+C4VcOVSBuHRKs1L5Ow==
+
+prismjs@^1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.25.0.tgz#6f822df1bdad965734b310b315a23315cf999756"
+  integrity sha512-WCjJHl1KEWbnkQom1+SzftbtXMKQoezOCYs5rECqMN+jP+apI7ftoflyqigqzopSO3hMhTEb0mFClA8lkolgEg==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"

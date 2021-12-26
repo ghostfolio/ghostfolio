@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `ngx-device-detector` from version `2.1.1` to `3.0.0`
+- Upgraded `ngx-markdown` from version `12.0.1` to `13.0.0`
+- Upgraded `ngx-stripe` from version `12.0.2` to `13.0.0`
 - Upgraded `prisma` from version `3.6.0` to `3.7.0`
 
 ### Fixed
