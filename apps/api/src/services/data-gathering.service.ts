@@ -242,7 +242,7 @@ export class DataGatheringService {
         try {
           currentData[symbol] = await dataEnhancer.enhance({
             response,
-            symbol: symbolMapping[dataEnhancer.getName()] ?? symbol
+            symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
           Logger.error(`Failed to enhance data for symbol ${symbol}`, error);
