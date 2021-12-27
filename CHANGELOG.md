@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Made the data provider warning more discreet
+- Upgraded `http-status-codes` from version `2.1.4` to `2.2.0`
 - Upgraded `ngx-device-detector` from version `2.1.1` to `3.0.0`
 - Upgraded `ngx-markdown` from version `12.0.1` to `13.0.0`
 - Upgraded `ngx-stripe` from version `12.0.2` to `13.0.0`
