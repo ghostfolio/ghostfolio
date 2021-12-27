@@ -4,8 +4,7 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest,
-  HttpResponse
+  HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
@@ -43,26 +42,6 @@ export class HttpResponseInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       tap((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          if (event.status === StatusCodes.ACCEPTED) {
-            if (!this.snackBarRef) {
-              this.snackBarRef = this.snackBar.open(
-                'Sorry! Our data provider partner is experiencing a mild case of the hiccups ;(',
-                'Try again?',
-                { duration: 6000 }
-              );
-
-              this.snackBarRef.afterDismissed().subscribe(() => {
-                this.snackBarRef = undefined;
-              });
-
-              this.snackBarRef.onAction().subscribe(() => {
-                window.location.reload();
-              });
-            }
-          }
-        }
-
         return event;
       }),
       catchError((error: HttpErrorResponse) => {

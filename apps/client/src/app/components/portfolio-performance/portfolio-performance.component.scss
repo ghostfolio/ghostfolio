@@ -1,6 +1,10 @@
 :host {
   display: block;
 
+  .status {
+    font-size: 1.33rem;
+  }
+
   .value-container {
     #value {
       font-variant-numeric: tabular-nums;

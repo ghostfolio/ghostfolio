@@ -19,6 +19,8 @@ import { isNumber } from 'lodash';
 })
 export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
+  @Input() deviceType: string;
+  @Input() hasError: boolean;
   @Input() isAllTimeHigh: boolean;
   @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;
@@ -44,7 +46,11 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
         this.unit = this.baseCurrency;
 
         new CountUp('value', this.performance?.currentValue, {
-          decimalPlaces: 2,
+          decimalPlaces:
+            this.deviceType === 'mobile' &&
+            this.performance?.currentValue >= 100000
+              ? 0
+              : 2,
           duration: 1,
           separator: `'`
         }).start();

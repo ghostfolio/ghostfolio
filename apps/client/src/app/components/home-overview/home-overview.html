@@ -1,15 +1,5 @@
 <div
-  class="
-    align-items-center
-    container
-    d-flex
-    flex-column
-    h-100
-    justify-content-center
-    overview
-    p-0
-    position-relative
-  "
+  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
   <div class="row w-100">
     <div class="chart-container col">
@@ -37,6 +27,8 @@
       <gf-portfolio-performance
         class="pb-4"
         [baseCurrency]="user?.settings?.baseCurrency"
+        [deviceType]="deviceType"
+        [hasError]="hasError"
         [isAllTimeHigh]="isAllTimeHigh"
         [isAllTimeLow]="isAllTimeLow"
         [isLoading]="isLoadingPerformance"

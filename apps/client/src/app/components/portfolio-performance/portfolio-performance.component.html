@@ -1,12 +1,15 @@
 <div class="container p-0">
-  <div
-    class="no-gutters row"
-    [ngClass]="{
-      'text-danger': isAllTimeLow,
-      'text-success': isAllTimeHigh
-    }"
-  >
-    <div class="flex-grow-1"></div>
+  <div class="no-gutters row">
+    <div
+      class="flex-grow-1 status text-muted text-right"
+      [title]="
+        hasError
+          ? 'Sorry! Our data provider partner is experiencing the hiccups.'
+          : ''
+      "
+    >
+      <ion-icon *ngIf="hasError" name="alert-circle-outline"></ion-icon>
+    </div>
     <div *ngIf="isLoading" class="align-items-center d-flex">
       <ngx-skeleton-loader
         animation="pulse"
@@ -20,6 +23,10 @@
     <div
       class="display-4 font-weight-bold m-0 text-center value-container"
       [hidden]="isLoading"
+      [ngClass]="{
+        'text-danger': isAllTimeLow,
+        'text-success': isAllTimeHigh
+      }"
     >
       <span #value id="value"></span>
     </div>
