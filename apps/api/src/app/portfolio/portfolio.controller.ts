@@ -51,7 +51,7 @@ export class PortfolioController {
   @Get('investments')
   @UseGuards(AuthGuard('jwt'))
   public async findAll(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
     @Res() res: Response
   ): Promise<InvestmentItem[]> {
     if (
@@ -87,7 +87,7 @@ export class PortfolioController {
   @Get('chart')
   @UseGuards(AuthGuard('jwt'))
   public async getChart(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioChart> {
@@ -98,17 +98,13 @@ export class PortfolioController {
 
     let chartData = historicalDataContainer.items;
 
-    let hasNullValue = false;
+    let hasError = false;
 
     chartData.forEach((chartDataItem) => {
       if (hasNotDefinedValuesInObject(chartDataItem)) {
-        hasNullValue = true;
+        hasError = true;
       }
     });
-
-    if (hasNullValue) {
-      res.status(StatusCodes.ACCEPTED);
-    }
 
     if (
       impersonationId ||
@@ -131,6 +127,7 @@ export class PortfolioController {
     }
 
     return <any>res.json({
+      hasError,
       chart: chartData,
       isAllTimeHigh: historicalDataContainer.isAllTimeHigh,
       isAllTimeLow: historicalDataContainer.isAllTimeLow
@@ -140,7 +137,7 @@ export class PortfolioController {
   @Get('details')
   @UseGuards(AuthGuard('jwt'))
   public async getDetails(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioDetails> {
@@ -152,6 +149,8 @@ export class PortfolioController {
       return <any>res.json({ accounts: {}, holdings: {} });
     }
 
+    let hasError = false;
+
     const { accounts, holdings, hasErrors } =
       await this.portfolioService.getDetails(
         impersonationId,
@@ -160,7 +159,7 @@ export class PortfolioController {
       );
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
-      res.status(StatusCodes.ACCEPTED);
+      hasError = true;
     }
 
     if (
@@ -198,43 +197,38 @@ export class PortfolioController {
       }
     }
 
-    return <any>res.json({ accounts, holdings });
+    return <any>res.json({ accounts, hasError, holdings });
   }
 
   @Get('performance')
   @UseGuards(AuthGuard('jwt'))
   public async getPerformance(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
     @Query('range') range,
     @Res() res: Response
-  ): Promise<PortfolioPerformance> {
+  ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
     const performanceInformation = await this.portfolioService.getPerformance(
       impersonationId,
       range
     );
 
-    if (performanceInformation?.hasErrors) {
-      res.status(StatusCodes.ACCEPTED);
-    }
-
-    let performance = performanceInformation.performance;
     if (
       impersonationId ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      performance = nullifyValuesInObject(performance, [
-        'currentGrossPerformance',
-        'currentValue'
-      ]);
+      performanceInformation.performance = nullifyValuesInObject(
+        performanceInformation.performance,
+        ['currentGrossPerformance', 'currentValue']
+      );
     }
 
-    return <any>res.json(performance);
+    return <any>res.json(performanceInformation);
   }
 
   @Get('positions')
   @UseGuards(AuthGuard('jwt'))
   public async getPositions(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioPositions> {
@@ -242,10 +236,6 @@ export class PortfolioController {
       impersonationId,
       range
     );
-
-    if (result?.hasErrors) {
-      res.status(StatusCodes.ACCEPTED);
-    }
 
     if (
       impersonationId ||
@@ -353,7 +343,7 @@ export class PortfolioController {
   @Get('position/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async getPosition(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
     @Param('symbol') symbol
   ): Promise<PortfolioPositionDetail> {
     let position = await this.portfolioService.getPosition(
@@ -387,7 +377,7 @@ export class PortfolioController {
   @Get('report')
   @UseGuards(AuthGuard('jwt'))
   public async getReport(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
     @Res() res: Response
   ): Promise<PortfolioReport> {
     if (

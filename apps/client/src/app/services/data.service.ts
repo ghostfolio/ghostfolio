@@ -181,7 +181,10 @@ export class DataService {
   }
 
   public fetchPortfolioPerformance(aParams: { [param: string]: any }) {
-    return this.http.get<PortfolioPerformance>('/api/portfolio/performance', {
+    return this.http.get<{
+      hasErrors: boolean;
+      performance: PortfolioPerformance;
+    }>('/api/portfolio/performance', {
       params: aParams
     });
   }

@@ -29,6 +29,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     { label: 'Max', value: 'max' }
   ];
   public deviceType: string;
+  public hasError: boolean;
   public hasImpersonationId: boolean;
   public historicalDataItems: LineChartItem[];
   public isAllTimeHigh: boolean;
@@ -116,7 +117,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .fetchPortfolioPerformance({ range: this.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        this.performance = response;
+        this.hasError = response.hasErrors;
+        this.performance = response.performance;
         this.isLoadingPerformance = false;
 
         this.changeDetectorRef.markForCheck();
