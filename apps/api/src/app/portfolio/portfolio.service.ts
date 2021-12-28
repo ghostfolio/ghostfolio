@@ -369,9 +369,9 @@ export class PortfolioService {
   ): Promise<PortfolioPositionDetail> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
-    const orders = (
-      await this.orderService.getOrders({ userId, types: ['BUY', 'SELL'] })
-    ).filter((order) => order.symbol === aSymbol);
+    const orders = (await this.orderService.getOrders({ userId })).filter(
+      (order) => order.symbol === aSymbol
+    );
 
     if (orders.length <= 0) {
       return {
@@ -401,17 +401,21 @@ export class PortfolioService {
     const positionCurrency = orders[0].currency;
     const name = orders[0].SymbolProfile?.name ?? '';
 
-    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
-      currency: order.currency,
-      dataSource: order.dataSource,
-      date: format(order.date, DATE_FORMAT),
-      fee: new Big(order.fee),
-      name: order.SymbolProfile?.name,
-      quantity: new Big(order.quantity),
-      symbol: order.symbol,
-      type: order.type,
-      unitPrice: new Big(order.unitPrice)
-    }));
+    const portfolioOrders: PortfolioOrder[] = orders
+      .filter((order) => {
+        return order.type === 'BUY' || order.type === 'SELL';
+      })
+      .map((order) => ({
+        currency: order.currency,
+        dataSource: order.dataSource,
+        date: format(order.date, DATE_FORMAT),
+        fee: new Big(order.fee),
+        name: order.SymbolProfile?.name,
+        quantity: new Big(order.quantity),
+        symbol: order.symbol,
+        type: order.type,
+        unitPrice: new Big(order.unitPrice)
+      }));
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
