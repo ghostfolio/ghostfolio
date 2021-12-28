@@ -77,11 +77,15 @@
     <td mat-cell *matCellDef="let element" class="px-1">
       <div
         class="d-inline-flex p-1 type-badge"
-        [ngClass]="element.type == 'BUY' ? 'buy' : 'sell'"
+        [ngClass]="{
+          buy: element.type === 'BUY',
+          dividend: element.type === 'DIVIDEND',
+          sell: element.type === 'SELL'
+        }"
       >
         <ion-icon
           [name]="
-            element.type === 'BUY'
+            element.type === 'BUY' || element.type === 'DIVIDEND'
               ? 'arrow-forward-circle-outline'
               : 'arrow-back-circle-outline'
           "

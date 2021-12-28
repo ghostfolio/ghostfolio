@@ -330,6 +330,7 @@ export class PortfolioController {
         'currentGrossPerformance',
         'currentNetPerformance',
         'currentValue',
+        'dividend',
         'fees',
         'netWorth',
         'totalBuy',

@@ -206,5 +206,6 @@ enum Role {
 
 enum Type {
   BUY
+  DIVIDEND
   SELL
 }

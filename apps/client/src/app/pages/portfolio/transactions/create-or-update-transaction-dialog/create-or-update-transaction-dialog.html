@@ -52,8 +52,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select name="type" required [(value)]="data.transaction.type">
-          <mat-option value="BUY" i18n> BUY </mat-option>
-          <mat-option value="SELL" i18n> SELL </mat-option>
+          <mat-option value="BUY" i18n>BUY</mat-option>
+          <mat-option value="DIVIDEND" i18n>DIVIDEND</mat-option>
+          <mat-option value="SELL" i18n>SELL</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -141,7 +142,7 @@
           [(ngModel)]="data.transaction.unitPrice"
         />
         <button
-          *ngIf="currentMarketPrice"
+          *ngIf="currentMarketPrice && (data.transaction.type === 'BUY' || data.transaction.type === 'SELL')"
           mat-icon-button
           matSuffix
           title="Apply current market price"

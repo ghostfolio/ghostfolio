@@ -401,17 +401,21 @@ export class PortfolioService {
     const positionCurrency = orders[0].currency;
     const name = orders[0].SymbolProfile?.name ?? '';
 
-    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
-      currency: order.currency,
-      dataSource: order.dataSource,
-      date: format(order.date, DATE_FORMAT),
-      fee: new Big(order.fee),
-      name: order.SymbolProfile?.name,
-      quantity: new Big(order.quantity),
-      symbol: order.symbol,
-      type: order.type,
-      unitPrice: new Big(order.unitPrice)
-    }));
+    const portfolioOrders: PortfolioOrder[] = orders
+      .filter((order) => {
+        return order.type === 'BUY' || order.type === 'SELL';
+      })
+      .map((order) => ({
+        currency: order.currency,
+        dataSource: order.dataSource,
+        date: format(order.date, DATE_FORMAT),
+        fee: new Big(order.fee),
+        name: order.SymbolProfile?.name,
+        quantity: new Big(order.quantity),
+        symbol: order.symbol,
+        type: order.type,
+        unitPrice: new Big(order.unitPrice)
+      }));
 
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
@@ -729,22 +733,6 @@ export class PortfolioService {
     };
   }
 
-  public getFees(orders: OrderWithAccount[], date = new Date(0)) {
-    return orders
-      .filter((order) => {
-        // Filter out all orders before given date
-        return isBefore(date, new Date(order.date));
-      })
-      .map((order) => {
-        return this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.currency,
-          this.request.user.Settings.currency
-        );
-      })
-      .reduce((previous, current) => previous + current, 0);
-  }
-
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const currency = this.request.user.Settings.currency;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
@@ -825,7 +813,7 @@ export class PortfolioService {
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
               currentPositions.totalInvestment.toNumber(),
-              this.getFees(orders)
+              this.getFees(orders).toNumber()
             )
           ],
           { baseCurrency: currency }
@@ -844,8 +832,11 @@ export class PortfolioService {
       userId,
       currency
     );
-    const orders = await this.orderService.getOrders({ userId });
-    const fees = this.getFees(orders);
+    const orders = await this.orderService.getOrders({
+      userId
+    });
+    const dividend = this.getDividend(orders).toNumber();
+    const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
 
     const totalBuy = this.getTotalByType(orders, currency, 'BUY');
@@ -859,14 +850,17 @@ export class PortfolioService {
 
     return {
       ...performanceInformation.performance,
+      dividend,
       fees,
       firstOrderDate,
       netWorth,
+      totalBuy,
+      totalSell,
       cash: balance,
       committedFunds: committedFunds.toNumber(),
-      ordersCount: orders.length,
-      totalBuy: totalBuy,
-      totalSell: totalSell
+      ordersCount: orders.filter((order) => {
+        return order.type === 'BUY' || order.type === 'SELL';
+      }).length
     };
   }
 
@@ -939,6 +933,47 @@ export class PortfolioService {
     return cashPositions;
   }
 
+  private getDividend(orders: OrderWithAccount[], date = new Date(0)) {
+    return orders
+      .filter((order) => {
+        // Filter out all orders before given date and type dividend
+        return (
+          isBefore(date, new Date(order.date)) &&
+          order.type === TypeOfOrder.DIVIDEND
+        );
+      })
+      .map((order) => {
+        return this.exchangeRateDataService.toCurrency(
+          new Big(order.quantity).mul(order.unitPrice).toNumber(),
+          order.currency,
+          this.request.user.Settings.currency
+        );
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      );
+  }
+
+  private getFees(orders: OrderWithAccount[], date = new Date(0)) {
+    return orders
+      .filter((order) => {
+        // Filter out all orders before given date
+        return isBefore(date, new Date(order.date));
+      })
+      .map((order) => {
+        return this.exchangeRateDataService.toCurrency(
+          order.fee,
+          order.currency,
+          this.request.user.Settings.currency
+        );
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      );
+  }
+
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
     switch (aDateRange) {
       case '1d':
@@ -967,7 +1002,11 @@ export class PortfolioService {
     transactionPoints: TransactionPoint[];
     orders: OrderWithAccount[];
   }> {
-    const orders = await this.orderService.getOrders({ includeDrafts, userId });
+    const orders = await this.orderService.getOrders({
+      includeDrafts,
+      userId,
+      types: ['BUY', 'SELL']
+    });
 
     if (orders.length <= 0) {
       return { transactionPoints: [], orders: [] };
