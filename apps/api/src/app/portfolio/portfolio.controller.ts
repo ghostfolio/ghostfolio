@@ -360,6 +360,7 @@ export class PortfolioController {
           'grossPerformance',
           'investment',
           'netPerformance',
+          'orders',
           'quantity',
           'value'
         ]);

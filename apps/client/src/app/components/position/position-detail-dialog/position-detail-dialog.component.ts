@@ -3,11 +3,13 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { OrderWithAccount } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { AssetSubClass } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
@@ -23,7 +25,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'position-detail-dialog.html',
   styleUrls: ['./position-detail-dialog.component.scss']
 })
-export class PositionDetailDialog implements OnDestroy {
+export class PositionDetailDialog implements OnDestroy, OnInit {
   public assetSubClass: AssetSubClass;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
@@ -39,6 +41,7 @@ export class PositionDetailDialog implements OnDestroy {
   public name: string;
   public netPerformance: number;
   public netPerformancePercent: number;
+  public orders: OrderWithAccount[];
   public quantity: number;
   public quantityPrecision = 2;
   public symbol: string;
@@ -52,9 +55,11 @@ export class PositionDetailDialog implements OnDestroy {
     private dataService: DataService,
     public dialogRef: MatDialogRef<PositionDetailDialog>,
     @Inject(MAT_DIALOG_DATA) public data: PositionDetailDialogParams
-  ) {
+  ) {}
+
+  public ngOnInit(): void {
     this.dataService
-      .fetchPositionDetail(data.symbol)
+      .fetchPositionDetail(this.data.symbol)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
@@ -72,6 +77,7 @@ export class PositionDetailDialog implements OnDestroy {
           name,
           netPerformance,
           netPerformancePercent,
+          orders,
           quantity,
           symbol,
           transactionCount,
@@ -104,6 +110,7 @@ export class PositionDetailDialog implements OnDestroy {
           this.name = name;
           this.netPerformance = netPerformance;
           this.netPerformancePercent = netPerformancePercent;
+          this.orders = orders;
           this.quantity = quantity;
           this.symbol = symbol;
           this.transactionCount = transactionCount;

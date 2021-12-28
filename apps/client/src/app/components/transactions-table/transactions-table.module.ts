@@ -14,7 +14,6 @@ import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info'
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { GfPositionDetailDialogModule } from '../position/position-detail-dialog/position-detail-dialog.module';
 import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 import { TransactionsTableComponent } from './transactions-table.component';
 
@@ -24,7 +23,6 @@ import { TransactionsTableComponent } from './transactions-table.component';
   imports: [
     CommonModule,
     GfNoTransactionsInfoModule,
-    GfPositionDetailDialogModule,
     GfSymbolIconModule,
     GfSymbolModule,
     GfValueModule,

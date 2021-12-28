@@ -66,28 +66,21 @@ export class OrderController {
         this.request.user.id
       );
 
-    let orders = await this.orderService.orders({
-      include: {
-        Account: {
-          include: {
-            Platform: true
-          }
-        },
-        SymbolProfile: {
-          select: {
-            name: true
-          }
-        }
-      },
-      orderBy: { date: 'desc' },
-      where: { userId: impersonationUserId || this.request.user.id }
+    let orders = await this.orderService.getOrders({
+      includeDrafts: true,
+      userId: impersonationUserId || this.request.user.id
     });
 
     if (
       impersonationUserId ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      orders = nullifyValuesInObjects(orders, ['fee', 'quantity', 'unitPrice']);
+      orders = nullifyValuesInObjects(orders, [
+        'fee',
+        'quantity',
+        'unitPrice',
+        'value'
+      ]);
     }
 
     return orders;

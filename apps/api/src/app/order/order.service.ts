@@ -4,6 +4,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Order, Prisma } from '@prisma/client';
+import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
 
 @Injectable()
@@ -82,7 +83,7 @@ export class OrderService {
     });
   }
 
-  public getOrders({
+  public async getOrders({
     includeDrafts = false,
     userId
   }: {
@@ -95,15 +96,29 @@ export class OrderService {
       where.isDraft = false;
     }
 
-    return this.orders({
-      where,
-      include: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        Account: true,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        SymbolProfile: true
-      },
-      orderBy: { date: 'asc' }
+    return (
+      await this.orders({
+        where,
+        include: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          Account: {
+            include: {
+              Platform: true
+            }
+          },
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          SymbolProfile: true
+        },
+        orderBy: { date: 'asc' }
+      })
+    ).map((order) => {
+      return {
+        ...order,
+        value: new Big(order.quantity)
+          .mul(order.unitPrice)
+          .plus(order.fee)
+          .toNumber()
+      };
     });
   }
 

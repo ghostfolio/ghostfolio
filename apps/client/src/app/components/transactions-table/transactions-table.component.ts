@@ -17,17 +17,14 @@ import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { endOfToday, format, isAfter } from 'date-fns';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { PositionDetailDialog } from '../position/position-detail-dialog/position-detail-dialog.component';
 
 const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
 const SEARCH_STRING_SEPARATOR = ',';
@@ -44,9 +41,12 @@ export class TransactionsTableComponent
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateOrder: boolean;
+  @Input() hasPermissionToFilter = true;
   @Input() hasPermissionToImportOrders: boolean;
+  @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
   @Input() showActions: boolean;
+  @Input() showSymbolColumn = true;
   @Input() transactions: OrderWithAccount[];
 
   @Output() export = new EventEmitter<void>();
@@ -77,21 +77,7 @@ export class TransactionsTableComponent
   private allFilters: string[];
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.routeQueryParams = route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (params['positionDetailDialog'] && params['symbol']) {
-          this.openPositionDialog({
-            symbol: params['symbol']
-          });
-        }
-      });
-
+  public constructor(private router: Router) {
     this.searchControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((keyword) => {
@@ -150,11 +136,18 @@ export class TransactionsTableComponent
       'quantity',
       'unitPrice',
       'fee',
+      'value',
       'account'
     ];
 
     if (this.showActions) {
       this.displayedColumns.push('actions');
+    }
+
+    if (!this.showSymbolColumn) {
+      this.displayedColumns = this.displayedColumns.filter((column) => {
+        return column !== 'symbol';
+      });
     }
 
     this.isLoading = true;
@@ -208,27 +201,6 @@ export class TransactionsTableComponent
 
   public onCloneTransaction(aTransaction: OrderWithAccount) {
     this.transactionToClone.emit(aTransaction);
-  }
-
-  public openPositionDialog({ symbol }: { symbol: string }): void {
-    const dialogRef = this.dialog.open(PositionDetailDialog, {
-      autoFocus: false,
-      data: {
-        symbol,
-        baseCurrency: this.baseCurrency,
-        deviceType: this.deviceType,
-        locale: this.locale
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
   }
 
   public ngOnDestroy() {

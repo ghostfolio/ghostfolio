@@ -1,3 +1,4 @@
+import { OrderWithAccount } from '@ghostfolio/common/types';
 import { AssetClass, AssetSubClass } from '@prisma/client';
 
 export interface PortfolioPositionDetail {
@@ -16,6 +17,7 @@ export interface PortfolioPositionDetail {
   name: string;
   netPerformance: number;
   netPerformancePercent: number;
+  orders: OrderWithAccount[];
   quantity: number;
   symbol: string;
   transactionCount: number;

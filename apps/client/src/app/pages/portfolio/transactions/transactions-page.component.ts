@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
@@ -73,6 +74,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
+        } else if (params['positionDetailDialog'] && params['symbol']) {
+          this.openPositionDialog({
+            symbol: params['symbol']
+          });
         }
       });
   }
@@ -248,6 +253,27 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.router.navigate([], {
       queryParams: { editDialog: true, transactionId: aTransaction.id }
     });
+  }
+
+  public openPositionDialog({ symbol }: { symbol: string }): void {
+    const dialogRef = this.dialog.open(PositionDetailDialog, {
+      autoFocus: false,
+      data: {
+        symbol,
+        baseCurrency: this.user?.settings?.baseCurrency,
+        deviceType: this.deviceType,
+        locale: this.user?.settings?.locale
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   public openUpdateTransactionDialog({
