@@ -14,12 +14,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AssetClass, Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { PositionDetailDialog } from '../position/position-detail-dialog/position-detail-dialog.component';
 
 @Component({
   selector: 'gf-positions-table',

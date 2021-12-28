@@ -124,6 +124,20 @@
       </div>
     </div>
   </div>
+
+  <gf-transactions-table
+    *ngIf="orders?.length > 0"
+    [baseCurrency]="data.baseCurrency"
+    [deviceType]="data.deviceType"
+    [hasPermissionToCreateOrder]="false"
+    [hasPermissionToFilter]="false"
+    [hasPermissionToImportOrders]="false"
+    [hasPermissionToOpenDetails]="false"
+    [locale]="data.locale"
+    [showActions]="false"
+    [showSymbolColumn]="false"
+    [transactions]="orders"
+  ></gf-transactions-table>
 </div>
 
 <gf-dialog-footer

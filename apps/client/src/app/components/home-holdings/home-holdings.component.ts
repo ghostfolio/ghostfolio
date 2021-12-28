@@ -1,4 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   RANGE,
@@ -33,9 +36,20 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
     private settingsStorageService: SettingsStorageService,
     private userService: UserService
   ) {
+    route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (params['positionDetailDialog'] && params['symbol']) {
+          this.openDialog(params['symbol']);
+        }
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -67,6 +81,27 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private openDialog(aSymbol: string): void {
+    const dialogRef = this.dialog.open(PositionDetailDialog, {
+      autoFocus: false,
+      data: {
+        baseCurrency: this.user?.settings?.baseCurrency,
+        deviceType: this.deviceType,
+        locale: this.user?.settings?.locale,
+        symbol: aSymbol
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   private update() {

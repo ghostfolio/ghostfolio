@@ -1,4 +1,8 @@
-<mat-form-field appearance="outline" class="w-100">
+<mat-form-field
+  appearance="outline"
+  class="w-100"
+  [ngClass]="{ 'd-none': !hasPermissionToFilter }"
+>
   <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
   <mat-chip-list #chipList aria-label="Search keywords">
     <mat-chip
@@ -179,6 +183,27 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="value">
+    <th
+      *matHeaderCellDef
+      class="justify-content-end px-1"
+      i18n
+      mat-header-cell
+      mat-sort-header
+    >
+      Value
+    </th>
+    <td *matCellDef="let element" class="px1" mat-cell>
+      <div class="d-flex justify-content-end">
+        <gf-value
+          [isCurrency]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : element.value"
+        ></gf-value>
+      </div>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="account">
     <th *matHeaderCellDef class="px-1" mat-header-cell>
       <span class="d-none d-lg-block" i18n>Account</span>
@@ -254,12 +279,13 @@
     *matRowDef="let row; columns: displayedColumns"
     mat-row
     (click)="
-      !row.isDraft &&
+      hasPermissionToOpenDetails &&
+        !row.isDraft &&
         onOpenPositionDialog({
           symbol: row.symbol
         })
     "
-    [ngClass]="{ 'is-draft': row.isDraft }"
+    [ngClass]="{ 'cursor-pointer': hasPermissionToOpenDetails && !row.isDraft }"
   ></tr>
 </table>
 
