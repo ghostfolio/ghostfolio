@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the transactions to the position detail dialog
 - Added support for dividend
 
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
 ## 1.96.0 - 27.12.2021
 
 ### Changed
