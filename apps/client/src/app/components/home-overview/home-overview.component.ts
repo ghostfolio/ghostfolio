@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -7,6 +6,7 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { defaultDateRangeOptions } from '@ghostfolio/common/config';
 import { PortfolioPerformance, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
@@ -21,13 +21,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeOverviewComponent implements OnDestroy, OnInit {
   public dateRange: DateRange;
-  public dateRangeOptions: ToggleOption[] = [
-    { label: 'Today', value: '1d' },
-    { label: 'YTD', value: 'ytd' },
-    { label: '1Y', value: '1y' },
-    { label: '5Y', value: '5y' },
-    { label: 'Max', value: 'max' }
-  ];
+  public dateRangeOptions = defaultDateRangeOptions;
   public deviceType: string;
   public hasError: boolean;
   public hasImpersonationId: boolean;

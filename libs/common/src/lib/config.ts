@@ -1,4 +1,14 @@
+import { ToggleOption } from './types';
+
 export const baseCurrency = 'USD';
+
+export const defaultDateRangeOptions: ToggleOption[] = [
+  { label: 'Today', value: '1d' },
+  { label: 'YTD', value: 'ytd' },
+  { label: '1Y', value: '1y' },
+  { label: '5Y', value: '5y' },
+  { label: 'Max', value: 'max' }
+];
 
 export const ghostfolioScraperApiSymbolPrefix = '_GF_';
 export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;

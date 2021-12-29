@@ -4,6 +4,7 @@ import type { DateRange } from './date-range.type';
 import type { Granularity } from './granularity.type';
 import type { OrderWithAccount } from './order-with-account.type';
 import type { RequestWithUser } from './request-with-user.type';
+import { ToggleOption } from './toggle-option.type';
 
 export type {
   AccessWithGranteeUser,
@@ -11,5 +12,6 @@ export type {
   DateRange,
   Granularity,
   OrderWithAccount,
-  RequestWithUser
+  RequestWithUser,
+  ToggleOption
 };

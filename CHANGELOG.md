@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the date range component to the holdings tab
+
 ### Fixed
 
 - Fixed the creation of historical data in the admin control panel (upsert instead of update)

@@ -8,6 +8,7 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { defaultDateRangeOptions } from '@ghostfolio/common/config';
 import { Position, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
@@ -22,6 +23,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public dateRange: DateRange;
+  public dateRangeOptions = defaultDateRangeOptions;
   public deviceType: string;
   public hasPermissionToCreateOrder: boolean;
   public positions: Position[];
@@ -78,6 +80,12 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.update();
   }
 
+  public onChangeDateRange(aDateRange: DateRange) {
+    this.dateRange = aDateRange;
+    this.settingsStorageService.setSetting(RANGE, this.dateRange);
+    this.update();
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -105,6 +113,8 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   }
 
   private update() {
+    this.positions = undefined;
+
     this.dataService
       .fetchPositions({ range: this.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
