@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -10,6 +9,7 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { ToggleOption } from '@ghostfolio/common/types';
 import { AssetClass } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
