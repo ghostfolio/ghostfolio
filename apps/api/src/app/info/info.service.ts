@@ -7,6 +7,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE
 } from '@ghostfolio/common/config';
@@ -187,6 +188,12 @@ export class InfoService {
     });
   }
 
+  private async countSlackCommunityUsers() {
+    return (await this.propertyService.getByKey(
+      PROPERTY_SLACK_COMMUNITY_USERS
+    )) as string;
+  }
+
   private getDemoAuthToken() {
     return this.jwtService.sign({
       id: InfoService.DEMO_USER_ID
@@ -218,19 +225,19 @@ export class InfoService {
     } catch {}
 
     const activeUsers1d = await this.countActiveUsers(1);
-    const activeUsers7d = await this.countActiveUsers(7);
     const activeUsers30d = await this.countActiveUsers(30);
     const newUsers30d = await this.countNewUsers(30);
     const gitHubContributors = await this.countGitHubContributors();
     const gitHubStargazers = await this.countGitHubStargazers();
+    const slackCommunityUsers = await this.countSlackCommunityUsers();
 
     statistics = {
       activeUsers1d,
-      activeUsers7d,
       activeUsers30d,
       gitHubContributors,
       gitHubStargazers,
-      newUsers30d
+      newUsers30d,
+      slackCommunityUsers
     };
 
     await this.redisCacheService.set(
