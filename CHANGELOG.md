@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the creation of historical data in the admin control panel (upsert instead of update)
 - Fixed the scrolling issue in the position detail dialog on mobile
 
 ## 1.97.0 - 28.12.2021
