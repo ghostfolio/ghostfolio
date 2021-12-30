@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Start refactoring _transactions_ to _activities_
 - Upgraded `angular` from version `13.0.2` to `13.1.1`
 - Upgraded `Nx` from version `13.3.0` to `13.4.1`
 
