@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Start refactoring _transactions_ to _activities_
 - Upgraded `angular` from version `13.0.2` to `13.1.1`
+- Upgraded `chart.js` from version `3.5.0` to `3.7.0`
 - Upgraded `Nx` from version `13.3.0` to `13.4.1`
 
 ## 1.98.0 - 29.12.2021
