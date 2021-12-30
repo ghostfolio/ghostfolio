@@ -67,6 +67,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'portfolio/activities',
+    loadChildren: () =>
+      import('./pages/portfolio/transactions/transactions-page.module').then(
+        (m) => m.TransactionsPageModule
+      )
+  },
+  {
     path: 'portfolio/allocations',
     loadChildren: () =>
       import('./pages/portfolio/allocations/allocations-page.module').then(
@@ -85,13 +92,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/portfolio/report/report-page.module').then(
         (m) => m.ReportPageModule
-      )
-  },
-  {
-    path: 'portfolio/transactions',
-    loadChildren: () =>
-      import('./pages/portfolio/transactions/transactions-page.module').then(
-        (m) => m.TransactionsPageModule
       )
   },
   {

@@ -30,30 +30,28 @@ const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
 const SEARCH_STRING_SEPARATOR = ',';
 
 @Component({
-  selector: 'gf-transactions-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './transactions-table.component.html',
-  styleUrls: ['./transactions-table.component.scss']
+  selector: 'gf-activities-table',
+  styleUrls: ['./activities-table.component.scss'],
+  templateUrl: './activities-table.component.html'
 })
-export class TransactionsTableComponent
-  implements OnChanges, OnDestroy, OnInit
-{
+export class ActivitiesTableComponent implements OnChanges, OnDestroy {
+  @Input() activities: OrderWithAccount[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
-  @Input() hasPermissionToCreateOrder: boolean;
+  @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToFilter = true;
-  @Input() hasPermissionToImportOrders: boolean;
+  @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
   @Input() showActions: boolean;
   @Input() showSymbolColumn = true;
-  @Input() transactions: OrderWithAccount[];
 
+  @Output() activityDeleted = new EventEmitter<string>();
+  @Output() activityToClone = new EventEmitter<OrderWithAccount>();
+  @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
   @Output() export = new EventEmitter<void>();
   @Output() import = new EventEmitter<void>();
-  @Output() transactionDeleted = new EventEmitter<string>();
-  @Output() transactionToClone = new EventEmitter<OrderWithAccount>();
-  @Output() transactionToUpdate = new EventEmitter<OrderWithAccount>();
 
   @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
@@ -124,8 +122,6 @@ export class TransactionsTableComponent
     this.searchControl.setValue(null);
   }
 
-  public ngOnInit() {}
-
   public ngOnChanges() {
     this.displayedColumns = [
       'count',
@@ -152,8 +148,8 @@ export class TransactionsTableComponent
 
     this.isLoading = true;
 
-    if (this.transactions) {
-      this.dataSource = new MatTableDataSource(this.transactions);
+    if (this.activities) {
+      this.dataSource = new MatTableDataSource(this.activities);
       this.dataSource.filterPredicate = (data, filter) => {
         const dataString = this.getFilterableValues(data)
           .join(' ')
@@ -171,13 +167,15 @@ export class TransactionsTableComponent
     }
   }
 
-  public onDeleteTransaction(aId: string) {
-    const confirmation = confirm(
-      'Do you really want to delete this transaction?'
-    );
+  public onCloneActivity(aActivity: OrderWithAccount) {
+    this.activityToClone.emit(aActivity);
+  }
+
+  public onDeleteActivity(aId: string) {
+    const confirmation = confirm('Do you really want to delete this activity?');
 
     if (confirmation) {
-      this.transactionDeleted.emit(aId);
+      this.activityDeleted.emit(aId);
     }
   }
 
@@ -195,12 +193,8 @@ export class TransactionsTableComponent
     });
   }
 
-  public onUpdateTransaction(aTransaction: OrderWithAccount) {
-    this.transactionToUpdate.emit(aTransaction);
-  }
-
-  public onCloneTransaction(aTransaction: OrderWithAccount) {
-    this.transactionToClone.emit(aTransaction);
+  public onUpdateActivity(aActivity: OrderWithAccount) {
+    this.activityToUpdate.emit(aActivity);
   }
 
   public ngOnDestroy() {
@@ -217,7 +211,7 @@ export class TransactionsTableComponent
     this.placeholder =
       lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
 
-    this.allFilters = this.getSearchableFieldValues(this.transactions).filter(
+    this.allFilters = this.getSearchableFieldValues(this.activities).filter(
       (item) => {
         return !lowercaseSearchKeywords.includes(item.trim().toLowerCase());
       }
@@ -226,11 +220,11 @@ export class TransactionsTableComponent
     this.filters$.next(this.allFilters);
   }
 
-  private getSearchableFieldValues(transactions: OrderWithAccount[]): string[] {
+  private getSearchableFieldValues(activities: OrderWithAccount[]): string[] {
     const fieldValues = new Set<string>();
 
-    for (const transaction of transactions) {
-      this.getFilterableValues(transaction, fieldValues);
+    for (const activity of activities) {
+      this.getFilterableValues(activity, fieldValues);
     }
 
     return [...fieldValues]
@@ -255,15 +249,15 @@ export class TransactionsTableComponent
   }
 
   private getFilterableValues(
-    transaction: OrderWithAccount,
+    activity: OrderWithAccount,
     fieldValues: Set<string> = new Set<string>()
   ): string[] {
-    fieldValues.add(transaction.currency);
-    fieldValues.add(transaction.symbol);
-    fieldValues.add(transaction.type);
-    fieldValues.add(transaction.Account?.name);
-    fieldValues.add(transaction.Account?.Platform?.name);
-    fieldValues.add(format(transaction.date, 'yyyy'));
+    fieldValues.add(activity.currency);
+    fieldValues.add(activity.symbol);
+    fieldValues.add(activity.type);
+    fieldValues.add(activity.Account?.name);
+    fieldValues.add(activity.Account?.Platform?.name);
+    fieldValues.add(format(activity.date, 'yyyy'));
 
     return [...fieldValues].filter((item) => {
       return item !== undefined;

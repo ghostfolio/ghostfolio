@@ -125,19 +125,19 @@
     </div>
   </div>
 
-  <gf-transactions-table
+  <gf-activities-table
     *ngIf="orders?.length > 0"
+    [activities]="orders"
     [baseCurrency]="data.baseCurrency"
     [deviceType]="data.deviceType"
-    [hasPermissionToCreateOrder]="false"
+    [hasPermissionToCreateActivity]="false"
     [hasPermissionToFilter]="false"
-    [hasPermissionToImportOrders]="false"
+    [hasPermissionToImportActivities]="false"
     [hasPermissionToOpenDetails]="false"
     [locale]="data.locale"
     [showActions]="false"
     [showSymbolColumn]="false"
-    [transactions]="orders"
-  ></gf-transactions-table>
+  ></gf-activities-table>
 </div>
 
 <gf-dialog-footer

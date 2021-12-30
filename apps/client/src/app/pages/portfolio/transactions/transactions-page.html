@@ -1,21 +1,21 @@
 <div class="container">
   <div class="row mb-3">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3" i18n>Transactions</h3>
-      <gf-transactions-table
+      <h3 class="d-flex justify-content-center mb-3" i18n>Activities</h3>
+      <gf-activities-table
+        [activities]="transactions"
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
-        [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-        [hasPermissionToImportOrders]="hasPermissionToImportOrders"
+        [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
+        [hasPermissionToImportActivities]="hasPermissionToImportOrders"
         [locale]="user?.settings?.locale"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder && !user.settings.isRestrictedView"
-        [transactions]="transactions"
+        (activityDeleted)="onDeleteTransaction($event)"
+        (activityToClone)="onCloneTransaction($event)"
+        (activityToUpdate)="onUpdateTransaction($event)"
         (export)="onExport()"
         (import)="onImport()"
-        (transactionDeleted)="onDeleteTransaction($event)"
-        (transactionToClone)="onCloneTransaction($event)"
-        (transactionToUpdate)="onUpdateTransaction($event)"
-      ></gf-transactions-table>
+      ></gf-activities-table>
     </div>
   </div>
 

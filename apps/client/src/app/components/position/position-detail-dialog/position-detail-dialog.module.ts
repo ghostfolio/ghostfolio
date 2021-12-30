@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
-import { GfTransactionsTableModule } from '@ghostfolio/client/components/transactions-table/transactions-table.module';
+import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 import { GfLineChartModule } from '@ghostfolio/ui/line-chart/line-chart.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -16,10 +16,10 @@ import { PositionDetailDialog } from './position-detail-dialog.component';
   exports: [],
   imports: [
     CommonModule,
+    GfActivitiesTableModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
     GfLineChartModule,
-    GfTransactionsTableModule,
     GfValueModule,
     MatButtonModule,
     MatDialogModule,
