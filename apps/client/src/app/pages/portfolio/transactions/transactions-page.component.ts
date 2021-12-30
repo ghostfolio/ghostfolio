@@ -255,27 +255,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openPositionDialog({ symbol }: { symbol: string }): void {
-    const dialogRef = this.dialog.open(PositionDetailDialog, {
-      autoFocus: false,
-      data: {
-        symbol,
-        baseCurrency: this.user?.settings?.baseCurrency,
-        deviceType: this.deviceType,
-        locale: this.user?.settings?.locale
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
-  }
-
   public openUpdateTransactionDialog({
     accountId,
     currency,
@@ -410,6 +389,34 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         }
 
         this.router.navigate(['.'], { relativeTo: this.route });
+      });
+  }
+
+  private openPositionDialog({ symbol }: { symbol: string }) {
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        this.user = user;
+
+        const dialogRef = this.dialog.open(PositionDetailDialog, {
+          autoFocus: false,
+          data: {
+            symbol,
+            baseCurrency: this.user?.settings?.baseCurrency,
+            deviceType: this.deviceType,
+            locale: this.user?.settings?.locale
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
       });
   }
 }

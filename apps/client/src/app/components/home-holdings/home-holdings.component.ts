@@ -48,7 +48,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['positionDetailDialog'] && params['symbol']) {
-          this.openDialog(params['symbol']);
+          this.openPositionDialog({ symbol: params['symbol'] });
         }
       });
 
@@ -91,24 +91,31 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openDialog(aSymbol: string): void {
-    const dialogRef = this.dialog.open(PositionDetailDialog, {
-      autoFocus: false,
-      data: {
-        baseCurrency: this.user?.settings?.baseCurrency,
-        deviceType: this.deviceType,
-        locale: this.user?.settings?.locale,
-        symbol: aSymbol
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
+  private openPositionDialog({ symbol }: { symbol: string }) {
+    this.userService
+      .get()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
+      .subscribe((user) => {
+        this.user = user;
+
+        const dialogRef = this.dialog.open(PositionDetailDialog, {
+          autoFocus: false,
+          data: {
+            symbol,
+            baseCurrency: this.user?.settings?.baseCurrency,
+            deviceType: this.deviceType,
+            locale: this.user?.settings?.locale
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
       });
   }
 

@@ -1,4 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -12,7 +15,7 @@ import {
 import { ToggleOption } from '@ghostfolio/common/types';
 import { AssetClass } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -51,6 +54,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     >;
   };
   public positionsArray: PortfolioPosition[];
+  public routeQueryParams: Subscription;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -69,9 +73,22 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService
-  ) {}
+  ) {
+    this.routeQueryParams = route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (params['positionDetailDialog'] && params['symbol']) {
+          this.openPositionDialog({
+            symbol: params['symbol']
+          });
+        }
+      });
+  }
 
   /**
    * Initializes the controller
@@ -265,5 +282,33 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private openPositionDialog({ symbol }: { symbol: string }) {
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        this.user = user;
+
+        const dialogRef = this.dialog.open(PositionDetailDialog, {
+          autoFocus: false,
+          data: {
+            symbol,
+            baseCurrency: this.user?.settings?.baseCurrency,
+            deviceType: this.deviceType,
+            locale: this.user?.settings?.locale
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
+      });
   }
 }
