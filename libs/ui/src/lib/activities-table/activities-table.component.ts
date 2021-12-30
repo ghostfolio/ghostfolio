@@ -30,14 +30,12 @@ const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
 const SEARCH_STRING_SEPARATOR = ',';
 
 @Component({
-  selector: 'gf-transactions-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './transactions-table.component.html',
-  styleUrls: ['./transactions-table.component.scss']
+  selector: 'gf-activities-table',
+  styleUrls: ['./activities-table.component.scss'],
+  templateUrl: './activities-table.component.html'
 })
-export class TransactionsTableComponent
-  implements OnChanges, OnDestroy, OnInit
-{
+export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateOrder: boolean;
@@ -123,8 +121,6 @@ export class TransactionsTableComponent
     this.searchInput.nativeElement.value = '';
     this.searchControl.setValue(null);
   }
-
-  public ngOnInit() {}
 
   public ngOnChanges() {
     this.displayedColumns = [

@@ -2,7 +2,7 @@
   <div class="row mb-3">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>Transactions</h3>
-      <gf-transactions-table
+      <gf-activities-table
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
         [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
@@ -15,7 +15,7 @@
         (transactionDeleted)="onDeleteTransaction($event)"
         (transactionToClone)="onCloneTransaction($event)"
         (transactionToUpdate)="onUpdateTransaction($event)"
-      ></gf-transactions-table>
+      ></gf-activities-table>
     </div>
   </div>
 

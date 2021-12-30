@@ -9,17 +9,17 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
-import { TransactionsTableComponent } from './transactions-table.component';
+import { ActivitiesTableComponent } from './activities-table.component';
 
 @NgModule({
-  declarations: [TransactionsTableComponent],
-  exports: [TransactionsTableComponent],
+  declarations: [ActivitiesTableComponent],
+  exports: [ActivitiesTableComponent],
   imports: [
     CommonModule,
     GfNoTransactionsInfoModule,
@@ -37,7 +37,6 @@ import { TransactionsTableComponent } from './transactions-table.component';
     ReactiveFormsModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfTransactionsTableModule {}
+export class GfActivitiesTableModule {}

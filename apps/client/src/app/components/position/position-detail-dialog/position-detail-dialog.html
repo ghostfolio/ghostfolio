@@ -125,7 +125,7 @@
     </div>
   </div>
 
-  <gf-transactions-table
+  <gf-activities-table
     *ngIf="orders?.length > 0"
     [baseCurrency]="data.baseCurrency"
     [deviceType]="data.deviceType"
@@ -137,7 +137,7 @@
     [showActions]="false"
     [showSymbolColumn]="false"
     [transactions]="orders"
-  ></gf-transactions-table>
+  ></gf-activities-table>
 </div>
 
 <gf-dialog-footer
