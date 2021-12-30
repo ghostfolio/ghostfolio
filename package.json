@@ -21,7 +21,7 @@
     "database:gui": "prisma studio",
     "database:migrate": "prisma migrate deploy",
     "database:push": "prisma db push",
-    "database:seed": "prisma db seed --preview-feature",
+    "database:seed": "prisma db seed",
     "database:setup": "yarn database:push && yarn database:seed",
     "dep-graph": "nx dep-graph",
     "e2e": "ng e2e",
