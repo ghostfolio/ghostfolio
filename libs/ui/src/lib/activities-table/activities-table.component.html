@@ -230,14 +230,14 @@
       <button
         class="mx-1 no-min-width px-2"
         mat-button
-        [matMenuTriggerFor]="transactionsMenu"
+        [matMenuTriggerFor]="activitiesMenu"
         (click)="$event.stopPropagation()"
       >
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
-      <mat-menu #transactionsMenu="matMenu" xPosition="before">
+      <mat-menu #activitiesMenu="matMenu" xPosition="before">
         <button
-          *ngIf="hasPermissionToImportOrders"
+          *ngIf="hasPermissionToImportActivities"
           class="align-items-center d-flex"
           mat-menu-item
           (click)="onImport()"
@@ -259,19 +259,19 @@
       <button
         class="mx-1 no-min-width px-2"
         mat-button
-        [matMenuTriggerFor]="transactionMenu"
+        [matMenuTriggerFor]="activityMenu"
         (click)="$event.stopPropagation()"
       >
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
-      <mat-menu #transactionMenu="matMenu" xPosition="before">
-        <button i18n mat-menu-item (click)="onUpdateTransaction(element)">
+      <mat-menu #activityMenu="matMenu" xPosition="before">
+        <button i18n mat-menu-item (click)="onUpdateActivity(element)">
           Edit
         </button>
-        <button i18n mat-menu-item (click)="onCloneTransaction(element)">
+        <button i18n mat-menu-item (click)="onCloneActivity(element)">
           Clone
         </button>
-        <button i18n mat-menu-item (click)="onDeleteTransaction(element.id)">
+        <button i18n mat-menu-item (click)="onDeleteActivity(element.id)">
           Delete
         </button>
       </mat-menu>
@@ -305,7 +305,7 @@
 
 <div
   *ngIf="
-    dataSource.data.length === 0 && hasPermissionToCreateOrder && !isLoading
+    dataSource.data.length === 0 && hasPermissionToCreateActivity && !isLoading
   "
   class="p-3 text-center"
 >
