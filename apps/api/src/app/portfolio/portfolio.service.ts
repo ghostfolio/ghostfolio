@@ -662,7 +662,9 @@ export class PortfolioService {
           grossPerformancePercentage:
             position.grossPerformancePercentage?.toNumber() ?? null,
           investment: new Big(position.investment).toNumber(),
-          marketState: dataProviderResponses[position.symbol].marketState,
+          marketState:
+            dataProviderResponses[position.symbol]?.marketState ??
+            MarketState.delayed,
           name: symbolProfileMap[position.symbol].name,
           netPerformance: position.netPerformance?.toNumber() ?? null,
           netPerformancePercentage:
