@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hid the data provider warning while loading
 - Fixed an exception with the market state caused by a failed data provider request
+- Fixed an exception in the portfolio position endpoint
 - Fixed the reload of the position detail dialog (with query parameters)
 
 ## 1.98.0 - 29.12.2021
