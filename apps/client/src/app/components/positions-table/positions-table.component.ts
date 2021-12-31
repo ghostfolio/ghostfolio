@@ -9,16 +9,13 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
+import { Router } from '@angular/router';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 import { AssetClass, Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-positions-table',
@@ -48,21 +45,7 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.routeQueryParams = route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (params['positionDetailDialog'] && params['symbol']) {
-          this.openPositionDialog({
-            symbol: params['symbol']
-          });
-        }
-      });
-  }
+  public constructor(private router: Router) {}
 
   public ngOnInit() {}
 
@@ -103,27 +86,6 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
     });
-  }
-
-  public openPositionDialog({ symbol }: { symbol: string }): void {
-    const dialogRef = this.dialog.open(PositionDetailDialog, {
-      autoFocus: false,
-      data: {
-        symbol,
-        baseCurrency: this.baseCurrency,
-        deviceType: this.deviceType,
-        locale: this.locale
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
   }
 
   public ngOnDestroy() {
