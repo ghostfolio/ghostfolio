@@ -3,12 +3,15 @@
     <div
       class="flex-grow-1 status text-muted text-right"
       [title]="
-        hasError
+        hasError && !isLoading
           ? 'Sorry! Our data provider partner is experiencing the hiccups.'
           : ''
       "
     >
-      <ion-icon *ngIf="hasError" name="alert-circle-outline"></ion-icon>
+      <ion-icon
+        *ngIf="hasError && !isLoading"
+        name="alert-circle-outline"
+      ></ion-icon>
     </div>
     <div *ngIf="isLoading" class="align-items-center d-flex">
       <ngx-skeleton-loader
