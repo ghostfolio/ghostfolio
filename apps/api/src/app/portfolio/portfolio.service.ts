@@ -447,17 +447,17 @@ export class PortfolioService {
       // Convert investment, gross and net performance to currency of user
       const userCurrency = this.request.user.Settings.currency;
       const investment = this.exchangeRateDataService.toCurrency(
-        position.investment.toNumber(),
+        position.investment?.toNumber(),
         currency,
         userCurrency
       );
       const grossPerformance = this.exchangeRateDataService.toCurrency(
-        position.grossPerformance.toNumber(),
+        position.grossPerformance?.toNumber(),
         currency,
         userCurrency
       );
       const netPerformance = this.exchangeRateDataService.toCurrency(
-        position.netPerformance.toNumber(),
+        position.netPerformance?.toNumber(),
         currency,
         userCurrency
       );
