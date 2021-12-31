@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="mb-5 row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>Changelog</h3>
+      <mat-card class="changelog">
+        <mat-card-content>
+          <markdown [src]="'assets/CHANGELOG.md'"></markdown>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h3 class="mb-3 text-center" i18n>License</h3>
+      <mat-card>
+        <mat-card-content>
+          <markdown [src]="'assets/LICENSE'"></markdown>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

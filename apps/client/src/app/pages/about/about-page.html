@@ -149,73 +149,23 @@
     </div>
   </div>
 
-  <div *ngIf="hasPermissionForBlog" class="mb-5 row">
-    <div class="col">
-      <h3 class="mb-3 text-center" i18n>Blog</h3>
-      <mat-card class="blog-container">
-        <mat-card-content>
-          <div class="container p-0">
-            <div class="flex-nowrap mb-3 no-gutters row">
-              <a
-                class="d-flex w-100"
-                [routerLink]="['/en', 'blog', '2021', '07', 'hello-ghostfolio']"
-              >
-                <div class="flex-grow-1">
-                  <div class="h6 m-0 text-truncate">Hello Ghostfolio</div>
-                  <div class="d-flex text-muted">31.07.2021</div>
-                </div>
-                <div class="align-items-center d-flex">
-                  <ion-icon
-                    class="chevron text-muted"
-                    name="chevron-forward-outline"
-                    size="small"
-                  ></ion-icon>
-                </div>
-              </a>
-            </div>
-            <div class="flex-nowrap no-gutters row">
-              <a
-                class="d-flex w-100"
-                [routerLink]="['/de', 'blog', '2021', '07', 'hallo-ghostfolio']"
-              >
-                <div class="flex-grow-1">
-                  <div class="h6 m-0 text-truncate">Hallo Ghostfolio</div>
-                  <div class="d-flex text-muted">31.07.2021</div>
-                </div>
-                <div class="align-items-center d-flex">
-                  <ion-icon
-                    class="chevron text-muted"
-                    name="chevron-forward-outline"
-                    size="small"
-                  ></ion-icon>
-                </div>
-              </a>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
-  <div class="mb-5 row">
-    <div class="col">
-      <h3 class="mb-3 text-center" i18n>Changelog</h3>
-      <mat-card class="changelog">
-        <mat-card-content>
-          <markdown [src]="'assets/CHANGELOG.md'"></markdown>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
   <div class="row">
-    <div class="col">
-      <h3 class="mb-3 text-center" i18n>License</h3>
-      <mat-card>
-        <mat-card-content>
-          <markdown [src]="'assets/LICENSE'"></markdown>
-        </mat-card-content>
-      </mat-card>
+    <div *ngIf="hasPermissionForBlog" class="col-md-6 col-xs-12 my-2">
+      <a class="py-2 w-100" i18n mat-stroked-button [routerLink]="['/blog']"
+        >Blog</a
+      >
+    </div>
+    <div
+      class="col-md-6 col-xs-12 my-2"
+      [ngClass]="{ 'offset-md-3': !hasPermissionForBlog }"
+    >
+      <a
+        class="py-2 w-100"
+        i18n
+        mat-stroked-button
+        [routerLink]="['/about', 'changelog']"
+        >Changelog & License</a
+      >
     </div>
   </div>
 </div>

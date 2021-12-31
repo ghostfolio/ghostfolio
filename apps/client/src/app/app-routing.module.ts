@@ -10,6 +10,13 @@ const routes: Routes = [
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   },
   {
+    path: 'about/changelog',
+    loadChildren: () =>
+      import('./pages/about/changelog/changelog-page.module').then(
+        (m) => m.ChangelogPageModule
+      )
+  },
+  {
     path: 'account',
     loadChildren: () =>
       import('./pages/account/account-page.module').then(
@@ -32,6 +39,11 @@ const routes: Routes = [
     path: 'auth',
     loadChildren: () =>
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
+  },
+  {
+    path: 'blog',
+    loadChildren: () =>
+      import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
   },
   {
     path: 'de/blog/2021/07/hallo-ghostfolio',
