@@ -6,6 +6,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
+  DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
@@ -23,7 +24,6 @@ import { subDays } from 'date-fns';
 @Injectable()
 export class InfoService {
   private static CACHE_KEY_STATISTICS = 'STATISTICS';
-  private static DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -196,7 +196,7 @@ export class InfoService {
 
   private getDemoAuthToken() {
     return this.jwtService.sign({
-      id: InfoService.DEMO_USER_ID
+      id: DEMO_USER_ID
     });
   }
 

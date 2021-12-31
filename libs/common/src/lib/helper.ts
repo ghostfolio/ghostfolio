@@ -3,8 +3,6 @@ import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
 import { ghostfolioScraperApiSymbolPrefix } from './config';
 
-export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
-
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }
