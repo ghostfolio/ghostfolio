@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an exception with the market state caused by a failed data provider request
 - Fixed an exception in the portfolio position endpoint
 - Fixed the reload of the position detail dialog (with query parameters)
+- Fixed the missing mapping for Russia in the data enhancer for symbol profile data via _Trackinsight_
 
 ## 1.98.0 - 29.12.2021
 

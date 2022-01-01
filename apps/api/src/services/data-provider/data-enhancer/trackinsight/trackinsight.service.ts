@@ -7,6 +7,9 @@ const getJSON = bent('json');
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://data.trackinsight.com/holdings';
   private static countries = require('countries-list/dist/countries.json');
+  private static countriesMapping = {
+    'Russian Federation': 'Russia'
+  };
   private static sectorsMapping = {
     'Consumer Discretionary': 'Consumer Cyclical',
     'Consumer Defensive': 'Consumer Staples',
@@ -45,7 +48,11 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         for (const [key, country] of Object.entries<any>(
           TrackinsightDataEnhancerService.countries
         )) {
-          if (country.name === name) {
+          if (
+            country.name === name ||
+            country.name ===
+              TrackinsightDataEnhancerService.countriesMapping[name]
+          ) {
             countryCode = key;
             break;
           }
