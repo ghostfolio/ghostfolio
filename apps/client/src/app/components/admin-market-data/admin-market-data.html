@@ -38,6 +38,13 @@
                   >
                     Gather Data
                   </button>
+                  <button
+                    i18n
+                    mat-menu-item
+                    (click)="onGatherProfileDataBySymbol({dataSource: item.dataSource, symbol: item.symbol})"
+                  >
+                    Gather Profile Data
+                  </button>
                 </mat-menu>
               </td>
             </tr>

@@ -96,6 +96,29 @@ export class AdminController {
     return;
   }
 
+  @Post('gather/profile-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherProfileDataForSymbol(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    this.dataGatheringService.gatherProfileData([{ dataSource, symbol }]);
+
+    return;
+  }
+
   @Post('gather/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async gatherSymbol(

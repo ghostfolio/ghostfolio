@@ -20,6 +20,19 @@ export class AdminService {
     return this.http.post<void>(`/api/admin/gather/profile-data`, {});
   }
 
+  public gatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http.post<void>(
+      `/api/admin/gather/profile-data/${dataSource}/${symbol}`,
+      {}
+    );
+  }
+
   public gatherSymbol({
     dataSource,
     date,
