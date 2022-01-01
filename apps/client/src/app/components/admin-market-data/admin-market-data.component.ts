@@ -43,6 +43,19 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     this.fetchAdminMarketData();
   }
 
+  public onGatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.adminService
+      .gatherProfileDataBySymbol({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
   public onGatherSymbol({
     dataSource,
     symbol
