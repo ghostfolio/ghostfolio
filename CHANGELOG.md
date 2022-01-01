@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the portfolio analysis page: show the y-axis and extend the chart in relation to the days in market
 - Restructured the about page
 - Start refactoring _transactions_ to _activities_
 - Refactored the demo user id
