@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import { User } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { ToggleOption } from '@ghostfolio/common/types';
+import { differenceInDays } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -16,28 +16,10 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
-  public accounts: {
-    [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
-  };
-  public continents: {
-    [code: string]: { name: string; value: number };
-  };
-  public countries: {
-    [code: string]: { name: string; value: number };
-  };
+  public daysInMarket: number;
   public deviceType: string;
   public hasImpersonationId: boolean;
-  public period = 'current';
-  public periodOptions: ToggleOption[] = [
-    { label: 'Initial', value: 'original' },
-    { label: 'Current', value: 'current' }
-  ];
   public investments: InvestmentItem[];
-  public portfolioPositions: { [symbol: string]: PortfolioPosition };
-  public positions: { [symbol: string]: any };
-  public sectors: {
-    [name: string]: { name: string; value: number };
-  };
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -69,8 +51,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchInvestments()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.investments = response;
+      .subscribe(({ firstOrderDate, investments }) => {
+        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
+        this.investments = investments;
 
         this.changeDetectorRef.markForCheck();
       });

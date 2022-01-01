@@ -8,6 +8,7 @@ import { Export } from './export.interface';
 import { InfoItem } from './info-item.interface';
 import { PortfolioChart } from './portfolio-chart.interface';
 import { PortfolioDetails } from './portfolio-details.interface';
+import { PortfolioInvestments } from './portfolio-investments.interface';
 import { PortfolioItem } from './portfolio-item.interface';
 import { PortfolioOverview } from './portfolio-overview.interface';
 import { PortfolioPerformance } from './portfolio-performance.interface';
@@ -33,6 +34,7 @@ export {
   InfoItem,
   PortfolioChart,
   PortfolioDetails,
+  PortfolioInvestments,
   PortfolioItem,
   PortfolioOverview,
   PortfolioPerformance,

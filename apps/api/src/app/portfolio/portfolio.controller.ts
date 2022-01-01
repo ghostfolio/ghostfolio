@@ -10,12 +10,12 @@ import { baseCurrency } from '@ghostfolio/common/config';
 import {
   PortfolioChart,
   PortfolioDetails,
+  PortfolioInvestments,
   PortfolioPerformance,
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
@@ -47,42 +47,6 @@ export class PortfolioController {
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
-
-  @Get('investments')
-  @UseGuards(AuthGuard('jwt'))
-  public async findAll(
-    @Headers('impersonation-id') impersonationId: string,
-    @Res() res: Response
-  ): Promise<InvestmentItem[]> {
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
-    ) {
-      res.status(StatusCodes.FORBIDDEN);
-      return <any>res.json([]);
-    }
-
-    let investments = await this.portfolioService.getInvestments(
-      impersonationId
-    );
-
-    if (
-      impersonationId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      const maxInvestment = investments.reduce(
-        (investment, item) => Math.max(investment, item.investment),
-        1
-      );
-
-      investments = investments.map((item) => ({
-        date: item.date,
-        investment: item.investment / maxInvestment
-      }));
-    }
-
-    return <any>res.json(investments);
-  }
 
   @Get('chart')
   @UseGuards(AuthGuard('jwt'))
@@ -198,6 +162,42 @@ export class PortfolioController {
     }
 
     return <any>res.json({ accounts, hasError, holdings });
+  }
+
+  @Get('investments')
+  @UseGuards(AuthGuard('jwt'))
+  public async getInvestments(
+    @Headers('impersonation-id') impersonationId: string,
+    @Res() res: Response
+  ): Promise<PortfolioInvestments> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      res.status(StatusCodes.FORBIDDEN);
+      return <any>res.json({});
+    }
+
+    let investments = await this.portfolioService.getInvestments(
+      impersonationId
+    );
+
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
+      const maxInvestment = investments.reduce(
+        (investment, item) => Math.max(investment, item.investment),
+        1
+      );
+
+      investments = investments.map((item) => ({
+        date: item.date,
+        investment: item.investment / maxInvestment
+      }));
+    }
+
+    return <any>res.json({ firstOrderDate: investments[0]?.date, investments });
   }
 
   @Get('performance')

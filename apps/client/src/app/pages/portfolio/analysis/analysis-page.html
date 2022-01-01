@@ -11,6 +11,8 @@
         <mat-card-content>
           <gf-investment-chart
             class="h-100"
+            [daysInMarket]="daysInMarket"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [investments]="investments"
           ></gf-investment-chart>
         </mat-card-content>
