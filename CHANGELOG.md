@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Exposed the profile data gathering by symbol as an endpoint
+
 ### Changed
 
 - Improved the portfolio analysis page: show the y-axis and extend the chart in relation to the days in market
