@@ -55,7 +55,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty } from 'lodash';
+import { isEmpty, sortBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -150,11 +150,32 @@ export class PortfolioService {
       return [];
     }
 
-    return portfolioCalculator.getInvestments().map((item) => {
+    const investments = portfolioCalculator.getInvestments().map((item) => {
       return {
         date: item.date,
         investment: item.investment.toNumber()
       };
+    });
+
+    // Add investment of today
+    const investmentOfToday = investments.filter((investment) => {
+      return investment.date === format(new Date(), DATE_FORMAT);
+    });
+
+    if (investmentOfToday.length <= 0) {
+      const pastInvestments = investments.filter((investment) => {
+        return isBefore(parseDate(investment.date), new Date());
+      });
+      const lastInvestment = pastInvestments[pastInvestments.length - 1];
+
+      investments.push({
+        date: format(new Date(), DATE_FORMAT),
+        investment: lastInvestment?.investment ?? 0
+      });
+    }
+
+    return sortBy(investments, (investment) => {
+      return investment.date;
     });
   }
 

@@ -5,7 +5,6 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
@@ -23,13 +22,13 @@ import {
   InfoItem,
   PortfolioChart,
   PortfolioDetails,
+  PortfolioInvestments,
   PortfolioPerformance,
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary,
   User
 } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DataSource, Order as OrderModel } from '@prisma/client';
@@ -124,6 +123,18 @@ export class DataService {
     return info;
   }
 
+  public fetchInvestments(): Observable<PortfolioInvestments> {
+    return this.http.get<any>('/api/portfolio/investments').pipe(
+      map((response) => {
+        if (response.firstOrderDate) {
+          response.firstOrderDate = parseISO(response.firstOrderDate);
+        }
+
+        return response;
+      })
+    );
+  }
+
   public fetchSymbolItem({
     dataSource,
     includeHistoricalData = false,
@@ -168,10 +179,6 @@ export class DataService {
         return data;
       })
     );
-  }
-
-  public fetchInvestments() {
-    return this.http.get<InvestmentItem[]>('/api/portfolio/investments');
   }
 
   public fetchPortfolioDetails(aParams: { [param: string]: any }) {

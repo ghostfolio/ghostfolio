@@ -7,7 +7,6 @@ import { InvestmentChartComponent } from './investment-chart.component';
 @NgModule({
   declarations: [InvestmentChartComponent],
   exports: [InvestmentChartComponent],
-  imports: [CommonModule, NgxSkeletonLoaderModule],
-  providers: []
+  imports: [CommonModule, NgxSkeletonLoaderModule]
 })
 export class GfInvestmentChartModule {}

@@ -10,6 +10,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { primaryColorRgb } from '@ghostfolio/common/config';
+import { parseDate } from '@ghostfolio/common/helper';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import {
   Chart,
@@ -19,7 +20,7 @@ import {
   PointElement,
   TimeScale
 } from 'chart.js';
-import { addMonths, isAfter, parseISO, subMonths } from 'date-fns';
+import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -27,8 +28,10 @@ import { addMonths, isAfter, parseISO, subMonths } from 'date-fns';
   templateUrl: './investment-chart.component.html',
   styleUrls: ['./investment-chart.component.scss']
 })
-export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
+export class InvestmentChartComponent implements OnChanges, OnDestroy {
+  @Input() daysInMarket: number;
   @Input() investments: InvestmentItem[];
+  @Input() isInPercent = false;
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -45,8 +48,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
     );
   }
 
-  public ngOnInit() {}
-
   public ngOnChanges() {
     if (this.investments) {
       this.initialize();
@@ -61,19 +62,25 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
     this.isLoading = true;
 
     if (this.investments?.length > 0) {
-      // Extend chart by three months (before)
+      // Extend chart by 5% of days in market (before)
       const firstItem = this.investments[0];
       this.investments.unshift({
         ...firstItem,
-        date: subMonths(parseISO(firstItem.date), 3).toISOString(),
+        date: subDays(
+          parseISO(firstItem.date),
+          this.daysInMarket * 0.05 || 90
+        ).toISOString(),
         investment: 0
       });
 
-      // Extend chart by three months (after)
+      // Extend chart by 5% of days in market (after)
       const lastItem = this.investments[this.investments.length - 1];
       this.investments.push({
         ...lastItem,
-        date: addMonths(new Date(), 3).toISOString()
+        date: addDays(
+          parseDate(lastItem.date),
+          this.daysInMarket * 0.05 || 90
+        ).toISOString()
       });
     }
 
@@ -136,12 +143,26 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy, OnInit {
                 }
               },
               y: {
-                display: false,
+                display: !this.isInPercent,
                 grid: {
                   display: false
                 },
                 ticks: {
-                  display: false
+                  display: true,
+                  callback: (tickValue, index, ticks) => {
+                    if (index === 0 || index === ticks.length - 1) {
+                      // Only print last and first legend entry
+                      if (typeof tickValue === 'number') {
+                        return tickValue.toFixed(2);
+                      }
+
+                      return tickValue;
+                    }
+
+                    return '';
+                  },
+                  mirror: true,
+                  z: 1
                 }
               }
             }
