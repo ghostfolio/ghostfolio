@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restructured the about page
 - Start refactoring _transactions_ to _activities_
 - Refactored the demo user id
 - Upgraded `angular` from version `13.0.2` to `13.1.1`
