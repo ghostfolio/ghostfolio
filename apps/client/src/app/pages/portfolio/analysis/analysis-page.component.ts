@@ -2,9 +2,10 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { Position, User } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { differenceInDays } from 'date-fns';
+import { sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -16,10 +17,12 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  public bottom3: Position[];
   public daysInMarket: number;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
+  public top3: Position[];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -54,6 +57,26 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .subscribe(({ firstOrderDate, investments }) => {
         this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
         this.investments = investments;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
+      .fetchPositions({ range: 'max' })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ positions }) => {
+        const positionsSorted = sortBy(
+          positions,
+          'netPerformancePercentage'
+        ).reverse();
+
+        this.top3 = positionsSorted.slice(0, 3);
+
+        if (positions?.length > 3) {
+          this.bottom3 = positionsSorted.slice(-3).reverse();
+        } else {
+          this.bottom3 = [];
+        }
 
         this.changeDetectorRef.markForCheck();
       });
