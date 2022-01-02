@@ -5,7 +5,7 @@
       <mat-card class="mb-3">
         <mat-card-header>
           <mat-card-title class="align-items-center d-flex" i18n
-            >Timeline</mat-card-title
+            >Investment Timeline</mat-card-title
           >
         </mat-card-header>
         <mat-card-content>
@@ -15,6 +15,84 @@
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [investments]="investments"
           ></gf-investment-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header>
+          <mat-card-title class="align-items-center d-flex" i18n
+            >Top 3</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngFor="let position of top3; let i = index" class="d-flex py-1">
+            <div class="flex-grow-1 mr-2 text-truncate">
+              {{ i + 1 }}. {{ position.name }}
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [colorizeSign]="true"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="position.netPerformancePercentage"
+              ></gf-value>
+            </div>
+          </div>
+          <div>
+            <ngx-skeleton-loader
+              *ngIf="!top3"
+              animation="pulse"
+              [theme]="{
+                height: '1.5rem',
+                width: '100%'
+              }"
+            ></ngx-skeleton-loader>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <mat-card class="mb-3">
+        <mat-card-header>
+          <mat-card-title class="align-items-center d-flex" i18n
+            >Bottom 3</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <div
+            *ngFor="let position of bottom3; let i = index"
+            class="d-flex py-1"
+          >
+            <div class="flex-grow-1 mr-2 text-truncate">
+              {{ i + 1 }}. {{ position.name }}
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [colorizeSign]="true"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="position.netPerformancePercentage"
+              ></gf-value>
+            </div>
+          </div>
+          <div>
+            <ngx-skeleton-loader
+              *ngIf="!bottom3"
+              animation="pulse"
+              [theme]="{
+                height: '1.5rem',
+                width: '100%'
+              }"
+            ></ngx-skeleton-loader>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
