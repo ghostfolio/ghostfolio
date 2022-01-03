@@ -62,7 +62,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['createDialog'] && this.hasPermissionToCreateOrder) {
+        if (params['createDialog']) {
           this.openCreateTransactionDialog();
         } else if (params['editDialog']) {
           if (this.transactions) {

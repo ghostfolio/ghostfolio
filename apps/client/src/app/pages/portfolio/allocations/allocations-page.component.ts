@@ -12,6 +12,7 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ToggleOption } from '@ghostfolio/common/types';
 import { AssetClass } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -36,6 +37,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   };
   public deviceType: string;
   public hasImpersonationId: boolean;
+  public hasPermissionToCreateOrder: boolean;
   public period = 'current';
   public periodOptions: ToggleOption[] = [
     { label: 'Initial', value: 'original' },
@@ -119,6 +121,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateOrder = hasPermission(
+            this.user.permissions,
+            permissions.createOrder
+          );
 
           this.changeDetectorRef.markForCheck();
         }

@@ -26,6 +26,7 @@ import { Subject, Subscription } from 'rxjs';
 export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
+  @Input() hasPermissionToCreateOrder: boolean;
   @Input() locale: string;
   @Input() positions: PortfolioPosition[];
 
