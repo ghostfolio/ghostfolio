@@ -8,6 +8,7 @@ import {
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { defaultDateRangeOptions } from '@ghostfolio/common/config';
 import { PortfolioPerformance, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -25,6 +26,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasError: boolean;
   public hasImpersonationId: boolean;
+  public hasPermissionToCreateOrder: boolean;
   public historicalDataItems: LineChartItem[];
   public isAllTimeHigh: boolean;
   public isAllTimeLow: boolean;
@@ -50,6 +52,11 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateOrder = hasPermission(
+            this.user.permissions,
+            permissions.createOrder
+          );
 
           this.changeDetectorRef.markForCheck();
         }

@@ -23,7 +23,10 @@
             [range]="range"
           ></gf-position>
         </ng-container>
-        <div *ngIf="!hasPositions" class="p-3 text-center">
+        <div
+          *ngIf="hasPermissionToCreateOrder && !hasPositions"
+          class="p-3 text-center"
+        >
           <gf-no-transactions-info-indicator
             [hasBorder]="false"
           ></gf-no-transactions-info-indicator>
