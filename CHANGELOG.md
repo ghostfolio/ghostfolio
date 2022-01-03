@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the _Top 3_ and _Bottom 3_ performers to the analysis page
 
+### Fixed
+
+- Fixed the routing of the create activity dialog
+
 ## 1.99.0 - 01.01.2022
 
 ### Added
