@@ -1,10 +1,11 @@
-import { parseDate, resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
   differenceInCalendarDays,
   endOfDay,
+  format,
   isBefore,
   isSameDay
 } from 'date-fns';
@@ -67,15 +68,202 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
     case 'VTI':
-      return {
-        marketPrice: new Big('144.38')
-          .plus(
-            new Big('0.08').mul(
-              differenceInCalendarDays(date, parseDate('2019-02-01'))
-            )
-          )
-          .toNumber()
-      };
+      switch (format(date, DATE_FORMAT)) {
+        case '2019-01-01':
+          return { marketPrice: 144.38 };
+        case '2019-02-01':
+          return { marketPrice: 144.38 };
+        case '2019-03-01':
+          return { marketPrice: 146.62 };
+        case '2019-04-01':
+          return { marketPrice: 149.1 };
+        case '2019-05-01':
+          return { marketPrice: 151.5 };
+        case '2019-06-01':
+          return { marketPrice: 153.98 };
+        case '2019-07-01':
+          return { marketPrice: 156.38 };
+        case '2019-08-01':
+          return { marketPrice: 158.86 };
+        case '2019-08-03':
+          return { marketPrice: 159.02 };
+        case '2019-09-01':
+          return { marketPrice: 161.34 };
+        case '2019-10-01':
+          return { marketPrice: 163.74 };
+        case '2019-11-01':
+          return { marketPrice: 166.22 };
+        case '2019-12-01':
+          return { marketPrice: 168.62 };
+        case '2020-01-01':
+          return { marketPrice: 171.1 };
+        case '2020-02-01':
+          return { marketPrice: 173.58 };
+        case '2020-02-02':
+          return { marketPrice: 173.66 };
+        case '2020-03-01':
+          return { marketPrice: 175.9 };
+        case '2020-04-01':
+          return { marketPrice: 178.38 };
+        case '2020-05-01':
+          return { marketPrice: 180.78 };
+        case '2020-06-01':
+          return { marketPrice: 183.26 };
+        case '2020-07-01':
+          return { marketPrice: 185.66 };
+        case '2020-08-01':
+          return { marketPrice: 188.14 };
+        case '2020-08-02':
+          return { marketPrice: 188.22 };
+        case '2020-08-03':
+          return { marketPrice: 188.3 };
+        case '2020-09-01':
+          return { marketPrice: 190.62 };
+        case '2020-10-01':
+          return { marketPrice: 193.02 };
+        case '2020-11-01':
+          return { marketPrice: 195.5 };
+        case '2020-12-01':
+          return { marketPrice: 197.9 };
+        case '2021-01-01':
+          return { marketPrice: 200.38 };
+        case '2021-02-01':
+          return { marketPrice: 202.86 };
+        case '2021-03-01':
+          return { marketPrice: 205.1 };
+        case '2021-04-01':
+          return { marketPrice: 207.58 };
+        case '2021-05-01':
+          return { marketPrice: 209.98 };
+        case '2021-06-01':
+          return { marketPrice: 212.46 };
+        case '2021-06-02':
+          return { marketPrice: 212.54 };
+        case '2021-06-03':
+          return { marketPrice: 212.62 };
+        case '2021-06-04':
+          return { marketPrice: 212.7 };
+        case '2021-06-05':
+          return { marketPrice: 212.78 };
+        case '2021-06-06':
+          return { marketPrice: 212.86 };
+        case '2021-06-07':
+          return { marketPrice: 212.94 };
+        case '2021-06-08':
+          return { marketPrice: 213.02 };
+        case '2021-06-09':
+          return { marketPrice: 213.1 };
+        case '2021-06-10':
+          return { marketPrice: 213.18 };
+        case '2021-06-11':
+          return { marketPrice: 213.26 };
+        case '2021-06-12':
+          return { marketPrice: 213.34 };
+        case '2021-06-13':
+          return { marketPrice: 213.42 };
+        case '2021-06-14':
+          return { marketPrice: 213.5 };
+        case '2021-06-15':
+          return { marketPrice: 213.58 };
+        case '2021-06-16':
+          return { marketPrice: 213.66 };
+        case '2021-06-17':
+          return { marketPrice: 213.74 };
+        case '2021-06-18':
+          return { marketPrice: 213.82 };
+        case '2021-06-19':
+          return { marketPrice: 213.9 };
+        case '2021-06-20':
+          return { marketPrice: 213.98 };
+        case '2021-06-21':
+          return { marketPrice: 214.06 };
+        case '2021-06-22':
+          return { marketPrice: 214.14 };
+        case '2021-06-23':
+          return { marketPrice: 214.22 };
+        case '2021-06-24':
+          return { marketPrice: 214.3 };
+        case '2021-06-25':
+          return { marketPrice: 214.38 };
+        case '2021-06-26':
+          return { marketPrice: 214.46 };
+        case '2021-06-27':
+          return { marketPrice: 214.54 };
+        case '2021-06-28':
+          return { marketPrice: 214.62 };
+        case '2021-06-29':
+          return { marketPrice: 214.7 };
+        case '2021-06-30':
+          return { marketPrice: 214.78 };
+        case '2021-07-01':
+          return { marketPrice: 214.86 };
+        case '2021-07-02':
+          return { marketPrice: 214.94 };
+        case '2021-07-03':
+          return { marketPrice: 215.02 };
+        case '2021-07-04':
+          return { marketPrice: 215.1 };
+        case '2021-07-05':
+          return { marketPrice: 215.18 };
+        case '2021-07-06':
+          return { marketPrice: 215.26 };
+        case '2021-07-07':
+          return { marketPrice: 215.34 };
+        case '2021-07-08':
+          return { marketPrice: 215.42 };
+        case '2021-07-09':
+          return { marketPrice: 215.5 };
+        case '2021-07-10':
+          return { marketPrice: 215.58 };
+        case '2021-07-11':
+          return { marketPrice: 215.66 };
+        case '2021-07-12':
+          return { marketPrice: 215.74 };
+        case '2021-07-13':
+          return { marketPrice: 215.82 };
+        case '2021-07-14':
+          return { marketPrice: 215.9 };
+        case '2021-07-15':
+          return { marketPrice: 215.98 };
+        case '2021-07-16':
+          return { marketPrice: 216.06 };
+        case '2021-07-17':
+          return { marketPrice: 216.14 };
+        case '2021-07-18':
+          return { marketPrice: 216.22 };
+        case '2021-07-19':
+          return { marketPrice: 216.3 };
+        case '2021-07-20':
+          return { marketPrice: 216.38 };
+        case '2021-07-21':
+          return { marketPrice: 216.46 };
+        case '2021-07-22':
+          return { marketPrice: 216.54 };
+        case '2021-07-23':
+          return { marketPrice: 216.62 };
+        case '2021-07-24':
+          return { marketPrice: 216.7 };
+        case '2021-07-25':
+          return { marketPrice: 216.78 };
+        case '2021-07-26':
+          return { marketPrice: 216.86 };
+        case '2021-07-27':
+          return { marketPrice: 216.94 };
+        case '2021-07-28':
+          return { marketPrice: 217.02 };
+        case '2021-07-29':
+          return { marketPrice: 217.1 };
+        case '2021-07-30':
+          return { marketPrice: 217.18 };
+        case '2021-07-31':
+          return { marketPrice: 217.26 };
+        case '2021-08-01':
+          return { marketPrice: 217.34 };
+        case '2020-10-24':
+          return { marketPrice: 194.86 };
+        default:
+          return { marketPrice: 0 };
+      }
 
     default:
       return { marketPrice: 0 };
@@ -1645,14 +1833,14 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('498.3'),
           netPerformance: new Big('498.3'),
           investment: new Big('2923.7'),
-          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
+          value: new Big('3422') // 20 * 171.1
         },
         {
           date: '2021-01-01',
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('349.35'),
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         }
       ]);
     });
@@ -1765,14 +1953,14 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('498.3'),
           netPerformance: new Big('398.3'), // 100 fees
           investment: new Big('2923.7'),
-          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
+          value: new Big('3422') // 20 * 171.1
         },
         {
           date: '2021-01-01',
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('199.35'), // 150 fees
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         }
       ]);
     });
@@ -1969,7 +2157,7 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('349.35'),
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         },
         {
           date: '2021-02-01',
@@ -2054,7 +2242,7 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('349.35'),
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         },
         {
           date: '2021-02-01',
@@ -2141,7 +2329,7 @@ describe('PortfolioCalculator', () => {
             grossPerformance: new Big('349.35'),
             netPerformance: new Big('349.35'),
             investment: new Big('652.55'),
-            value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+            value: new Big('1001.9') // 5 * 200.38
           },
           {
             date: '2021-02-01',
