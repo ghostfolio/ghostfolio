@@ -7,9 +7,7 @@ import { HelloGhostfolioPageComponent } from './hello-ghostfolio-page.component'
 
 @NgModule({
   declarations: [HelloGhostfolioPageComponent],
-  exports: [],
   imports: [CommonModule, HelloGhostfolioPageRoutingModule, RouterModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HelloGhostfolioPageModule {}

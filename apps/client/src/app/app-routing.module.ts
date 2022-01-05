@@ -60,6 +60,13 @@ const routes: Routes = [
       ).then((m) => m.HelloGhostfolioPageModule)
   },
   {
+    path: 'en/blog/2022/01/ghostfolio-first-months-in-open-source',
+    loadChildren: () =>
+      import(
+        './pages/blog/2022/01/first-months-in-open-source/first-months-in-open-source-page.module'
+      ).then((m) => m.FirstMonthsInOpenSourcePageModule)
+  },
+  {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)

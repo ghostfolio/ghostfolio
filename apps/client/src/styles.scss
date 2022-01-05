@@ -38,7 +38,7 @@ body {
 
   .blog {
     a {
-      color: rgba(var(--palette-primary-500), 1);
+      color: rgba(var(--palette-primary-500), 1) !important;
       font-weight: 500;
 
       &:hover {
