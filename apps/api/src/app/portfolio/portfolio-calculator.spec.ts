@@ -1,10 +1,11 @@
-import { parseDate, resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
   differenceInCalendarDays,
   endOfDay,
+  format,
   isBefore,
   isSameDay
 } from 'date-fns';
@@ -67,15 +68,202 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
     case 'VTI':
-      return {
-        marketPrice: new Big('144.38')
-          .plus(
-            new Big('0.08').mul(
-              differenceInCalendarDays(date, parseDate('2019-02-01'))
-            )
-          )
-          .toNumber()
-      };
+      switch (format(date, DATE_FORMAT)) {
+        case '2019-01-01':
+          return { marketPrice: 144.38 };
+        case '2019-02-01':
+          return { marketPrice: 144.38 };
+        case '2019-03-01':
+          return { marketPrice: 146.62 };
+        case '2019-04-01':
+          return { marketPrice: 149.1 };
+        case '2019-05-01':
+          return { marketPrice: 151.5 };
+        case '2019-06-01':
+          return { marketPrice: 153.98 };
+        case '2019-07-01':
+          return { marketPrice: 156.38 };
+        case '2019-08-01':
+          return { marketPrice: 158.86 };
+        case '2019-08-03':
+          return { marketPrice: 159.02 };
+        case '2019-09-01':
+          return { marketPrice: 161.34 };
+        case '2019-10-01':
+          return { marketPrice: 163.74 };
+        case '2019-11-01':
+          return { marketPrice: 166.22 };
+        case '2019-12-01':
+          return { marketPrice: 168.62 };
+        case '2020-01-01':
+          return { marketPrice: 171.1 };
+        case '2020-02-01':
+          return { marketPrice: 173.58 };
+        case '2020-02-02':
+          return { marketPrice: 173.66 };
+        case '2020-03-01':
+          return { marketPrice: 175.9 };
+        case '2020-04-01':
+          return { marketPrice: 178.38 };
+        case '2020-05-01':
+          return { marketPrice: 180.78 };
+        case '2020-06-01':
+          return { marketPrice: 183.26 };
+        case '2020-07-01':
+          return { marketPrice: 185.66 };
+        case '2020-08-01':
+          return { marketPrice: 188.14 };
+        case '2020-08-02':
+          return { marketPrice: 188.22 };
+        case '2020-08-03':
+          return { marketPrice: 188.3 };
+        case '2020-09-01':
+          return { marketPrice: 190.62 };
+        case '2020-10-01':
+          return { marketPrice: 193.02 };
+        case '2020-11-01':
+          return { marketPrice: 195.5 };
+        case '2020-12-01':
+          return { marketPrice: 197.9 };
+        case '2021-01-01':
+          return { marketPrice: 200.38 };
+        case '2021-02-01':
+          return { marketPrice: 202.86 };
+        case '2021-03-01':
+          return { marketPrice: 205.1 };
+        case '2021-04-01':
+          return { marketPrice: 207.58 };
+        case '2021-05-01':
+          return { marketPrice: 209.98 };
+        case '2021-06-01':
+          return { marketPrice: 212.46 };
+        case '2021-06-02':
+          return { marketPrice: 212.54 };
+        case '2021-06-03':
+          return { marketPrice: 212.62 };
+        case '2021-06-04':
+          return { marketPrice: 212.7 };
+        case '2021-06-05':
+          return { marketPrice: 212.78 };
+        case '2021-06-06':
+          return { marketPrice: 212.86 };
+        case '2021-06-07':
+          return { marketPrice: 212.94 };
+        case '2021-06-08':
+          return { marketPrice: 213.02 };
+        case '2021-06-09':
+          return { marketPrice: 213.1 };
+        case '2021-06-10':
+          return { marketPrice: 213.18 };
+        case '2021-06-11':
+          return { marketPrice: 213.26 };
+        case '2021-06-12':
+          return { marketPrice: 213.34 };
+        case '2021-06-13':
+          return { marketPrice: 213.42 };
+        case '2021-06-14':
+          return { marketPrice: 213.5 };
+        case '2021-06-15':
+          return { marketPrice: 213.58 };
+        case '2021-06-16':
+          return { marketPrice: 213.66 };
+        case '2021-06-17':
+          return { marketPrice: 213.74 };
+        case '2021-06-18':
+          return { marketPrice: 213.82 };
+        case '2021-06-19':
+          return { marketPrice: 213.9 };
+        case '2021-06-20':
+          return { marketPrice: 213.98 };
+        case '2021-06-21':
+          return { marketPrice: 214.06 };
+        case '2021-06-22':
+          return { marketPrice: 214.14 };
+        case '2021-06-23':
+          return { marketPrice: 214.22 };
+        case '2021-06-24':
+          return { marketPrice: 214.3 };
+        case '2021-06-25':
+          return { marketPrice: 214.38 };
+        case '2021-06-26':
+          return { marketPrice: 214.46 };
+        case '2021-06-27':
+          return { marketPrice: 214.54 };
+        case '2021-06-28':
+          return { marketPrice: 214.62 };
+        case '2021-06-29':
+          return { marketPrice: 214.7 };
+        case '2021-06-30':
+          return { marketPrice: 214.78 };
+        case '2021-07-01':
+          return { marketPrice: 214.86 };
+        case '2021-07-02':
+          return { marketPrice: 214.94 };
+        case '2021-07-03':
+          return { marketPrice: 215.02 };
+        case '2021-07-04':
+          return { marketPrice: 215.1 };
+        case '2021-07-05':
+          return { marketPrice: 215.18 };
+        case '2021-07-06':
+          return { marketPrice: 215.26 };
+        case '2021-07-07':
+          return { marketPrice: 215.34 };
+        case '2021-07-08':
+          return { marketPrice: 215.42 };
+        case '2021-07-09':
+          return { marketPrice: 215.5 };
+        case '2021-07-10':
+          return { marketPrice: 215.58 };
+        case '2021-07-11':
+          return { marketPrice: 215.66 };
+        case '2021-07-12':
+          return { marketPrice: 215.74 };
+        case '2021-07-13':
+          return { marketPrice: 215.82 };
+        case '2021-07-14':
+          return { marketPrice: 215.9 };
+        case '2021-07-15':
+          return { marketPrice: 215.98 };
+        case '2021-07-16':
+          return { marketPrice: 216.06 };
+        case '2021-07-17':
+          return { marketPrice: 216.14 };
+        case '2021-07-18':
+          return { marketPrice: 216.22 };
+        case '2021-07-19':
+          return { marketPrice: 216.3 };
+        case '2021-07-20':
+          return { marketPrice: 216.38 };
+        case '2021-07-21':
+          return { marketPrice: 216.46 };
+        case '2021-07-22':
+          return { marketPrice: 216.54 };
+        case '2021-07-23':
+          return { marketPrice: 216.62 };
+        case '2021-07-24':
+          return { marketPrice: 216.7 };
+        case '2021-07-25':
+          return { marketPrice: 216.78 };
+        case '2021-07-26':
+          return { marketPrice: 216.86 };
+        case '2021-07-27':
+          return { marketPrice: 216.94 };
+        case '2021-07-28':
+          return { marketPrice: 217.02 };
+        case '2021-07-29':
+          return { marketPrice: 217.1 };
+        case '2021-07-30':
+          return { marketPrice: 217.18 };
+        case '2021-07-31':
+          return { marketPrice: 217.26 };
+        case '2021-08-01':
+          return { marketPrice: 217.34 };
+        case '2020-10-24':
+          return { marketPrice: 194.86 };
+        default:
+          return { marketPrice: 0 };
+      }
 
     default:
       return { marketPrice: 0 };
@@ -1645,14 +1833,14 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('498.3'),
           netPerformance: new Big('498.3'),
           investment: new Big('2923.7'),
-          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
+          value: new Big('3422') // 20 * 171.1
         },
         {
           date: '2021-01-01',
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('349.35'),
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         }
       ]);
     });
@@ -1765,14 +1953,14 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('498.3'),
           netPerformance: new Big('398.3'), // 100 fees
           investment: new Big('2923.7'),
-          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
+          value: new Big('3422') // 20 * 171.1
         },
         {
           date: '2021-01-01',
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('199.35'), // 150 fees
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         }
       ]);
     });
@@ -1808,203 +1996,203 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('0'),
           netPerformance: new Big('0'),
           investment: new Big('1443.8'),
-          value: new Big('1443.8') // 10 * (144.38 + days=0 * 0.08)
+          value: new Big('1443.8') // 10 * 144.38
         },
         {
           date: '2019-03-01',
           grossPerformance: new Big('22.4'),
           netPerformance: new Big('22.4'),
           investment: new Big('1443.8'),
-          value: new Big('1466.2') // 10 * (144.38 + days=28 * 0.08)
+          value: new Big('1466.2') // 10 * 146.62
         },
         {
           date: '2019-04-01',
           grossPerformance: new Big('47.2'),
           netPerformance: new Big('47.2'),
           investment: new Big('1443.8'),
-          value: new Big('1491') // 10 * (144.38 + days=59 * 0.08)
+          value: new Big('1491') // 10 * 149.1
         },
         {
           date: '2019-05-01',
           grossPerformance: new Big('71.2'),
           netPerformance: new Big('71.2'),
           investment: new Big('1443.8'),
-          value: new Big('1515') // 10 * (144.38 + days=89 * 0.08)
+          value: new Big('1515') // 10 * 151.5
         },
         {
           date: '2019-06-01',
           grossPerformance: new Big('96'),
           netPerformance: new Big('96'),
           investment: new Big('1443.8'),
-          value: new Big('1539.8') // 10 * (144.38 + days=120 * 0.08)
+          value: new Big('1539.8') // 10 * 153.98
         },
         {
           date: '2019-07-01',
           grossPerformance: new Big('120'),
           netPerformance: new Big('120'),
           investment: new Big('1443.8'),
-          value: new Big('1563.8') // 10 * (144.38 + days=150 * 0.08)
+          value: new Big('1563.8') // 10 * 156.38
         },
         {
           date: '2019-08-01',
           grossPerformance: new Big('144.8'),
           netPerformance: new Big('144.8'),
           investment: new Big('1443.8'),
-          value: new Big('1588.6') // 10 * (144.38 + days=181 * 0.08)
+          value: new Big('1588.6') // 10 * 158.86
         },
         {
           date: '2019-09-01',
           grossPerformance: new Big('303.1'),
           netPerformance: new Big('303.1'),
           investment: new Big('2923.7'),
-          value: new Big('3226.8') // 20 * (144.38 + days=212 * 0.08)
+          value: new Big('3226.8') // 20 * 161.34
         },
         {
           date: '2019-10-01',
           grossPerformance: new Big('351.1'),
           netPerformance: new Big('351.1'),
           investment: new Big('2923.7'),
-          value: new Big('3274.8') // 20 * (144.38 + days=242 * 0.08)
+          value: new Big('3274.8') // 20 * 163.74
         },
         {
           date: '2019-11-01',
           grossPerformance: new Big('400.7'),
           netPerformance: new Big('400.7'),
           investment: new Big('2923.7'),
-          value: new Big('3324.4') // 20 * (144.38 + days=273 * 0.08)
+          value: new Big('3324.4') // 20 * 166.22
         },
         {
           date: '2019-12-01',
           grossPerformance: new Big('448.7'),
           netPerformance: new Big('448.7'),
           investment: new Big('2923.7'),
-          value: new Big('3372.4') // 20 * (144.38 + days=303 * 0.08)
+          value: new Big('3372.4') // 20 * 168.62
         },
         {
           date: '2020-01-01',
           grossPerformance: new Big('498.3'),
           netPerformance: new Big('498.3'),
           investment: new Big('2923.7'),
-          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
+          value: new Big('3422') // 20 * 171.1
         },
         {
           date: '2020-02-01',
           grossPerformance: new Big('547.9'),
           netPerformance: new Big('547.9'),
           investment: new Big('2923.7'),
-          value: new Big('3471.6') // 20 * (144.38 + days=365 * 0.08)
+          value: new Big('3471.6') // 20 * 173.58
         },
         {
           date: '2020-03-01',
           grossPerformance: new Big('226.95'),
           netPerformance: new Big('226.95'),
           investment: new Big('652.55'),
-          value: new Big('879.5') // 5 * (144.38 + days=394 * 0.08)
+          value: new Big('879.5') // 5 * 175.9
         },
         {
           date: '2020-04-01',
           grossPerformance: new Big('239.35'),
           netPerformance: new Big('239.35'),
           investment: new Big('652.55'),
-          value: new Big('891.9') // 5 * (144.38 + days=425 * 0.08)
+          value: new Big('891.9') // 5 * 178.38
         },
         {
           date: '2020-05-01',
           grossPerformance: new Big('251.35'),
           netPerformance: new Big('251.35'),
           investment: new Big('652.55'),
-          value: new Big('903.9') // 5 * (144.38 + days=455 * 0.08)
+          value: new Big('903.9') // 5 * 180.78
         },
         {
           date: '2020-06-01',
           grossPerformance: new Big('263.75'),
           netPerformance: new Big('263.75'),
           investment: new Big('652.55'),
-          value: new Big('916.3') // 5 * (144.38 + days=486 * 0.08)
+          value: new Big('916.3') // 5 * 183.26
         },
         {
           date: '2020-07-01',
           grossPerformance: new Big('275.75'),
           netPerformance: new Big('275.75'),
           investment: new Big('652.55'),
-          value: new Big('928.3') // 5 * (144.38 + days=516 * 0.08)
+          value: new Big('928.3') // 5 * 185.66
         },
         {
           date: '2020-08-01',
           grossPerformance: new Big('288.15'),
           netPerformance: new Big('288.15'),
           investment: new Big('652.55'),
-          value: new Big('940.7') // 5 * (144.38 + days=547 * 0.08)
+          value: new Big('940.7') // 5 * 188.14
         },
         {
           date: '2020-09-01',
           grossPerformance: new Big('300.55'),
           netPerformance: new Big('300.55'),
           investment: new Big('652.55'),
-          value: new Big('953.1') // 5 * (144.38 + days=578 * 0.08)
+          value: new Big('953.1') // 5 * 190.62
         },
         {
           date: '2020-10-01',
           grossPerformance: new Big('312.55'),
           netPerformance: new Big('312.55'),
           investment: new Big('652.55'),
-          value: new Big('965.1') // 5 * (144.38 + days=608 * 0.08)
+          value: new Big('965.1') // 5 * 193.02
         },
         {
           date: '2020-11-01',
           grossPerformance: new Big('324.95'),
           netPerformance: new Big('324.95'),
           investment: new Big('652.55'),
-          value: new Big('977.5') // 5 * (144.38 + days=639 * 0.08)
+          value: new Big('977.5') // 5 * 195.5
         },
         {
           date: '2020-12-01',
           grossPerformance: new Big('336.95'),
           netPerformance: new Big('336.95'),
           investment: new Big('652.55'),
-          value: new Big('989.5') // 5 * (144.38 + days=669 * 0.08)
+          value: new Big('989.5') // 5 * 197.9
         },
         {
           date: '2021-01-01',
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('349.35'),
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         },
         {
           date: '2021-02-01',
           grossPerformance: new Big('358.85'),
           netPerformance: new Big('358.85'),
           investment: new Big('2684.05'),
-          value: new Big('3042.9') // 15 * (144.38 + days=731 * 0.08)
+          value: new Big('3042.9') // 15 * 202.86
         },
         {
           date: '2021-03-01',
           grossPerformance: new Big('392.45'),
           netPerformance: new Big('392.45'),
           investment: new Big('2684.05'),
-          value: new Big('3076.5') // 15 * (144.38 + days=759 * 0.08)
+          value: new Big('3076.5') // 15 * 205.1
         },
         {
           date: '2021-04-01',
           grossPerformance: new Big('429.65'),
           netPerformance: new Big('429.65'),
           investment: new Big('2684.05'),
-          value: new Big('3113.7') // 15 * (144.38 + days=790 * 0.08)
+          value: new Big('3113.7') // 15 * 207.58
         },
         {
           date: '2021-05-01',
           grossPerformance: new Big('465.65'),
           netPerformance: new Big('465.65'),
           investment: new Big('2684.05'),
-          value: new Big('3149.7') // 15 * (144.38 + days=820 * 0.08)
+          value: new Big('3149.7') // 15 * 209.98
         },
         {
           date: '2021-06-01',
           grossPerformance: new Big('502.85'),
           netPerformance: new Big('502.85'),
           investment: new Big('2684.05'),
-          value: new Big('3186.9') // 15 * (144.38 + days=851 * 0.08)
+          value: new Big('3186.9') // 15 * 212.46
         }
       ]);
 
@@ -2047,49 +2235,49 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('498.3'),
           netPerformance: new Big('498.3'),
           investment: new Big('2923.7'),
-          value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
+          value: new Big('3422') // 20 * 171.1
         },
         {
           date: '2021-01-01',
           grossPerformance: new Big('349.35'),
           netPerformance: new Big('349.35'),
           investment: new Big('652.55'),
-          value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+          value: new Big('1001.9') // 5 * 200.38
         },
         {
           date: '2021-02-01',
           grossPerformance: new Big('358.85'),
           netPerformance: new Big('358.85'),
           investment: new Big('2684.05'),
-          value: new Big('3042.9') // 15 * (144.38 + days=731 * 0.08)
+          value: new Big('3042.9') // 15 * 202.86
         },
         {
           date: '2021-03-01',
           grossPerformance: new Big('392.45'),
           netPerformance: new Big('392.45'),
           investment: new Big('2684.05'),
-          value: new Big('3076.5') // 15 * (144.38 + days=759 * 0.08)
+          value: new Big('3076.5') // 15 * 205.1
         },
         {
           date: '2021-04-01',
           grossPerformance: new Big('429.65'),
           netPerformance: new Big('429.65'),
           investment: new Big('2684.05'),
-          value: new Big('3113.7') // 15 * (144.38 + days=790 * 0.08)
+          value: new Big('3113.7') // 15 * 207.58
         },
         {
           date: '2021-05-01',
           grossPerformance: new Big('465.65'),
           netPerformance: new Big('465.65'),
           investment: new Big('2684.05'),
-          value: new Big('3149.7') // 15 * (144.38 + days=820 * 0.08)
+          value: new Big('3149.7') // 15 * 209.98
         },
         {
           date: '2021-06-01',
           grossPerformance: new Big('502.85'),
           netPerformance: new Big('502.85'),
           investment: new Big('2684.05'),
-          value: new Big('3186.9') // 15 * (144.38 + days=851 * 0.08)
+          value: new Big('3186.9') // 15 * 212.46
         }
       ]);
     });
@@ -2134,252 +2322,252 @@ describe('PortfolioCalculator', () => {
             grossPerformance: new Big('498.3'),
             netPerformance: new Big('498.3'),
             investment: new Big('2923.7'),
-            value: new Big('3422') // 20 * (144.38 + days=335 * 0.08)
+            value: new Big('3422') // 20 * 171.1
           },
           {
             date: '2021-01-01',
             grossPerformance: new Big('349.35'),
             netPerformance: new Big('349.35'),
             investment: new Big('652.55'),
-            value: new Big('1001.9') // 5 * (144.38 + days=700 * 0.08)
+            value: new Big('1001.9') // 5 * 200.38
           },
           {
             date: '2021-02-01',
             grossPerformance: new Big('358.85'),
             netPerformance: new Big('358.85'),
             investment: new Big('2684.05'),
-            value: new Big('3042.9') // 15 * (144.38 + days=731 * 0.08)
+            value: new Big('3042.9') // 15 * 202.86
           },
           {
             date: '2021-03-01',
             grossPerformance: new Big('392.45'),
             netPerformance: new Big('392.45'),
             investment: new Big('2684.05'),
-            value: new Big('3076.5') // 15 * (144.38 + days=759 * 0.08)
+            value: new Big('3076.5') // 15 * 205.1
           },
           {
             date: '2021-04-01',
             grossPerformance: new Big('429.65'),
             netPerformance: new Big('429.65'),
             investment: new Big('2684.05'),
-            value: new Big('3113.7') // 15 * (144.38 + days=790 * 0.08)
+            value: new Big('3113.7') // 15 * 207.58
           },
           {
             date: '2021-05-01',
             grossPerformance: new Big('465.65'),
             netPerformance: new Big('465.65'),
             investment: new Big('2684.05'),
-            value: new Big('3149.7') // 15 * (144.38 + days=820 * 0.08)
+            value: new Big('3149.7') // 15 * 209.98
           },
           {
             date: '2021-06-01',
             grossPerformance: new Big('502.85'),
             netPerformance: new Big('502.85'),
             investment: new Big('2684.05'),
-            value: new Big('3186.9') // 15 * (144.38 + days=851 * 0.08)
+            value: new Big('3186.9') // 15 * 212.46
           },
           {
             date: '2021-06-02',
             grossPerformance: new Big('504.05'),
             netPerformance: new Big('504.05'),
             investment: new Big('2684.05'),
-            value: new Big('3188.1') // 15 * (144.38 + days=852 * 0.08) / +1.2
+            value: new Big('3188.1') // 15 * 212.54
           },
           {
             date: '2021-06-03',
             grossPerformance: new Big('505.25'),
             netPerformance: new Big('505.25'),
             investment: new Big('2684.05'),
-            value: new Big('3189.3') // +1.2
+            value: new Big('3189.3') // 15 * 212.62
           },
           {
             date: '2021-06-04',
             grossPerformance: new Big('506.45'),
             netPerformance: new Big('506.45'),
             investment: new Big('2684.05'),
-            value: new Big('3190.5') // +1.2
+            value: new Big('3190.5') // 15 * 212.7
           },
           {
             date: '2021-06-05',
             grossPerformance: new Big('507.65'),
             netPerformance: new Big('507.65'),
             investment: new Big('2684.05'),
-            value: new Big('3191.7') // +1.2
+            value: new Big('3191.7') // 15 * 212.78
           },
           {
             date: '2021-06-06',
             grossPerformance: new Big('508.85'),
             netPerformance: new Big('508.85'),
             investment: new Big('2684.05'),
-            value: new Big('3192.9') // +1.2
+            value: new Big('3192.9') // 15 * 212.86
           },
           {
             date: '2021-06-07',
             grossPerformance: new Big('510.05'),
             netPerformance: new Big('510.05'),
             investment: new Big('2684.05'),
-            value: new Big('3194.1') // +1.2
+            value: new Big('3194.1') // 15 * 212.94
           },
           {
             date: '2021-06-08',
             grossPerformance: new Big('511.25'),
             netPerformance: new Big('511.25'),
             investment: new Big('2684.05'),
-            value: new Big('3195.3') // +1.2
+            value: new Big('3195.3') // 15 * 213.02
           },
           {
             date: '2021-06-09',
             grossPerformance: new Big('512.45'),
             netPerformance: new Big('512.45'),
             investment: new Big('2684.05'),
-            value: new Big('3196.5') // +1.2
+            value: new Big('3196.5') // 15 * 213.1
           },
           {
             date: '2021-06-10',
             grossPerformance: new Big('513.65'),
             netPerformance: new Big('513.65'),
             investment: new Big('2684.05'),
-            value: new Big('3197.7') // +1.2
+            value: new Big('3197.7') // 15 * 213.18
           },
           {
             date: '2021-06-11',
             grossPerformance: new Big('514.85'),
             netPerformance: new Big('514.85'),
             investment: new Big('2684.05'),
-            value: new Big('3198.9') // +1.2
+            value: new Big('3198.9') // 15 * 213.26
           },
           {
             date: '2021-06-12',
             grossPerformance: new Big('516.05'),
             netPerformance: new Big('516.05'),
             investment: new Big('2684.05'),
-            value: new Big('3200.1') // +1.2
+            value: new Big('3200.1') // 15 * 213.34
           },
           {
             date: '2021-06-13',
             grossPerformance: new Big('517.25'),
             netPerformance: new Big('517.25'),
             investment: new Big('2684.05'),
-            value: new Big('3201.3') // +1.2
+            value: new Big('3201.3') // 15 * 213.42
           },
           {
             date: '2021-06-14',
             grossPerformance: new Big('518.45'),
             netPerformance: new Big('518.45'),
             investment: new Big('2684.05'),
-            value: new Big('3202.5') // +1.2
+            value: new Big('3202.5') // 15 * 213.5
           },
           {
             date: '2021-06-15',
             grossPerformance: new Big('519.65'),
             netPerformance: new Big('519.65'),
             investment: new Big('2684.05'),
-            value: new Big('3203.7') // +1.2
+            value: new Big('3203.7') // 15 * 213.58
           },
           {
             date: '2021-06-16',
             grossPerformance: new Big('520.85'),
             netPerformance: new Big('520.85'),
             investment: new Big('2684.05'),
-            value: new Big('3204.9') // +1.2
+            value: new Big('3204.9') // 15 * 213.66
           },
           {
             date: '2021-06-17',
             grossPerformance: new Big('522.05'),
             netPerformance: new Big('522.05'),
             investment: new Big('2684.05'),
-            value: new Big('3206.1') // +1.2
+            value: new Big('3206.1') // 15 * 213.74
           },
           {
             date: '2021-06-18',
             grossPerformance: new Big('523.25'),
             netPerformance: new Big('523.25'),
             investment: new Big('2684.05'),
-            value: new Big('3207.3') // +1.2
+            value: new Big('3207.3') // 15 * 213.82
           },
           {
             date: '2021-06-19',
             grossPerformance: new Big('524.45'),
             netPerformance: new Big('524.45'),
             investment: new Big('2684.05'),
-            value: new Big('3208.5') // +1.2
+            value: new Big('3208.5') // 15 * 213.9
           },
           {
             date: '2021-06-20',
             grossPerformance: new Big('525.65'),
             netPerformance: new Big('525.65'),
             investment: new Big('2684.05'),
-            value: new Big('3209.7') // +1.2
+            value: new Big('3209.7') // 15 * 213.98
           },
           {
             date: '2021-06-21',
             grossPerformance: new Big('526.85'),
             netPerformance: new Big('526.85'),
             investment: new Big('2684.05'),
-            value: new Big('3210.9') // +1.2
+            value: new Big('3210.9') // 15 * 214.06
           },
           {
             date: '2021-06-22',
             grossPerformance: new Big('528.05'),
             netPerformance: new Big('528.05'),
             investment: new Big('2684.05'),
-            value: new Big('3212.1') // +1.2
+            value: new Big('3212.1') // 15 * 214.14
           },
           {
             date: '2021-06-23',
             grossPerformance: new Big('529.25'),
             netPerformance: new Big('529.25'),
             investment: new Big('2684.05'),
-            value: new Big('3213.3') // +1.2
+            value: new Big('3213.3') // 15 * 214.22
           },
           {
             date: '2021-06-24',
             grossPerformance: new Big('530.45'),
             netPerformance: new Big('530.45'),
             investment: new Big('2684.05'),
-            value: new Big('3214.5') // +1.2
+            value: new Big('3214.5') // 15 * 214.3
           },
           {
             date: '2021-06-25',
             grossPerformance: new Big('531.65'),
             netPerformance: new Big('531.65'),
             investment: new Big('2684.05'),
-            value: new Big('3215.7') // +1.2
+            value: new Big('3215.7') // 15 * 214.38
           },
           {
             date: '2021-06-26',
             grossPerformance: new Big('532.85'),
             netPerformance: new Big('532.85'),
             investment: new Big('2684.05'),
-            value: new Big('3216.9') // +1.2
+            value: new Big('3216.9') // 15 * 214.46
           },
           {
             date: '2021-06-27',
             grossPerformance: new Big('534.05'),
             netPerformance: new Big('534.05'),
             investment: new Big('2684.05'),
-            value: new Big('3218.1') // +1.2
+            value: new Big('3218.1') // 15 * 214.54
           },
           {
             date: '2021-06-28',
             grossPerformance: new Big('535.25'),
             netPerformance: new Big('535.25'),
             investment: new Big('2684.05'),
-            value: new Big('3219.3') // +1.2
+            value: new Big('3219.3') // 15 * 214.62
           },
           {
             date: '2021-06-29',
             grossPerformance: new Big('536.45'),
             netPerformance: new Big('536.45'),
             investment: new Big('2684.05'),
-            value: new Big('3220.5') // +1.2
+            value: new Big('3220.5') // 15 * 214.7
           },
           {
             date: '2021-06-30',
             grossPerformance: new Big('537.65'),
             netPerformance: new Big('537.65'),
             investment: new Big('2684.05'),
-            value: new Big('3221.7') // +1.2
+            value: new Big('3221.7') // 15 * 214.78
           }
         ])
       );
@@ -2442,7 +2630,7 @@ describe('PortfolioCalculator', () => {
           grossPerformance: new Big('267.2'),
           netPerformance: new Big('267.2'),
           investment: new Big('11553.75'),
-          value: new Big('11820.95') // 10 * (144.38 + days=334 * 0.08) + 5 * 2021.99
+          value: new Big('11820.95') // 10 * 171.1  + 5 * 2021.99
         }
       ]);
     });
