@@ -1,4 +1,5 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
@@ -7,29 +8,23 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import {
-  DATE_FORMAT,
-  getYesterday,
-  isGhostfolioScraperApiSymbol
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import * as bent from 'bent';
-import * as cheerio from 'cheerio';
 import { format } from 'date-fns';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 @Injectable()
-export class GhostfolioScraperApiService implements DataProviderInterface {
-  private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
-
+export class GoogleSheetsService implements DataProviderInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public canHandle(symbol: string) {
-    return isGhostfolioScraperApiSymbol(symbol);
+    return true;
   }
 
   public async get(
@@ -45,14 +40,13 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         [symbol]
       );
 
-      const { marketPrice } = await this.prismaService.marketData.findFirst({
-        orderBy: {
-          date: 'desc'
-        },
-        where: {
-          symbol
-        }
+      const sheet = await this.getSheet({
+        sheetId: this.configurationService.get('GOOGLE_SHEETS_ID'),
+        symbol
       });
+      const marketPrice = parseFloat(
+        (await sheet.getCellByA1('B1').value) as string
+      );
 
       return {
         [symbol]: {
@@ -83,26 +77,31 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
 
     try {
       const [symbol] = aSymbols;
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
-      );
-      const scraperConfiguration = symbolProfile?.scraperConfiguration;
 
-      const get = bent(scraperConfiguration?.url, 'GET', 'string', 200, {});
+      const sheet = await this.getSheet({
+        symbol,
+        sheetId: this.configurationService.get('GOOGLE_SHEETS_ID')
+      });
 
-      const html = await get();
-      const $ = cheerio.load(html);
+      const rows = await sheet.getRows();
 
-      const value = this.extractNumberFromString(
-        $(scraperConfiguration?.selector).text()
-      );
+      const historicalData: {
+        [date: string]: IDataProviderHistoricalResponse;
+      } = {};
+
+      rows
+        .filter((row, index) => {
+          return index >= 1;
+        })
+        .forEach((row) => {
+          const date = new Date(row._rawData[0]);
+          const close = parseFloat(row._rawData[1]);
+
+          historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };
+        });
 
       return {
-        [symbol]: {
-          [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: value
-          }
-        }
+        [symbol]: historicalData
       };
     } catch (error) {
       Logger.error(error);
@@ -112,7 +111,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   }
 
   public getName(): DataSource {
-    return DataSource.GHOSTFOLIO;
+    return DataSource.GOOGLE_SHEETS;
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
@@ -146,14 +145,28 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return { items };
   }
 
-  private extractNumberFromString(aString: string): number {
-    try {
-      const [numberString] = aString.match(
-        GhostfolioScraperApiService.NUMERIC_REGEXP
-      );
-      return parseFloat(numberString.trim());
-    } catch {
-      return undefined;
-    }
+  private async getSheet({
+    sheetId,
+    symbol
+  }: {
+    sheetId: string;
+    symbol: string;
+  }) {
+    const doc = new GoogleSpreadsheet(sheetId);
+
+    await doc.useServiceAccountAuth({
+      client_email: this.configurationService.get('GOOGLE_SHEETS_ACCOUNT'),
+      private_key: this.configurationService
+        .get('GOOGLE_SHEETS_PRIVATE_KEY')
+        .replace(/\\n/g, '\n')
+    });
+
+    await doc.loadInfo();
+
+    const sheet = doc.sheetsByTitle[symbol];
+
+    await sheet.loadCells();
+
+    return sheet;
   }
 }

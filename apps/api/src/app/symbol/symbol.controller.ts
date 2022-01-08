@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isDate, isEmpty } from 'lodash';
 
@@ -37,8 +37,7 @@ export class SymbolController {
     @Query() { query = '' }
   ): Promise<{ items: LookupItem[] }> {
     try {
-      const encodedQuery = encodeURIComponent(query.toLowerCase());
-      return this.symbolService.lookup(encodedQuery);
+      return this.symbolService.lookup(query.toLowerCase());
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),

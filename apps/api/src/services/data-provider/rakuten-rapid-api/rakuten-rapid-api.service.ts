@@ -45,7 +45,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
         return {
           [ghostfolioFearAndGreedIndexSymbol]: {
             currency: undefined,
-            dataSource: DataSource.RAKUTEN,
+            dataSource: this.getName(),
             marketPrice: fgi.now.value,
             marketState: MarketState.open,
             name: RakutenRapidApiService.FEAR_AND_GREED_INDEX_NAME
@@ -85,7 +85,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
-              dataSource: DataSource.RAKUTEN,
+              dataSource: this.getName(),
               date: subWeeks(getToday(), 1),
               marketPrice: fgi.oneWeekAgo.value
             }
@@ -94,7 +94,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
-              dataSource: DataSource.RAKUTEN,
+              dataSource: this.getName(),
               date: subMonths(getToday(), 1),
               marketPrice: fgi.oneMonthAgo.value
             }
@@ -103,7 +103,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
-              dataSource: DataSource.RAKUTEN,
+              dataSource: this.getName(),
               date: subYears(getToday(), 1),
               marketPrice: fgi.oneYearAgo.value
             }
@@ -129,7 +129,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
     return DataSource.RAKUTEN;
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
 

@@ -149,13 +149,13 @@ export class DataProviderService {
     return result;
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const promises: Promise<{ items: LookupItem[] }>[] = [];
     let lookupItems: LookupItem[] = [];
 
     for (const dataSource of this.configurationService.get('DATA_SOURCES')) {
       promises.push(
-        this.getDataProvider(DataSource[dataSource]).search(aSymbol)
+        this.getDataProvider(DataSource[dataSource]).search(aQuery)
       );
     }
 
@@ -176,7 +176,7 @@ export class DataProviderService {
   }
 
   public getPrimaryDataSource(): DataSource {
-    return DataSource[this.configurationService.get('DATA_SOURCES')[0]];
+    return DataSource[this.configurationService.get('DATA_SOURCE_PRIMARY')];
   }
 
   private getDataProvider(providerName: DataSource) {
