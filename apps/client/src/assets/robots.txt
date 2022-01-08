@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /p/*
 
 Sitemap: https://ghostfol.io/sitemap.xml
