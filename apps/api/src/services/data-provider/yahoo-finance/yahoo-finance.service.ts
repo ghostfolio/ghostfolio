@@ -103,7 +103,7 @@ export class YahooFinanceService implements DataProviderInterface {
           assetClass,
           assetSubClass,
           currency: value.price?.currency,
-          dataSource: DataSource.YAHOO,
+          dataSource: this.getName(),
           exchange: this.parseExchange(value.price?.exchangeName),
           marketState:
             value.price?.marketState === 'REGULAR' ||
@@ -221,12 +221,14 @@ export class YahooFinanceService implements DataProviderInterface {
     return DataSource.YAHOO;
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const items: LookupItem[] = [];
 
     try {
       const get = bent(
-        `${this.yahooFinanceHostname}/v1/finance/search?q=${aSymbol}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
+        `${this.yahooFinanceHostname}/v1/finance/search?q=${encodeURIComponent(
+          aQuery
+        )}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
         'GET',
         'json',
         200
@@ -268,7 +270,7 @@ export class YahooFinanceService implements DataProviderInterface {
         items.push({
           symbol,
           currency: value.currency,
-          dataSource: DataSource.YAHOO,
+          dataSource: this.getName(),
           name: value.name
         });
       }

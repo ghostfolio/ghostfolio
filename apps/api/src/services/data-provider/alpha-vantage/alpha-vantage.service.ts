@@ -88,13 +88,13 @@ export class AlphaVantageService implements DataProviderInterface {
     return DataSource.ALPHA_VANTAGE;
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
-    const result = await this.alphaVantage.data.search(aSymbol);
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+    const result = await this.alphaVantage.data.search(aQuery);
 
     return {
       items: result?.bestMatches?.map((bestMatch) => {
         return {
-          dataSource: DataSource.ALPHA_VANTAGE,
+          dataSource: this.getName(),
           name: bestMatch['2. name'],
           symbol: bestMatch['1. symbol']
         };

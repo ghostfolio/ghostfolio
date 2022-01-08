@@ -93,32 +93,6 @@ export class SymbolService {
     try {
       const { items } = await this.dataProviderService.search(aQuery);
       results.items = items;
-
-      // Add custom symbols
-      const ghostfolioSymbolProfiles =
-        await this.prismaService.symbolProfile.findMany({
-          select: {
-            currency: true,
-            dataSource: true,
-            name: true,
-            symbol: true
-          },
-          where: {
-            AND: [
-              {
-                dataSource: DataSource.GHOSTFOLIO,
-                name: {
-                  startsWith: aQuery
-                }
-              }
-            ]
-          }
-        });
-
-      for (const ghostfolioSymbolProfile of ghostfolioSymbolProfiles) {
-        results.items.push(ghostfolioSymbolProfile);
-      }
-
       return results;
     } catch (error) {
       Logger.error(error);

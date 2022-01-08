@@ -4,6 +4,7 @@ export interface Environment extends CleanedEnvAccessors {
   ACCESS_TOKEN_SALT: string;
   ALPHA_VANTAGE_API_KEY: string;
   CACHE_TTL: number;
+  DATA_SOURCE_PRIMARY: string;
   DATA_SOURCES: string | string[]; // string is not correct, error in envalid?
   ENABLE_FEATURE_BLOG: boolean;
   ENABLE_FEATURE_CUSTOM_SYMBOLS: boolean;
@@ -16,6 +17,9 @@ export interface Environment extends CleanedEnvAccessors {
   ENABLE_FEATURE_SYSTEM_MESSAGE: boolean;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_SECRET: string;
+  GOOGLE_SHEETS_ACCOUNT: string;
+  GOOGLE_SHEETS_ID: string;
+  GOOGLE_SHEETS_PRIVATE_KEY: string;
   JWT_SECRET_KEY: string;
   MAX_ITEM_IN_CACHE: number;
   MAX_ORDERS_TO_IMPORT: number;
