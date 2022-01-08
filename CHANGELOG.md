@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `GOOGLE_SHEETS` as a new data source type
+
 ### Changed
 
 - Excluded the url pattern of shared portfolios in the `robots.txt` file
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.100.0 - 05.01.2022
 
