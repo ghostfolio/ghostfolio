@@ -85,19 +85,6 @@ describe('CurrentRateService', () => {
     );
   });
 
-  it('getValue', async () => {
-    expect(
-      await currentRateService.getValue({
-        currency: 'USD',
-        date: new Date(Date.UTC(2020, 0, 1, 0, 0, 0)),
-        symbol: 'AMZN',
-        userCurrency: 'CHF'
-      })
-    ).toMatchObject({
-      marketPrice: 1847.839966
-    });
-  });
-
   it('getValues', async () => {
     expect(
       await currentRateService.getValues({

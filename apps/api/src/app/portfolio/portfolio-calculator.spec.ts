@@ -1,17 +1,9 @@
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
-import {
-  addDays,
-  differenceInCalendarDays,
-  endOfDay,
-  format,
-  isBefore,
-  isSameDay
-} from 'date-fns';
+import { addDays, endOfDay, format, isBefore, isSameDay } from 'date-fns';
 
 import { CurrentRateService } from './current-rate.service';
-import { GetValueParams } from './interfaces/get-value-params.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
 import { PortfolioOrder } from './interfaces/portfolio-order.interface';
 import { TimelinePeriod } from './interfaces/timeline-period.interface';
@@ -275,9 +267,6 @@ jest.mock('./current-rate.service', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     CurrentRateService: jest.fn().mockImplementation(() => {
       return {
-        getValue: ({ date, symbol }: GetValueParams) => {
-          return Promise.resolve(mockGetValue(symbol, date));
-        },
         getValues: ({ dataGatheringItems, dateQuery }: GetValuesParams) => {
           const result = [];
           if (dateQuery.lt) {

@@ -7,7 +7,6 @@ import { isBefore, isToday } from 'date-fns';
 import { flatten } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
-import { GetValueParams } from './interfaces/get-value-params.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 @Injectable()
@@ -17,46 +16,6 @@ export class CurrentRateService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService
   ) {}
-
-  public async getValue({
-    currency,
-    date,
-    symbol,
-    userCurrency
-  }: GetValueParams): Promise<GetValueObject> {
-    if (isToday(date)) {
-      const dataProviderResult = await this.dataProviderService.get([
-        {
-          symbol,
-          dataSource: this.dataProviderService.getPrimaryDataSource()
-        }
-      ]);
-      return {
-        symbol,
-        date: resetHours(date),
-        marketPrice: dataProviderResult?.[symbol]?.marketPrice ?? 0
-      };
-    }
-
-    const marketData = await this.marketDataService.get({
-      date,
-      symbol
-    });
-
-    if (marketData) {
-      return {
-        date: marketData.date,
-        marketPrice: this.exchangeRateDataService.toCurrency(
-          marketData.marketPrice,
-          currency,
-          userCurrency
-        ),
-        symbol: marketData.symbol
-      };
-    }
-
-    throw new Error(`Value not found for ${symbol} at ${resetHours(date)}`);
-  }
 
   public async getValues({
     currencies,
