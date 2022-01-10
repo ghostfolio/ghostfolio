@@ -107,7 +107,7 @@ export class PortfolioService {
           account.currency,
           userCurrency
         ),
-        value: details.accounts[account.name]?.current ?? 0
+        value: details.accounts[account.id]?.current ?? 0
       };
 
       delete result.Order;
@@ -1091,10 +1091,11 @@ export class PortfolioService {
         account.currency,
         userCurrency
       );
-      accounts[account.name] = {
+      accounts[account.id] = {
         balance: convertedBalance,
         currency: account.currency,
         current: convertedBalance,
+        name: account.name,
         original: convertedBalance
       };
 
@@ -1108,16 +1109,17 @@ export class PortfolioService {
           originalValueOfSymbol *= -1;
         }
 
-        if (accounts[order.Account?.name || UNKNOWN_KEY]?.current) {
-          accounts[order.Account?.name || UNKNOWN_KEY].current +=
+        if (accounts[order.Account?.id || UNKNOWN_KEY]?.current) {
+          accounts[order.Account?.id || UNKNOWN_KEY].current +=
             currentValueOfSymbol;
-          accounts[order.Account?.name || UNKNOWN_KEY].original +=
+          accounts[order.Account?.id || UNKNOWN_KEY].original +=
             originalValueOfSymbol;
         } else {
-          accounts[order.Account?.name || UNKNOWN_KEY] = {
+          accounts[order.Account?.id || UNKNOWN_KEY] = {
             balance: 0,
             currency: order.Account?.currency,
             current: currentValueOfSymbol,
+            name: account.name,
             original: originalValueOfSymbol
           };
         }

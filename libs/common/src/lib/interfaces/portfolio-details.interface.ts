@@ -2,10 +2,11 @@ import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 export interface PortfolioDetails {
   accounts: {
-    [name: string]: {
+    [id: string]: {
       balance: number;
       currency: string;
       current: number;
+      name: string;
       original: number;
     };
   };

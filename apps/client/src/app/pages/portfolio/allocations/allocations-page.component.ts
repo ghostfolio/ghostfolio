@@ -162,10 +162,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
     };
 
-    for (const [name, { current, original }] of Object.entries(
+    for (const [id, { current, name, original }] of Object.entries(
       this.portfolioDetails.accounts
     )) {
-      this.accounts[name] = {
+      this.accounts[id] = {
         name,
         value: aPeriod === 'original' ? original : current
       };
