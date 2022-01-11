@@ -106,20 +106,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
-          this.user = state.user;
-
-          this.defaultAccountId = this.user?.accounts.find((account) => {
-            return account.isDefault;
-          })?.id;
-
-          this.hasPermissionToCreateOrder = hasPermission(
-            this.user.permissions,
-            permissions.createOrder
-          );
-          this.hasPermissionToDeleteOrder = hasPermission(
-            this.user.permissions,
-            permissions.deleteOrder
-          );
+          this.updateUser(state.user);
 
           this.changeDetectorRef.markForCheck();
         }
@@ -352,43 +339,50 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   }
 
   private openCreateTransactionDialog(aTransaction?: OrderModel): void {
-    const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
-      data: {
-        accounts: this.user?.accounts?.filter((account) => {
-          return account.accountType === 'SECURITIES';
-        }),
-        transaction: {
-          accountId: aTransaction?.accountId ?? this.defaultAccountId,
-          currency: aTransaction?.currency ?? null,
-          dataSource: aTransaction?.dataSource ?? null,
-          date: new Date(),
-          fee: 0,
-          quantity: null,
-          symbol: aTransaction?.symbol ?? null,
-          type: aTransaction?.type ?? 'BUY',
-          unitPrice: null
-        },
-        user: this.user
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
+    this.userService
+      .get()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const transaction: CreateOrderDto = data?.transaction;
+      .subscribe((user) => {
+        this.updateUser(user);
 
-        if (transaction) {
-          this.dataService.postOrder(transaction).subscribe({
-            next: () => {
-              this.fetchOrders();
+        const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
+          data: {
+            accounts: this.user?.accounts?.filter((account) => {
+              return account.accountType === 'SECURITIES';
+            }),
+            transaction: {
+              accountId: aTransaction?.accountId ?? this.defaultAccountId,
+              currency: aTransaction?.currency ?? null,
+              dataSource: aTransaction?.dataSource ?? null,
+              date: new Date(),
+              fee: 0,
+              quantity: null,
+              symbol: aTransaction?.symbol ?? null,
+              type: aTransaction?.type ?? 'BUY',
+              unitPrice: null
+            },
+            user: this.user
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((data: any) => {
+            const transaction: CreateOrderDto = data?.transaction;
+
+            if (transaction) {
+              this.dataService.postOrder(transaction).subscribe({
+                next: () => {
+                  this.fetchOrders();
+                }
+              });
             }
-          });
-        }
 
-        this.router.navigate(['.'], { relativeTo: this.route });
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
       });
   }
 
@@ -397,7 +391,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((user) => {
-        this.user = user;
+        this.updateUser(user);
 
         const dialogRef = this.dialog.open(PositionDetailDialog, {
           autoFocus: false,
@@ -418,5 +412,22 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });
+  }
+
+  private updateUser(aUser: User) {
+    this.user = aUser;
+
+    this.defaultAccountId = this.user?.accounts.find((account) => {
+      return account.isDefault;
+    })?.id;
+
+    this.hasPermissionToCreateOrder = hasPermission(
+      this.user.permissions,
+      permissions.createOrder
+    );
+    this.hasPermissionToDeleteOrder = hasPermission(
+      this.user.permissions,
+      permissions.deleteOrder
+    );
   }
 }

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the support for multiple accounts with the same name
+- Fixed the preselected default account of the create activity dialog
 
 ## 1.101.0 - 08.01.2022
 
