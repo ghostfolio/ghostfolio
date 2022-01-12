@@ -132,16 +132,35 @@
               </div>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">{{ statistics?.slackCommunityUsers ?? '-' }}</h3>
-              <div class="h6 mb-0" i18n>Users in Slack community</div>
+              <a
+                class="d-block"
+                href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+              >
+                <h3 class="mb-0">
+                  {{ statistics?.slackCommunityUsers ?? '-' }}
+                </h3>
+                <div class="h6 mb-0" i18n>Users in Slack community</div>
+              </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">{{ statistics?.gitHubContributors ?? '-' }}</h3>
-              <div class="h6 mb-0" i18n>Contributors on GitHub</div>
+              <a
+                class="d-block"
+                href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
+              >
+                <h3 class="mb-0">
+                  {{ statistics?.gitHubContributors ?? '-' }}
+                </h3>
+                <div class="h6 mb-0" i18n>Contributors on GitHub</div>
+              </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">{{ statistics?.gitHubStargazers ?? '-' }}</h3>
-              <div class="h6 mb-0" i18n>Stars on GitHub</div>
+              <a
+                class="d-block"
+                href="https://github.com/ghostfolio/ghostfolio/stargazers"
+              >
+                <h3 class="mb-0">{{ statistics?.gitHubStargazers ?? '-' }}</h3>
+                <div class="h6 mb-0" i18n>Stars on GitHub</div>
+              </a>
             </div>
           </div>
         </mat-card-content>
@@ -150,21 +169,27 @@
   </div>
 
   <div class="row">
-    <div *ngIf="hasPermissionForBlog" class="col-md-6 col-xs-12 my-2">
-      <a class="py-2 w-100" i18n mat-stroked-button [routerLink]="['/blog']"
-        >Blog</a
-      >
-    </div>
     <div
       class="col-md-6 col-xs-12 my-2"
       [ngClass]="{ 'offset-md-3': !hasPermissionForBlog }"
     >
       <a
         class="py-2 w-100"
+        color="primary"
         i18n
         mat-stroked-button
         [routerLink]="['/about', 'changelog']"
         >Changelog & License</a
+      >
+    </div>
+    <div *ngIf="hasPermissionForBlog" class="col-md-6 col-xs-12 my-2">
+      <a
+        class="py-2 w-100"
+        color="primary"
+        i18n
+        mat-flat-button
+        [routerLink]="['/blog']"
+        >Blog</a
       >
     </div>
   </div>
