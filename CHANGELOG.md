@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added links to the statistics section on the about page
 
+### Fixed
+
+- Fixed the currency of the value in the position detail dialog
+
 ## 1.102.0 - 11.01.2022
 
 ### Changed
