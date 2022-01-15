@@ -58,9 +58,9 @@ export class ExchangeRateDataService {
       getYesterday()
     );
 
-    if (isEmpty(result)) {
+    if (Object.keys(result).length !== this.currencyPairs.length) {
       // Load currencies directly from data provider as a fallback
-      // if historical data is not yet available
+      // if historical data is not fully available
       const historicalData = await this.dataProviderService.get(
         this.currencyPairs.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
