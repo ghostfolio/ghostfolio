@@ -34,11 +34,6 @@ export class ImportService {
       unitPrice
     } of orders) {
       await this.orderService.createOrder({
-        Account: {
-          connect: {
-            id_userId: { userId, id: accountId }
-          }
-        },
         currency,
         dataSource,
         fee,
@@ -46,7 +41,26 @@ export class ImportService {
         symbol,
         type,
         unitPrice,
+        Account: {
+          connect: {
+            id_userId: { userId, id: accountId }
+          }
+        },
         date: parseISO(<string>(<unknown>date)),
+        SymbolProfile: {
+          connectOrCreate: {
+            create: {
+              dataSource,
+              symbol
+            },
+            where: {
+              dataSource_symbol: {
+                dataSource,
+                symbol
+              }
+            }
+          }
+        },
         User: { connect: { id: userId } }
       });
     }

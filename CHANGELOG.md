@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the fallback to load currencies directly from the data provider
+- Fixed the missing symbol profile data connection in the import functionality for activities
 
 ## 1.103.0 - 13.01.2022
 
