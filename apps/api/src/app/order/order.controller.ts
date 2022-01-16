@@ -116,23 +116,23 @@ export class OrderController {
 
     return this.orderService.createOrder({
       ...data,
+      date,
       Account: {
         connect: {
           id_userId: { id: accountId, userId: this.request.user.id }
         }
       },
-      date,
       SymbolProfile: {
         connectOrCreate: {
+          create: {
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          },
           where: {
             dataSource_symbol: {
               dataSource: data.dataSource,
               symbol: data.symbol
             }
-          },
-          create: {
-            dataSource: data.dataSource,
-            symbol: data.symbol
           }
         }
       },
