@@ -7,6 +7,7 @@ import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
+  addMilliseconds,
   addMonths,
   addYears,
   differenceInDays,
@@ -17,11 +18,12 @@ import {
   max,
   min
 } from 'date-fns';
-import { flatten, isNumber } from 'lodash';
+import { first, flatten, isNumber, sortBy } from 'lodash';
 
 import { CurrentRateService } from './current-rate.service';
 import { CurrentPositions } from './interfaces/current-positions.interface';
 import { GetValueObject } from './interfaces/get-value-object.interface';
+import { PortfolioOrderItem } from './interfaces/portfolio-calculator.interface';
 import { PortfolioOrder } from './interfaces/portfolio-order.interface';
 import { TimelinePeriod } from './interfaces/timeline-period.interface';
 import {
@@ -32,22 +34,34 @@ import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.in
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
 export class PortfolioCalculator {
+  private currency: string;
+  private currentRateService: CurrentRateService;
+  private orders: PortfolioOrder[];
   private transactionPoints: TransactionPoint[];
 
-  public constructor(
-    private currentRateService: CurrentRateService,
-    private currency: string
-  ) {}
+  public constructor({
+    currency,
+    currentRateService,
+    orders
+  }: {
+    currency: string;
+    currentRateService: CurrentRateService;
+    orders: PortfolioOrder[];
+  }) {
+    this.currency = currency;
+    this.currentRateService = currentRateService;
+    this.orders = orders;
 
-  public computeTransactionPoints(orders: PortfolioOrder[]) {
-    orders.sort((a, b) => a.date.localeCompare(b.date));
+    this.orders.sort((a, b) => a.date.localeCompare(b.date));
+  }
 
+  public computeTransactionPoints() {
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
 
     let lastDate: string = null;
     let lastTransactionPoint: TransactionPoint = null;
-    for (const order of orders) {
+    for (const order of this.orders) {
       const currentDate = order.date;
 
       let currentTransactionPointItem: TransactionPointSymbol;
@@ -134,6 +148,14 @@ export class PortfolioCalculator {
   }
 
   public async getCurrentPositions(start: Date): Promise<CurrentPositions> {
+    if (true) {
+      return this.getCurrentPositionsNew(start);
+    }
+
+    return this.getCurrentPositionsOld(start);
+  }
+
+  public async getCurrentPositionsOld(start: Date): Promise<CurrentPositions> {
     if (!this.transactionPoints?.length) {
       return {
         currentValue: new Big(0),
@@ -341,6 +363,406 @@ export class PortfolioCalculator {
       ...overall,
       positions,
       hasErrors: hasErrors || overall.hasErrors
+    };
+  }
+
+  public async getCurrentPositionsNew(start: Date): Promise<CurrentPositions> {
+    if (!this.transactionPoints?.length) {
+      return {
+        currentValue: new Big(0),
+        hasErrors: false,
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0),
+        netAnnualizedPerformance: new Big(0),
+        netPerformance: new Big(0),
+        netPerformancePercentage: new Big(0),
+        positions: [],
+        totalInvestment: new Big(0)
+      };
+    }
+
+    const lastTransactionPoint =
+      this.transactionPoints[this.transactionPoints.length - 1];
+
+    // use Date.now() to use the mock for today
+    const today = new Date(Date.now());
+
+    let firstTransactionPoint: TransactionPoint = null;
+    let firstIndex = this.transactionPoints.length;
+    const dates = [];
+    const dataGatheringItems: IDataGatheringItem[] = [];
+    const currencies: { [symbol: string]: string } = {};
+
+    dates.push(resetHours(start));
+    for (const item of this.transactionPoints[firstIndex - 1].items) {
+      dataGatheringItems.push({
+        dataSource: item.dataSource,
+        symbol: item.symbol
+      });
+      currencies[item.symbol] = item.currency;
+    }
+    for (let i = 0; i < this.transactionPoints.length; i++) {
+      if (
+        !isBefore(parseDate(this.transactionPoints[i].date), start) &&
+        firstTransactionPoint === null
+      ) {
+        firstTransactionPoint = this.transactionPoints[i];
+        firstIndex = i;
+      }
+      if (firstTransactionPoint !== null) {
+        dates.push(resetHours(parseDate(this.transactionPoints[i].date)));
+      }
+    }
+
+    dates.push(resetHours(today));
+
+    const marketSymbols = await this.currentRateService.getValues({
+      currencies,
+      dataGatheringItems,
+      dateQuery: {
+        in: dates
+      },
+      userCurrency: this.currency
+    });
+
+    const marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    } = {};
+
+    for (const marketSymbol of marketSymbols) {
+      const date = format(marketSymbol.date, DATE_FORMAT);
+      if (!marketSymbolMap[date]) {
+        marketSymbolMap[date] = {};
+      }
+      if (marketSymbol.marketPrice) {
+        marketSymbolMap[date][marketSymbol.symbol] = new Big(
+          marketSymbol.marketPrice
+        );
+      }
+    }
+
+    const todayString = format(today, DATE_FORMAT);
+
+    if (firstIndex > 0) {
+      firstIndex--;
+    }
+    const initialValues: { [symbol: string]: Big } = {};
+
+    const positions: TimelinePosition[] = [];
+    let hasErrorsInSymbolMetrics = false;
+
+    for (const item of lastTransactionPoint.items) {
+      const marketValue = marketSymbolMap[todayString]?.[item.symbol];
+
+      const {
+        // annualizedGrossPerformance,
+        // annualizedNetPerformance,
+        grossPerformance,
+        grossPerformancePercentage,
+        hasErrors,
+        initialValue,
+        netPerformance,
+        netPerformancePercentage
+      } = this.getSymbolMetrics({
+        marketSymbolMap,
+        start,
+        symbol: item.symbol
+      });
+
+      hasErrorsInSymbolMetrics = hasErrorsInSymbolMetrics || hasErrors;
+
+      initialValues[item.symbol] = initialValue;
+
+      positions.push({
+        averagePrice: item.quantity.eq(0)
+          ? new Big(0)
+          : item.investment.div(item.quantity),
+        currency: item.currency,
+        dataSource: item.dataSource,
+        firstBuyDate: item.firstBuyDate,
+        grossPerformance: !hasErrors ? grossPerformance ?? null : null,
+        grossPerformancePercentage: !hasErrors
+          ? grossPerformancePercentage ?? null
+          : null,
+        investment: item.investment,
+        marketPrice: marketValue?.toNumber() ?? null,
+        netPerformance: !hasErrors ? netPerformance ?? null : null,
+        netPerformancePercentage: !hasErrors
+          ? netPerformancePercentage ?? null
+          : null,
+        quantity: item.quantity,
+        symbol: item.symbol,
+        transactionCount: item.transactionCount
+      });
+    }
+    const overall = this.calculateOverallPerformance(positions, initialValues);
+
+    return {
+      ...overall,
+      positions,
+      hasErrors: hasErrorsInSymbolMetrics || overall.hasErrors
+    };
+  }
+
+  public getSymbolMetrics({
+    marketSymbolMap,
+    start,
+    symbol
+  }: {
+    marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    };
+    start: Date;
+    symbol: string;
+  }) {
+    let hasErrors = false;
+
+    let orders: PortfolioOrderItem[] = this.orders.filter((order) => {
+      return order.symbol === symbol;
+    });
+
+    if (orders.length <= 0) {
+      return {
+        hasErrors,
+        initialValue: new Big(0),
+        netPerformance: new Big(0),
+        netPerformancePercentage: new Big(0),
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0)
+      };
+    }
+
+    const dateOfFirstTransaction = new Date(first(orders).date);
+    const endDate = new Date(Date.now());
+
+    const totalDays = new Big(
+      differenceInDays(
+        endDate,
+        isAfter(start, dateOfFirstTransaction) ? start : dateOfFirstTransaction
+      )
+    );
+
+    let feesAtStartDate = new Big(0);
+    let fees = new Big(0);
+    let grossPerformance = new Big(0);
+    let grossPerformanceAtStartDate = new Big(0);
+    let grossPerformanceFromSells = new Big(0);
+    let initialValue: Big;
+    let lastAveragePrice = new Big(0);
+    let lastValueOfInvestment = new Big(0);
+    let lastNetValueOfInvestment = new Big(0);
+    let previousOrder: PortfolioOrder = null;
+    let timeWeightedGrossPerformancePercentage = new Big(1);
+    let timeWeightedNetPerformancePercentage = new Big(1);
+    let totalInvestment = new Big(0);
+    let totalUnits = new Big(0);
+
+    const unitPriceAtStartDate =
+      marketSymbolMap[format(start, DATE_FORMAT)]?.[symbol];
+
+    const unitPriceAtEndDate =
+      marketSymbolMap[format(endDate, DATE_FORMAT)]?.[symbol];
+
+    if (!unitPriceAtStartDate || !unitPriceAtEndDate) {
+      hasErrors = true;
+    }
+
+    // Add a placeholder order at the start and the end date
+    orders.push({
+      symbol,
+      currency: null,
+      date: format(start, DATE_FORMAT),
+      dataSource: null,
+      fee: new Big(0),
+      itemType: 'start',
+      name: '',
+      quantity: new Big(0),
+      type: TypeOfOrder.BUY,
+      unitPrice: unitPriceAtStartDate ?? new Big(0)
+    });
+
+    orders.push({
+      symbol,
+      currency: null,
+      date: format(endDate, DATE_FORMAT),
+      dataSource: null,
+      fee: new Big(0),
+      itemType: 'end',
+      name: '',
+      quantity: new Big(0),
+      type: TypeOfOrder.BUY,
+      unitPrice: unitPriceAtEndDate ?? new Big(0)
+    });
+
+    // Sort orders so that the start and end placeholder order are at the right
+    // position
+    orders = sortBy(orders, (order) => {
+      let sortIndex = new Date(order.date);
+
+      if (order.itemType === 'start') {
+        sortIndex = addMilliseconds(sortIndex, -1);
+      }
+
+      if (order.itemType === 'end') {
+        sortIndex = addMilliseconds(sortIndex, 1);
+      }
+
+      return sortIndex.getTime();
+    });
+
+    const indexOfStartOrder = orders.findIndex((order) => {
+      return order.itemType === 'start';
+    });
+
+    for (let i = 0; i < orders.length; i += 1) {
+      const order = orders[i];
+
+      const transactionInvestment = order.quantity.mul(order.unitPrice);
+
+      if (
+        !initialValue &&
+        order.itemType !== 'start' &&
+        order.itemType !== 'end'
+      ) {
+        initialValue = transactionInvestment;
+      }
+
+      fees = fees.plus(order.fee);
+
+      totalUnits = totalUnits.plus(
+        order.quantity.mul(this.getFactor(order.type))
+      );
+
+      const valueOfInvestment = totalUnits.mul(order.unitPrice);
+      const netValueOfInvestment = totalUnits.mul(order.unitPrice).sub(fees);
+
+      const grossPerformanceFromSell =
+        order.type === TypeOfOrder.SELL
+          ? order.unitPrice.minus(lastAveragePrice).mul(order.quantity)
+          : new Big(0);
+
+      grossPerformanceFromSells = grossPerformanceFromSells.plus(
+        grossPerformanceFromSell
+      );
+
+      totalInvestment = totalInvestment
+        .plus(transactionInvestment.mul(this.getFactor(order.type)))
+        .plus(grossPerformanceFromSell);
+
+      lastAveragePrice = totalUnits.eq(0)
+        ? new Big(0)
+        : totalInvestment.div(totalUnits);
+
+      const newGrossPerformance = valueOfInvestment
+        .minus(totalInvestment)
+        .plus(grossPerformanceFromSells);
+
+      const grossPerformanceSinceLastTransaction =
+        newGrossPerformance.minus(grossPerformance);
+
+      const netPerformanceSinceLastTransaction =
+        grossPerformanceSinceLastTransaction.minus(previousOrder?.fee ?? 0);
+
+      if (
+        i > indexOfStartOrder &&
+        !lastValueOfInvestment
+          .plus(transactionInvestment.mul(this.getFactor(order.type)))
+          .eq(0)
+      ) {
+        timeWeightedGrossPerformancePercentage =
+          timeWeightedGrossPerformancePercentage.mul(
+            new Big(1).plus(
+              valueOfInvestment
+                .minus(
+                  lastValueOfInvestment.plus(
+                    transactionInvestment.mul(this.getFactor(order.type))
+                  )
+                )
+                .div(
+                  lastValueOfInvestment.plus(
+                    transactionInvestment.mul(this.getFactor(order.type))
+                  )
+                )
+            )
+          );
+
+        timeWeightedNetPerformancePercentage =
+          timeWeightedNetPerformancePercentage.mul(
+            new Big(1).plus(
+              netValueOfInvestment
+                .minus(
+                  lastNetValueOfInvestment.plus(
+                    transactionInvestment.mul(this.getFactor(order.type))
+                  )
+                )
+                .div(
+                  lastNetValueOfInvestment.plus(
+                    transactionInvestment.mul(this.getFactor(order.type))
+                  )
+                )
+            )
+          );
+      }
+
+      grossPerformance = newGrossPerformance;
+      lastNetValueOfInvestment = netValueOfInvestment;
+      lastValueOfInvestment = valueOfInvestment;
+
+      if (order.itemType === 'start') {
+        feesAtStartDate = fees;
+        grossPerformanceAtStartDate = grossPerformance;
+      }
+
+      /*console.log(`
+        Date: ${order.date}
+        Price: ${order.unitPrice}
+        transactionInvestment: ${transactionInvestment}
+        totalUnits: ${totalUnits}
+        totalInvestment: ${totalInvestment}
+        valueOfInvestment: ${valueOfInvestment}
+        lastAveragePrice: ${lastAveragePrice}
+        grossPerformanceFromSell: ${grossPerformanceFromSell}
+        grossPerformanceFromSells: ${grossPerformanceFromSells}
+        grossPerformance: ${grossPerformance.minus(grossPerformanceAtStartDate)}
+        netPerformance: ${grossPerformance.minus(fees)}
+        netPerformanceSinceLastTransaction: ${netPerformanceSinceLastTransaction}
+        grossPerformanceSinceLastTransaction: ${grossPerformanceSinceLastTransaction}
+        timeWeightedGrossPerformancePercentage: ${timeWeightedGrossPerformancePercentage}
+        timeWeightedNetPerformancePercentage: ${timeWeightedNetPerformancePercentage}
+      `);*/
+
+      previousOrder = order;
+    }
+
+    // console.log('\n---\n');
+
+    timeWeightedGrossPerformancePercentage =
+      timeWeightedGrossPerformancePercentage.sub(1);
+
+    timeWeightedNetPerformancePercentage =
+      timeWeightedNetPerformancePercentage.sub(1);
+
+    const totalGrossPerformance = grossPerformance.minus(
+      grossPerformanceAtStartDate
+    );
+
+    const totalNetPerformance = grossPerformance
+      .minus(grossPerformanceAtStartDate)
+      .minus(fees.minus(feesAtStartDate));
+
+    return {
+      hasErrors,
+      initialValue,
+      annualizedNetPerformance: !totalDays.eq(0)
+        ? totalNetPerformance.mul(totalDays).div(365)
+        : new Big(0),
+      annualizedGrossPerformance: !totalDays.eq(0)
+        ? totalGrossPerformance.div(totalDays).mul(365)
+        : new Big(0),
+      netPerformance: totalNetPerformance,
+      netPerformancePercentage: timeWeightedNetPerformancePercentage,
+      grossPerformance: totalGrossPerformance,
+      grossPerformancePercentage: timeWeightedGrossPerformancePercentage
     };
   }
 
