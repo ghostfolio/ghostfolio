@@ -25,17 +25,17 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       };
     } = {};
 
-    for (const account of Object.keys(this.accounts)) {
-      accounts[account] = {
-        name: account,
-        investment: this.accounts[account].current
+    for (const [accountId, account] of Object.entries(this.accounts)) {
+      accounts[accountId] = {
+        name: account.name,
+        investment: account.current
       };
     }
 
     let maxItem;
     let totalInvestment = 0;
 
-    Object.values(accounts).forEach((account) => {
+    for (const account of Object.values(accounts)) {
       if (!maxItem) {
         maxItem = account;
       }
@@ -47,7 +47,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       if (account.investment > maxItem?.investment) {
         maxItem = account;
       }
-    });
+    }
 
     const maxInvestmentRatio = maxItem.investment / totalInvestment;
 
