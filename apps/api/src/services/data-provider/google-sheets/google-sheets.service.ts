@@ -8,7 +8,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -35,27 +35,36 @@ export class GoogleSheetsService implements DataProviderInterface {
     }
 
     try {
-      const [symbol] = aSymbols;
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
+      const response: { [symbol: string]: IDataProviderResponse } = {};
+
+      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+        aSymbols
       );
 
       const sheet = await this.getSheet({
         sheetId: this.configurationService.get('GOOGLE_SHEETS_ID'),
-        symbol
+        symbol: 'Overview'
       });
-      const marketPrice = parseFloat(
-        (await sheet.getCellByA1('B1').value) as string
-      );
 
-      return {
-        [symbol]: {
-          marketPrice,
-          currency: symbolProfile?.currency,
-          dataSource: this.getName(),
-          marketState: MarketState.delayed
+      const rows = await sheet.getRows();
+
+      for (const row of rows) {
+        const marketPrice = parseFloat(row['marketPrice']);
+        const symbol = row['symbol'];
+
+        if (aSymbols.includes(symbol)) {
+          response[symbol] = {
+            marketPrice,
+            currency: symbolProfiles.find((symbolProfile) => {
+              return symbolProfile.symbol === symbol;
+            })?.currency,
+            dataSource: this.getName(),
+            marketState: MarketState.delayed
+          };
         }
-      };
+      }
+
+      return response;
     } catch (error) {
       Logger.error(error);
     }
@@ -94,7 +103,7 @@ export class GoogleSheetsService implements DataProviderInterface {
           return index >= 1;
         })
         .forEach((row) => {
-          const date = new Date(row._rawData[0]);
+          const date = parseDate(row._rawData[0]);
           const close = parseFloat(row._rawData[1]);
 
           historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };

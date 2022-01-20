@@ -16,8 +16,8 @@
               class="cursor-pointer mat-row"
               (click)="setCurrentSymbol(item.symbol)"
             >
-              <td class="mat-cell px-1 py-2">{{ item.symbol }}</td>
-              <td class="mat-cell px-1 py-2">{{ item.dataSource}}</td>
+              <td class="mat-cell px-1 py-2">{{ item.symbol }}</td>
+              <td class="mat-cell px-1 py-2">{{ item.dataSource }}</td>
               <td class="mat-cell px-1 py-2">
                 {{ (item.date | date: defaultDateFormat) ?? '' }}
               </td>

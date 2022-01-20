@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for fetching multiple symbols in the `GOOGLE_SHEETS` data provider
+
+### Changed
+
+- Improved the data provider with grouping by data source and thereby reducing the number of requests
+
 ### Fixed
 
 - Fixed the unresolved account names in the _X-ray_ section
+- Fixed the date conversion in the `GOOGLE_SHEETS` data provider
 
 ## 1.104.0 - 16.01.2022
 

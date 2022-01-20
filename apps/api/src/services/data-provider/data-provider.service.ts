@@ -12,7 +12,7 @@ import { Granularity } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData } from '@prisma/client';
 import { format, isValid } from 'date-fns';
-import { isEmpty } from 'lodash';
+import { groupBy, isEmpty } from 'lodash';
 
 @Injectable()
 export class DataProviderService {
@@ -30,18 +30,27 @@ export class DataProviderService {
       [symbol: string]: IDataProviderResponse;
     } = {};
 
-    for (const item of items) {
-      const dataProvider = this.getDataProvider(item.dataSource);
-      response[item.symbol] = (await dataProvider.get([item.symbol]))[
-        item.symbol
-      ];
-    }
+    const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
 
     const promises = [];
-    for (const symbol of Object.keys(response)) {
-      const promise = Promise.resolve(response[symbol]);
+
+    for (const [dataSource, dataGatheringItems] of Object.entries(
+      itemsGroupedByDataSource
+    )) {
+      const symbols = dataGatheringItems.map((dataGatheringItem) => {
+        return dataGatheringItem.symbol;
+      });
+
+      const promise = Promise.resolve(
+        this.getDataProvider(DataSource[dataSource]).get(symbols)
+      );
+
       promises.push(
-        promise.then((currentResponse) => (response[symbol] = currentResponse))
+        promise.then((result) => {
+          for (const [symbol, dataProviderResponse] of Object.entries(result)) {
+            response[symbol] = dataProviderResponse;
+          }
+        })
       );
     }
 
