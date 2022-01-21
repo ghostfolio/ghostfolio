@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded _Stripe_ dependencies
 
+### Fixed
+
+- Improved the redirection on logout
+
 ## 1.105.0 - 20.01.2022
 
 ### Added
