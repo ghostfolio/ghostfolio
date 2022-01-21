@@ -12,7 +12,7 @@
     <strong>Open Source Wealth Management Software made for Humans</strong>
   </p>
   <p>
-    <a href="https://ghostfol.io"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/en/blog/2021/07/hello-ghostfolio"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
+    <a href="https://ghostfol.io"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/blog"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
   </p>
   <p>
     <a href="#contributing">
