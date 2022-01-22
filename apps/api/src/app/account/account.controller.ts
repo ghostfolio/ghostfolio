@@ -1,4 +1,4 @@
-import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { PortfolioServiceFactory } from '@ghostfolio/api/app/portfolio/portfolio-service.factory';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
   nullifyValuesInObject,
@@ -35,7 +35,7 @@ export class AccountController {
   public constructor(
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
-    private readonly portfolioService: PortfolioService,
+    private readonly portfolioServiceFactory: PortfolioServiceFactory,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
@@ -91,10 +91,9 @@ export class AccountController {
         this.request.user.id
       );
 
-    let accountsWithAggregations =
-      await this.portfolioService.getAccountsWithAggregations(
-        impersonationUserId || this.request.user.id
-      );
+    let accountsWithAggregations = await this.portfolioServiceFactory
+      .get()
+      .getAccountsWithAggregations(impersonationUserId || this.request.user.id);
 
     if (
       impersonationUserId ||
