@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded _Stripe_ dependencies
 - Upgraded `prisma` from version `3.7.0` to `3.8.1`
 
+### Fixed
+
+- Improved the redirection on logout
+
 ## 1.105.0 - 20.01.2022
 
 ### Added
