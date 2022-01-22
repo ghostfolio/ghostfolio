@@ -346,7 +346,7 @@ export class PortfolioCalculatorNew {
     let totalInvestment = new Big(0);
     let totalUnits = new Big(0);
 
-    // Add a placeholder order at the start and the end date
+    // Add a synthetic order at the start and the end date
     orders.push({
       symbol,
       currency: null,
