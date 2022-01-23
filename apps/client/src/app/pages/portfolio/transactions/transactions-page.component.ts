@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -28,6 +29,7 @@ import { ImportTransactionDialog } from './import-transaction-dialog/import-tran
   templateUrl: './transactions-page.html'
 })
 export class TransactionsPageComponent implements OnDestroy, OnInit {
+  public activities: Activity[];
   public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -35,7 +37,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public hasPermissionToDeleteOrder: boolean;
   public hasPermissionToImportOrders: boolean;
   public routeQueryParams: Subscription;
-  public transactions: OrderModel[];
   public user: User;
 
   private primaryDataSource: DataSource;
@@ -65,8 +66,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         if (params['createDialog']) {
           this.openCreateTransactionDialog();
         } else if (params['editDialog']) {
-          if (this.transactions) {
-            const transaction = this.transactions.find(({ id }) => {
+          if (this.activities) {
+            const transaction = this.activities.find(({ id }) => {
               return id === params['transactionId'];
             });
 
@@ -119,10 +120,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchOrders()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.transactions = response;
+      .subscribe(({ activities }) => {
+        this.activities = activities;
 
-        if (this.hasPermissionToCreateOrder && this.transactions?.length <= 0) {
+        if (this.hasPermissionToCreateOrder && this.activities?.length <= 0) {
           this.router.navigate([], { queryParams: { createDialog: true } });
         }
 

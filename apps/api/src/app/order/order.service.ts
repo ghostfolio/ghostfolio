@@ -1,5 +1,6 @@
 import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
@@ -7,10 +8,13 @@ import { DataSource, Order, Prisma, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
 
+import { Activity } from './interfaces/activities.interface';
+
 @Injectable()
 export class OrderService {
   public constructor(
     private readonly cacheService: CacheService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly prismaService: PrismaService
   ) {}
@@ -86,12 +90,14 @@ export class OrderService {
   public async getOrders({
     includeDrafts = false,
     types,
+    userCurrency,
     userId
   }: {
     includeDrafts?: boolean;
     types?: TypeOfOrder[];
+    userCurrency: string;
     userId: string;
-  }) {
+  }): Promise<Activity[]> {
     const where: Prisma.OrderWhereInput = { userId };
 
     if (includeDrafts === false) {
@@ -124,12 +130,21 @@ export class OrderService {
         orderBy: { date: 'asc' }
       })
     ).map((order) => {
+      const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
+
       return {
         ...order,
-        value: new Big(order.quantity)
-          .mul(order.unitPrice)
-          .plus(order.fee)
-          .toNumber()
+        value,
+        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          order.fee,
+          order.currency,
+          userCurrency
+        ),
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          value,
+          order.currency,
+          userCurrency
+        )
       };
     });
   }

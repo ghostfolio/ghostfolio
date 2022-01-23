@@ -15,6 +15,16 @@
   }
 
   .mat-table {
+    td {
+      &.mat-footer-cell {
+        border-top: 1px solid
+          rgba(
+            var(--palette-foreground-divider),
+            var(--palette-foreground-divider-alpha)
+          );
+      }
+    }
+
     th {
       ::ng-deep {
         .mat-sort-header-container {
@@ -55,6 +65,15 @@
   }
 
   .mat-table {
+    td {
+      &.mat-footer-cell {
+        border-top-color: rgba(
+          var(--palette-foreground-divider-dark),
+          var(--palette-foreground-divider-dark-alpha)
+        );
+      }
+    }
+
     .type-badge {
       background-color: rgba(
         var(--palette-foreground-text-dark),
