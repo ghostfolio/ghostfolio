@@ -1,5 +1,5 @@
 import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
-import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
@@ -15,10 +15,11 @@ import { ImportService } from './import.service';
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,
+    OrderModule,
     PrismaModule,
     RedisCacheModule
   ],
   controllers: [ImportController],
-  providers: [CacheService, ImportService, OrderService]
+  providers: [CacheService, ImportService]
 })
 export class ImportModule {}

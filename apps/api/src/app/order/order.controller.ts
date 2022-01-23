@@ -23,6 +23,7 @@ import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { CreateOrderDto } from './create-order.dto';
+import { Activities } from './interfaces/activities.interface';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './update-order.dto';
 
@@ -59,14 +60,16 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'))
   public async getAllOrders(
     @Headers('impersonation-id') impersonationId
-  ): Promise<OrderModel[]> {
+  ): Promise<Activities> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         impersonationId,
         this.request.user.id
       );
+    const userCurrency = this.request.user.Settings.currency;
 
-    let orders = await this.orderService.getOrders({
+    let activities = await this.orderService.getOrders({
+      userCurrency,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id
     });
@@ -75,15 +78,17 @@ export class OrderController {
       impersonationUserId ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      orders = nullifyValuesInObjects(orders, [
+      activities = nullifyValuesInObjects(activities, [
         'fee',
+        'feeInBaseCurrency',
         'quantity',
         'unitPrice',
-        'value'
+        'value',
+        'valueInBaseCurrency'
       ]);
     }
 
-    return orders;
+    return { activities };
   }
 
   @Get(':id')

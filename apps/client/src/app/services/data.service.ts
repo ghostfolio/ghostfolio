@@ -4,6 +4,7 @@ import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
@@ -169,14 +170,14 @@ export class DataService {
       );
   }
 
-  public fetchOrders(): Observable<OrderModel[]> {
-    return this.http.get<any[]>('/api/order').pipe(
-      map((data) => {
-        for (const item of data) {
-          item.createdAt = parseISO(item.createdAt);
-          item.date = parseISO(item.date);
+  public fetchOrders(): Observable<Activities> {
+    return this.http.get<any>('/api/order').pipe(
+      map(({ activities }) => {
+        for (const activity of activities) {
+          activity.createdAt = parseISO(activity.createdAt);
+          activity.date = parseISO(activity.date);
         }
-        return data;
+        return { activities };
       })
     );
   }

@@ -7,7 +7,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -20,9 +19,12 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import Big from 'big.js';
 import { endOfToday, format, isAfter } from 'date-fns';
+import { isNumber } from 'lodash';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -36,7 +38,7 @@ const SEARCH_STRING_SEPARATOR = ',';
   templateUrl: './activities-table.component.html'
 })
 export class ActivitiesTableComponent implements OnChanges, OnDestroy {
-  @Input() activities: OrderWithAccount[];
+  @Input() activities: Activity[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
@@ -57,8 +59,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<OrderWithAccount> =
-    new MatTableDataSource();
+  public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public displayedColumns = [];
   public endOfToday = endOfToday();
@@ -71,6 +72,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public searchControl = new FormControl();
   public searchKeywords: string[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public totalFees: number;
+  public totalValue: number;
 
   private allFilters: string[];
   private unsubscribeSubject = new Subject<void>();
@@ -218,6 +221,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     );
 
     this.filters$.next(this.allFilters);
+
+    this.totalFees = this.getTotalFees();
+    this.totalValue = this.getTotalValue();
   }
 
   private getSearchableFieldValues(activities: OrderWithAccount[]): string[] {
@@ -262,5 +268,37 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     return [...fieldValues].filter((item) => {
       return item !== undefined;
     });
+  }
+
+  private getTotalFees() {
+    let totalFees = new Big(0);
+
+    for (const activity of this.dataSource.filteredData) {
+      if (isNumber(activity.feeInBaseCurrency)) {
+        totalFees = totalFees.plus(activity.feeInBaseCurrency);
+      } else {
+        return null;
+      }
+    }
+
+    return totalFees.toNumber();
+  }
+
+  private getTotalValue() {
+    let totalValue = new Big(0);
+
+    for (const activity of this.dataSource.filteredData) {
+      if (isNumber(activity.valueInBaseCurrency)) {
+        if (activity.type === 'BUY') {
+          totalValue = totalValue.plus(activity.valueInBaseCurrency);
+        } else if (activity.type === 'SELL') {
+          totalValue = totalValue.minus(activity.valueInBaseCurrency);
+        }
+      } else {
+        return null;
+      }
+    }
+
+    return totalValue.toNumber();
   }
 }
