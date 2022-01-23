@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the historical data view in the admin control panel
 - Upgraded _Stripe_ dependencies
 - Upgraded `prisma` from version `3.7.0` to `3.8.1`
 
