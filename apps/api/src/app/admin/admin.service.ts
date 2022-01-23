@@ -9,7 +9,8 @@ import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
-  AdminMarketDataDetails
+  AdminMarketDataDetails,
+  AdminMarketDataItem
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Property } from '@prisma/client';
@@ -56,12 +57,67 @@ export class AdminService {
   }
 
   public async getMarketData(): Promise<AdminMarketData> {
-    return {
-      marketData: await (
-        await this.dataGatheringService.getSymbolsMax()
-      ).map((symbol) => {
-        return symbol;
+    const marketData = await this.prismaService.marketData.groupBy({
+      _count: true,
+      by: ['dataSource', 'symbol']
+    });
+
+    const currencyPairsToGather: AdminMarketDataItem[] =
+      this.exchangeRateDataService
+        .getCurrencyPairs()
+        .map(({ dataSource, symbol }) => {
+          const marketDataItemCount =
+            marketData.find((marketDataItem) => {
+              return (
+                marketDataItem.dataSource === dataSource &&
+                marketDataItem.symbol === symbol
+              );
+            })?._count ?? 0;
+
+          return {
+            dataSource,
+            marketDataItemCount,
+            symbol
+          };
+        });
+
+    const symbolProfilesToGather: AdminMarketDataItem[] = (
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: [{ symbol: 'asc' }],
+        select: {
+          _count: {
+            select: { Order: true }
+          },
+          dataSource: true,
+          Order: {
+            orderBy: [{ date: 'asc' }],
+            select: { date: true },
+            take: 1
+          },
+          scraperConfiguration: true,
+          symbol: true
+        }
       })
+    ).map((symbolProfile) => {
+      const marketDataItemCount =
+        marketData.find((marketDataItem) => {
+          return (
+            marketDataItem.dataSource === symbolProfile.dataSource &&
+            marketDataItem.symbol === symbolProfile.symbol
+          );
+        })?._count ?? 0;
+
+      return {
+        marketDataItemCount,
+        activityCount: symbolProfile._count.Order,
+        dataSource: symbolProfile.dataSource,
+        date: symbolProfile.Order?.[0]?.date,
+        symbol: symbolProfile.symbol
+      };
+    });
+
+    return {
+      marketData: [...currencyPairsToGather, ...symbolProfilesToGather]
     };
   }
 
