@@ -35,7 +35,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
-import { PortfolioServiceFactory } from './portfolio-service.factory';
+import { PortfolioServiceStrategy } from './portfolio-service.strategy';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -43,7 +43,7 @@ export class PortfolioController {
     private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly portfolioServiceFactory: PortfolioServiceFactory,
+    private readonly portfolioServiceStrategy: PortfolioServiceStrategy,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
@@ -55,7 +55,7 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioChart> {
-    const historicalDataContainer = await this.portfolioServiceFactory
+    const historicalDataContainer = await this.portfolioServiceStrategy
       .get()
       .getChart(impersonationId, range);
 
@@ -114,9 +114,10 @@ export class PortfolioController {
 
     let hasError = false;
 
-    const { accounts, holdings, hasErrors } = await this.portfolioServiceFactory
-      .get()
-      .getDetails(impersonationId, this.request.user.id, range);
+    const { accounts, holdings, hasErrors } =
+      await this.portfolioServiceStrategy
+        .get()
+        .getDetails(impersonationId, this.request.user.id, range);
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -174,7 +175,7 @@ export class PortfolioController {
       return <any>res.json({});
     }
 
-    let investments = await this.portfolioServiceFactory
+    let investments = await this.portfolioServiceStrategy
       .get()
       .getInvestments(impersonationId);
 
@@ -203,7 +204,7 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
-    const performanceInformation = await this.portfolioServiceFactory
+    const performanceInformation = await this.portfolioServiceStrategy
       .get()
       .getPerformance(impersonationId, range);
 
@@ -227,7 +228,7 @@ export class PortfolioController {
     @Query('range') range,
     @Res() res: Response
   ): Promise<PortfolioPositions> {
-    const result = await this.portfolioServiceFactory
+    const result = await this.portfolioServiceStrategy
       .get()
       .getPositions(impersonationId, range);
 
@@ -268,7 +269,7 @@ export class PortfolioController {
       hasDetails = user.subscription.type === 'Premium';
     }
 
-    const { holdings } = await this.portfolioServiceFactory
+    const { holdings } = await this.portfolioServiceStrategy
       .get()
       .getDetails(access.userId, access.userId);
 
@@ -311,7 +312,7 @@ export class PortfolioController {
   public async getSummary(
     @Headers('impersonation-id') impersonationId
   ): Promise<PortfolioSummary> {
-    let summary = await this.portfolioServiceFactory
+    let summary = await this.portfolioServiceStrategy
       .get()
       .getSummary(impersonationId);
 
@@ -342,7 +343,7 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Param('symbol') symbol
   ): Promise<PortfolioPositionDetail> {
-    let position = await this.portfolioServiceFactory
+    let position = await this.portfolioServiceStrategy
       .get()
       .getPosition(impersonationId, symbol);
 
@@ -386,7 +387,7 @@ export class PortfolioController {
 
     return <any>(
       res.json(
-        await this.portfolioServiceFactory.get().getReport(impersonationId)
+        await this.portfolioServiceStrategy.get().getReport(impersonationId)
       )
     );
   }
