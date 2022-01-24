@@ -23,7 +23,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import { Provider, Role } from '@prisma/client';
+import { Provider } from '@prisma/client';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -114,6 +114,12 @@ export class UserController {
       ...(<UserSettings>this.request.user.Settings.settings),
       ...data
     };
+
+    for (const key in userSettings) {
+      if (userSettings[key] === false) {
+        delete userSettings[key];
+      }
+    }
 
     return await this.userService.updateUserSetting({
       userSettings,

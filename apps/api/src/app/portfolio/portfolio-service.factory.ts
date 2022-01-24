@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import type { RequestWithUser } from '@ghostfolio/common/types';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+
 import { PortfolioService } from './portfolio.service';
 import { PortfolioServiceNew } from './portfolio.service-new';
 
@@ -6,11 +9,14 @@ import { PortfolioServiceNew } from './portfolio.service-new';
 export class PortfolioServiceFactory {
   public constructor(
     private readonly portfolioService: PortfolioService,
-    private readonly portfolioServiceNew: PortfolioServiceNew
+    private readonly portfolioServiceNew: PortfolioServiceNew,
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   public get() {
-    if (false) {
+    if (
+      this.request.user?.Settings?.settings?.['isNewCalculationEngine'] === true
+    ) {
       return this.portfolioServiceNew;
     }
 
