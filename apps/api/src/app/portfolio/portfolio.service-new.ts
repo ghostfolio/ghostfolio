@@ -399,11 +399,12 @@ export class PortfolioServiceNew {
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
+    const userCurrency = this.request.user.Settings.currency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
-    const orders = (await this.orderService.getOrders({ userId })).filter(
-      (order) => order.symbol === aSymbol
-    );
+    const orders = (
+      await this.orderService.getOrders({ userCurrency, userId })
+    ).filter((order) => order.symbol === aSymbol);
 
     if (orders.length <= 0) {
       return {
@@ -871,24 +872,25 @@ export class PortfolioServiceNew {
   }
 
   public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
-    const currency = this.request.user.Settings.currency;
+    const userCurrency = this.request.user.Settings.currency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const performanceInformation = await this.getPerformance(aImpersonationId);
 
     const { balance } = await this.accountService.getCashDetails(
       userId,
-      currency
+      userCurrency
     );
     const orders = await this.orderService.getOrders({
+      userCurrency,
       userId
     });
     const dividend = this.getDividend(orders).toNumber();
     const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
 
-    const totalBuy = this.getTotalByType(orders, currency, 'BUY');
-    const totalSell = this.getTotalByType(orders, currency, 'SELL');
+    const totalBuy = this.getTotalByType(orders, userCurrency, 'BUY');
+    const totalSell = this.getTotalByType(orders, userCurrency, 'SELL');
 
     const committedFunds = new Big(totalBuy).sub(totalSell);
 
@@ -1051,8 +1053,11 @@ export class PortfolioServiceNew {
     orders: OrderWithAccount[];
     portfolioOrders: PortfolioOrder[];
   }> {
+    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
+
     const orders = await this.orderService.getOrders({
       includeDrafts,
+      userCurrency,
       userId,
       types: ['BUY', 'SELL']
     });
@@ -1061,7 +1066,6 @@ export class PortfolioServiceNew {
       return { transactionPoints: [], orders: [], portfolioOrders: [] };
     }
 
-    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
       dataSource: order.SymbolProfile?.dataSource ?? order.dataSource,

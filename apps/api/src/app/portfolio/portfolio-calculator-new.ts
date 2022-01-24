@@ -233,8 +233,6 @@ export class PortfolioCalculatorNew {
       const marketValue = marketSymbolMap[todayString]?.[item.symbol];
 
       const {
-        // annualizedGrossPerformance,
-        // annualizedNetPerformance,
         grossPerformance,
         grossPerformancePercentage,
         hasErrors,
@@ -340,7 +338,6 @@ export class PortfolioCalculatorNew {
     let lastAveragePrice = new Big(0);
     let lastValueOfInvestment = new Big(0);
     let lastNetValueOfInvestment = new Big(0);
-    let previousOrder: PortfolioOrder = null;
     let timeWeightedGrossPerformancePercentage = new Big(1);
     let timeWeightedNetPerformancePercentage = new Big(1);
     let totalInvestment = new Big(0);
@@ -436,12 +433,6 @@ export class PortfolioCalculatorNew {
         .minus(totalInvestment)
         .plus(grossPerformanceFromSells);
 
-      const grossPerformanceSinceLastTransaction =
-        newGrossPerformance.minus(grossPerformance);
-
-      const netPerformanceSinceLastTransaction =
-        grossPerformanceSinceLastTransaction.minus(previousOrder?.fee ?? 0);
-
       if (
         i > indexOfStartOrder &&
         !lastValueOfInvestment
@@ -491,30 +482,7 @@ export class PortfolioCalculatorNew {
         feesAtStartDate = fees;
         grossPerformanceAtStartDate = grossPerformance;
       }
-
-      /*console.log(`
-        Symbol: ${symbol}
-        Date: ${order.date}
-        Price: ${order.unitPrice}
-        transactionInvestment: ${transactionInvestment}
-        totalUnits: ${totalUnits}
-        totalInvestment: ${totalInvestment}
-        valueOfInvestment: ${valueOfInvestment}
-        lastAveragePrice: ${lastAveragePrice}
-        grossPerformanceFromSell: ${grossPerformanceFromSell}
-        grossPerformanceFromSells: ${grossPerformanceFromSells}
-        grossPerformance: ${grossPerformance.minus(grossPerformanceAtStartDate)}
-        netPerformance: ${grossPerformance.minus(fees)}
-        netPerformanceSinceLastTransaction: ${netPerformanceSinceLastTransaction}
-        grossPerformanceSinceLastTransaction: ${grossPerformanceSinceLastTransaction}
-        timeWeightedGrossPerformancePercentage: ${timeWeightedGrossPerformancePercentage}
-        timeWeightedNetPerformancePercentage: ${timeWeightedNetPerformancePercentage}
-      `);*/
-
-      previousOrder = order;
     }
-
-    // console.log('\n---\n');
 
     timeWeightedGrossPerformancePercentage =
       timeWeightedGrossPerformancePercentage.sub(1);
@@ -531,8 +499,8 @@ export class PortfolioCalculatorNew {
       .minus(fees.minus(feesAtStartDate));
 
     return {
-      hasErrors: !initialValue || !unitPriceAtEndDate,
       initialValue,
+      hasErrors: !initialValue || !unitPriceAtEndDate,
       netPerformance: totalNetPerformance,
       netPerformancePercentage: timeWeightedNetPerformancePercentage,
       grossPerformance: totalGrossPerformance,
