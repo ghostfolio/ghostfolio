@@ -499,8 +499,8 @@ export class PortfolioCalculatorNew {
       .minus(fees.minus(feesAtStartDate));
 
     return {
-      hasErrors: !initialValue || !unitPriceAtEndDate,
       initialValue,
+      hasErrors: !initialValue || !unitPriceAtEndDate,
       netPerformance: totalNetPerformance,
       netPerformancePercentage: timeWeightedNetPerformancePercentage,
       grossPerformance: totalGrossPerformance,
