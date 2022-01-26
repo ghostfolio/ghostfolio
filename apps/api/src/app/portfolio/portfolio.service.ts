@@ -881,6 +881,8 @@ export class PortfolioService {
       netWorth,
       totalBuy,
       totalSell,
+      annualizedPerformancePercent:
+        performanceInformation.performance.annualizedPerformancePercent,
       cash: balance,
       committedFunds: committedFunds.toNumber(),
       ordersCount: orders.filter((order) => {

@@ -10,7 +10,6 @@ import {
   addMilliseconds,
   addMonths,
   addYears,
-  differenceInDays,
   endOfDay,
   format,
   isAfter,
@@ -130,7 +129,10 @@ export class PortfolioCalculatorNew {
     netPerformancePercent: Big;
   }): Big {
     if (isNumber(daysInMarket) && daysInMarket > 0) {
-      return netPerformancePercent.mul(daysInMarket).div(365);
+      const exponent = new Big(365).div(daysInMarket).toNumber();
+      return new Big(
+        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
+      ).minus(1);
     }
 
     return new Big(0);
@@ -632,10 +634,6 @@ export class PortfolioCalculatorNew {
     let netPerformance = new Big(0);
     let netPerformancePercentage = new Big(0);
     let completeInitialValue = new Big(0);
-    let netAnnualizedPerformance = new Big(0);
-
-    // use Date.now() to use the mock for today
-    const today = new Date(Date.now());
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
@@ -664,16 +662,6 @@ export class PortfolioCalculatorNew {
         grossPerformancePercentage = grossPerformancePercentage.plus(
           currentPosition.grossPerformancePercentage.mul(currentInitialValue)
         );
-
-        netAnnualizedPerformance = netAnnualizedPerformance.plus(
-          this.getAnnualizedPerformancePercent({
-            daysInMarket: differenceInDays(
-              today,
-              parseDate(currentPosition.firstBuyDate)
-            ),
-            netPerformancePercent: currentPosition.netPerformancePercentage
-          }).mul(currentInitialValue)
-        );
         netPerformancePercentage = netPerformancePercentage.plus(
           currentPosition.netPerformancePercentage.mul(currentInitialValue)
         );
@@ -690,8 +678,6 @@ export class PortfolioCalculatorNew {
         grossPerformancePercentage.div(completeInitialValue);
       netPerformancePercentage =
         netPerformancePercentage.div(completeInitialValue);
-      netAnnualizedPerformance =
-        netAnnualizedPerformance.div(completeInitialValue);
     }
 
     return {
@@ -699,7 +685,6 @@ export class PortfolioCalculatorNew {
       grossPerformance,
       grossPerformancePercentage,
       hasErrors,
-      netAnnualizedPerformance,
       netPerformance,
       netPerformancePercentage,
       totalInvestment

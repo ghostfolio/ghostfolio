@@ -42,6 +42,7 @@ import { REQUEST } from '@nestjs/core';
 import { AssetClass, DataSource, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
+  differenceInDays,
   endOfToday,
   format,
   isAfter,
@@ -480,7 +481,6 @@ export class PortfolioServiceNew {
       } = position;
 
       // Convert investment, gross and net performance to currency of user
-      const userCurrency = this.request.user.Settings.currency;
       const investment = this.exchangeRateDataService.toCurrency(
         position.investment?.toNumber(),
         currency,
@@ -736,7 +736,6 @@ export class PortfolioServiceNew {
       return {
         hasErrors: false,
         performance: {
-          annualizedPerformancePercent: 0,
           currentGrossPerformance: 0,
           currentGrossPerformancePercent: 0,
           currentNetPerformance: 0,
@@ -755,8 +754,6 @@ export class PortfolioServiceNew {
     );
 
     const hasErrors = currentPositions.hasErrors;
-    const annualizedPerformancePercent =
-      currentPositions.netAnnualizedPerformance.toNumber();
     const currentValue = currentPositions.currentValue.toNumber();
     const currentGrossPerformance =
       currentPositions.grossPerformance.toNumber();
@@ -769,7 +766,6 @@ export class PortfolioServiceNew {
     return {
       hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
-        annualizedPerformancePercent,
         currentGrossPerformance,
         currentGrossPerformancePercent,
         currentNetPerformance,
@@ -898,8 +894,24 @@ export class PortfolioServiceNew {
       .plus(performanceInformation.performance.currentValue)
       .toNumber();
 
+    const daysInMarket = differenceInDays(new Date(), firstOrderDate);
+
+    const annualizedPerformancePercent = new PortfolioCalculatorNew({
+      currency: userCurrency,
+      currentRateService: this.currentRateService,
+      orders: []
+    })
+      .getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercent: new Big(
+          performanceInformation.performance.currentNetPerformancePercent
+        )
+      })
+      ?.toNumber();
+
     return {
       ...performanceInformation.performance,
+      annualizedPerformancePercent,
       dividend,
       fees,
       firstOrderDate,
