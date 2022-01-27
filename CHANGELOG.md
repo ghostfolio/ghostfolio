@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the annualized performance in the new calculation engine
+- Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 90 days
 
 ## 1.107.0 - 24.01.2022
 

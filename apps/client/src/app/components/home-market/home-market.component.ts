@@ -20,6 +20,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalData: HistoricalDataItem[];
   public isLoading = true;
+  public readonly numberOfDays = 90;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -49,7 +50,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
             this.dataService
               .fetchSymbolItem({
                 dataSource: DataSource.RAKUTEN,
-                includeHistoricalData: true,
+                includeHistoricalData: this.numberOfDays,
                 symbol: ghostfolioFearAndGreedIndexSymbol
               })
               .pipe(takeUntil(this.unsubscribeSubject))

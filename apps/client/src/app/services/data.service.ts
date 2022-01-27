@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
@@ -138,15 +138,21 @@ export class DataService {
 
   public fetchSymbolItem({
     dataSource,
-    includeHistoricalData = false,
+    includeHistoricalData,
     symbol
   }: {
     dataSource: DataSource;
-    includeHistoricalData?: boolean;
+    includeHistoricalData?: number;
     symbol: string;
   }) {
+    let params = new HttpParams();
+
+    if (includeHistoricalData) {
+      params = params.append('includeHistoricalData', includeHistoricalData);
+    }
+
     return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`, {
-      params: { includeHistoricalData }
+      params
     });
   }
 
