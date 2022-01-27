@@ -153,7 +153,6 @@ export class PortfolioCalculatorNew {
         hasErrors: false,
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
-        netAnnualizedPerformance: new Big(0),
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         positions: [],
