@@ -16,11 +16,11 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-market.html'
 })
 export class HomeMarketComponent implements OnDestroy, OnInit {
-  public numberOfDays = 90;
   public fearAndGreedIndex: number;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalData: HistoricalDataItem[];
   public isLoading = true;
+  public readonly numberOfDays = 90;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
