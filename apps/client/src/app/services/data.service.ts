@@ -151,8 +151,6 @@ export class DataService {
       params = params.append('includeHistoricalData', includeHistoricalData);
     }
 
-    console.log(params);
-
     return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`, {
       params
     });
