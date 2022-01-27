@@ -16,6 +16,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-market.html'
 })
 export class HomeMarketComponent implements OnDestroy, OnInit {
+  public numberOfDays = 90;
   public fearAndGreedIndex: number;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalData: HistoricalDataItem[];
@@ -49,7 +50,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
             this.dataService
               .fetchSymbolItem({
                 dataSource: DataSource.RAKUTEN,
-                includeHistoricalData: true,
+                includeHistoricalData: this.numberOfDays,
                 symbol: ghostfolioFearAndGreedIndexSymbol
               })
               .pipe(takeUntil(this.unsubscribeSubject))

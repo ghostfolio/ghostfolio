@@ -5,7 +5,6 @@ import {
   IDataProviderHistoricalResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -18,25 +17,24 @@ import { SymbolItem } from './interfaces/symbol-item.interface';
 export class SymbolService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService,
-    private readonly prismaService: PrismaService
+    private readonly marketDataService: MarketDataService
   ) {}
 
   public async get({
     dataGatheringItem,
-    includeHistoricalData = false
+    includeHistoricalData
   }: {
     dataGatheringItem: IDataGatheringItem;
-    includeHistoricalData?: boolean;
+    includeHistoricalData?: number;
   }): Promise<SymbolItem> {
     const response = await this.dataProviderService.get([dataGatheringItem]);
     const { currency, marketPrice } = response[dataGatheringItem.symbol] ?? {};
 
     if (dataGatheringItem.dataSource && marketPrice) {
-      let historicalData: HistoricalDataItem[];
+      let historicalData: HistoricalDataItem[] = [];
 
-      if (includeHistoricalData) {
-        const days = 30;
+      if (includeHistoricalData > 0) {
+        const days = includeHistoricalData;
 
         const marketData = await this.marketDataService.getRange({
           dateQuery: { gte: subDays(new Date(), days) },

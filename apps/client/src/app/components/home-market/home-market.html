@@ -1,18 +1,10 @@
 <div
-  class="
-    align-items-center
-    container
-    d-flex
-    flex-grow-1
-    h-100
-    justify-content-center
-    w-100
-  "
+  class="align-items-center container d-flex flex-grow-1 h-100 justify-content-center w-100"
 >
   <div class="no-gutters row w-100">
     <div class="col-xs-12 col-md-8 offset-md-2">
       <div class="mb-2 text-center text-muted">
-        <small i18n>Last 30 Days</small>
+        <small i18n>Last {{ numberOfDays }} Days</small>
       </div>
       <gf-line-chart
         class="mb-5"
