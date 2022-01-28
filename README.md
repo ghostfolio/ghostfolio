@@ -187,6 +187,6 @@ Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Sl
 
 ## License
 
-© 2021 [Ghostfolio](https://ghostfol.io)
+© 2022 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
