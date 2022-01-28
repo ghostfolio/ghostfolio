@@ -191,7 +191,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             try {
               await this.importTransactionsService.importJson({
                 content: content.orders,
-                defaultAccountId: this.defaultAccountId
               });
 
               this.handleImportSuccess();
@@ -204,8 +203,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           } else if (file.name.endsWith('.csv')) {
             try {
               await this.importTransactionsService.importCsv({
+                user: this.user,
                 fileContent,
-                defaultAccountId: this.defaultAccountId,
                 primaryDataSource: this.primaryDataSource
               });
 
