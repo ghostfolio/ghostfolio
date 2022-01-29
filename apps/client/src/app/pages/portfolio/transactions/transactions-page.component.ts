@@ -190,7 +190,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
             try {
               await this.importTransactionsService.importJson({
-                content: content.orders,
+                content: content.orders
               });
 
               this.handleImportSuccess();
@@ -205,7 +205,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
               await this.importTransactionsService.importCsv({
                 fileContent,
                 primaryDataSource: this.primaryDataSource,
-                user: this.user,
+                user: this.user
               });
 
               this.handleImportSuccess();

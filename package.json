@@ -103,6 +103,7 @@
     "ngx-markdown": "13.0.0",
     "ngx-skeleton-loader": "2.9.1",
     "ngx-stripe": "13.0.0",
+    "papaparse": "5.3.1",
     "passport": "0.4.1",
     "passport-google-oauth20": "2.0.0",
     "passport-jwt": "4.0.0",
