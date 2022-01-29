@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, format, isAfter } from 'date-fns';
 import { isNumber } from 'lodash';
@@ -190,9 +191,15 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.import.emit();
   }
 
-  public onOpenPositionDialog({ symbol }: { symbol: string }): void {
+  public onOpenPositionDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): void {
     this.router.navigate([], {
-      queryParams: { positionDetailDialog: true, symbol }
+      queryParams: { dataSource, symbol, positionDetailDialog: true }
     });
   }
 

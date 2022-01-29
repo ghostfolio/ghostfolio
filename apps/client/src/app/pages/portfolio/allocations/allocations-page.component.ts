@@ -14,7 +14,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ToggleOption } from '@ghostfolio/common/types';
-import { AssetClass } from '@prisma/client';
+import { AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -84,8 +84,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['positionDetailDialog'] && params['symbol']) {
+        if (
+          params['dataSource'] &&
+          params['positionDetailDialog'] &&
+          params['symbol']
+        ) {
           this.openPositionDialog({
+            dataSource: params['dataSource'],
             symbol: params['symbol']
           });
         }
@@ -291,7 +296,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openPositionDialog({ symbol }: { symbol: string }) {
+  private openPositionDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -301,6 +312,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         const dialogRef = this.dialog.open(PositionDetailDialog, {
           autoFocus: false,
           data: {
+            dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,

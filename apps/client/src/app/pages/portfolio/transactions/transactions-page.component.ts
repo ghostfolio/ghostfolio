@@ -75,8 +75,13 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
-        } else if (params['positionDetailDialog'] && params['symbol']) {
+        } else if (
+          params['dataSource'] &&
+          params['positionDetailDialog'] &&
+          params['symbol']
+        ) {
           this.openPositionDialog({
+            dataSource: params['dataSource'],
             symbol: params['symbol']
           });
         }
@@ -387,7 +392,13 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  private openPositionDialog({ symbol }: { symbol: string }) {
+  private openPositionDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -397,6 +408,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         const dialogRef = this.dialog.open(PositionDetailDialog, {
           autoFocus: false,
           data: {
+            dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,

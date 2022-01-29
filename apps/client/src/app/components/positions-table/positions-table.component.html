@@ -108,7 +108,7 @@
     }"
     (click)="
       !ignoreAssetSubClasses.includes(row.assetSubClass) &&
-        onOpenPositionDialog({ symbol: row.symbol })
+        onOpenPositionDialog({ dataSource: row.dataSource, symbol: row.symbol })
     "
   ></tr>
 </table>

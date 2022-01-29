@@ -59,7 +59,10 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
 
   public ngOnInit(): void {
     this.dataService
-      .fetchPositionDetail(this.data.symbol)
+      .fetchPositionDetail({
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({

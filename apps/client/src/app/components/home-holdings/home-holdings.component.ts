@@ -12,6 +12,7 @@ import { defaultDateRangeOptions } from '@ghostfolio/common/config';
 import { Position, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
+import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -47,8 +48,15 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['positionDetailDialog'] && params['symbol']) {
-          this.openPositionDialog({ symbol: params['symbol'] });
+        if (
+          params['dataSource'] &&
+          params['positionDetailDialog'] &&
+          params['symbol']
+        ) {
+          this.openPositionDialog({
+            dataSource: params['dataSource'],
+            symbol: params['symbol']
+          });
         }
       });
 
@@ -91,7 +99,13 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openPositionDialog({ symbol }: { symbol: string }) {
+  private openPositionDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -101,6 +115,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
         const dialogRef = this.dialog.open(PositionDetailDialog, {
           autoFocus: false,
           data: {
+            dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,

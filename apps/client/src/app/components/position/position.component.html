@@ -3,7 +3,11 @@
     <a
       class="d-flex p-3 w-100"
       [routerLink]="[]"
-      [queryParams]="{ positionDetailDialog: true, symbol: position?.symbol }"
+      [queryParams]="{
+        dataSource: position?.dataSource,
+        positionDetailDialog: true,
+        symbol: position?.symbol
+      }"
     >
       <div class="d-flex mr-2">
         <gf-trend-indicator

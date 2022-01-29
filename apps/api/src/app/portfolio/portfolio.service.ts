@@ -345,6 +345,7 @@ export class PortfolioService {
         assetSubClass: symbolProfile.assetSubClass,
         countries: symbolProfile.countries,
         currency: item.currency,
+        dataSource: symbolProfile.dataSource,
         exchange: dataProviderResponse.exchange,
         grossPerformance: item.grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent:
@@ -385,6 +386,7 @@ export class PortfolioService {
   }
 
   public async getPosition(
+    aDataSource: DataSource,
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
@@ -393,7 +395,9 @@ export class PortfolioService {
 
     const orders = (
       await this.orderService.getOrders({ userCurrency, userId })
-    ).filter((order) => order.symbol === aSymbol);
+    ).filter((order) => {
+      return order.dataSource === aDataSource && order.symbol === aSymbol;
+    });
 
     if (orders.length <= 0) {
       return {
@@ -467,7 +471,6 @@ export class PortfolioService {
       } = position;
 
       // Convert investment, gross and net performance to currency of user
-      const userCurrency = this.request.user.Settings.currency;
       const investment = this.exchangeRateDataService.toCurrency(
         position.investment?.toNumber(),
         currency,
