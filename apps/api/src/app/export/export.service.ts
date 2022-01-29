@@ -11,6 +11,7 @@ export class ExportService {
     const orders = await this.prismaService.order.findMany({
       orderBy: { date: 'desc' },
       select: {
+        accountId: true,
         currency: true,
         dataSource: true,
         date: true,

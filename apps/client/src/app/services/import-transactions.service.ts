@@ -3,15 +3,17 @@ import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { DataSource, Type } from '@prisma/client';
 import { parse } from 'date-fns';
-import { isNumber } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
+import { isNumber } from 'lodash';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { User } from '@ghostfolio/common/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImportTransactionsService {
+  private static ACCOUNT_ID = ['account', 'accountid'];
   private static CURRENCY_KEYS = ['ccy', 'currency'];
   private static DATE_KEYS = ['date'];
   private static FEE_KEYS = ['commission', 'fee'];
@@ -23,25 +25,29 @@ export class ImportTransactionsService {
   public constructor(private http: HttpClient) {}
 
   public async importCsv({
-    defaultAccountId,
     fileContent,
-    primaryDataSource
+    primaryDataSource,
+    user
   }: {
-    defaultAccountId: string;
     fileContent: string;
     primaryDataSource: DataSource;
+    user: User;
   }) {
-    const content = csvToJson(fileContent, {
+    let content: any[] = [];
+
+    csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
-      skipEmptyLines: true
-    }).data;
+      skipEmptyLines: true,
+      complete: (parsedData) => {
+        content = parsedData.data.filter((item) => item['date'] != null);
+      }
+    });
 
     const orders: CreateOrderDto[] = [];
-
     for (const [index, item] of content.entries()) {
       orders.push({
-        accountId: defaultAccountId,
+        accountId: this.parseAccount({ content, index, item, user }),
         currency: this.parseCurrency({ content, index, item }),
         dataSource: primaryDataSource,
         date: this.parseDate({ content, index, item }),
@@ -53,21 +59,13 @@ export class ImportTransactionsService {
       });
     }
 
-    await this.importJson({ defaultAccountId, content: orders });
+    await this.importJson({ content: orders });
   }
 
-  public importJson({
-    content,
-    defaultAccountId
-  }: {
-    content: CreateOrderDto[];
-    defaultAccountId: string;
-  }): Promise<void> {
+  public importJson({ content }: { content: CreateOrderDto[] }): Promise<void> {
     return new Promise((resolve, reject) => {
       this.postImport({
-        orders: content.map((order) => {
-          return { ...order, accountId: defaultAccountId };
-        })
+        orders: content
       })
         .pipe(
           catchError((error) => {
@@ -88,6 +86,38 @@ export class ImportTransactionsService {
       acc[key.toLowerCase()] = aObject[key];
       return acc;
     }, {});
+  }
+
+  private parseAccount({
+    content,
+    index,
+    item,
+    user
+  }: {
+    content: any[];
+    index: number;
+    item: any;
+    user: User;
+  }) {
+    item = this.lowercaseKeys(item);
+    for (const key of ImportTransactionsService.ACCOUNT_ID) {
+      if (item[key]) {
+        let accountid = user.accounts.find((account) => {
+          return (
+            account.name.toLowerCase() === item[key].toLowerCase() ||
+            account.id == item[key]
+          );
+        })?.id;
+        if (!accountid) {
+          accountid = user?.accounts.find((account) => {
+            return account.isDefault;
+          })?.id;
+        }
+        return accountid;
+      }
+    }
+
+    throw { message: `orders.${index}.account is not valid`, orders: content };
   }
 
   private parseCurrency({
