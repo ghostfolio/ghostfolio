@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { parse } from 'date-fns';
 import { DataSource, Type } from '@prisma/client';
+import { parse } from 'date-fns';
 import { parse as csvToJson } from 'papaparse';
 import { isNumber } from 'lodash';
 import { EMPTY } from 'rxjs';
@@ -33,14 +33,16 @@ export class ImportTransactionsService {
     primaryDataSource: DataSource;
     user: User;
   }) {
-    const content = csvToJson(fileContent, {
+    let content: any[] = [];
+
+    csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
       skipEmptyLines: true,
       complete: (parsedData) => {
-        parsedData.data.filter((item) => item['date'] != null);
+        content = parsedData.data.filter((item) => item['date'] != null);
       }
-    }).data;
+    });
 
     const orders: CreateOrderDto[] = [];
     for (const [index, item] of content.entries()) {
