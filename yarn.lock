@@ -13425,14 +13425,6 @@ ngx-markdown@13.0.0:
     prismjs "^1.25.0"
     tslib "^2.3.0"
 
-ngx-papaparse@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-papaparse/-/ngx-papaparse-5.0.0.tgz#30c5a73658cdb443e78e0b3f8c89d646d1ae5b2e"
-  integrity sha512-BA5vEtHPrh3UXLLbcvbHAIVEdMhQrkdMS5SpciuRDQqN1PSK71qQbVFws9AuqHoBXPwXPMUokiAzYs69VFhaPA==
-  dependencies:
-    papaparse "^5.3.0"
-    tslib "^1.10.0"
-
 ngx-skeleton-loader@2.9.1:
   version "2.9.1"
   resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.9.1.tgz#1e419ef66696a2017afc9c8cd0bc129d2c680ffb"
@@ -14152,7 +14144,7 @@ pako@^1.0.3, pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
 
-papaparse@^5.3.0:
+papaparse@5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.1.tgz#770b7a9124d821d4b2132132b7bd7dce7194b5b1"
   integrity sha512-Dbt2yjLJrCwH2sRqKFFJaN5XgIASO9YOFeFP8rIBRG2Ain8mqk5r1M6DkfvqEVozVcz3r3HaUGw253hA1nLIcA==
