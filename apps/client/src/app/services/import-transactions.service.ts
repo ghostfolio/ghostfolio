@@ -59,7 +59,6 @@ export class ImportTransactionsService {
       });
     }
 
-
     await this.importJson({ content: orders });
   }
 
