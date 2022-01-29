@@ -357,6 +357,7 @@ export class PortfolioServiceNew {
         assetSubClass: symbolProfile.assetSubClass,
         countries: symbolProfile.countries,
         currency: item.currency,
+        dataSource: symbolProfile.dataSource,
         exchange: dataProviderResponse.exchange,
         grossPerformance: item.grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent:
@@ -397,6 +398,7 @@ export class PortfolioServiceNew {
   }
 
   public async getPosition(
+    aDataSource: DataSource,
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
@@ -405,7 +407,9 @@ export class PortfolioServiceNew {
 
     const orders = (
       await this.orderService.getOrders({ userCurrency, userId })
-    ).filter((order) => order.symbol === aSymbol);
+    ).filter((order) => {
+      return order.dataSource === aDataSource && order.symbol === aSymbol;
+    });
 
     if (orders.length <= 0) {
       return {

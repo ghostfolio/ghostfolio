@@ -30,6 +30,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { DataSource } from '@prisma/client';
 import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -337,15 +338,16 @@ export class PortfolioController {
     return summary;
   }
 
-  @Get('position/:symbol')
+  @Get('position/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async getPosition(
     @Headers('impersonation-id') impersonationId: string,
+    @Param('dataSource') dataSource,
     @Param('symbol') symbol
   ): Promise<PortfolioPositionDetail> {
     let position = await this.portfolioServiceStrategy
       .get()
-      .getPosition(impersonationId, symbol);
+      .getPosition(dataSource, impersonationId, symbol);
 
     if (position) {
       if (

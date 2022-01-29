@@ -14,7 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
-import { AssetClass, Order as OrderModel } from '@prisma/client';
+import { AssetClass, DataSource, Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -75,9 +75,15 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }*/
 
-  public onOpenPositionDialog({ symbol }: { symbol: string }): void {
+  public onOpenPositionDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): void {
     this.router.navigate([], {
-      queryParams: { positionDetailDialog: true, symbol }
+      queryParams: { dataSource, symbol, positionDetailDialog: true }
     });
   }
 

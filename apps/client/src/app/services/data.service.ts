@@ -225,19 +225,27 @@ export class DataService {
     );
   }
 
-  public fetchPositionDetail(aSymbol: string) {
-    return this.http.get<any>(`/api/portfolio/position/${aSymbol}`).pipe(
-      map((data) => {
-        if (data.orders) {
-          for (const order of data.orders) {
-            order.createdAt = parseISO(order.createdAt);
-            order.date = parseISO(order.date);
+  public fetchPositionDetail({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http
+      .get<any>(`/api/portfolio/position/${dataSource}/${symbol}`)
+      .pipe(
+        map((data) => {
+          if (data.orders) {
+            for (const order of data.orders) {
+              order.createdAt = parseISO(order.createdAt);
+              order.date = parseISO(order.date);
+            }
           }
-        }
 
-        return data;
-      })
-    );
+          return data;
+        })
+      );
   }
 
   public loginAnonymous(accessToken: string) {
