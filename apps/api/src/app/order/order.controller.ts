@@ -114,19 +114,9 @@ export class OrderController {
       );
     }
 
-    const date = parseISO(data.date);
-
-    const accountId = data.accountId;
-    delete data.accountId;
-
     return this.orderService.createOrder({
       ...data,
-      date,
-      Account: {
-        connect: {
-          id_userId: { id: accountId, userId: this.request.user.id }
-        }
-      },
+      date: parseISO(data.date),
       SymbolProfile: {
         connectOrCreate: {
           create: {
@@ -141,7 +131,8 @@ export class OrderController {
           }
         }
       },
-      User: { connect: { id: this.request.user.id } }
+      User: { connect: { id: this.request.user.id } },
+      userId: this.request.user.id
     });
   }
 

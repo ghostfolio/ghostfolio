@@ -1,3 +1,4 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
@@ -24,7 +25,7 @@ import { OrderService } from './order.service';
     UserModule
   ],
   controllers: [OrderController],
-  providers: [CacheService, OrderService],
+  providers: [AccountService, CacheService, OrderService],
   exports: [OrderService]
 })
 export class OrderModule {}
