@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { DataSource, Type } from '@prisma/client';
 import { parse } from 'date-fns';
+import { DataSource, Type } from '@prisma/client';
+import { parse as csvToJson } from 'papaparse';
 import { isNumber } from 'lodash';
-import { Papa } from 'ngx-papaparse';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from '@ghostfolio/common/interfaces';
@@ -22,27 +22,25 @@ export class ImportTransactionsService {
   private static TYPE_KEYS = ['action', 'type'];
   private static UNIT_PRICE_KEYS = ['price', 'unitprice', 'value'];
 
-  public constructor(private http: HttpClient, private papa: Papa) {}
+  public constructor(private http: HttpClient) {}
 
   public async importCsv({
-    user,
     fileContent,
-    primaryDataSource
+    primaryDataSource,
+    user
   }: {
-    user: User;
     fileContent: string;
     primaryDataSource: DataSource;
+    user: User;
   }) {
-    let content;
-
-    this.papa.parse(fileContent, {
+    const content = csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
       skipEmptyLines: true,
       complete: (parsedData) => {
-        content = parsedData.data.filter((item) => item['date'] != null);
+        parsedData.data.filter((item) => item['date'] != null);
       }
-    });
+    }).data;
 
     const orders: CreateOrderDto[] = [];
     for (const [index, item] of content.entries()) {

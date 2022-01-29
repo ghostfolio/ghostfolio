@@ -203,9 +203,9 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           } else if (file.name.endsWith('.csv')) {
             try {
               await this.importTransactionsService.importCsv({
-                user: this.user,
                 fileContent,
-                primaryDataSource: this.primaryDataSource
+                primaryDataSource: this.primaryDataSource,
+                user: this.user,
               });
 
               this.handleImportSuccess();
