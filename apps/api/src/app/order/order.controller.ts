@@ -1,5 +1,6 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -14,7 +15,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -57,6 +59,7 @@ export class OrderController {
   }
 
   @Get()
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @UseGuards(AuthGuard('jwt'))
   public async getAllOrders(
     @Headers('impersonation-id') impersonationId

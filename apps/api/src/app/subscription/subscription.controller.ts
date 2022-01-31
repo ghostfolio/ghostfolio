@@ -7,6 +7,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
   Inject,
   Logger,
@@ -17,7 +18,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { SubscriptionService } from './subscription.service';
@@ -32,11 +32,9 @@ export class SubscriptionController {
   ) {}
 
   @Post('redeem-coupon')
+  @HttpCode(StatusCodes.OK)
   @UseGuards(AuthGuard('jwt'))
-  public async redeemCoupon(
-    @Body() { couponCode }: { couponCode: string },
-    @Res() res: Response
-  ) {
+  public async redeemCoupon(@Body() { couponCode }: { couponCode: string }) {
     if (!this.request.user) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -74,12 +72,10 @@ export class SubscriptionController {
       `Subscription for user '${this.request.user.id}' has been created with coupon`
     );
 
-    res.status(StatusCodes.OK);
-
-    return <any>res.json({
+    return {
       message: getReasonPhrase(StatusCodes.OK),
       statusCode: StatusCodes.OK
-    });
+    };
   }
 
   @Get('stripe/callback')
