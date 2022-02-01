@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added support for cryptocurrency _Mina Protocol_ (`MINA-USD`)
+
 ### Changed
 
 - Improved the consistent use of `symbol` in combination with `dataSource`
