@@ -1,20 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { DataSource, Type } from '@prisma/client';
+import { Account, DataSource, Type } from '@prisma/client';
 import { parse } from 'date-fns';
-import { parse as csvToJson } from 'papaparse';
 import { isNumber } from 'lodash';
+import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { User } from '@ghostfolio/common/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImportTransactionsService {
-  private static ACCOUNT_ID = ['account', 'accountid'];
+  private static ACCOUNT_KEYS = ['account', 'accountid'];
   private static CURRENCY_KEYS = ['ccy', 'currency'];
+  private static DATA_SOURCE_KEYS = ['datasource'];
   private static DATE_KEYS = ['date'];
   private static FEE_KEYS = ['commission', 'fee'];
   private static QUANTITY_KEYS = ['qty', 'quantity', 'shares', 'units'];
@@ -26,30 +26,23 @@ export class ImportTransactionsService {
 
   public async importCsv({
     fileContent,
-    primaryDataSource,
-    user
+    userAccounts
   }: {
     fileContent: string;
-    primaryDataSource: DataSource;
-    user: User;
+    userAccounts: Account[];
   }) {
-    let content: any[] = [];
-
-    csvToJson(fileContent, {
+    const content = csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
-      skipEmptyLines: true,
-      complete: (parsedData) => {
-        content = parsedData.data.filter((item) => item['date'] != null);
-      }
-    });
+      skipEmptyLines: true
+    }).data;
 
     const orders: CreateOrderDto[] = [];
     for (const [index, item] of content.entries()) {
       orders.push({
-        accountId: this.parseAccount({ content, index, item, user }),
+        accountId: this.parseAccount({ item, userAccounts }),
         currency: this.parseCurrency({ content, index, item }),
-        dataSource: primaryDataSource,
+        dataSource: this.parseDataSource({ item }),
         date: this.parseDate({ content, index, item }),
         fee: this.parseFee({ content, index, item }),
         quantity: this.parseQuantity({ content, index, item }),
@@ -89,35 +82,26 @@ export class ImportTransactionsService {
   }
 
   private parseAccount({
-    content,
-    index,
     item,
-    user
+    userAccounts
   }: {
-    content: any[];
-    index: number;
     item: any;
-    user: User;
+    userAccounts: Account[];
   }) {
     item = this.lowercaseKeys(item);
-    for (const key of ImportTransactionsService.ACCOUNT_ID) {
+
+    for (const key of ImportTransactionsService.ACCOUNT_KEYS) {
       if (item[key]) {
-        let accountid = user.accounts.find((account) => {
+        return userAccounts.find((account) => {
           return (
-            account.name.toLowerCase() === item[key].toLowerCase() ||
-            account.id == item[key]
+            account.id === item[key] ||
+            account.name.toLowerCase() === item[key].toLowerCase()
           );
         })?.id;
-        if (!accountid) {
-          accountid = user?.accounts.find((account) => {
-            return account.isDefault;
-          })?.id;
-        }
-        return accountid;
       }
     }
 
-    throw { message: `orders.${index}.account is not valid`, orders: content };
+    return undefined;
   }
 
   private parseCurrency({
@@ -138,6 +122,18 @@ export class ImportTransactionsService {
     }
 
     throw { message: `orders.${index}.currency is not valid`, orders: content };
+  }
+
+  private parseDataSource({ item }: { item: any }) {
+    item = this.lowercaseKeys(item);
+
+    for (const key of ImportTransactionsService.DATA_SOURCE_KEYS) {
+      if (item[key]) {
+        return DataSource[item[key].toUpperCase()];
+      }
+    }
+
+    return undefined;
   }
 
   private parseDate({

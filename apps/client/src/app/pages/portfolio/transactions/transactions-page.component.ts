@@ -39,7 +39,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public routeQueryParams: Subscription;
   public user: User;
 
-  private primaryDataSource: DataSource;
   private unsubscribeSubject = new Subject<void>();
 
   /**
@@ -57,9 +56,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {
-    const { primaryDataSource } = this.dataService.fetchInfo();
-    this.primaryDataSource = primaryDataSource;
-
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
@@ -209,8 +205,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             try {
               await this.importTransactionsService.importCsv({
                 fileContent,
-                primaryDataSource: this.primaryDataSource,
-                user: this.user
+                userAccounts: this.user.accounts
               });
 
               this.handleImportSuccess();

@@ -1,3 +1,4 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
@@ -13,6 +14,7 @@ import { Activity } from './interfaces/activities.interface';
 @Injectable()
 export class OrderService {
   public constructor(
+    private readonly accountService: AccountService,
     private readonly cacheService: CacheService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
@@ -47,7 +49,24 @@ export class OrderService {
     });
   }
 
-  public async createOrder(data: Prisma.OrderCreateInput): Promise<Order> {
+  public async createOrder(
+    data: Prisma.OrderCreateInput & { accountId?: string; userId: string }
+  ): Promise<Order> {
+    const defaultAccount = (
+      await this.accountService.getAccounts(data.userId)
+    ).find((account) => {
+      return account.isDefault === true;
+    });
+
+    const Account = {
+      connect: {
+        id_userId: {
+          userId: data.userId,
+          id: data.accountId ?? defaultAccount?.id
+        }
+      }
+    };
+
     const isDraft = isAfter(data.date as Date, endOfToday());
 
     // Convert the symbol to uppercase to avoid case-sensitive duplicates
@@ -70,9 +89,15 @@ export class OrderService {
 
     await this.cacheService.flush();
 
+    delete data.accountId;
+    delete data.userId;
+
+    const orderData: Prisma.OrderCreateInput = data;
+
     return this.prismaService.order.create({
       data: {
-        ...data,
+        ...orderData,
+        Account,
         isDraft,
         symbol
       }

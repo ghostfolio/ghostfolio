@@ -20,6 +20,11 @@ export class ImportService {
     orders: Partial<Order>[];
     userId: string;
   }): Promise<void> {
+    for (const order of orders) {
+      order.dataSource =
+        order.dataSource ?? this.dataProviderService.getPrimaryDataSource();
+    }
+
     await this.validateOrders({ orders, userId });
 
     for (const {
@@ -34,6 +39,7 @@ export class ImportService {
       unitPrice
     } of orders) {
       await this.orderService.createOrder({
+        accountId,
         currency,
         dataSource,
         fee,
@@ -41,11 +47,7 @@ export class ImportService {
         symbol,
         type,
         unitPrice,
-        Account: {
-          connect: {
-            id_userId: { userId, id: accountId }
-          }
-        },
+        userId,
         date: parseISO(<string>(<unknown>date)),
         SymbolProfile: {
           connectOrCreate: {
