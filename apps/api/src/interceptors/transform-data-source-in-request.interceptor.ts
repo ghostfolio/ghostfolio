@@ -23,15 +23,23 @@ export class TransformDataSourceInRequestInterceptor<T>
     const request = http.getRequest();
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true) {
-      // Decode data source
+      if (request.body.dataSource) {
+        request.body.dataSource = this.decodeDataSource(
+          request.body.dataSource
+        );
+      }
+
       if (request.params.dataSource) {
-        request.params.dataSource = Buffer.from(
-          request.params.dataSource,
-          'hex'
-        ).toString();
+        request.params.dataSource = this.decodeDataSource(
+          request.params.dataSource
+        );
       }
     }
 
     return next.handle();
+  }
+
+  private decodeDataSource(encodeDataSource: string) {
+    return Buffer.from(encodeDataSource, 'hex').toString();
   }
 }

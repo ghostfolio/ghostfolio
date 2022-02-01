@@ -28,8 +28,32 @@ export class TransformDataSourceInResponseInterceptor<T>
         ) {
           if (data.activities) {
             data.activities.map((activity) => {
+              activity.SymbolProfile.dataSource = this.encodeDataSource(
+                activity.SymbolProfile.dataSource
+              );
               activity.dataSource = this.encodeDataSource(activity.dataSource);
               return activity;
+            });
+          }
+
+          if (data.dataSource) {
+            data.dataSource = this.encodeDataSource(data.dataSource);
+          }
+
+          if (data.holdings) {
+            for (const symbol of Object.keys(data.holdings)) {
+              if (data.holdings[symbol].dataSource) {
+                data.holdings[symbol].dataSource = this.encodeDataSource(
+                  data.holdings[symbol].dataSource
+                );
+              }
+            }
+          }
+
+          if (data.items) {
+            data.items.map((item) => {
+              item.dataSource = this.encodeDataSource(item.dataSource);
+              return item;
             });
           }
 

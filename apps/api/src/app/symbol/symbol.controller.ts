@@ -1,3 +1,5 @@
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   Controller,
@@ -5,7 +7,8 @@ import {
   HttpException,
   Param,
   Query,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
@@ -25,6 +28,7 @@ export class SymbolController {
    */
   @Get('lookup')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
     @Query() { query = '' }
   ): Promise<{ items: LookupItem[] }> {
@@ -43,6 +47,8 @@ export class SymbolController {
    */
   @Get(':dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getSymbolData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string,
