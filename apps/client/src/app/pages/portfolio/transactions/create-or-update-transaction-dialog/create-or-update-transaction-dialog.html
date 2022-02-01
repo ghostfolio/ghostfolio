@@ -109,18 +109,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Fee</mat-label>
-        <input
-          matInput
-          name="fee"
-          required
-          type="number"
-          [(ngModel)]="data.transaction.fee"
-        />
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
         <input
           matInput
@@ -141,6 +129,7 @@
           type="number"
           [(ngModel)]="data.transaction.unitPrice"
         />
+        <span class="ml-2" matSuffix>{{ data.transaction.currency }}</span>
         <button
           *ngIf="currentMarketPrice && (data.transaction.type === 'BUY' || data.transaction.type === 'SELL')"
           mat-icon-button
@@ -150,6 +139,19 @@
         >
           <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
         </button>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Fee</mat-label>
+        <input
+          matInput
+          name="fee"
+          required
+          type="number"
+          [(ngModel)]="data.transaction.fee"
+        />
+        <span class="ml-2" matSuffix>{{ data.transaction.currency }}</span>
       </mat-form-field>
     </div>
   </div>
