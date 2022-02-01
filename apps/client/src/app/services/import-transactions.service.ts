@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { DataSource, Type } from '@prisma/client';
+import { Account, DataSource, Type } from '@prisma/client';
 import { parse } from 'date-fns';
 import { isNumber } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
@@ -12,7 +12,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ImportTransactionsService {
-  private static ACCOUNT_ID_KEYS = ['account', 'accountid'];
+  private static ACCOUNT_KEYS = ['account', 'accountid'];
   private static CURRENCY_KEYS = ['ccy', 'currency'];
   private static DATA_SOURCE_KEYS = ['datasource'];
   private static DATE_KEYS = ['date'];
@@ -24,7 +24,13 @@ export class ImportTransactionsService {
 
   public constructor(private http: HttpClient) {}
 
-  public async importCsv({ fileContent }: { fileContent: string }) {
+  public async importCsv({
+    fileContent,
+    userAccounts
+  }: {
+    fileContent: string;
+    userAccounts: Account[];
+  }) {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
@@ -34,7 +40,7 @@ export class ImportTransactionsService {
     const orders: CreateOrderDto[] = [];
     for (const [index, item] of content.entries()) {
       orders.push({
-        accountId: this.parseAccountId({ item }),
+        accountId: this.parseAccount({ item, userAccounts }),
         currency: this.parseCurrency({ content, index, item }),
         dataSource: this.parseDataSource({ item }),
         date: this.parseDate({ content, index, item }),
@@ -75,12 +81,23 @@ export class ImportTransactionsService {
     }, {});
   }
 
-  private parseAccountId({ item }: { item: any }) {
+  private parseAccount({
+    item,
+    userAccounts
+  }: {
+    item: any;
+    userAccounts: Account[];
+  }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.ACCOUNT_ID_KEYS) {
+    for (const key of ImportTransactionsService.ACCOUNT_KEYS) {
       if (item[key]) {
-        return item[key];
+        return userAccounts.find((account) => {
+          return (
+            account.id === item[key] ||
+            account.name.toLowerCase() === item[key].toLowerCase()
+          );
+        })?.id;
       }
     }
 
@@ -112,7 +129,7 @@ export class ImportTransactionsService {
 
     for (const key of ImportTransactionsService.DATA_SOURCE_KEYS) {
       if (item[key]) {
-        return DataSource[item[key]];
+        return DataSource[item[key].toUpperCase()];
       }
     }
 
