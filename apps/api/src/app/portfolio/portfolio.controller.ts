@@ -225,8 +225,8 @@ export class PortfolioController {
   }
 
   @Get('positions')
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
