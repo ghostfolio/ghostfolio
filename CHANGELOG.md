@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the form in the create or edit transaction dialog
 - Improved the consistent use of `symbol` in combination with `dataSource`
 - Removed the primary data source from the client
 
