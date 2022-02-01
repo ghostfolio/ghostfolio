@@ -141,7 +141,7 @@ export class DataService {
     includeHistoricalData,
     symbol
   }: {
-    dataSource: DataSource;
+    dataSource: DataSource | string;
     includeHistoricalData?: number;
     symbol: string;
   }) {

@@ -1,3 +1,4 @@
+import { decodeDataSource } from '@ghostfolio/common/helper';
 import {
   CallHandler,
   ExecutionContext,
@@ -24,22 +25,14 @@ export class TransformDataSourceInRequestInterceptor<T>
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true) {
       if (request.body.dataSource) {
-        request.body.dataSource = this.decodeDataSource(
-          request.body.dataSource
-        );
+        request.body.dataSource = decodeDataSource(request.body.dataSource);
       }
 
       if (request.params.dataSource) {
-        request.params.dataSource = this.decodeDataSource(
-          request.params.dataSource
-        );
+        request.params.dataSource = decodeDataSource(request.params.dataSource);
       }
     }
 
     return next.handle();
-  }
-
-  private decodeDataSource(encodeDataSource: string) {
-    return Buffer.from(encodeDataSource, 'hex').toString();
   }
 }
