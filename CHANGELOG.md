@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the consistent use of `symbol` in combination with `dataSource`
 - Removed the primary data source from the client
 
+### Removed
+
+- Removed the unused endpoint `GET api/order/:id`
+
 ## 1.108.0 - 27.01.2022
 
 ### Changed
