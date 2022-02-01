@@ -1,5 +1,7 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -14,7 +16,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -58,6 +61,7 @@ export class OrderController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllOrders(
     @Headers('impersonation-id') impersonationId
   ): Promise<Activities> {
@@ -91,19 +95,9 @@ export class OrderController {
     return { activities };
   }
 
-  @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
-  public async getOrderById(@Param('id') id: string): Promise<OrderModel> {
-    return this.orderService.order({
-      id_userId: {
-        id,
-        userId: this.request.user.id
-      }
-    });
-  }
-
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
     if (
       !hasPermission(this.request.user.permissions, permissions.createOrder)
@@ -138,6 +132,7 @@ export class OrderController {
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
     if (
       !hasPermission(this.request.user.permissions, permissions.updateOrder)
