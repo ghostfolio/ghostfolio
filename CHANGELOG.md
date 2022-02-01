@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for the (optional) `accountId` in the import functionality for activities
 - Added support for the (optional) `dataSource` in the import functionality for activities
+- Added support for the data source transformation
 - Added support for the cryptocurrency _Mina Protocol_ (`MINA-USD`)
 
 ### Changed
