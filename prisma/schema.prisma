@@ -185,6 +185,7 @@ enum DataSource {
   ALPHA_VANTAGE
   GHOSTFOLIO
   GOOGLE_SHEETS
+  MANUAL
   RAKUTEN
   YAHOO
 }
@@ -208,5 +209,6 @@ enum Role {
 enum Type {
   BUY
   DIVIDEND
+  ITEM
   SELL
 }

@@ -245,6 +245,8 @@ export class ImportTransactionsService {
             return Type.BUY;
           case 'dividend':
             return Type.DIVIDEND;
+          case 'item':
+            return Type.ITEM;
           case 'sell':
             return Type.SELL;
           default:

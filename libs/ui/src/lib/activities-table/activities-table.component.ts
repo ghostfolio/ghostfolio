@@ -302,7 +302,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
     for (const activity of this.dataSource.filteredData) {
       if (isNumber(activity.valueInBaseCurrency)) {
-        if (activity.type === 'BUY') {
+        if (activity.type === 'BUY' || activity.type === 'ITEM') {
           totalValue = totalValue.plus(activity.valueInBaseCurrency);
         } else if (activity.type === 'SELL') {
           totalValue = totalValue.minus(activity.valueInBaseCurrency);

@@ -194,6 +194,7 @@ export class DataProviderService {
         return dataProviderInterface;
       }
     }
+
     throw new Error('No data provider has been found.');
   }
 }

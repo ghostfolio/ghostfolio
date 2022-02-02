@@ -21,8 +21,13 @@ export class ImportService {
     userId: string;
   }): Promise<void> {
     for (const order of orders) {
-      order.dataSource =
-        order.dataSource ?? this.dataProviderService.getPrimaryDataSource();
+      if (!order.dataSource) {
+        if (order.type === 'ITEM') {
+          order.dataSource = 'MANUAL';
+        } else {
+          order.dataSource = this.dataProviderService.getPrimaryDataSource();
+        }
+      }
     }
 
     await this.validateOrders({ orders, userId });
@@ -111,20 +116,22 @@ export class ImportService {
         throw new Error(`orders.${index} is a duplicate transaction`);
       }
 
-      const result = await this.dataProviderService.get([
-        { dataSource, symbol }
-      ]);
+      if (dataSource !== 'MANUAL') {
+        const result = await this.dataProviderService.get([
+          { dataSource, symbol }
+        ]);
 
-      if (result[symbol] === undefined) {
-        throw new Error(
-          `orders.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
-        );
-      }
+        if (result[symbol] === undefined) {
+          throw new Error(
+            `orders.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+          );
+        }
 
-      if (result[symbol].currency !== currency) {
-        throw new Error(
-          `orders.${index}.currency ("${currency}") does not match with "${result[symbol].currency}"`
-        );
+        if (result[symbol].currency !== currency) {
+          throw new Error(
+            `orders.${index}.currency ("${currency}") does not match with "${result[symbol].currency}"`
+          );
+        }
       }
     }
   }
