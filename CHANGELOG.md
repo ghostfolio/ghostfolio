@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -Fixed the data source of the _Fear & Greed Index_ (market mood)
 
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
 ## 1.109.0 - 01.02.2022
 
 ### Added
