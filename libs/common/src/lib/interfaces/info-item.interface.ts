@@ -4,6 +4,7 @@ import { Subscription } from './subscription.interface';
 export interface InfoItem {
   currencies: string[];
   demoAuthToken: string;
+  fearAndGreedDataSource?: string;
   globalPermissions: string[];
   isReadOnlyMode?: boolean;
   lastDataGathering?: Date;

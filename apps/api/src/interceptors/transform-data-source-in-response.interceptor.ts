@@ -1,10 +1,10 @@
+import { encodeDataSource } from '@ghostfolio/common/helper';
 import {
   CallHandler,
   ExecutionContext,
   Injectable,
   NestInterceptor
 } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ConfigurationService } from '../services/configuration.service';
@@ -28,22 +28,22 @@ export class TransformDataSourceInResponseInterceptor<T>
         ) {
           if (data.activities) {
             data.activities.map((activity) => {
-              activity.SymbolProfile.dataSource = this.encodeDataSource(
+              activity.SymbolProfile.dataSource = encodeDataSource(
                 activity.SymbolProfile.dataSource
               );
-              activity.dataSource = this.encodeDataSource(activity.dataSource);
+              activity.dataSource = encodeDataSource(activity.dataSource);
               return activity;
             });
           }
 
           if (data.dataSource) {
-            data.dataSource = this.encodeDataSource(data.dataSource);
+            data.dataSource = encodeDataSource(data.dataSource);
           }
 
           if (data.holdings) {
             for (const symbol of Object.keys(data.holdings)) {
               if (data.holdings[symbol].dataSource) {
-                data.holdings[symbol].dataSource = this.encodeDataSource(
+                data.holdings[symbol].dataSource = encodeDataSource(
                   data.holdings[symbol].dataSource
                 );
               }
@@ -52,14 +52,14 @@ export class TransformDataSourceInResponseInterceptor<T>
 
           if (data.items) {
             data.items.map((item) => {
-              item.dataSource = this.encodeDataSource(item.dataSource);
+              item.dataSource = encodeDataSource(item.dataSource);
               return item;
             });
           }
 
           if (data.positions) {
             data.positions.map((position) => {
-              position.dataSource = this.encodeDataSource(position.dataSource);
+              position.dataSource = encodeDataSource(position.dataSource);
               return position;
             });
           }
@@ -68,9 +68,5 @@ export class TransformDataSourceInResponseInterceptor<T>
         return data;
       })
     );
-  }
-
-  private encodeDataSource(aDataSource: DataSource) {
-    return Buffer.from(aDataSource, 'utf-8').toString('hex');
   }
 }
