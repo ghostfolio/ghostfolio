@@ -395,8 +395,11 @@ export class PortfolioService {
 
     const orders = (
       await this.orderService.getOrders({ userCurrency, userId })
-    ).filter((order) => {
-      return order.dataSource === aDataSource && order.symbol === aSymbol;
+    ).filter(({ SymbolProfile }) => {
+      return (
+        SymbolProfile.dataSource === aDataSource &&
+        SymbolProfile.symbol === aSymbol
+      );
     });
 
     if (orders.length <= 0) {

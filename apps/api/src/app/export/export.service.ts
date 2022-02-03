@@ -17,7 +17,7 @@ export class ExportService {
         date: true,
         fee: true,
         quantity: true,
-        symbol: true,
+        SymbolProfile: true,
         type: true,
         unitPrice: true
       },
@@ -26,7 +26,30 @@ export class ExportService {
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
-      orders
+      orders: orders.map(
+        ({
+          accountId,
+          currency,
+          date,
+          fee,
+          quantity,
+          SymbolProfile,
+          type,
+          unitPrice
+        }) => {
+          return {
+            accountId,
+            currency,
+            date,
+            fee,
+            quantity,
+            type,
+            unitPrice,
+            dataSource: SymbolProfile.dataSource,
+            symbol: SymbolProfile.symbol
+          };
+        }
+      )
     };
   }
 }
