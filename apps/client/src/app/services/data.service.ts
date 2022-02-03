@@ -18,7 +18,6 @@ import {
   Accounts,
   AdminData,
   AdminMarketData,
-  AdminMarketDataDetails,
   Export,
   InfoItem,
   PortfolioChart,
@@ -67,19 +66,6 @@ export class DataService {
 
   public fetchAdminMarketData() {
     return this.http.get<AdminMarketData>('/api/admin/market-data');
-  }
-
-  public fetchAdminMarketDataBySymbol(
-    aSymbol: string
-  ): Observable<AdminMarketDataDetails> {
-    return this.http.get<any>(`/api/admin/market-data/${aSymbol}`).pipe(
-      map((data) => {
-        for (const item of data.marketData) {
-          item.date = parseISO(item.date);
-        }
-        return data;
-      })
-    );
   }
 
   public deleteAccess(aId: string) {

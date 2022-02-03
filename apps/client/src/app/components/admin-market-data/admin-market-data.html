@@ -16,7 +16,7 @@
           <ng-container *ngFor="let item of marketData; let i = index">
             <tr
               class="cursor-pointer mat-row"
-              (click)="setCurrentSymbol(item.symbol)"
+              (click)="setCurrentProfile({ dataSource: item.dataSource, symbol: item.symbol })"
             >
               <td class="mat-cell px-1 py-2">{{ item.symbol }}</td>
               <td class="mat-cell px-1 py-2">{{ item.dataSource }}</td>
@@ -49,11 +49,19 @@
                   >
                     Gather Profile Data
                   </button>
+                  <button
+                    i18n
+                    mat-menu-item
+                    [disabled]="item.activityCount !== 0"
+                    (click)="onDeleteProfileData({dataSource: item.dataSource, symbol: item.symbol})"
+                  >
+                    Delete Profile Data
+                  </button>
                 </mat-menu>
               </td>
             </tr>
             <tr *ngIf="currentSymbol === item.symbol" class="mat-row">
-              <td class="p-1" colspan="4">
+              <td class="p-1" colspan="6">
                 <gf-admin-market-data-detail
                   [dataSource]="item.dataSource"
                   [marketData]="marketDataDetails"

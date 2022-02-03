@@ -5,6 +5,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import {
   AdminData,
@@ -13,7 +14,7 @@ import {
   AdminMarketDataItem
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
-import { Property } from '@prisma/client';
+import { DataSource, Property } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 
 @Injectable()
@@ -25,8 +26,20 @@ export class AdminService {
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
-    private readonly subscriptionService: SubscriptionService
+    private readonly subscriptionService: SubscriptionService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async deleteProfileData({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    await this.marketDataService.deleteMany({ dataSource, symbol });
+    await this.symbolProfileService.delete({ dataSource, symbol });
+  }
 
   public async get(): Promise<AdminData> {
     return {
@@ -121,16 +134,21 @@ export class AdminService {
     };
   }
 
-  public async getMarketDataBySymbol(
-    aSymbol: string
-  ): Promise<AdminMarketDataDetails> {
+  public async getMarketDataBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): Promise<AdminMarketDataDetails> {
     return {
       marketData: await this.marketDataService.marketDataItems({
         orderBy: {
           date: 'asc'
         },
         where: {
-          symbol: aSymbol
+          dataSource,
+          symbol
         }
       })
     };

@@ -11,6 +11,7 @@ import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   Inject,
@@ -195,9 +196,10 @@ export class AdminController {
     return this.adminService.getMarketData();
   }
 
-  @Get('market-data/:symbol')
+  @Get('market-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async getMarketDataBySymbol(
+    @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<AdminMarketDataDetails> {
     if (
@@ -212,7 +214,7 @@ export class AdminController {
       );
     }
 
-    return this.adminService.getMarketDataBySymbol(symbol);
+    return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
   }
 
   @Put('market-data/:dataSource/:symbol/:dateString')
@@ -246,6 +248,27 @@ export class AdminController {
         }
       }
     });
+  }
+
+  @Delete('profile-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteProfileData(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.deleteProfileData({ dataSource, symbol });
   }
 
   @Put('settings/:key')
