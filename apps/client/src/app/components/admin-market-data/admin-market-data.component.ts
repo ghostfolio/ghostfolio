@@ -20,6 +20,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-market-data.html'
 })
 export class AdminMarketDataComponent implements OnDestroy, OnInit {
+  public currentDataSource: DataSource;
   public currentSymbol: string;
   public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public marketData: AdminMarketDataItem[] = [];
@@ -41,6 +42,19 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
    */
   public ngOnInit() {
     this.fetchAdminMarketData();
+  }
+
+  public onDeleteProfileData({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.adminService
+      .deleteProfileData({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
   }
 
   public onGatherProfileDataBySymbol({
@@ -69,22 +83,33 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
-  public setCurrentSymbol(aSymbol: string) {
-    this.marketDataDetails = [];
-
-    if (this.currentSymbol === aSymbol) {
-      this.currentSymbol = '';
-    } else {
-      this.currentSymbol = aSymbol;
-
-      this.fetchAdminMarketDataBySymbol(this.currentSymbol);
-    }
-  }
-
   public onMarketDataChanged(withRefresh: boolean = false) {
     if (withRefresh) {
       this.fetchAdminMarketData();
-      this.fetchAdminMarketDataBySymbol(this.currentSymbol);
+      this.fetchAdminMarketDataBySymbol({
+        dataSource: this.currentDataSource,
+        symbol: this.currentSymbol
+      });
+    }
+  }
+
+  public setCurrentProfile({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.marketDataDetails = [];
+
+    if (this.currentSymbol === symbol) {
+      this.currentDataSource = undefined;
+      this.currentSymbol = '';
+    } else {
+      this.currentDataSource = dataSource;
+      this.currentSymbol = symbol;
+
+      this.fetchAdminMarketDataBySymbol({ dataSource, symbol });
     }
   }
 
@@ -104,9 +129,15 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       });
   }
 
-  private fetchAdminMarketDataBySymbol(aSymbol: string) {
-    this.dataService
-      .fetchAdminMarketDataBySymbol(aSymbol)
+  private fetchAdminMarketDataBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.adminService
+      .fetchAdminMarketDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ marketData }) => {
         this.marketDataDetails = marketData;

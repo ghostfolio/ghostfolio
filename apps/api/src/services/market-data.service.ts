@@ -9,6 +9,21 @@ import { DataSource, MarketData, Prisma } from '@prisma/client';
 export class MarketDataService {
   public constructor(private readonly prismaService: PrismaService) {}
 
+  public async deleteMany({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.prismaService.marketData.deleteMany({
+      where: {
+        dataSource,
+        symbol
+      }
+    });
+  }
+
   public async get({
     date,
     symbol

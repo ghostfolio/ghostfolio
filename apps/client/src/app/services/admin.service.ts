@@ -3,14 +3,47 @@ import { Injectable } from '@angular/core';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { AdminMarketDataDetails } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
   public constructor(private http: HttpClient) {}
+
+  public deleteProfileData({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http.delete<void>(
+      `/api/admin/profile-data/${dataSource}/${symbol}`
+    );
+  }
+
+  public fetchAdminMarketDataBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): Observable<AdminMarketDataDetails> {
+    return this.http
+      .get<any>(`/api/admin/market-data/${dataSource}/${symbol}`)
+      .pipe(
+        map((data) => {
+          for (const item of data.marketData) {
+            item.date = parseISO(item.date);
+          }
+          return data;
+        })
+      );
+  }
 
   public gatherMax() {
     return this.http.post<void>(`/api/admin/gather/max`, {});

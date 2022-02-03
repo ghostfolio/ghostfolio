@@ -6,6 +6,7 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { MarketDataModule } from '@ghostfolio/api/services/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { AdminController } from './admin.controller';
@@ -20,7 +21,8 @@ import { AdminService } from './admin.service';
     MarketDataModule,
     PrismaModule,
     PropertyModule,
-    SubscriptionModule
+    SubscriptionModule,
+    SymbolProfileModule
   ],
   controllers: [AdminController],
   providers: [AdminService],

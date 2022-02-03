@@ -4,14 +4,26 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
-import { Prisma, SymbolProfile } from '@prisma/client';
+import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
 import { ScraperConfiguration } from './data-provider/ghostfolio-scraper-api/interfaces/scraper-configuration.interface';
 
 @Injectable()
 export class SymbolProfileService {
-  constructor(private readonly prismaService: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
+
+  public async delete({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.prismaService.symbolProfile.delete({
+      where: { dataSource_symbol: { dataSource, symbol } }
+    });
+  }
 
   public async getSymbolProfiles(
     symbols: string[]
