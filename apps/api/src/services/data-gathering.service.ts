@@ -473,9 +473,18 @@ export class DataGatheringService {
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }],
+      select: {
+        dataSource: true,
+        scraperConfiguration: true,
+        symbol: true
+      }
+    });
+
     // Only consider symbols with incomplete market data for the last
     // 7 days
-    const symbolsToGather = (
+    const symbolsNotToGather = (
       await this.prismaService.marketData.groupBy({
         _count: true,
         by: ['symbol'],
@@ -485,24 +494,15 @@ export class DataGatheringService {
       })
     )
       .filter((group) => {
-        return group._count < 6;
+        return group._count >= 6;
       })
       .map((group) => {
         return group.symbol;
       });
 
-    const symbolProfilesToGather = (
-      await this.prismaService.symbolProfile.findMany({
-        orderBy: [{ symbol: 'asc' }],
-        select: {
-          dataSource: true,
-          scraperConfiguration: true,
-          symbol: true
-        }
-      })
-    )
+    const symbolProfilesToGather = symbolProfiles
       .filter(({ symbol }) => {
-        return symbolsToGather.includes(symbol);
+        return !symbolsNotToGather.includes(symbol);
       })
       .map((symbolProfile) => {
         return {
@@ -514,7 +514,7 @@ export class DataGatheringService {
     const currencyPairsToGather = this.exchangeRateDataService
       .getCurrencyPairs()
       .filter(({ symbol }) => {
-        return symbolsToGather.includes(symbol);
+        return !symbolsNotToGather.includes(symbol);
       })
       .map(({ dataSource, symbol }) => {
         return {
