@@ -43,6 +43,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
+  @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToFilter = true;
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
@@ -137,12 +138,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       'unitPrice',
       'fee',
       'value',
-      'account'
+      'account',
+      'actions'
     ];
-
-    if (this.showActions) {
-      this.displayedColumns.push('actions');
-    }
 
     if (!this.showSymbolColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {

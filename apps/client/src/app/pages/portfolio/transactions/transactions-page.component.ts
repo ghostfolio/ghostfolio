@@ -90,11 +90,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     const { globalPermissions } = this.dataService.fetchInfo();
 
-    this.hasPermissionToImportOrders = hasPermission(
-      globalPermissions,
-      permissions.enableImport
-    );
-
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
@@ -102,6 +97,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+
+        this.hasPermissionToImportOrders =
+          hasPermission(globalPermissions, permissions.enableImport) &&
+          !this.hasImpersonationId;
       });
 
     this.userService.stateChanged
@@ -406,6 +405,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,
+            hasImpersonationId: this.hasImpersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',

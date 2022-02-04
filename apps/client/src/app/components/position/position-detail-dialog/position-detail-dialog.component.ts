@@ -185,8 +185,42 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
+  public onExport() {
+    this.dataService
+      .fetchExport(
+        this.orders.map((order) => {
+          return order.id;
+        })
+      )
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        this.downloadAsFile(
+          data,
+          `ghostfolio-export-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.json`,
+          'text/plain'
+        );
+      });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private downloadAsFile(
+    aContent: unknown,
+    aFileName: string,
+    aContentType: string
+  ) {
+    const a = document.createElement('a');
+    const file = new Blob([JSON.stringify(aContent, undefined, '  ')], {
+      type: aContentType
+    });
+    a.href = URL.createObjectURL(file);
+    a.download = aFileName;
+    a.click();
   }
 }
