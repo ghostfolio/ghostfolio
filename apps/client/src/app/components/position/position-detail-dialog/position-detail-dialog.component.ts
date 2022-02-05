@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { AssetSubClass } from '@prisma/client';
@@ -194,9 +194,9 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       )
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
-        this.downloadAsFile(
+        downloadAsFile(
           data,
-          `ghostfolio-export-${format(
+          `ghostfolio-export-${this.symbol}-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,
@@ -208,19 +208,5 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  private downloadAsFile(
-    aContent: unknown,
-    aFileName: string,
-    aContentType: string
-  ) {
-    const a = document.createElement('a');
-    const file = new Blob([JSON.stringify(aContent, undefined, '  ')], {
-      type: aContentType
-    });
-    a.href = URL.createObjectURL(file);
-    a.download = aFileName;
-    a.click();
   }
 }
