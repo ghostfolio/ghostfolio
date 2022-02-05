@@ -43,6 +43,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
+  @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToFilter = true;
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
@@ -53,7 +54,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
   @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
-  @Output() export = new EventEmitter<void>();
+  @Output() export = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
 
   @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
@@ -137,12 +138,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       'unitPrice',
       'fee',
       'value',
-      'account'
+      'account',
+      'actions'
     ];
-
-    if (this.showActions) {
-      this.displayedColumns.push('actions');
-    }
 
     if (!this.showSymbolColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
@@ -184,7 +182,15 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   }
 
   public onExport() {
-    this.export.emit();
+    if (this.searchKeywords.length > 0) {
+      this.export.emit(
+        this.dataSource.filteredData.map((activity) => {
+          return activity.id;
+        })
+      );
+    } else {
+      this.export.emit();
+    }
   }
 
   public onImport() {

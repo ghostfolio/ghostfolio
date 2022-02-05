@@ -131,12 +131,14 @@
     [baseCurrency]="data.baseCurrency"
     [deviceType]="data.deviceType"
     [hasPermissionToCreateActivity]="false"
+    [hasPermissionToExportActivities]="!hasImpersonationId"
     [hasPermissionToFilter]="false"
     [hasPermissionToImportActivities]="false"
     [hasPermissionToOpenDetails]="false"
     [locale]="data.locale"
     [showActions]="false"
     [showSymbolColumn]="false"
+    (export)="onExport()"
   ></gf-activities-table>
 </div>
 

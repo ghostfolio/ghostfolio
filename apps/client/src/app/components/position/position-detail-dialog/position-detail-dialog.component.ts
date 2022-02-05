@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { AssetSubClass } from '@prisma/client';
@@ -183,6 +183,26 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
 
   public onClose(): void {
     this.dialogRef.close();
+  }
+
+  public onExport() {
+    this.dataService
+      .fetchExport(
+        this.orders.map((order) => {
+          return order.id;
+        })
+      )
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        downloadAsFile(
+          data,
+          `ghostfolio-export-${this.symbol}-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.json`,
+          'text/plain'
+        );
+      });
   }
 
   public ngOnDestroy() {

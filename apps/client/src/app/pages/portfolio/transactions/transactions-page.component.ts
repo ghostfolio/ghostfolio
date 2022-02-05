@@ -10,6 +10,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource, Order as OrderModel } from '@prisma/client';
@@ -90,11 +91,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     const { globalPermissions } = this.dataService.fetchInfo();
 
-    this.hasPermissionToImportOrders = hasPermission(
-      globalPermissions,
-      permissions.enableImport
-    );
-
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
@@ -102,6 +98,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+
+        this.hasPermissionToImportOrders =
+          hasPermission(globalPermissions, permissions.enableImport) &&
+          !this.hasImpersonationId;
       });
 
     this.userService.stateChanged
@@ -147,12 +147,12 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onExport() {
+  public onExport(activityIds?: string[]) {
     this.dataService
-      .fetchExport()
+      .fetchExport(activityIds)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
-        this.downloadAsFile(
+        downloadAsFile(
           data,
           `ghostfolio-export-${format(
             parseISO(data.meta.date),
@@ -303,20 +303,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private downloadAsFile(
-    aContent: unknown,
-    aFileName: string,
-    aContentType: string
-  ) {
-    const a = document.createElement('a');
-    const file = new Blob([JSON.stringify(aContent, undefined, '  ')], {
-      type: aContentType
-    });
-    a.href = URL.createObjectURL(file);
-    a.download = aFileName;
-    a.click();
-  }
-
   private handleImportError({ error, orders }: { error: any; orders: any[] }) {
     this.snackBar.dismiss();
 
@@ -406,6 +392,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,
+            hasImpersonationId: this.hasImpersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',

@@ -268,6 +268,9 @@
   <ng-container matColumnDef="actions">
     <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
       <button
+        *ngIf="
+          hasPermissionToExportActivities || hasPermissionToImportActivities
+        "
         class="mx-1 no-min-width px-2"
         mat-button
         [matMenuTriggerFor]="activitiesMenu"
@@ -286,6 +289,7 @@
           <span i18n>Import</span>
         </button>
         <button
+          *ngIf="hasPermissionToExportActivities"
           class="align-items-center d-flex"
           mat-menu-item
           (click)="onExport()"
@@ -297,6 +301,7 @@
     </th>
     <td *matCellDef="let element" class="px-1 text-center" mat-cell>
       <button
+        *ngIf="this.showActions"
         class="mx-1 no-min-width px-2"
         mat-button
         [matMenuTriggerFor]="activityMenu"

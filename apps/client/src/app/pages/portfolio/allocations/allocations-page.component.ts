@@ -316,6 +316,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,
+            hasImpersonationId: this.hasImpersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
