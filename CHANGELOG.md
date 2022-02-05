@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the export functionality to the position detail dialog
 
+### Changed
+
+- Improved the export functionality for activities (respect filtering)
+
 ## 1.111.0 - 03.02.2022
 
 ### Added
