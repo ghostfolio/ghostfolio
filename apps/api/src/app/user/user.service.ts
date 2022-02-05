@@ -70,6 +70,18 @@ export class UserService {
     };
   }
 
+  public async hasAdmin() {
+    const usersWithAdminRole = await this.users({
+      where: {
+        role: {
+          equals: 'ADMIN'
+        }
+      }
+    });
+
+    return usersWithAdminRole.length > 0;
+  }
+
   public isRestrictedView(aUser: UserWithSettings) {
     return (aUser.Settings.settings as UserSettings)?.isRestrictedView ?? false;
   }
