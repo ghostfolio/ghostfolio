@@ -147,9 +147,9 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onExport() {
+  public onExport(activityIds?: string[]) {
     this.dataService
-      .fetchExport()
+      .fetchExport(activityIds)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
         downloadAsFile(
