@@ -1,4 +1,9 @@
-<h1 mat-dialog-title i18n>Create Account</h1>
+<h1 mat-dialog-title>
+  <span i18n>Create Account</span
+  ><span *ngIf="data.role === 'ADMIN'" class="badge badge-light ml-2"
+    >{{ data.role }}</span
+  >
+</h1>
 <div mat-dialog-content>
   <div>
     <mat-form-field appearance="outline" class="w-100">

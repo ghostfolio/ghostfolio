@@ -85,12 +85,13 @@ export class UserController {
 
     const hasAdmin = await this.userService.hasAdmin();
 
-    const { accessToken, id } = await this.userService.createUser({
+    const { accessToken, id, role } = await this.userService.createUser({
       role: hasAdmin ? 'USER' : 'ADMIN'
     });
 
     return {
       accessToken,
+      role,
       authToken: this.jwtService.sign({
         id
       })
