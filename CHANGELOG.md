@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the export functionality for activities (respect filtering)
 - Removed the _Admin_ user from the database seeding
 - Assigned the role `ADMIN` on sign up (only if there is no admin yet)
+- Upgraded `prisma` from version `3.8.1` to `3.9.1`
 
 ### Fixed
 
