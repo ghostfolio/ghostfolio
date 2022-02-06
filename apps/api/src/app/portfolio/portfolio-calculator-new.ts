@@ -398,7 +398,9 @@ export class PortfolioCalculatorNew {
         order.unitPrice
       );
 
-      const transactionInvestment = order.quantity.mul(order.unitPrice);
+      const transactionInvestment = order.quantity
+        .mul(order.unitPrice)
+        .mul(this.getFactor(order.type));
 
       if (
         !initialValue &&
@@ -426,7 +428,7 @@ export class PortfolioCalculatorNew {
       );
 
       totalInvestment = totalInvestment
-        .plus(transactionInvestment.mul(this.getFactor(order.type)))
+        .plus(transactionInvestment)
         .plus(grossPerformanceFromSell);
 
       lastAveragePrice = totalUnits.eq(0)
@@ -481,9 +483,7 @@ export class PortfolioCalculatorNew {
 
       grossPerformance = newGrossPerformance;
 
-      lastTransactionInvestment = transactionInvestment.mul(
-        this.getFactor(order.type)
-      );
+      lastTransactionInvestment = transactionInvestment;
 
       lastValueOfInvestmentBeforeTransaction =
         valueOfInvestmentBeforeTransaction;
@@ -492,6 +492,7 @@ export class PortfolioCalculatorNew {
         feesAtStartDate = fees;
         grossPerformanceAtStartDate = grossPerformance;
       }
+    }
 
     timeWeightedGrossPerformancePercentage =
       timeWeightedGrossPerformancePercentage.sub(1);
