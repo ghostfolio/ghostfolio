@@ -337,8 +337,8 @@ export class PortfolioCalculatorNew {
     let grossPerformanceFromSells = new Big(0);
     let initialValue: Big;
     let lastAveragePrice = new Big(0);
-    let lastValueOfInvestment = new Big(0);
-    let lastNetValueOfInvestment = new Big(0);
+    let lastTransactionInvestment = new Big(0);
+    let lastValueOfInvestmentBeforeTransaction = new Big(0);
     let timeWeightedGrossPerformancePercentage = new Big(1);
     let timeWeightedNetPerformancePercentage = new Big(1);
     let totalInvestment = new Big(0);
@@ -394,7 +394,13 @@ export class PortfolioCalculatorNew {
     for (let i = 0; i < orders.length; i += 1) {
       const order = orders[i];
 
-      const transactionInvestment = order.quantity.mul(order.unitPrice);
+      const valueOfInvestmentBeforeTransaction = totalUnits.mul(
+        order.unitPrice
+      );
+
+      const transactionInvestment = order.quantity
+        .mul(order.unitPrice)
+        .mul(this.getFactor(order.type));
 
       if (
         !initialValue &&
@@ -411,7 +417,6 @@ export class PortfolioCalculatorNew {
       );
 
       const valueOfInvestment = totalUnits.mul(order.unitPrice);
-      const netValueOfInvestment = totalUnits.mul(order.unitPrice).sub(fees);
 
       const grossPerformanceFromSell =
         order.type === TypeOfOrder.SELL
@@ -423,7 +428,7 @@ export class PortfolioCalculatorNew {
       );
 
       totalInvestment = totalInvestment
-        .plus(transactionInvestment.mul(this.getFactor(order.type)))
+        .plus(transactionInvestment)
         .plus(grossPerformanceFromSell);
 
       lastAveragePrice = totalUnits.eq(0)
@@ -436,48 +441,52 @@ export class PortfolioCalculatorNew {
 
       if (
         i > indexOfStartOrder &&
-        !lastValueOfInvestment
-          .plus(transactionInvestment.mul(this.getFactor(order.type)))
+        !lastValueOfInvestmentBeforeTransaction
+          .plus(lastTransactionInvestment)
           .eq(0)
       ) {
+        const grossHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
+          .sub(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
+            )
+          )
+          .div(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
+            )
+          );
+
         timeWeightedGrossPerformancePercentage =
           timeWeightedGrossPerformancePercentage.mul(
-            new Big(1).plus(
-              valueOfInvestment
-                .minus(
-                  lastValueOfInvestment.plus(
-                    transactionInvestment.mul(this.getFactor(order.type))
-                  )
-                )
-                .div(
-                  lastValueOfInvestment.plus(
-                    transactionInvestment.mul(this.getFactor(order.type))
-                  )
-                )
+            new Big(1).plus(grossHoldingPeriodReturn)
+          );
+
+        const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
+          .sub(fees.sub(order.fee))
+          .sub(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
+            )
+          )
+          .div(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
             )
           );
 
         timeWeightedNetPerformancePercentage =
           timeWeightedNetPerformancePercentage.mul(
-            new Big(1).plus(
-              netValueOfInvestment
-                .minus(
-                  lastNetValueOfInvestment.plus(
-                    transactionInvestment.mul(this.getFactor(order.type))
-                  )
-                )
-                .div(
-                  lastNetValueOfInvestment.plus(
-                    transactionInvestment.mul(this.getFactor(order.type))
-                  )
-                )
-            )
+            new Big(1).plus(netHoldingPeriodReturn)
           );
       }
 
       grossPerformance = newGrossPerformance;
-      lastNetValueOfInvestment = netValueOfInvestment;
-      lastValueOfInvestment = valueOfInvestment;
+
+      lastTransactionInvestment = transactionInvestment;
+
+      lastValueOfInvestmentBeforeTransaction =
+        valueOfInvestmentBeforeTransaction;
 
       if (order.itemType === 'start') {
         feesAtStartDate = fees;
