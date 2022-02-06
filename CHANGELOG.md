@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed the _Admin_ user from the database seeding
 - Assigned the role `ADMIN` on sign up (only if there is no admin yet)
 
+### Fixed
+
+- Fixed the horizontal overflow in the accounts table
+- Fixed the horizontal overflow in the activities table
+
 ### Todo
 
 - Apply data migration (`yarn database:migrate`)
