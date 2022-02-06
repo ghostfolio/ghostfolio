@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-hallo-ghostfolio-page',
   styleUrls: ['./hallo-ghostfolio-page.scss'],
   templateUrl: './hallo-ghostfolio-page.html'

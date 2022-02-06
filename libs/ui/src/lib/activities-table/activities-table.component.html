@@ -36,314 +36,334 @@
   </mat-autocomplete>
 </mat-form-field>
 
-<table
-  class="gf-table w-100"
-  matSort
-  matSortActive="date"
-  matSortDirection="desc"
-  mat-table
-  [dataSource]="dataSource"
->
-  <ng-container matColumnDef="count">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell px-1 text-right"
-      i18n
-      mat-header-cell
-    ></th>
-    <td
-      *matCellDef="let element; let i = index"
-      class="d-none d-lg-table-cell px-1 text-right"
-      mat-cell
-    >
-      {{ dataSource.data.length - i }}
-    </td>
-    <td
-      *matFooterCellDef
-      class="d-none d-lg-table-cell px-1"
-      mat-footer-cell
-    ></td>
-  </ng-container>
-  <ng-container matColumnDef="date">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-      Date
-    </th>
-    <td *matCellDef="let element" class="px-1" mat-cell>
-      <div class="d-flex">
-        {{ element.date | date: defaultDateFormat }}
-      </div>
-    </td>
-    <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
-  </ng-container>
-
-  <ng-container matColumnDef="type">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-      Type
-    </th>
-    <td *matCellDef="let element" mat-cell class="px-1">
-      <div
-        class="d-inline-flex p-1 type-badge"
-        [ngClass]="{
-          buy: element.type === 'BUY',
-          dividend: element.type === 'DIVIDEND',
-          sell: element.type === 'SELL'
-        }"
+<div class="activities">
+  <table
+    class="gf-table w-100"
+    matSort
+    matSortActive="date"
+    matSortDirection="desc"
+    mat-table
+    [dataSource]="dataSource"
+  >
+    <ng-container matColumnDef="count">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell px-1 text-right"
+        i18n
+        mat-header-cell
+      ></th>
+      <td
+        *matCellDef="let element; let i = index"
+        class="d-none d-lg-table-cell px-1 text-right"
+        mat-cell
       >
-        <ion-icon
-          [name]="
-            element.type === 'BUY' || element.type === 'DIVIDEND'
-              ? 'arrow-forward-circle-outline'
-              : 'arrow-back-circle-outline'
+        {{ dataSource.data.length - i }}
+      </td>
+      <td
+        *matFooterCellDef
+        class="d-none d-lg-table-cell px-1"
+        mat-footer-cell
+      ></td>
+    </ng-container>
+    <ng-container matColumnDef="date">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
+        Date
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex">
+          {{ element.date | date: defaultDateFormat }}
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
+        Type
+      </th>
+      <td *matCellDef="let element" mat-cell class="px-1">
+        <div
+          class="d-inline-flex p-1 type-badge"
+          [ngClass]="{
+            buy: element.type === 'BUY',
+            dividend: element.type === 'DIVIDEND',
+            sell: element.type === 'SELL'
+          }"
+        >
+          <ion-icon
+            [name]="
+              element.type === 'BUY' || element.type === 'DIVIDEND'
+                ? 'arrow-forward-circle-outline'
+                : 'arrow-back-circle-outline'
+            "
+          ></ion-icon>
+          <span class="d-none d-lg-block mx-1">{{ element.type }}</span>
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
+
+    <ng-container matColumnDef="symbol">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
+        Symbol
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex align-items-center">
+          {{ element.symbol | gfSymbol }}
+          <span *ngIf="element.isDraft" class="badge badge-secondary ml-1" i18n
+            >Draft</span
+          >
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
+
+    <ng-container matColumnDef="currency">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell px-1"
+        i18n
+        mat-header-cell
+        mat-sort-header
+      >
+        Currency
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        {{ element.currency }}
+      </td>
+      <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
+        {{ baseCurrency }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        i18n
+        mat-header-cell
+        mat-sort-header
+      >
+        Quantity
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.quantity"
+          ></gf-value>
+        </div>
+      </td>
+      <td
+        *matFooterCellDef
+        class="d-none d-lg-table-cell px-1"
+        mat-footer-cell
+      ></td>
+    </ng-container>
+
+    <ng-container matColumnDef="unitPrice">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        i18n
+        mat-header-cell
+        mat-sort-header
+      >
+        Unit Price
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.unitPrice"
+          ></gf-value>
+        </div>
+      </td>
+      <td
+        *matFooterCellDef
+        class="d-none d-lg-table-cell px-1"
+        mat-footer-cell
+      ></td>
+    </ng-container>
+
+    <ng-container matColumnDef="fee">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        i18n
+        mat-header-cell
+        mat-sort-header
+      >
+        Fee
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.fee"
+          ></gf-value>
+        </div>
+      </td>
+      <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : totalFees"
+          ></gf-value>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th
+        *matHeaderCellDef
+        class="justify-content-end px-1"
+        i18n
+        mat-header-cell
+        mat-sort-header
+      >
+        Value
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.value"
+          ></gf-value>
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : totalValue"
+          ></gf-value>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="account">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <span class="d-none d-lg-block" i18n>Account</span>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex">
+          <gf-symbol-icon
+            *ngIf="element.Account?.Platform?.url"
+            class="mr-1"
+            [tooltip]="element.Account?.Platform?.name"
+            [url]="element.Account?.Platform?.url"
+          ></gf-symbol-icon>
+          <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
+        <button
+          *ngIf="
+            hasPermissionToExportActivities || hasPermissionToImportActivities
           "
-        ></ion-icon>
-        <span class="d-none d-lg-block mx-1">{{ element.type }}</span>
-      </div>
-    </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell></td>
-  </ng-container>
-
-  <ng-container matColumnDef="symbol">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-      Symbol
-    </th>
-    <td *matCellDef="let element" class="px-1" mat-cell>
-      <div class="d-flex align-items-center">
-        {{ element.symbol | gfSymbol }}
-        <span *ngIf="element.isDraft" class="badge badge-secondary ml-1" i18n
-          >Draft</span
+          class="mx-1 no-min-width px-2"
+          mat-button
+          [matMenuTriggerFor]="activitiesMenu"
+          (click)="$event.stopPropagation()"
         >
-      </div>
-    </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell></td>
-  </ng-container>
-
-  <ng-container matColumnDef="currency">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell px-1"
-      i18n
-      mat-header-cell
-      mat-sort-header
-    >
-      Currency
-    </th>
-    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
-      {{ element.currency }}
-    </td>
-    <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
-      {{ baseCurrency }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="quantity">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell justify-content-end px-1"
-      i18n
-      mat-header-cell
-      mat-sort-header
-    >
-      Quantity
-    </th>
-    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : element.quantity"
-        ></gf-value>
-      </div>
-    </td>
-    <td
-      *matFooterCellDef
-      class="d-none d-lg-table-cell px-1"
-      mat-footer-cell
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="unitPrice">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell justify-content-end px-1"
-      i18n
-      mat-header-cell
-      mat-sort-header
-    >
-      Unit Price
-    </th>
-    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : element.unitPrice"
-        ></gf-value>
-      </div>
-    </td>
-    <td
-      *matFooterCellDef
-      class="d-none d-lg-table-cell px-1"
-      mat-footer-cell
-    ></td>
-  </ng-container>
-
-  <ng-container matColumnDef="fee">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell justify-content-end px-1"
-      i18n
-      mat-header-cell
-      mat-sort-header
-    >
-      Fee
-    </th>
-    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : element.fee"
-        ></gf-value>
-      </div>
-    </td>
-    <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : totalFees"
-        ></gf-value>
-      </div>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="value">
-    <th
-      *matHeaderCellDef
-      class="justify-content-end px-1"
-      i18n
-      mat-header-cell
-      mat-sort-header
-    >
-      Value
-    </th>
-    <td *matCellDef="let element" class="px-1" mat-cell>
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : element.value"
-        ></gf-value>
-      </div>
-    </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell>
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : totalValue"
-        ></gf-value>
-      </div>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="account">
-    <th *matHeaderCellDef class="px-1" mat-header-cell>
-      <span class="d-none d-lg-block" i18n>Account</span>
-    </th>
-    <td *matCellDef="let element" class="px-1" mat-cell>
-      <div class="d-flex">
-        <gf-symbol-icon
-          *ngIf="element.Account?.Platform?.url"
-          class="mr-1"
-          [tooltip]="element.Account?.Platform?.name"
-          [url]="element.Account?.Platform?.url"
-        ></gf-symbol-icon>
-        <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
-      </div>
-    </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell></td>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
-      <button
-        *ngIf="
-          hasPermissionToExportActivities || hasPermissionToImportActivities
-        "
-        class="mx-1 no-min-width px-2"
-        mat-button
-        [matMenuTriggerFor]="activitiesMenu"
-        (click)="$event.stopPropagation()"
-      >
-        <ion-icon name="ellipsis-vertical"></ion-icon>
-      </button>
-      <mat-menu #activitiesMenu="matMenu" xPosition="before">
+          <ion-icon name="ellipsis-vertical"></ion-icon>
+        </button>
+        <mat-menu #activitiesMenu="matMenu" xPosition="before">
+          <button
+            *ngIf="hasPermissionToImportActivities"
+            class="align-items-center d-flex"
+            mat-menu-item
+            (click)="onImport()"
+          >
+            <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+            <span i18n>Import</span>
+          </button>
+          <button
+            *ngIf="hasPermissionToExportActivities"
+            class="align-items-center d-flex"
+            mat-menu-item
+            (click)="onExport()"
+          >
+            <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
+            <span i18n>Export</span>
+          </button>
+        </mat-menu>
+      </th>
+      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
         <button
-          *ngIf="hasPermissionToImportActivities"
-          class="align-items-center d-flex"
-          mat-menu-item
-          (click)="onImport()"
+          *ngIf="this.showActions"
+          class="mx-1 no-min-width px-2"
+          mat-button
+          [matMenuTriggerFor]="activityMenu"
+          (click)="$event.stopPropagation()"
         >
-          <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
-          <span i18n>Import</span>
+          <ion-icon name="ellipsis-vertical"></ion-icon>
         </button>
-        <button
-          *ngIf="hasPermissionToExportActivities"
-          class="align-items-center d-flex"
-          mat-menu-item
-          (click)="onExport()"
-        >
-          <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
-          <span i18n>Export</span>
-        </button>
-      </mat-menu>
-    </th>
-    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-      <button
-        *ngIf="this.showActions"
-        class="mx-1 no-min-width px-2"
-        mat-button
-        [matMenuTriggerFor]="activityMenu"
-        (click)="$event.stopPropagation()"
-      >
-        <ion-icon name="ellipsis-vertical"></ion-icon>
-      </button>
-      <mat-menu #activityMenu="matMenu" xPosition="before">
-        <button i18n mat-menu-item (click)="onUpdateActivity(element)">
-          Edit
-        </button>
-        <button i18n mat-menu-item (click)="onCloneActivity(element)">
-          Clone
-        </button>
-        <button i18n mat-menu-item (click)="onDeleteActivity(element.id)">
-          Delete
-        </button>
-      </mat-menu>
-    </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell></td>
-  </ng-container>
+        <mat-menu #activityMenu="matMenu" xPosition="before">
+          <button i18n mat-menu-item (click)="onUpdateActivity(element)">
+            Edit
+          </button>
+          <button i18n mat-menu-item (click)="onCloneActivity(element)">
+            Clone
+          </button>
+          <button i18n mat-menu-item (click)="onDeleteActivity(element.id)">
+            Delete
+          </button>
+        </mat-menu>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
 
-  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-  <tr
-    *matRowDef="let row; columns: displayedColumns"
-    mat-row
-    (click)="
-      hasPermissionToOpenDetails &&
-        !row.isDraft &&
-        onOpenPositionDialog({
-          dataSource: row.dataSource,
-          symbol: row.symbol
-        })
-    "
-    [ngClass]="{ 'cursor-pointer': hasPermissionToOpenDetails && !row.isDraft }"
-  ></tr>
-  <tr
-    *matFooterRowDef="displayedColumns"
-    mat-footer-row
-    [ngClass]="{ 'd-none': isLoading || dataSource.data.length === 0 }"
-  ></tr>
-</table>
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr
+      *matRowDef="let row; columns: displayedColumns"
+      mat-row
+      (click)="
+        hasPermissionToOpenDetails &&
+          !row.isDraft &&
+          onOpenPositionDialog({
+            dataSource: row.dataSource,
+            symbol: row.symbol
+          })
+      "
+      [ngClass]="{
+        'cursor-pointer': hasPermissionToOpenDetails && !row.isDraft
+      }"
+    ></tr>
+    <tr
+      *matFooterRowDef="displayedColumns"
+      mat-footer-row
+      [ngClass]="{ 'd-none': isLoading || dataSource.data.length === 0 }"
+    ></tr>
+  </table>
+</div>
 
 <ngx-skeleton-loader
   *ngIf="isLoading"

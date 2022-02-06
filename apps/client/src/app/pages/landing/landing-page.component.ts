@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-landing-page',
   styleUrls: ['./landing-page.scss'],
   templateUrl: './landing-page.html'

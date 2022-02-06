@@ -24,7 +24,7 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
 import { ImportTransactionDialog } from './import-transaction-dialog/import-transaction-dialog.component';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-transactions-page',
   styleUrls: ['./transactions-page.scss'],
   templateUrl: './transactions-page.html'

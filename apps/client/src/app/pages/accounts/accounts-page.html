@@ -1,19 +1,21 @@
 <div class="container">
-  <div class="row mb-3">
+  <div class="row">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>Accounts</h3>
-      <gf-accounts-table
-        [accounts]="accounts"
-        [baseCurrency]="user?.settings?.baseCurrency"
-        [deviceType]="deviceType"
-        [locale]="user?.settings?.locale"
-        [showActions]="!hasImpersonationId && hasPermissionToDeleteAccount && !user.settings.isRestrictedView"
-        [totalBalance]="totalBalance"
-        [totalValue]="totalValue"
-        [transactionCount]="transactionCount"
-        (accountDeleted)="onDeleteAccount($event)"
-        (accountToUpdate)="onUpdateAccount($event)"
-      ></gf-accounts-table>
+      <div class="accounts">
+        <gf-accounts-table
+          [accounts]="accounts"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="deviceType"
+          [locale]="user?.settings?.locale"
+          [showActions]="!hasImpersonationId && hasPermissionToDeleteAccount && !user.settings.isRestrictedView"
+          [totalBalance]="totalBalance"
+          [totalValue]="totalValue"
+          [transactionCount]="transactionCount"
+          (accountDeleted)="onDeleteAccount($event)"
+          (accountToUpdate)="onUpdateAccount($event)"
+        ></gf-accounts-table>
+      </div>
     </div>
   </div>
 
