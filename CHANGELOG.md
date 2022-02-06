@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the horizontal overflow in the accounts table
 - Fixed the horizontal overflow in the activities table
+- Fixed the total value of the activities table in the position detail dialog (absolute value)
 
 ### Todo
 
