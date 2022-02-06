@@ -156,7 +156,7 @@ model User {
   createdAt     DateTime       @default(now())
   id            String         @id @default(uuid())
   Order         Order[]
-  provider      Provider?
+  provider      Provider       @default(ANONYMOUS)
   role          Role           @default(USER)
   Settings      Settings?
   Subscription  Subscription[]

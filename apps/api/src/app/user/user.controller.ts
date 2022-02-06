@@ -23,7 +23,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
-import { Provider } from '@prisma/client';
+import { Provider, Role } from '@prisma/client';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -83,8 +83,10 @@ export class UserController {
       }
     }
 
+    const hasAdmin = await this.userService.hasAdmin();
+
     const { accessToken, id } = await this.userService.createUser({
-      provider: Provider.ANONYMOUS
+      role: hasAdmin ? 'USER' : 'ADMIN'
     });
 
     return {

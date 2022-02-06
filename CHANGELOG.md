@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the export functionality for activities (respect filtering)
+- Removed the _Admin_ user from the database seeding
+- Assigned the role `ADMIN` on sign up (only if there is no admin yet)
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.111.0 - 03.02.2022
 

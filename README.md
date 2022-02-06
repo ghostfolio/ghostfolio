@@ -124,15 +124,9 @@ docker-compose -f docker/docker-compose.build.yml exec ghostfolio yarn database:
 
 Open http://localhost:3333 in your browser and accomplish these steps:
 
-1. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
+1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
-
-### Finalization
-
-1. Create a new user via _Get Started_
-1. Assign the role `ADMIN` to this user (directly in the database)
-1. Delete the original _Admin_ (directly in the database)
 
 ### Migrate Database
 
@@ -155,8 +149,8 @@ docker-compose -f docker/docker-compose-build-local.yml exec ghostfolio yarn dat
 1. Run `yarn install`
 1. Run `docker-compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
-1. Start server and client (see [_Development_](#Development))
-1. Login as _Admin_ with the following _Security Token_: `ae76872ae8f3419c6d6f64bf51888ecbcc703927a342d815fafe486acdb938da07d0cf44fca211a0be74a423238f535362d390a41e81e633a9ce668a6e31cdf9`
+1. Start the server and the client (see [_Development_](#Development))
+1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
 
