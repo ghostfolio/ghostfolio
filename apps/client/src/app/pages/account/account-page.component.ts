@@ -31,7 +31,7 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-account-page',
   styleUrls: ['./account-page.scss'],
   templateUrl: './account-page.html'

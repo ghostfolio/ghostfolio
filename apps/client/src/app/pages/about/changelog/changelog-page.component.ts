@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-changelog-page',
   styleUrls: ['./changelog-page.scss'],
   templateUrl: './changelog-page.html'

@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-pricing-page',
   styleUrls: ['./pricing-page.scss'],
   templateUrl: './pricing-page.html'

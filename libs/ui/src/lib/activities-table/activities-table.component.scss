@@ -14,45 +14,49 @@
     min-height: 1.5rem !important;
   }
 
-  .mat-table {
-    td {
-      &.mat-footer-cell {
-        border-top: 1px solid
-          rgba(
-            var(--palette-foreground-divider),
-            var(--palette-foreground-divider-alpha)
-          );
-      }
-    }
+  .activities {
+    overflow-x: auto;
 
-    th {
-      ::ng-deep {
-        .mat-sort-header-container {
-          justify-content: inherit;
+    .mat-table {
+      td {
+        &.mat-footer-cell {
+          border-top: 1px solid
+            rgba(
+              var(--palette-foreground-divider),
+              var(--palette-foreground-divider-alpha)
+            );
         }
       }
-    }
 
-    .mat-row {
-      .type-badge {
-        background-color: rgba(var(--palette-foreground-text), 0.05);
-        border-radius: 1rem;
-        line-height: 1em;
-
-        ion-icon {
-          font-size: 1rem;
+      th {
+        ::ng-deep {
+          .mat-sort-header-container {
+            justify-content: inherit;
+          }
         }
+      }
 
-        &.buy {
-          color: var(--green);
-        }
+      .mat-row {
+        .type-badge {
+          background-color: rgba(var(--palette-foreground-text), 0.05);
+          border-radius: 1rem;
+          line-height: 1em;
 
-        &.dividend {
-          color: var(--blue);
-        }
+          ion-icon {
+            font-size: 1rem;
+          }
 
-        &.sell {
-          color: var(--orange);
+          &.buy {
+            color: var(--green);
+          }
+
+          &.dividend {
+            color: var(--blue);
+          }
+
+          &.sell {
+            color: var(--orange);
+          }
         }
       }
     }

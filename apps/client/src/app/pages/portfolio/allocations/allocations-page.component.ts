@@ -20,7 +20,7 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-allocations-page',
   styleUrls: ['./allocations-page.scss'],
   templateUrl: './allocations-page.html'

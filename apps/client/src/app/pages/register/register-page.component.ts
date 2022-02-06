@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-register-page',
   styleUrls: ['./register-page.scss'],
   templateUrl: './register-page.html'

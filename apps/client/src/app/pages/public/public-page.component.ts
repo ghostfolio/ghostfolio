@@ -13,7 +13,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-public-page',
   styleUrls: ['./public-page.scss'],
   templateUrl: './public-page.html'
