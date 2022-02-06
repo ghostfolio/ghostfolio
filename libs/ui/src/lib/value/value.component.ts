@@ -17,6 +17,7 @@ import { isNumber } from 'lodash';
 export class ValueComponent implements OnChanges {
   @Input() colorizeSign = false;
   @Input() currency = '';
+  @Input() isAbsolute = false;
   @Input() isCurrency = false;
   @Input() isPercent = false;
   @Input() label = '';
@@ -90,6 +91,11 @@ export class ValueComponent implements OnChanges {
           } catch {}
         } else {
           this.formattedValue = this.value?.toString();
+        }
+
+        if (this.isAbsolute) {
+          // Remove algebraic sign
+          this.formattedValue = this.formattedValue.replace(/^-/, '');
         }
       } else {
         try {

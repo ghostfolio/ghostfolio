@@ -256,6 +256,7 @@
       <td *matFooterCellDef class="px-1" mat-footer-cell>
         <div class="d-flex justify-content-end">
           <gf-value
+            [isAbsolute]="true"
             [isCurrency]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : totalValue"
