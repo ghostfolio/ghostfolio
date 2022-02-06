@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 1.112.0 - 06.02.2022
 
 ### Added
 
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the performance calculation in connection with a sell activity in the new calculation engine
 - Fixed the horizontal overflow in the accounts table
 - Fixed the horizontal overflow in the activities table
 - Fixed the total value of the activities table in the position detail dialog (absolute value)
