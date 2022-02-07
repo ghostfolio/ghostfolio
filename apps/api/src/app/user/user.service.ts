@@ -70,6 +70,18 @@ export class UserService {
     };
   }
 
+  public async hasAdmin() {
+    const usersWithAdminRole = await this.users({
+      where: {
+        role: {
+          equals: 'ADMIN'
+        }
+      }
+    });
+
+    return usersWithAdminRole.length > 0;
+  }
+
   public isRestrictedView(aUser: UserWithSettings) {
     return (aUser.Settings.settings as UserSettings)?.isRestrictedView ?? false;
   }
@@ -168,7 +180,11 @@ export class UserService {
     return hash.digest('hex');
   }
 
-  public async createUser(data?: Prisma.UserCreateInput): Promise<User> {
+  public async createUser(data: Prisma.UserCreateInput): Promise<User> {
+    if (!data?.provider) {
+      data.provider = 'ANONYMOUS';
+    }
+
     let user = await this.prismaService.user.create({
       data: {
         ...data,
@@ -187,7 +203,7 @@ export class UserService {
       }
     });
 
-    if (data.provider === Provider.ANONYMOUS) {
+    if (data.provider === 'ANONYMOUS') {
       const accessToken = this.createAccessToken(
         user.id,
         this.getRandomString(10)

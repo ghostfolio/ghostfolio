@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.112.1 - 06.02.2022
+
+### Fixed
+
+- Fixed the creation of the user account (missing access token)
+
+## 1.112.0 - 06.02.2022
+
+### Added
+
+- Added the export functionality to the position detail dialog
+
+### Changed
+
+- Improved the export functionality for activities (respect filtering)
+- Removed the _Admin_ user from the database seeding
+- Assigned the role `ADMIN` on sign up (only if there is no admin yet)
+- Upgraded `prisma` from version `3.8.1` to `3.9.1`
+
+### Fixed
+
+- Fixed an issue with the performance calculation in connection with a sell activity in the new calculation engine
+- Fixed the horizontal overflow in the accounts table
+- Fixed the horizontal overflow in the activities table
+- Fixed the total value of the activities table in the position detail dialog (absolute value)
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
 ## 1.111.0 - 03.02.2022
 
 ### Added

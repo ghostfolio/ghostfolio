@@ -1,6 +1,13 @@
 import { Export } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
-import { Controller, Get, Inject, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Inject,
+  Query,
+  UseGuards
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -15,8 +22,11 @@ export class ExportController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  public async export(): Promise<Export> {
-    return await this.exportService.export({
+  public async export(
+    @Query('activityIds') activityIds?: string[]
+  ): Promise<Export> {
+    return this.exportService.export({
+      activityIds,
       userId: this.request.user.id
     });
   }

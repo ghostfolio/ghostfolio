@@ -7,13 +7,14 @@
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
+        [hasPermissionToExportActivities]="!hasImpersonationId"
         [hasPermissionToImportActivities]="hasPermissionToImportOrders"
         [locale]="user?.settings?.locale"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder && !user.settings.isRestrictedView"
         (activityDeleted)="onDeleteTransaction($event)"
         (activityToClone)="onCloneTransaction($event)"
         (activityToUpdate)="onUpdateTransaction($event)"
-        (export)="onExport()"
+        (export)="onExport($event)"
         (import)="onImport()"
       ></gf-activities-table>
     </div>

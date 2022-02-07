@@ -6,6 +6,7 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
+import { Role } from '@prisma/client';
 import { format } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -14,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-token-dialog.component';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-register-page',
   styleUrls: ['./register-page.scss'],
   templateUrl: './register-page.html'
@@ -62,19 +63,21 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     this.dataService
       .postUser()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ accessToken, authToken }) => {
-        this.openShowAccessTokenDialog(accessToken, authToken);
+      .subscribe(({ accessToken, authToken, role }) => {
+        this.openShowAccessTokenDialog(accessToken, authToken, role);
       });
   }
 
   public openShowAccessTokenDialog(
     accessToken: string,
-    authToken: string
+    authToken: string,
+    role: Role
   ): void {
     const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
       data: {
         accessToken,
-        authToken
+        authToken,
+        role
       },
       disableClose: true,
       width: '30rem'

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
   RANGE,
   SettingsStorageService
@@ -26,6 +27,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public dateRange: DateRange;
   public dateRangeOptions = defaultDateRangeOptions;
   public deviceType: string;
+  public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public positions: Position[];
   public user: User;
@@ -40,6 +42,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
+    private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
@@ -82,6 +85,13 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((aId) => {
+        this.hasImpersonationId = !!aId;
+      });
+
     this.dateRange =
       <DateRange>this.settingsStorageService.getSetting(RANGE) || 'max';
 
@@ -119,6 +129,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,
+            hasImpersonationId: this.hasImpersonationId,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',

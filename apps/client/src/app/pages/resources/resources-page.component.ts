@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-resources-page',
   styleUrls: ['./resources-page.scss'],
   templateUrl: './resources-page.html'

@@ -94,8 +94,16 @@ export class DataService {
     });
   }
 
-  public fetchExport() {
-    return this.http.get<Export>('/api/export');
+  public fetchExport(activityIds?: string[]) {
+    let params = new HttpParams();
+
+    if (activityIds) {
+      params = params.append('activityIds', activityIds.join(','));
+    }
+
+    return this.http.get<Export>('/api/export', {
+      params
+    });
   }
 
   public fetchInfo(): InfoItem {

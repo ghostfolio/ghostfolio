@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-webauthn-page',
   styleUrls: ['./webauthn-page.scss'],
   templateUrl: './webauthn-page.html'
