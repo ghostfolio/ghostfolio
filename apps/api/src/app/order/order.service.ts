@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Order, Prisma, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from './interfaces/activities.interface';
 
@@ -67,24 +68,39 @@ export class OrderService {
       }
     };
 
-    const isDraft = isAfter(data.date as Date, endOfToday());
+    if (data.type === 'ITEM') {
+      const currency = data.currency;
+      const id = uuidv4();
+      const name = data.SymbolProfile.connectOrCreate.create.symbol;
 
-    // Convert the symbol to uppercase to avoid case-sensitive duplicates
-    const symbol = data.symbol.toUpperCase();
+      data.id = id;
+      data.symbol = null;
+      data.SymbolProfile.connectOrCreate.create.currency = currency;
+      data.SymbolProfile.connectOrCreate.create.name = name;
+      data.SymbolProfile.connectOrCreate.create.symbol = id;
+    } else {
+      data.SymbolProfile.connectOrCreate.create.symbol =
+        data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
+    }
+
+    const isDraft = isAfter(data.date as Date, endOfToday());
 
     if (!isDraft) {
       // Gather symbol data of order in the background, if not draft
       this.dataGatheringService.gatherSymbols([
         {
-          symbol,
           dataSource: data.dataSource,
-          date: <Date>data.date
+          date: <Date>data.date,
+          symbol: data.SymbolProfile.connectOrCreate.create.symbol
         }
       ]);
     }
 
     this.dataGatheringService.gatherProfileData([
-      { symbol, dataSource: data.dataSource }
+      {
+        dataSource: data.dataSource,
+        symbol: data.SymbolProfile.connectOrCreate.create.symbol
+      }
     ]);
 
     await this.cacheService.flush();
@@ -98,8 +114,7 @@ export class OrderService {
       data: {
         ...orderData,
         Account,
-        isDraft,
-        symbol
+        isDraft
       }
     });
   }

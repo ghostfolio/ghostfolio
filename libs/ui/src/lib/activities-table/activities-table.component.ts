@@ -271,11 +271,11 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     activity: OrderWithAccount,
     fieldValues: Set<string> = new Set<string>()
   ): string[] {
-    fieldValues.add(activity.currency);
-    fieldValues.add(activity.symbol);
-    fieldValues.add(activity.type);
     fieldValues.add(activity.Account?.name);
     fieldValues.add(activity.Account?.Platform?.name);
+    fieldValues.add(activity.SymbolProfile.currency);
+    fieldValues.add(activity.SymbolProfile.symbol);
+    fieldValues.add(activity.type);
     fieldValues.add(format(activity.date, 'yyyy'));
 
     return [...fieldValues].filter((item) => {
