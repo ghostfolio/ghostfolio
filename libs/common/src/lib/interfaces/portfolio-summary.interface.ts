@@ -7,6 +7,7 @@ export interface PortfolioSummary extends PortfolioPerformance {
   committedFunds: number;
   fees: number;
   firstOrderDate: Date;
+  items: number;
   netWorth: number;
   ordersCount: number;
   totalBuy: number;
