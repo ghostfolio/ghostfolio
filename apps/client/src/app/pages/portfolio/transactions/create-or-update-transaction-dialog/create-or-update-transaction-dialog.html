@@ -1,22 +1,29 @@
 <form #addTransactionForm="ngForm" class="d-flex flex-column h-100">
-  <h1 *ngIf="data.transaction.id" mat-dialog-title i18n>Update activity</h1>
-  <h1 *ngIf="!data.transaction.id" mat-dialog-title i18n>Add activity</h1>
+  <h1 *ngIf="data.activity.id" mat-dialog-title i18n>Update activity</h1>
+  <h1 *ngIf="!data.activity.id" mat-dialog-title i18n>Add activity</h1>
   <div class="flex-grow-1" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Type</mat-label>
+        <mat-select name="type" [formControl]="typeCtrl">
+          <mat-option value="BUY" i18n>BUY</mat-option>
+          <mat-option value="DIVIDEND" i18n>DIVIDEND</mat-option>
+          <mat-option value="ITEM" i18n>ITEM</mat-option>
+          <mat-option value="SELL" i18n>SELL</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div [ngClass]="{ 'd-none': !showAccountIdCtrl }">
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account</mat-label>
-        <mat-select
-          name="accountId"
-          required
-          [(value)]="data.transaction.accountId"
-        >
+        <mat-select name="accountId" [formControl]="accountIdCtrl">
           <mat-option *ngFor="let account of data.accounts" [value]="account.id"
             >{{ account.name }}</mat-option
           >
         </mat-select>
       </mat-form-field>
     </div>
-    <div>
+    <div [ngClass]="{ 'd-none': !showSearchSymbolCtrl }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Symbol or ISIN</mat-label>
         <input
@@ -24,7 +31,6 @@
           autocomplete="off"
           autocorrect="off"
           matInput
-          required
           [formControl]="searchSymbolCtrl"
           [matAutocomplete]="autocomplete"
           (blur)="onBlurSymbol()"
@@ -48,15 +54,10 @@
         <mat-spinner *ngIf="isLoading" matSuffix [diameter]="20"></mat-spinner>
       </mat-form-field>
     </div>
-    <div>
+    <div [ngClass]="{ 'd-none': !showNameCtrl }">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Type</mat-label>
-        <mat-select name="type" required [(value)]="data.transaction.type">
-          <mat-option value="BUY" i18n>BUY</mat-option>
-          <mat-option value="DIVIDEND" i18n>DIVIDEND</mat-option>
-          <mat-option value="ITEM" i18n>ITEM</mat-option>
-          <mat-option value="SELL" i18n>SELL</mat-option>
-        </mat-select>
+        <mat-label i18n>Name</mat-label>
+        <input matInput name="name" [formControl]="nameCtrl" />
       </mat-form-field>
     </div>
     <div class="d-none">
@@ -64,10 +65,8 @@
         <mat-label i18n>Currency</mat-label>
         <mat-select
           class="no-arrow"
-          disabled
           name="currency"
-          required
-          [(value)]="data.transaction.currency"
+          [formControl]="currencyCtrl"
         >
           <mat-option *ngFor="let currency of currencies" [value]="currency"
             >{{ currency }}</mat-option
@@ -78,25 +77,17 @@
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Data Source</mat-label>
-        <input
-          disabled
-          matInput
-          name="dataSource"
-          required
-          [(ngModel)]="data.transaction.dataSource"
-        />
+        <input matInput name="dataSource" [formControl]="dataSourceCtrl" />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
         <input
-          disabled
           matInput
           name="date"
-          required
+          [formControl]="dateCtrl"
           [matDatepicker]="date"
-          [(ngModel)]="data.transaction.date"
         />
         <mat-datepicker-toggle matSuffix [for]="date">
           <ion-icon
@@ -114,9 +105,8 @@
         <input
           matInput
           name="quantity"
-          required
           type="number"
-          [(ngModel)]="data.transaction.quantity"
+          [formControl]="quantityCtrl"
         />
       </mat-form-field>
     </div>
@@ -126,13 +116,12 @@
         <input
           matInput
           name="unitPrice"
-          required
           type="number"
-          [(ngModel)]="data.transaction.unitPrice"
+          [formControl]="unitPriceCtrl"
         />
-        <span class="ml-2" matSuffix>{{ data.transaction.currency }}</span>
+        <span class="ml-2" matSuffix>{{ currencyCtrl.value }}</span>
         <button
-          *ngIf="currentMarketPrice && (data.transaction.type === 'BUY' || data.transaction.type === 'SELL')"
+          *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
           mat-icon-button
           matSuffix
           title="Apply current market price"
@@ -145,23 +134,17 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
-        <input
-          matInput
-          name="fee"
-          required
-          type="number"
-          [(ngModel)]="data.transaction.fee"
-        />
-        <span class="ml-2" matSuffix>{{ data.transaction.currency }}</span>
+        <input matInput name="fee" type="number" [formControl]="feeCtrl" />
+        <span class="ml-2" matSuffix>{{ currencyCtrl.value }}</span>
       </mat-form-field>
     </div>
   </div>
   <div class="d-flex" mat-dialog-actions>
     <gf-value
       class="flex-grow-1"
-      [currency]="data.transaction.currency"
+      [currency]="currencyCtrl.value"
       [locale]="data.user?.settings?.locale"
-      [value]="data.transaction.fee + (data.transaction.quantity * data.transaction.unitPrice)"
+      [value]="feeCtrl.value + (quantityCtrl.value * unitPriceCtrl.value) ?? 0"
     ></gf-value>
     <div>
       <button i18n mat-button (click)="onCancel()">Cancel</button>
@@ -169,8 +152,8 @@
         color="primary"
         i18n
         mat-flat-button
-        [disabled]="!(addTransactionForm.form.valid && data.transaction.currency && data.transaction.symbol)"
-        [mat-dialog-close]="data"
+        [disabled]="!(addTransactionForm.form.valid)"
+        (click)="onSubmit()"
       >
         Save
       </button>

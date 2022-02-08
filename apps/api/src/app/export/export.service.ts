@@ -1,5 +1,6 @@
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { isUUID } from '@ghostfolio/common/helper';
 import { Export } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 
@@ -59,7 +60,7 @@ export class ExportService {
             type,
             unitPrice,
             dataSource: SymbolProfile.dataSource,
-            symbol: SymbolProfile.symbol
+            symbol: type === 'ITEM' ? SymbolProfile.name : SymbolProfile.symbol
           };
         }
       )

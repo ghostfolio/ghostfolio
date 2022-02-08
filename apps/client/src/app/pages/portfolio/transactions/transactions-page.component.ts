@@ -242,35 +242,13 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateTransactionDialog({
-    accountId,
-    currency,
-    dataSource,
-    date,
-    fee,
-    id,
-    quantity,
-    symbol,
-    type,
-    unitPrice
-  }: OrderModel): void {
+  public openUpdateTransactionDialog(activity: Activity): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
+        activity,
         accounts: this.user?.accounts?.filter((account) => {
           return account.accountType === 'SECURITIES';
         }),
-        transaction: {
-          accountId,
-          currency,
-          dataSource,
-          date,
-          fee,
-          id,
-          quantity,
-          symbol,
-          type,
-          unitPrice
-        },
         user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
@@ -281,7 +259,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data: any) => {
-        const transaction: UpdateOrderDto = data?.transaction;
+        const transaction: UpdateOrderDto = data?.activity;
 
         if (transaction) {
           this.dataService
@@ -336,7 +314,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             accounts: this.user?.accounts?.filter((account) => {
               return account.accountType === 'SECURITIES';
             }),
-            transaction: {
+            activity: {
               accountId: aTransaction?.accountId ?? this.defaultAccountId,
               currency: aTransaction?.currency ?? null,
               dataSource: aTransaction?.dataSource ?? null,
@@ -357,7 +335,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((data: any) => {
-            const transaction: CreateOrderDto = data?.transaction;
+            const transaction: CreateOrderDto = data?.activity;
 
             if (transaction) {
               this.dataService.postOrder(transaction).subscribe({

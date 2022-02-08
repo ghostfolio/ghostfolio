@@ -59,7 +59,7 @@ export class OrderService {
       return account.isDefault === true;
     });
 
-    const Account = {
+    let Account = {
       connect: {
         id_userId: {
           userId: data.userId,
@@ -70,14 +70,22 @@ export class OrderService {
 
     if (data.type === 'ITEM') {
       const currency = data.currency;
+      const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
 
+      Account = undefined;
+      data.dataSource = dataSource;
       data.id = id;
       data.symbol = null;
       data.SymbolProfile.connectOrCreate.create.currency = currency;
+      data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
       data.SymbolProfile.connectOrCreate.create.symbol = id;
+      data.SymbolProfile.connectOrCreate.where.dataSource_symbol = {
+        dataSource,
+        symbol: id
+      };
     } else {
       data.SymbolProfile.connectOrCreate.create.symbol =
         data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
@@ -194,6 +202,13 @@ export class OrderService {
     data: Prisma.OrderUpdateInput;
   }): Promise<Order> {
     const { data, where } = params;
+
+    if (data.type === 'ITEM') {
+      const name = data.symbol;
+
+      data.symbol = null;
+      data.SymbolProfile = { update: { name } };
+    }
 
     const isDraft = isAfter(data.date as Date, endOfToday());
 

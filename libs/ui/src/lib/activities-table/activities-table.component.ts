@@ -21,6 +21,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { isUUID } from '@ghostfolio/common/helper';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
@@ -69,6 +70,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public filters: Observable<string[]> = this.filters$.asObservable();
   public isAfter = isAfter;
   public isLoading = true;
+  public isUUID = isUUID;
   public placeholder = '';
   public routeQueryParams: Subscription;
   public searchControl = new FormControl();
@@ -274,7 +276,11 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     fieldValues.add(activity.Account?.name);
     fieldValues.add(activity.Account?.Platform?.name);
     fieldValues.add(activity.SymbolProfile.currency);
-    fieldValues.add(activity.SymbolProfile.symbol);
+    fieldValues.add(
+      isUUID(activity.SymbolProfile.symbol)
+        ? activity.SymbolProfile.name
+        : activity.SymbolProfile.symbol
+    );
     fieldValues.add(activity.type);
     fieldValues.add(format(activity.date, 'yyyy'));
 
