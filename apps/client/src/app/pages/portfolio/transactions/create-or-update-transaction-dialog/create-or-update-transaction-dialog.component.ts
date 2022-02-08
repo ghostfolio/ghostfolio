@@ -6,7 +6,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
@@ -14,6 +14,7 @@ import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Type } from '@prisma/client';
+import { isUUID } from 'class-validator';
 import { isString } from 'lodash';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import {
@@ -37,25 +38,15 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 export class CreateOrUpdateTransactionDialog implements OnDestroy {
   @ViewChild('autocomplete') autocomplete;
 
-  public accountIdCtrl = new FormControl({}, Validators.required);
-  public currencyCtrl = new FormControl({}, Validators.required);
+  public activityForm: FormGroup;
+
   public currencies: string[] = [];
   public currentMarketPrice = null;
-  public dataSourceCtrl = new FormControl({}, Validators.required);
-  public dateCtrl = new FormControl({}, Validators.required);
-  public feeCtrl = new FormControl({}, Validators.required);
   public filteredLookupItems: LookupItem[];
   public filteredLookupItemsObservable: Observable<LookupItem[]>;
   public isLoading = false;
-  public nameCtrl = new FormControl({}, Validators.required);
   public platforms: { id: string; name: string }[];
-  public quantityCtrl = new FormControl({}, Validators.required);
-  public searchSymbolCtrl = new FormControl({}, Validators.required);
-  public showAccountIdCtrl = true;
-  public showNameCtrl = true;
-  public showSearchSymbolCtrl = true;
-  public typeCtrl = new FormControl({}, Validators.required);
-  public unitPriceCtrl = new FormControl({}, Validators.required);
+  public Validators = Validators;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -63,6 +54,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<CreateOrUpdateTransactionDialog>,
+    private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTransactionDialogParams
   ) {}
 
@@ -72,78 +64,98 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     this.currencies = currencies;
     this.platforms = platforms;
 
-    this.filteredLookupItemsObservable =
-      this.searchSymbolCtrl.valueChanges.pipe(
-        startWith(''),
-        debounceTime(400),
-        distinctUntilChanged(),
-        switchMap((query: string) => {
-          if (isString(query)) {
-            const filteredLookupItemsObservable =
-              this.dataService.fetchSymbols(query);
+    this.activityForm = this.formBuilder.group({
+      accountId: [this.data.activity?.accountId, Validators.required],
+      currency: [
+        this.data.activity?.SymbolProfile?.currency,
+        Validators.required
+      ],
+      dataSource: [
+        this.data.activity?.SymbolProfile?.dataSource,
+        Validators.required
+      ],
+      date: [this.data.activity?.date, Validators.required],
+      fee: [this.data.activity?.fee, Validators.required],
+      name: [this.data.activity?.SymbolProfile?.name, Validators.required],
+      quantity: [this.data.activity?.quantity, Validators.required],
+      searchSymbol: [
+        {
+          dataSource: this.data.activity?.SymbolProfile?.dataSource,
+          symbol: this.data.activity?.SymbolProfile?.symbol
+        },
+        Validators.required
+      ],
+      type: [undefined, Validators.required], // Set after value changes subscription
+      unitPrice: [this.data.activity?.unitPrice, Validators.required]
+    });
 
-            filteredLookupItemsObservable.subscribe((filteredLookupItems) => {
-              this.filteredLookupItems = filteredLookupItems;
-            });
+    this.filteredLookupItemsObservable = this.activityForm.controls[
+      'searchSymbol'
+    ].valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((query: string) => {
+        if (isString(query)) {
+          const filteredLookupItemsObservable =
+            this.dataService.fetchSymbols(query);
 
-            return filteredLookupItemsObservable;
-          }
+          filteredLookupItemsObservable.subscribe((filteredLookupItems) => {
+            this.filteredLookupItems = filteredLookupItems;
+          });
 
-          return [];
-        })
-      );
+          return filteredLookupItemsObservable;
+        }
 
-    this.typeCtrl.valueChanges.subscribe((type: Type) => {
+        return [];
+      })
+    );
+
+    this.activityForm.controls['type'].valueChanges.subscribe((type: Type) => {
       if (type === 'ITEM') {
-        this.accountIdCtrl.removeValidators(Validators.required);
-        this.accountIdCtrl.updateValueAndValidity();
-        this.currencyCtrl.setValue(this.data.user.settings.baseCurrency);
-        this.dataSourceCtrl.removeValidators(Validators.required);
-        this.dataSourceCtrl.updateValueAndValidity();
-        this.nameCtrl.setValidators(Validators.required);
-        this.nameCtrl.updateValueAndValidity();
-        this.quantityCtrl.setValue(1);
-        this.searchSymbolCtrl.removeValidators(Validators.required);
-        this.searchSymbolCtrl.updateValueAndValidity();
-        this.showAccountIdCtrl = false;
-        this.showNameCtrl = true;
-        this.showSearchSymbolCtrl = false;
+        this.activityForm.controls['accountId'].removeValidators(
+          Validators.required
+        );
+        this.activityForm.controls['accountId'].updateValueAndValidity();
+        this.activityForm.controls['currency'].setValue(
+          this.data.user.settings.baseCurrency
+        );
+        this.activityForm.controls['dataSource'].removeValidators(
+          Validators.required
+        );
+        this.activityForm.controls['dataSource'].updateValueAndValidity();
+        this.activityForm.controls['name'].setValidators(Validators.required);
+        this.activityForm.controls['name'].updateValueAndValidity();
+        this.activityForm.controls['quantity'].setValue(1);
+        this.activityForm.controls['searchSymbol'].removeValidators(
+          Validators.required
+        );
+        this.activityForm.controls['searchSymbol'].updateValueAndValidity();
       } else {
-        this.accountIdCtrl.setValidators(Validators.required);
-        this.accountIdCtrl.updateValueAndValidity();
-        this.currencyCtrl.setValue(undefined);
-        this.dataSourceCtrl.setValidators(Validators.required);
-        this.dataSourceCtrl.updateValueAndValidity();
-        this.nameCtrl.removeValidators(Validators.required);
-        this.nameCtrl.updateValueAndValidity();
-        this.quantityCtrl.setValue(undefined);
-        this.searchSymbolCtrl.setValidators(Validators.required);
-        this.searchSymbolCtrl.updateValueAndValidity();
-        this.showAccountIdCtrl = true;
-        this.showNameCtrl = false;
-        this.showSearchSymbolCtrl = true;
+        this.activityForm.controls['accountId'].setValidators(
+          Validators.required
+        );
+        this.activityForm.controls['accountId'].updateValueAndValidity();
+        this.activityForm.controls['dataSource'].setValidators(
+          Validators.required
+        );
+        this.activityForm.controls['dataSource'].updateValueAndValidity();
+        this.activityForm.controls['name'].removeValidators(
+          Validators.required
+        );
+        this.activityForm.controls['name'].updateValueAndValidity();
+        this.activityForm.controls['searchSymbol'].setValidators(
+          Validators.required
+        );
+        this.activityForm.controls['searchSymbol'].updateValueAndValidity();
       }
-
-      this.changeDetectorRef.markForCheck();
     });
 
-    this.accountIdCtrl.setValue(this.data.activity?.accountId);
-    this.currencyCtrl.setValue(this.data.activity?.currency);
-    this.dataSourceCtrl.setValue(this.data.activity?.dataSource);
-    this.dateCtrl.setValue(this.data.activity?.date);
-    this.feeCtrl.setValue(this.data.activity?.fee);
-    this.nameCtrl.setValue(this.data.activity?.SymbolProfile?.name);
-    this.quantityCtrl.setValue(this.data.activity?.quantity);
-    this.searchSymbolCtrl.setValue({
-      dataSource: this.data.activity?.dataSource,
-      symbol: this.data.activity?.symbol
-    });
-    this.typeCtrl.setValue(this.data.activity?.type);
-    this.unitPriceCtrl.setValue(this.data.activity?.unitPrice);
+    this.activityForm.controls['type'].setValue(this.data.activity?.type);
 
     if (this.data.activity?.id) {
-      this.searchSymbolCtrl.disable();
-      this.typeCtrl.disable();
+      this.activityForm.controls['searchSymbol'].disable();
+      this.activityForm.controls['type'].disable();
     }
 
     if (this.data.activity?.symbol) {
@@ -162,7 +174,9 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   }
 
   public applyCurrentMarketPrice() {
-    this.unitPriceCtrl.setValue(this.currentMarketPrice);
+    this.activityForm.patchValue({
+      unitPrice: this.currentMarketPrice
+    });
   }
 
   public displayFn(aLookupItem: LookupItem) {
@@ -171,13 +185,16 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
   public onBlurSymbol() {
     const currentLookupItem = this.filteredLookupItems.find((lookupItem) => {
-      return lookupItem.symbol === this.data.activity.symbol;
+      return (
+        lookupItem.symbol ===
+        this.activityForm.controls['searchSymbol'].value.symbol
+      );
     });
 
     if (currentLookupItem) {
       this.updateSymbol(currentLookupItem.symbol);
     } else {
-      this.searchSymbolCtrl.setErrors({ incorrect: true });
+      this.activityForm.controls['searchSymbol'].setErrors({ incorrect: true });
 
       this.data.activity.currency = null;
       this.data.activity.dataSource = null;
@@ -193,15 +210,17 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
   public onSubmit() {
     const activity: CreateOrderDto | UpdateOrderDto = {
-      accountId: this.accountIdCtrl.value,
-      currency: this.currencyCtrl.value,
-      date: this.dateCtrl.value,
-      dataSource: this.dataSourceCtrl.value,
-      fee: this.feeCtrl.value,
-      quantity: this.quantityCtrl.value,
-      symbol: this.searchSymbolCtrl.value.symbol ?? this.nameCtrl.value,
-      type: this.typeCtrl.value,
-      unitPrice: this.unitPriceCtrl.value
+      accountId: this.activityForm.controls['accountId'].value,
+      currency: this.activityForm.controls['currency'].value,
+      date: this.activityForm.controls['date'].value,
+      dataSource: this.activityForm.controls['dataSource'].value,
+      fee: this.activityForm.controls['fee'].value,
+      quantity: this.activityForm.controls['quantity'].value,
+      symbol: isUUID(this.activityForm.controls['searchSymbol'].value.symbol)
+        ? this.activityForm.controls['name'].value
+        : this.activityForm.controls['searchSymbol'].value.symbol,
+      type: this.activityForm.controls['type'].value,
+      unitPrice: this.activityForm.controls['unitPrice'].value
     };
 
     if (this.data.activity.id) {
@@ -212,7 +231,9 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   }
 
   public onUpdateSymbol(event: MatAutocompleteSelectedEvent) {
-    this.dataSourceCtrl.setValue(event.option.value.dataSource);
+    this.activityForm.controls['dataSource'].setValue(
+      event.option.value.dataSource
+    );
     this.updateSymbol(event.option.value.symbol);
   }
 
@@ -224,16 +245,15 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   private updateSymbol(symbol: string) {
     this.isLoading = true;
 
-    this.searchSymbolCtrl.setErrors(null);
-
-    this.searchSymbolCtrl.setValue({ symbol });
+    this.activityForm.controls['searchSymbol'].setErrors(null);
+    this.activityForm.controls['searchSymbol'].setValue({ symbol });
 
     this.changeDetectorRef.markForCheck();
 
     this.dataService
       .fetchSymbolItem({
-        dataSource: this.dataSourceCtrl.value,
-        symbol: this.searchSymbolCtrl.value.symbol
+        dataSource: this.activityForm.controls['dataSource'].value,
+        symbol: this.activityForm.controls['searchSymbol'].value.symbol
       })
       .pipe(
         catchError(() => {
@@ -250,8 +270,8 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(({ currency, dataSource, marketPrice }) => {
-        this.currencyCtrl.setValue(currency);
-        this.dataSourceCtrl.setValue(dataSource);
+        this.activityForm.controls['currency'].setValue(currency);
+        this.activityForm.controls['dataSource'].setValue(dataSource);
 
         this.currentMarketPrice = marketPrice;
 

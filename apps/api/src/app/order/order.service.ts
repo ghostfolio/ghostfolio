@@ -203,6 +203,10 @@ export class OrderService {
   }): Promise<Order> {
     const { data, where } = params;
 
+    if (data.Account.connect.id_userId.id === null) {
+      delete data.Account;
+    }
+
     if (data.type === 'ITEM') {
       const name = data.symbol;
 

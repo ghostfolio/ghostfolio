@@ -1,11 +1,15 @@
-<form #addTransactionForm="ngForm" class="d-flex flex-column h-100">
+<form
+  class="d-flex flex-column h-100"
+  [formGroup]="activityForm"
+  (ngSubmit)="onSubmit()"
+>
   <h1 *ngIf="data.activity.id" mat-dialog-title i18n>Update activity</h1>
   <h1 *ngIf="!data.activity.id" mat-dialog-title i18n>Add activity</h1>
   <div class="flex-grow-1" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
-        <mat-select name="type" [formControl]="typeCtrl">
+        <mat-select formControlName="type">
           <mat-option value="BUY" i18n>BUY</mat-option>
           <mat-option value="DIVIDEND" i18n>DIVIDEND</mat-option>
           <mat-option value="ITEM" i18n>ITEM</mat-option>
@@ -13,25 +17,29 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div [ngClass]="{ 'd-none': !showAccountIdCtrl }">
+    <div
+      [ngClass]="{ 'd-none': !activityForm.controls['accountId'].hasValidator(Validators.required) }"
+    >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account</mat-label>
-        <mat-select name="accountId" [formControl]="accountIdCtrl">
+        <mat-select formControlName="accountId">
           <mat-option *ngFor="let account of data.accounts" [value]="account.id"
             >{{ account.name }}</mat-option
           >
         </mat-select>
       </mat-form-field>
     </div>
-    <div [ngClass]="{ 'd-none': !showSearchSymbolCtrl }">
+    <div
+      [ngClass]="{ 'd-none': !activityForm.controls['searchSymbol'].hasValidator(Validators.required) }"
+    >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Symbol or ISIN</mat-label>
         <input
           autocapitalize="off"
           autocomplete="off"
           autocorrect="off"
+          formControlName="searchSymbol"
           matInput
-          [formControl]="searchSymbolCtrl"
           [matAutocomplete]="autocomplete"
           (blur)="onBlurSymbol()"
         />
@@ -54,20 +62,18 @@
         <mat-spinner *ngIf="isLoading" matSuffix [diameter]="20"></mat-spinner>
       </mat-form-field>
     </div>
-    <div [ngClass]="{ 'd-none': !showNameCtrl }">
+    <div
+      [ngClass]="{ 'd-none': !activityForm.controls['name'].hasValidator(Validators.required) }"
+    >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
-        <input matInput name="name" [formControl]="nameCtrl" />
+        <input formControlName="name" matInput />
       </mat-form-field>
     </div>
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
-        <mat-select
-          class="no-arrow"
-          name="currency"
-          [formControl]="currencyCtrl"
-        >
+        <mat-select class="no-arrow" formControlName="currency">
           <mat-option *ngFor="let currency of currencies" [value]="currency"
             >{{ currency }}</mat-option
           >
@@ -77,18 +83,13 @@
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Data Source</mat-label>
-        <input matInput name="dataSource" [formControl]="dataSourceCtrl" />
+        <input formControlName="dataSource" matInput />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
-        <input
-          matInput
-          name="date"
-          [formControl]="dateCtrl"
-          [matDatepicker]="date"
-        />
+        <input formControlName="date" matInput [matDatepicker]="date" />
         <mat-datepicker-toggle matSuffix [for]="date">
           <ion-icon
             class="text-muted"
@@ -102,29 +103,22 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
-        <input
-          matInput
-          name="quantity"
-          type="number"
-          [formControl]="quantityCtrl"
-        />
+        <input formControlName="quantity" matInput type="number" />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Unit Price</mat-label>
-        <input
-          matInput
-          name="unitPrice"
-          type="number"
-          [formControl]="unitPriceCtrl"
-        />
-        <span class="ml-2" matSuffix>{{ currencyCtrl.value }}</span>
+        <input formControlName="unitPrice" matInput type="number" />
+        <span class="ml-2" matSuffix
+          >{{ activityForm.controls['currency'].value }}</span
+        >
         <button
           *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
           mat-icon-button
           matSuffix
           title="Apply current market price"
+          type="button"
           (click)="applyCurrentMarketPrice()"
         >
           <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
@@ -134,26 +128,28 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
-        <input matInput name="fee" type="number" [formControl]="feeCtrl" />
-        <span class="ml-2" matSuffix>{{ currencyCtrl.value }}</span>
+        <input formControlName="fee" matInput type="number" />
+        <span class="ml-2" matSuffix
+          >{{ activityForm.controls['currency'].value }}</span
+        >
       </mat-form-field>
     </div>
   </div>
   <div class="d-flex" mat-dialog-actions>
     <gf-value
       class="flex-grow-1"
-      [currency]="currencyCtrl.value"
+      [currency]="activityForm.controls['currency'].value"
       [locale]="data.user?.settings?.locale"
-      [value]="feeCtrl.value + (quantityCtrl.value * unitPriceCtrl.value) ?? 0"
+      [value]="activityForm.controls['fee'].value + (activityForm.controls['quantity'].value * activityForm.controls['unitPrice'].value) ?? 0"
     ></gf-value>
     <div>
-      <button i18n mat-button (click)="onCancel()">Cancel</button>
+      <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
       <button
         color="primary"
         i18n
         mat-flat-button
-        [disabled]="!(addTransactionForm.form.valid)"
-        (click)="onSubmit()"
+        type="submit"
+        [disabled]="!activityForm.valid"
       >
         Save
       </button>
