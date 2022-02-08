@@ -48,9 +48,9 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
       'account',
       'platform',
       'transactions',
-      'currency',
       'balance',
-      'value'
+      'value',
+      'currency'
     ];
 
     if (this.showActions) {
