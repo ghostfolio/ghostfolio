@@ -82,7 +82,7 @@ export class PortfolioCalculatorNew {
             : unitPrice
                 .mul(order.quantity)
                 .mul(factor)
-                .add(oldAccumulatedSymbol.investment),
+                .plus(oldAccumulatedSymbol.investment),
           quantity: newQuantity,
           symbol: order.symbol,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
@@ -452,7 +452,7 @@ export class PortfolioCalculatorNew {
           .eq(0)
       ) {
         const grossHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-          .sub(
+          .minus(
             lastValueOfInvestmentBeforeTransaction.plus(
               lastTransactionInvestment
             )
@@ -469,8 +469,8 @@ export class PortfolioCalculatorNew {
           );
 
         const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-          .sub(fees.minus(feesAtStartDate))
-          .sub(
+          .minus(fees.minus(feesAtStartDate))
+          .minus(
             lastValueOfInvestmentBeforeTransaction.plus(
               lastTransactionInvestment
             )
@@ -509,10 +509,10 @@ export class PortfolioCalculatorNew {
     }
 
     timeWeightedGrossPerformancePercentage =
-      timeWeightedGrossPerformancePercentage.sub(1);
+      timeWeightedGrossPerformancePercentage.minus(1);
 
     timeWeightedNetPerformancePercentage =
-      timeWeightedNetPerformancePercentage.sub(1);
+      timeWeightedNetPerformancePercentage.minus(1);
 
     const totalGrossPerformance = grossPerformance.minus(
       grossPerformanceAtStartDate
@@ -525,7 +525,7 @@ export class PortfolioCalculatorNew {
     let valueOfInvestmentSum = new Big(0);
 
     for (const holdingPeriodPerformance of holdingPeriodPerformances) {
-      valueOfInvestmentSum = valueOfInvestmentSum.add(
+      valueOfInvestmentSum = valueOfInvestmentSum.plus(
         holdingPeriodPerformance.valueOfInvestment
       );
     }
@@ -568,7 +568,7 @@ export class PortfolioCalculatorNew {
         date: transactionPoint.date,
         investment: transactionPoint.items.reduce(
           (investment, transactionPointSymbol) =>
-            investment.add(transactionPointSymbol.investment),
+            investment.plus(transactionPointSymbol.investment),
           new Big(0)
         )
       };
@@ -685,13 +685,13 @@ export class PortfolioCalculatorNew {
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
-        currentValue = currentValue.add(
+        currentValue = currentValue.plus(
           new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
         );
       } else {
         hasErrors = true;
       }
-      totalInvestment = totalInvestment.add(currentPosition.investment);
+      totalInvestment = totalInvestment.plus(currentPosition.investment);
       if (currentPosition.grossPerformance) {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
@@ -760,8 +760,8 @@ export class PortfolioCalculatorNew {
           dataSource: item.dataSource,
           symbol: item.symbol
         });
-        investment = investment.add(item.investment);
-        fees = fees.add(item.fee);
+        investment = investment.plus(item.investment);
+        fees = fees.plus(item.fee);
       }
 
       let marketSymbols: GetValueObject[] = [];
@@ -817,7 +817,7 @@ export class PortfolioCalculatorNew {
             invalid = true;
             break;
           }
-          value = value.add(
+          value = value.plus(
             item.quantity.mul(marketSymbolMap[currentDateAsString][item.symbol])
           );
         }

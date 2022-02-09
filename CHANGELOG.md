@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the position of the currency column in the accounts table
 - Improved the position of the currency column in the activities table
 
+### Fixed
+
+- Fixed an issue with the performance calculation in connection with fees in the new calculation engine
+
 ## 1.112.1 - 06.02.2022
 
 ### Fixed
