@@ -132,8 +132,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCloneTransaction(aTransaction: OrderModel) {
-    this.openCreateTransactionDialog(aTransaction);
+  public onCloneTransaction(aActivity: Activity) {
+    this.openCreateTransactionDialog(aActivity);
   }
 
   public onDeleteTransaction(aId: string) {
@@ -302,7 +302,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  private openCreateTransactionDialog(aTransaction?: OrderModel): void {
+  private openCreateTransactionDialog(aActivity?: Activity): void {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -315,14 +315,13 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
               return account.accountType === 'SECURITIES';
             }),
             activity: {
-              accountId: aTransaction?.accountId ?? this.defaultAccountId,
-              currency: aTransaction?.currency ?? null,
-              dataSource: aTransaction?.dataSource ?? null,
+              ...aActivity,
+              accountId: aActivity?.accountId ?? this.defaultAccountId,
               date: new Date(),
+              id: null,
               fee: 0,
               quantity: null,
-              symbol: aTransaction?.symbol ?? null,
-              type: aTransaction?.type ?? 'BUY',
+              type: aActivity?.type ?? 'BUY',
               unitPrice: null
             },
             user: this.user
