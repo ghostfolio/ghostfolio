@@ -69,7 +69,7 @@ export class PortfolioCalculator {
             : unitPrice
                 .mul(order.quantity)
                 .mul(factor)
-                .add(oldAccumulatedSymbol.investment),
+                .plus(oldAccumulatedSymbol.investment),
           quantity: newQuantity,
           symbol: order.symbol,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
@@ -354,7 +354,7 @@ export class PortfolioCalculator {
         date: transactionPoint.date,
         investment: transactionPoint.items.reduce(
           (investment, transactionPointSymbol) =>
-            investment.add(transactionPointSymbol.investment),
+            investment.plus(transactionPointSymbol.investment),
           new Big(0)
         )
       };
@@ -475,13 +475,13 @@ export class PortfolioCalculator {
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
-        currentValue = currentValue.add(
+        currentValue = currentValue.plus(
           new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
         );
       } else {
         hasErrors = true;
       }
-      totalInvestment = totalInvestment.add(currentPosition.investment);
+      totalInvestment = totalInvestment.plus(currentPosition.investment);
       if (currentPosition.grossPerformance) {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
@@ -562,8 +562,8 @@ export class PortfolioCalculator {
           dataSource: item.dataSource,
           symbol: item.symbol
         });
-        investment = investment.add(item.investment);
-        fees = fees.add(item.fee);
+        investment = investment.plus(item.investment);
+        fees = fees.plus(item.fee);
       }
 
       let marketSymbols: GetValueObject[] = [];
@@ -619,7 +619,7 @@ export class PortfolioCalculator {
             invalid = true;
             break;
           }
-          value = value.add(
+          value = value.plus(
             item.quantity.mul(marketSymbolMap[currentDateAsString][item.symbol])
           );
         }
