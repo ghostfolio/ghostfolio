@@ -3,6 +3,7 @@ import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Order, Prisma, Type as TypeOfOrder } from '@prisma/client';
@@ -19,7 +20,8 @@ export class OrderService {
     private readonly cacheService: CacheService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public async order(
@@ -130,9 +132,15 @@ export class OrderService {
   public async deleteOrder(
     where: Prisma.OrderWhereUniqueInput
   ): Promise<Order> {
-    return this.prismaService.order.delete({
+    const order = await this.prismaService.order.delete({
       where
     });
+
+    if (order.type === 'ITEM') {
+      await this.symbolProfileService.deleteById(order.symbolProfileId);
+    }
+
+    return order;
   }
 
   public async getOrders({

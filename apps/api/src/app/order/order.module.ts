@@ -8,6 +8,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { OrderController } from './order.controller';
@@ -22,6 +23,7 @@ import { OrderService } from './order.service';
     ImpersonationModule,
     PrismaModule,
     RedisCacheModule,
+    SymbolProfileModule,
     UserModule
   ],
   controllers: [OrderController],
