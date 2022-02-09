@@ -344,6 +344,12 @@ export class PortfolioCalculatorNew {
     let totalInvestment = new Big(0);
     let totalUnits = new Big(0);
 
+    const holdingPeriodPerformances: {
+      grossReturn: Big;
+      netReturn: Big;
+      valueOfInvestment: Big;
+    }[] = [];
+
     // Add a synthetic order at the start and the end date
     orders.push({
       symbol,
@@ -463,7 +469,7 @@ export class PortfolioCalculatorNew {
           );
 
         const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-          .sub(fees.sub(order.fee))
+          .sub(fees.minus(feesAtStartDate))
           .sub(
             lastValueOfInvestmentBeforeTransaction.plus(
               lastTransactionInvestment
@@ -479,6 +485,14 @@ export class PortfolioCalculatorNew {
           timeWeightedNetPerformancePercentage.mul(
             new Big(1).plus(netHoldingPeriodReturn)
           );
+
+        holdingPeriodPerformances.push({
+          grossReturn: grossHoldingPeriodReturn,
+          netReturn: netHoldingPeriodReturn,
+          valueOfInvestment: lastValueOfInvestmentBeforeTransaction.plus(
+            lastTransactionInvestment
+          )
+        });
       }
 
       grossPerformance = newGrossPerformance;
@@ -508,13 +522,39 @@ export class PortfolioCalculatorNew {
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
 
+    let valueOfInvestmentSum = new Big(0);
+
+    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
+      valueOfInvestmentSum = valueOfInvestmentSum.add(
+        holdingPeriodPerformance.valueOfInvestment
+      );
+    }
+
+    let totalWeightedGrossPerformance = new Big(0);
+    let totalWeightedNetPerformance = new Big(0);
+
+    // Weight the holding period returns according to their value of investment
+    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
+      totalWeightedGrossPerformance = totalWeightedGrossPerformance.plus(
+        holdingPeriodPerformance.grossReturn
+          .mul(holdingPeriodPerformance.valueOfInvestment)
+          .div(valueOfInvestmentSum)
+      );
+
+      totalWeightedNetPerformance = totalWeightedNetPerformance.plus(
+        holdingPeriodPerformance.netReturn
+          .mul(holdingPeriodPerformance.valueOfInvestment)
+          .div(valueOfInvestmentSum)
+      );
+    }
+
     return {
       initialValue,
       hasErrors: !initialValue || !unitPriceAtEndDate,
       netPerformance: totalNetPerformance,
-      netPerformancePercentage: timeWeightedNetPerformancePercentage,
+      netPerformancePercentage: totalWeightedNetPerformance,
       grossPerformance: totalGrossPerformance,
-      grossPerformancePercentage: timeWeightedGrossPerformancePercentage
+      grossPerformancePercentage: totalWeightedGrossPerformance
     };
   }
 
