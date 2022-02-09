@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for (wealth) items
 
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
 ## 1.113.0 - 09.02.2022
 
 ### Changed
