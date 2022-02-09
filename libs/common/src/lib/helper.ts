@@ -106,12 +106,6 @@ export function isGhostfolioScraperApiSymbol(aSymbol = '') {
   return aSymbol.startsWith(ghostfolioScraperApiSymbolPrefix);
 }
 
-export function isUUID(aString: string) {
-  const regexExp =
-    /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
-  return regexExp.test(aString);
-}
-
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);
