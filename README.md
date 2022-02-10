@@ -41,21 +41,13 @@ If you prefer to run Ghostfolio on your own infrastructure (self-hosting), pleas
 Ghostfolio is for you if you are...
 
 - 💼 trading stocks, ETFs or cryptocurrencies on multiple platforms
-
 - 🏦 pursuing a buy & hold strategy
-
 - 🎯 interested in getting insights of your portfolio composition
-
 - 👻 valuing privacy and data ownership
-
 - 🧘 into minimalism
-
 - 🧺 caring about diversifying your financial resources
-
 - 🆓 interested in financial independence
-
 - 🙅 saying no to spreadsheets in 2021
-
 - 😎 still reading this list
 
 ## Features
@@ -65,6 +57,7 @@ Ghostfolio is for you if you are...
 - ✅ Portfolio performance: Time-weighted rate of return (TWR) for `Today`, `YTD`, `1Y`, `5Y`, `Max`
 - ✅ Various charts
 - ✅ Static analysis to identify potential risks in your portfolio
+- ✅ Import and export transactions
 - ✅ Dark Mode
 - ✅ Zen Mode
 - ✅ Mobile-first design
