@@ -59,7 +59,7 @@ export class ExportService {
             type,
             unitPrice,
             dataSource: SymbolProfile.dataSource,
-            symbol: SymbolProfile.symbol
+            symbol: type === 'ITEM' ? SymbolProfile.name : SymbolProfile.symbol
           };
         }
       )

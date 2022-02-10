@@ -6,7 +6,7 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { AdminMarketDataDetails } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
-import { map, Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

@@ -87,15 +87,21 @@
           [ngClass]="{
             buy: element.type === 'BUY',
             dividend: element.type === 'DIVIDEND',
+            item: element.type === 'ITEM',
             sell: element.type === 'SELL'
           }"
         >
           <ion-icon
-            [name]="
-              element.type === 'BUY' || element.type === 'DIVIDEND'
-                ? 'arrow-forward-circle-outline'
-                : 'arrow-back-circle-outline'
-            "
+            *ngIf="element.type === 'BUY' || element.type === 'DIVIDEND'"
+            name="arrow-forward-circle-outline"
+          ></ion-icon>
+          <ion-icon
+            *ngIf="element.type === 'ITEM'"
+            name="cube-outline"
+          ></ion-icon>
+          <ion-icon
+            *ngIf="element.type === 'SELL'"
+            name="arrow-back-circle-outline"
           ></ion-icon>
           <span class="d-none d-lg-block mx-1">{{ element.type }}</span>
         </div>
@@ -109,7 +115,12 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex align-items-center">
-          {{ element.symbol | gfSymbol }}
+          <span *ngIf="isUUID(element.SymbolProfile.symbol); else symbol">
+            {{ element.SymbolProfile.name }}
+          </span>
+          <ng-template #symbol>
+            {{ element.SymbolProfile.symbol | gfSymbol }}
+          </ng-template>
           <span *ngIf="element.isDraft" class="badge badge-secondary ml-1" i18n
             >Draft</span
           >
@@ -349,13 +360,15 @@
       (click)="
         hasPermissionToOpenDetails &&
           !row.isDraft &&
+          row.type !== 'ITEM' &&
           onOpenPositionDialog({
             dataSource: row.dataSource,
-            symbol: row.symbol
+            symbol: row.SymbolProfile.symbol
           })
       "
       [ngClass]="{
-        'cursor-pointer': hasPermissionToOpenDetails && !row.isDraft
+        'cursor-pointer':
+          hasPermissionToOpenDetails && !row.isDraft && row.type !== 'ITEM'
       }"
     ></tr>
     <tr

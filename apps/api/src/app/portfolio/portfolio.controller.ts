@@ -332,6 +332,7 @@ export class PortfolioController {
         'currentValue',
         'dividend',
         'fees',
+        'items',
         'netWorth',
         'totalBuy',
         'totalSell'

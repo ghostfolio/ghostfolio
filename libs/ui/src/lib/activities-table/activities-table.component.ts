@@ -24,6 +24,7 @@ import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
+import { isUUID } from 'class-validator';
 import { endOfToday, format, isAfter } from 'date-fns';
 import { isNumber } from 'lodash';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
@@ -69,6 +70,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public filters: Observable<string[]> = this.filters$.asObservable();
   public isAfter = isAfter;
   public isLoading = true;
+  public isUUID = isUUID;
   public placeholder = '';
   public routeQueryParams: Subscription;
   public searchControl = new FormControl();
@@ -271,11 +273,15 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     activity: OrderWithAccount,
     fieldValues: Set<string> = new Set<string>()
   ): string[] {
-    fieldValues.add(activity.currency);
-    fieldValues.add(activity.symbol);
-    fieldValues.add(activity.type);
     fieldValues.add(activity.Account?.name);
     fieldValues.add(activity.Account?.Platform?.name);
+    fieldValues.add(activity.SymbolProfile.currency);
+
+    if (!isUUID(activity.SymbolProfile.symbol)) {
+      fieldValues.add(activity.SymbolProfile.symbol);
+    }
+
+    fieldValues.add(activity.type);
     fieldValues.add(format(activity.date, 'yyyy'));
 
     return [...fieldValues].filter((item) => {
@@ -302,7 +308,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
     for (const activity of this.dataSource.filteredData) {
       if (isNumber(activity.valueInBaseCurrency)) {
-        if (activity.type === 'BUY') {
+        if (activity.type === 'BUY' || activity.type === 'ITEM') {
           totalValue = totalValue.plus(activity.valueInBaseCurrency);
         } else if (activity.type === 'SELL') {
           totalValue = totalValue.minus(activity.valueInBaseCurrency);

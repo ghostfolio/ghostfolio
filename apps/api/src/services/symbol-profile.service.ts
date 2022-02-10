@@ -25,6 +25,12 @@ export class SymbolProfileService {
     });
   }
 
+  public async deleteById(id: string) {
+    return this.prismaService.symbolProfile.delete({
+      where: { id }
+    });
+  }
+
   public async getSymbolProfiles(
     symbols: string[]
   ): Promise<EnhancedSymbolProfile[]> {

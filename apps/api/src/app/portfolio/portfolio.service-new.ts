@@ -891,6 +891,7 @@ export class PortfolioServiceNew {
     const dividend = this.getDividend(orders).toNumber();
     const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
+    const items = this.getItems(orders).toNumber();
 
     const totalBuy = this.getTotalByType(orders, userCurrency, 'BUY');
     const totalSell = this.getTotalByType(orders, userCurrency, 'SELL');
@@ -899,6 +900,7 @@ export class PortfolioServiceNew {
 
     const netWorth = new Big(balance)
       .plus(performanceInformation.performance.currentValue)
+      .plus(items)
       .toNumber();
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
@@ -922,6 +924,7 @@ export class PortfolioServiceNew {
       dividend,
       fees,
       firstOrderDate,
+      items,
       netWorth,
       totalBuy,
       totalSell,
@@ -1033,6 +1036,28 @@ export class PortfolioServiceNew {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.fee,
+          order.currency,
+          this.request.user.Settings.currency
+        );
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      );
+  }
+
+  private getItems(orders: OrderWithAccount[], date = new Date(0)) {
+    return orders
+      .filter((order) => {
+        // Filter out all orders before given date and type item
+        return (
+          isBefore(date, new Date(order.date)) &&
+          order.type === TypeOfOrder.ITEM
+        );
+      })
+      .map((order) => {
+        return this.exchangeRateDataService.toCurrency(
+          new Big(order.quantity).mul(order.unitPrice).toNumber(),
           order.currency,
           this.request.user.Settings.currency
         );

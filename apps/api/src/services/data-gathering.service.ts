@@ -445,6 +445,11 @@ export class DataGatheringService {
           },
           scraperConfiguration: true,
           symbol: true
+        },
+        where: {
+          dataSource: {
+            not: 'MANUAL'
+          }
         }
       })
     ).map((symbolProfile) => {
@@ -479,6 +484,11 @@ export class DataGatheringService {
         dataSource: true,
         scraperConfiguration: true,
         symbol: true
+      },
+      where: {
+        dataSource: {
+          not: 'MANUAL'
+        }
       }
     });
 
@@ -537,6 +547,7 @@ export class DataGatheringService {
     return distinctOrders.filter((distinctOrder) => {
       return (
         distinctOrder.dataSource !== DataSource.GHOSTFOLIO &&
+        distinctOrder.dataSource !== DataSource.MANUAL &&
         distinctOrder.dataSource !== DataSource.RAKUTEN
       );
     });

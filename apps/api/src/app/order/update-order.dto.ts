@@ -1,7 +1,8 @@
 import { DataSource, Type } from '@prisma/client';
-import { IsISO8601, IsNumber, IsString } from 'class-validator';
+import { IsISO8601, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateOrderDto {
+  @IsOptional()
   @IsString()
   accountId: string;
 

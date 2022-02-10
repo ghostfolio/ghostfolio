@@ -3,11 +3,13 @@ import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Order, Prisma, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from './interfaces/activities.interface';
 
@@ -18,7 +20,8 @@ export class OrderService {
     private readonly cacheService: CacheService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public async order(
@@ -58,7 +61,7 @@ export class OrderService {
       return account.isDefault === true;
     });
 
-    const Account = {
+    let Account = {
       connect: {
         id_userId: {
           userId: data.userId,
@@ -67,24 +70,47 @@ export class OrderService {
       }
     };
 
-    const isDraft = isAfter(data.date as Date, endOfToday());
+    if (data.type === 'ITEM') {
+      const currency = data.currency;
+      const dataSource: DataSource = 'MANUAL';
+      const id = uuidv4();
+      const name = data.SymbolProfile.connectOrCreate.create.symbol;
 
-    // Convert the symbol to uppercase to avoid case-sensitive duplicates
-    const symbol = data.symbol.toUpperCase();
+      Account = undefined;
+      data.dataSource = dataSource;
+      data.id = id;
+      data.symbol = null;
+      data.SymbolProfile.connectOrCreate.create.currency = currency;
+      data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
+      data.SymbolProfile.connectOrCreate.create.name = name;
+      data.SymbolProfile.connectOrCreate.create.symbol = id;
+      data.SymbolProfile.connectOrCreate.where.dataSource_symbol = {
+        dataSource,
+        symbol: id
+      };
+    } else {
+      data.SymbolProfile.connectOrCreate.create.symbol =
+        data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
+    }
+
+    const isDraft = isAfter(data.date as Date, endOfToday());
 
     if (!isDraft) {
       // Gather symbol data of order in the background, if not draft
       this.dataGatheringService.gatherSymbols([
         {
-          symbol,
           dataSource: data.dataSource,
-          date: <Date>data.date
+          date: <Date>data.date,
+          symbol: data.SymbolProfile.connectOrCreate.create.symbol
         }
       ]);
     }
 
     this.dataGatheringService.gatherProfileData([
-      { symbol, dataSource: data.dataSource }
+      {
+        dataSource: data.dataSource,
+        symbol: data.SymbolProfile.connectOrCreate.create.symbol
+      }
     ]);
 
     await this.cacheService.flush();
@@ -98,8 +124,7 @@ export class OrderService {
       data: {
         ...orderData,
         Account,
-        isDraft,
-        symbol
+        isDraft
       }
     });
   }
@@ -107,9 +132,15 @@ export class OrderService {
   public async deleteOrder(
     where: Prisma.OrderWhereUniqueInput
   ): Promise<Order> {
-    return this.prismaService.order.delete({
+    const order = await this.prismaService.order.delete({
       where
     });
+
+    if (order.type === 'ITEM') {
+      await this.symbolProfileService.deleteById(order.symbolProfileId);
+    }
+
+    return order;
   }
 
   public async getOrders({
@@ -179,6 +210,17 @@ export class OrderService {
     data: Prisma.OrderUpdateInput;
   }): Promise<Order> {
     const { data, where } = params;
+
+    if (data.Account.connect.id_userId.id === null) {
+      delete data.Account;
+    }
+
+    if (data.type === 'ITEM') {
+      const name = data.symbol;
+
+      data.symbol = null;
+      data.SymbolProfile = { update: { name } };
+    }
 
     const isDraft = isAfter(data.date as Date, endOfToday());
 
