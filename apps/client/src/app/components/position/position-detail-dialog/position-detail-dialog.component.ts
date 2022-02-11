@@ -11,7 +11,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
-import { AssetSubClass } from '@prisma/client';
+import { AssetSubClass, SymbolProfile } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -29,6 +29,9 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public assetSubClass: AssetSubClass;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
+  public countries: {
+    [code: string]: { name: string; value: number };
+  };
   public currency: string;
   public firstBuyDate: string;
   public grossPerformance: number;
@@ -44,7 +47,11 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public orders: OrderWithAccount[];
   public quantity: number;
   public quantityPrecision = 2;
+  public sectors: {
+    [name: string]: { name: string; value: number };
+  };
   public symbol: string;
+  public SymbolProfile: SymbolProfile;
   public transactionCount: number;
   public value: number;
 
@@ -83,12 +90,14 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           orders,
           quantity,
           symbol,
+          SymbolProfile,
           transactionCount,
           value
         }) => {
           this.assetSubClass = assetSubClass;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
+          this.countries = {};
           this.currency = currency;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;
@@ -115,9 +124,29 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.netPerformancePercent = netPerformancePercent;
           this.orders = orders;
           this.quantity = quantity;
+          this.sectors = {};
           this.symbol = symbol;
+          this.SymbolProfile = SymbolProfile;
           this.transactionCount = transactionCount;
           this.value = value;
+
+          if (SymbolProfile?.countries?.length > 0) {
+            for (const country of SymbolProfile.countries) {
+              this.countries[country.code] = {
+                name: country.name,
+                value: country.weight
+              };
+            }
+          }
+
+          if (SymbolProfile?.sectors?.length > 0) {
+            for (const sector of SymbolProfile.sectors) {
+              this.sectors[sector.name] = {
+                name: sector.name,
+                value: sector.weight
+              };
+            }
+          }
 
           if (isToday(parseISO(this.firstBuyDate))) {
             // Add average price

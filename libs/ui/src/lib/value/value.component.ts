@@ -5,7 +5,7 @@ import {
   OnChanges
 } from '@angular/core';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
-import { format, isDate } from 'date-fns';
+import { format, isDate, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
 
 @Component({
@@ -28,10 +28,9 @@ export class ValueComponent implements OnChanges {
   @Input() value: number | string = '';
 
   public absoluteValue = 0;
-  public formattedDate = '';
   public formattedValue = '';
-  public isDate = false;
   public isNumber = false;
+  public isString = false;
   public useAbsoluteValue = false;
 
   public constructor() {}
@@ -39,8 +38,8 @@ export class ValueComponent implements OnChanges {
   public ngOnChanges() {
     if (this.value || this.value === 0) {
       if (isNumber(this.value)) {
-        this.isDate = false;
         this.isNumber = true;
+        this.isString = false;
         this.absoluteValue = Math.abs(<number>this.value);
 
         if (this.colorizeSign) {
@@ -98,17 +97,19 @@ export class ValueComponent implements OnChanges {
           this.formattedValue = this.formattedValue.replace(/^-/, '');
         }
       } else {
-        try {
-          if (isDate(new Date(this.value))) {
-            this.isDate = true;
-            this.isNumber = false;
+        this.isNumber = false;
+        this.isString = true;
 
-            this.formattedDate = format(
+        try {
+          if (isDate(parseISO(this.value))) {
+            this.formattedValue = format(
               new Date(<string>this.value),
               DEFAULT_DATE_FORMAT
             );
           }
-        } catch {}
+        } catch {
+          this.formattedValue = this.value;
+        }
       }
     }
 

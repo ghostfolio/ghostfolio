@@ -1,3 +1,4 @@
+import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { AssetClass, AssetSubClass } from '@prisma/client';
 
@@ -19,6 +20,7 @@ export interface PortfolioPositionDetail {
   netPerformancePercent: number;
   orders: OrderWithAccount[];
   quantity: number;
+  SymbolProfile: EnhancedSymbolProfile;
   symbol: string;
   transactionCount: number;
   value: number;

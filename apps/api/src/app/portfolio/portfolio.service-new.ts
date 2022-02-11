@@ -432,6 +432,7 @@ export class PortfolioServiceNew {
         orders: [],
         quantity: undefined,
         symbol: aSymbol,
+        SymbolProfile: undefined,
         transactionCount: undefined,
         value: undefined
       };
@@ -439,8 +440,11 @@ export class PortfolioServiceNew {
 
     const assetClass = orders[0].SymbolProfile?.assetClass;
     const assetSubClass = orders[0].SymbolProfile?.assetSubClass;
-    const positionCurrency = orders[0].currency;
     const name = orders[0].SymbolProfile?.name ?? '';
+    const positionCurrency = orders[0].currency;
+    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      aSymbol
+    ]);
 
     const portfolioOrders: PortfolioOrder[] = orders
       .filter((order) => {
@@ -569,6 +573,7 @@ export class PortfolioServiceNew {
         name,
         netPerformance,
         orders,
+        SymbolProfile,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
         grossPerformancePercent:
@@ -628,6 +633,7 @@ export class PortfolioServiceNew {
         minPrice,
         name,
         orders,
+        SymbolProfile,
         averagePrice: 0,
         currency: currentData[aSymbol]?.currency,
         firstBuyDate: undefined,
