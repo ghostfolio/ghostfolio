@@ -11,7 +11,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
-import { AssetSubClass, SymbolProfile } from '@prisma/client';
+import { SymbolProfile } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -26,13 +26,11 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./position-detail-dialog.component.scss']
 })
 export class PositionDetailDialog implements OnDestroy, OnInit {
-  public assetSubClass: AssetSubClass;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public currency: string;
   public firstBuyDate: string;
   public grossPerformance: number;
   public grossPerformancePercent: number;
@@ -41,7 +39,6 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
-  public name: string;
   public netPerformance: number;
   public netPerformancePercent: number;
   public orders: OrderWithAccount[];
@@ -50,7 +47,6 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
-  public symbol: string;
   public SymbolProfile: SymbolProfile;
   public transactionCount: number;
   public value: number;
@@ -73,9 +69,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
-          assetSubClass,
           averagePrice,
-          currency,
           firstBuyDate,
           grossPerformance,
           grossPerformancePercent,
@@ -84,21 +78,17 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           marketPrice,
           maxPrice,
           minPrice,
-          name,
           netPerformance,
           netPerformancePercent,
           orders,
           quantity,
-          symbol,
           SymbolProfile,
           transactionCount,
           value
         }) => {
-          this.assetSubClass = assetSubClass;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
-          this.currency = currency;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;
           this.grossPerformancePercent = grossPerformancePercent;
@@ -119,13 +109,11 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.marketPrice = marketPrice;
           this.maxPrice = maxPrice;
           this.minPrice = minPrice;
-          this.name = name;
           this.netPerformance = netPerformance;
           this.netPerformancePercent = netPerformancePercent;
           this.orders = orders;
           this.quantity = quantity;
           this.sectors = {};
-          this.symbol = symbol;
           this.SymbolProfile = SymbolProfile;
           this.transactionCount = transactionCount;
           this.value = value;
@@ -195,7 +183,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
 
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
-          } else if (assetSubClass === 'CRYPTOCURRENCY') {
+          } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
             if (this.quantity < 1) {
               this.quantityPrecision = 7;
             } else if (this.quantity < 1000) {
@@ -225,7 +213,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       .subscribe((data) => {
         downloadAsFile(
           data,
-          `ghostfolio-export-${this.symbol}-${format(
+          `ghostfolio-export-${this.SymbolProfile?.symbol}-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,

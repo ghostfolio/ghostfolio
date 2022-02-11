@@ -344,6 +344,7 @@ export class PortfolioController {
 
   @Get('position/:dataSource/:symbol')
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @UseGuards(AuthGuard('jwt'))
   public async getPosition(
     @Headers('impersonation-id') impersonationId: string,

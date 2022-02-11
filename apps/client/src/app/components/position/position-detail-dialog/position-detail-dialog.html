@@ -2,7 +2,7 @@
   mat-dialog-title
   position="center"
   [deviceType]="data.deviceType"
-  [title]="name ?? symbol"
+  [title]="SymbolProfile?.name ?? SymbolProfile?.symbol"
   (closeButtonClicked)="onClose()"
 ></gf-dialog-header>
 
@@ -55,7 +55,7 @@
         <gf-value
           label="Ø Buy Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="averagePrice"
         ></gf-value>
@@ -64,7 +64,7 @@
         <gf-value
           label="Market Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="marketPrice"
         ></gf-value>
@@ -73,7 +73,7 @@
         <gf-value
           label="Minimum Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="minPrice"
@@ -83,7 +83,7 @@
         <gf-value
           label="Maximum Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="maxPrice"
