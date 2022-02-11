@@ -39,7 +39,7 @@
         class="mb-0 text-truncate"
         [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
       >
-        {{ formattedValue }}
+        {{ formattedValue | titlecase }}
       </div>
     </ng-container>
   </div>

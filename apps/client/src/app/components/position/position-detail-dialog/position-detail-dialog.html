@@ -122,6 +122,21 @@
           [value]="transactionCount"
         ></gf-value>
       </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Asset Class"
+          size="medium"
+          [value]="SymbolProfile?.assetClass"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          size="medium"
+          label="Asset Sub Class"
+          [locale]="data.locale"
+          [value]="SymbolProfile?.assetSubClass"
+        ></gf-value>
+      </div>
       <ng-container
         *ngIf="SymbolProfile?.countries?.length > 0 || SymbolProfile?.sectors?.length > 0"
       >
