@@ -417,7 +417,6 @@ export class PortfolioServiceNew {
     if (orders.length <= 0) {
       return {
         averagePrice: undefined,
-        currency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
@@ -426,21 +425,20 @@ export class PortfolioServiceNew {
         marketPrice: undefined,
         maxPrice: undefined,
         minPrice: undefined,
-        name: undefined,
         netPerformance: undefined,
         netPerformancePercent: undefined,
         orders: [],
         quantity: undefined,
-        symbol: aSymbol,
+        SymbolProfile: undefined,
         transactionCount: undefined,
         value: undefined
       };
     }
 
-    const assetClass = orders[0].SymbolProfile?.assetClass;
-    const assetSubClass = orders[0].SymbolProfile?.assetSubClass;
     const positionCurrency = orders[0].currency;
-    const name = orders[0].SymbolProfile?.name ?? '';
+    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      aSymbol
+    ]);
 
     const portfolioOrders: PortfolioOrder[] = orders
       .filter((order) => {
@@ -557,18 +555,15 @@ export class PortfolioServiceNew {
       }
 
       return {
-        assetClass,
-        assetSubClass,
-        currency,
         firstBuyDate,
         grossPerformance,
         investment,
         marketPrice,
         maxPrice,
         minPrice,
-        name,
         netPerformance,
         orders,
+        SymbolProfile,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
         grossPerformancePercent:
@@ -576,7 +571,6 @@ export class PortfolioServiceNew {
         historicalData: historicalDataArray,
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         quantity: quantity.toNumber(),
-        symbol: aSymbol,
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice).toNumber(),
           currency,
@@ -621,15 +615,12 @@ export class PortfolioServiceNew {
       }
 
       return {
-        assetClass,
-        assetSubClass,
         marketPrice,
         maxPrice,
         minPrice,
-        name,
         orders,
+        SymbolProfile,
         averagePrice: 0,
-        currency: currentData[aSymbol]?.currency,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
@@ -638,7 +629,6 @@ export class PortfolioServiceNew {
         netPerformance: undefined,
         netPerformancePercent: undefined,
         quantity: 0,
-        symbol: aSymbol,
         transactionCount: undefined,
         value: 0
       };

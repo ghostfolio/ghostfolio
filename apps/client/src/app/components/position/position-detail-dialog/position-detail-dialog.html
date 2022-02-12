@@ -2,7 +2,7 @@
   mat-dialog-title
   position="center"
   [deviceType]="data.deviceType"
-  [title]="name ?? symbol"
+  [title]="SymbolProfile?.name ?? SymbolProfile?.symbol"
   (closeButtonClicked)="onClose()"
 ></gf-dialog-header>
 
@@ -55,7 +55,7 @@
         <gf-value
           label="Ø Buy Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="averagePrice"
         ></gf-value>
@@ -64,7 +64,7 @@
         <gf-value
           label="Market Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="marketPrice"
         ></gf-value>
@@ -73,7 +73,7 @@
         <gf-value
           label="Minimum Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="minPrice"
@@ -83,7 +83,7 @@
         <gf-value
           label="Maximum Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="maxPrice"
@@ -122,6 +122,72 @@
           [value]="transactionCount"
         ></gf-value>
       </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Asset Class"
+          size="medium"
+          [value]="SymbolProfile?.assetClass"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          size="medium"
+          label="Asset Sub Class"
+          [locale]="data.locale"
+          [value]="SymbolProfile?.assetSubClass"
+        ></gf-value>
+      </div>
+      <ng-container
+        *ngIf="SymbolProfile?.countries?.length > 0 || SymbolProfile?.sectors?.length > 0"
+      >
+        <ng-container
+          *ngIf="SymbolProfile?.countries?.length === 1 && SymbolProfile?.sectors?.length === 1; else charts"
+        >
+          <div
+            *ngIf="SymbolProfile?.countries?.length === 1"
+            class="col-6 mb-3"
+          >
+            <gf-value
+              label="Country"
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.countries[0].name"
+            ></gf-value>
+          </div>
+          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+            <gf-value
+              label="Sector"
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.sectors[0].name"
+            ></gf-value>
+          </div>
+        </ng-container>
+        <ng-template #charts>
+          <div class="col-6 mb-3">
+            <div class="h4 mb-0" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+              [positions]="countries"
+            ></gf-portfolio-proportion-chart>
+          </div>
+          <div class="col-6 mb-3">
+            <div class="h4 mb-0" i18n>Sectors</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+              [positions]="sectors"
+            ></gf-portfolio-proportion-chart>
+          </div>
+        </ng-template>
+      </ng-container>
     </div>
   </div>
 

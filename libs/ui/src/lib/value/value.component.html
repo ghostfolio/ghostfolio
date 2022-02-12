@@ -34,12 +34,12 @@
         {{ currency }}
       </div>
     </ng-container>
-    <ng-container *ngIf="isDate">
+    <ng-container *ngIf="isString">
       <div
-        class="mb-0"
+        class="mb-0 text-truncate"
         [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
       >
-        {{ formattedDate }}
+        {{ formattedValue | titlecase }}
       </div>
     </ng-container>
   </div>

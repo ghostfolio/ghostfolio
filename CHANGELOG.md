@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the asset and asset sub class to the position detail dialog
+- Added the countries and sectors to the position detail dialog
+
 ### Changed
 
 - Upgraded `angular` from version `13.1.2` to `13.2.3`

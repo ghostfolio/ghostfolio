@@ -58,11 +58,24 @@ export class TransformDataSourceInResponseInterceptor<T>
             });
           }
 
+          if (data.orders) {
+            data.orders.map((order) => {
+              order.dataSource = encodeDataSource(order.dataSource);
+              return order;
+            });
+          }
+
           if (data.positions) {
             data.positions.map((position) => {
               position.dataSource = encodeDataSource(position.dataSource);
               return position;
             });
+          }
+
+          if (data.SymbolProfile) {
+            data.SymbolProfile.dataSource = encodeDataSource(
+              data.SymbolProfile.dataSource
+            );
           }
         }
 
