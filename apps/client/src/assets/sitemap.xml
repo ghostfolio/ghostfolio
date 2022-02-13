@@ -6,42 +6,46 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
     <loc>https://ghostfol.io</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/about</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/about/changelog</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/blog</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/de/blog/2021/07/hallo-ghostfolio</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog/2021/07/hello-ghostfolio</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog/2022/01/ghostfolio-first-months-in-open-source</loc>
-    <lastmod>2022-01-05T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/features</loc>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/pricing</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/register</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/resources</loc>
-    <lastmod>2022-01-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-02-13T00:00:00+00:00</lastmod>
   </url>
 </urlset>
