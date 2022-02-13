@@ -67,6 +67,13 @@ const routes: Routes = [
       ).then((m) => m.FirstMonthsInOpenSourcePageModule)
   },
   {
+    path: 'features',
+    loadChildren: () =>
+      import('./pages/features/features-page.module').then(
+        (m) => m.FeaturesPageModule
+      )
+  },
+  {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)

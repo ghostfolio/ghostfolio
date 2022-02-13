@@ -243,6 +243,17 @@
       i18n
       mat-flat-button
       [ngClass]="{
+        'font-weight-bold': currentRoute === 'features',
+        'text-decoration-underline': currentRoute === 'features'
+      }"
+      [routerLink]="['/features']"
+      >Features</a
+    >
+    <a
+      class="d-none d-sm-block mx-1"
+      i18n
+      mat-flat-button
+      [ngClass]="{
         'font-weight-bold': currentRoute === 'about',
         'text-decoration-underline': currentRoute === 'about'
       }"
