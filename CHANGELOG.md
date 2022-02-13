@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a feature overview page
 - Added the asset and asset sub class to the position detail dialog
 - Added the countries and sectors to the position detail dialog
 
