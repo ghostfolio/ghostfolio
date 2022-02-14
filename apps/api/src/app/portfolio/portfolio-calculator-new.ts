@@ -281,283 +281,6 @@ export class PortfolioCalculatorNew {
     };
   }
 
-  public getSymbolMetrics({
-    marketSymbolMap,
-    start,
-    symbol
-  }: {
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
-    start: Date;
-    symbol: string;
-  }) {
-    let orders: PortfolioOrderItem[] = this.orders.filter((order) => {
-      return order.symbol === symbol;
-    });
-
-    if (orders.length <= 0) {
-      return {
-        hasErrors: false,
-        initialValue: new Big(0),
-        netPerformance: new Big(0),
-        netPerformancePercentage: new Big(0),
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0)
-      };
-    }
-
-    const dateOfFirstTransaction = new Date(first(orders).date);
-    const endDate = new Date(Date.now());
-
-    const unitPriceAtStartDate =
-      marketSymbolMap[format(start, DATE_FORMAT)]?.[symbol];
-
-    const unitPriceAtEndDate =
-      marketSymbolMap[format(endDate, DATE_FORMAT)]?.[symbol];
-
-    if (
-      !unitPriceAtEndDate ||
-      (!unitPriceAtStartDate && isBefore(dateOfFirstTransaction, start))
-    ) {
-      return {
-        hasErrors: true,
-        initialValue: new Big(0),
-        netPerformance: new Big(0),
-        netPerformancePercentage: new Big(0),
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0)
-      };
-    }
-
-    let feesAtStartDate = new Big(0);
-    let fees = new Big(0);
-    let grossPerformance = new Big(0);
-    let grossPerformanceAtStartDate = new Big(0);
-    let grossPerformanceFromSells = new Big(0);
-    let initialValue: Big;
-    let lastAveragePrice = new Big(0);
-    let lastTransactionInvestment = new Big(0);
-    let lastValueOfInvestmentBeforeTransaction = new Big(0);
-    let timeWeightedGrossPerformancePercentage = new Big(1);
-    let timeWeightedNetPerformancePercentage = new Big(1);
-    let totalInvestment = new Big(0);
-    let totalUnits = new Big(0);
-
-    const holdingPeriodPerformances: {
-      grossReturn: Big;
-      netReturn: Big;
-      valueOfInvestment: Big;
-    }[] = [];
-
-    // Add a synthetic order at the start and the end date
-    orders.push({
-      symbol,
-      currency: null,
-      date: format(start, DATE_FORMAT),
-      dataSource: null,
-      fee: new Big(0),
-      itemType: 'start',
-      name: '',
-      quantity: new Big(0),
-      type: TypeOfOrder.BUY,
-      unitPrice: unitPriceAtStartDate ?? new Big(0)
-    });
-
-    orders.push({
-      symbol,
-      currency: null,
-      date: format(endDate, DATE_FORMAT),
-      dataSource: null,
-      fee: new Big(0),
-      itemType: 'end',
-      name: '',
-      quantity: new Big(0),
-      type: TypeOfOrder.BUY,
-      unitPrice: unitPriceAtEndDate ?? new Big(0)
-    });
-
-    // Sort orders so that the start and end placeholder order are at the right
-    // position
-    orders = sortBy(orders, (order) => {
-      let sortIndex = new Date(order.date);
-
-      if (order.itemType === 'start') {
-        sortIndex = addMilliseconds(sortIndex, -1);
-      }
-
-      if (order.itemType === 'end') {
-        sortIndex = addMilliseconds(sortIndex, 1);
-      }
-
-      return sortIndex.getTime();
-    });
-
-    const indexOfStartOrder = orders.findIndex((order) => {
-      return order.itemType === 'start';
-    });
-
-    for (let i = 0; i < orders.length; i += 1) {
-      const order = orders[i];
-
-      const valueOfInvestmentBeforeTransaction = totalUnits.mul(
-        order.unitPrice
-      );
-
-      const transactionInvestment = order.quantity
-        .mul(order.unitPrice)
-        .mul(this.getFactor(order.type));
-
-      if (
-        !initialValue &&
-        order.itemType !== 'start' &&
-        order.itemType !== 'end'
-      ) {
-        initialValue = transactionInvestment;
-      }
-
-      fees = fees.plus(order.fee);
-
-      totalUnits = totalUnits.plus(
-        order.quantity.mul(this.getFactor(order.type))
-      );
-
-      const valueOfInvestment = totalUnits.mul(order.unitPrice);
-
-      const grossPerformanceFromSell =
-        order.type === TypeOfOrder.SELL
-          ? order.unitPrice.minus(lastAveragePrice).mul(order.quantity)
-          : new Big(0);
-
-      grossPerformanceFromSells = grossPerformanceFromSells.plus(
-        grossPerformanceFromSell
-      );
-
-      totalInvestment = totalInvestment
-        .plus(transactionInvestment)
-        .plus(grossPerformanceFromSell);
-
-      lastAveragePrice = totalUnits.eq(0)
-        ? new Big(0)
-        : totalInvestment.div(totalUnits);
-
-      const newGrossPerformance = valueOfInvestment
-        .minus(totalInvestment)
-        .plus(grossPerformanceFromSells);
-
-      if (
-        i > indexOfStartOrder &&
-        !lastValueOfInvestmentBeforeTransaction
-          .plus(lastTransactionInvestment)
-          .eq(0)
-      ) {
-        const grossHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-          .minus(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          )
-          .div(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          );
-
-        timeWeightedGrossPerformancePercentage =
-          timeWeightedGrossPerformancePercentage.mul(
-            new Big(1).plus(grossHoldingPeriodReturn)
-          );
-
-        const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-          .minus(fees.minus(feesAtStartDate))
-          .minus(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          )
-          .div(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          );
-
-        timeWeightedNetPerformancePercentage =
-          timeWeightedNetPerformancePercentage.mul(
-            new Big(1).plus(netHoldingPeriodReturn)
-          );
-
-        holdingPeriodPerformances.push({
-          grossReturn: grossHoldingPeriodReturn,
-          netReturn: netHoldingPeriodReturn,
-          valueOfInvestment: lastValueOfInvestmentBeforeTransaction.plus(
-            lastTransactionInvestment
-          )
-        });
-      }
-
-      grossPerformance = newGrossPerformance;
-
-      lastTransactionInvestment = transactionInvestment;
-
-      lastValueOfInvestmentBeforeTransaction =
-        valueOfInvestmentBeforeTransaction;
-
-      if (order.itemType === 'start') {
-        feesAtStartDate = fees;
-        grossPerformanceAtStartDate = grossPerformance;
-      }
-    }
-
-    timeWeightedGrossPerformancePercentage =
-      timeWeightedGrossPerformancePercentage.minus(1);
-
-    timeWeightedNetPerformancePercentage =
-      timeWeightedNetPerformancePercentage.minus(1);
-
-    const totalGrossPerformance = grossPerformance.minus(
-      grossPerformanceAtStartDate
-    );
-
-    const totalNetPerformance = grossPerformance
-      .minus(grossPerformanceAtStartDate)
-      .minus(fees.minus(feesAtStartDate));
-
-    let valueOfInvestmentSum = new Big(0);
-
-    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
-      valueOfInvestmentSum = valueOfInvestmentSum.plus(
-        holdingPeriodPerformance.valueOfInvestment
-      );
-    }
-
-    let totalWeightedGrossPerformance = new Big(0);
-    let totalWeightedNetPerformance = new Big(0);
-
-    // Weight the holding period returns according to their value of investment
-    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
-      totalWeightedGrossPerformance = totalWeightedGrossPerformance.plus(
-        holdingPeriodPerformance.grossReturn
-          .mul(holdingPeriodPerformance.valueOfInvestment)
-          .div(valueOfInvestmentSum)
-      );
-
-      totalWeightedNetPerformance = totalWeightedNetPerformance.plus(
-        holdingPeriodPerformance.netReturn
-          .mul(holdingPeriodPerformance.valueOfInvestment)
-          .div(valueOfInvestmentSum)
-      );
-    }
-
-    return {
-      initialValue,
-      hasErrors: !initialValue || !unitPriceAtEndDate,
-      netPerformance: totalNetPerformance,
-      netPerformancePercentage: totalWeightedNetPerformance,
-      grossPerformance: totalGrossPerformance,
-      grossPerformancePercentage: totalWeightedGrossPerformance
-    };
-  }
-
   public getInvestments(): { date: string; investment: Big }[] {
     if (this.transactionPoints.length === 0) {
       return [];
@@ -883,6 +606,283 @@ export class PortfolioCalculatorNew {
       case 'year':
         return addYears(date, 1);
     }
+  }
+
+  private getSymbolMetrics({
+    marketSymbolMap,
+    start,
+    symbol
+  }: {
+    marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    };
+    start: Date;
+    symbol: string;
+  }) {
+    let orders: PortfolioOrderItem[] = this.orders.filter((order) => {
+      return order.symbol === symbol;
+    });
+
+    if (orders.length <= 0) {
+      return {
+        hasErrors: false,
+        initialValue: new Big(0),
+        netPerformance: new Big(0),
+        netPerformancePercentage: new Big(0),
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0)
+      };
+    }
+
+    const dateOfFirstTransaction = new Date(first(orders).date);
+    const endDate = new Date(Date.now());
+
+    const unitPriceAtStartDate =
+      marketSymbolMap[format(start, DATE_FORMAT)]?.[symbol];
+
+    const unitPriceAtEndDate =
+      marketSymbolMap[format(endDate, DATE_FORMAT)]?.[symbol];
+
+    if (
+      !unitPriceAtEndDate ||
+      (!unitPriceAtStartDate && isBefore(dateOfFirstTransaction, start))
+    ) {
+      return {
+        hasErrors: true,
+        initialValue: new Big(0),
+        netPerformance: new Big(0),
+        netPerformancePercentage: new Big(0),
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0)
+      };
+    }
+
+    let feesAtStartDate = new Big(0);
+    let fees = new Big(0);
+    let grossPerformance = new Big(0);
+    let grossPerformanceAtStartDate = new Big(0);
+    let grossPerformanceFromSells = new Big(0);
+    let initialValue: Big;
+    let lastAveragePrice = new Big(0);
+    let lastTransactionInvestment = new Big(0);
+    let lastValueOfInvestmentBeforeTransaction = new Big(0);
+    let timeWeightedGrossPerformancePercentage = new Big(1);
+    let timeWeightedNetPerformancePercentage = new Big(1);
+    let totalInvestment = new Big(0);
+    let totalUnits = new Big(0);
+
+    const holdingPeriodPerformances: {
+      grossReturn: Big;
+      netReturn: Big;
+      valueOfInvestment: Big;
+    }[] = [];
+
+    // Add a synthetic order at the start and the end date
+    orders.push({
+      symbol,
+      currency: null,
+      date: format(start, DATE_FORMAT),
+      dataSource: null,
+      fee: new Big(0),
+      itemType: 'start',
+      name: '',
+      quantity: new Big(0),
+      type: TypeOfOrder.BUY,
+      unitPrice: unitPriceAtStartDate ?? new Big(0)
+    });
+
+    orders.push({
+      symbol,
+      currency: null,
+      date: format(endDate, DATE_FORMAT),
+      dataSource: null,
+      fee: new Big(0),
+      itemType: 'end',
+      name: '',
+      quantity: new Big(0),
+      type: TypeOfOrder.BUY,
+      unitPrice: unitPriceAtEndDate ?? new Big(0)
+    });
+
+    // Sort orders so that the start and end placeholder order are at the right
+    // position
+    orders = sortBy(orders, (order) => {
+      let sortIndex = new Date(order.date);
+
+      if (order.itemType === 'start') {
+        sortIndex = addMilliseconds(sortIndex, -1);
+      }
+
+      if (order.itemType === 'end') {
+        sortIndex = addMilliseconds(sortIndex, 1);
+      }
+
+      return sortIndex.getTime();
+    });
+
+    const indexOfStartOrder = orders.findIndex((order) => {
+      return order.itemType === 'start';
+    });
+
+    for (let i = 0; i < orders.length; i += 1) {
+      const order = orders[i];
+
+      const valueOfInvestmentBeforeTransaction = totalUnits.mul(
+        order.unitPrice
+      );
+
+      const transactionInvestment = order.quantity
+        .mul(order.unitPrice)
+        .mul(this.getFactor(order.type));
+
+      if (
+        !initialValue &&
+        order.itemType !== 'start' &&
+        order.itemType !== 'end'
+      ) {
+        initialValue = transactionInvestment;
+      }
+
+      fees = fees.plus(order.fee);
+
+      totalUnits = totalUnits.plus(
+        order.quantity.mul(this.getFactor(order.type))
+      );
+
+      const valueOfInvestment = totalUnits.mul(order.unitPrice);
+
+      const grossPerformanceFromSell =
+        order.type === TypeOfOrder.SELL
+          ? order.unitPrice.minus(lastAveragePrice).mul(order.quantity)
+          : new Big(0);
+
+      grossPerformanceFromSells = grossPerformanceFromSells.plus(
+        grossPerformanceFromSell
+      );
+
+      totalInvestment = totalInvestment
+        .plus(transactionInvestment)
+        .plus(grossPerformanceFromSell);
+
+      lastAveragePrice = totalUnits.eq(0)
+        ? new Big(0)
+        : totalInvestment.div(totalUnits);
+
+      const newGrossPerformance = valueOfInvestment
+        .minus(totalInvestment)
+        .plus(grossPerformanceFromSells);
+
+      if (
+        i > indexOfStartOrder &&
+        !lastValueOfInvestmentBeforeTransaction
+          .plus(lastTransactionInvestment)
+          .eq(0)
+      ) {
+        const grossHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
+          .minus(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
+            )
+          )
+          .div(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
+            )
+          );
+
+        timeWeightedGrossPerformancePercentage =
+          timeWeightedGrossPerformancePercentage.mul(
+            new Big(1).plus(grossHoldingPeriodReturn)
+          );
+
+        const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
+          .minus(fees.minus(feesAtStartDate))
+          .minus(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
+            )
+          )
+          .div(
+            lastValueOfInvestmentBeforeTransaction.plus(
+              lastTransactionInvestment
+            )
+          );
+
+        timeWeightedNetPerformancePercentage =
+          timeWeightedNetPerformancePercentage.mul(
+            new Big(1).plus(netHoldingPeriodReturn)
+          );
+
+        holdingPeriodPerformances.push({
+          grossReturn: grossHoldingPeriodReturn,
+          netReturn: netHoldingPeriodReturn,
+          valueOfInvestment: lastValueOfInvestmentBeforeTransaction.plus(
+            lastTransactionInvestment
+          )
+        });
+      }
+
+      grossPerformance = newGrossPerformance;
+
+      lastTransactionInvestment = transactionInvestment;
+
+      lastValueOfInvestmentBeforeTransaction =
+        valueOfInvestmentBeforeTransaction;
+
+      if (order.itemType === 'start') {
+        feesAtStartDate = fees;
+        grossPerformanceAtStartDate = grossPerformance;
+      }
+    }
+
+    timeWeightedGrossPerformancePercentage =
+      timeWeightedGrossPerformancePercentage.minus(1);
+
+    timeWeightedNetPerformancePercentage =
+      timeWeightedNetPerformancePercentage.minus(1);
+
+    const totalGrossPerformance = grossPerformance.minus(
+      grossPerformanceAtStartDate
+    );
+
+    const totalNetPerformance = grossPerformance
+      .minus(grossPerformanceAtStartDate)
+      .minus(fees.minus(feesAtStartDate));
+
+    let valueOfInvestmentSum = new Big(0);
+
+    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
+      valueOfInvestmentSum = valueOfInvestmentSum.plus(
+        holdingPeriodPerformance.valueOfInvestment
+      );
+    }
+
+    let totalWeightedGrossPerformance = new Big(0);
+    let totalWeightedNetPerformance = new Big(0);
+
+    // Weight the holding period returns according to their value of investment
+    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
+      totalWeightedGrossPerformance = totalWeightedGrossPerformance.plus(
+        holdingPeriodPerformance.grossReturn
+          .mul(holdingPeriodPerformance.valueOfInvestment)
+          .div(valueOfInvestmentSum)
+      );
+
+      totalWeightedNetPerformance = totalWeightedNetPerformance.plus(
+        holdingPeriodPerformance.netReturn
+          .mul(holdingPeriodPerformance.valueOfInvestment)
+          .div(valueOfInvestmentSum)
+      );
+    }
+
+    return {
+      initialValue,
+      hasErrors: !initialValue || !unitPriceAtEndDate,
+      netPerformance: totalNetPerformance,
+      netPerformancePercentage: totalWeightedNetPerformance,
+      grossPerformance: totalGrossPerformance,
+      grossPerformancePercentage: totalWeightedGrossPerformance
+    };
   }
 
   private isNextItemActive(

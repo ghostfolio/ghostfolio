@@ -42,6 +42,7 @@
     "start:server": "nx serve api --watch",
     "start:storybook": "nx run ui:storybook",
     "test": "nx test",
+    "test:single": "nx test --test-file portfolio-calculator-new.spec.ts",
     "ts-node": "ts-node",
     "update": "nx migrate latest",
     "watch:server": "nx build api --watch",
