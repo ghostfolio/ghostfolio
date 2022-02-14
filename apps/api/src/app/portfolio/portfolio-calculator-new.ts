@@ -272,7 +272,7 @@ export class PortfolioCalculatorNew {
         transactionCount: item.transactionCount
       });
     }
-    const overall = this.calculateOverallPerformance(positions, initialValues);
+    const overall = this.calculateOverallPerformance(positions);
 
     return {
       ...overall,
@@ -393,18 +393,27 @@ export class PortfolioCalculatorNew {
     };
   }
 
-  private calculateOverallPerformance(
-    positions: TimelinePosition[],
-    initialValues: { [p: string]: Big }
-  ) {
-    let hasErrors = false;
+  private calculateOverallPerformance(positions: TimelinePosition[]) {
     let currentValue = new Big(0);
-    let totalInvestment = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformancePercentage = new Big(0);
+    let hasErrors = false;
     let netPerformance = new Big(0);
     let netPerformancePercentage = new Big(0);
-    let completeInitialValue = new Big(0);
+    let totalGrossPerformanceFluctuation = new Big(0);
+    let totalInvestment = new Big(0);
+
+    for (const currentPosition of positions) {
+      if (
+        currentPosition.grossPerformance &&
+        currentPosition.grossPerformancePercentage
+      ) {
+        totalGrossPerformanceFluctuation =
+          totalGrossPerformanceFluctuation.plus(
+            currentPosition.grossPerformance.abs()
+          );
+      }
+    }
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
@@ -414,11 +423,14 @@ export class PortfolioCalculatorNew {
       } else {
         hasErrors = true;
       }
+
       totalInvestment = totalInvestment.plus(currentPosition.investment);
+
       if (currentPosition.grossPerformance) {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
         );
+
         netPerformance = netPerformance.plus(currentPosition.netPerformance);
       } else if (!currentPosition.quantity.eq(0)) {
         hasErrors = true;
@@ -426,15 +438,18 @@ export class PortfolioCalculatorNew {
 
       if (
         currentPosition.grossPerformancePercentage &&
-        initialValues[currentPosition.symbol]
+        !totalGrossPerformanceFluctuation.eq(0)
       ) {
-        const currentInitialValue = initialValues[currentPosition.symbol];
-        completeInitialValue = completeInitialValue.plus(currentInitialValue);
+        const ratioOfCurrentPosition = currentPosition.grossPerformance
+          .abs()
+          .div(totalGrossPerformanceFluctuation);
+
         grossPerformancePercentage = grossPerformancePercentage.plus(
-          currentPosition.grossPerformancePercentage.mul(currentInitialValue)
+          currentPosition.grossPerformancePercentage.mul(ratioOfCurrentPosition)
         );
+
         netPerformancePercentage = netPerformancePercentage.plus(
-          currentPosition.netPerformancePercentage.mul(currentInitialValue)
+          currentPosition.netPerformancePercentage.mul(ratioOfCurrentPosition)
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
@@ -442,13 +457,6 @@ export class PortfolioCalculatorNew {
         );
         hasErrors = true;
       }
-    }
-
-    if (!completeInitialValue.eq(0)) {
-      grossPerformancePercentage =
-        grossPerformancePercentage.div(completeInitialValue);
-      netPerformancePercentage =
-        netPerformancePercentage.div(completeInitialValue);
     }
 
     return {
