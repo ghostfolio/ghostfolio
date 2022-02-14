@@ -85,7 +85,7 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 Run the following command to start the Docker images from [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio):
 
 ```bash
-docker-compose -f docker/docker-compose.yml up
+docker-compose -f docker/docker-compose.yml up -d
 ```
 
 #### Setup Database
@@ -102,7 +102,7 @@ Run the following commands to build and start the Docker images:
 
 ```bash
 docker-compose -f docker/docker-compose.build.yml build
-docker-compose -f docker/docker-compose.build.yml up
+docker-compose -f docker/docker-compose.build.yml up -d
 ```
 
 #### Setup Database
