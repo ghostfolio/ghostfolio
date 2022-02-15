@@ -150,11 +150,11 @@ export class PortfolioProportionChartComponent
       });
 
       if (!unknownItem) {
-        const index = chartDataSorted.push([
+        chartDataSorted.push([
           UNKNOWN_KEY,
           { name: UNKNOWN_KEY, subCategory: {}, value: 0 }
         ]);
-        unknownItem = chartDataSorted[index];
+        unknownItem = chartDataSorted[chartDataSorted.length - 1];
       }
 
       rest.forEach((restItem) => {

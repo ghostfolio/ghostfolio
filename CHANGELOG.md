@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the mobile layout of the position detail dialog (countries and sectors charts)
 
+### Fixed
+
+- Fixed the `maxItems` attribute of the portfolio proportion chart component
+
 ## 1.115.0 - 13.02.2022
 
 ### Added
