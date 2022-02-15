@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the `maxItems` attribute of the portfolio proportion chart component
+- Fixed the time in market display of the portfolio summary tab on the home page
 
 ## 1.115.0 - 13.02.2022
 
