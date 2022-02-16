@@ -9,7 +9,8 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
-  PROPERTY_SYSTEM_MESSAGE
+  PROPERTY_SYSTEM_MESSAGE,
+  ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import { encodeDataSource } from '@ghostfolio/common/helper';
 import { InfoItem } from '@ghostfolio/common/interfaces';
@@ -18,7 +19,6 @@ import { Subscription } from '@ghostfolio/common/interfaces/subscription.interfa
 import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { DataSource } from '@prisma/client';
 import * as bent from 'bent';
 import { subDays } from 'date-fns';
 
@@ -52,7 +52,9 @@ export class InfoService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      info.fearAndGreedDataSource = encodeDataSource(DataSource.RAKUTEN);
+      info.fearAndGreedDataSource = encodeDataSource(
+        ghostfolioFearAndGreedIndexDataSource
+      );
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
