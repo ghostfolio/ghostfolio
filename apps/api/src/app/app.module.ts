@@ -8,6 +8,7 @@ import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.mod
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -65,6 +66,7 @@ import { UserModule } from './user/user.module';
     }),
     SubscriptionModule,
     SymbolModule,
+    TwitterBotModule,
     UserModule
   ],
   controllers: [AppController],

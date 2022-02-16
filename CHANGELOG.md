@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a service to tweet the current _Fear & Greed Index_ (market mood)
+
 ### Changed
 
 - Improved the mobile layout of the position detail dialog (countries and sectors charts)

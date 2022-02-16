@@ -30,5 +30,9 @@ export interface Environment extends CleanedEnvAccessors {
   ROOT_URL: string;
   STRIPE_PUBLIC_KEY: string;
   STRIPE_SECRET_KEY: string;
+  TWITTER_ACCESS_TOKEN: string;
+  TWITTER_ACCESS_TOKEN_SECRET: string;
+  TWITTER_API_KEY: string;
+  TWITTER_API_SECRET: string;
   WEB_AUTH_RP_ID: string;
 }

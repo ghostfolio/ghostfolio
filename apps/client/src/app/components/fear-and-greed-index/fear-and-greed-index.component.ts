@@ -24,12 +24,9 @@ export class FearAndGreedIndexComponent implements OnChanges, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.fearAndGreedIndexEmoji = resolveFearAndGreedIndex(
-      this.fearAndGreedIndex
-    ).emoji;
+    const { emoji, text } = resolveFearAndGreedIndex(this.fearAndGreedIndex);
 
-    this.fearAndGreedIndexText = resolveFearAndGreedIndex(
-      this.fearAndGreedIndex
-    ).text;
+    this.fearAndGreedIndexEmoji = emoji;
+    this.fearAndGreedIndexText = text;
   }
 }
