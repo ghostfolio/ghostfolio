@@ -1,3 +1,4 @@
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { CacheModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -17,9 +18,10 @@ import { RedisCacheService } from './redis-cache.service';
         store: redisStore,
         ttl: configurationService.get('CACHE_TTL')
       })
-    })
+    }),
+    ConfigurationModule
   ],
-  providers: [ConfigurationService, RedisCacheService],
+  providers: [RedisCacheService],
   exports: [RedisCacheService]
 })
 export class RedisCacheModule {}
