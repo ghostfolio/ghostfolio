@@ -144,6 +144,14 @@
         <ng-container
           *ngIf="SymbolProfile?.countries?.length === 1 && SymbolProfile?.sectors?.length === 1; else charts"
         >
+          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+            <gf-value
+              label="Sector"
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.sectors[0].name"
+            ></gf-value>
+          </div>
           <div
             *ngIf="SymbolProfile?.countries?.length === 1"
             class="col-6 mb-3"
@@ -155,27 +163,8 @@
               [value]="SymbolProfile.countries[0].name"
             ></gf-value>
           </div>
-          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
-            <gf-value
-              label="Sector"
-              size="medium"
-              [locale]="data.locale"
-              [value]="SymbolProfile.sectors[0].name"
-            ></gf-value>
-          </div>
         </ng-container>
         <ng-template #charts>
-          <div class="col-md-6 mb-3">
-            <div class="h4" i18n>Countries</div>
-            <gf-portfolio-proportion-chart
-              [baseCurrency]="user?.settings?.baseCurrency"
-              [isInPercent]="true"
-              [keys]="['name']"
-              [locale]="user?.settings?.locale"
-              [maxItems]="10"
-              [positions]="countries"
-            ></gf-portfolio-proportion-chart>
-          </div>
           <div class="col-md-6 mb-3">
             <div class="h4" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
@@ -185,6 +174,17 @@
               [locale]="user?.settings?.locale"
               [maxItems]="10"
               [positions]="sectors"
+            ></gf-portfolio-proportion-chart>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="h4" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+              [positions]="countries"
             ></gf-portfolio-proportion-chart>
           </div>
         </ng-template>
