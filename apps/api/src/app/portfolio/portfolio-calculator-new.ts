@@ -451,8 +451,13 @@ export class PortfolioCalculatorNew {
       }
     }
 
-    grossPerformancePercentage = grossPerformancePercentage.div(sumOfWeights);
-    netPerformancePercentage = netPerformancePercentage.div(sumOfWeights);
+    if (sumOfWeights.gt(0)) {
+      grossPerformancePercentage = grossPerformancePercentage.div(sumOfWeights);
+      netPerformancePercentage = netPerformancePercentage.div(sumOfWeights);
+    } else {
+      grossPerformancePercentage = new Big(0);
+      netPerformancePercentage = new Big(0);
+    }
 
     return {
       currentValue,
