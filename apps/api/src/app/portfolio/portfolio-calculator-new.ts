@@ -272,7 +272,7 @@ export class PortfolioCalculatorNew {
         transactionCount: item.transactionCount
       });
     }
-    const overall = this.calculateOverallPerformance(positions);
+    const overall = this.calculateOverallPerformance(positions, initialValues);
 
     return {
       ...overall,
@@ -393,27 +393,18 @@ export class PortfolioCalculatorNew {
     };
   }
 
-  private calculateOverallPerformance(positions: TimelinePosition[]) {
+  private calculateOverallPerformance(
+    positions: TimelinePosition[],
+    initialValues: { [symbol: string]: Big }
+  ) {
     let currentValue = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformancePercentage = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
     let netPerformancePercentage = new Big(0);
-    let totalGrossPerformanceFluctuation = new Big(0);
+    let sumOfWeights = new Big(0);
     let totalInvestment = new Big(0);
-
-    for (const currentPosition of positions) {
-      if (
-        currentPosition.grossPerformance &&
-        currentPosition.grossPerformancePercentage
-      ) {
-        totalGrossPerformanceFluctuation =
-          totalGrossPerformanceFluctuation.plus(
-            currentPosition.grossPerformance.abs()
-          );
-      }
-    }
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
@@ -436,20 +427,21 @@ export class PortfolioCalculatorNew {
         hasErrors = true;
       }
 
-      if (
-        currentPosition.grossPerformancePercentage &&
-        !totalGrossPerformanceFluctuation.eq(0)
-      ) {
-        const ratioOfCurrentPosition = currentPosition.grossPerformance
-          .abs()
-          .div(totalGrossPerformanceFluctuation);
+      if (currentPosition.grossPerformancePercentage) {
+        // Use the average from the initial value and the current investment as
+        // a weight
+        const weight = (initialValues[currentPosition.symbol] ?? new Big(0))
+          .plus(currentPosition.investment)
+          .div(2);
+
+        sumOfWeights = sumOfWeights.plus(weight);
 
         grossPerformancePercentage = grossPerformancePercentage.plus(
-          currentPosition.grossPerformancePercentage.mul(ratioOfCurrentPosition)
+          currentPosition.grossPerformancePercentage.mul(weight)
         );
 
         netPerformancePercentage = netPerformancePercentage.plus(
-          currentPosition.netPerformancePercentage.mul(ratioOfCurrentPosition)
+          currentPosition.netPerformancePercentage.mul(weight)
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
@@ -458,6 +450,9 @@ export class PortfolioCalculatorNew {
         hasErrors = true;
       }
     }
+
+    grossPerformancePercentage = grossPerformancePercentage.div(sumOfWeights);
+    netPerformancePercentage = netPerformancePercentage.div(sumOfWeights);
 
     return {
       currentValue,
@@ -743,12 +738,15 @@ export class PortfolioCalculatorNew {
         .mul(order.unitPrice)
         .mul(this.getFactor(order.type));
 
-      if (
-        !initialValue &&
-        order.itemType !== 'start' &&
-        order.itemType !== 'end'
-      ) {
-        initialValue = transactionInvestment;
+      if (i >= indexOfStartOrder && !initialValue) {
+        if (
+          i === indexOfStartOrder &&
+          !valueOfInvestmentBeforeTransaction.eq(0)
+        ) {
+          initialValue = valueOfInvestmentBeforeTransaction;
+        } else if (transactionInvestment.gt(0)) {
+          initialValue = transactionInvestment;
+        }
       }
 
       fees = fees.plus(order.fee);
