@@ -23,8 +23,8 @@ export class CronService {
     await this.exchangeRateDataService.loadCurrencies();
   }
 
-  @Cron(CronExpression.EVERY_DAY_AT_6PM)
-  public async runEveryDayAtSixPM() {
+  @Cron(CronExpression.EVERY_DAY_AT_5PM)
+  public async runEveryDayAtFivePM() {
     this.twitterBotService.tweetFearAndGreedIndex();
   }
 
