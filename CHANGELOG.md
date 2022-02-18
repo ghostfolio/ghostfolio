@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the allocations by account for non-unique account names
+- Added a fallback to the default account if the `accountId` is invalid in the import functionality for activities
 
 ## 1.116.0 - 16.02.2022
 
