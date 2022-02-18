@@ -1,18 +1,20 @@
 import { AuthDeviceController } from '@ghostfolio/api/app/auth-device/auth-device.controller';
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   controllers: [AuthDeviceController],
   imports: [
+    ConfigurationModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '180 days' }
-    })
+    }),
+    PrismaModule
   ],
-  providers: [AuthDeviceService, ConfigurationService, PrismaService]
+  providers: [AuthDeviceService]
 })
 export class AuthDeviceModule {}
