@@ -1,10 +1,10 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { Injectable } from '@nestjs/common';
 import { Order } from '@prisma/client';
 import { isSameDay, parseISO } from 'date-fns';
-import { AccountService } from '@ghostfolio/api/app/account/account.service';
 
 @Injectable()
 export class ImportService {
