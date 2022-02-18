@@ -4,10 +4,12 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { Injectable } from '@nestjs/common';
 import { Order } from '@prisma/client';
 import { isSameDay, parseISO } from 'date-fns';
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 
 @Injectable()
 export class ImportService {
   public constructor(
+    private readonly accountService: AccountService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly orderService: OrderService
@@ -32,6 +34,12 @@ export class ImportService {
 
     await this.validateOrders({ orders, userId });
 
+    const accountIds = (await this.accountService.getAccounts(userId)).map(
+      (account) => {
+        return account.id;
+      }
+    );
+
     for (const {
       accountId,
       currency,
@@ -44,7 +52,6 @@ export class ImportService {
       unitPrice
     } of orders) {
       await this.orderService.createOrder({
-        accountId,
         currency,
         dataSource,
         fee,
@@ -53,6 +60,7 @@ export class ImportService {
         type,
         unitPrice,
         userId,
+        accountId: accountIds.includes(accountId) ? accountId : undefined,
         date: parseISO(<string>(<unknown>date)),
         SymbolProfile: {
           connectOrCreate: {
