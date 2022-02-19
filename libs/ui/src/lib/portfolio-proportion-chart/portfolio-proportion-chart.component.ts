@@ -11,6 +11,7 @@ import {
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import Big from 'big.js';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';
@@ -78,16 +79,17 @@ export class PortfolioProportionChartComponent
       [symbol: string]: {
         color?: string;
         name: string;
-        subCategory: { [symbol: string]: { value: number } };
-        value: number;
+        subCategory: { [symbol: string]: { value: Big } };
+        value: Big;
       };
     } = {};
 
     Object.keys(this.positions).forEach((symbol) => {
       if (this.positions[symbol][this.keys[0]]) {
         if (chartData[this.positions[symbol][this.keys[0]]]) {
-          chartData[this.positions[symbol][this.keys[0]]].value +=
-            this.positions[symbol].value;
+          chartData[this.positions[symbol][this.keys[0]]].value = chartData[
+            this.positions[symbol][this.keys[0]]
+          ].value.plus(this.positions[symbol].value);
 
           if (
             chartData[this.positions[symbol][this.keys[0]]].subCategory[
@@ -96,37 +98,43 @@ export class PortfolioProportionChartComponent
           ) {
             chartData[this.positions[symbol][this.keys[0]]].subCategory[
               this.positions[symbol][this.keys[1]]
-            ].value += this.positions[symbol].value;
+            ].value = chartData[
+              this.positions[symbol][this.keys[0]]
+            ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
+              this.positions[symbol].value
+            );
           } else {
             chartData[this.positions[symbol][this.keys[0]]].subCategory[
               this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
-            ] = { value: this.positions[symbol].value };
+            ] = { value: new Big(this.positions[symbol].value) };
           }
         } else {
           chartData[this.positions[symbol][this.keys[0]]] = {
             name: this.positions[symbol].name,
             subCategory: {},
-            value: this.positions[symbol].value
+            value: new Big(this.positions[symbol].value)
           };
 
           if (this.positions[symbol][this.keys[1]]) {
             chartData[this.positions[symbol][this.keys[0]]].subCategory = {
               [this.positions[symbol][this.keys[1]]]: {
-                value: this.positions[symbol].value
+                value: new Big(this.positions[symbol].value)
               }
             };
           }
         }
       } else {
         if (chartData[UNKNOWN_KEY]) {
-          chartData[UNKNOWN_KEY].value += this.positions[symbol].value;
+          chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
+            this.positions[symbol].value
+          );
         } else {
           chartData[UNKNOWN_KEY] = {
             name: this.positions[symbol].name,
             subCategory: this.keys[1]
-              ? { [this.keys[1]]: { value: 0 } }
+              ? { [this.keys[1]]: { value: new Big(0) } }
               : undefined,
-            value: this.positions[symbol].value
+            value: new Big(this.positions[symbol].value)
           };
         }
       }
@@ -134,7 +142,7 @@ export class PortfolioProportionChartComponent
 
     let chartDataSorted = Object.entries(chartData)
       .sort((a, b) => {
-        return a[1].value - b[1].value;
+        return a[1].value.minus(b[1].value).toNumber();
       })
       .reverse();
 
@@ -152,7 +160,7 @@ export class PortfolioProportionChartComponent
       if (!unknownItem) {
         chartDataSorted.push([
           UNKNOWN_KEY,
-          { name: UNKNOWN_KEY, subCategory: {}, value: 0 }
+          { name: UNKNOWN_KEY, subCategory: {}, value: new Big(0) }
         ]);
         unknownItem = chartDataSorted[chartDataSorted.length - 1];
       }
@@ -162,7 +170,7 @@ export class PortfolioProportionChartComponent
           unknownItem[1] = {
             name: UNKNOWN_KEY,
             subCategory: {},
-            value: unknownItem[1].value + restItem[1].value
+            value: unknownItem[1].value.plus(restItem[1].value)
           };
         }
       });
@@ -170,7 +178,7 @@ export class PortfolioProportionChartComponent
       // Sort data again
       chartDataSorted = chartDataSorted
         .sort((a, b) => {
-          return a[1].value - b[1].value;
+          return a[1].value.minus(b[1].value).toNumber();
         })
         .reverse();
     }
@@ -201,7 +209,7 @@ export class PortfolioProportionChartComponent
         backgroundColorSubCategory.push(
           Color(item.color).lighten(lightnessRatio).hex()
         );
-        dataSubCategory.push(item.subCategory[subCategory].value);
+        dataSubCategory.push(item.subCategory[subCategory].value.toNumber());
         labelSubCategory.push(subCategory);
 
         lightnessRatio += 0.1;
@@ -215,7 +223,7 @@ export class PortfolioProportionChartComponent
         }),
         borderWidth: 0,
         data: chartDataSorted.map(([, item]) => {
-          return item.value;
+          return item.value.toNumber();
         })
       }
     ];
