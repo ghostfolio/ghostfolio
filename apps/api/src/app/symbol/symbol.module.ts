@@ -8,13 +8,14 @@ import { SymbolController } from './symbol.controller';
 import { SymbolService } from './symbol.service';
 
 @Module({
+  controllers: [SymbolController],
+  exports: [SymbolService],
   imports: [
     ConfigurationModule,
     DataProviderModule,
     MarketDataModule,
     PrismaModule
   ],
-  controllers: [SymbolController],
   providers: [SymbolService]
 })
 export class SymbolModule {}

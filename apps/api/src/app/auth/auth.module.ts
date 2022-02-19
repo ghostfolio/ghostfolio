@@ -2,8 +2,8 @@ import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.s
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -15,20 +15,20 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   controllers: [AuthController],
   imports: [
+    ConfigurationModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '180 days' }
     }),
+    PrismaModule,
     SubscriptionModule,
     UserModule
   ],
   providers: [
     AuthDeviceService,
     AuthService,
-    ConfigurationService,
     GoogleStrategy,
     JwtStrategy,
-    PrismaService,
     WebAuthService
   ]
 })

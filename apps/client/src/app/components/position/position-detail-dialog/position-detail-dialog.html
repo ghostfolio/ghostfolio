@@ -126,14 +126,15 @@
         <gf-value
           label="Asset Class"
           size="medium"
+          [hidden]="!SymbolProfile?.assetClass"
           [value]="SymbolProfile?.assetClass"
         ></gf-value>
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          size="medium"
           label="Asset Sub Class"
-          [locale]="data.locale"
+          size="medium"
+          [hidden]="!SymbolProfile?.assetSubClass"
           [value]="SymbolProfile?.assetSubClass"
         ></gf-value>
       </div>
@@ -143,6 +144,14 @@
         <ng-container
           *ngIf="SymbolProfile?.countries?.length === 1 && SymbolProfile?.sectors?.length === 1; else charts"
         >
+          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+            <gf-value
+              label="Sector"
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.sectors[0].name"
+            ></gf-value>
+          </div>
           <div
             *ngIf="SymbolProfile?.countries?.length === 1"
             class="col-6 mb-3"
@@ -154,29 +163,10 @@
               [value]="SymbolProfile.countries[0].name"
             ></gf-value>
           </div>
-          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
-            <gf-value
-              label="Sector"
-              size="medium"
-              [locale]="data.locale"
-              [value]="SymbolProfile.sectors[0].name"
-            ></gf-value>
-          </div>
         </ng-container>
         <ng-template #charts>
-          <div class="col-6 mb-3">
-            <div class="h4 mb-0" i18n>Countries</div>
-            <gf-portfolio-proportion-chart
-              [baseCurrency]="user?.settings?.baseCurrency"
-              [isInPercent]="true"
-              [keys]="['name']"
-              [locale]="user?.settings?.locale"
-              [maxItems]="10"
-              [positions]="countries"
-            ></gf-portfolio-proportion-chart>
-          </div>
-          <div class="col-6 mb-3">
-            <div class="h4 mb-0" i18n>Sectors</div>
+          <div class="col-md-6 mb-3">
+            <div class="h4" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
               [baseCurrency]="user?.settings?.baseCurrency"
               [isInPercent]="true"
@@ -184,6 +174,17 @@
               [locale]="user?.settings?.locale"
               [maxItems]="10"
               [positions]="sectors"
+            ></gf-portfolio-proportion-chart>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="h4" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+              [positions]="countries"
             ></gf-portfolio-proportion-chart>
           </div>
         </ng-template>

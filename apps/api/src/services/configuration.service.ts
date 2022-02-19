@@ -39,6 +39,10 @@ export class ConfigurationService {
       ROOT_URL: str({ default: 'http://localhost:4200' }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),
+      TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
+      TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),
+      TWITTER_API_KEY: str({ default: 'dummyApiKey' }),
+      TWITTER_API_SECRET: str({ default: 'dummyApiSecret' }),
       WEB_AUTH_RP_ID: host({ default: 'localhost' })
     });
   }
