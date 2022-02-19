@@ -6,6 +6,7 @@ import {
 } from '@ghostfolio/common/config';
 import { resolveFearAndGreedIndex } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
+import { isSunday } from 'date-fns';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
@@ -27,7 +28,10 @@ export class TwitterBotService {
   }
 
   public async tweetFearAndGreedIndex() {
-    if (!this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
+    if (
+      !this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX') ||
+      isSunday(new Date())
+    ) {
       return;
     }
 
