@@ -903,11 +903,12 @@ export class PortfolioCalculatorNew {
 
     const netPerformancePercentage =
       averagePriceAtStartDate.eq(0) ||
-      averagePriceAtEndDate.plus(feesPerUnit).eq(0) ||
+      averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
         ? totalNetPerformance.div(maxTotalInvestment)
         : unitPriceAtEndDate
-            .div(averagePriceAtEndDate.plus(feesPerUnit))
+            .minus(feesPerUnit)
+            .div(averagePriceAtEndDate)
             .div(
               orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
             )
@@ -927,6 +928,7 @@ export class PortfolioCalculatorNew {
         Gross performance: ${totalGrossPerformance.toFixed(
           2
         )} / ${grossPerformancePercentage.mul(100).toFixed(2)}%
+        Fees per unit: ${feesPerUnit.toFixed(2)}
         Net performance: ${totalNetPerformance.toFixed(
           2
         )} / ${netPerformancePercentage.mul(100).toFixed(2)}%`
