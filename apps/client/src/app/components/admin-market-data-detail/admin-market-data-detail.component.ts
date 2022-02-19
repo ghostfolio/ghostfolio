@@ -12,7 +12,7 @@ import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DataSource, MarketData } from '@prisma/client';
-import { format, isBefore, isValid, parse } from 'date-fns';
+import { format, isBefore, isSameDay, isValid, parse } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -82,6 +82,11 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     return isValid(date) && isBefore(date, new Date());
   }
 
+  public isToday(aDateString: string) {
+    const date = parse(aDateString, DATE_FORMAT, new Date());
+    return isValid(date) && isSameDay(date, new Date());
+  }
+
   public onOpenMarketDataDetail({
     day,
     yearMonth
@@ -89,13 +94,18 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     day: string;
     yearMonth: string;
   }) {
+    const date = new Date(`${yearMonth}-${day}`);
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
+
+    if (isSameDay(date, new Date())) {
+      return;
+    }
 
     const dialogRef = this.dialog.open(MarketDataDetailDialog, {
       data: {
+        date,
         marketPrice,
         dataSource: this.dataSource,
-        date: new Date(`${yearMonth}-${day}`),
         symbol: this.symbol
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
