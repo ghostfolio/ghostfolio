@@ -180,8 +180,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       };
     }
 
-    console.log(this.accounts);
-
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
