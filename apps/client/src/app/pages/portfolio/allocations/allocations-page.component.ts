@@ -14,7 +14,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ToggleOption } from '@ghostfolio/common/types';
-import { AssetClass, DataSource } from '@prisma/client';
+import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +27,10 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {
-    [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
+    [id: string]: Pick<Account, 'name'> & {
+      id: string;
+      value: number;
+    };
   };
   public continents: {
     [code: string]: { name: string; value: number };
@@ -171,6 +174,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.portfolioDetails.accounts
     )) {
       this.accounts[id] = {
+        id,
         name,
         value: aPeriod === 'original' ? original : current
       };
