@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the countries and sectors charts in the position detail dialog
+- Distinguished today's data point of historical data in the admin control panel
 - Restructured the server modules
 
 ### Fixed
