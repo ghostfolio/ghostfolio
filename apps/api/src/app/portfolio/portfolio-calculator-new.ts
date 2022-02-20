@@ -230,7 +230,7 @@ export class PortfolioCalculatorNew {
     const initialValues: { [symbol: string]: Big } = {};
 
     const positions: TimelinePosition[] = [];
-    let hasErrorsInSymbolMetrics = false;
+    let hasAnySymbolMetricsErrors = false;
 
     for (const item of lastTransactionPoint.items) {
       const marketValue = marketSymbolMap[todayString]?.[item.symbol];
@@ -248,8 +248,7 @@ export class PortfolioCalculatorNew {
         symbol: item.symbol
       });
 
-      hasErrorsInSymbolMetrics = hasErrorsInSymbolMetrics || hasErrors;
-
+      hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
       initialValues[item.symbol] = initialValue;
 
       positions.push({
@@ -274,12 +273,13 @@ export class PortfolioCalculatorNew {
         transactionCount: item.transactionCount
       });
     }
+
     const overall = this.calculateOverallPerformance(positions, initialValues);
 
     return {
       ...overall,
       positions,
-      hasErrors: hasErrorsInSymbolMetrics || overall.hasErrors
+      hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
   }
 
@@ -939,7 +939,7 @@ export class PortfolioCalculatorNew {
       initialValue,
       grossPerformancePercentage,
       netPerformancePercentage,
-      hasErrors: !initialValue || !unitPriceAtEndDate,
+      hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
       netPerformance: totalNetPerformance,
       grossPerformance: totalGrossPerformance
     };
