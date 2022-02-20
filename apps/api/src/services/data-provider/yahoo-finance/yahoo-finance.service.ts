@@ -25,7 +25,7 @@ import {
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
-  private yahooFinanceHostname = 'https://query1.finance.yahoo.com';
+  private readonly yahooFinanceHostname = 'https://query1.finance.yahoo.com';
 
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService
@@ -274,7 +274,9 @@ export class YahooFinanceService implements DataProviderInterface {
           name: value.name
         });
       }
-    } catch {}
+    } catch (error) {
+      Logger.error(error);
+    }
 
     return { items };
   }
