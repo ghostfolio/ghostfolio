@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Displayed features in features overview page based on permissions
+- Extended the data points of historical data in the admin control panel
 
 ## 1.117.0 - 19.02.2022
 
