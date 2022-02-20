@@ -25,7 +25,7 @@ import {
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
-  private readonly yahooFinanceHostname = 'https://query2.finance.yahoo.com';
+  private readonly yahooFinanceHostname = 'https://query1.finance.yahoo.com';
 
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService
