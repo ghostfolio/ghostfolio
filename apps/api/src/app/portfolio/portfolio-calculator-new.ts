@@ -33,6 +33,8 @@ import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.in
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
 export class PortfolioCalculatorNew {
+  private static readonly ENABLE_LOGGING = false;
+
   private currency: string;
   private currentRateService: CurrentRateService;
   private orders: PortfolioOrder[];
@@ -228,7 +230,7 @@ export class PortfolioCalculatorNew {
     const initialValues: { [symbol: string]: Big } = {};
 
     const positions: TimelinePosition[] = [];
-    let hasErrorsInSymbolMetrics = false;
+    let hasAnySymbolMetricsErrors = false;
 
     for (const item of lastTransactionPoint.items) {
       const marketValue = marketSymbolMap[todayString]?.[item.symbol];
@@ -246,8 +248,7 @@ export class PortfolioCalculatorNew {
         symbol: item.symbol
       });
 
-      hasErrorsInSymbolMetrics = hasErrorsInSymbolMetrics || hasErrors;
-
+      hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
       initialValues[item.symbol] = initialValue;
 
       positions.push({
@@ -272,12 +273,13 @@ export class PortfolioCalculatorNew {
         transactionCount: item.transactionCount
       });
     }
+
     const overall = this.calculateOverallPerformance(positions, initialValues);
 
     return {
       ...overall,
       positions,
-      hasErrors: hasErrorsInSymbolMetrics || overall.hasErrors
+      hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
   }
 
@@ -395,16 +397,16 @@ export class PortfolioCalculatorNew {
 
   private calculateOverallPerformance(
     positions: TimelinePosition[],
-    initialValues: { [p: string]: Big }
+    initialValues: { [symbol: string]: Big }
   ) {
-    let hasErrors = false;
     let currentValue = new Big(0);
-    let totalInvestment = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformancePercentage = new Big(0);
+    let hasErrors = false;
     let netPerformance = new Big(0);
     let netPerformancePercentage = new Big(0);
-    let completeInitialValue = new Big(0);
+    let sumOfWeights = new Big(0);
+    let totalInvestment = new Big(0);
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
@@ -414,27 +416,34 @@ export class PortfolioCalculatorNew {
       } else {
         hasErrors = true;
       }
+
       totalInvestment = totalInvestment.plus(currentPosition.investment);
+
       if (currentPosition.grossPerformance) {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
         );
+
         netPerformance = netPerformance.plus(currentPosition.netPerformance);
       } else if (!currentPosition.quantity.eq(0)) {
         hasErrors = true;
       }
 
-      if (
-        currentPosition.grossPerformancePercentage &&
-        initialValues[currentPosition.symbol]
-      ) {
-        const currentInitialValue = initialValues[currentPosition.symbol];
-        completeInitialValue = completeInitialValue.plus(currentInitialValue);
+      if (currentPosition.grossPerformancePercentage) {
+        // Use the average from the initial value and the current investment as
+        // a weight
+        const weight = (initialValues[currentPosition.symbol] ?? new Big(0))
+          .plus(currentPosition.investment)
+          .div(2);
+
+        sumOfWeights = sumOfWeights.plus(weight);
+
         grossPerformancePercentage = grossPerformancePercentage.plus(
-          currentPosition.grossPerformancePercentage.mul(currentInitialValue)
+          currentPosition.grossPerformancePercentage.mul(weight)
         );
+
         netPerformancePercentage = netPerformancePercentage.plus(
-          currentPosition.netPerformancePercentage.mul(currentInitialValue)
+          currentPosition.netPerformancePercentage.mul(weight)
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
@@ -444,11 +453,12 @@ export class PortfolioCalculatorNew {
       }
     }
 
-    if (!completeInitialValue.eq(0)) {
-      grossPerformancePercentage =
-        grossPerformancePercentage.div(completeInitialValue);
-      netPerformancePercentage =
-        netPerformancePercentage.div(completeInitialValue);
+    if (sumOfWeights.gt(0)) {
+      grossPerformancePercentage = grossPerformancePercentage.div(sumOfWeights);
+      netPerformancePercentage = netPerformancePercentage.div(sumOfWeights);
+    } else {
+      grossPerformancePercentage = new Big(0);
+      netPerformancePercentage = new Big(0);
     }
 
     return {
@@ -657,6 +667,8 @@ export class PortfolioCalculatorNew {
       };
     }
 
+    let averagePriceAtEndDate = new Big(0);
+    let averagePriceAtStartDate = new Big(0);
     let feesAtStartDate = new Big(0);
     let fees = new Big(0);
     let grossPerformance = new Big(0);
@@ -666,16 +678,12 @@ export class PortfolioCalculatorNew {
     let lastAveragePrice = new Big(0);
     let lastTransactionInvestment = new Big(0);
     let lastValueOfInvestmentBeforeTransaction = new Big(0);
+    let maxTotalInvestment = new Big(0);
     let timeWeightedGrossPerformancePercentage = new Big(1);
     let timeWeightedNetPerformancePercentage = new Big(1);
     let totalInvestment = new Big(0);
+    let totalInvestmentWithGrossPerformanceFromSell = new Big(0);
     let totalUnits = new Big(0);
-
-    const holdingPeriodPerformances: {
-      grossReturn: Big;
-      netReturn: Big;
-      valueOfInvestment: Big;
-    }[] = [];
 
     // Add a synthetic order at the start and the end date
     orders.push({
@@ -688,7 +696,7 @@ export class PortfolioCalculatorNew {
       name: '',
       quantity: new Big(0),
       type: TypeOfOrder.BUY,
-      unitPrice: unitPriceAtStartDate ?? new Big(0)
+      unitPrice: unitPriceAtStartDate
     });
 
     orders.push({
@@ -701,7 +709,7 @@ export class PortfolioCalculatorNew {
       name: '',
       quantity: new Big(0),
       type: TypeOfOrder.BUY,
-      unitPrice: unitPriceAtEndDate ?? new Big(0)
+      unitPrice: unitPriceAtEndDate
     });
 
     // Sort orders so that the start and end placeholder order are at the right
@@ -724,8 +732,30 @@ export class PortfolioCalculatorNew {
       return order.itemType === 'start';
     });
 
+    const indexOfEndOrder = orders.findIndex((order) => {
+      return order.itemType === 'end';
+    });
+
     for (let i = 0; i < orders.length; i += 1) {
       const order = orders[i];
+
+      if (order.itemType === 'start') {
+        // Take the unit price of the order as the market price if there are no
+        // orders of this symbol before the start date
+        order.unitPrice =
+          indexOfStartOrder === 0
+            ? orders[i + 1]?.unitPrice
+            : unitPriceAtStartDate;
+      }
+
+      // Calculate the average start price as soon as any units are held
+      if (
+        averagePriceAtStartDate.eq(0) &&
+        i >= indexOfStartOrder &&
+        totalUnits.gt(0)
+      ) {
+        averagePriceAtStartDate = totalInvestment.div(totalUnits);
+      }
 
       const valueOfInvestmentBeforeTransaction = totalUnits.mul(
         order.unitPrice
@@ -735,12 +765,25 @@ export class PortfolioCalculatorNew {
         .mul(order.unitPrice)
         .mul(this.getFactor(order.type));
 
-      if (
-        !initialValue &&
-        order.itemType !== 'start' &&
-        order.itemType !== 'end'
-      ) {
-        initialValue = transactionInvestment;
+      totalInvestment = totalInvestment.plus(transactionInvestment);
+
+      if (totalInvestment.gt(maxTotalInvestment)) {
+        maxTotalInvestment = totalInvestment;
+      }
+
+      if (i === indexOfEndOrder && totalUnits.gt(0)) {
+        averagePriceAtEndDate = totalInvestment.div(totalUnits);
+      }
+
+      if (i >= indexOfStartOrder && !initialValue) {
+        if (
+          i === indexOfStartOrder &&
+          !valueOfInvestmentBeforeTransaction.eq(0)
+        ) {
+          initialValue = valueOfInvestmentBeforeTransaction;
+        } else if (transactionInvestment.gt(0)) {
+          initialValue = transactionInvestment;
+        }
       }
 
       fees = fees.plus(order.fee);
@@ -760,16 +803,17 @@ export class PortfolioCalculatorNew {
         grossPerformanceFromSell
       );
 
-      totalInvestment = totalInvestment
-        .plus(transactionInvestment)
-        .plus(grossPerformanceFromSell);
+      totalInvestmentWithGrossPerformanceFromSell =
+        totalInvestmentWithGrossPerformanceFromSell
+          .plus(transactionInvestment)
+          .plus(grossPerformanceFromSell);
 
       lastAveragePrice = totalUnits.eq(0)
         ? new Big(0)
-        : totalInvestment.div(totalUnits);
+        : totalInvestmentWithGrossPerformanceFromSell.div(totalUnits);
 
       const newGrossPerformance = valueOfInvestment
-        .minus(totalInvestment)
+        .minus(totalInvestmentWithGrossPerformanceFromSell)
         .plus(grossPerformanceFromSells);
 
       if (
@@ -812,14 +856,6 @@ export class PortfolioCalculatorNew {
           timeWeightedNetPerformancePercentage.mul(
             new Big(1).plus(netHoldingPeriodReturn)
           );
-
-        holdingPeriodPerformances.push({
-          grossReturn: grossHoldingPeriodReturn,
-          netReturn: netHoldingPeriodReturn,
-          valueOfInvestment: lastValueOfInvestmentBeforeTransaction.plus(
-            lastTransactionInvestment
-          )
-        });
       }
 
       grossPerformance = newGrossPerformance;
@@ -849,39 +885,63 @@ export class PortfolioCalculatorNew {
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
 
-    let valueOfInvestmentSum = new Big(0);
+    const grossPerformancePercentage =
+      averagePriceAtStartDate.eq(0) ||
+      averagePriceAtEndDate.eq(0) ||
+      orders[indexOfStartOrder].unitPrice.eq(0)
+        ? totalGrossPerformance.div(maxTotalInvestment)
+        : unitPriceAtEndDate
+            .div(averagePriceAtEndDate)
+            .div(
+              orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
+            )
+            .minus(1);
 
-    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
-      valueOfInvestmentSum = valueOfInvestmentSum.plus(
-        holdingPeriodPerformance.valueOfInvestment
-      );
-    }
+    const feesPerUnit = totalUnits.gt(0)
+      ? fees.minus(feesAtStartDate).div(totalUnits)
+      : new Big(0);
 
-    let totalWeightedGrossPerformance = new Big(0);
-    let totalWeightedNetPerformance = new Big(0);
+    const netPerformancePercentage =
+      averagePriceAtStartDate.eq(0) ||
+      averagePriceAtEndDate.eq(0) ||
+      orders[indexOfStartOrder].unitPrice.eq(0)
+        ? totalNetPerformance.div(maxTotalInvestment)
+        : unitPriceAtEndDate
+            .minus(feesPerUnit)
+            .div(averagePriceAtEndDate)
+            .div(
+              orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
+            )
+            .minus(1);
 
-    // Weight the holding period returns according to their value of investment
-    for (const holdingPeriodPerformance of holdingPeriodPerformances) {
-      totalWeightedGrossPerformance = totalWeightedGrossPerformance.plus(
-        holdingPeriodPerformance.grossReturn
-          .mul(holdingPeriodPerformance.valueOfInvestment)
-          .div(valueOfInvestmentSum)
-      );
-
-      totalWeightedNetPerformance = totalWeightedNetPerformance.plus(
-        holdingPeriodPerformance.netReturn
-          .mul(holdingPeriodPerformance.valueOfInvestment)
-          .div(valueOfInvestmentSum)
+    if (PortfolioCalculatorNew.ENABLE_LOGGING) {
+      console.log(
+        `
+        ${symbol}
+        Unit price: ${orders[indexOfStartOrder].unitPrice.toFixed(
+          2
+        )} -> ${unitPriceAtEndDate.toFixed(2)}
+        Average price: ${averagePriceAtStartDate.toFixed(
+          2
+        )} -> ${averagePriceAtEndDate.toFixed(2)}
+        Max. total investment: ${maxTotalInvestment.toFixed(2)}
+        Gross performance: ${totalGrossPerformance.toFixed(
+          2
+        )} / ${grossPerformancePercentage.mul(100).toFixed(2)}%
+        Fees per unit: ${feesPerUnit.toFixed(2)}
+        Net performance: ${totalNetPerformance.toFixed(
+          2
+        )} / ${netPerformancePercentage.mul(100).toFixed(2)}%`
       );
     }
 
     return {
       initialValue,
-      hasErrors: !initialValue || !unitPriceAtEndDate,
+      grossPerformancePercentage,
+      netPerformancePercentage,
+      hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
       netPerformance: totalNetPerformance,
-      netPerformancePercentage: totalWeightedNetPerformance,
-      grossPerformance: totalGrossPerformance,
-      grossPerformancePercentage: totalWeightedGrossPerformance
+      grossPerformance: totalGrossPerformance
     };
   }
 
