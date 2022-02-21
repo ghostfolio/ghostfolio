@@ -55,6 +55,8 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public price: number;
   public priceId: string;
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+  public trySubscriptionMail =
+    'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
