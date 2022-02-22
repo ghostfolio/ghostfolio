@@ -47,9 +47,12 @@ export class PortfolioProportionChartComponent
   public chart: Chart;
   public isLoading = true;
 
+  private readonly OTHER_KEY = 'OTHER';
+
   private colorMap: {
     [symbol: string]: string;
   } = {
+    [this.OTHER_KEY]: `rgba(${getTextColor()}, 0.24)`,
     [UNKNOWN_KEY]: `rgba(${getTextColor()}, 0.12)`
   };
 
@@ -147,30 +150,24 @@ export class PortfolioProportionChartComponent
       .reverse();
 
     if (this.maxItems && chartDataSorted.length > this.maxItems) {
-      // Add surplus items to unknown group
+      // Add surplus items to OTHER group
       const rest = chartDataSorted.splice(
         this.maxItems,
         chartDataSorted.length - 1
       );
 
-      let unknownItem = chartDataSorted.find((charDataItem) => {
-        return charDataItem[0] === UNKNOWN_KEY;
-      });
-
-      if (!unknownItem) {
-        chartDataSorted.push([
-          UNKNOWN_KEY,
-          { name: UNKNOWN_KEY, subCategory: {}, value: new Big(0) }
-        ]);
-        unknownItem = chartDataSorted[chartDataSorted.length - 1];
-      }
+      chartDataSorted.push([
+        this.OTHER_KEY,
+        { name: this.OTHER_KEY, subCategory: {}, value: new Big(0) }
+      ]);
+      const otherItem = chartDataSorted[chartDataSorted.length - 1];
 
       rest.forEach((restItem) => {
-        if (unknownItem?.[1]) {
-          unknownItem[1] = {
-            name: UNKNOWN_KEY,
+        if (otherItem?.[1]) {
+          otherItem[1] = {
+            name: this.OTHER_KEY,
             subCategory: {},
-            value: unknownItem[1].value.plus(restItem[1].value)
+            value: otherItem[1].value.plus(restItem[1].value)
           };
         }
       });
@@ -287,8 +284,13 @@ export class PortfolioProportionChartComponent
                     const labelIndex =
                       (data.datasets[context.datasetIndex - 1]?.data?.length ??
                         0) + context.dataIndex;
-                    const symbol =
-                      context.chart.data.labels?.[labelIndex] ?? '';
+                    let symbol = context.chart.data.labels?.[labelIndex] ?? '';
+
+                    if (symbol === this.OTHER_KEY) {
+                      symbol = 'Other';
+                    } else if (symbol === UNKNOWN_KEY) {
+                      symbol = 'Unknown';
+                    }
 
                     const name = this.positions[<string>symbol]?.name;
 
