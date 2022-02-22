@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a trial for the subscription
 
+### Changed
+
+- Improved the portfolio entry page
+
 ## 1.118.0 - 20.02.2022
 
 ### Changed
