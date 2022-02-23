@@ -23,7 +23,7 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date

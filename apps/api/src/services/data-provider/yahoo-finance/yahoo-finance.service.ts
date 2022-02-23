@@ -10,6 +10,7 @@ import Big from 'big.js';
 import { countries } from 'countries-list';
 import { addDays, format, isSameDay } from 'date-fns';
 import * as yahooFinance from 'yahoo-finance';
+import yahooFinance2 from 'yahoo-finance2';
 
 import {
   IDataProviderHistoricalResponse,
@@ -18,7 +19,6 @@ import {
 } from '../../interfaces/interfaces';
 import { DataProviderInterface } from '../interfaces/data-provider.interface';
 import {
-  IYahooFinanceHistoricalResponse,
   IYahooFinancePrice,
   IYahooFinanceQuoteResponse
 } from './interfaces/interfaces';
@@ -162,56 +162,50 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
     }
 
-    const yahooFinanceSymbols = aSymbols.map((symbol) => {
-      return this.convertToYahooFinanceSymbol(symbol);
-    });
+    const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(aSymbol);
 
     try {
-      const historicalData: {
-        [symbol: string]: IYahooFinanceHistoricalResponse[];
-      } = await yahooFinance.historical({
-        symbols: yahooFinanceSymbols,
-        from: format(from, DATE_FORMAT),
-        to: format(to, DATE_FORMAT)
-      });
+      const historicalResult = await yahooFinance2.historical(
+        yahooFinanceSymbol,
+        {
+          interval: '1d',
+          period1: format(from, DATE_FORMAT),
+          period2: format(to, DATE_FORMAT)
+        }
+      );
 
       const response: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
       } = {};
 
-      for (const [yahooFinanceSymbol, timeSeries] of Object.entries(
-        historicalData
-      )) {
-        // Convert symbols back
-        const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
-        response[symbol] = {};
+      // Convert symbol back
+      const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
 
-        timeSeries.forEach((timeSerie) => {
-          response[symbol][format(timeSerie.date, DATE_FORMAT)] = {
-            marketPrice: timeSerie.close,
-            performance: timeSerie.open - timeSerie.close
-          };
-        });
+      response[symbol] = {};
+
+      for (const historicalItem of historicalResult) {
+        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
+          marketPrice: historicalItem.close,
+          performance: historicalItem.open - historicalItem.close
+        };
       }
 
       return response;
     } catch (error) {
-      Logger.error(error);
+      Logger.warn(
+        `Skipping yahooFinance2.getHistorical("${aSymbol}"): [${error.name}] ${error.message}`
+      );
 
       return {};
     }

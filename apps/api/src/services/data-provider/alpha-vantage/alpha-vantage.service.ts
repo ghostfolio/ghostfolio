@@ -36,18 +36,14 @@ export class AlphaVantageService implements DataProviderInterface {
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    const symbol = aSymbols[0];
+    const symbol = aSymbol;
 
     try {
       const historicalData: {

@@ -70,19 +70,16 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
     try {
-      const [symbol] = aSymbols;
+      const symbol = aSymbol;
+
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [symbol]
       );

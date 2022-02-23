@@ -12,13 +12,13 @@ export interface DataProviderInterface {
   get(aSymbols: string[]): Promise<{ [symbol: string]: IDataProviderResponse }>;
 
   getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity,
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }>;
+  }>; // TODO: Return only one symbol
 
   getName(): DataSource;
 

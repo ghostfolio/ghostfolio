@@ -144,7 +144,7 @@ export class DataProviderService {
       if (dataProvider.canHandle(symbol)) {
         promises.push(
           dataProvider
-            .getHistorical([symbol], undefined, from, to)
+            .getHistorical(symbol, undefined, from, to)
             .then((data) => ({ data: data?.[symbol], symbol }))
         );
       }
