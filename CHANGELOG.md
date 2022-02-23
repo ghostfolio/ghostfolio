@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Distinguished the labels _Other_ and _Unknown_ in the portfolio proportion chart component
+- Improved the portfolio entry page
 
 ## 1.119.0 - 21.02.2022
 
