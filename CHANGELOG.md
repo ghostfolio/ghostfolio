@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Distinguished the labels _Other_ and _Unknown_ in the portfolio proportion chart component
 - Improved the portfolio entry page
+- Migrated from `yahoo-finance` to `yahoo-finance2`
 
 ### Fixed
 
