@@ -32,6 +32,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
+  public showDetails = false;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -79,7 +80,14 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       });
 
     this.dateRange =
-      <DateRange>this.settingsStorageService.getSetting(RANGE) || 'max';
+      this.user.settings.viewMode === 'ZEN'
+        ? 'max'
+        : <DateRange>this.settingsStorageService.getSetting(RANGE) ?? 'max';
+
+    this.showDetails =
+      !this.hasImpersonationId &&
+      !this.user.settings.isRestrictedView &&
+      this.user.settings.viewMode !== 'ZEN';
 
     this.update();
   }

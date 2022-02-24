@@ -33,6 +33,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { ViewMode } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
@@ -213,6 +214,7 @@ export class PortfolioController {
 
     if (
       impersonationId ||
+      this.request.user.Settings.viewMode === ViewMode.ZEN ||
       this.userService.isRestrictedView(this.request.user)
     ) {
       performanceInformation.performance = nullifyValuesInObject(

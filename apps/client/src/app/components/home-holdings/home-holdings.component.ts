@@ -93,7 +93,9 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       });
 
     this.dateRange =
-      <DateRange>this.settingsStorageService.getSetting(RANGE) || 'max';
+      this.user.settings.viewMode === 'ZEN'
+        ? 'max'
+        : <DateRange>this.settingsStorageService.getSetting(RANGE) ?? 'max';
 
     this.update();
   }
