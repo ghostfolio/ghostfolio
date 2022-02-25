@@ -1,5 +1,5 @@
 <div class="container justify-content-center p-3">
-  <div class="mb-3 text-center">
+  <div *ngIf="user.settings.viewMode !== 'ZEN'" class="mb-3 text-center">
     <gf-toggle
       [defaultValue]="dateRange"
       [isLoading]="positions === undefined"

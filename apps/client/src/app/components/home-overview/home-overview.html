@@ -34,9 +34,9 @@
         [isLoading]="isLoadingPerformance"
         [locale]="user?.settings?.locale"
         [performance]="performance"
-        [showDetails]="!hasImpersonationId && !user.settings.isRestrictedView"
+        [showDetails]="showDetails"
       ></gf-portfolio-performance>
-      <div class="text-center">
+      <div *ngIf="showDetails" class="text-center">
         <gf-toggle
           [defaultValue]="dateRange"
           [isLoading]="isLoadingPerformance"
