@@ -40,7 +40,7 @@ export class CurrentRateService {
       const today = resetHours(new Date());
       promises.push(
         this.dataProviderService
-          .get(dataGatheringItems)
+          .getQuotes(dataGatheringItems)
           .then((dataResultProvider) => {
             const result = [];
             for (const dataGatheringItem of dataGatheringItems) {

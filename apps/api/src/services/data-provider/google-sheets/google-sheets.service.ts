@@ -11,7 +11,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.se
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 
@@ -27,49 +27,12 @@ export class GoogleSheetsService implements DataProviderInterface {
     return true;
   }
 
-  public async get(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    try {
-      const response: { [symbol: string]: IDataProviderResponse } = {};
-
-      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        aSymbols
-      );
-
-      const sheet = await this.getSheet({
-        sheetId: this.configurationService.get('GOOGLE_SHEETS_ID'),
-        symbol: 'Overview'
-      });
-
-      const rows = await sheet.getRows();
-
-      for (const row of rows) {
-        const marketPrice = parseFloat(row['marketPrice']);
-        const symbol = row['symbol'];
-
-        if (aSymbols.includes(symbol)) {
-          response[symbol] = {
-            marketPrice,
-            currency: symbolProfiles.find((symbolProfile) => {
-              return symbolProfile.symbol === symbol;
-            })?.currency,
-            dataSource: this.getName(),
-            marketState: MarketState.delayed
-          };
-        }
-      }
-
-      return response;
-    } catch (error) {
-      Logger.error(error);
-    }
-
-    return {};
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
   }
 
   public async getHistorical(
@@ -117,6 +80,51 @@ export class GoogleSheetsService implements DataProviderInterface {
 
   public getName(): DataSource {
     return DataSource.GOOGLE_SHEETS;
+  }
+
+  public async getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    if (aSymbols.length <= 0) {
+      return {};
+    }
+
+    try {
+      const response: { [symbol: string]: IDataProviderResponse } = {};
+
+      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+        aSymbols
+      );
+
+      const sheet = await this.getSheet({
+        sheetId: this.configurationService.get('GOOGLE_SHEETS_ID'),
+        symbol: 'Overview'
+      });
+
+      const rows = await sheet.getRows();
+
+      for (const row of rows) {
+        const marketPrice = parseFloat(row['marketPrice']);
+        const symbol = row['symbol'];
+
+        if (aSymbols.includes(symbol)) {
+          response[symbol] = {
+            marketPrice,
+            currency: symbolProfiles.find((symbolProfile) => {
+              return symbolProfile.symbol === symbol;
+            })?.currency,
+            dataSource: this.getName(),
+            marketState: MarketState.delayed
+          };
+        }
+      }
+
+      return response;
+    } catch (error) {
+      Logger.error(error);
+    }
+
+    return {};
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {

@@ -4,12 +4,12 @@ import {
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;
 
-  get(aSymbols: string[]): Promise<{ [symbol: string]: IDataProviderResponse }>;
+  getAssetProfile(aSymbol: string): Promise<Partial<SymbolProfile>>;
 
   getHistorical(
     aSymbol: string,
@@ -21,6 +21,10 @@ export interface DataProviderInterface {
   }>; // TODO: Return only one symbol
 
   getName(): DataSource;
+
+  getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }>;
 
   search(aQuery: string): Promise<{ items: LookupItem[] }>;
 }

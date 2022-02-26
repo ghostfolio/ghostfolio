@@ -27,8 +27,10 @@ export class SymbolService {
     dataGatheringItem: IDataGatheringItem;
     includeHistoricalData?: number;
   }): Promise<SymbolItem> {
-    const response = await this.dataProviderService.get([dataGatheringItem]);
-    const { currency, marketPrice } = response[dataGatheringItem.symbol] ?? {};
+    const quotes = await this.dataProviderService.getQuotes([
+      dataGatheringItem
+    ]);
+    const { currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {};
 
     if (dataGatheringItem.dataSource && marketPrice) {
       let historicalData: HistoricalDataItem[] = [];

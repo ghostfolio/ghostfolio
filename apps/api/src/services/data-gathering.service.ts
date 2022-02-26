@@ -226,22 +226,24 @@ export class DataGatheringService {
       dataGatheringItems = await this.getSymbolsProfileData();
     }
 
-    const currentData = await this.dataProviderService.get(dataGatheringItems);
+    const assetProfiles = await this.dataProviderService.getAssetProfiles(
+      dataGatheringItems
+    );
     const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
       dataGatheringItems.map(({ symbol }) => {
         return symbol;
       })
     );
 
-    for (const [symbol, response] of Object.entries(currentData)) {
+    for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
       const symbolMapping = symbolProfiles.find((symbolProfile) => {
         return symbolProfile.symbol === symbol;
       })?.symbolMapping;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
-          currentData[symbol] = await dataEnhancer.enhance({
-            response,
+          assetProfiles[symbol] = await dataEnhancer.enhance({
+            response: assetProfile,
             symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
@@ -257,7 +259,7 @@ export class DataGatheringService {
         dataSource,
         name,
         sectors
-      } = currentData[symbol];
+      } = assetProfiles[symbol];
 
       try {
         await this.prismaService.symbolProfile.upsert({

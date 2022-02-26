@@ -14,7 +14,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import * as bent from 'bent';
 import * as cheerio from 'cheerio';
 import { format } from 'date-fns';
@@ -32,41 +32,12 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return isGhostfolioScraperApiSymbol(symbol);
   }
 
-  public async get(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    try {
-      const [symbol] = aSymbols;
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
-      );
-
-      const { marketPrice } = await this.prismaService.marketData.findFirst({
-        orderBy: {
-          date: 'desc'
-        },
-        where: {
-          symbol
-        }
-      });
-
-      return {
-        [symbol]: {
-          marketPrice,
-          currency: symbolProfile?.currency,
-          dataSource: this.getName(),
-          marketState: MarketState.delayed
-        }
-      };
-    } catch (error) {
-      Logger.error(error);
-    }
-
-    return {};
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
   }
 
   public async getHistorical(
@@ -110,6 +81,43 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
 
   public getName(): DataSource {
     return DataSource.GHOSTFOLIO;
+  }
+
+  public async getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    if (aSymbols.length <= 0) {
+      return {};
+    }
+
+    try {
+      const [symbol] = aSymbols;
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [symbol]
+      );
+
+      const { marketPrice } = await this.prismaService.marketData.findFirst({
+        orderBy: {
+          date: 'desc'
+        },
+        where: {
+          symbol
+        }
+      });
+
+      return {
+        [symbol]: {
+          marketPrice,
+          currency: symbolProfile?.currency,
+          dataSource: this.getName(),
+          marketState: MarketState.delayed
+        }
+      };
+    } catch (error) {
+      Logger.error(error);
+    }
+
+    return {};
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {

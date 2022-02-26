@@ -18781,10 +18781,10 @@ y18n@^5.0.5:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
-yahoo-finance2@2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.1.5.tgz#f0ff4025b56d4b9c63a3edfd3b28df292c171e90"
-  integrity sha512-yN+BvaJ1IRWoOaZkZMHpH6Ll2NtKGeC9RRFDo6FcrC7llkCkL0RV/Fcvd4jbMIZ6pOhuZqsnxF0Mm7h5EZQIqg==
+yahoo-finance2@2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.1.8.tgz#4e48f01318b5592aa9e275e27b32fdf5175e57a5"
+  integrity sha512-bjSgr43gpDHErB90s22Kl06nZkGApAtnLNdBeZZSX5DcWSqOQAJRsZ+RXhg/5SduCzcYivIEonA1x0+TKe4F9w==
   dependencies:
     ajv "8.10.0"
     ajv-formats "2.1.1"

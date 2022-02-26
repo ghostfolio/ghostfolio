@@ -33,19 +33,10 @@ export interface IDataProviderHistoricalResponse {
 }
 
 export interface IDataProviderResponse {
-  assetClass?: AssetClass;
-  assetSubClass?: AssetSubClass;
-  countries?: { code: string; weight: number }[];
   currency: string;
   dataSource: DataSource;
-  exchange?: string;
-  marketChange?: number;
-  marketChangePercent?: number;
   marketPrice: number;
   marketState: MarketState;
-  name?: string;
-  sectors?: { name: string; weight: number }[];
-  url?: string;
 }
 
 export interface IDataGatheringItem {
