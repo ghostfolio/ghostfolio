@@ -212,14 +212,6 @@ export class YahooFinanceService implements DataProviderInterface {
               : MarketState.closed,
           marketPrice: quote.regularMarketPrice || 0
         };
-
-        if (quote.currency === 'GBp') {
-          // Convert GBp (pence) to GBP
-          response[symbol].currency = 'GBP';
-          response[symbol].marketPrice = new Big(quote.regularMarketPrice ?? 0)
-            .div(100)
-            .toNumber();
-        }
       }
 
       return response;
