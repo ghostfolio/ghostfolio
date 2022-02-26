@@ -2,7 +2,7 @@ import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format } from 'date-fns';
-import { isEmpty, isNumber, uniq } from 'lodash';
+import { isNumber, uniq } from 'lodash';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
