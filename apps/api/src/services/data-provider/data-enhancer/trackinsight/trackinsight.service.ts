@@ -1,5 +1,4 @@
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
-import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { SymbolProfile } from '@prisma/client';
