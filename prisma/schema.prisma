@@ -178,6 +178,7 @@ enum AssetClass {
 enum AssetSubClass {
   CRYPTOCURRENCY
   ETF
+  MUTUALFUND
   STOCK
 }
 

@@ -266,8 +266,7 @@ export class YahooFinanceService implements DataProviderInterface {
               this.cryptocurrencyService.isCryptocurrency(
                 symbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
               )) ||
-            quoteType === 'EQUITY' ||
-            quoteType === 'ETF'
+            ['EQUITY', 'ETF', 'MUTUALFUND'].includes(quoteType)
           );
         })
         .filter(({ quoteType, symbol }) => {
@@ -324,6 +323,10 @@ export class YahooFinanceService implements DataProviderInterface {
       case 'etf':
         assetClass = AssetClass.EQUITY;
         assetSubClass = AssetSubClass.ETF;
+        break;
+      case 'mutualfund':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.MUTUALFUND;
         break;
     }
 
