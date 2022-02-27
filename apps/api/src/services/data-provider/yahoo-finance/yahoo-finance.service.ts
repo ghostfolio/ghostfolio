@@ -1,5 +1,6 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse,
@@ -19,9 +20,7 @@ import * as bent from 'bent';
 import Big from 'big.js';
 import { countries } from 'countries-list';
 import { addDays, format, isSameDay } from 'date-fns';
-import yahooFinance2 from 'yahoo-finance2';
-
-import { DataProviderInterface } from '../interfaces/data-provider.interface';
+import yahooFinance from 'yahoo-finance2';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -80,7 +79,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const symbol = this.convertToYahooFinanceSymbol(aSymbol);
-      const assetProfile = await yahooFinance2.quoteSummary(symbol, {
+      const assetProfile = await yahooFinance.quoteSummary(symbol, {
         modules: ['price', 'summaryProfile']
       });
 
@@ -143,7 +142,7 @@ export class YahooFinanceService implements DataProviderInterface {
     const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(aSymbol);
 
     try {
-      const historicalResult = await yahooFinance2.historical(
+      const historicalResult = await yahooFinance.historical(
         yahooFinanceSymbol,
         {
           interval: '1d',
@@ -202,7 +201,7 @@ export class YahooFinanceService implements DataProviderInterface {
     try {
       const response: { [symbol: string]: IDataProviderResponse } = {};
 
-      const quotes = await yahooFinance2.quote(yahooFinanceSymbols);
+      const quotes = await yahooFinance.quote(yahooFinanceSymbols);
 
       for (const quote of quotes) {
         // Convert symbols back
