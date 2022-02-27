@@ -5,13 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Migrated from `yahoo-finance` to `yahoo-finance2`
+
 ## 1.120.0 - 25.02.2022
 
 ### Changed
 
 - Distinguished the labels _Other_ and _Unknown_ in the portfolio proportion chart component
 - Improved the portfolio entry page
-- Migrated from `yahoo-finance` to `yahoo-finance2`
 
 ### Fixed
 
