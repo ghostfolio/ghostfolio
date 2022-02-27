@@ -202,7 +202,7 @@ export class YahooFinanceService implements DataProviderInterface {
     try {
       const response: { [symbol: string]: IDataProviderResponse } = {};
 
-      const quotes = await yahooFinance2.quote(yahooFinanceSymbols, {}, {});
+      const quotes = await yahooFinance2.quote(yahooFinanceSymbols);
 
       for (const quote of quotes) {
         // Convert symbols back
