@@ -163,8 +163,15 @@ export class YahooFinanceService implements DataProviderInterface {
       response[symbol] = {};
 
       for (const historicalItem of historicalResult) {
+        let marketPrice = historicalItem.close;
+
+        if (symbol === 'USDGBp') {
+          // Convert GPB to GBp (pence)
+          marketPrice = new Big(marketPrice).mul(100).toNumber();
+        }
+
         response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice: historicalItem.close,
+          marketPrice,
           performance: historicalItem.open - historicalItem.close
         };
       }
@@ -212,6 +219,17 @@ export class YahooFinanceService implements DataProviderInterface {
               : MarketState.closed,
           marketPrice: quote.regularMarketPrice || 0
         };
+
+        if (symbol === 'USDGBP' && yahooFinanceSymbols.includes('USDGBp=X')) {
+          // Convert GPB to GBp (pence)
+          response['USDGBp'] = {
+            ...response[symbol],
+            currency: 'GBp',
+            marketPrice: new Big(response[symbol].marketPrice)
+              .mul(100)
+              .toNumber()
+          };
+        }
       }
 
       return response;
