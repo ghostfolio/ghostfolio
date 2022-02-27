@@ -119,11 +119,10 @@ export class YahooFinanceService implements DataProviderInterface {
         }
       }
 
-      // TODO: Add url if available
-      /*const url = assetProfile.summaryProfile?.website;
-        if (url) {
-          response.url = url;
-        }*/
+      const url = assetProfile.summaryProfile?.website;
+      if (url) {
+        response.url = url;
+      }
     } catch {}
 
     return response;

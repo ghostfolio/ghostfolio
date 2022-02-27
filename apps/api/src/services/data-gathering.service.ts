@@ -220,9 +220,11 @@ export class DataGatheringService {
     Logger.log('Profile data gathering has been started.');
     console.time('data-gathering-profile');
 
-    let dataGatheringItems = aDataGatheringItems.filter((dataGatheringItem) => {
-      return dataGatheringItem.dataSource !== 'MANUAL';
-    });
+    let dataGatheringItems = aDataGatheringItems?.filter(
+      (dataGatheringItem) => {
+        return dataGatheringItem.dataSource !== 'MANUAL';
+      }
+    );
 
     if (!dataGatheringItems) {
       dataGatheringItems = await this.getSymbolsProfileData();
@@ -260,7 +262,8 @@ export class DataGatheringService {
         currency,
         dataSource,
         name,
-        sectors
+        sectors,
+        url
       } = assetProfiles[symbol];
 
       try {
@@ -273,7 +276,8 @@ export class DataGatheringService {
             dataSource,
             name,
             sectors,
-            symbol
+            symbol,
+            url
           },
           update: {
             assetClass,
@@ -281,7 +285,8 @@ export class DataGatheringService {
             countries,
             currency,
             name,
-            sectors
+            sectors,
+            url
           },
           where: {
             dataSource_symbol: {

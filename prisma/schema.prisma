@@ -129,6 +129,7 @@ model SymbolProfile {
   sectors              Json?
   symbol               String
   symbolMapping        Json?
+  url                  String?
 
   @@unique([dataSource, symbol])
 }
