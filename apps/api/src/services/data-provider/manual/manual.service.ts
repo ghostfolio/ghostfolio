@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -16,14 +16,16 @@ export class ManualService implements DataProviderInterface {
     return false;
   }
 
-  public async get(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    return {};
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date
@@ -35,6 +37,12 @@ export class ManualService implements DataProviderInterface {
 
   public getName(): DataSource {
     return DataSource.MANUAL;
+  }
+
+  public async getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    return {};
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {

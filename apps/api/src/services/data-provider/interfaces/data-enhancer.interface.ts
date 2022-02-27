@@ -1,13 +1,13 @@
-import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { SymbolProfile } from '@prisma/client';
 
 export interface DataEnhancerInterface {
   enhance({
     response,
     symbol
   }: {
-    response: IDataProviderResponse;
+    response: Partial<SymbolProfile>;
     symbol: string;
-  }): Promise<IDataProviderResponse>;
+  }): Promise<Partial<SymbolProfile>>;
 
   getName(): string;
 }

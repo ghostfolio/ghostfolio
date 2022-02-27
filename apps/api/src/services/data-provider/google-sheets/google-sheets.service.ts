@@ -11,7 +11,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.se
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 
@@ -27,7 +27,62 @@ export class GoogleSheetsService implements DataProviderInterface {
     return true;
   }
 
-  public async get(
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
+  }
+
+  public async getHistorical(
+    aSymbol: string,
+    aGranularity: Granularity = 'day',
+    from: Date,
+    to: Date
+  ): Promise<{
+    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+  }> {
+    try {
+      const symbol = aSymbol;
+
+      const sheet = await this.getSheet({
+        symbol,
+        sheetId: this.configurationService.get('GOOGLE_SHEETS_ID')
+      });
+
+      const rows = await sheet.getRows();
+
+      const historicalData: {
+        [date: string]: IDataProviderHistoricalResponse;
+      } = {};
+
+      rows
+        .filter((row, index) => {
+          return index >= 1;
+        })
+        .forEach((row) => {
+          const date = parseDate(row._rawData[0]);
+          const close = parseFloat(row._rawData[1]);
+
+          historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };
+        });
+
+      return {
+        [symbol]: historicalData
+      };
+    } catch (error) {
+      Logger.error(error);
+    }
+
+    return {};
+  }
+
+  public getName(): DataSource {
+    return DataSource.GOOGLE_SHEETS;
+  }
+
+  public async getQuotes(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
     if (aSymbols.length <= 0) {
@@ -70,57 +125,6 @@ export class GoogleSheetsService implements DataProviderInterface {
     }
 
     return {};
-  }
-
-  public async getHistorical(
-    aSymbols: string[],
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    try {
-      const [symbol] = aSymbols;
-
-      const sheet = await this.getSheet({
-        symbol,
-        sheetId: this.configurationService.get('GOOGLE_SHEETS_ID')
-      });
-
-      const rows = await sheet.getRows();
-
-      const historicalData: {
-        [date: string]: IDataProviderHistoricalResponse;
-      } = {};
-
-      rows
-        .filter((row, index) => {
-          return index >= 1;
-        })
-        .forEach((row) => {
-          const date = parseDate(row._rawData[0]);
-          const close = parseFloat(row._rawData[1]);
-
-          historicalData[format(date, DATE_FORMAT)] = { marketPrice: close };
-        });
-
-      return {
-        [symbol]: historicalData
-      };
-    } catch (error) {
-      Logger.error(error);
-    }
-
-    return {};
-  }
-
-  public getName(): DataSource {
-    return DataSource.GOOGLE_SHEETS;
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {

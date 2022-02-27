@@ -315,7 +315,7 @@ export class PortfolioService {
     );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.get(dataGatheringItems),
+      this.dataProviderService.getQuotes(dataGatheringItems),
       this.symbolProfileService.getSymbolProfiles(symbols)
     ]);
 
@@ -346,7 +346,6 @@ export class PortfolioService {
         countries: symbolProfile.countries,
         currency: item.currency,
         dataSource: symbolProfile.dataSource,
-        exchange: dataProviderResponse.exchange,
         grossPerformance: item.grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent:
           item.grossPerformancePercentage?.toNumber() ?? 0,
@@ -552,9 +551,10 @@ export class PortfolioService {
         SymbolProfile,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
-        grossPerformancePercent: position.grossPerformancePercentage.toNumber(),
+        grossPerformancePercent:
+          position.grossPerformancePercentage?.toNumber(),
         historicalData: historicalDataArray,
-        netPerformancePercent: position.netPerformancePercentage.toNumber(),
+        netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice).toNumber(),
@@ -563,7 +563,7 @@ export class PortfolioService {
         )
       };
     } else {
-      const currentData = await this.dataProviderService.get([
+      const currentData = await this.dataProviderService.getQuotes([
         { dataSource: DataSource.YAHOO, symbol: aSymbol }
       ]);
       const marketPrice = currentData[aSymbol]?.marketPrice;
@@ -660,7 +660,7 @@ export class PortfolioService {
     const symbols = positions.map((position) => position.symbol);
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.get(dataGatheringItem),
+      this.dataProviderService.getQuotes(dataGatheringItem),
       this.symbolProfileService.getSymbolProfiles(symbols)
     ]);
 

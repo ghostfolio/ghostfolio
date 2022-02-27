@@ -125,19 +125,19 @@ export class ImportService {
       }
 
       if (dataSource !== 'MANUAL') {
-        const result = await this.dataProviderService.get([
+        const quotes = await this.dataProviderService.getQuotes([
           { dataSource, symbol }
         ]);
 
-        if (result[symbol] === undefined) {
+        if (quotes[symbol] === undefined) {
           throw new Error(
             `orders.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
         }
 
-        if (result[symbol].currency !== currency) {
+        if (quotes[symbol].currency !== currency) {
           throw new Error(
-            `orders.${index}.currency ("${currency}") does not match with "${result[symbol].currency}"`
+            `orders.${index}.currency ("${currency}") does not match with "${quotes[symbol].currency}"`
           );
         }
       }

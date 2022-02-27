@@ -220,32 +220,41 @@ export class DataGatheringService {
     Logger.log('Profile data gathering has been started.');
     console.time('data-gathering-profile');
 
-    let dataGatheringItems = aDataGatheringItems;
+    let dataGatheringItems = aDataGatheringItems?.filter(
+      (dataGatheringItem) => {
+        return dataGatheringItem.dataSource !== 'MANUAL';
+      }
+    );
 
     if (!dataGatheringItems) {
       dataGatheringItems = await this.getSymbolsProfileData();
     }
 
-    const currentData = await this.dataProviderService.get(dataGatheringItems);
+    const assetProfiles = await this.dataProviderService.getAssetProfiles(
+      dataGatheringItems
+    );
     const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
       dataGatheringItems.map(({ symbol }) => {
         return symbol;
       })
     );
 
-    for (const [symbol, response] of Object.entries(currentData)) {
+    for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
       const symbolMapping = symbolProfiles.find((symbolProfile) => {
         return symbolProfile.symbol === symbol;
       })?.symbolMapping;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
-          currentData[symbol] = await dataEnhancer.enhance({
-            response,
+          assetProfiles[symbol] = await dataEnhancer.enhance({
+            response: assetProfile,
             symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
-          Logger.error(`Failed to enhance data for symbol ${symbol}`, error);
+          Logger.error(
+            `Failed to enhance data for symbol ${symbol} by ${dataEnhancer.getName()}`,
+            error
+          );
         }
       }
 
@@ -256,8 +265,9 @@ export class DataGatheringService {
         currency,
         dataSource,
         name,
-        sectors
-      } = currentData[symbol];
+        sectors,
+        url
+      } = assetProfiles[symbol];
 
       try {
         await this.prismaService.symbolProfile.upsert({
@@ -269,7 +279,8 @@ export class DataGatheringService {
             dataSource,
             name,
             sectors,
-            symbol
+            symbol,
+            url
           },
           update: {
             assetClass,
@@ -277,7 +288,8 @@ export class DataGatheringService {
             countries,
             currency,
             name,
-            sectors
+            sectors,
+            url
           },
           where: {
             dataSource_symbol: {
@@ -300,6 +312,10 @@ export class DataGatheringService {
     let symbolCounter = 0;
 
     for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
+      if (dataSource === 'MANUAL') {
+        continue;
+      }
+
       this.dataGatheringProgress = symbolCounter / aSymbolsWithStartDate.length;
 
       try {
@@ -347,7 +363,7 @@ export class DataGatheringService {
             } catch {}
           } else {
             Logger.warn(
-              `Failed to gather data for symbol ${symbol} at ${format(
+              `Failed to gather data for symbol ${symbol} from ${dataSource} at ${format(
                 currentDate,
                 DATE_FORMAT
               )}.`

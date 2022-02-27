@@ -2,7 +2,7 @@ import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format } from 'date-fns';
-import { isEmpty, isNumber, uniq } from 'lodash';
+import { isNumber, uniq } from 'lodash';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
@@ -61,7 +61,7 @@ export class ExchangeRateDataService {
     if (Object.keys(result).length !== this.currencyPairs.length) {
       // Load currencies directly from data provider as a fallback
       // if historical data is not fully available
-      const historicalData = await this.dataProviderService.get(
+      const historicalData = await this.dataProviderService.getQuotes(
         this.currencyPairs.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
         })

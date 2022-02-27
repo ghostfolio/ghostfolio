@@ -129,6 +129,7 @@ model SymbolProfile {
   sectors              Json?
   symbol               String
   symbolMapping        Json?
+  url                  String?
 
   @@unique([dataSource, symbol])
 }
@@ -178,6 +179,7 @@ enum AssetClass {
 enum AssetSubClass {
   CRYPTOCURRENCY
   ETF
+  MUTUALFUND
   STOCK
 }
 

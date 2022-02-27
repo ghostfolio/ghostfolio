@@ -1,5 +1,7 @@
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
-import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { Country } from '@ghostfolio/common/interfaces/country.interface';
+import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
+import { SymbolProfile } from '@prisma/client';
 import bent from 'bent';
 
 const getJSON = bent('json');
@@ -21,9 +23,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     response,
     symbol
   }: {
-    response: IDataProviderResponse;
+    response: Partial<SymbolProfile>;
     symbol: string;
-  }): Promise<IDataProviderResponse> {
+  }): Promise<Partial<SymbolProfile>> {
     if (
       !(response.assetClass === 'EQUITY' && response.assetSubClass === 'ETF')
     ) {
@@ -40,7 +42,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       );
     });
 
-    if (!response.countries || response.countries.length === 0) {
+    if (
+      !response.countries ||
+      (response.countries as unknown as Country[]).length === 0
+    ) {
       response.countries = [];
       for (const [name, value] of Object.entries<any>(holdings.countries)) {
         let countryCode: string;
@@ -65,7 +70,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       }
     }
 
-    if (!response.sectors || response.sectors.length === 0) {
+    if (
+      !response.sectors ||
+      (response.sectors as unknown as Sector[]).length === 0
+    ) {
       response.sectors = [];
       for (const [name, value] of Object.entries<any>(holdings.sectors)) {
         response.sectors.push({
