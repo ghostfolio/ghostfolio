@@ -220,7 +220,9 @@ export class DataGatheringService {
     Logger.log('Profile data gathering has been started.');
     console.time('data-gathering-profile');
 
-    let dataGatheringItems = aDataGatheringItems;
+    let dataGatheringItems = aDataGatheringItems.filter((dataGatheringItem) => {
+      return dataGatheringItem.dataSource !== 'MANUAL';
+    });
 
     if (!dataGatheringItems) {
       dataGatheringItems = await this.getSymbolsProfileData();
@@ -302,6 +304,10 @@ export class DataGatheringService {
     let symbolCounter = 0;
 
     for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
+      if (dataSource === 'MANUAL') {
+        continue;
+      }
+
       this.dataGatheringProgress = symbolCounter / aSymbolsWithStartDate.length;
 
       try {
@@ -349,7 +355,7 @@ export class DataGatheringService {
             } catch {}
           } else {
             Logger.warn(
-              `Failed to gather data for symbol ${symbol} at ${format(
+              `Failed to gather data for symbol ${symbol} from ${dataSource} at ${format(
                 currentDate,
                 DATE_FORMAT
               )}.`
