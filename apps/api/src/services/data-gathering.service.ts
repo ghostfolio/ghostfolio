@@ -251,7 +251,10 @@ export class DataGatheringService {
             symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
-          Logger.error(`Failed to enhance data for symbol ${symbol}`, error);
+          Logger.error(
+            `Failed to enhance data for symbol ${symbol} by ${dataEnhancer.getName()}`,
+            error
+          );
         }
       }
 
