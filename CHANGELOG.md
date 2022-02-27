@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for mutual funds
+
 ### Changed
 
 - Migrated from `yahoo-finance` to `yahoo-finance2`
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.120.0 - 25.02.2022
 
