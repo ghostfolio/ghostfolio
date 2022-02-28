@@ -1,5 +1,3 @@
-import { Property } from '@prisma/client';
-
 export interface AdminData {
   dataGatheringProgress?: number;
   exchangeRates: { label1: string; label2: string; value: number }[];

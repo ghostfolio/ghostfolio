@@ -8,6 +8,7 @@ import {
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { DataSource, MarketData } from '@prisma/client';
 import { Subject } from 'rxjs';
@@ -44,39 +45,21 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     this.fetchAdminMarketData();
   }
 
-  public onDeleteProfileData({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .deleteProfileData({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherProfileDataBySymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherSymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -93,13 +76,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     }
   }
 
-  public setCurrentProfile({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public setCurrentProfile({ dataSource, symbol }: UniqueAsset) {
     this.marketDataDetails = [];
 
     if (this.currentSymbol === symbol) {
@@ -129,13 +106,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       });
   }
 
-  private fetchAdminMarketDataBySymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  private fetchAdminMarketDataBySymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .fetchAdminMarketDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
