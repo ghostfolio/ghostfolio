@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { AdminMarketDataDetails } from '@ghostfolio/common/interfaces';
+import {
+  AdminMarketDataDetails,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
@@ -14,13 +17,7 @@ import { Observable, map } from 'rxjs';
 export class AdminService {
   public constructor(private http: HttpClient) {}
 
-  public deleteProfileData({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public deleteProfileData({ dataSource, symbol }: UniqueAsset) {
     return this.http.delete<void>(
       `/api/admin/profile-data/${dataSource}/${symbol}`
     );
@@ -53,13 +50,7 @@ export class AdminService {
     return this.http.post<void>(`/api/admin/gather/profile-data`, {});
   }
 
-  public gatherProfileDataBySymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public gatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
     return this.http.post<void>(
       `/api/admin/gather/profile-data/${dataSource}/${symbol}`,
       {}
@@ -70,10 +61,8 @@ export class AdminService {
     dataSource,
     date,
     symbol
-  }: {
-    dataSource: DataSource;
+  }: UniqueAsset & {
     date?: Date;
-    symbol: string;
   }) {
     let url = `/api/admin/gather/${dataSource}/${symbol}`;
 

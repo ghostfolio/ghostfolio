@@ -3,14 +3,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   ViewChild
 } from '@angular/core';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import { Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
@@ -30,6 +33,7 @@ export class PortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   @Input() baseCurrency: string;
+  @Input() cursor: string;
   @Input() isInPercent = false;
   @Input() keys: string[] = [];
   @Input() locale = '';
@@ -37,10 +41,13 @@ export class PortfolioProportionChartComponent
   @Input() showLabels = false;
   @Input() positions: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & {
+      dataSource?: DataSource;
       name: string;
       value: number;
     };
   } = {};
+
+  @Output() proportionChartClicked = new EventEmitter<UniqueAsset>();
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
@@ -255,6 +262,21 @@ export class PortfolioProportionChartComponent
             cutout: '70%',
             layout: {
               padding: this.showLabels === true ? 100 : 0
+            },
+            onClick: (event, activeElements) => {
+              const dataIndex = activeElements[0].index;
+              const symbol: string = event.chart.data.labels[dataIndex];
+
+              const dataSource = this.positions[symbol]?.dataSource;
+
+              this.proportionChartClicked.emit({ dataSource, symbol });
+            },
+            onHover: (event, chartElement) => {
+              if (this.cursor) {
+                event.native.target.style.cursor = chartElement[0]
+                  ? this.cursor
+                  : 'default';
+              }
             },
             plugins: {
               datalabels: {

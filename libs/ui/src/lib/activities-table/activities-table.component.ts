@@ -21,6 +21,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
@@ -199,13 +200,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.import.emit();
   }
 
-  public onOpenPositionDialog({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }): void {
+  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, positionDetailDialog: true }
     });

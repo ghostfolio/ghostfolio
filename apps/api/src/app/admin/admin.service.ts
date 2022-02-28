@@ -11,7 +11,8 @@ import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
-  AdminMarketDataItem
+  AdminMarketDataItem,
+  UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Property } from '@prisma/client';
@@ -30,13 +31,7 @@ export class AdminService {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
-  public async deleteProfileData({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public async deleteProfileData({ dataSource, symbol }: UniqueAsset) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
     await this.symbolProfileService.delete({ dataSource, symbol });
   }
@@ -137,10 +132,7 @@ export class AdminService {
   public async getMarketDataBySymbol({
     dataSource,
     symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }): Promise<AdminMarketDataDetails> {
+  }: UniqueAsset): Promise<AdminMarketDataDetails> {
     return {
       marketData: await this.marketDataService.marketDataItems({
         orderBy: {

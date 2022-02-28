@@ -22,6 +22,7 @@ import { PortfolioReport } from './portfolio-report.interface';
 import { PortfolioSummary } from './portfolio-summary.interface';
 import { Position } from './position.interface';
 import { TimelinePosition } from './timeline-position.interface';
+import { UniqueAsset } from './unique-asset.interface';
 import { UserSettings } from './user-settings.interface';
 import { UserWithSettings } from './user-with-settings';
 import { User } from './user.interface';
@@ -49,6 +50,7 @@ export {
   PortfolioSummary,
   Position,
   TimelinePosition,
+  UniqueAsset,
   User,
   UserSettings,
   UserWithSettings

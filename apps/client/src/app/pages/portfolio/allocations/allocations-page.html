@@ -89,12 +89,14 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             class="mx-auto"
+            cursor="pointer"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['symbol']"
             [locale]="user?.settings?.locale"
             [positions]="symbols"
             [showLabels]="deviceType !== 'mobile'"
+            (proportionChartClicked)="onProportionChartClicked($event)"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>

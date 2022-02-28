@@ -4,6 +4,7 @@ import {
   PROPERTY_LOCKED_DATA_GATHERING
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
@@ -121,13 +122,7 @@ export class DataGatheringService {
     }
   }
 
-  public async gatherSymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public async gatherSymbol({ dataSource, symbol }: UniqueAsset) {
     const isDataGatheringLocked = await this.prismaService.property.findUnique({
       where: { key: PROPERTY_LOCKED_DATA_GATHERING }
     });

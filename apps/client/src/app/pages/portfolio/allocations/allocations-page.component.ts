@@ -10,6 +10,7 @@ import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
   PortfolioPosition,
+  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -64,7 +65,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     [name: string]: { name: string; value: number };
   };
   public symbols: {
-    [name: string]: { name: string; symbol: string; value: number };
+    [name: string]: {
+      dataSource?: DataSource;
+      name: string;
+      symbol: string;
+      value: number;
+    };
   };
 
   public user: User;
@@ -281,6 +287,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
       if (position.assetClass === AssetClass.EQUITY) {
         this.symbols[prettifySymbol(symbol)] = {
+          dataSource: position.dataSource,
           name: position.name,
           symbol: prettifySymbol(symbol),
           value: aPeriod === 'original' ? position.investment : position.value
@@ -293,6 +300,14 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.period = aValue;
 
     this.initializeAnalysisData(this.period);
+  }
+
+  public onProportionChartClicked({ dataSource, symbol }: UniqueAsset) {
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, positionDetailDialog: true }
+      });
+    }
   }
 
   public ngOnDestroy() {
