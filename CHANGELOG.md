@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for click in the portfolio proportion chart component
 
+### Fixed
+
+- Fixed an issue with undefined currencies after creating an activity
+
 ## 1.121.0 - 27.02.2022
 
 ### Added
