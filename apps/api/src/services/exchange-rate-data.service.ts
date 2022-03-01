@@ -114,6 +114,10 @@ export class ExchangeRateDataService {
     aFromCurrency: string,
     aToCurrency: string
   ) {
+    if (aValue === 0) {
+      return 0;
+    }
+
     const hasNaN = Object.values(this.exchangeRates).some((exchangeRate) => {
       return isNaN(exchangeRate);
     });
@@ -206,7 +210,7 @@ export class ExchangeRateDataService {
       currencies = currencies.concat(customCurrencies);
     }
 
-    return uniq(currencies).sort();
+    return uniq(currencies).filter(Boolean).sort();
   }
 
   private prepareCurrencyPairs(aCurrencies: string[]) {
