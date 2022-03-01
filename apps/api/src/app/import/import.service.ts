@@ -3,8 +3,8 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { Injectable } from '@nestjs/common';
-import { Order } from '@prisma/client';
 import { isSameDay, parseISO } from 'date-fns';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 
 @Injectable()
 export class ImportService {
@@ -19,7 +19,7 @@ export class ImportService {
     orders,
     userId
   }: {
-    orders: Partial<Order>[];
+    orders: Partial<CreateOrderDto>[];
     userId: string;
   }): Promise<void> {
     for (const order of orders) {
@@ -85,7 +85,7 @@ export class ImportService {
     orders,
     userId
   }: {
-    orders: Partial<Order>[];
+    orders: Partial<CreateOrderDto>[];
     userId: string;
   }) {
     if (
@@ -99,6 +99,7 @@ export class ImportService {
     }
 
     const existingOrders = await this.orderService.orders({
+      include: { SymbolProfile: true },
       orderBy: { date: 'desc' },
       where: { userId }
     });
@@ -110,7 +111,7 @@ export class ImportService {
       const duplicateOrder = existingOrders.find((order) => {
         return (
           order.currency === currency &&
-          order.dataSource === dataSource &&
+          order.SymbolProfile.dataSource === dataSource &&
           isSameDay(order.date, parseISO(<string>(<unknown>date))) &&
           order.fee === fee &&
           order.quantity === quantity &&

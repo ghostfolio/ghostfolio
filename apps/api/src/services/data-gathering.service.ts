@@ -552,16 +552,23 @@ export class DataGatheringService {
     const distinctOrders = await this.prismaService.order.findMany({
       distinct: ['symbol'],
       orderBy: [{ symbol: 'asc' }],
-      select: { dataSource: true, symbol: true }
+      select: { SymbolProfile: true }
     });
 
-    return distinctOrders.filter((distinctOrder) => {
-      return (
-        distinctOrder.dataSource !== DataSource.GHOSTFOLIO &&
-        distinctOrder.dataSource !== DataSource.MANUAL &&
-        distinctOrder.dataSource !== DataSource.RAKUTEN
-      );
-    });
+    return distinctOrders
+      .filter((distinctOrder) => {
+        return (
+          distinctOrder.SymbolProfile.dataSource !== DataSource.GHOSTFOLIO &&
+          distinctOrder.SymbolProfile.dataSource !== DataSource.MANUAL &&
+          distinctOrder.SymbolProfile.dataSource !== DataSource.RAKUTEN
+        );
+      })
+      .map((distinctOrder) => {
+        return {
+          dataSource: distinctOrder.SymbolProfile.dataSource,
+          symbol: distinctOrder.SymbolProfile.symbol
+        };
+      });
   }
 
   private async isDataGatheringNeeded() {

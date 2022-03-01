@@ -19,7 +19,6 @@ export class ExportService {
       select: {
         accountId: true,
         currency: true,
-        dataSource: true,
         date: true,
         fee: true,
         id: true,

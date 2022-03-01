@@ -171,6 +171,14 @@ export class OrderController {
             id_userId: { id: accountId, userId: this.request.user.id }
           }
         },
+        SymbolProfile: {
+          connect: {
+            dataSource_symbol: {
+              dataSource: data.dataSource,
+              symbol: data.symbol
+            }
+          }
+        },
         User: { connect: { id: this.request.user.id } }
       },
       where: {

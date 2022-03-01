@@ -53,7 +53,11 @@ export class OrderService {
   }
 
   public async createOrder(
-    data: Prisma.OrderCreateInput & { accountId?: string; userId: string }
+    data: Prisma.OrderCreateInput & {
+      accountId?: string;
+      dataSource: DataSource;
+      userId: string;
+    }
   ): Promise<Order> {
     const defaultAccount = (
       await this.accountService.getAccounts(data.userId)
@@ -228,9 +232,9 @@ export class OrderService {
       // Gather symbol data of order in the background, if not draft
       this.dataGatheringService.gatherSymbols([
         {
-          dataSource: <DataSource>data.dataSource,
+          dataSource: data.SymbolProfile.connect.dataSource_symbol.dataSource,
           date: <Date>data.date,
-          symbol: <string>data.symbol
+          symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
         }
       ]);
     }

@@ -449,7 +449,7 @@ export class PortfolioService {
       })
       .map((order) => ({
         currency: order.currency,
-        dataSource: order.SymbolProfile?.dataSource ?? order.dataSource,
+        dataSource: order.SymbolProfile.dataSource,
         date: format(order.date, DATE_FORMAT),
         fee: new Big(order.fee),
         name: order.SymbolProfile?.name,
@@ -1081,7 +1081,7 @@ export class PortfolioService {
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
       currency: order.currency,
-      dataSource: order.SymbolProfile?.dataSource ?? order.dataSource,
+      dataSource: order.SymbolProfile.dataSource,
       date: format(order.date, DATE_FORMAT),
       fee: new Big(
         this.exchangeRateDataService.toCurrency(
