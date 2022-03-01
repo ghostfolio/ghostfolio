@@ -93,6 +93,13 @@ export class OrderService {
         data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
     }
 
+    await this.dataGatheringService.gatherProfileData([
+      {
+        dataSource: data.dataSource,
+        symbol: data.SymbolProfile.connectOrCreate.create.symbol
+      }
+    ]);
+
     const isDraft = isAfter(data.date as Date, endOfToday());
 
     if (!isDraft) {
@@ -105,13 +112,6 @@ export class OrderService {
         }
       ]);
     }
-
-    this.dataGatheringService.gatherProfileData([
-      {
-        dataSource: data.dataSource,
-        symbol: data.SymbolProfile.connectOrCreate.create.symbol
-      }
-    ]);
 
     await this.cacheService.flush();
 
