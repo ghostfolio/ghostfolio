@@ -57,6 +57,7 @@ export class OrderService {
       accountId?: string;
       currency?: string;
       dataSource?: DataSource;
+      symbol?: string;
       userId: string;
     }
   ): Promise<Order> {
@@ -83,7 +84,6 @@ export class OrderService {
 
       Account = undefined;
       data.id = id;
-      data.symbol = null;
       data.SymbolProfile.connectOrCreate.create.currency = currency;
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
@@ -122,6 +122,7 @@ export class OrderService {
     delete data.accountId;
     delete data.currency;
     delete data.dataSource;
+    delete data.symbol;
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
@@ -211,37 +212,47 @@ export class OrderService {
     });
   }
 
-  public async updateOrder(params: {
+  public async updateOrder({
+    data,
+    where
+  }: {
+    data: Prisma.OrderUpdateInput & {
+      currency?: string;
+      dataSource?: DataSource;
+      symbol?: string;
+    };
     where: Prisma.OrderWhereUniqueInput;
-    data: Prisma.OrderUpdateInput;
   }): Promise<Order> {
-    const { data, where } = params;
-
     if (data.Account.connect.id_userId.id === null) {
       delete data.Account;
     }
 
+    let isDraft = false;
+
     if (data.type === 'ITEM') {
-      const name = data.symbol;
+      const name = data.SymbolProfile.connect.dataSource_symbol.symbol;
 
-      data.symbol = null;
       data.SymbolProfile = { update: { name } };
-    }
+    } else {
+      isDraft = isAfter(data.date as Date, endOfToday());
 
-    const isDraft = isAfter(data.date as Date, endOfToday());
-
-    if (!isDraft) {
-      // Gather symbol data of order in the background, if not draft
-      this.dataGatheringService.gatherSymbols([
-        {
-          dataSource: data.SymbolProfile.connect.dataSource_symbol.dataSource,
-          date: <Date>data.date,
-          symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
-        }
-      ]);
+      if (!isDraft) {
+        // Gather symbol data of order in the background, if not draft
+        this.dataGatheringService.gatherSymbols([
+          {
+            dataSource: data.SymbolProfile.connect.dataSource_symbol.dataSource,
+            date: <Date>data.date,
+            symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
+          }
+        ]);
+      }
     }
 
     await this.cacheService.flush();
+
+    delete data.currency;
+    delete data.dataSource;
+    delete data.symbol;
 
     return this.prismaService.order.update({
       data: {

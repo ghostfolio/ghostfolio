@@ -79,7 +79,6 @@ model Order {
   id              String        @default(uuid())
   isDraft         Boolean       @default(false)
   quantity        Float
-  symbol          String?
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   symbolProfileId String
   type            Type

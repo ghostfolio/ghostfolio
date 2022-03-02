@@ -158,7 +158,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       this.activityForm.controls['type'].disable();
     }
 
-    if (this.data.activity?.symbol) {
+    if (this.data.activity?.SymbolProfile?.symbol) {
       this.dataService
         .fetchSymbolItem({
           dataSource: this.data.activity?.SymbolProfile?.dataSource,

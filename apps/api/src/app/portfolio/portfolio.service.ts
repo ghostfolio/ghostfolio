@@ -454,7 +454,7 @@ export class PortfolioService {
         fee: new Big(order.fee),
         name: order.SymbolProfile?.name,
         quantity: new Big(order.quantity),
-        symbol: order.symbol,
+        symbol: order.SymbolProfile.symbol,
         type: order.type,
         unitPrice: new Big(order.unitPrice)
       }));
@@ -1092,7 +1092,7 @@ export class PortfolioService {
       ),
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
-      symbol: order.symbol,
+      symbol: order.SymbolProfile.symbol,
       type: order.type,
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
@@ -1139,7 +1139,8 @@ export class PortfolioService {
 
       for (const order of ordersByAccount) {
         let currentValueOfSymbol =
-          order.quantity * portfolioItemsNow[order.symbol].marketPrice;
+          order.quantity *
+          portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
         let originalValueOfSymbol = order.quantity * order.unitPrice;
 
         if (order.type === 'SELL') {

@@ -54,7 +54,6 @@ export class ImportService {
       await this.orderService.createOrder({
         fee,
         quantity,
-        symbol,
         type,
         unitPrice,
         userId,
@@ -114,7 +113,7 @@ export class ImportService {
           isSameDay(order.date, parseISO(<string>(<unknown>date))) &&
           order.fee === fee &&
           order.quantity === quantity &&
-          order.symbol === symbol &&
+          order.SymbolProfile.symbol === symbol &&
           order.type === type &&
           order.unitPrice === unitPrice
         );
