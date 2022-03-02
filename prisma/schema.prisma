@@ -116,7 +116,7 @@ model SymbolProfile {
   assetSubClass        AssetSubClass?
   countries            Json?
   createdAt            DateTime       @default(now())
-  currency             String?
+  currency             String
   dataSource           DataSource
   id                   String         @id @default(uuid())
   name                 String?
