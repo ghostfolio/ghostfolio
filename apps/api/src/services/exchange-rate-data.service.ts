@@ -191,12 +191,7 @@ export class ExchangeRateDataService {
       await this.prismaService.symbolProfile.findMany({
         distinct: ['currency'],
         orderBy: [{ currency: 'asc' }],
-        select: { currency: true },
-        where: {
-          currency: {
-            not: null
-          }
-        }
+        select: { currency: true }
       })
     ).forEach((symbolProfile) => {
       currencies.push(symbolProfile.currency);
