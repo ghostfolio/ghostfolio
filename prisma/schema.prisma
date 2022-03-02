@@ -74,7 +74,6 @@ model Order {
   accountId       String?
   accountUserId   String?
   createdAt       DateTime      @default(now())
-  currency        String?
   date            DateTime
   fee             Float
   id              String        @default(uuid())

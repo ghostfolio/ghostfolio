@@ -55,7 +55,7 @@ export class OrderService {
   public async createOrder(
     data: Prisma.OrderCreateInput & {
       accountId?: string;
-      dataSource: DataSource;
+      dataSource?: DataSource;
       userId: string;
     }
   ): Promise<Order> {
@@ -81,7 +81,6 @@ export class OrderService {
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
 
       Account = undefined;
-      data.dataSource = dataSource;
       data.id = id;
       data.symbol = null;
       data.SymbolProfile.connectOrCreate.create.currency = currency;
@@ -99,7 +98,7 @@ export class OrderService {
 
     await this.dataGatheringService.gatherProfileData([
       {
-        dataSource: data.dataSource,
+        dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
         symbol: data.SymbolProfile.connectOrCreate.create.symbol
       }
     ]);
@@ -110,7 +109,7 @@ export class OrderService {
       // Gather symbol data of order in the background, if not draft
       this.dataGatheringService.gatherSymbols([
         {
-          dataSource: data.dataSource,
+          dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
           date: <Date>data.date,
           symbol: data.SymbolProfile.connectOrCreate.create.symbol
         }
@@ -120,6 +119,7 @@ export class OrderService {
     await this.cacheService.flush();
 
     delete data.accountId;
+    delete data.dataSource;
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;

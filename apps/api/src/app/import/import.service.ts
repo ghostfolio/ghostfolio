@@ -53,7 +53,6 @@ export class ImportService {
     } of orders) {
       await this.orderService.createOrder({
         currency,
-        dataSource,
         fee,
         quantity,
         symbol,
