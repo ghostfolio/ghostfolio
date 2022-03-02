@@ -114,6 +114,7 @@ export class OrderController {
       SymbolProfile: {
         connectOrCreate: {
           create: {
+            currency: data.currency,
             dataSource: data.dataSource,
             symbol: data.symbol
           },

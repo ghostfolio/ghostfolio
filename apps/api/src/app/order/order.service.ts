@@ -55,6 +55,7 @@ export class OrderService {
   public async createOrder(
     data: Prisma.OrderCreateInput & {
       accountId?: string;
+      currency?: string;
       dataSource?: DataSource;
       userId: string;
     }
@@ -75,7 +76,7 @@ export class OrderService {
     };
 
     if (data.type === 'ITEM') {
-      const currency = data.currency;
+      const currency = data.SymbolProfile.connectOrCreate.create.currency;
       const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
@@ -119,6 +120,7 @@ export class OrderService {
     await this.cacheService.flush();
 
     delete data.accountId;
+    delete data.currency;
     delete data.dataSource;
     delete data.userId;
 
@@ -197,12 +199,12 @@ export class OrderService {
         value,
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         ),
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       };

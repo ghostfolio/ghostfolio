@@ -438,7 +438,7 @@ export class PortfolioService {
       };
     }
 
-    const positionCurrency = orders[0].currency;
+    const positionCurrency = orders[0].SymbolProfile.currency;
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       aSymbol
     ]);
@@ -448,7 +448,7 @@ export class PortfolioService {
         return order.type === 'BUY' || order.type === 'SELL';
       })
       .map((order) => ({
-        currency: order.currency,
+        currency: order.SymbolProfile.currency,
         dataSource: order.SymbolProfile.dataSource,
         date: format(order.date, DATE_FORMAT),
         fee: new Big(order.fee),
@@ -987,7 +987,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1006,7 +1006,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1028,7 +1028,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1080,13 +1080,13 @@ export class PortfolioService {
     }
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
-      currency: order.currency,
+      currency: order.SymbolProfile.currency,
       dataSource: order.SymbolProfile.dataSource,
       date: format(order.date, DATE_FORMAT),
       fee: new Big(
         this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       ),
@@ -1097,7 +1097,7 @@ export class PortfolioService {
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
           order.unitPrice,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       )
@@ -1189,7 +1189,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.quantity * order.unitPrice,
-          order.currency,
+          order.SymbolProfile.currency,
           currency
         );
       })

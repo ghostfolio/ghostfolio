@@ -52,7 +52,6 @@ export class ImportService {
       unitPrice
     } of orders) {
       await this.orderService.createOrder({
-        currency,
         fee,
         quantity,
         symbol,
@@ -64,6 +63,7 @@ export class ImportService {
         SymbolProfile: {
           connectOrCreate: {
             create: {
+              currency,
               dataSource,
               symbol
             },
@@ -109,7 +109,7 @@ export class ImportService {
     ] of orders.entries()) {
       const duplicateOrder = existingOrders.find((order) => {
         return (
-          order.currency === currency &&
+          order.SymbolProfile.currency === currency &&
           order.SymbolProfile.dataSource === dataSource &&
           isSameDay(order.date, parseISO(<string>(<unknown>date))) &&
           order.fee === fee &&
