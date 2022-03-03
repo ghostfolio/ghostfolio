@@ -24,8 +24,8 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() deviceType: string;
   @Input() locale: string;
   @Input() showActions: boolean;
-  @Input() totalBalance: number;
-  @Input() totalValue: number;
+  @Input() totalBalanceInBaseCurrency: number;
+  @Input() totalValueInBaseCurrency: number;
   @Input() transactionCount: number;
 
   @Output() accountDeleted = new EventEmitter<string>();

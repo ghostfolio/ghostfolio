@@ -100,15 +100,22 @@ export class PortfolioServiceNew {
         }
       }
 
+      const value = details.accounts[account.id]?.current ?? 0;
+
       const result = {
         ...account,
         transactionCount,
-        convertedBalance: this.exchangeRateDataService.toCurrency(
+        value,
+        balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
           userCurrency
         ),
-        value: details.accounts[account.id]?.current ?? 0
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          value,
+          account.currency,
+          userCurrency
+        )
       };
 
       delete result.Order;
@@ -119,17 +126,26 @@ export class PortfolioServiceNew {
 
   public async getAccountsWithAggregations(aUserId: string): Promise<Accounts> {
     const accounts = await this.getAccounts(aUserId);
-    let totalBalance = 0;
-    let totalValue = 0;
+    let totalBalanceInBaseCurrency = new Big(0);
+    let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
 
     for (const account of accounts) {
-      totalBalance += account.convertedBalance;
-      totalValue += account.value;
+      totalBalanceInBaseCurrency = totalBalanceInBaseCurrency.plus(
+        account.balanceInBaseCurrency
+      );
+      totalValueInBaseCurrency = totalValueInBaseCurrency.plus(
+        account.valueInBaseCurrency
+      );
       transactionCount += account.transactionCount;
     }
 
-    return { accounts, totalBalance, totalValue, transactionCount };
+    return {
+      accounts,
+      transactionCount,
+      totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
+      totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
+    };
   }
 
   public async getInvestments(
@@ -293,13 +309,11 @@ export class PortfolioServiceNew {
       orders: portfolioOrders
     });
 
-    if (transactionPoints?.length <= 0) {
-      return { accounts: {}, holdings: {}, hasErrors: false };
-    }
-
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
+    const portfolioStart = parseDate(
+      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    );
     const startDate = this.getStartDate(aDateRange, portfolioStart);
     const currentPositions = await portfolioCalculator.getCurrentPositions(
       startDate
@@ -312,9 +326,11 @@ export class PortfolioServiceNew {
 
     const holdings: PortfolioDetails['holdings'] = {};
     const totalInvestment = currentPositions.totalInvestment.plus(
-      cashDetails.balance
+      cashDetails.balanceInBaseCurrency
     );
-    const totalValue = currentPositions.currentValue.plus(cashDetails.balance);
+    const totalValue = currentPositions.currentValue.plus(
+      cashDetails.balanceInBaseCurrency
+    );
 
     const dataGatheringItems = currentPositions.positions.map((position) => {
       return {
@@ -869,7 +885,7 @@ export class PortfolioServiceNew {
 
     const performanceInformation = await this.getPerformance(aImpersonationId);
 
-    const { balance } = await this.accountService.getCashDetails(
+    const { balanceInBaseCurrency } = await this.accountService.getCashDetails(
       userId,
       userCurrency
     );
@@ -887,7 +903,7 @@ export class PortfolioServiceNew {
 
     const committedFunds = new Big(totalBuy).minus(totalSell);
 
-    const netWorth = new Big(balance)
+    const netWorth = new Big(balanceInBaseCurrency)
       .plus(performanceInformation.performance.currentValue)
       .plus(items)
       .toNumber();
@@ -917,7 +933,7 @@ export class PortfolioServiceNew {
       netWorth,
       totalBuy,
       totalSell,
-      cash: balance,
+      cash: balanceInBaseCurrency,
       committedFunds: committedFunds.toNumber(),
       ordersCount: orders.filter((order) => {
         return order.type === 'BUY' || order.type === 'SELL';
@@ -1153,17 +1169,12 @@ export class PortfolioServiceNew {
         return accountId === account.id;
       });
 
-      const convertedBalance = this.exchangeRateDataService.toCurrency(
-        account.balance,
-        account.currency,
-        userCurrency
-      );
       accounts[account.id] = {
-        balance: convertedBalance,
+        balance: account.balance,
         currency: account.currency,
-        current: convertedBalance,
+        current: account.balance,
         name: account.name,
-        original: convertedBalance
+        original: account.balance
       };
 
       for (const order of ordersByAccount) {

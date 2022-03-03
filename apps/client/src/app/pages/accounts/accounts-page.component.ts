@@ -28,8 +28,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateAccount: boolean;
   public hasPermissionToDeleteAccount: boolean;
   public routeQueryParams: Subscription;
-  public totalBalance = 0;
-  public totalValue = 0;
+  public totalBalanceInBaseCurrency = 0;
+  public totalValueInBaseCurrency = 0;
   public transactionCount = 0;
   public user: User;
 
@@ -106,18 +106,25 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchAccounts()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ accounts, totalBalance, totalValue, transactionCount }) => {
-        this.accounts = accounts;
-        this.totalBalance = totalBalance;
-        this.totalValue = totalValue;
-        this.transactionCount = transactionCount;
+      .subscribe(
+        ({
+          accounts,
+          totalBalanceInBaseCurrency,
+          totalValueInBaseCurrency,
+          transactionCount
+        }) => {
+          this.accounts = accounts;
+          this.totalBalanceInBaseCurrency = totalBalanceInBaseCurrency;
+          this.totalValueInBaseCurrency = totalValueInBaseCurrency;
+          this.transactionCount = transactionCount;
 
-        if (this.accounts?.length <= 0) {
-          this.router.navigate([], { queryParams: { createDialog: true } });
+          if (this.accounts?.length <= 0) {
+            this.router.navigate([], { queryParams: { createDialog: true } });
+          }
+
+          this.changeDetectorRef.markForCheck();
         }
-
-        this.changeDetectorRef.markForCheck();
-      });
+      );
   }
 
   public onDeleteAccount(aId: string) {

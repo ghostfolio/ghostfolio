@@ -1,7 +1,8 @@
 import { Account as AccountModel } from '@prisma/client';
 
 export type AccountWithValue = AccountModel & {
-  convertedBalance: number;
+  balanceInBaseCurrency: number;
   transactionCount: number;
   value: number;
+  valueInBaseCurrency: number;
 };
