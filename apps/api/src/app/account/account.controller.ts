@@ -101,16 +101,18 @@ export class AccountController {
     ) {
       accountsWithAggregations = {
         ...nullifyValuesInObject(accountsWithAggregations, [
-          'totalBalance',
-          'totalValue'
+          'totalBalanceInBaseCurrency',
+          'totalValueInBaseCurrency'
         ]),
         accounts: nullifyValuesInObjects(accountsWithAggregations.accounts, [
           'balance',
+          'balanceInBaseCurrency',
           'convertedBalance',
           'fee',
           'quantity',
           'unitPrice',
-          'value'
+          'value',
+          'valueInBaseCurrency'
         ])
       };
     }
