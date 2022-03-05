@@ -53,7 +53,13 @@ export class OrderService {
   }
 
   public async createOrder(
-    data: Prisma.OrderCreateInput & { accountId?: string; userId: string }
+    data: Prisma.OrderCreateInput & {
+      accountId?: string;
+      currency?: string;
+      dataSource?: DataSource;
+      symbol?: string;
+      userId: string;
+    }
   ): Promise<Order> {
     const defaultAccount = (
       await this.accountService.getAccounts(data.userId)
@@ -71,15 +77,13 @@ export class OrderService {
     };
 
     if (data.type === 'ITEM') {
-      const currency = data.currency;
+      const currency = data.SymbolProfile.connectOrCreate.create.currency;
       const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
 
       Account = undefined;
-      data.dataSource = dataSource;
       data.id = id;
-      data.symbol = null;
       data.SymbolProfile.connectOrCreate.create.currency = currency;
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
@@ -95,7 +99,7 @@ export class OrderService {
 
     await this.dataGatheringService.gatherProfileData([
       {
-        dataSource: data.dataSource,
+        dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
         symbol: data.SymbolProfile.connectOrCreate.create.symbol
       }
     ]);
@@ -106,7 +110,7 @@ export class OrderService {
       // Gather symbol data of order in the background, if not draft
       this.dataGatheringService.gatherSymbols([
         {
-          dataSource: data.dataSource,
+          dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
           date: <Date>data.date,
           symbol: data.SymbolProfile.connectOrCreate.create.symbol
         }
@@ -116,6 +120,9 @@ export class OrderService {
     await this.cacheService.flush();
 
     delete data.accountId;
+    delete data.currency;
+    delete data.dataSource;
+    delete data.symbol;
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
@@ -193,49 +200,59 @@ export class OrderService {
         value,
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         ),
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       };
     });
   }
 
-  public async updateOrder(params: {
+  public async updateOrder({
+    data,
+    where
+  }: {
+    data: Prisma.OrderUpdateInput & {
+      currency?: string;
+      dataSource?: DataSource;
+      symbol?: string;
+    };
     where: Prisma.OrderWhereUniqueInput;
-    data: Prisma.OrderUpdateInput;
   }): Promise<Order> {
-    const { data, where } = params;
-
     if (data.Account.connect.id_userId.id === null) {
       delete data.Account;
     }
 
+    let isDraft = false;
+
     if (data.type === 'ITEM') {
-      const name = data.symbol;
+      const name = data.SymbolProfile.connect.dataSource_symbol.symbol;
 
-      data.symbol = null;
       data.SymbolProfile = { update: { name } };
-    }
+    } else {
+      isDraft = isAfter(data.date as Date, endOfToday());
 
-    const isDraft = isAfter(data.date as Date, endOfToday());
-
-    if (!isDraft) {
-      // Gather symbol data of order in the background, if not draft
-      this.dataGatheringService.gatherSymbols([
-        {
-          dataSource: <DataSource>data.dataSource,
-          date: <Date>data.date,
-          symbol: <string>data.symbol
-        }
-      ]);
+      if (!isDraft) {
+        // Gather symbol data of order in the background, if not draft
+        this.dataGatheringService.gatherSymbols([
+          {
+            dataSource: data.SymbolProfile.connect.dataSource_symbol.dataSource,
+            date: <Date>data.date,
+            symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
+          }
+        ]);
+      }
     }
 
     await this.cacheService.flush();
+
+    delete data.currency;
+    delete data.dataSource;
+    delete data.symbol;
 
     return this.prismaService.order.update({
       data: {

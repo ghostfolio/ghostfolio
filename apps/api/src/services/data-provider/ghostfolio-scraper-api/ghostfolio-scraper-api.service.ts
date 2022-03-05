@@ -7,11 +7,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import {
-  DATE_FORMAT,
-  getYesterday,
-  isGhostfolioScraperApiSymbol
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -29,7 +25,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   ) {}
 
   public canHandle(symbol: string) {
-    return isGhostfolioScraperApiSymbol(symbol);
+    return true;
   }
 
   public async getAssetProfile(

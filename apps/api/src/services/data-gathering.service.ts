@@ -549,19 +549,24 @@ export class DataGatheringService {
   }
 
   private async getSymbolsProfileData(): Promise<IDataGatheringItem[]> {
-    const distinctOrders = await this.prismaService.order.findMany({
-      distinct: ['symbol'],
-      orderBy: [{ symbol: 'asc' }],
-      select: { dataSource: true, symbol: true }
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }]
     });
 
-    return distinctOrders.filter((distinctOrder) => {
-      return (
-        distinctOrder.dataSource !== DataSource.GHOSTFOLIO &&
-        distinctOrder.dataSource !== DataSource.MANUAL &&
-        distinctOrder.dataSource !== DataSource.RAKUTEN
-      );
-    });
+    return symbolProfiles
+      .filter((symbolProfile) => {
+        return (
+          symbolProfile.dataSource !== DataSource.GHOSTFOLIO &&
+          symbolProfile.dataSource !== DataSource.MANUAL &&
+          symbolProfile.dataSource !== DataSource.RAKUTEN
+        );
+      })
+      .map((symbolProfile) => {
+        return {
+          dataSource: symbolProfile.dataSource,
+          symbol: symbolProfile.symbol
+        };
+      });
   }
 
   private async isDataGatheringNeeded() {

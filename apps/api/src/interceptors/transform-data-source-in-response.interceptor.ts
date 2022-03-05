@@ -32,7 +32,6 @@ export class TransformDataSourceInResponseInterceptor<T>
               activity.SymbolProfile.dataSource = encodeDataSource(
                 activity.SymbolProfile.dataSource
               );
-              activity.dataSource = encodeDataSource(activity.dataSource);
               return activity;
             });
           }
@@ -63,13 +62,6 @@ export class TransformDataSourceInResponseInterceptor<T>
             data.items.map((item) => {
               item.dataSource = encodeDataSource(item.dataSource);
               return item;
-            });
-          }
-
-          if (data.orders) {
-            data.orders.map((order) => {
-              order.dataSource = encodeDataSource(order.dataSource);
-              return order;
             });
           }
 

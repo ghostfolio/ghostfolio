@@ -74,14 +74,11 @@ model Order {
   accountId       String?
   accountUserId   String?
   createdAt       DateTime      @default(now())
-  currency        String?
-  dataSource      DataSource?
   date            DateTime
   fee             Float
   id              String        @default(uuid())
   isDraft         Boolean       @default(false)
   quantity        Float
-  symbol          String?
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   symbolProfileId String
   type            Type
@@ -119,7 +116,7 @@ model SymbolProfile {
   assetSubClass        AssetSubClass?
   countries            Json?
   createdAt            DateTime       @default(now())
-  currency             String?
+  currency             String
   dataSource           DataSource
   id                   String         @id @default(uuid())
   name                 String?

@@ -11,9 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Included data provider errors in API response
 
+### Changed
+
+- Removed the redundant attributes (`currency`, `dataSource`, `symbol`) of the activity model
+- Removed the prefix for symbols with the data source `GHOSTFOLIO`
+
 ### Fixed
 
 - Improved the account calculations
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.122.0 - 01.03.2022
 

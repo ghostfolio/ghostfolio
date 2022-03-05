@@ -438,7 +438,7 @@ export class PortfolioService {
       };
     }
 
-    const positionCurrency = orders[0].currency;
+    const positionCurrency = orders[0].SymbolProfile.currency;
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       aSymbol
     ]);
@@ -448,13 +448,13 @@ export class PortfolioService {
         return order.type === 'BUY' || order.type === 'SELL';
       })
       .map((order) => ({
-        currency: order.currency,
-        dataSource: order.SymbolProfile?.dataSource ?? order.dataSource,
+        currency: order.SymbolProfile.currency,
+        dataSource: order.SymbolProfile.dataSource,
         date: format(order.date, DATE_FORMAT),
         fee: new Big(order.fee),
         name: order.SymbolProfile?.name,
         quantity: new Big(order.quantity),
-        symbol: order.symbol,
+        symbol: order.SymbolProfile.symbol,
         type: order.type,
         unitPrice: new Big(order.unitPrice)
       }));
@@ -987,7 +987,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1006,7 +1006,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1028,7 +1028,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1080,24 +1080,24 @@ export class PortfolioService {
     }
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
-      currency: order.currency,
-      dataSource: order.SymbolProfile?.dataSource ?? order.dataSource,
+      currency: order.SymbolProfile.currency,
+      dataSource: order.SymbolProfile.dataSource,
       date: format(order.date, DATE_FORMAT),
       fee: new Big(
         this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       ),
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
-      symbol: order.symbol,
+      symbol: order.SymbolProfile.symbol,
       type: order.type,
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
           order.unitPrice,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       )
@@ -1139,7 +1139,8 @@ export class PortfolioService {
 
       for (const order of ordersByAccount) {
         let currentValueOfSymbol =
-          order.quantity * portfolioItemsNow[order.symbol].marketPrice;
+          order.quantity *
+          portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
         let originalValueOfSymbol = order.quantity * order.unitPrice;
 
         if (order.type === 'SELL') {
@@ -1189,7 +1190,7 @@ export class PortfolioService {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.quantity * order.unitPrice,
-          order.currency,
+          order.SymbolProfile.currency,
           currency
         );
       })

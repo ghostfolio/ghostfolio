@@ -102,10 +102,6 @@ export function isCurrency(aSymbol = '') {
   return currencies[aSymbol];
 }
 
-export function isGhostfolioScraperApiSymbol(aSymbol = '') {
-  return aSymbol.startsWith(ghostfolioScraperApiSymbolPrefix);
-}
-
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);

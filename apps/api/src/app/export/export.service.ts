@@ -18,8 +18,6 @@ export class ExportService {
       orderBy: { date: 'desc' },
       select: {
         accountId: true,
-        currency: true,
-        dataSource: true,
         date: true,
         fee: true,
         id: true,
@@ -42,7 +40,6 @@ export class ExportService {
       orders: orders.map(
         ({
           accountId,
-          currency,
           date,
           fee,
           quantity,
@@ -52,12 +49,12 @@ export class ExportService {
         }) => {
           return {
             accountId,
-            currency,
             date,
             fee,
             quantity,
             type,
             unitPrice,
+            currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             symbol: type === 'ITEM' ? SymbolProfile.name : SymbolProfile.symbol
           };

@@ -158,11 +158,11 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       this.activityForm.controls['type'].disable();
     }
 
-    if (this.data.activity?.symbol) {
+    if (this.data.activity?.SymbolProfile?.symbol) {
       this.dataService
         .fetchSymbolItem({
-          dataSource: this.data.activity?.dataSource,
-          symbol: this.data.activity?.symbol
+          dataSource: this.data.activity?.SymbolProfile?.dataSource,
+          symbol: this.data.activity?.SymbolProfile?.symbol
         })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(({ marketPrice }) => {
@@ -196,9 +196,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     } else {
       this.activityForm.controls['searchSymbol'].setErrors({ incorrect: true });
 
-      this.data.activity.currency = null;
-      this.data.activity.dataSource = null;
-      this.data.activity.symbol = null;
+      this.data.activity.SymbolProfile = null;
     }
 
     this.changeDetectorRef.markForCheck();
@@ -259,9 +257,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       })
       .pipe(
         catchError(() => {
-          this.data.activity.currency = null;
-          this.data.activity.dataSource = null;
-          this.data.activity.unitPrice = null;
+          this.data.activity.SymbolProfile = null;
 
           this.isLoading = false;
 
