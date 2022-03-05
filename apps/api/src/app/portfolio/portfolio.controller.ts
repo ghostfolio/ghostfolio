@@ -15,6 +15,7 @@ import {
   PortfolioDetails,
   PortfolioInvestments,
   PortfolioPerformance,
+  PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary
@@ -207,7 +208,7 @@ export class PortfolioController {
   public async getPerformance(
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
-  ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
+  ): Promise<PortfolioPerformanceResponse> {
     const performanceInformation = await this.portfolioServiceStrategy
       .get()
       .getPerformance(impersonationId, range);

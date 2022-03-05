@@ -7,6 +7,7 @@
           ? 'Sorry! Our data provider partner is experiencing the hiccups.'
           : ''
       "
+      (click)="errors?.length > 0 && onShowErrors()"
     >
       <ion-icon
         *ngIf="hasError && !isLoading"

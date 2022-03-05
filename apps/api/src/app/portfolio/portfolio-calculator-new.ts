@@ -1,7 +1,11 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import { TimelinePosition } from '@ghostfolio/common/interfaces';
+import {
+  ResponseError,
+  TimelinePosition,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { Logger } from '@nestjs/common';
 import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
@@ -232,6 +236,8 @@ export class PortfolioCalculatorNew {
     const positions: TimelinePosition[] = [];
     let hasAnySymbolMetricsErrors = false;
 
+    const errors: ResponseError['errors'] = [];
+
     for (const item of lastTransactionPoint.items) {
       const marketValue = marketSymbolMap[todayString]?.[item.symbol];
 
@@ -272,12 +278,17 @@ export class PortfolioCalculatorNew {
         symbol: item.symbol,
         transactionCount: item.transactionCount
       });
+
+      if (hasErrors) {
+        errors.push({ dataSource: item.dataSource, symbol: item.symbol });
+      }
     }
 
     const overall = this.calculateOverallPerformance(positions, initialValues);
 
     return {
       ...overall,
+      errors,
       positions,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
