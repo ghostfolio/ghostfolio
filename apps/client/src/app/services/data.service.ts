@@ -24,9 +24,11 @@ import {
   PortfolioDetails,
   PortfolioInvestments,
   PortfolioPerformance,
+  PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary,
+  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -188,13 +190,13 @@ export class DataService {
     });
   }
 
-  public fetchPortfolioPerformance(aParams: { [param: string]: any }) {
-    return this.http.get<{
-      hasErrors: boolean;
-      performance: PortfolioPerformance;
-    }>('/api/portfolio/performance', {
-      params: aParams
-    });
+  public fetchPortfolioPerformance(params: { [param: string]: any }) {
+    return this.http.get<PortfolioPerformanceResponse>(
+      '/api/portfolio/performance',
+      {
+        params
+      }
+    );
   }
 
   public fetchPortfolioPublic(aId: string) {

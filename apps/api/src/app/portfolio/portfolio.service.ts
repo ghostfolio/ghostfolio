@@ -25,7 +25,7 @@ import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   PortfolioDetails,
-  PortfolioPerformance,
+  PortfolioPerformanceResponse,
   PortfolioReport,
   PortfolioSummary,
   Position,
@@ -712,7 +712,7 @@ export class PortfolioService {
   public async getPerformance(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
+  ): Promise<PortfolioPerformanceResponse> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const portfolioCalculator = new PortfolioCalculator(

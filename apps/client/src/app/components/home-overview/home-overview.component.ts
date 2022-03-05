@@ -7,7 +7,11 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { defaultDateRangeOptions } from '@ghostfolio/common/config';
-import { PortfolioPerformance, User } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPerformance,
+  UniqueAsset,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
@@ -24,6 +28,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public dateRange: DateRange;
   public dateRangeOptions = defaultDateRangeOptions;
   public deviceType: string;
+  public errors: UniqueAsset[];
   public hasError: boolean;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
@@ -126,6 +131,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .fetchPortfolioPerformance({ range: this.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
+        this.errors = response.errors;
         this.hasError = response.hasErrors;
         this.performance = response.performance;
         this.isLoadingPerformance = false;
