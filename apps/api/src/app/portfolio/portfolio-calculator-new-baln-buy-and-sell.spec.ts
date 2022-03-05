@@ -66,6 +66,7 @@ describe('PortfolioCalculatorNew', () => {
 
       expect(currentPositions).toEqual({
         currentValue: new Big('0'),
+        errors: [],
         grossPerformance: new Big('-12.6'),
         grossPerformancePercentage: new Big('-0.0440867739678096571'),
         hasErrors: false,
