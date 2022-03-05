@@ -41,6 +41,14 @@ export class TransformDataSourceInResponseInterceptor<T>
             data.dataSource = encodeDataSource(data.dataSource);
           }
 
+          if (data.errors) {
+            for (const error of data.errors) {
+              if (error.dataSource) {
+                error.dataSource = encodeDataSource(error.dataSource);
+              }
+            }
+          }
+
           if (data.holdings) {
             for (const symbol of Object.keys(data.holdings)) {
               if (data.holdings[symbol].dataSource) {

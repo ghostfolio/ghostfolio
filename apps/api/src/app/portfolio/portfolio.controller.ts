@@ -14,7 +14,6 @@ import {
   PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,
-  PortfolioPerformance,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
@@ -205,6 +204,7 @@ export class PortfolioController {
 
   @Get('performance')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPerformance(
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
