@@ -156,11 +156,14 @@
               ></mat-slide-toggle>
             </div>
           </div>
-          <div *ngIf="hasPermissionForSubscription" class="d-flex my-3">
+          <div
+            *ngIf="hasPermissionForSubscription"
+            class="d-flex my-3 subscription"
+          >
             <div class="w-50" i18n>Coupons</div>
             <div class="w-50">
               <div *ngFor="let coupon of coupons">
-                <span>{{ coupon.code }}</span>
+                <span>{{ coupon.code }} ({{ coupon.duration }})</span>
                 <button
                   class="mini-icon mx-1 no-min-width px-2"
                   mat-button
@@ -170,10 +173,25 @@
                 </button>
               </div>
               <div class="mt-2">
-                <button color="primary" mat-flat-button (click)="onAddCoupon()">
-                  <ion-icon class="mr-1" name="add-outline"></ion-icon>
-                  <span i18n>Add Coupon</span>
-                </button>
+                <form #couponForm="ngForm">
+                  <mat-form-field appearance="outline" class="mr-2">
+                    <mat-select
+                      name="duration"
+                      [value]="couponDuration"
+                      (selectionChange)="onChangeCouponDuration($event.value)"
+                    >
+                      <mat-option value="30 days">30 Days</mat-option>
+                      <mat-option value="1 year">1 Year</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <button
+                    color="primary"
+                    mat-flat-button
+                    (click)="onAddCoupon()"
+                  >
+                    <span i18n>Add</span>
+                  </button>
+                </form>
               </div>
             </div>
           </div>

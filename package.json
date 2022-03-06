@@ -100,6 +100,7 @@
     "http-status-codes": "2.2.0",
     "ionicons": "5.5.1",
     "lodash": "4.17.21",
+    "ms": "3.0.0-canary.1",
     "ngx-device-detector": "3.0.0",
     "ngx-markdown": "13.0.0",
     "ngx-skeleton-loader": "5.0.0",

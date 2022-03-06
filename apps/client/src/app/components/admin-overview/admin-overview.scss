@@ -20,4 +20,10 @@
       }
     }
   }
+
+  .subscription {
+    .mat-form-field {
+      max-width: 100%;
+    }
+  }
 }
