@@ -177,7 +177,8 @@ export class YahooFinanceService implements DataProviderInterface {
       return response;
     } catch (error) {
       Logger.warn(
-        `Skipping yahooFinance2.getHistorical("${aSymbol}"): [${error.name}] ${error.message}`
+        `Skipping yahooFinance2.getHistorical("${aSymbol}"): [${error.name}] ${error.message}`,
+        'YahooFinanceService'
       );
 
       return {};
@@ -232,7 +233,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'YahooFinanceService');
 
       return {};
     }
@@ -296,7 +297,7 @@ export class YahooFinanceService implements DataProviderInterface {
         });
       }
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'YahooFinanceService');
     }
 
     return { items };

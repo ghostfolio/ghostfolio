@@ -54,11 +54,12 @@ export class TwitterBotService {
         );
 
         Logger.log(
-          `Fear & Greed Index has been tweeted: https://twitter.com/ghostfolio_/status/${createdTweet.id}`
+          `Fear & Greed Index has been tweeted: https://twitter.com/ghostfolio_/status/${createdTweet.id}`,
+          'TwitterBotService'
         );
       }
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'TwitterBotService');
     }
   }
 }

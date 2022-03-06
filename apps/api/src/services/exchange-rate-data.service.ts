@@ -149,7 +149,8 @@ export class ExchangeRateDataService {
 
     // Fallback with error, if currencies are not available
     Logger.error(
-      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
+      'ExchangeRateDataService'
     );
     return aValue;
   }

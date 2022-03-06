@@ -144,7 +144,7 @@ export class InfoService {
       const contributors = await get();
       return contributors?.length;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'InfoService');
 
       return undefined;
     }
@@ -165,7 +165,7 @@ export class InfoService {
       const { stargazers_count } = await get();
       return stargazers_count;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'InfoService');
 
       return undefined;
     }

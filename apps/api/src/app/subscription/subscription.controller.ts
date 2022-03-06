@@ -72,7 +72,8 @@ export class SubscriptionController {
     });
 
     Logger.log(
-      `Subscription for user '${this.request.user.id}' has been created with a coupon for ${coupon.duration}`
+      `Subscription for user '${this.request.user.id}' has been created with a coupon for ${coupon.duration}`,
+      'SubscriptionController'
     );
 
     return {
@@ -87,7 +88,10 @@ export class SubscriptionController {
       req.query.checkoutSessionId
     );
 
-    Logger.log(`Subscription for user '${userId}' has been created via Stripe`);
+    Logger.log(
+      `Subscription for user '${userId}' has been created via Stripe`,
+      'SubscriptionController'
+    );
 
     res.redirect(`${this.configurationService.get('ROOT_URL')}/account`);
   }
@@ -104,7 +108,7 @@ export class SubscriptionController {
         userId: this.request.user.id
       });
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'SubscriptionController');
 
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
