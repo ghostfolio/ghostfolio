@@ -13688,13 +13688,13 @@ ngx-markdown@13.0.0:
     prismjs "^1.25.0"
     tslib "^2.3.0"
 
-ngx-skeleton-loader@2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-2.9.1.tgz#1e419ef66696a2017afc9c8cd0bc129d2c680ffb"
-  integrity sha512-knFL2Ua/p60XUPH9ZrfgydiBHvvylny7jsVOXBtmACrYD7HcnuUl1uAEk/LvcN15tSjC9VnVwTIOU4i8LCSAgw==
+ngx-skeleton-loader@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-5.0.0.tgz#e0042de20b0159d3f97d03a696d68f39ceee383b"
+  integrity sha512-6cz8UAu4WcYnBp/LnU053LCIwjKNZWX8GX1v3bvqQVdDa1ubsEeJm+CZxk5B8W2jP9CcFhvWrBlmmVUyl1Yxug==
   dependencies:
     perf-marks "^1.13.4"
-    tslib "^1.10.0"
+    tslib "^2.0.0"
 
 ngx-stripe@13.0.0:
   version "13.0.0"
