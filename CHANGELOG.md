@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `ngx-skeleton-loader` from version `2.9.1` to `5.0.0`
+- Upgraded `prisma` from version `3.9.1` to `3.10.0`
 - Upgraded `yahoo-finance2` from version `2.1.9` to `2.2.0`
 
 ## 1.123.0 - 05.03.2022
