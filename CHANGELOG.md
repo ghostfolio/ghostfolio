@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for setting a duration in the coupon system
+
 ### Changed
 
 - Upgraded `ngx-skeleton-loader` from version `2.9.1` to `5.0.0`

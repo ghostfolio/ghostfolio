@@ -46,22 +46,25 @@ export class SubscriptionController {
       ((await this.propertyService.getByKey(PROPERTY_COUPONS)) as Coupon[]) ??
       [];
 
-    const isValid = coupons.some((coupon) => {
-      return coupon.code === couponCode;
+    const coupon = coupons.find((currentCoupon) => {
+      return currentCoupon.code === couponCode;
     });
 
-    if (!isValid) {
+    if (coupon === undefined) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
       );
     }
 
-    await this.subscriptionService.createSubscription(this.request.user.id);
+    await this.subscriptionService.createSubscription({
+      duration: coupon.duration,
+      userId: this.request.user.id
+    });
 
     // Destroy coupon
-    coupons = coupons.filter((coupon) => {
-      return coupon.code !== couponCode;
+    coupons = coupons.filter((currentCoupon) => {
+      return currentCoupon.code !== couponCode;
     });
     await this.propertyService.put({
       key: PROPERTY_COUPONS,
@@ -69,7 +72,7 @@ export class SubscriptionController {
     });
 
     Logger.log(
-      `Subscription for user '${this.request.user.id}' has been created with coupon`
+      `Subscription for user '${this.request.user.id}' has been created with a coupon for ${coupon.duration}`
     );
 
     return {

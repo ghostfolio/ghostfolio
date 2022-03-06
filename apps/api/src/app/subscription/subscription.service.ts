@@ -2,8 +2,9 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable, Logger } from '@nestjs/common';
-import { Subscription, User } from '@prisma/client';
-import { addDays, isBefore } from 'date-fns';
+import { Subscription } from '@prisma/client';
+import { addMilliseconds, isBefore } from 'date-fns';
+import ms, { StringValue } from 'ms';
 import Stripe from 'stripe';
 
 @Injectable()
@@ -64,13 +65,19 @@ export class SubscriptionService {
     };
   }
 
-  public async createSubscription(aUserId: string) {
+  public async createSubscription({
+    duration = '1 year',
+    userId
+  }: {
+    duration?: StringValue;
+    userId: string;
+  }) {
     await this.prismaService.subscription.create({
       data: {
-        expiresAt: addDays(new Date(), 365),
+        expiresAt: addMilliseconds(new Date(), ms(duration)),
         User: {
           connect: {
-            id: aUserId
+            id: userId
           }
         }
       }
@@ -83,7 +90,7 @@ export class SubscriptionService {
         aCheckoutSessionId
       );
 
-      await this.createSubscription(session.client_reference_id);
+      await this.createSubscription({ userId: session.client_reference_id });
 
       await this.stripe.customers.update(session.customer as string, {
         description: session.client_reference_id
