@@ -2,6 +2,7 @@
   <div class="flex-nowrap no-gutters row">
     <a
       class="d-flex p-3 w-100"
+      [ngClass]="{ 'cursor-default': isLoading }"
       [routerLink]="[]"
       [queryParams]="{
         dataSource: position?.dataSource,
