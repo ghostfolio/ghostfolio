@@ -125,7 +125,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'RakutenRapidApiService');
     }
 
     return {};
@@ -160,7 +160,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
       const { fgi } = await get();
       return fgi;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'RakutenRapidApiService');
 
       return undefined;
     }

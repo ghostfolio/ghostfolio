@@ -76,7 +76,7 @@ export class AlphaVantageService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, symbol);
+      Logger.error(error, 'AlphaVantageService');
 
       return {};
     }

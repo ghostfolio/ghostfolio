@@ -95,7 +95,7 @@ export class SymbolService {
       results.items = items;
       return results;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'SymbolService');
 
       throw error;
     }

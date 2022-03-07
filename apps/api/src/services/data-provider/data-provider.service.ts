@@ -82,7 +82,7 @@ export class DataProviderService {
         return r;
       }, {});
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'DataProviderService');
     } finally {
       return response;
     }

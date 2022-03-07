@@ -98,7 +98,7 @@ export class SubscriptionService {
 
       return session.client_reference_id;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'SubscriptionService');
     }
   }
 

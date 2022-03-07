@@ -458,7 +458,8 @@ export class PortfolioCalculatorNew {
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
-          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`
+          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`,
+          'PortfolioCalculatorNew'
         );
         hasErrors = true;
       }
@@ -523,7 +524,8 @@ export class PortfolioCalculatorNew {
         } catch (error) {
           Logger.error(
             `Failed to fetch info for date ${startDate} with exception`,
-            error
+            error,
+            'PortfolioCalculatorNew'
           );
           return null;
         }

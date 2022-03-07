@@ -69,7 +69,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         }
       };
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'GhostfolioScraperApiService');
     }
 
     return {};
@@ -110,7 +110,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         }
       };
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'GhostfolioScraperApiService');
     }
 
     return {};

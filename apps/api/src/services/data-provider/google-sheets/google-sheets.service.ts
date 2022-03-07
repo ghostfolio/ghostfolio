@@ -72,7 +72,7 @@ export class GoogleSheetsService implements DataProviderInterface {
         [symbol]: historicalData
       };
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'GoogleSheetsService');
     }
 
     return {};
@@ -121,7 +121,7 @@ export class GoogleSheetsService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'GoogleSheetsService');
     }
 
     return {};

@@ -40,7 +40,7 @@ export class ImportController {
         userId: this.request.user.id
       });
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, ImportController);
 
       throw new HttpException(
         {
