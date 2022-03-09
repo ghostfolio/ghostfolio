@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the contexts to the logger commands
 
+### Changed
+
+- Upgraded `Nx` from version `13.8.1` to `13.8.5`
+
 ## 1.124.0 - 06.03.2022
 
 ### Added
