@@ -43,6 +43,15 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     this.update();
   }
 
+  public onChangeEmergencyFund(emergencyFund: number) {
+    this.dataService
+      .putUserSetting({ emergencyFund })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.update();
+      });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

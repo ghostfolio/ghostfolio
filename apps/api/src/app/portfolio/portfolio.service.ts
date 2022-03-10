@@ -6,6 +6,7 @@ import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfol
 import { TimelineSpecification } from '@ghostfolio/api/app/portfolio/interfaces/timeline-specification.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/portfolio-calculator';
+import { UserSettings } from '@ghostfolio/api/app/user/interfaces/user-settings.interface';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -873,6 +874,9 @@ export class PortfolioService {
       userId
     });
     const dividend = this.getDividend(orders).toNumber();
+    const emergencyFund =
+      (this.request.user?.Settings?.settings as UserSettings).emergencyFund ??
+      0;
     const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
     const items = this.getItems(orders).toNumber();
@@ -880,6 +884,7 @@ export class PortfolioService {
     const totalBuy = this.getTotalByType(orders, userCurrency, 'BUY');
     const totalSell = this.getTotalByType(orders, userCurrency, 'SELL');
 
+    const cash = new Big(balanceInBaseCurrency).minus(emergencyFund).toNumber();
     const committedFunds = new Big(totalBuy).minus(totalSell);
 
     const netWorth = new Big(balanceInBaseCurrency)
@@ -889,7 +894,9 @@ export class PortfolioService {
 
     return {
       ...performanceInformation.performance,
+      cash,
       dividend,
+      emergencyFund,
       fees,
       firstOrderDate,
       items,
@@ -898,7 +905,6 @@ export class PortfolioService {
       totalSell,
       annualizedPerformancePercent:
         performanceInformation.performance.annualizedPerformancePercent,
-      cash: balanceInBaseCurrency,
       committedFunds: committedFunds.toNumber(),
       ordersCount: orders.filter((order) => {
         return order.type === 'BUY' || order.type === 'SELL';

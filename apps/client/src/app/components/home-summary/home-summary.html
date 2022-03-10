@@ -11,6 +11,7 @@
             [isLoading]="isLoading"
             [locale]="user?.settings?.locale"
             [summary]="summary"
+            (emergencyFundChanged)="onChangeEmergencyFund($event)"
           ></gf-portfolio-summary>
         </mat-card-content>
       </mat-card>
