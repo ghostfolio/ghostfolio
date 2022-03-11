@@ -27,6 +27,7 @@ import {
   Accounts,
   PortfolioDetails,
   PortfolioPerformanceResponse,
+  PortfolioPosition,
   PortfolioReport,
   PortfolioSummary,
   Position,
@@ -288,6 +289,10 @@ export class PortfolioService {
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId, aUserId);
 
+    const emergencyFund = new Big(
+      (this.request.user?.Settings?.settings as UserSettings)?.emergencyFund ??
+        0
+    );
     const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
@@ -382,6 +387,7 @@ export class PortfolioService {
 
     const cashPositions = await this.getCashPositions({
       cashDetails,
+      emergencyFund,
       userCurrency,
       investment: totalInvestment,
       value: totalValue
@@ -875,7 +881,7 @@ export class PortfolioService {
     });
     const dividend = this.getDividend(orders).toNumber();
     const emergencyFund =
-      (this.request.user?.Settings?.settings as UserSettings).emergencyFund ??
+      (this.request.user?.Settings?.settings as UserSettings)?.emergencyFund ??
       0;
     const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
@@ -914,16 +920,20 @@ export class PortfolioService {
 
   private async getCashPositions({
     cashDetails,
+    emergencyFund,
     investment,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
+    emergencyFund: Big;
     investment: Big;
     userCurrency: string;
     value: Big;
   }) {
-    const cashPositions = {};
+    const cashPositions: {
+      [symbol: string]: Partial<PortfolioPosition>;
+    } = {};
 
     for (const account of cashDetails.accounts) {
       const convertedBalance = this.exchangeRateDataService.toCurrency(
@@ -963,6 +973,26 @@ export class PortfolioService {
         };
       }
     }
+
+    cashPositions['EMERGENCY_FUND'] = {
+      ...cashPositions[userCurrency],
+      assetSubClass: 'EMERGENCY_FUND',
+      investment: emergencyFund.toNumber(),
+      name: 'EMERGENCY_FUND',
+      symbol: 'EMERGENCY_FUND',
+      value: emergencyFund.toNumber()
+    };
+
+    cashPositions[userCurrency].investment = new Big(
+      cashPositions[userCurrency].investment
+    )
+      .minus(emergencyFund)
+      .toNumber();
+    cashPositions[userCurrency].value = new Big(
+      cashPositions[userCurrency].value
+    )
+      .minus(emergencyFund)
+      .toNumber();
 
     for (const symbol of Object.keys(cashPositions)) {
       // Calculate allocations for each currency

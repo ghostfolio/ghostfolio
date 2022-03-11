@@ -18,6 +18,7 @@ import { formatDistanceToNow } from 'date-fns';
 })
 export class PortfolioSummaryComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
+  @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() locale: string;
   @Input() summary: PortfolioSummary;
