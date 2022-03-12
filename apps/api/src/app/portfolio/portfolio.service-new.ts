@@ -302,7 +302,6 @@ export class PortfolioServiceNew {
     aDateRange: DateRange = 'max'
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId, aUserId);
-
     const user = await this.userService.user({ id: userId });
 
     const emergencyFund = new Big(
@@ -896,6 +895,7 @@ export class PortfolioServiceNew {
   public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
     const userCurrency = this.request.user.Settings.currency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
 
     const performanceInformation = await this.getPerformance(aImpersonationId);
 
@@ -908,9 +908,9 @@ export class PortfolioServiceNew {
       userId
     });
     const dividend = this.getDividend(orders).toNumber();
-    const emergencyFund =
-      (this.request.user?.Settings?.settings as UserSettings)?.emergencyFund ??
-      0;
+    const emergencyFund = new Big(
+      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
+    );
     const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
     const items = this.getItems(orders).toNumber();
@@ -946,7 +946,6 @@ export class PortfolioServiceNew {
       annualizedPerformancePercent,
       cash,
       dividend,
-      emergencyFund,
       fees,
       firstOrderDate,
       items,
@@ -954,6 +953,7 @@ export class PortfolioServiceNew {
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
+      emergencyFund: emergencyFund.toNumber(),
       ordersCount: orders.filter((order) => {
         return order.type === 'BUY' || order.type === 'SELL';
       }).length
