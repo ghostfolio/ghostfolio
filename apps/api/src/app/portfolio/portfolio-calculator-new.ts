@@ -691,6 +691,7 @@ export class PortfolioCalculatorNew {
     let grossPerformanceAtStartDate = new Big(0);
     let grossPerformanceFromSells = new Big(0);
     let initialValue: Big;
+    let investmentAtStartDate: Big;
     let lastAveragePrice = new Big(0);
     let lastTransactionInvestment = new Big(0);
     let lastValueOfInvestmentBeforeTransaction = new Big(0);
@@ -771,6 +772,10 @@ export class PortfolioCalculatorNew {
         totalUnits.gt(0)
       ) {
         averagePriceAtStartDate = totalInvestment.div(totalUnits);
+      }
+
+      if (!investmentAtStartDate && i >= indexOfStartOrder) {
+        investmentAtStartDate = totalInvestment ?? new Big(0);
       }
 
       const valueOfInvestmentBeforeTransaction = totalUnits.mul(
@@ -901,13 +906,17 @@ export class PortfolioCalculatorNew {
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
 
+    const maxInvestmentBetweenStartAndEndDate = initialValue.plus(
+      maxTotalInvestment.minus(investmentAtStartDate)
+    );
+
     const grossPerformancePercentage =
       PortfolioCalculatorNew.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? maxTotalInvestment.gt(0)
-          ? totalGrossPerformance.div(maxTotalInvestment)
+        ? maxInvestmentBetweenStartAndEndDate.gt(0)
+          ? totalGrossPerformance.div(maxInvestmentBetweenStartAndEndDate)
           : new Big(0)
         : // This formula has the issue that buying more units with a price
           // lower than the average buying price results in a positive
@@ -928,8 +937,8 @@ export class PortfolioCalculatorNew {
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? maxTotalInvestment.gt(0)
-          ? totalNetPerformance.div(maxTotalInvestment)
+        ? maxInvestmentBetweenStartAndEndDate.gt(0)
+          ? totalNetPerformance.div(maxInvestmentBetweenStartAndEndDate)
           : new Big(0)
         : // This formula has the issue that buying more units with a price
           // lower than the average buying price results in a positive
