@@ -238,7 +238,7 @@ export class PortfolioCalculatorNew {
 
     const positions: TimelinePosition[] = [];
     let hasAnySymbolMetricsErrors = false;
-    
+
     const errors: ResponseError['errors'] = [];
 
     for (const item of lastTransactionPoint.items) {
