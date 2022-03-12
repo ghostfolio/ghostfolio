@@ -122,7 +122,7 @@ export class PortfolioProportionChartComponent
           chartData[this.positions[symbol][this.keys[0]]] = {
             name: this.positions[symbol].name,
             subCategory: {},
-            value: new Big(this.positions[symbol].value)
+            value: new Big(this.positions[symbol].value ?? 0)
           };
 
           if (this.positions[symbol][this.keys[1]]) {
