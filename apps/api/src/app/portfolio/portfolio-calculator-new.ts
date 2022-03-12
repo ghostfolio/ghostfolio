@@ -33,7 +33,10 @@ import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.in
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
 export class PortfolioCalculatorNew {
-  private static readonly ENABLE_LOGGING = false;
+  private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
+    true;
+
+  private static readonly ENABLE_LOGGING = true;
 
   private currency: string;
   private currentRateService: CurrentRateService;
@@ -767,7 +770,7 @@ export class PortfolioCalculatorNew {
 
       totalInvestment = totalInvestment.plus(transactionInvestment);
 
-      if (totalInvestment.gt(maxTotalInvestment)) {
+      if (i >= indexOfStartOrder && totalInvestment.gt(maxTotalInvestment)) {
         maxTotalInvestment = totalInvestment;
       }
 
@@ -886,11 +889,17 @@ export class PortfolioCalculatorNew {
       .minus(fees.minus(feesAtStartDate));
 
     const grossPerformancePercentage =
+      PortfolioCalculatorNew.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? totalGrossPerformance.div(maxTotalInvestment)
-        : unitPriceAtEndDate
+        ? maxTotalInvestment.gt(0)
+          ? totalGrossPerformance.div(maxTotalInvestment)
+          : new Big(0)
+        : // This formula has the issue that buying more units with a price
+          // lower than the average buying price results in a positive
+          // performance even if the market pricse stays constant
+          unitPriceAtEndDate
             .div(averagePriceAtEndDate)
             .div(
               orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
@@ -902,11 +911,17 @@ export class PortfolioCalculatorNew {
       : new Big(0);
 
     const netPerformancePercentage =
+      PortfolioCalculatorNew.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? totalNetPerformance.div(maxTotalInvestment)
-        : unitPriceAtEndDate
+        ? maxTotalInvestment.gt(0)
+          ? totalNetPerformance.div(maxTotalInvestment)
+          : new Big(0)
+        : // This formula has the issue that buying more units with a price
+          // lower than the average buying price results in a positive
+          // performance even if the market pricse stays constant
+          unitPriceAtEndDate
             .minus(feesPerUnit)
             .div(averagePriceAtEndDate)
             .div(
