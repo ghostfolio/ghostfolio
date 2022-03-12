@@ -1,16 +1,16 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
-import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
-import { isAfter, isBefore, parse } from 'date-fns';
-
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
-} from '../../interfaces/interfaces';
-import { DataProviderInterface } from '../interfaces/data-provider.interface';
+} from '@ghostfolio/api/services/interfaces/interfaces';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { Granularity } from '@ghostfolio/common/types';
+import { Injectable, Logger } from '@nestjs/common';
+import { DataSource, SymbolProfile } from '@prisma/client';
+import { isAfter, isBefore, parse } from 'date-fns';
+
 import { IAlphaVantageHistoricalResponse } from './interfaces/interfaces';
 
 @Injectable()
@@ -29,25 +29,23 @@ export class AlphaVantageService implements DataProviderInterface {
     return !!this.configurationService.get('ALPHA_VANTAGE_API_KEY');
   }
 
-  public async get(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    return {};
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    const symbol = aSymbols[0];
+    const symbol = aSymbol;
 
     try {
       const historicalData: {
@@ -78,7 +76,7 @@ export class AlphaVantageService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, symbol);
+      Logger.error(error, 'AlphaVantageService');
 
       return {};
     }
@@ -86,6 +84,12 @@ export class AlphaVantageService implements DataProviderInterface {
 
   public getName(): DataSource {
     return DataSource.ALPHA_VANTAGE;
+  }
+
+  public async getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    return {};
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {

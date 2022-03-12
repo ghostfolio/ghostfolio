@@ -7,10 +7,107 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the contexts to the logger commands
+
+### Changed
+
+- Upgraded `Nx` from version `13.8.1` to `13.8.5`
+
+## 1.124.0 - 06.03.2022
+
+### Added
+
+- Added support for setting a duration in the coupon system
+
+### Changed
+
+- Upgraded `ngx-skeleton-loader` from version `2.9.1` to `5.0.0`
+- Upgraded `prisma` from version `3.9.1` to `3.10.0`
+- Upgraded `yahoo-finance2` from version `2.1.9` to `2.2.0`
+
+## 1.123.0 - 05.03.2022
+
+### Added
+
+- Included data provider errors in the API response
+
+### Changed
+
+- Removed the redundant attributes (`currency`, `dataSource`, `symbol`) of the activity model
+- Removed the prefix for symbols with the data source `GHOSTFOLIO`
+
+### Fixed
+
+- Improved the account calculations
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.122.0 - 01.03.2022
+
+### Added
+
+- Added support for click in the portfolio proportion chart component
+
+### Fixed
+
+- Fixed an issue with undefined currencies after creating an activity
+
+## 1.121.0 - 27.02.2022
+
+### Added
+
+- Added support for mutual funds
+- Added the url to the symbol profile model
+
+### Changed
+
+- Migrated from `yahoo-finance` to `yahoo-finance2`
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.120.0 - 25.02.2022
+
+### Changed
+
+- Distinguished the labels _Other_ and _Unknown_ in the portfolio proportion chart component
+- Improved the portfolio entry page
+
+### Fixed
+
+- Fixed the _Zen Mode_
+
+## 1.119.0 - 21.02.2022
+
+### Added
+
+- Added a trial for the subscription
+
+## 1.118.0 - 20.02.2022
+
+### Changed
+
+- Improved the calculation of the overall performance percentage in the new calculation engine
+- Displayed features in features overview page based on permissions
+- Extended the data points of historical data in the admin control panel
+
+## 1.117.0 - 19.02.2022
+
 ### Changed
 
 - Moved the countries and sectors charts in the position detail dialog
+- Distinguished today's data point of historical data in the admin control panel
 - Restructured the server modules
+
+### Fixed
+
+- Fixed the allocations by account for non-unique account names
+- Added a fallback to the default account if the `accountId` is invalid in the import functionality for activities
 
 ## 1.116.0 - 16.02.2022
 

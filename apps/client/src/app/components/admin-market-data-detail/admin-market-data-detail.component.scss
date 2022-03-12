@@ -25,5 +25,10 @@
     &.available {
       background-color: var(--success);
     }
+
+    &.today {
+      background-color: rgba(var(--palette-accent-500), 1);
+      cursor: default;
+    }
   }
 }

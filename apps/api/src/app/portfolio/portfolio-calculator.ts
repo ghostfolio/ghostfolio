@@ -238,7 +238,10 @@ export class PortfolioCalculator {
         if (!marketSymbolMap[nextDate]?.[item.symbol]) {
           invalidSymbols.push(item.symbol);
           hasErrors = true;
-          Logger.warn(`Missing value for symbol ${item.symbol} at ${nextDate}`);
+          Logger.warn(
+            `Missing value for symbol ${item.symbol} at ${nextDate}`,
+            'PortfolioCalculator'
+          );
           continue;
         }
         let lastInvestment: Big = new Big(0);
@@ -270,7 +273,8 @@ export class PortfolioCalculator {
             invalidSymbols.push(item.symbol);
             hasErrors = true;
             Logger.warn(
-              `Missing value for symbol ${item.symbol} at ${currentDate}`
+              `Missing value for symbol ${item.symbol} at ${currentDate}`,
+              'PortfolioCalculator'
             );
             continue;
           }
@@ -514,7 +518,8 @@ export class PortfolioCalculator {
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
-          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`
+          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`,
+          'PortfolioCalculator'
         );
         hasErrors = true;
       }
@@ -581,7 +586,8 @@ export class PortfolioCalculator {
         } catch (error) {
           Logger.error(
             `Failed to fetch info for date ${startDate} with exception`,
-            error
+            error,
+            'PortfolioCalculator'
           );
           return null;
         }

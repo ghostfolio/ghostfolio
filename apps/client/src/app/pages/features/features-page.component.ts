@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -10,6 +12,8 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './features-page.html'
 })
 export class FeaturesPageComponent implements OnDestroy {
+  public hasPermissionForSubscription: boolean;
+  public info: InfoItem;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -19,8 +23,11 @@ export class FeaturesPageComponent implements OnDestroy {
    */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
     private userService: UserService
-  ) {}
+  ) {
+    this.info = this.dataService.fetchInfo();
+  }
 
   /**
    * Initializes the controller
@@ -35,6 +42,11 @@ export class FeaturesPageComponent implements OnDestroy {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
   }
 
   public ngOnDestroy() {

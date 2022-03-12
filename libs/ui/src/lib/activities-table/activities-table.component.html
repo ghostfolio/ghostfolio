@@ -144,7 +144,7 @@
         class="d-none d-lg-table-cell px-1"
         mat-cell
       >
-        {{ element.currency }}
+        {{ element.SymbolProfile.currency }}
       </td>
       <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
         {{ baseCurrency }}
@@ -362,7 +362,7 @@
           !row.isDraft &&
           row.type !== 'ITEM' &&
           onOpenPositionDialog({
-            dataSource: row.dataSource,
+            dataSource: row.SymbolProfile.dataSource,
             symbol: row.SymbolProfile.symbol
           })
       "

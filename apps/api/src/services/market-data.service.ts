@@ -2,6 +2,7 @@ import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-dat
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { DataSource, MarketData, Prisma } from '@prisma/client';
 
@@ -9,13 +10,7 @@ import { DataSource, MarketData, Prisma } from '@prisma/client';
 export class MarketDataService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async deleteMany({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public async deleteMany({ dataSource, symbol }: UniqueAsset) {
     return this.prismaService.marketData.deleteMany({
       where: {
         dataSource,

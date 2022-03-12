@@ -14,7 +14,7 @@ import {
   PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,
-  PortfolioPerformance,
+  PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary
@@ -33,6 +33,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { ViewMode } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
@@ -203,16 +204,18 @@ export class PortfolioController {
 
   @Get('performance')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPerformance(
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
-  ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
+  ): Promise<PortfolioPerformanceResponse> {
     const performanceInformation = await this.portfolioServiceStrategy
       .get()
       .getPerformance(impersonationId, range);
 
     if (
       impersonationId ||
+      this.request.user.Settings.viewMode === ViewMode.ZEN ||
       this.userService.isRestrictedView(this.request.user)
     ) {
       performanceInformation.performance = nullifyValuesInObject(

@@ -89,6 +89,7 @@
               <h4 class="align-items-center d-flex">
                 <span i18n>Portfolio Calculations</span>
                 <ion-icon
+                  *ngIf="hasPermissionForSubscription"
                   class="ml-1 text-muted"
                   name="diamond-outline"
                 ></ion-icon>
@@ -107,6 +108,7 @@
               <h4 class="align-items-center d-flex">
                 <span i18n>Portfolio Allocations</span>
                 <ion-icon
+                  *ngIf="hasPermissionForSubscription"
                   class="ml-1 text-muted"
                   name="diamond-outline"
                 ></ion-icon>
@@ -139,7 +141,10 @@
             </div>
           </mat-card>
         </div>
-        <div class="col-xs-12 col-md-4 mb-3">
+        <div
+          *ngIf="hasPermissionForSubscription"
+          class="col-xs-12 col-md-4 mb-3"
+        >
           <mat-card class="d-flex flex-column h-100">
             <div class="flex-grow-1">
               <h4 class="align-items-center d-flex">
@@ -163,6 +168,7 @@
               <h4 class="align-items-center d-flex">
                 <span i18n>Static Analysis</span>
                 <ion-icon
+                  *ngIf="hasPermissionForSubscription"
                   class="ml-1 text-muted"
                   name="diamond-outline"
                 ></ion-icon>

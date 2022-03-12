@@ -1,3 +1,4 @@
+import { AccountModule } from '@ghostfolio/api/app/account/account.module';
 import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
@@ -13,6 +14,7 @@ import { ImportService } from './import.service';
 @Module({
   controllers: [ImportController],
   imports: [
+    AccountModule,
     CacheModule,
     ConfigurationModule,
     DataGatheringModule,

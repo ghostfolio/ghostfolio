@@ -1,13 +1,15 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { Injectable } from '@nestjs/common';
-import { Order } from '@prisma/client';
 import { isSameDay, parseISO } from 'date-fns';
 
 @Injectable()
 export class ImportService {
   public constructor(
+    private readonly accountService: AccountService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly orderService: OrderService
@@ -17,7 +19,7 @@ export class ImportService {
     orders,
     userId
   }: {
-    orders: Partial<Order>[];
+    orders: Partial<CreateOrderDto>[];
     userId: string;
   }): Promise<void> {
     for (const order of orders) {
@@ -32,6 +34,12 @@ export class ImportService {
 
     await this.validateOrders({ orders, userId });
 
+    const accountIds = (await this.accountService.getAccounts(userId)).map(
+      (account) => {
+        return account.id;
+      }
+    );
+
     for (const {
       accountId,
       currency,
@@ -44,19 +52,17 @@ export class ImportService {
       unitPrice
     } of orders) {
       await this.orderService.createOrder({
-        accountId,
-        currency,
-        dataSource,
         fee,
         quantity,
-        symbol,
         type,
         unitPrice,
         userId,
+        accountId: accountIds.includes(accountId) ? accountId : undefined,
         date: parseISO(<string>(<unknown>date)),
         SymbolProfile: {
           connectOrCreate: {
             create: {
+              currency,
               dataSource,
               symbol
             },
@@ -77,7 +83,7 @@ export class ImportService {
     orders,
     userId
   }: {
-    orders: Partial<Order>[];
+    orders: Partial<CreateOrderDto>[];
     userId: string;
   }) {
     if (
@@ -91,6 +97,7 @@ export class ImportService {
     }
 
     const existingOrders = await this.orderService.orders({
+      include: { SymbolProfile: true },
       orderBy: { date: 'desc' },
       where: { userId }
     });
@@ -101,12 +108,12 @@ export class ImportService {
     ] of orders.entries()) {
       const duplicateOrder = existingOrders.find((order) => {
         return (
-          order.currency === currency &&
-          order.dataSource === dataSource &&
+          order.SymbolProfile.currency === currency &&
+          order.SymbolProfile.dataSource === dataSource &&
           isSameDay(order.date, parseISO(<string>(<unknown>date))) &&
           order.fee === fee &&
           order.quantity === quantity &&
-          order.symbol === symbol &&
+          order.SymbolProfile.symbol === symbol &&
           order.type === type &&
           order.unitPrice === unitPrice
         );
@@ -117,19 +124,19 @@ export class ImportService {
       }
 
       if (dataSource !== 'MANUAL') {
-        const result = await this.dataProviderService.get([
+        const quotes = await this.dataProviderService.getQuotes([
           { dataSource, symbol }
         ]);
 
-        if (result[symbol] === undefined) {
+        if (quotes[symbol] === undefined) {
           throw new Error(
             `orders.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
         }
 
-        if (result[symbol].currency !== currency) {
+        if (quotes[symbol].currency !== currency) {
           throw new Error(
-            `orders.${index}.currency ("${currency}") does not match with "${result[symbol].currency}"`
+            `orders.${index}.currency ("${currency}") does not match with "${quotes[symbol].currency}"`
           );
         }
       }

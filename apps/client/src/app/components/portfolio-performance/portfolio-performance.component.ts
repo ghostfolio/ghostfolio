@@ -7,7 +7,10 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { PortfolioPerformance } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPerformance,
+  ResponseError
+} from '@ghostfolio/common/interfaces';
 import { CountUp } from 'countup.js';
 import { isNumber } from 'lodash';
 
@@ -20,6 +23,7 @@ import { isNumber } from 'lodash';
 export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
+  @Input() errors: ResponseError['errors'];
   @Input() hasError: boolean;
   @Input() isAllTimeHigh: boolean;
   @Input() isAllTimeLow: boolean;
@@ -68,5 +72,13 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
         ).start();
       }
     }
+  }
+
+  public onShowErrors() {
+    const errorMessageParts = this.errors.map((error) => {
+      return `${error.symbol} (${error.dataSource})`;
+    });
+
+    alert(errorMessageParts.join('\n'));
   }
 }

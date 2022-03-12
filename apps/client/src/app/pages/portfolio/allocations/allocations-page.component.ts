@@ -10,11 +10,12 @@ import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
   PortfolioPosition,
+  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ToggleOption } from '@ghostfolio/common/types';
-import { AssetClass, DataSource } from '@prisma/client';
+import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +28,10 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {
-    [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
+    [id: string]: Pick<Account, 'name'> & {
+      id: string;
+      value: number;
+    };
   };
   public continents: {
     [code: string]: { name: string; value: number };
@@ -61,7 +65,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     [name: string]: { name: string; value: number };
   };
   public symbols: {
-    [name: string]: { name: string; symbol: string; value: number };
+    [name: string]: {
+      dataSource?: DataSource;
+      name: string;
+      symbol: string;
+      value: number;
+    };
   };
 
   public user: User;
@@ -171,6 +180,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.portfolioDetails.accounts
     )) {
       this.accounts[id] = {
+        id,
         name,
         value: aPeriod === 'original' ? original : current
       };
@@ -277,6 +287,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
       if (position.assetClass === AssetClass.EQUITY) {
         this.symbols[prettifySymbol(symbol)] = {
+          dataSource: position.dataSource,
           name: position.name,
           symbol: prettifySymbol(symbol),
           value: aPeriod === 'original' ? position.investment : position.value
@@ -289,6 +300,14 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.period = aValue;
 
     this.initializeAnalysisData(this.period);
+  }
+
+  public onProportionChartClicked({ dataSource, symbol }: UniqueAsset) {
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, positionDetailDialog: true }
+      });
+    }
   }
 
   public ngOnDestroy() {

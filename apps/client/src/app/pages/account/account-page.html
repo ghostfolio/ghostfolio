@@ -23,12 +23,12 @@
                   name="diamond-outline"
                 ></ion-icon>
               </div>
-              <div *ngIf="user?.subscription?.expiresAt">
+              <div *ngIf="user?.subscription?.type === 'Premium'">
                 Valid until {{ user?.subscription?.expiresAt | date:
                 defaultDateFormat }}
               </div>
               <div
-                *ngIf="hasPermissionForSubscription && !user?.subscription?.expiresAt"
+                *ngIf="hasPermissionForSubscription && user?.subscription?.type === 'Basic'"
               >
                 <button
                   color="primary"
@@ -48,8 +48,20 @@
                   <span i18n> per year</span>
                 </div>
                 <a
-                  class="cursor-pointer d-block mt-2"
+                  *ngIf="!user?.subscription?.expiresAt"
+                  class="mr-2 my-2"
+                  mat-stroked-button
+                  [href]="trySubscriptionMail"
+                  ><span i18n>Try Premium</span
+                  ><ion-icon
+                    class="ml-1 text-muted"
+                    name="diamond-outline"
+                  ></ion-icon
+                ></a>
+                <a
+                  class="mr-2 my-2"
                   i18n
+                  mat-stroked-button
                   [routerLink]=""
                   (click)="onRedeemCoupon()"
                   >Redeem Coupon</a

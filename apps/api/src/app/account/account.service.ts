@@ -2,6 +2,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
+import Big from 'big.js';
 
 import { CashDetails } from './interfaces/cash-details.interface';
 
@@ -105,21 +106,26 @@ export class AccountService {
     aUserId: string,
     aCurrency: string
   ): Promise<CashDetails> {
-    let totalCashBalance = 0;
+    let totalCashBalanceInBaseCurrency = new Big(0);
 
     const accounts = await this.accounts({
       where: { userId: aUserId }
     });
 
-    accounts.forEach((account) => {
-      totalCashBalance += this.exchangeRateDataService.toCurrency(
-        account.balance,
-        account.currency,
-        aCurrency
+    for (const account of accounts) {
+      totalCashBalanceInBaseCurrency = totalCashBalanceInBaseCurrency.plus(
+        this.exchangeRateDataService.toCurrency(
+          account.balance,
+          account.currency,
+          aCurrency
+        )
       );
-    });
+    }
 
-    return { accounts, balance: totalCashBalance };
+    return {
+      accounts,
+      balanceInBaseCurrency: totalCashBalanceInBaseCurrency.toNumber()
+    };
   }
 
   public async updateAccount(

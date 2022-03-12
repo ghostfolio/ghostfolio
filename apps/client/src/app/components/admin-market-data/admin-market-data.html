@@ -64,6 +64,7 @@
               <td class="p-1" colspan="6">
                 <gf-admin-market-data-detail
                   [dataSource]="item.dataSource"
+                  [dateOfFirstActivity]="item.date"
                   [marketData]="marketDataDetails"
                   [symbol]="item.symbol"
                   (marketDataChanged)="onMarketDataChanged($event)"

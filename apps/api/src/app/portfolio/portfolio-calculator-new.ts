@@ -1,7 +1,11 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import { TimelinePosition } from '@ghostfolio/common/interfaces';
+import {
+  ResponseError,
+  TimelinePosition,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { Logger } from '@nestjs/common';
 import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
@@ -36,7 +40,7 @@ export class PortfolioCalculatorNew {
   private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
     true;
 
-  private static readonly ENABLE_LOGGING = true;
+  private static readonly ENABLE_LOGGING = false;
 
   private currency: string;
   private currentRateService: CurrentRateService;
@@ -234,6 +238,7 @@ export class PortfolioCalculatorNew {
 
     const positions: TimelinePosition[] = [];
     let hasAnySymbolMetricsErrors = false;
+    const errors: ResponseError['errors'] = [];
 
     for (const item of lastTransactionPoint.items) {
       const marketValue = marketSymbolMap[todayString]?.[item.symbol];
@@ -275,12 +280,17 @@ export class PortfolioCalculatorNew {
         symbol: item.symbol,
         transactionCount: item.transactionCount
       });
+
+      if (hasErrors) {
+        errors.push({ dataSource: item.dataSource, symbol: item.symbol });
+      }
     }
 
     const overall = this.calculateOverallPerformance(positions, initialValues);
 
     return {
       ...overall,
+      errors,
       positions,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
@@ -450,7 +460,8 @@ export class PortfolioCalculatorNew {
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
-          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`
+          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`,
+          'PortfolioCalculatorNew'
         );
         hasErrors = true;
       }
@@ -515,7 +526,8 @@ export class PortfolioCalculatorNew {
         } catch (error) {
           Logger.error(
             `Failed to fetch info for date ${startDate} with exception`,
-            error
+            error,
+            'PortfolioCalculatorNew'
           );
           return null;
         }

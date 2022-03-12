@@ -24,7 +24,7 @@ import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   PortfolioDetails,
-  PortfolioPerformance,
+  PortfolioPerformanceResponse,
   PortfolioReport,
   PortfolioSummary,
   Position,
@@ -100,15 +100,22 @@ export class PortfolioServiceNew {
         }
       }
 
+      const value = details.accounts[account.id]?.current ?? 0;
+
       const result = {
         ...account,
         transactionCount,
-        convertedBalance: this.exchangeRateDataService.toCurrency(
+        value,
+        balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
           userCurrency
         ),
-        value: details.accounts[account.id]?.current ?? 0
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          value,
+          account.currency,
+          userCurrency
+        )
       };
 
       delete result.Order;
@@ -119,17 +126,26 @@ export class PortfolioServiceNew {
 
   public async getAccountsWithAggregations(aUserId: string): Promise<Accounts> {
     const accounts = await this.getAccounts(aUserId);
-    let totalBalance = 0;
-    let totalValue = 0;
+    let totalBalanceInBaseCurrency = new Big(0);
+    let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
 
     for (const account of accounts) {
-      totalBalance += account.convertedBalance;
-      totalValue += account.value;
+      totalBalanceInBaseCurrency = totalBalanceInBaseCurrency.plus(
+        account.balanceInBaseCurrency
+      );
+      totalValueInBaseCurrency = totalValueInBaseCurrency.plus(
+        account.valueInBaseCurrency
+      );
       transactionCount += account.transactionCount;
     }
 
-    return { accounts, totalBalance, totalValue, transactionCount };
+    return {
+      accounts,
+      transactionCount,
+      totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
+      totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
+    };
   }
 
   public async getInvestments(
@@ -293,13 +309,11 @@ export class PortfolioServiceNew {
       orders: portfolioOrders
     });
 
-    if (transactionPoints?.length <= 0) {
-      return { accounts: {}, holdings: {}, hasErrors: false };
-    }
-
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
+    const portfolioStart = parseDate(
+      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    );
     const startDate = this.getStartDate(aDateRange, portfolioStart);
     const currentPositions = await portfolioCalculator.getCurrentPositions(
       startDate
@@ -312,9 +326,11 @@ export class PortfolioServiceNew {
 
     const holdings: PortfolioDetails['holdings'] = {};
     const totalInvestment = currentPositions.totalInvestment.plus(
-      cashDetails.balance
+      cashDetails.balanceInBaseCurrency
     );
-    const totalValue = currentPositions.currentValue.plus(cashDetails.balance);
+    const totalValue = currentPositions.currentValue.plus(
+      cashDetails.balanceInBaseCurrency
+    );
 
     const dataGatheringItems = currentPositions.positions.map((position) => {
       return {
@@ -327,7 +343,7 @@ export class PortfolioServiceNew {
     );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.get(dataGatheringItems),
+      this.dataProviderService.getQuotes(dataGatheringItems),
       this.symbolProfileService.getSymbolProfiles(symbols)
     ]);
 
@@ -358,7 +374,6 @@ export class PortfolioServiceNew {
         countries: symbolProfile.countries,
         currency: item.currency,
         dataSource: symbolProfile.dataSource,
-        exchange: dataProviderResponse.exchange,
         grossPerformance: item.grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent:
           item.grossPerformancePercentage?.toNumber() ?? 0,
@@ -435,7 +450,7 @@ export class PortfolioServiceNew {
       };
     }
 
-    const positionCurrency = orders[0].currency;
+    const positionCurrency = orders[0].SymbolProfile.currency;
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       aSymbol
     ]);
@@ -445,13 +460,13 @@ export class PortfolioServiceNew {
         return order.type === 'BUY' || order.type === 'SELL';
       })
       .map((order) => ({
-        currency: order.currency,
-        dataSource: order.SymbolProfile?.dataSource ?? order.dataSource,
+        currency: order.SymbolProfile.currency,
+        dataSource: order.SymbolProfile.dataSource,
         date: format(order.date, DATE_FORMAT),
         fee: new Big(order.fee),
         name: order.SymbolProfile?.name,
         quantity: new Big(order.quantity),
-        symbol: order.symbol,
+        symbol: order.SymbolProfile.symbol,
         type: order.type,
         unitPrice: new Big(order.unitPrice)
       }));
@@ -578,7 +593,7 @@ export class PortfolioServiceNew {
         )
       };
     } else {
-      const currentData = await this.dataProviderService.get([
+      const currentData = await this.dataProviderService.getQuotes([
         { dataSource: DataSource.YAHOO, symbol: aSymbol }
       ]);
       const marketPrice = currentData[aSymbol]?.marketPrice;
@@ -679,7 +694,7 @@ export class PortfolioServiceNew {
     const symbols = positions.map((position) => position.symbol);
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.get(dataGatheringItem),
+      this.dataProviderService.getQuotes(dataGatheringItem),
       this.symbolProfileService.getSymbolProfiles(symbols)
     ]);
 
@@ -715,7 +730,7 @@ export class PortfolioServiceNew {
   public async getPerformance(
     aImpersonationId: string,
     aDateRange: DateRange = 'max'
-  ): Promise<{ hasErrors: boolean; performance: PortfolioPerformance }> {
+  ): Promise<PortfolioPerformanceResponse> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
@@ -761,6 +776,7 @@ export class PortfolioServiceNew {
       currentPositions.netPerformancePercentage.toNumber();
 
     return {
+      errors: currentPositions.errors,
       hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
         currentGrossPerformance,
@@ -870,7 +886,7 @@ export class PortfolioServiceNew {
 
     const performanceInformation = await this.getPerformance(aImpersonationId);
 
-    const { balance } = await this.accountService.getCashDetails(
+    const { balanceInBaseCurrency } = await this.accountService.getCashDetails(
       userId,
       userCurrency
     );
@@ -888,7 +904,7 @@ export class PortfolioServiceNew {
 
     const committedFunds = new Big(totalBuy).minus(totalSell);
 
-    const netWorth = new Big(balance)
+    const netWorth = new Big(balanceInBaseCurrency)
       .plus(performanceInformation.performance.currentValue)
       .plus(items)
       .toNumber();
@@ -918,7 +934,7 @@ export class PortfolioServiceNew {
       netWorth,
       totalBuy,
       totalSell,
-      cash: balance,
+      cash: balanceInBaseCurrency,
       committedFunds: committedFunds.toNumber(),
       ordersCount: orders.filter((order) => {
         return order.type === 'BUY' || order.type === 'SELL';
@@ -1007,7 +1023,7 @@ export class PortfolioServiceNew {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1026,7 +1042,7 @@ export class PortfolioServiceNew {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1048,7 +1064,7 @@ export class PortfolioServiceNew {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.currency,
+          order.SymbolProfile.currency,
           this.request.user.Settings.currency
         );
       })
@@ -1101,24 +1117,24 @@ export class PortfolioServiceNew {
     }
 
     const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
-      currency: order.currency,
-      dataSource: order.SymbolProfile?.dataSource ?? order.dataSource,
+      currency: order.SymbolProfile.currency,
+      dataSource: order.SymbolProfile.dataSource,
       date: format(order.date, DATE_FORMAT),
       fee: new Big(
         this.exchangeRateDataService.toCurrency(
           order.fee,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       ),
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
-      symbol: order.symbol,
+      symbol: order.SymbolProfile.symbol,
       type: order.type,
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
           order.unitPrice,
-          order.currency,
+          order.SymbolProfile.currency,
           userCurrency
         )
       )
@@ -1154,22 +1170,18 @@ export class PortfolioServiceNew {
         return accountId === account.id;
       });
 
-      const convertedBalance = this.exchangeRateDataService.toCurrency(
-        account.balance,
-        account.currency,
-        userCurrency
-      );
       accounts[account.id] = {
-        balance: convertedBalance,
+        balance: account.balance,
         currency: account.currency,
-        current: convertedBalance,
+        current: account.balance,
         name: account.name,
-        original: convertedBalance
+        original: account.balance
       };
 
       for (const order of ordersByAccount) {
         let currentValueOfSymbol =
-          order.quantity * portfolioItemsNow[order.symbol].marketPrice;
+          order.quantity *
+          portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
         let originalValueOfSymbol = order.quantity * order.unitPrice;
 
         if (order.type === 'SELL') {
@@ -1219,7 +1231,7 @@ export class PortfolioServiceNew {
       .map((order) => {
         return this.exchangeRateDataService.toCurrency(
           order.quantity * order.unitPrice,
-          order.currency,
+          order.SymbolProfile.currency,
           currency
         );
       })

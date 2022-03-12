@@ -7,14 +7,10 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import {
-  DATE_FORMAT,
-  getYesterday,
-  isGhostfolioScraperApiSymbol
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import * as bent from 'bent';
 import * as cheerio from 'cheerio';
 import { format } from 'date-fns';
@@ -29,10 +25,61 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   ) {}
 
   public canHandle(symbol: string) {
-    return isGhostfolioScraperApiSymbol(symbol);
+    return true;
   }
 
-  public async get(
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
+  }
+
+  public async getHistorical(
+    aSymbol: string,
+    aGranularity: Granularity = 'day',
+    from: Date,
+    to: Date
+  ): Promise<{
+    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+  }> {
+    try {
+      const symbol = aSymbol;
+
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [symbol]
+      );
+      const scraperConfiguration = symbolProfile?.scraperConfiguration;
+
+      const get = bent(scraperConfiguration?.url, 'GET', 'string', 200, {});
+
+      const html = await get();
+      const $ = cheerio.load(html);
+
+      const value = this.extractNumberFromString(
+        $(scraperConfiguration?.selector).text()
+      );
+
+      return {
+        [symbol]: {
+          [format(getYesterday(), DATE_FORMAT)]: {
+            marketPrice: value
+          }
+        }
+      };
+    } catch (error) {
+      Logger.error(error, 'GhostfolioScraperApiService');
+    }
+
+    return {};
+  }
+
+  public getName(): DataSource {
+    return DataSource.GHOSTFOLIO;
+  }
+
+  public async getQuotes(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
     if (aSymbols.length <= 0) {
@@ -63,56 +110,10 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         }
       };
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'GhostfolioScraperApiService');
     }
 
     return {};
-  }
-
-  public async getHistorical(
-    aSymbols: string[],
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    try {
-      const [symbol] = aSymbols;
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
-      );
-      const scraperConfiguration = symbolProfile?.scraperConfiguration;
-
-      const get = bent(scraperConfiguration?.url, 'GET', 'string', 200, {});
-
-      const html = await get();
-      const $ = cheerio.load(html);
-
-      const value = this.extractNumberFromString(
-        $(scraperConfiguration?.selector).text()
-      );
-
-      return {
-        [symbol]: {
-          [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: value
-          }
-        }
-      };
-    } catch (error) {
-      Logger.error(error);
-    }
-
-    return {};
-  }
-
-  public getName(): DataSource {
-    return DataSource.GHOSTFOLIO;
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {

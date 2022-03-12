@@ -20,6 +20,7 @@ import {
   parseISO
 } from 'date-fns';
 import { uniq } from 'lodash';
+import { StringValue } from 'ms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -29,6 +30,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-overview.html'
 })
 export class AdminOverviewComponent implements OnDestroy, OnInit {
+  public couponDuration: StringValue = '30 days';
   public coupons: Coupon[];
   public customCurrencies: string[];
   public dataGatheringInProgress: boolean;
@@ -105,7 +107,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onAddCoupon() {
-    const coupons = [...this.coupons, { code: this.generateCouponCode(16) }];
+    const coupons = [
+      ...this.coupons,
+      { code: this.generateCouponCode(16), duration: this.couponDuration }
+    ];
     this.putCoupons(coupons);
   }
 
@@ -116,6 +121,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       const currencies = uniq([...this.customCurrencies, currency]);
       this.putCurrencies(currencies);
     }
+  }
+
+  public onChangeCouponDuration(aCouponDuration: StringValue) {
+    this.couponDuration = aCouponDuration;
   }
 
   public onDeleteCoupon(aCouponCode: string) {

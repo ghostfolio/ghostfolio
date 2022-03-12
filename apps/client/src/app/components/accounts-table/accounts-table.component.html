@@ -86,7 +86,7 @@
         class="d-inline-block justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
-        [value]="element.convertedBalance"
+        [value]="element.balance"
       ></gf-value>
     </td>
     <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
@@ -94,7 +94,7 @@
         class="d-inline-block justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
-        [value]="totalBalance"
+        [value]="totalBalanceInBaseCurrency"
       ></gf-value>
     </td>
   </ng-container>
@@ -116,7 +116,7 @@
         class="d-inline-block justify-content-end"
         [isCurrency]="true"
         [locale]="locale"
-        [value]="totalValue"
+        [value]="totalValueInBaseCurrency"
       ></gf-value>
     </td>
   </ng-container>
