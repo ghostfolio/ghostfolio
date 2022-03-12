@@ -7,6 +7,7 @@ import { TimelineSpecification } from '@ghostfolio/api/app/portfolio/interfaces/
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/portfolio-calculator';
 import { UserSettings } from '@ghostfolio/api/app/user/interfaces/user-settings.interface';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -22,9 +23,9 @@ import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
+  ASSET_SUB_CLASS_EMERGENCY_FUND,
   UNKNOWN_KEY,
-  baseCurrency,
-  ASSET_SUB_CLASS_EMERGENCY_FUND
+  baseCurrency
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
@@ -80,7 +81,8 @@ export class PortfolioService {
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly userService: UserService
   ) {}
 
   public async getAccounts(aUserId: string): Promise<AccountWithValue[]> {
@@ -292,9 +294,10 @@ export class PortfolioService {
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId, aUserId);
 
+    const user = await this.userService.user({ id: userId });
+
     const emergencyFund = new Big(
-      (this.request.user?.Settings?.settings as UserSettings)?.emergencyFund ??
-        0
+      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
     const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
     const portfolioCalculator = new PortfolioCalculator(
@@ -976,25 +979,27 @@ export class PortfolioService {
       }
     }
 
-    cashPositions[ASSET_SUB_CLASS_EMERGENCY_FUND] = {
-      ...cashPositions[userCurrency],
-      assetSubClass: ASSET_SUB_CLASS_EMERGENCY_FUND,
-      investment: emergencyFund.toNumber(),
-      name: ASSET_SUB_CLASS_EMERGENCY_FUND,
-      symbol: ASSET_SUB_CLASS_EMERGENCY_FUND,
-      value: emergencyFund.toNumber()
-    };
+    if (emergencyFund.gt(0)) {
+      cashPositions[ASSET_SUB_CLASS_EMERGENCY_FUND] = {
+        ...cashPositions[userCurrency],
+        assetSubClass: ASSET_SUB_CLASS_EMERGENCY_FUND,
+        investment: emergencyFund.toNumber(),
+        name: ASSET_SUB_CLASS_EMERGENCY_FUND,
+        symbol: ASSET_SUB_CLASS_EMERGENCY_FUND,
+        value: emergencyFund.toNumber()
+      };
 
-    cashPositions[userCurrency].investment = new Big(
-      cashPositions[userCurrency].investment
-    )
-      .minus(emergencyFund)
-      .toNumber();
-    cashPositions[userCurrency].value = new Big(
-      cashPositions[userCurrency].value
-    )
-      .minus(emergencyFund)
-      .toNumber();
+      cashPositions[userCurrency].investment = new Big(
+        cashPositions[userCurrency].investment
+      )
+        .minus(emergencyFund)
+        .toNumber();
+      cashPositions[userCurrency].value = new Big(
+        cashPositions[userCurrency].value
+      )
+        .minus(emergencyFund)
+        .toNumber();
+    }
 
     for (const symbol of Object.keys(cashPositions)) {
       // Calculate allocations for each currency
