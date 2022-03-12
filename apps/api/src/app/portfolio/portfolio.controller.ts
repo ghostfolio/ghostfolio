@@ -334,6 +334,7 @@ export class PortfolioController {
         'currentNetPerformance',
         'currentValue',
         'dividend',
+        'emergencyFund',
         'fees',
         'items',
         'netWorth',

@@ -1,9 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 import { PortfolioSummary } from '@ghostfolio/common/interfaces';
 import { formatDistanceToNow } from 'date-fns';
@@ -16,9 +18,12 @@ import { formatDistanceToNow } from 'date-fns';
 })
 export class PortfolioSummaryComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
+  @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() locale: string;
   @Input() summary: PortfolioSummary;
+
+  @Output() emergencyFundChanged = new EventEmitter<number>();
 
   public timeInMarket: string;
 
@@ -35,6 +40,18 @@ export class PortfolioSummaryComponent implements OnChanges, OnInit {
       }
     } else {
       this.timeInMarket = undefined;
+    }
+  }
+
+  public onEditEmergencyFund() {
+    const emergencyFundInput = prompt(
+      'Please enter the amount of your emergency fund:',
+      this.summary.emergencyFund.toString()
+    );
+    const emergencyFund = parseFloat(emergencyFundInput?.trim());
+
+    if (emergencyFund >= 0) {
+      this.emergencyFundChanged.emit(emergencyFund);
     }
   }
 }

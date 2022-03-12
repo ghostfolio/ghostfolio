@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for an emergency fund
 - Added the contexts to the logger commands
 
 ### Changed

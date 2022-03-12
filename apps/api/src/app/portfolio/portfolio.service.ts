@@ -6,6 +6,8 @@ import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfol
 import { TimelineSpecification } from '@ghostfolio/api/app/portfolio/interfaces/timeline-specification.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/portfolio-calculator';
+import { UserSettings } from '@ghostfolio/api/app/user/interfaces/user-settings.interface';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
@@ -20,7 +22,11 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
+import {
+  ASSET_SUB_CLASS_EMERGENCY_FUND,
+  UNKNOWN_KEY,
+  baseCurrency
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
@@ -75,7 +81,8 @@ export class PortfolioService {
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly userService: UserService
   ) {}
 
   public async getAccounts(aUserId: string): Promise<AccountWithValue[]> {
@@ -286,7 +293,11 @@ export class PortfolioService {
     aDateRange: DateRange = 'max'
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId, aUserId);
+    const user = await this.userService.user({ id: userId });
 
+    const emergencyFund = new Big(
+      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
+    );
     const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
     const portfolioCalculator = new PortfolioCalculator(
       this.currentRateService,
@@ -381,6 +392,7 @@ export class PortfolioService {
 
     const cashPositions = await this.getCashPositions({
       cashDetails,
+      emergencyFund,
       userCurrency,
       investment: totalInvestment,
       value: totalValue
@@ -861,6 +873,7 @@ export class PortfolioService {
   public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
     const userCurrency = this.request.user.Settings.currency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
 
     const performanceInformation = await this.getPerformance(aImpersonationId);
 
@@ -873,6 +886,9 @@ export class PortfolioService {
       userId
     });
     const dividend = this.getDividend(orders).toNumber();
+    const emergencyFund = new Big(
+      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
+    );
     const fees = this.getFees(orders).toNumber();
     const firstOrderDate = orders[0]?.date;
     const items = this.getItems(orders).toNumber();
@@ -880,6 +896,7 @@ export class PortfolioService {
     const totalBuy = this.getTotalByType(orders, userCurrency, 'BUY');
     const totalSell = this.getTotalByType(orders, userCurrency, 'SELL');
 
+    const cash = new Big(balanceInBaseCurrency).minus(emergencyFund).toNumber();
     const committedFunds = new Big(totalBuy).minus(totalSell);
 
     const netWorth = new Big(balanceInBaseCurrency)
@@ -889,6 +906,7 @@ export class PortfolioService {
 
     return {
       ...performanceInformation.performance,
+      cash,
       dividend,
       fees,
       firstOrderDate,
@@ -898,8 +916,8 @@ export class PortfolioService {
       totalSell,
       annualizedPerformancePercent:
         performanceInformation.performance.annualizedPerformancePercent,
-      cash: balanceInBaseCurrency,
       committedFunds: committedFunds.toNumber(),
+      emergencyFund: emergencyFund.toNumber(),
       ordersCount: orders.filter((order) => {
         return order.type === 'BUY' || order.type === 'SELL';
       }).length
@@ -908,16 +926,18 @@ export class PortfolioService {
 
   private async getCashPositions({
     cashDetails,
+    emergencyFund,
     investment,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
+    emergencyFund: Big;
     investment: Big;
     userCurrency: string;
     value: Big;
   }) {
-    const cashPositions = {};
+    const cashPositions: PortfolioDetails['holdings'] = {};
 
     for (const account of cashDetails.accounts) {
       const convertedBalance = this.exchangeRateDataService.toCurrency(
@@ -941,6 +961,7 @@ export class PortfolioService {
           assetSubClass: AssetClass.CASH,
           countries: [],
           currency: account.currency,
+          dataSource: undefined,
           grossPerformance: 0,
           grossPerformancePercent: 0,
           investment: convertedBalance,
@@ -956,6 +977,28 @@ export class PortfolioService {
           value: convertedBalance
         };
       }
+    }
+
+    if (emergencyFund.gt(0)) {
+      cashPositions[ASSET_SUB_CLASS_EMERGENCY_FUND] = {
+        ...cashPositions[userCurrency],
+        assetSubClass: ASSET_SUB_CLASS_EMERGENCY_FUND,
+        investment: emergencyFund.toNumber(),
+        name: ASSET_SUB_CLASS_EMERGENCY_FUND,
+        symbol: ASSET_SUB_CLASS_EMERGENCY_FUND,
+        value: emergencyFund.toNumber()
+      };
+
+      cashPositions[userCurrency].investment = new Big(
+        cashPositions[userCurrency].investment
+      )
+        .minus(emergencyFund)
+        .toNumber();
+      cashPositions[userCurrency].value = new Big(
+        cashPositions[userCurrency].value
+      )
+        .minus(emergencyFund)
+        .toNumber();
     }
 
     for (const symbol of Object.keys(cashPositions)) {
