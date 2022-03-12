@@ -42,6 +42,8 @@ export const warnColorRgb = {
   b: 69
 };
 
+export const ASSET_SUB_CLASS_EMERGENCY_FUND = 'EMERGENCY_FUND';
+
 export const DEFAULT_DATE_FORMAT = 'dd.MM.yyyy';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 

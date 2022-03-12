@@ -20,13 +20,16 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { UNKNOWN_KEY, baseCurrency } from '@ghostfolio/common/config';
+import {
+  ASSET_SUB_CLASS_EMERGENCY_FUND,
+  UNKNOWN_KEY,
+  baseCurrency
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   PortfolioDetails,
   PortfolioPerformanceResponse,
-  PortfolioPosition,
   PortfolioReport,
   PortfolioSummary,
   Position,
@@ -967,9 +970,7 @@ export class PortfolioServiceNew {
     value: Big;
     userCurrency: string;
   }) {
-    const cashPositions: {
-      [symbol: string]: Partial<PortfolioPosition>;
-    } = {};
+    const cashPositions: PortfolioDetails['holdings'] = {};
 
     for (const account of cashDetails.accounts) {
       const convertedBalance = this.exchangeRateDataService.toCurrency(
@@ -993,6 +994,7 @@ export class PortfolioServiceNew {
           assetSubClass: AssetClass.CASH,
           countries: [],
           currency: account.currency,
+          dataSource: undefined,
           grossPerformance: 0,
           grossPerformancePercent: 0,
           investment: convertedBalance,
@@ -1010,12 +1012,12 @@ export class PortfolioServiceNew {
       }
     }
 
-    cashPositions['EMERGENCY_FUND'] = {
+    cashPositions[ASSET_SUB_CLASS_EMERGENCY_FUND] = {
       ...cashPositions[userCurrency],
-      assetSubClass: 'EMERGENCY_FUND',
+      assetSubClass: ASSET_SUB_CLASS_EMERGENCY_FUND,
       investment: emergencyFund.toNumber(),
-      name: 'EMERGENCY_FUND',
-      symbol: 'EMERGENCY_FUND',
+      name: ASSET_SUB_CLASS_EMERGENCY_FUND,
+      symbol: ASSET_SUB_CLASS_EMERGENCY_FUND,
       value: emergencyFund.toNumber()
     };
     cashPositions[userCurrency].investment = new Big(
