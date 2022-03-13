@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Restructured the portfolio summary tab on the home page
 
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
 ## 1.125.0 - 12.03.2022
 
 ### Added
