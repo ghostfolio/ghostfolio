@@ -21,6 +21,7 @@ import Big from 'big.js';
 import { countries } from 'countries-list';
 import { addDays, format, isSameDay } from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
+import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -303,7 +304,7 @@ export class YahooFinanceService implements DataProviderInterface {
     return { items };
   }
 
-  private parseAssetClass(aPrice: any): {
+  private parseAssetClass(aPrice: Price): {
     assetClass: AssetClass;
     assetSubClass: AssetSubClass;
   } {
