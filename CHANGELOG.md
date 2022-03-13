@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Restructured the portfolio summary tab on the home page
+- Improved the tooltips in the portfolio proportion chart component by introducing multilines
 
 ## 1.125.0 - 12.03.2022
 
