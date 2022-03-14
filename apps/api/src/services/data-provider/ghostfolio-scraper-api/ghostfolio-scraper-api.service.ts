@@ -50,16 +50,18 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [symbol]
       );
-      const scraperConfiguration = symbolProfile?.scraperConfiguration;
+      const { selector, url } = symbolProfile.scraperConfiguration;
 
-      const get = bent(scraperConfiguration?.url, 'GET', 'string', 200, {});
+      if (selector === undefined || url === undefined) {
+        return {};
+      }
+
+      const get = bent(url, 'GET', 'string', 200, {});
 
       const html = await get();
       const $ = cheerio.load(html);
 
-      const value = this.extractNumberFromString(
-        $(scraperConfiguration?.selector).text()
-      );
+      const value = this.extractNumberFromString($(selector).text());
 
       return {
         [symbol]: {
