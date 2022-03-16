@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the error handling in the scraper configuration
 
+### Fixed
+
+- Fixed the support for multiple symbols of the data source `GHOSTFOLIO`
+
 ## 1.126.0 - 14.03.2022
 
 ### Added
