@@ -84,33 +84,42 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   public async getQuotes(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    const response: { [symbol: string]: IDataProviderResponse } = {};
+
     if (aSymbols.length <= 0) {
-      return {};
+      return response;
     }
 
     try {
-      const [symbol] = aSymbols;
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
+      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+        aSymbols
       );
 
-      const { marketPrice } = await this.prismaService.marketData.findFirst({
+      const marketData = await this.prismaService.marketData.findMany({
+        distinct: ['symbol'],
         orderBy: {
           date: 'desc'
         },
+        take: aSymbols.length,
         where: {
-          symbol
+          symbol: {
+            in: aSymbols
+          }
         }
       });
 
-      return {
-        [symbol]: {
-          marketPrice,
-          currency: symbolProfile?.currency,
+      for (const symbolProfile of symbolProfiles) {
+        response[symbolProfile.symbol] = {
+          currency: symbolProfile.currency,
           dataSource: this.getName(),
+          marketPrice: marketData.find((marketDataItem) => {
+            return marketDataItem.symbol === symbolProfile.symbol;
+          }).marketPrice,
           marketState: MarketState.delayed
-        }
-      };
+        };
+      }
+
+      return response;
     } catch (error) {
       Logger.error(error, 'GhostfolioScraperApiService');
     }
