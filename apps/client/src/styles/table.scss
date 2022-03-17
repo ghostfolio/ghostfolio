@@ -10,21 +10,26 @@
   }
 
   .mat-row {
+    &:hover {
+      background-color: rgba(var(--palette-foreground-base), 0.05) !important;
+    }
+
     &:nth-child(even) {
-      background-color: rgba(
-        var(--palette-foreground-base),
-        var(--palette-background-hover-alpha)
-      );
+      background-color: rgba(var(--palette-foreground-base), 0.02);
     }
   }
 
   @if $darkTheme {
     .mat-row {
-      &:nth-child(even) {
+      &:hover {
         background-color: rgba(
           var(--palette-foreground-base-dark),
-          var(--palette-background-hover-alpha)
-        );
+          0.05
+        ) !important;
+      }
+
+      &:nth-child(even) {
+        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
       }
     }
   }
