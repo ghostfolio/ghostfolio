@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a hover effect to the table style
+
 ### Fixed
 
 - Fixed an issue with the user currency of the public page
