@@ -13,7 +13,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as bent from 'bent';
 import * as cheerio from 'cheerio';
-import { format } from 'date-fns';
+import { addDays, format, isBefore } from 'date-fns';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
@@ -50,9 +50,27 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [symbol]
       );
-      const { selector, url } = symbolProfile.scraperConfiguration;
+      const { defaultMarketPrice, selector, url } =
+        symbolProfile.scraperConfiguration;
 
-      if (selector === undefined || url === undefined) {
+      if (defaultMarketPrice) {
+        const historical: {
+          [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        } = {
+          [symbol]: {}
+        };
+        let date = from;
+
+        while (isBefore(date, to)) {
+          historical[symbol][format(date, DATE_FORMAT)] = {
+            marketPrice: defaultMarketPrice
+          };
+
+          date = addDays(date, 1);
+        }
+
+        return historical;
+      } else if (selector === undefined || url === undefined) {
         return {};
       }
 
