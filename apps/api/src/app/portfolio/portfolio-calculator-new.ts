@@ -701,6 +701,7 @@ export class PortfolioCalculatorNew {
     let totalInvestment = new Big(0);
     let totalInvestmentWithGrossPerformanceFromSell = new Big(0);
     let totalUnits = new Big(0);
+    let valueAtStartDate: Big;
 
     // Add a synthetic order at the start and the end date
     orders.push({
@@ -774,13 +775,14 @@ export class PortfolioCalculatorNew {
         averagePriceAtStartDate = totalInvestment.div(totalUnits);
       }
 
-      if (!investmentAtStartDate && i >= indexOfStartOrder) {
-        investmentAtStartDate = totalInvestment ?? new Big(0);
-      }
-
       const valueOfInvestmentBeforeTransaction = totalUnits.mul(
         order.unitPrice
       );
+
+      if (!investmentAtStartDate && i >= indexOfStartOrder) {
+        investmentAtStartDate = totalInvestment ?? new Big(0);
+        valueAtStartDate = valueOfInvestmentBeforeTransaction;
+      }
 
       const transactionInvestment = order.quantity
         .mul(order.unitPrice)
@@ -906,7 +908,7 @@ export class PortfolioCalculatorNew {
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
 
-    const maxInvestmentBetweenStartAndEndDate = initialValue.plus(
+    const maxInvestmentBetweenStartAndEndDate = valueAtStartDate.plus(
       maxTotalInvestment.minus(investmentAtStartDate)
     );
 
