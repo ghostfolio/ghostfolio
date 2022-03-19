@@ -324,16 +324,16 @@ export class PortfolioProportionChartComponent
                     const percentage = (context.parsed * 100) / sum;
 
                     if (this.isInPercent) {
-                      return `${name ?? symbol} (${percentage.toFixed(2)}%)`;
+                      return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
                     } else {
                       const value = <number>context.raw;
-                      return `${name ?? symbol}: ${value.toLocaleString(
-                        this.locale,
-                        {
+                      return [
+                        `${name ?? symbol}`,
+                        `${value.toLocaleString(this.locale, {
                           maximumFractionDigits: 2,
                           minimumFractionDigits: 2
-                        }
-                      )} ${this.baseCurrency} (${percentage.toFixed(2)}%)`;
+                        })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
+                      ];
                     }
                   }
                 }

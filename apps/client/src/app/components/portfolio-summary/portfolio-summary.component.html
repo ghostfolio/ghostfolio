@@ -119,7 +119,7 @@
     <div class="col"><hr /></div>
   </div>
   <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Value</div>
+    <div class="d-flex flex-grow-1" i18n>Total</div>
     <div class="d-flex flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
@@ -127,6 +127,17 @@
         [currency]="baseCurrency"
         [locale]="locale"
         [value]="isLoading ? undefined : summary?.currentValue"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Valuables</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.items"
       ></gf-value>
     </div>
   </div>
@@ -151,24 +162,13 @@
     </div>
   </div>
   <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Cash (Buying Power)</div>
+    <div class="d-flex flex-grow-1" i18n>Buying Power</div>
     <div class="d-flex justify-content-end">
       <gf-value
         class="justify-content-end"
         [currency]="baseCurrency"
         [locale]="locale"
         [value]="isLoading ? undefined : summary?.cash"
-      ></gf-value>
-    </div>
-  </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Items</div>
-    <div class="d-flex justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        [currency]="baseCurrency"
-        [locale]="locale"
-        [value]="isLoading ? undefined : summary?.items"
       ></gf-value>
     </div>
   </div>
