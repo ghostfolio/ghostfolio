@@ -79,6 +79,7 @@ export class SymbolProfileService {
 
     if (scraperConfiguration) {
       return {
+        defaultMarketPrice: scraperConfiguration.defaultMarketPrice as number,
         selector: scraperConfiguration.selector as string,
         url: scraperConfiguration.url as string
       };
