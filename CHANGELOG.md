@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the attribute `defaultMarketPrice` to the scraper configuration to improve the support for bonds
 - Added a hover effect to the table style
 
 ### Fixed
