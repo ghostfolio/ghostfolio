@@ -307,7 +307,10 @@ export class PortfolioServiceNew {
     const emergencyFund = new Big(
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
-    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
+    const userCurrency =
+      this.request.user?.Settings?.currency ??
+      user.Settings?.currency ??
+      baseCurrency;
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
