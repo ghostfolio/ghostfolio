@@ -171,9 +171,11 @@ enum AssetClass {
   CASH
   COMMODITY
   EQUITY
+  FIXED_INCOME
 }
 
 enum AssetSubClass {
+  BOND
   CRYPTOCURRENCY
   ETF
   MUTUALFUND
