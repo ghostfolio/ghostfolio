@@ -922,7 +922,7 @@ export class PortfolioCalculatorNew {
           : new Big(0)
         : // This formula has the issue that buying more units with a price
           // lower than the average buying price results in a positive
-          // performance even if the market pricse stays constant
+          // performance even if the market price stays constant
           unitPriceAtEndDate
             .div(averagePriceAtEndDate)
             .div(
@@ -944,7 +944,7 @@ export class PortfolioCalculatorNew {
           : new Big(0)
         : // This formula has the issue that buying more units with a price
           // lower than the average buying price results in a positive
-          // performance even if the market pricse stays constant
+          // performance even if the market price stays constant
           unitPriceAtEndDate
             .minus(feesPerUnit)
             .div(averagePriceAtEndDate)
