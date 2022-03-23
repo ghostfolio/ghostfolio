@@ -19,6 +19,7 @@ export interface PortfolioPosition {
   marketChange?: number;
   marketChangePercent?: number;
   marketPrice: number;
+  markets?: { [market: string]: number };
   marketState: MarketState;
   name: string;
   netPerformance: number;

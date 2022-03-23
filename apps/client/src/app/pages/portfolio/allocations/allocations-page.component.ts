@@ -42,6 +42,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
+  public markets: {
+    [market: string]: { name: string; value: number };
+  };
   public period = 'current';
   public periodOptions: ToggleOption[] = [
     { label: 'Initial', value: 'original' },
@@ -160,6 +163,20 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
+    this.markets = {
+      DEVELOPED_MARKETS: {
+        name: 'DEVELOPED_MARKETS',
+        value: 0
+      },
+      EMERGING_MARKETS: {
+        name: 'EMERGING_MARKETS',
+        value: 0
+      },
+      OTHER_MARKETS: {
+        name: 'OTHER_MARKETS',
+        value: 0
+      }
+    };
     this.positions = {};
     this.positionsArray = [];
     this.sectors = {
@@ -219,6 +236,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
+          this.markets['DEVELOPED_MARKETS'].value +=
+            position.markets['DEVELOPED_MARKETS'] * position.value;
+          this.markets['EMERGING_MARKETS'].value +=
+            position.markets['EMERGING_MARKETS'] * position.value;
+          this.markets['OTHER_MARKETS'].value +=
+            position.markets['OTHER_MARKETS'] * position.value;
+
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
 
@@ -294,6 +318,18 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         };
       }
     }
+
+    const marketsTotal =
+      this.markets['DEVELOPED_MARKETS'].value +
+      this.markets['EMERGING_MARKETS'].value +
+      this.markets['OTHER_MARKETS'].value;
+
+    this.markets['DEVELOPED_MARKETS'].value =
+      this.markets['DEVELOPED_MARKETS'].value / marketsTotal;
+    this.markets['EMERGING_MARKETS'].value =
+      this.markets['EMERGING_MARKETS'].value / marketsTotal;
+    this.markets['OTHER_MARKETS'].value =
+      this.markets['OTHER_MARKETS'].value / marketsTotal;
   }
 
   public onChangePeriod(aValue: string) {

@@ -71,6 +71,9 @@ import {
 import { PortfolioCalculatorNew } from './portfolio-calculator-new';
 import { RulesService } from './rules.service';
 
+const developedMarkets = require('../../assets/countries/developed-markets.json');
+const emergingMarkets = require('../../assets/countries/emerging-markets.json');
+
 @Injectable()
 export class PortfolioServiceNew {
   public constructor(
@@ -380,7 +383,31 @@ export class PortfolioServiceNew {
       const value = item.quantity.mul(item.marketPrice);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
+
+      const markets = {
+        DEVELOPED_MARKETS: 0,
+        EMERGING_MARKETS: 0,
+        OTHER_MARKETS: 0
+      };
+
+      for (const country of symbolProfile.countries) {
+        if (developedMarkets.includes(country.code)) {
+          markets.DEVELOPED_MARKETS = new Big(markets.DEVELOPED_MARKETS)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          markets.EMERGING_MARKETS = new Big(markets.EMERGING_MARKETS)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          markets.OTHER_MARKETS = new Big(markets.OTHER_MARKETS)
+            .plus(country.weight)
+            .toNumber();
+        }
+      }
+
       holdings[item.symbol] = {
+        markets,
         allocationCurrent: value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
         assetClass: symbolProfile.assetClass,
