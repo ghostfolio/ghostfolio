@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a hover effect to the page tabs
+- Extended the feature overview page by _Bonds_ and _Emergency Fund_
 
 ## 1.128.0 - 19.03.2022
 
