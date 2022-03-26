@@ -237,11 +237,14 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
         if (position.countries.length > 0) {
           this.markets['DEVELOPED_MARKETS'].value +=
-            position.markets['DEVELOPED_MARKETS'] * position.value;
+            position.markets['DEVELOPED_MARKETS'] *
+            (aPeriod === 'original' ? position.investment : position.value);
           this.markets['EMERGING_MARKETS'].value +=
-            position.markets['EMERGING_MARKETS'] * position.value;
+            position.markets['EMERGING_MARKETS'] *
+            (aPeriod === 'original' ? position.investment : position.value);
           this.markets['OTHER_MARKETS'].value +=
-            position.markets['OTHER_MARKETS'] * position.value;
+            position.markets['OTHER_MARKETS'] *
+            (aPeriod === 'original' ? position.investment : position.value);
 
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;

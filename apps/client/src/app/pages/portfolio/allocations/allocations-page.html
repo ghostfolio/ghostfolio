@@ -172,42 +172,6 @@
       </mat-card>
     </div>
   </div>
-  <div class="row">
-    <div class="col-lg">
-      <mat-card class="mb-3">
-        <mat-card-content>
-          <div class="row">
-            <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">
-                {{ (markets?.DEVELOPED_MARKETS?.value | percent: '1.2-2') || '-'
-                }}
-              </h3>
-              <div class="h6 mb-0">
-                <span i18n>Developed Markets</span>
-              </div>
-            </div>
-            <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">
-                {{ (markets?.EMERGING_MARKETS?.value | percent: '1.2-2') || '-'
-                }}
-              </h3>
-              <div class="h6 mb-0">
-                <span i18n>Emerging Markets</span>
-              </div>
-            </div>
-            <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">
-                {{ (markets?.OTHER_MARKETS?.value | percent: '1.2-2') || '-' }}
-              </h3>
-              <div class="h6 mb-0">
-                <span i18n>Other Markets</span>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
   <div class="row world-map-chart">
     <div class="col-lg">
       <mat-card class="mb-3">
@@ -226,6 +190,30 @@
             [countries]="countries"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           ></gf-world-map-chart>
+          <div class="row">
+            <div class="col-xs-12 col-md-4 d-flex justify-content-center">
+              <gf-value
+                label="Developed Markets"
+                size="large"
+                [value]="(markets?.DEVELOPED_MARKETS?.value | percent: '1.2-2') || '-'"
+              ></gf-value>
+            </div>
+            <div class="col-xs-12 col-md-4 d-flex justify-content-center">
+              <gf-value
+                label="Emerging Markets"
+                size="large"
+                [value]="(markets?.EMERGING_MARKETS?.value | percent: '1.2-2') || '-'"
+              ></gf-value>
+            </div>
+            <div class="col-xs-12 col-md-4 d-flex justify-content-center">
+              <gf-value
+                class="width-auto"
+                label="Other Markets"
+                size="large"
+                [value]="(markets?.OTHER_MARKETS?.value | percent: '1.2-2') || '-'"
+              ></gf-value>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

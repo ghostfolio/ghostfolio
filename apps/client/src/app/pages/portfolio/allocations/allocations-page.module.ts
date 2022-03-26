@@ -5,6 +5,7 @@ import { GfPositionsTableModule } from '@ghostfolio/client/components/positions-
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.module';
+import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { AllocationsPageRoutingModule } from './allocations-page-routing.module';
 import { AllocationsPageComponent } from './allocations-page.component';
@@ -19,6 +20,7 @@ import { AllocationsPageComponent } from './allocations-page.component';
     GfPositionsTableModule,
     GfToggleModule,
     GfWorldMapChartModule,
+    GfValueModule,
     MatCardModule
   ],
   providers: [],

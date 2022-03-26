@@ -43,7 +43,10 @@
       </div>
     </ng-container>
   </div>
-  <small *ngIf="label">
+  <div *ngIf="label && size === 'large'">
+    {{ label }}
+  </div>
+  <small *ngIf="label && size !== 'large'">
     {{ label }}
   </small>
 </ng-container>
