@@ -14,7 +14,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { ToggleOption } from '@ghostfolio/common/types';
+import { Market, ToggleOption } from '@ghostfolio/common/types';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -43,7 +43,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public markets: {
-    [market: string]: { name: string; value: number };
+    [key in Market]: { name: string; value: number };
   };
   public period = 'current';
   public periodOptions: ToggleOption[] = [
@@ -164,16 +164,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
     };
     this.markets = {
-      DEVELOPED_MARKETS: {
-        name: 'DEVELOPED_MARKETS',
+      developedMarkets: {
+        name: 'developedMarkets',
         value: 0
       },
-      EMERGING_MARKETS: {
-        name: 'EMERGING_MARKETS',
+      emergingMarkets: {
+        name: 'emergingMarkets',
         value: 0
       },
-      OTHER_MARKETS: {
-        name: 'OTHER_MARKETS',
+      otherMarkets: {
+        name: 'otherMarkets',
         value: 0
       }
     };
@@ -236,14 +236,14 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
-          this.markets['DEVELOPED_MARKETS'].value +=
-            position.markets['DEVELOPED_MARKETS'] *
+          this.markets['developedMarkets'].value +=
+            position.markets['developedMarkets'] *
             (aPeriod === 'original' ? position.investment : position.value);
-          this.markets['EMERGING_MARKETS'].value +=
-            position.markets['EMERGING_MARKETS'] *
+          this.markets['emergingMarkets'].value +=
+            position.markets['emergingMarkets'] *
             (aPeriod === 'original' ? position.investment : position.value);
-          this.markets['OTHER_MARKETS'].value +=
-            position.markets['OTHER_MARKETS'] *
+          this.markets['otherMarkets'].value +=
+            position.markets['otherMarkets'] *
             (aPeriod === 'original' ? position.investment : position.value);
 
           for (const country of position.countries) {
@@ -323,16 +323,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     }
 
     const marketsTotal =
-      this.markets['DEVELOPED_MARKETS'].value +
-      this.markets['EMERGING_MARKETS'].value +
-      this.markets['OTHER_MARKETS'].value;
+      this.markets.developedMarkets.value +
+      this.markets.emergingMarkets.value +
+      this.markets.otherMarkets.value;
 
-    this.markets['DEVELOPED_MARKETS'].value =
-      this.markets['DEVELOPED_MARKETS'].value / marketsTotal;
-    this.markets['EMERGING_MARKETS'].value =
-      this.markets['EMERGING_MARKETS'].value / marketsTotal;
-    this.markets['OTHER_MARKETS'].value =
-      this.markets['OTHER_MARKETS'].value / marketsTotal;
+    this.markets.developedMarkets.value =
+      this.markets.developedMarkets.value / marketsTotal;
+    this.markets.emergingMarkets.value =
+      this.markets.emergingMarkets.value / marketsTotal;
+    this.markets.otherMarkets.value =
+      this.markets.otherMarkets.value / marketsTotal;
   }
 
   public onChangePeriod(aValue: string) {

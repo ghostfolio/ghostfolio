@@ -21,7 +21,7 @@ export class ValueComponent implements OnChanges {
   @Input() isCurrency = false;
   @Input() isPercent = false;
   @Input() label = '';
-  @Input() locale = '';
+  @Input() locale = 'en-US';
   @Input() position = '';
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';

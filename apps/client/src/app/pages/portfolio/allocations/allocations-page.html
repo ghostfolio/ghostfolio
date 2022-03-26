@@ -191,26 +191,31 @@
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           ></gf-world-map-chart>
           <div class="row">
-            <div class="col-xs-12 col-md-4 d-flex justify-content-center">
+            <div class="col-xs-12 col-md-4 my-2">
               <gf-value
                 label="Developed Markets"
                 size="large"
-                [value]="(markets?.DEVELOPED_MARKETS?.value | percent: '1.2-2') || '-'"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="markets?.developedMarkets?.value"
               ></gf-value>
             </div>
-            <div class="col-xs-12 col-md-4 d-flex justify-content-center">
+            <div class="col-xs-12 col-md-4 my-2">
               <gf-value
                 label="Emerging Markets"
                 size="large"
-                [value]="(markets?.EMERGING_MARKETS?.value | percent: '1.2-2') || '-'"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="markets?.emergingMarkets?.value"
               ></gf-value>
             </div>
-            <div class="col-xs-12 col-md-4 d-flex justify-content-center">
+            <div class="col-xs-12 col-md-4 my-2">
               <gf-value
-                class="width-auto"
                 label="Other Markets"
                 size="large"
-                [value]="(markets?.OTHER_MARKETS?.value | percent: '1.2-2') || '-'"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="markets?.otherMarkets?.value"
               ></gf-value>
             </div>
           </div>

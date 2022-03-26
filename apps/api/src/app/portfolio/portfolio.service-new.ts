@@ -40,6 +40,7 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import type {
   AccountWithValue,
   DateRange,
+  Market,
   OrderWithAccount,
   RequestWithUser
 } from '@ghostfolio/common/types';
@@ -384,23 +385,23 @@ export class PortfolioServiceNew {
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
-      const markets = {
-        DEVELOPED_MARKETS: 0,
-        EMERGING_MARKETS: 0,
-        OTHER_MARKETS: 0
+      const markets: { [key in Market]: number } = {
+        developedMarkets: 0,
+        emergingMarkets: 0,
+        otherMarkets: 0
       };
 
       for (const country of symbolProfile.countries) {
         if (developedMarkets.includes(country.code)) {
-          markets.DEVELOPED_MARKETS = new Big(markets.DEVELOPED_MARKETS)
+          markets.developedMarkets = new Big(markets.developedMarkets)
             .plus(country.weight)
             .toNumber();
         } else if (emergingMarkets.includes(country.code)) {
-          markets.EMERGING_MARKETS = new Big(markets.EMERGING_MARKETS)
+          markets.emergingMarkets = new Big(markets.emergingMarkets)
             .plus(country.weight)
             .toNumber();
         } else {
-          markets.OTHER_MARKETS = new Big(markets.OTHER_MARKETS)
+          markets.otherMarkets = new Big(markets.otherMarkets)
             .plus(country.weight)
             .toNumber();
         }
