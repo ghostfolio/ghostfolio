@@ -79,12 +79,38 @@
             [countries]="countries"
             [isInPercent]="true"
           ></gf-world-map-chart>
+          <div class="row">
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                label="Developed Markets"
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.developedMarkets?.value"
+              ></gf-value>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                label="Emerging Markets"
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.emergingMarkets?.value"
+              ></gf-value>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                label="Other Markets"
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.otherMarkets?.value"
+              ></gf-value>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
   <div class="row my-5">
-    <div class="col-md-8 offset-md-2">
+    <div class="col-md-10 offset-md-1">
       <h2 class="h4 mb-1 text-center">
         Would you like to <strong>refine</strong> your
         <strong>personal investment strategy</strong>?

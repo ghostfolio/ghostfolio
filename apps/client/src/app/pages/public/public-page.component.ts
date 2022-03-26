@@ -7,6 +7,7 @@ import {
   PortfolioPosition,
   PortfolioPublicDetails
 } from '@ghostfolio/common/interfaces';
+import { Market } from '@ghostfolio/common/types';
 import { StatusCodes } from 'http-status-codes';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
@@ -26,6 +27,9 @@ export class PublicPageComponent implements OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
+  public markets: {
+    [key in Market]: { name: string; value: number };
+  };
   public portfolioPublicDetails: PortfolioPublicDetails;
   public positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name' | 'value'>;
@@ -96,6 +100,20 @@ export class PublicPageComponent implements OnInit {
         value: 0
       }
     };
+    this.markets = {
+      developedMarkets: {
+        name: 'developedMarkets',
+        value: 0
+      },
+      emergingMarkets: {
+        name: 'emergingMarkets',
+        value: 0
+      },
+      otherMarkets: {
+        name: 'otherMarkets',
+        value: 0
+      }
+    };
     this.positions = {};
     this.sectors = {
       [UNKNOWN_KEY]: {
@@ -123,6 +141,13 @@ export class PublicPageComponent implements OnInit {
       };
 
       if (position.countries.length > 0) {
+        this.markets.developedMarkets.value +=
+          position.markets.developedMarkets * position.value;
+        this.markets.emergingMarkets.value +=
+          position.markets.emergingMarkets * position.value;
+        this.markets.otherMarkets.value +=
+          position.markets.otherMarkets * position.value;
+
         for (const country of position.countries) {
           const { code, continent, name, weight } = country;
 
@@ -176,6 +201,18 @@ export class PublicPageComponent implements OnInit {
         value: position.value
       };
     }
+
+    const marketsTotal =
+      this.markets.developedMarkets.value +
+      this.markets.emergingMarkets.value +
+      this.markets.otherMarkets.value;
+
+    this.markets.developedMarkets.value =
+      this.markets.developedMarkets.value / marketsTotal;
+    this.markets.emergingMarkets.value =
+      this.markets.emergingMarkets.value / marketsTotal;
+    this.markets.otherMarkets.value =
+      this.markets.otherMarkets.value / marketsTotal;
   }
 
   public ngOnDestroy() {

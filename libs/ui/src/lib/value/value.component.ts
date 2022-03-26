@@ -4,7 +4,7 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
+import { DEFAULT_DATE_FORMAT, locale } from '@ghostfolio/common/config';
 import { format, isDate, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
 
@@ -21,7 +21,7 @@ export class ValueComponent implements OnChanges {
   @Input() isCurrency = false;
   @Input() isPercent = false;
   @Input() label = '';
-  @Input() locale = '';
+  @Input() locale = locale;
   @Input() position = '';
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';

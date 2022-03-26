@@ -190,6 +190,32 @@
             [countries]="countries"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           ></gf-world-map-chart>
+          <div class="row">
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                label="Developed Markets"
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.developedMarkets?.value"
+              ></gf-value>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                label="Emerging Markets"
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.emergingMarkets?.value"
+              ></gf-value>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                label="Other Markets"
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.otherMarkets?.value"
+              ></gf-value>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

@@ -13,8 +13,9 @@ export class PortfolioServiceStrategy {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  public get() {
+  public get(newCalculationEngine?: boolean) {
     if (
+      newCalculationEngine ||
       this.request.user?.Settings?.settings?.['isNewCalculationEngine'] === true
     ) {
       return this.portfolioServiceNew;

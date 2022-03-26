@@ -120,7 +120,7 @@ export class PortfolioController {
 
     const { accounts, holdings, hasErrors } =
       await this.portfolioServiceStrategy
-        .get()
+        .get(true)
         .getDetails(impersonationId, this.request.user.id, range);
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
@@ -277,7 +277,7 @@ export class PortfolioController {
     }
 
     const { holdings } = await this.portfolioServiceStrategy
-      .get()
+      .get(true)
       .getDetails(access.userId, access.userId);
 
     const portfolioPublicDetails: PortfolioPublicDetails = {
@@ -304,6 +304,7 @@ export class PortfolioController {
           allocationCurrent: portfolioPosition.allocationCurrent,
           countries: hasDetails ? portfolioPosition.countries : [],
           currency: portfolioPosition.currency,
+          markets: portfolioPosition.markets,
           name: portfolioPosition.name,
           sectors: hasDetails ? portfolioPosition.sectors : [],
           value: portfolioPosition.value / totalValue

@@ -40,6 +40,7 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import type {
   AccountWithValue,
   DateRange,
+  Market,
   OrderWithAccount,
   RequestWithUser
 } from '@ghostfolio/common/types';
@@ -70,6 +71,9 @@ import {
 } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioCalculatorNew } from './portfolio-calculator-new';
 import { RulesService } from './rules.service';
+
+const developedMarkets = require('../../assets/countries/developed-markets.json');
+const emergingMarkets = require('../../assets/countries/emerging-markets.json');
 
 @Injectable()
 export class PortfolioServiceNew {
@@ -380,7 +384,31 @@ export class PortfolioServiceNew {
       const value = item.quantity.mul(item.marketPrice);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
+
+      const markets: { [key in Market]: number } = {
+        developedMarkets: 0,
+        emergingMarkets: 0,
+        otherMarkets: 0
+      };
+
+      for (const country of symbolProfile.countries) {
+        if (developedMarkets.includes(country.code)) {
+          markets.developedMarkets = new Big(markets.developedMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          markets.emergingMarkets = new Big(markets.emergingMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          markets.otherMarkets = new Big(markets.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
+      }
+
       holdings[item.symbol] = {
+        markets,
         allocationCurrent: value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
         assetClass: symbolProfile.assetClass,

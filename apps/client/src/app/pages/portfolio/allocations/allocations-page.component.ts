@@ -14,7 +14,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { ToggleOption } from '@ghostfolio/common/types';
+import { Market, ToggleOption } from '@ghostfolio/common/types';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -42,6 +42,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
+  public markets: {
+    [key in Market]: { name: string; value: number };
+  };
   public period = 'current';
   public periodOptions: ToggleOption[] = [
     { label: 'Initial', value: 'original' },
@@ -160,6 +163,20 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
+    this.markets = {
+      developedMarkets: {
+        name: 'developedMarkets',
+        value: 0
+      },
+      emergingMarkets: {
+        name: 'emergingMarkets',
+        value: 0
+      },
+      otherMarkets: {
+        name: 'otherMarkets',
+        value: 0
+      }
+    };
     this.positions = {};
     this.positionsArray = [];
     this.sectors = {
@@ -219,6 +236,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
+          this.markets.developedMarkets.value +=
+            position.markets.developedMarkets *
+            (aPeriod === 'original' ? position.investment : position.value);
+          this.markets.emergingMarkets.value +=
+            position.markets.emergingMarkets *
+            (aPeriod === 'original' ? position.investment : position.value);
+          this.markets.otherMarkets.value +=
+            position.markets.otherMarkets *
+            (aPeriod === 'original' ? position.investment : position.value);
+
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
 
@@ -294,6 +321,18 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         };
       }
     }
+
+    const marketsTotal =
+      this.markets.developedMarkets.value +
+      this.markets.emergingMarkets.value +
+      this.markets.otherMarkets.value;
+
+    this.markets.developedMarkets.value =
+      this.markets.developedMarkets.value / marketsTotal;
+    this.markets.emergingMarkets.value =
+      this.markets.emergingMarkets.value / marketsTotal;
+    this.markets.otherMarkets.value =
+      this.markets.otherMarkets.value / marketsTotal;
   }
 
   public onChangePeriod(aValue: string) {
