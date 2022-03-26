@@ -43,12 +43,14 @@
       </div>
     </ng-container>
   </div>
-  <div *ngIf="label && size === 'large'">
-    {{ label }}
-  </div>
-  <small *ngIf="label && size !== 'large'">
-    {{ label }}
-  </small>
+  <ng-container *ngIf="label">
+    <div *ngIf="size === 'large'">
+      {{ label }}
+    </div>
+    <small *ngIf="size !== 'large'">
+      {{ label }}
+    </small>
+  </ng-container>
 </ng-container>
 
 <ngx-skeleton-loader
