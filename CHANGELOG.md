@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the calculation for developed vs. emerging markets to the allocations page
 - Added a hover effect to the page tabs
 
 ## 1.128.0 - 19.03.2022
