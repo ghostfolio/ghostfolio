@@ -236,14 +236,14 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
-          this.markets['developedMarkets'].value +=
-            position.markets['developedMarkets'] *
+          this.markets.developedMarkets.value +=
+            position.markets.developedMarkets *
             (aPeriod === 'original' ? position.investment : position.value);
-          this.markets['emergingMarkets'].value +=
-            position.markets['emergingMarkets'] *
+          this.markets.emergingMarkets.value +=
+            position.markets.emergingMarkets *
             (aPeriod === 'original' ? position.investment : position.value);
-          this.markets['otherMarkets'].value +=
-            position.markets['otherMarkets'] *
+          this.markets.otherMarkets.value +=
+            position.markets.otherMarkets *
             (aPeriod === 'original' ? position.investment : position.value);
 
           for (const country of position.countries) {
