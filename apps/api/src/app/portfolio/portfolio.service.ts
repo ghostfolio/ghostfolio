@@ -106,21 +106,21 @@ export class PortfolioService {
         }
       }
 
-      const value = details.accounts[account.id]?.current ?? 0;
+      const valueInBaseCurrency = details.accounts[account.id]?.current ?? 0;
 
       const result = {
         ...account,
         transactionCount,
-        value,
+        valueInBaseCurrency,
         balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
           userCurrency
         ),
-        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          value,
-          account.currency,
-          userCurrency
+        value: this.exchangeRateDataService.toCurrency(
+          valueInBaseCurrency,
+          userCurrency,
+          account.currency
         )
       };
 
