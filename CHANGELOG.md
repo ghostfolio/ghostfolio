@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added more durations in the coupon system
+
 ### Fixed
 
 - Fixed an issue with the currency conversion (duplicate) in the account calculations
