@@ -1,0 +1,53 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg">
+      <h3 class="d-flex justify-content-center mb-3" i18n>FIRE</h3>
+      <div class="mb-4">
+        <h4 i18n>4% Rule</h4>
+        <div *ngIf="isLoading">
+          <ngx-skeleton-loader
+            animation="pulse"
+            class="my-1"
+            [theme]="{
+              height: '1rem',
+              width: '100%'
+            }"
+          ></ngx-skeleton-loader>
+          <ngx-skeleton-loader
+            animation="pulse"
+            [theme]="{
+              height: '1rem',
+              width: '10rem'
+            }"
+          ></ngx-skeleton-loader>
+        </div>
+        <div *ngIf="!isLoading">
+          If you retire today, you would be able to withdraw
+          <span class="font-weight-bold"
+            ><gf-value
+              class="d-inline-block"
+              [currency]="user?.settings?.baseCurrency"
+              [value]="withdrawalRatePerYear"
+            ></gf-value>
+            per year</span
+          >
+          or
+          <span class="font-weight-bold"
+            ><gf-value
+              class="d-inline-block"
+              [currency]="user?.settings?.baseCurrency"
+              [value]="withdrawalRatePerMonth"
+            ></gf-value>
+            per month</span
+          >, based on your net worth of
+          <gf-value
+            class="d-inline-block"
+            [currency]="user?.settings?.baseCurrency"
+            [value]="fireWealth"
+          ></gf-value>
+          (excluding emergency fund) and a withdrawal rate of 4%.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

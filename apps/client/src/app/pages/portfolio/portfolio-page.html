@@ -101,5 +101,32 @@
         </div>
       </mat-card>
     </div>
+    <div class="col-xs-12 col-md-6 mb-3">
+      <mat-card class="d-flex flex-column h-100">
+        <h4 class="align-items-center d-flex">
+          <span i18n>FIRE</span>
+          <ion-icon
+            *ngIf="hasPermissionForSubscription"
+            class="ml-1 text-muted"
+            name="diamond-outline"
+          ></ion-icon>
+        </h4>
+        <div class="flex-grow-1">
+          Ghostfolio FIRE calculates metrics for the
+          <i>Financial Independence, Retire Early</i> lifestyle.
+        </div>
+        <div class="mt-2 text-right">
+          <a
+            color="primary"
+            mat-button
+            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
+            [routerLink]="['/portfolio', 'fire']"
+          >
+            <span i18n>Open FIRE</span>
+            <ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
+          </a>
+        </div>
+      </mat-card>
+    </div>
   </div>
 </div>
