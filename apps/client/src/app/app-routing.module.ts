@@ -114,6 +114,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'portfolio/fire',
+    loadChildren: () =>
+      import('./pages/portfolio/fire/fire-page.module').then(
+        (m) => m.FirePageModule
+      )
+  },
+  {
     path: 'portfolio/report',
     loadChildren: () =>
       import('./pages/portfolio/report/report-page.module').then(
