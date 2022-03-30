@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a _FIRE_ (Financial Independence, Retire Early) section including the 4% rule
 - Added more durations in the coupon system
 
 ### Fixed
