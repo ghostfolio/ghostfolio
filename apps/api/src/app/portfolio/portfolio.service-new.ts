@@ -810,23 +810,33 @@ export class PortfolioServiceNew {
 
     const hasErrors = currentPositions.hasErrors;
     const currentValue = currentPositions.currentValue.toNumber();
-    const currentGrossPerformance =
-      currentPositions.grossPerformance.toNumber();
-    const currentGrossPerformancePercent =
-      currentPositions.grossPerformancePercentage.toNumber();
-    const currentNetPerformance = currentPositions.netPerformance.toNumber();
-    const currentNetPerformancePercent =
-      currentPositions.netPerformancePercentage.toNumber();
+    const currentGrossPerformance = currentPositions.grossPerformance;
+    let currentGrossPerformancePercent =
+      currentPositions.grossPerformancePercentage;
+    const currentNetPerformance = currentPositions.netPerformance;
+    let currentNetPerformancePercent =
+      currentPositions.netPerformancePercentage;
+
+    if (currentGrossPerformance.mul(currentGrossPerformancePercent).lt(0)) {
+      // If algebraic sign is different, harmonize it
+      currentGrossPerformancePercent = currentGrossPerformancePercent.mul(-1);
+    }
+
+    if (currentNetPerformance.mul(currentNetPerformancePercent).lt(0)) {
+      // If algebraic sign is different, harmonize it
+      currentNetPerformancePercent = currentNetPerformancePercent.mul(-1);
+    }
 
     return {
       errors: currentPositions.errors,
       hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
-        currentGrossPerformance,
-        currentGrossPerformancePercent,
-        currentNetPerformance,
-        currentNetPerformancePercent,
-        currentValue
+        currentValue,
+        currentGrossPerformance: currentGrossPerformance.toNumber(),
+        currentGrossPerformancePercent:
+          currentGrossPerformancePercent.toNumber(),
+        currentNetPerformance: currentNetPerformance.toNumber(),
+        currentNetPerformancePercent: currentNetPerformancePercent.toNumber()
       }
     };
   }
