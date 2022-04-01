@@ -79,6 +79,7 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
+- A local copy of this Git repository (clone)
 
 ### a. Run environment
 
@@ -136,6 +137,7 @@ docker-compose -f docker/docker-compose-build-local.yml exec ghostfolio yarn dat
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Node.js](https://nodejs.org/en/download) (version 14+)
 - [Yarn](https://yarnpkg.com/en/docs/install)
+- A local copy of this Git repository (clone)
 
 ### Setup
 
