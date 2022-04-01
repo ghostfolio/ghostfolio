@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   ghostfolio:
-    image: ghostfolio/ghostfolio
+    image: ghostfolio/ghostfolio:latest
     env_file:
       - ../.env
     environment:

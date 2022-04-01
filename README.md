@@ -122,13 +122,11 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
 
-### Migrate Database
+### Upgrade Version
 
-With the following command you can keep your database schema in sync after a Ghostfolio version update:
-
-```bash
-docker-compose -f docker/docker-compose-build-local.yml exec ghostfolio yarn database:migrate
-```
+1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
+1. Run the following command to start the new Docker image: `docker-compose -f docker/docker-compose.yml up -d`
+1. Then, run the following command to keep your database schema in sync: `docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
 
 ## Development
 
@@ -163,6 +161,14 @@ Run `yarn start:client`
 ### Start _Storybook_
 
 Run `yarn start:storybook`
+
+### Migrate Database
+
+With the following command you can keep your database schema in sync:
+
+```bash
+yarn database:push
+```
 
 ## Testing
 
