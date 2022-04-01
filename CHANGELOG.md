@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added more durations in the coupon system
 
+### Changed
+
+- Improved the pricing page
+
 ## 1.130.0 - 30.03.2022
 
 ### Added
