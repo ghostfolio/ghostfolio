@@ -35,7 +35,7 @@ export class WebAuthnService {
   public register() {
     return this.http
       .get<PublicKeyCredentialCreationOptionsJSON>(
-        `/api/auth/webauthn/generate-registration-options`,
+        `/api/v1/auth/webauthn/generate-registration-options`,
         {}
       )
       .pipe(
@@ -48,7 +48,7 @@ export class WebAuthnService {
         }),
         switchMap((attResp) => {
           return this.http.post<AuthDeviceDto>(
-            `/api/auth/webauthn/verify-attestation`,
+            `/api/v1/auth/webauthn/verify-attestation`,
             {
               credential: attResp
             }
@@ -65,31 +65,33 @@ export class WebAuthnService {
 
   public deregister() {
     const deviceId = this.getDeviceId();
-    return this.http.delete<AuthDeviceDto>(`/api/auth-device/${deviceId}`).pipe(
-      catchError((error) => {
-        console.warn(`Could not deregister device ${deviceId}`, error);
-        return of(null);
-      }),
-      tap(() =>
-        this.settingsStorageService.removeSetting(
-          WebAuthnService.WEB_AUTH_N_DEVICE_ID
+    return this.http
+      .delete<AuthDeviceDto>(`/api/v1/auth-device/${deviceId}`)
+      .pipe(
+        catchError((error) => {
+          console.warn(`Could not deregister device ${deviceId}`, error);
+          return of(null);
+        }),
+        tap(() =>
+          this.settingsStorageService.removeSetting(
+            WebAuthnService.WEB_AUTH_N_DEVICE_ID
+          )
         )
-      )
-    );
+      );
   }
 
   public login() {
     const deviceId = this.getDeviceId();
     return this.http
       .post<PublicKeyCredentialRequestOptionsJSON>(
-        `/api/auth/webauthn/generate-assertion-options`,
+        `/api/v1/auth/webauthn/generate-assertion-options`,
         { deviceId }
       )
       .pipe(
         switchMap(startAuthentication),
         switchMap((assertionResponse) => {
           return this.http.post<{ authToken: string }>(
-            `/api/auth/webauthn/verify-assertion`,
+            `/api/v1/auth/webauthn/verify-assertion`,
             {
               credential: assertionResponse,
               deviceId

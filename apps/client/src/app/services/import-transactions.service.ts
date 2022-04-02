@@ -282,6 +282,6 @@ export class ImportTransactionsService {
   }
 
   private postImport(aImportData: { orders: CreateOrderDto[] }) {
-    return this.http.post<void>('/api/import', aImportData);
+    return this.http.post<void>('/api/v1/import', aImportData);
   }
 }

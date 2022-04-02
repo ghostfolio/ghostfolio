@@ -23,12 +23,10 @@ import {
   PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,
-  PortfolioPerformance,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -52,46 +50,46 @@ export class DataService {
     couponId?: string;
     priceId: string;
   }) {
-    return this.http.post('/api/subscription/stripe/checkout-session', {
+    return this.http.post('/api/v1/subscription/stripe/checkout-session', {
       couponId,
       priceId
     });
   }
 
   public fetchAccounts() {
-    return this.http.get<Accounts>('/api/account');
+    return this.http.get<Accounts>('/api/v1/account');
   }
 
   public fetchAdminData() {
-    return this.http.get<AdminData>('/api/admin');
+    return this.http.get<AdminData>('/api/v1/admin');
   }
 
   public fetchAdminMarketData() {
-    return this.http.get<AdminMarketData>('/api/admin/market-data');
+    return this.http.get<AdminMarketData>('/api/v1/admin/market-data');
   }
 
   public deleteAccess(aId: string) {
-    return this.http.delete<any>(`/api/access/${aId}`);
+    return this.http.delete<any>(`/api/v1/access/${aId}`);
   }
 
   public deleteAccount(aId: string) {
-    return this.http.delete<any>(`/api/account/${aId}`);
+    return this.http.delete<any>(`/api/v1/account/${aId}`);
   }
 
   public deleteOrder(aId: string) {
-    return this.http.delete<any>(`/api/order/${aId}`);
+    return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
   public deleteUser(aId: string) {
-    return this.http.delete<any>(`/api/user/${aId}`);
+    return this.http.delete<any>(`/api/v1/user/${aId}`);
   }
 
   public fetchAccesses() {
-    return this.http.get<Access[]>('/api/access');
+    return this.http.get<Access[]>('/api/v1/access');
   }
 
   public fetchChart({ range }: { range: DateRange }) {
-    return this.http.get<PortfolioChart>('/api/portfolio/chart', {
+    return this.http.get<PortfolioChart>('/api/v1/portfolio/chart', {
       params: { range }
     });
   }
@@ -103,7 +101,7 @@ export class DataService {
       params = params.append('activityIds', activityIds.join(','));
     }
 
-    return this.http.get<Export>('/api/export', {
+    return this.http.get<Export>('/api/v1/export', {
       params
     });
   }
@@ -121,7 +119,7 @@ export class DataService {
   }
 
   public fetchInvestments(): Observable<PortfolioInvestments> {
-    return this.http.get<any>('/api/portfolio/investments').pipe(
+    return this.http.get<any>('/api/v1/portfolio/investments').pipe(
       map((response) => {
         if (response.firstOrderDate) {
           response.firstOrderDate = parseISO(response.firstOrderDate);
@@ -147,7 +145,7 @@ export class DataService {
       params = params.append('includeHistoricalData', includeHistoricalData);
     }
 
-    return this.http.get<SymbolItem>(`/api/symbol/${dataSource}/${symbol}`, {
+    return this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`, {
       params
     });
   }
@@ -157,14 +155,14 @@ export class DataService {
   }: {
     range: DateRange;
   }): Observable<PortfolioPositions> {
-    return this.http.get<PortfolioPositions>('/api/portfolio/positions', {
+    return this.http.get<PortfolioPositions>('/api/v1/portfolio/positions', {
       params: { range }
     });
   }
 
   public fetchSymbols(aQuery: string) {
     return this.http
-      .get<{ items: LookupItem[] }>(`/api/symbol/lookup?query=${aQuery}`)
+      .get<{ items: LookupItem[] }>(`/api/v1/symbol/lookup?query=${aQuery}`)
       .pipe(
         map((respose) => {
           return respose.items;
@@ -173,7 +171,7 @@ export class DataService {
   }
 
   public fetchOrders(): Observable<Activities> {
-    return this.http.get<any>('/api/order').pipe(
+    return this.http.get<any>('/api/v1/order').pipe(
       map(({ activities }) => {
         for (const activity of activities) {
           activity.createdAt = parseISO(activity.createdAt);
@@ -185,14 +183,14 @@ export class DataService {
   }
 
   public fetchPortfolioDetails(aParams: { [param: string]: any }) {
-    return this.http.get<PortfolioDetails>('/api/portfolio/details', {
+    return this.http.get<PortfolioDetails>('/api/v1/portfolio/details', {
       params: aParams
     });
   }
 
   public fetchPortfolioPerformance(params: { [param: string]: any }) {
     return this.http.get<PortfolioPerformanceResponse>(
-      '/api/portfolio/performance',
+      '/api/v1/portfolio/performance',
       {
         params
       }
@@ -201,16 +199,16 @@ export class DataService {
 
   public fetchPortfolioPublic(aId: string) {
     return this.http.get<PortfolioPublicDetails>(
-      `/api/portfolio/public/${aId}`
+      `/api/v1/portfolio/public/${aId}`
     );
   }
 
   public fetchPortfolioReport() {
-    return this.http.get<PortfolioReport>('/api/portfolio/report');
+    return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
   }
 
   public fetchPortfolioSummary(): Observable<PortfolioSummary> {
-    return this.http.get<any>('/api/portfolio/summary').pipe(
+    return this.http.get<any>('/api/v1/portfolio/summary').pipe(
       map((summary) => {
         if (summary.firstOrderDate) {
           summary.firstOrderDate = parseISO(summary.firstOrderDate);
@@ -229,7 +227,7 @@ export class DataService {
     symbol: string;
   }) {
     return this.http
-      .get<any>(`/api/portfolio/position/${dataSource}/${symbol}`)
+      .get<any>(`/api/v1/portfolio/position/${dataSource}/${symbol}`)
       .pipe(
         map((data) => {
           if (data.orders) {
@@ -245,47 +243,47 @@ export class DataService {
   }
 
   public loginAnonymous(accessToken: string) {
-    return this.http.get<any>(`/api/auth/anonymous/${accessToken}`);
+    return this.http.get<any>(`/api/v1/auth/anonymous/${accessToken}`);
   }
 
   public postAccess(aAccess: CreateAccessDto) {
-    return this.http.post<OrderModel>(`/api/access`, aAccess);
+    return this.http.post<OrderModel>(`/api/v1/access`, aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {
-    return this.http.post<OrderModel>(`/api/account`, aAccount);
+    return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
   }
 
   public postOrder(aOrder: CreateOrderDto) {
-    return this.http.post<OrderModel>(`/api/order`, aOrder);
+    return this.http.post<OrderModel>(`/api/v1/order`, aOrder);
   }
 
   public postUser() {
-    return this.http.post<UserItem>(`/api/user`, {});
+    return this.http.post<UserItem>(`/api/v1/user`, {});
   }
 
   public putAccount(aAccount: UpdateAccountDto) {
-    return this.http.put<UserItem>(`/api/account/${aAccount.id}`, aAccount);
+    return this.http.put<UserItem>(`/api/v1/account/${aAccount.id}`, aAccount);
   }
 
   public putAdminSetting(key: string, aData: PropertyDto) {
-    return this.http.put<void>(`/api/admin/settings/${key}`, aData);
+    return this.http.put<void>(`/api/v1/admin/settings/${key}`, aData);
   }
 
   public putOrder(aOrder: UpdateOrderDto) {
-    return this.http.put<UserItem>(`/api/order/${aOrder.id}`, aOrder);
+    return this.http.put<UserItem>(`/api/v1/order/${aOrder.id}`, aOrder);
   }
 
   public putUserSetting(aData: UpdateUserSettingDto) {
-    return this.http.put<User>(`/api/user/setting`, aData);
+    return this.http.put<User>(`/api/v1/user/setting`, aData);
   }
 
   public putUserSettings(aData: UpdateUserSettingsDto) {
-    return this.http.put<User>(`/api/user/settings`, aData);
+    return this.http.put<User>(`/api/v1/user/settings`, aData);
   }
 
   public redeemCoupon(couponCode: string) {
-    return this.http.post('/api/subscription/redeem-coupon', {
+    return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
     });
   }

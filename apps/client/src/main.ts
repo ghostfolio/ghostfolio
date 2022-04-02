@@ -8,7 +8,7 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 (async () => {
-  const response = await fetch('/api/info');
+  const response = await fetch('/api/v1/info');
   const info: InfoItem = await response.json();
 
   if (window.localStorage.getItem('utm_source') === 'trusted-web-activity') {
