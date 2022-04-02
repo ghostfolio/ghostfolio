@@ -39,13 +39,15 @@
                   Upgrade
                 </button>
                 <div *ngIf="price" class="mt-1">
-                  {{ baseCurrency }}
                   <ng-container *ngIf="coupon"
-                    >{{ price - coupon | number : '1.2-2' }}
-                    <del>{{ price }}</del>
-                  </ng-container>
-                  <ng-container *ngIf="!coupon">{{ price }}</ng-container>
-                  <span i18n> per year</span>
+                    ><del class="text-muted"
+                      >{{ baseCurrency }}&nbsp;{{ price }}</del
+                    >&nbsp;{{ baseCurrency }}&nbsp;{{ price - coupon
+                    }}</ng-container
+                  >
+                  <ng-container *ngIf="!coupon"
+                    >{{ baseCurrency }}&nbsp;{{ price }}</ng-container
+                  >&nbsp;<span i18n>per year</span>
                 </div>
                 <a
                   *ngIf="!user?.subscription?.expiresAt"
