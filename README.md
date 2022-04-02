@@ -168,6 +168,72 @@ Run `yarn start:storybook`
 
 Run `yarn test`
 
+## Public API (experimental)
+
+### Import Activities
+
+#### Request
+
+`POST http://localhost:4200/api/v1/import`
+
+#### Authorization: Bearer Token
+
+Set the header as follows:
+
+```
+"Authorization": "Bearer eyJh..."
+```
+
+#### Body
+
+```
+{
+  "activities": [
+    {
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2021-09-15T00:00:00.000Z",
+      "fee": 19,
+      "quantity": 5,
+      "symbol": "MSFT"
+      "type": "BUY",
+      "unitPrice": 298.58
+    }
+  ]
+}
+```
+
+| Field      | Type                | Description                                        |
+| ---------- | ------------------- | -------------------------------------------------- |
+| accountId  | string (`optional`) | Id of the account                                  |
+| currency   | string              | `CHF` \| `EUR` \| `USD` etc.                       |
+| dataSource | string              | `MANUAL` (for type `ITEM`) \| `YAHOO`              |
+| date       | string              | Date in the format `ISO-8601`                      |
+| fee        | number              | Fee of the activity                                |
+| quantity   | number              | Quantity of the activity                           |
+| symbol     | string              | Symbol of the activity (suitable for `dataSource`) |
+| type       | string              | `BUY` \| `DIVIDEND` \| `ITEM` \| `SELL`            |
+| unitPrice  | number              | Price per unit of the activity                     |
+
+#### Response
+
+##### Success
+
+`201 Created`
+
+##### Error
+
+`400 Bad Request`
+
+```
+{
+  "error": "Bad Request",
+  "message": [
+    "activities.1 is a duplicate activity"
+  ]
+}
+```
+
 ## Contributing
 
 Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public - including you.
