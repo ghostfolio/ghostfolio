@@ -174,7 +174,7 @@ Run `yarn test`
 
 #### Request
 
-`POST http://localhost:4200/api/v1/import`
+`POST http://localhost:3333/api/v1/import`
 
 #### Authorization: Bearer Token
 
