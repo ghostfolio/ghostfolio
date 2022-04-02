@@ -8,6 +8,6 @@ export class CacheService {
   public constructor(private http: HttpClient) {}
 
   public flush() {
-    return this.http.post<any>(`/api/cache/flush`, {});
+    return this.http.post<any>(`/api/v1/cache/flush`, {});
   }
 }

@@ -36,7 +36,7 @@ export class UserService extends ObservableStore<UserStoreState> {
   }
 
   private fetchUser() {
-    return this.http.get<User>('/api/user').pipe(
+    return this.http.get<User>('/api/v1/user').pipe(
       map((user) => {
         this.setState({ user }, UserStoreActions.GetUser);
         return user;
