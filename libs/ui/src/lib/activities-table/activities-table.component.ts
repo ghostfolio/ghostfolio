@@ -23,7 +23,6 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, format, isAfter } from 'date-fns';
