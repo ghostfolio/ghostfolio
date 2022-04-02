@@ -36,7 +36,7 @@ export class ImportController {
 
     try {
       return await this.importService.import({
-        orders: importData.orders,
+        activities: importData.activities,
         userId: this.request.user.id
       });
     } catch (error) {

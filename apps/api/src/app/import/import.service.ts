@@ -16,23 +16,23 @@ export class ImportService {
   ) {}
 
   public async import({
-    orders,
+    activities,
     userId
   }: {
-    orders: Partial<CreateOrderDto>[];
+    activities: Partial<CreateOrderDto>[];
     userId: string;
   }): Promise<void> {
-    for (const order of orders) {
-      if (!order.dataSource) {
-        if (order.type === 'ITEM') {
-          order.dataSource = 'MANUAL';
+    for (const activity of activities) {
+      if (!activity.dataSource) {
+        if (activity.type === 'ITEM') {
+          activity.dataSource = 'MANUAL';
         } else {
-          order.dataSource = this.dataProviderService.getPrimaryDataSource();
+          activity.dataSource = this.dataProviderService.getPrimaryDataSource();
         }
       }
     }
 
-    await this.validateOrders({ orders, userId });
+    await this.validateActivities({ activities, userId });
 
     const accountIds = (await this.accountService.getAccounts(userId)).map(
       (account) => {
@@ -50,7 +50,7 @@ export class ImportService {
       symbol,
       type,
       unitPrice
-    } of orders) {
+    } of activities) {
       await this.orderService.createOrder({
         fee,
         quantity,
@@ -79,24 +79,24 @@ export class ImportService {
     }
   }
 
-  private async validateOrders({
-    orders,
+  private async validateActivities({
+    activities,
     userId
   }: {
-    orders: Partial<CreateOrderDto>[];
+    activities: Partial<CreateOrderDto>[];
     userId: string;
   }) {
     if (
-      orders?.length > this.configurationService.get('MAX_ORDERS_TO_IMPORT')
+      activities?.length > this.configurationService.get('MAX_ORDERS_TO_IMPORT')
     ) {
       throw new Error(
-        `Too many transactions (${this.configurationService.get(
+        `Too many activities (${this.configurationService.get(
           'MAX_ORDERS_TO_IMPORT'
         )} at most)`
       );
     }
 
-    const existingOrders = await this.orderService.orders({
+    const existingActivities = await this.orderService.orders({
       include: { SymbolProfile: true },
       orderBy: { date: 'desc' },
       where: { userId }
@@ -105,22 +105,22 @@ export class ImportService {
     for (const [
       index,
       { currency, dataSource, date, fee, quantity, symbol, type, unitPrice }
-    ] of orders.entries()) {
-      const duplicateOrder = existingOrders.find((order) => {
+    ] of activities.entries()) {
+      const duplicateActivity = existingActivities.find((activity) => {
         return (
-          order.SymbolProfile.currency === currency &&
-          order.SymbolProfile.dataSource === dataSource &&
-          isSameDay(order.date, parseISO(<string>(<unknown>date))) &&
-          order.fee === fee &&
-          order.quantity === quantity &&
-          order.SymbolProfile.symbol === symbol &&
-          order.type === type &&
-          order.unitPrice === unitPrice
+          activity.SymbolProfile.currency === currency &&
+          activity.SymbolProfile.dataSource === dataSource &&
+          isSameDay(activity.date, parseISO(<string>(<unknown>date))) &&
+          activity.fee === fee &&
+          activity.quantity === quantity &&
+          activity.SymbolProfile.symbol === symbol &&
+          activity.type === type &&
+          activity.unitPrice === unitPrice
         );
       });
 
-      if (duplicateOrder) {
-        throw new Error(`orders.${index} is a duplicate transaction`);
+      if (duplicateActivity) {
+        throw new Error(`activities.${index} is a duplicate activity`);
       }
 
       if (dataSource !== 'MANUAL') {
@@ -130,13 +130,13 @@ export class ImportService {
 
         if (quotes[symbol] === undefined) {
           throw new Error(
-            `orders.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
         }
 
         if (quotes[symbol].currency !== currency) {
           throw new Error(
-            `orders.${index}.currency ("${currency}") does not match with "${quotes[symbol].currency}"`
+            `activities.${index}.currency ("${currency}") does not match with "${quotes[symbol].currency}"`
           );
         }
       }

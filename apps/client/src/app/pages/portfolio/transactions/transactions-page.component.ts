@@ -185,19 +185,31 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           if (file.name.endsWith('.json')) {
             const content = JSON.parse(fileContent);
 
-            if (!isArray(content.orders)) {
-              throw new Error();
+            if (!isArray(content.activities)) {
+              if (isArray(content.orders)) {
+                this.handleImportError({
+                  activities: [],
+                  error: {
+                    error: {
+                      message: [`orders needs to be renamed to activities`]
+                    }
+                  }
+                });
+                return;
+              } else {
+                throw new Error();
+              }
             }
 
             try {
               await this.importTransactionsService.importJson({
-                content: content.orders
+                content: content.activities
               });
 
               this.handleImportSuccess();
             } catch (error) {
               console.error(error);
-              this.handleImportError({ error, orders: content.orders });
+              this.handleImportError({ error, activities: content.activities });
             }
 
             return;
@@ -212,10 +224,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             } catch (error) {
               console.error(error);
               this.handleImportError({
+                activities: error?.activities ?? [],
                 error: {
                   error: { message: error?.error?.message ?? [error?.message] }
-                },
-                orders: error?.orders ?? []
+                }
               });
             }
 
@@ -226,8 +238,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         } catch (error) {
           console.error(error);
           this.handleImportError({
-            error: { error: { message: ['Unexpected format'] } },
-            orders: []
+            activities: [],
+            error: { error: { message: ['Unexpected format'] } }
           });
         }
       };
@@ -281,12 +293,18 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private handleImportError({ error, orders }: { error: any; orders: any[] }) {
+  private handleImportError({
+    activities,
+    error
+  }: {
+    activities: any[];
+    error: any;
+  }) {
     this.snackBar.dismiss();
 
     this.dialog.open(ImportTransactionDialog, {
       data: {
-        orders,
+        activities,
         deviceType: this.deviceType,
         messages: error?.error?.message
       },
