@@ -140,6 +140,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       'fee',
       'value',
       'currency',
+      'valueInBaseCurrency',
       'account',
       'actions'
     ];
