@@ -27,28 +27,28 @@
                 Valid until {{ user?.subscription?.expiresAt | date:
                 defaultDateFormat }}
               </div>
-              <div
-                *ngIf="hasPermissionForSubscription && user?.subscription?.type === 'Basic'"
-              >
-                <button
-                  color="primary"
-                  i18n
-                  mat-flat-button
-                  (click)="onCheckout(priceId)"
-                >
-                  Upgrade
-                </button>
-                <div *ngIf="price" class="mt-1">
-                  <ng-container *ngIf="coupon"
-                    ><del class="text-muted"
-                      >{{ baseCurrency }}&nbsp;{{ price }}</del
-                    >&nbsp;{{ baseCurrency }}&nbsp;{{ price - coupon
-                    }}</ng-container
+              <div *ngIf="user?.subscription?.type === 'Basic'">
+                <ng-container *ngIf="hasPermissionForSubscription">
+                  <button
+                    color="primary"
+                    i18n
+                    mat-flat-button
+                    (click)="onCheckout(priceId)"
                   >
-                  <ng-container *ngIf="!coupon"
-                    >{{ baseCurrency }}&nbsp;{{ price }}</ng-container
-                  >&nbsp;<span i18n>per year</span>
-                </div>
+                    Upgrade
+                  </button>
+                  <div *ngIf="price" class="mt-1">
+                    <ng-container *ngIf="coupon"
+                      ><del class="text-muted"
+                        >{{ baseCurrency }}&nbsp;{{ price }}</del
+                      >&nbsp;{{ baseCurrency }}&nbsp;{{ price - coupon
+                      }}</ng-container
+                    >
+                    <ng-container *ngIf="!coupon"
+                      >{{ baseCurrency }}&nbsp;{{ price }}</ng-container
+                    >&nbsp;<span i18n>per year</span>
+                  </div>
+                </ng-container>
                 <a
                   *ngIf="!user?.subscription?.expiresAt"
                   class="mr-2 my-2"
