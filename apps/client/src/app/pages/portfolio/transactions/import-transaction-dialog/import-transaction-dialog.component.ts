@@ -27,12 +27,12 @@ export class ImportTransactionDialog implements OnDestroy {
 
   public ngOnInit() {
     for (const message of this.data.messages) {
-      if (message.includes('orders.')) {
+      if (message.includes('activities.')) {
         let [index] = message.split(' ');
-        index = index.replace('orders.', '');
+        index = index.replace('activities.', '');
         [index] = index.split('.');
 
-        this.details.push(this.data.orders[index]);
+        this.details.push(this.data.activities[index]);
       } else {
         this.details.push('');
       }

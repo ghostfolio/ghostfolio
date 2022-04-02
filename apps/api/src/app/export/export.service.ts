@@ -14,7 +14,7 @@ export class ExportService {
     activityIds?: string[];
     userId: string;
   }): Promise<Export> {
-    let orders = await this.prismaService.order.findMany({
+    let activities = await this.prismaService.order.findMany({
       orderBy: { date: 'desc' },
       select: {
         accountId: true,
@@ -30,14 +30,14 @@ export class ExportService {
     });
 
     if (activityIds) {
-      orders = orders.filter((order) => {
-        return activityIds.includes(order.id);
+      activities = activities.filter((activity) => {
+        return activityIds.includes(activity.id);
       });
     }
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
-      orders: orders.map(
+      activities: activities.map(
         ({
           accountId,
           date,

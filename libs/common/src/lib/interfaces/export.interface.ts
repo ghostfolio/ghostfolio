@@ -5,5 +5,5 @@ export interface Export {
     date: string;
     version: string;
   };
-  orders: Partial<Order>[];
+  activities: Partial<Order>[];
 }

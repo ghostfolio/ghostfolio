@@ -6,5 +6,5 @@ export class ImportDataDto {
   @IsArray()
   @Type(() => CreateOrderDto)
   @ValidateNested({ each: true })
-  orders: CreateOrderDto[];
+  activities: CreateOrderDto[];
 }

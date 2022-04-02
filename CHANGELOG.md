@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `orders` to `activities` in import and export functionality
 - Improved the pricing page
 
 ## 1.130.0 - 30.03.2022
