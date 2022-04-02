@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Display the value in base currency in the accounts table on mobile
+- Display the value in base currency in the activities table on mobile
 - Renamed `orders` to `activities` in import and export functionality
 - Harmonized the algebraic sign of `currentGrossPerformancePercent` and `currentNetPerformancePercent` with `currentGrossPerformance` and `currentNetPerformance`
 - Improved the pricing page
