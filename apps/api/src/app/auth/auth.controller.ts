@@ -9,7 +9,9 @@ import {
   Post,
   Req,
   Res,
-  UseGuards
+  UseGuards,
+  Version,
+  VERSION_NEUTRAL
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -51,6 +53,7 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
+  @Version(VERSION_NEUTRAL)
   public googleLoginCallback(@Req() req, @Res() res) {
     // Handles the Google OAuth2 callback
     const jwt: string = req.user.jwt;
