@@ -20,7 +20,7 @@ import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { DEFAULT_DATE_FORMAT, baseCurrency } from '@ghostfolio/common/config';
+import { baseCurrency } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -45,7 +45,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public coupon: number;
   public couponId: string;
   public currencies: string[] = [];
-  public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateAccess: boolean;

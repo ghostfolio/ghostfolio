@@ -8,8 +8,7 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getDateFormatString } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DataSource, MarketData } from '@prisma/client';
 import {
@@ -40,8 +39,8 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
 
+  public dateFormat = getDateFormatString();
   public days = Array(31);
-  public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public deviceType: string;
   public historicalDataItems: LineChartItem[];
   public marketDataByMonth: {

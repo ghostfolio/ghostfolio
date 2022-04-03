@@ -4,8 +4,8 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
-import { DEFAULT_DATE_FORMAT, locale } from '@ghostfolio/common/config';
-import { format, isDate, parseISO } from 'date-fns';
+import { getLocale } from '@ghostfolio/common/helper';
+import { isDate, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
 
 @Component({
@@ -21,7 +21,7 @@ export class ValueComponent implements OnChanges {
   @Input() isCurrency = false;
   @Input() isPercent = false;
   @Input() label = '';
-  @Input() locale = locale;
+  @Input() locale = getLocale();
   @Input() position = '';
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
@@ -102,10 +102,13 @@ export class ValueComponent implements OnChanges {
 
         try {
           if (isDate(parseISO(this.value))) {
-            this.formattedValue = format(
-              new Date(<string>this.value),
-              DEFAULT_DATE_FORMAT
-            );
+            this.formattedValue = new Date(
+              <string>this.value
+            ).toLocaleDateString(this.locale, {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            });
           }
         } catch {
           this.formattedValue = this.value;

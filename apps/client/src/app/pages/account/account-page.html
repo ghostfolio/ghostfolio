@@ -24,8 +24,12 @@
                 ></ion-icon>
               </div>
               <div *ngIf="user?.subscription?.type === 'Premium'">
-                Valid until {{ user?.subscription?.expiresAt | date:
-                defaultDateFormat }}
+                Valid until
+                <gf-value
+                  class="d-inline-block"
+                  [locale]="user?.settings?.locale"
+                  [value]="user?.subscription?.expiresAt"
+                ></gf-value>
               </div>
               <div *ngIf="user?.subscription?.type === 'Basic'">
                 <ng-container *ngIf="hasPermissionForSubscription">

@@ -5,7 +5,6 @@ import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  DEFAULT_DATE_FORMAT,
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
@@ -35,7 +34,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public customCurrencies: string[];
   public dataGatheringInProgress: boolean;
   public dataGatheringProgress: number;
-  public defaultDateFormat = DEFAULT_DATE_FORMAT;
   public exchangeRates: { label1: string; label2: string; value: number }[];
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;

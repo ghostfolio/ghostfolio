@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterModule } from '@angular/router';
 import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
+import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { AccountPageRoutingModule } from './account-page-routing.module';
 import { AccountPageComponent } from './account-page.component';
@@ -24,6 +25,7 @@ import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-di
     FormsModule,
     GfCreateOrUpdateAccessDialogModule,
     GfPortfolioAccessTableModule,
+    GfValueModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,

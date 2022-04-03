@@ -71,7 +71,7 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          {{ element.date | date: defaultDateFormat }}
+          <gf-value [locale]="locale" [value]="element.date"></gf-value>
         </div>
       </td>
       <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
