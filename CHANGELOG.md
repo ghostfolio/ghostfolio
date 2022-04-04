@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for localization (date format) in user settings
+- Added support for localization (date and number format) in user settings
 
 ## 1.131.1 - 04.04.2022
 
