@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.131.1 - 04.04.2022
+
+### Fixed
+
+- Fixed the missing API version in the _Stripe_ success callback url
+
 ## 1.131.0 - 02.04.2022
 
 ### Added

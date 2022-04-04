@@ -10,8 +10,8 @@ import {
   Req,
   Res,
   UseGuards,
-  Version,
-  VERSION_NEUTRAL
+  VERSION_NEUTRAL,
+  Version
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';

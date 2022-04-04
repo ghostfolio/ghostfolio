@@ -45,7 +45,7 @@ export class SubscriptionService {
       payment_method_types: ['card'],
       success_url: `${this.configurationService.get(
         'ROOT_URL'
-      )}/api/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
+      )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
     };
 
     if (couponId) {

@@ -1,10 +1,10 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import {
   PortfolioDetails,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
 
