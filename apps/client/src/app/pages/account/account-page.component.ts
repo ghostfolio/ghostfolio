@@ -23,6 +23,7 @@ import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { baseCurrency } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { uniq } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
@@ -51,6 +52,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public locales = ['de', 'de-CH', 'en-GB', 'en-US'];
   public price: number;
   public priceId: string;
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
@@ -120,6 +122,9 @@ export class AccountPageComponent implements OnDestroy, OnInit {
             permissions.updateViewMode
           );
 
+          this.locales.push(this.user.settings.locale);
+          this.locales = uniq(this.locales.sort());
+
           this.changeDetectorRef.markForCheck();
         }
       });
@@ -140,6 +145,24 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.update();
+  }
+
+  public onChangeUserSetting(aKey: string, aValue: string) {
+    this.dataService
+      .putUserSetting({ [aKey]: aValue })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 
   public onChangeUserSettings(aKey: string, aValue: string) {

@@ -2,17 +2,14 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_IS_READ_ONLY_MODE } from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
-import {
-  hasPermission,
-  hasRole,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  Headers,
   HttpException,
   Inject,
   Param,
@@ -63,8 +60,13 @@ export class UserController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  public async getUser(@Param('id') id: string): Promise<User> {
-    return this.userService.getUser(this.request.user);
+  public async getUser(
+    @Headers('accept-language') acceptLanguage: string
+  ): Promise<User> {
+    return this.userService.getUser(
+      this.request.user,
+      acceptLanguage?.split(',')?.[0]
+    );
   }
 
   @Post()
@@ -118,7 +120,7 @@ export class UserController {
     };
 
     for (const key in userSettings) {
-      if (userSettings[key] === false) {
+      if (userSettings[key] === false || userSettings[key] === null) {
         delete userSettings[key];
       }
     }

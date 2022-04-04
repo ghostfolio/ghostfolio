@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserSettingDto {
   @IsNumber()
@@ -12,4 +12,8 @@ export class UpdateUserSettingDto {
   @IsBoolean()
   @IsOptional()
   isRestrictedView?: boolean;
+
+  @IsString()
+  @IsOptional()
+  locale?: string;
 }

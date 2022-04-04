@@ -71,6 +71,22 @@ export function getLocale() {
     : navigator.language ?? locale;
 }
 
+export function getNumberFormatDecimal(aLocale?: string) {
+  const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
+
+  return formatObject.find((object) => {
+    return object.type === 'decimal';
+  }).value;
+}
+
+export function getNumberFormatGroup(aLocale?: string) {
+  const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
+
+  return formatObject.find((object) => {
+    return object.type === 'group';
+  }).value;
+}
+
 export function getTextColor() {
   const cssVariable = getCssVariable(
     window.matchMedia('(prefers-color-scheme: dark)').matches
