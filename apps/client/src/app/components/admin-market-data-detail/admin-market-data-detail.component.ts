@@ -8,8 +8,11 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getDateFormatString,
+  getLocale
+} from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DataSource, MarketData } from '@prisma/client';
 import {
@@ -35,13 +38,14 @@ import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-
 export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
+  @Input() locale = getLocale();
   @Input() marketData: MarketData[];
   @Input() symbol: string;
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
 
   public days = Array(31);
-  public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public defaultDateFormat: string;
   public deviceType: string;
   public historicalDataItems: LineChartItem[];
   public marketDataByMonth: {
@@ -62,6 +66,8 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
+    this.defaultDateFormat = getDateFormatString(this.locale);
+
     this.historicalDataItems = this.marketData.map((marketDataItem) => {
       return {
         date: format(marketDataItem.date, DATE_FORMAT),

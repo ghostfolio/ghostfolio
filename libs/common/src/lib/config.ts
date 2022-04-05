@@ -19,7 +19,7 @@ export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;
 export const ghostfolioFearAndGreedIndexDataSource = DataSource.RAKUTEN;
 export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
 
-export const locale = 'de-CH';
+export const locale = 'en-US';
 
 export const primaryColorHex = '#36cfcc';
 export const primaryColorRgb = {
@@ -44,7 +44,6 @@ export const warnColorRgb = {
 
 export const ASSET_SUB_CLASS_EMERGENCY_FUND = 'EMERGENCY_FUND';
 
-export const DEFAULT_DATE_FORMAT = 'dd.MM.yyyy';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 
 export const PROPERTY_COUPONS = 'COUPONS';

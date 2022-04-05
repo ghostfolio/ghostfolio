@@ -8,6 +8,10 @@ import {
   ViewChild
 } from '@angular/core';
 import {
+  getNumberFormatDecimal,
+  getNumberFormatGroup
+} from '@ghostfolio/common/helper';
+import {
   PortfolioPerformance,
   ResponseError
 } from '@ghostfolio/common/interfaces';
@@ -50,13 +54,14 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
         this.unit = this.baseCurrency;
 
         new CountUp('value', this.performance?.currentValue, {
+          decimal: getNumberFormatDecimal(this.locale),
           decimalPlaces:
             this.deviceType === 'mobile' &&
             this.performance?.currentValue >= 100000
               ? 0
               : 2,
           duration: 1,
-          separator: `'`
+          separator: getNumberFormatGroup(this.locale)
         }).start();
       } else if (this.performance?.currentValue === null) {
         this.unit = '%';

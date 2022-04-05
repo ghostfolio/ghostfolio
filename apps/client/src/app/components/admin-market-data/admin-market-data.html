@@ -65,6 +65,7 @@
                 <gf-admin-market-data-detail
                   [dataSource]="item.dataSource"
                   [dateOfFirstActivity]="item.date"
+                  [locale]="user?.settings?.locale"
                   [marketData]="marketDataDetails"
                   [symbol]="item.symbol"
                   (marketDataChanged)="onMarketDataChanged($event)"

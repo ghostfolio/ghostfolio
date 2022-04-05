@@ -20,9 +20,11 @@ import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { DEFAULT_DATE_FORMAT, baseCurrency } from '@ghostfolio/common/config';
+import { baseCurrency } from '@ghostfolio/common/config';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { uniq } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
@@ -45,13 +47,14 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public coupon: number;
   public couponId: string;
   public currencies: string[] = [];
-  public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public defaultDateFormat: string;
   public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateAccess: boolean;
   public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public locales = ['de', 'de-CH', 'en-GB', 'en-US'];
   public price: number;
   public priceId: string;
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
@@ -101,6 +104,10 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          this.defaultDateFormat = getDateFormatString(
+            this.user.settings.locale
+          );
+
           this.hasPermissionToCreateAccess = hasPermission(
             this.user.permissions,
             permissions.createAccess
@@ -120,6 +127,9 @@ export class AccountPageComponent implements OnDestroy, OnInit {
             this.user.permissions,
             permissions.updateViewMode
           );
+
+          this.locales.push(this.user.settings.locale);
+          this.locales = uniq(this.locales.sort());
 
           this.changeDetectorRef.markForCheck();
         }
@@ -141,6 +151,24 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.update();
+  }
+
+  public onChangeUserSetting(aKey: string, aValue: string) {
+    this.dataService
+      .putUserSetting({ [aKey]: aValue })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 
   public onChangeUserSettings(aKey: string, aValue: string) {

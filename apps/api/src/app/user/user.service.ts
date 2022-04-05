@@ -33,14 +33,17 @@ export class UserService {
     private readonly subscriptionService: SubscriptionService
   ) {}
 
-  public async getUser({
-    Account,
-    alias,
-    id,
-    permissions,
-    Settings,
-    subscription
-  }: UserWithSettings): Promise<IUser> {
+  public async getUser(
+    {
+      Account,
+      alias,
+      id,
+      permissions,
+      Settings,
+      subscription
+    }: UserWithSettings,
+    aLocale = locale
+  ): Promise<IUser> {
     const access = await this.prismaService.access.findMany({
       include: {
         User: true
@@ -63,8 +66,8 @@ export class UserService {
       accounts: Account,
       settings: {
         ...(<UserSettings>Settings.settings),
-        locale,
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
+        locale: (<UserSettings>Settings.settings).locale ?? aLocale,
         viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
       }
     };

@@ -1,16 +1,14 @@
-import {
-  DEFAULT_DATE_FORMAT,
-  DEFAULT_DATE_FORMAT_MONTH_YEAR
-} from '@ghostfolio/common/config';
+import { DEFAULT_DATE_FORMAT_MONTH_YEAR } from '@ghostfolio/common/config';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 
 export const DateFormats = {
   display: {
-    dateInput: DEFAULT_DATE_FORMAT,
+    dateInput: getDateFormatString(),
     monthYearLabel: DEFAULT_DATE_FORMAT_MONTH_YEAR,
-    dateA11yLabel: DEFAULT_DATE_FORMAT,
+    dateA11yLabel: getDateFormatString(),
     monthYearA11yLabel: DEFAULT_DATE_FORMAT_MONTH_YEAR
   },
   parse: {
-    dateInput: DEFAULT_DATE_FORMAT
+    dateInput: getDateFormatString()
   }
 };

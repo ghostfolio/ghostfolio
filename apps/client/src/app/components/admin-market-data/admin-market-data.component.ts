@@ -7,8 +7,9 @@ import {
 } from '@angular/core';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DEFAULT_DATE_FORMAT } from '@ghostfolio/common/config';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { getDateFormatString } from '@ghostfolio/common/helper';
+import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { DataSource, MarketData } from '@prisma/client';
 import { Subject } from 'rxjs';
@@ -23,9 +24,10 @@ import { takeUntil } from 'rxjs/operators';
 export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public currentDataSource: DataSource;
   public currentSymbol: string;
-  public defaultDateFormat = DEFAULT_DATE_FORMAT;
+  public defaultDateFormat: string;
   public marketData: AdminMarketDataItem[] = [];
   public marketDataDetails: MarketData[] = [];
+  public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -35,8 +37,21 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
-  ) {}
+    private dataService: DataService,
+    private userService: UserService
+  ) {
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.defaultDateFormat = getDateFormatString(
+            this.user.settings.locale
+          );
+        }
+      });
+  }
 
   /**
    * Initializes the controller

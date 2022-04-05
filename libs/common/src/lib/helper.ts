@@ -2,7 +2,7 @@ import * as currencies from '@dinero.js/currencies';
 import { DataSource } from '@prisma/client';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
-import { ghostfolioScraperApiSymbolPrefix } from './config';
+import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
@@ -42,6 +42,49 @@ export function getCssVariable(aCssVariable: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(
     aCssVariable
   );
+}
+
+export function getDateFormatString(aLocale?: string) {
+  const formatObject = new Intl.DateTimeFormat(aLocale).formatToParts(
+    new Date()
+  );
+
+  return formatObject
+    .map((object) => {
+      switch (object.type) {
+        case 'day':
+          return 'dd';
+        case 'month':
+          return 'MM';
+        case 'year':
+          return 'yyyy';
+        default:
+          return object.value;
+      }
+    })
+    .join('');
+}
+
+export function getLocale() {
+  return navigator.languages?.length
+    ? navigator.languages[0]
+    : navigator.language ?? locale;
+}
+
+export function getNumberFormatDecimal(aLocale?: string) {
+  const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
+
+  return formatObject.find((object) => {
+    return object.type === 'decimal';
+  }).value;
+}
+
+export function getNumberFormatGroup(aLocale?: string) {
+  const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
+
+  return formatObject.find((object) => {
+    return object.type === 'group';
+  }).value;
 }
 
 export function getTextColor() {
