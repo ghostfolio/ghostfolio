@@ -21,6 +21,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { baseCurrency } from '@ghostfolio/common/config';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { uniq } from 'lodash';
@@ -46,6 +47,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public coupon: number;
   public couponId: string;
   public currencies: string[] = [];
+  public defaultDateFormat: string;
   public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateAccess: boolean;
@@ -101,6 +103,10 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.defaultDateFormat = getDateFormatString(
+            this.user.settings.locale
+          );
 
           this.hasPermissionToCreateAccess = hasPermission(
             this.user.permissions,

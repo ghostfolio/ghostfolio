@@ -8,6 +8,7 @@ import {
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { DataSource, MarketData } from '@prisma/client';
@@ -23,6 +24,7 @@ import { takeUntil } from 'rxjs/operators';
 export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public currentDataSource: DataSource;
   public currentSymbol: string;
+  public defaultDateFormat: string;
   public marketData: AdminMarketDataItem[] = [];
   public marketDataDetails: MarketData[] = [];
   public user: User;
@@ -43,6 +45,10 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.defaultDateFormat = getDateFormatString(
+            this.user.settings.locale
+          );
         }
       });
   }

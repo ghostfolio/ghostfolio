@@ -20,6 +20,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
@@ -62,6 +63,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
+  public defaultDateFormat: string;
   public displayedColumns = [];
   public endOfToday = endOfToday();
   public filters$: Subject<string[]> = new BehaviorSubject([]);
@@ -150,6 +152,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
 
     this.isLoading = true;
+
+    this.defaultDateFormat = getDateFormatString(this.locale);
 
     if (this.activities) {
       this.dataSource = new MatTableDataSource(this.activities);

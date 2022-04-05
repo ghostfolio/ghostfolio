@@ -21,10 +21,7 @@
               <td class="mat-cell px-1 py-2">{{ item.symbol }}</td>
               <td class="mat-cell px-1 py-2">{{ item.dataSource }}</td>
               <td class="mat-cell px-1 py-2">
-                <gf-value
-                  [locale]="user?.settings?.locale"
-                  [value]="item.date ?? ''"
-                ></gf-value>
+                {{ (item.date | date: defaultDateFormat) ?? '' }}
               </td>
               <td class="mat-cell px-1 py-2">{{ item.activityCount }}</td>
               <td class="mat-cell px-1 py-2">{{ item.marketDataItemCount }}</td>
@@ -68,6 +65,7 @@
                 <gf-admin-market-data-detail
                   [dataSource]="item.dataSource"
                   [dateOfFirstActivity]="item.date"
+                  [locale]="user?.settings?.locale"
                   [marketData]="marketDataDetails"
                   [symbol]="item.symbol"
                   (marketDataChanged)="onMarketDataChanged($event)"
