@@ -42,7 +42,7 @@ export class UserService {
       Settings,
       subscription
     }: UserWithSettings,
-    aLocale?: string
+    aLocale = locale
   ): Promise<IUser> {
     const access = await this.prismaService.access.findMany({
       include: {
@@ -67,7 +67,7 @@ export class UserService {
       settings: {
         ...(<UserSettings>Settings.settings),
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
-        locale: (<UserSettings>Settings.settings).locale ?? aLocale ?? locale,
+        locale: (<UserSettings>Settings.settings).locale ?? aLocale,
         viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
       }
     };
