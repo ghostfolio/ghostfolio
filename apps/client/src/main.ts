@@ -1,6 +1,7 @@
 import { enableProdMode } from '@angular/core';
 import { LOCALE_ID } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { locale } from '@ghostfolio/common/config';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 
@@ -27,7 +28,7 @@ import { environment } from './environments/environment';
 
   platformBrowserDynamic()
     .bootstrapModule(AppModule, {
-      providers: [{ provide: LOCALE_ID, useValue: 'de-CH' }]
+      providers: [{ provide: LOCALE_ID, useValue: locale }]
     })
     .catch((error) => console.error(error));
 })();
