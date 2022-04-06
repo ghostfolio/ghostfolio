@@ -21,7 +21,7 @@
 
     <gf-line-chart
       class="mb-4"
-      benchmarkLabel="Buy Price"
+      benchmarkLabel="Average Unit Price"
       [benchmarkDataItems]="benchmarkDataItems"
       [historicalDataItems]="historicalDataItems"
       [showGradient]="true"
@@ -53,7 +53,7 @@
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Ø Buy Price"
+          label="Average Unit Price"
           size="medium"
           [currency]="SymbolProfile?.currency"
           [locale]="data.locale"

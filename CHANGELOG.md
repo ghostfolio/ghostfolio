@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for localization (date and number format) in user settings
 
+### Changed
+
+- Improved the label of the average price from _Ø Buy Price_ to _Average Unit Price_
+
 ## 1.131.1 - 04.04.2022
 
 ### Fixed
