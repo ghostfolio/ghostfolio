@@ -70,9 +70,10 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
           'value',
           this.performance?.currentNetPerformancePercent * 100,
           {
+            decimal: getNumberFormatDecimal(this.locale),
             decimalPlaces: 2,
-            duration: 0.75,
-            separator: `'`
+            duration: 1,
+            separator: getNumberFormatGroup(this.locale)
           }
         ).start();
       }

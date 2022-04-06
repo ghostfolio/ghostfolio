@@ -67,7 +67,7 @@ export class UserService {
       settings: {
         ...(<UserSettings>Settings.settings),
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
-        locale: (<UserSettings>Settings.settings).locale ?? aLocale,
+        locale: (<UserSettings>Settings.settings)?.locale ?? aLocale,
         viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
       }
     };
