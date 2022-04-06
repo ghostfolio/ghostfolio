@@ -119,9 +119,5 @@ export class ValueComponent implements OnChanges {
     if (this.formattedValue === '0.00') {
       this.useAbsoluteValue = true;
     }
-
-    if (this.isPercent) {
-      this.formattedValue = '– ';
-    }
   }
 }
