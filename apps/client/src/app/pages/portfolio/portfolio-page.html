@@ -25,7 +25,7 @@
         <h4 class="align-items-center d-flex">
           <span i18n>Allocations</span>
           <ion-icon
-            *ngIf="hasPermissionForSubscription"
+            *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1 text-muted"
             name="diamond-outline"
           ></ion-icon>
@@ -38,7 +38,6 @@
           <a
             color="primary"
             mat-button
-            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
             [routerLink]="['/portfolio', 'allocations']"
           >
             <span i18n>Open Allocations</span>
@@ -52,7 +51,7 @@
         <h4 class="align-items-center d-flex">
           <span i18n>Analysis</span>
           <ion-icon
-            *ngIf="hasPermissionForSubscription"
+            *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1 text-muted"
             name="diamond-outline"
           ></ion-icon>
@@ -65,7 +64,6 @@
           <a
             color="primary"
             mat-button
-            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
             [routerLink]="['/portfolio', 'analysis']"
           >
             <span i18n>Open Analysis</span>
@@ -79,7 +77,7 @@
         <h4 class="align-items-center d-flex">
           <span i18n>X-ray</span>
           <ion-icon
-            *ngIf="hasPermissionForSubscription"
+            *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1 text-muted"
             name="diamond-outline"
           ></ion-icon>
@@ -89,12 +87,7 @@
           risks in your portfolio.
         </div>
         <div class="mt-2 text-right">
-          <a
-            color="primary"
-            mat-button
-            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
-            [routerLink]="['/portfolio', 'report']"
-          >
+          <a color="primary" mat-button [routerLink]="['/portfolio', 'report']">
             <span i18n>Open X-ray</span>
             <ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
           </a>
@@ -106,7 +99,7 @@
         <h4 class="align-items-center d-flex">
           <span i18n>FIRE</span>
           <ion-icon
-            *ngIf="hasPermissionForSubscription"
+            *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1 text-muted"
             name="diamond-outline"
           ></ion-icon>
@@ -116,12 +109,7 @@
           <i>Financial Independence, Retire Early</i> lifestyle.
         </div>
         <div class="mt-2 text-right">
-          <a
-            color="primary"
-            mat-button
-            [disabled]="hasPermissionForSubscription && user?.settings?.viewMode !== 'DEFAULT'"
-            [routerLink]="['/portfolio', 'fire']"
-          >
+          <a color="primary" mat-button [routerLink]="['/portfolio', 'fire']">
             <span i18n>Open FIRE</span>
             <ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
           </a>

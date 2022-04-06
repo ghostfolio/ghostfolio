@@ -320,6 +320,16 @@ export class PortfolioController {
   public async getSummary(
     @Headers('impersonation-id') impersonationId
   ): Promise<PortfolioSummary> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     let summary = await this.portfolioServiceStrategy
       .get()
       .getSummary(impersonationId);

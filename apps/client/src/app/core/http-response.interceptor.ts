@@ -17,12 +17,14 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { StatusCodes } from 'http-status-codes';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
+  public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
 
@@ -34,6 +36,11 @@ export class HttpResponseInterceptor implements HttpInterceptor {
     private webAuthnService: WebAuthnService
   ) {
     this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
   }
 
   public intercept(
@@ -56,7 +63,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             } else {
               this.snackBarRef = this.snackBar.open(
                 'This feature requires a subscription.',
-                'Upgrade Plan',
+                this.hasPermissionForSubscription ? 'Upgrade Plan' : undefined,
                 { duration: 6000 }
               );
             }
