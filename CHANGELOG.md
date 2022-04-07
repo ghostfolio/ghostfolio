@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the empty state of the portfolio proportion chart component
+
 ### Fixed
 
 - Fixed an issue with dates in the value component
