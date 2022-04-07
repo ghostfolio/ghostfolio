@@ -147,13 +147,6 @@ export class UserService {
       user.subscription = this.subscriptionService.getSubscription(
         userFromDatabase?.Subscription
       );
-
-      if (user.subscription.type === SubscriptionType.Basic) {
-        user.permissions = user.permissions.filter((permission) => {
-          return permission !== permissions.updateViewMode;
-        });
-        user.Settings.viewMode = ViewMode.ZEN;
-      }
     }
 
     return user;

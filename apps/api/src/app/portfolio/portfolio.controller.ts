@@ -106,16 +106,6 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
   ): Promise<PortfolioDetails & { hasError: boolean }> {
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     let hasError = false;
 
     const { accounts, holdings, hasErrors } =
@@ -162,7 +152,11 @@ export class PortfolioController {
       }
     }
 
-    return { accounts, hasError, holdings };
+    const isBasicUser =
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic';
+
+    return { accounts, hasError, holdings: isBasicUser ? {} : holdings };
   }
 
   @Get('investments')

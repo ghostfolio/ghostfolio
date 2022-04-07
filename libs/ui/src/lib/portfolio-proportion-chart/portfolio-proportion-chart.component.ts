@@ -246,6 +246,12 @@ export class PortfolioProportionChartComponent
       labels = labelSubCategory.concat(labels);
     }
 
+    if (datasets[0]?.data?.length === 0 || datasets[0]?.data?.[0] === 0) {
+      labels = [''];
+      datasets[0].backgroundColor = [this.colorMap[UNKNOWN_KEY]];
+      datasets[0].data[0] = Number.MAX_SAFE_INTEGER;
+    }
+
     const data = {
       datasets,
       labels
@@ -323,7 +329,9 @@ export class PortfolioProportionChartComponent
 
                     const percentage = (context.parsed * 100) / sum;
 
-                    if (this.isInPercent) {
+                    if (<number>context.raw === Number.MAX_SAFE_INTEGER) {
+                      return 'No data available';
+                    } else if (this.isInPercent) {
                       return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
                     } else {
                       const value = <number>context.raw;

@@ -30,33 +30,14 @@
     <div class="col-md-4">
       <mat-card class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n
-            >By Asset Class</mat-card-title
-          >
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
-        </mat-card-header>
-        <mat-card-content>
-          <gf-portfolio-proportion-chart
-            [baseCurrency]="user?.settings?.baseCurrency"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-            [keys]="['assetClass', 'assetSubClass']"
-            [locale]="user?.settings?.locale"
-            [positions]="positions"
-          ></gf-portfolio-proportion-chart>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-4">
-      <mat-card class="mb-3">
-        <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n
-            >By Currency</mat-card-title
-          >
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Currency</span
+            ><ion-icon
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1 text-muted"
+              name="diamond-outline"
+            ></ion-icon
+          ></mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -75,10 +56,46 @@
         </mat-card-content>
       </mat-card>
     </div>
+    <div class="col-md-4">
+      <mat-card class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Asset Class</span
+            ><ion-icon
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1 text-muted"
+              name="diamond-outline"
+            ></ion-icon
+          ></mat-card-title>
+          <gf-toggle
+            [defaultValue]="period"
+            [isLoading]="false"
+            [options]="periodOptions"
+            (change)="onChangePeriod($event.value)"
+          ></gf-toggle>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['assetClass', 'assetSubClass']"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <div class="col-md-12 allocations-by-symbol">
       <mat-card class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>By Symbol</mat-card-title>
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Symbol</span
+            ><ion-icon
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1 text-muted"
+              name="diamond-outline"
+            ></ion-icon
+          ></mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -104,7 +121,14 @@
     <div class="col-md-4">
       <mat-card class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>By Sector</mat-card-title>
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Sector</span
+            ><ion-icon
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1 text-muted"
+              name="diamond-outline"
+            ></ion-icon
+          ></mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -127,9 +151,14 @@
     <div class="col-md-4">
       <mat-card class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n
-            >By Continent</mat-card-title
-          >
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Continent</span
+            ><ion-icon
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1 text-muted"
+              name="diamond-outline"
+            ></ion-icon
+          ></mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -151,7 +180,14 @@
     <div class="col-md-4">
       <mat-card class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>By Country</mat-card-title>
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Country</span
+            ><ion-icon
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1 text-muted"
+              name="diamond-outline"
+            ></ion-icon
+          ></mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -176,7 +212,14 @@
     <div class="col-lg">
       <mat-card class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>Regions</mat-card-title>
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>Regions</span
+            ><ion-icon
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1 text-muted"
+              name="diamond-outline"
+            ></ion-icon
+          ></mat-card-title>
           <gf-toggle
             [defaultValue]="period"
             [isLoading]="false"
@@ -225,7 +268,6 @@
       <gf-positions-table
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
-        [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
         [locale]="user?.settings?.locale"
         [positions]="positionsArray"
       ></gf-positions-table>

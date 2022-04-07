@@ -124,17 +124,6 @@
 ></ngx-skeleton-loader>
 
 <div
-  *ngIf="
-    dataSource.data.length === 0 && hasPermissionToCreateOrder && !isLoading
-  "
-  class="p-3 text-center"
->
-  <gf-no-transactions-info-indicator
-    [hasBorder]="false"
-  ></gf-no-transactions-info-indicator>
-</div>
-
-<div
   *ngIf="dataSource.data.length > pageSize && !isLoading"
   class="my-3 text-center"
 >

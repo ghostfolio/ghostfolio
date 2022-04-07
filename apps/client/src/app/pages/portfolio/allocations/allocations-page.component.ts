@@ -13,7 +13,6 @@ import {
   UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, ToggleOption } from '@ghostfolio/common/types';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -41,7 +40,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   };
   public deviceType: string;
   public hasImpersonationId: boolean;
-  public hasPermissionToCreateOrder: boolean;
   public markets: {
     [key in Market]: { name: string; value: number };
   };
@@ -138,11 +136,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.hasPermissionToCreateOrder = hasPermission(
-            this.user.permissions,
-            permissions.createOrder
-          );
 
           this.changeDetectorRef.markForCheck();
         }
