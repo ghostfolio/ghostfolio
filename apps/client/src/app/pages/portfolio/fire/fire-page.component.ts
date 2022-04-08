@@ -14,12 +14,11 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './fire-page.html'
 })
 export class FirePageComponent implements OnDestroy, OnInit {
-  public fireWealth: number;
-  public hasImpersonationId: boolean;
+  public fireWealth: Big;
   public isLoading = false;
   public user: User;
-  public withdrawalRatePerMonth: number;
-  public withdrawalRatePerYear: number;
+  public withdrawalRatePerMonth: Big;
+  public withdrawalRatePerYear: Big;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -39,13 +38,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.isLoading = true;
 
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((aId) => {
-        this.hasImpersonationId = !!aId;
-      });
-
     this.dataService
       .fetchPortfolioSummary()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -54,14 +46,9 @@ export class FirePageComponent implements OnDestroy, OnInit {
           return;
         }
 
-        this.fireWealth = new Big(currentValue).plus(cash).toNumber();
-        this.withdrawalRatePerYear = new Big(this.fireWealth)
-          .mul(4)
-          .div(100)
-          .toNumber();
-        this.withdrawalRatePerMonth = new Big(this.withdrawalRatePerYear)
-          .div(12)
-          .toNumber();
+        this.fireWealth = new Big(currentValue);
+        this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
+        this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
 
         this.isLoading = false;
 

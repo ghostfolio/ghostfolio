@@ -27,7 +27,8 @@
             ><gf-value
               class="d-inline-block"
               [currency]="user?.settings?.baseCurrency"
-              [value]="withdrawalRatePerYear"
+              [locale]="user?.settings?.locale"
+              [value]="withdrawalRatePerYear?.toNumber()"
             ></gf-value>
             per year</span
           >
@@ -36,16 +37,18 @@
             ><gf-value
               class="d-inline-block"
               [currency]="user?.settings?.baseCurrency"
-              [value]="withdrawalRatePerMonth"
+              [locale]="user?.settings?.locale"
+              [value]="withdrawalRatePerMonth?.toNumber()"
             ></gf-value>
             per month</span
-          >, based on your net worth of
+          >, based on your investment of
           <gf-value
             class="d-inline-block"
             [currency]="user?.settings?.baseCurrency"
-            [value]="fireWealth"
+            [locale]="user?.settings?.locale"
+            [value]="fireWealth?.toNumber()"
           ></gf-value>
-          (excluding emergency fund) and a withdrawal rate of 4%.
+          and a withdrawal rate of 4%.
         </div>
       </div>
     </div>
