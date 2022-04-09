@@ -14,7 +14,6 @@ import { Module } from '@nestjs/common';
 
 import { CurrentRateService } from './current-rate.service';
 import { PortfolioController } from './portfolio.controller';
-import { PortfolioService } from './portfolio.service';
 import { PortfolioServiceNew } from './portfolio.service-new';
 import { RulesService } from './rules.service';
 
@@ -37,7 +36,6 @@ import { RulesService } from './rules.service';
   providers: [
     AccountService,
     CurrentRateService,
-    PortfolioService,
     PortfolioServiceNew,
     RulesService
   ]
