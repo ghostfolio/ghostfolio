@@ -38,7 +38,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
-import { PortfolioServiceStrategy } from './portfolio-service.strategy';
+import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -46,7 +46,7 @@ export class PortfolioController {
     private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly portfolioServiceStrategy: PortfolioServiceStrategy,
+    private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
@@ -57,9 +57,10 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
   ): Promise<PortfolioChart> {
-    const historicalDataContainer = await this.portfolioServiceStrategy
-      .get()
-      .getChart(impersonationId, range);
+    const historicalDataContainer = await this.portfolioService.getChart(
+      impersonationId,
+      range
+    );
 
     let chartData = historicalDataContainer.items;
 
@@ -109,9 +110,11 @@ export class PortfolioController {
     let hasError = false;
 
     const { accounts, holdings, hasErrors } =
-      await this.portfolioServiceStrategy
-        .get(true)
-        .getDetails(impersonationId, this.request.user.id, range);
+      await this.portfolioService.getDetails(
+        impersonationId,
+        this.request.user.id,
+        range
+      );
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -174,9 +177,9 @@ export class PortfolioController {
       );
     }
 
-    let investments = await this.portfolioServiceStrategy
-      .get()
-      .getInvestments(impersonationId);
+    let investments = await this.portfolioService.getInvestments(
+      impersonationId
+    );
 
     if (
       impersonationId ||
@@ -203,9 +206,10 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
   ): Promise<PortfolioPerformanceResponse> {
-    const performanceInformation = await this.portfolioServiceStrategy
-      .get()
-      .getPerformance(impersonationId, range);
+    const performanceInformation = await this.portfolioService.getPerformance(
+      impersonationId,
+      range
+    );
 
     if (
       impersonationId ||
@@ -228,9 +232,10 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
   ): Promise<PortfolioPositions> {
-    const result = await this.portfolioServiceStrategy
-      .get()
-      .getPositions(impersonationId, range);
+    const result = await this.portfolioService.getPositions(
+      impersonationId,
+      range
+    );
 
     if (
       impersonationId ||
@@ -270,9 +275,10 @@ export class PortfolioController {
       hasDetails = user.subscription.type === 'Premium';
     }
 
-    const { holdings } = await this.portfolioServiceStrategy
-      .get(true)
-      .getDetails(access.userId, access.userId);
+    const { holdings } = await this.portfolioService.getDetails(
+      access.userId,
+      access.userId
+    );
 
     const portfolioPublicDetails: PortfolioPublicDetails = {
       hasDetails,
@@ -324,9 +330,7 @@ export class PortfolioController {
       );
     }
 
-    let summary = await this.portfolioServiceStrategy
-      .get()
-      .getSummary(impersonationId);
+    let summary = await this.portfolioService.getSummary(impersonationId);
 
     if (
       impersonationId ||
@@ -360,9 +364,11 @@ export class PortfolioController {
     @Param('dataSource') dataSource,
     @Param('symbol') symbol
   ): Promise<PortfolioPositionDetail> {
-    let position = await this.portfolioServiceStrategy
-      .get()
-      .getPosition(dataSource, impersonationId, symbol);
+    let position = await this.portfolioService.getPosition(
+      dataSource,
+      impersonationId,
+      symbol
+    );
 
     if (position) {
       if (
@@ -403,6 +409,6 @@ export class PortfolioController {
       );
     }
 
-    return await this.portfolioServiceStrategy.get().getReport(impersonationId);
+    return await this.portfolioService.getReport(impersonationId);
   }
 }

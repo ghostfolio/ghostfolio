@@ -169,23 +169,6 @@
               ></mat-slide-toggle>
             </div>
           </div>
-          <div
-            *ngIf="user?.subscription"
-            class="align-items-center d-flex mt-4 py-1"
-          >
-            <div class="pr-1 w-50">
-              <div i18n>New Calculation Engine</div>
-              <div class="hint-text text-muted" i18n>Experimental</div>
-            </div>
-            <div class="pl-1 w-50">
-              <mat-slide-toggle
-                color="primary"
-                [checked]="user.settings.isNewCalculationEngine"
-                [disabled]="!hasPermissionToUpdateUserSettings"
-                (change)="onNewCalculationChange($event)"
-              ></mat-slide-toggle>
-            </div>
-          </div>
         </mat-card-content>
       </mat-card>
     </div>
