@@ -1,4 +1,4 @@
-import { PortfolioServiceNew } from '@ghostfolio/api/app/portfolio/portfolio.service-new';
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
   nullifyValuesInObject,
@@ -35,7 +35,7 @@ export class AccountController {
   public constructor(
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
-    private readonly portfolioServiceNew: PortfolioServiceNew,
+    private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
@@ -92,7 +92,7 @@ export class AccountController {
       );
 
     let accountsWithAggregations =
-      await this.portfolioServiceNew.getAccountsWithAggregations(
+      await this.portfolioService.getAccountsWithAggregations(
         impersonationUserId || this.request.user.id
       );
 
