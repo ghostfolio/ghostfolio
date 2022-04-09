@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the 4% rule in the _FIRE_ section
+- Changed the background of the header to a solid color
 
 ## 1.133.0 - 07.04.2022
 
