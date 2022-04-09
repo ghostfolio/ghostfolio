@@ -1,9 +1,9 @@
 import Big from 'big.js';
 
 import { CurrentRateService } from './current-rate.service';
-import { PortfolioCalculatorNew } from './portfolio-calculator-new';
+import { PortfolioCalculator } from './portfolio-calculator';
 
-describe('PortfolioCalculatorNew', () => {
+describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
 
   beforeEach(() => {
@@ -11,7 +11,7 @@ describe('PortfolioCalculatorNew', () => {
   });
 
   describe('annualized performance percentage', () => {
-    const portfolioCalculatorNew = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currentRateService,
       currency: 'USD',
       orders: []
@@ -19,7 +19,7 @@ describe('PortfolioCalculatorNew', () => {
 
     it('Get annualized performance', async () => {
       expect(
-        portfolioCalculatorNew
+        portfolioCalculator
           .getAnnualizedPerformancePercent({
             daysInMarket: NaN, // differenceInDays of date-fns returns NaN for the same day
             netPerformancePercent: new Big(0)
@@ -28,7 +28,7 @@ describe('PortfolioCalculatorNew', () => {
       ).toEqual(0);
 
       expect(
-        portfolioCalculatorNew
+        portfolioCalculator
           .getAnnualizedPerformancePercent({
             daysInMarket: 0,
             netPerformancePercent: new Big(0)
@@ -40,7 +40,7 @@ describe('PortfolioCalculatorNew', () => {
        * Source: https://www.readyratios.com/reference/analysis/annualized_rate.html
        */
       expect(
-        portfolioCalculatorNew
+        portfolioCalculator
           .getAnnualizedPerformancePercent({
             daysInMarket: 65, // < 1 year
             netPerformancePercent: new Big(0.1025)
@@ -49,7 +49,7 @@ describe('PortfolioCalculatorNew', () => {
       ).toBeCloseTo(0.729705);
 
       expect(
-        portfolioCalculatorNew
+        portfolioCalculator
           .getAnnualizedPerformancePercent({
             daysInMarket: 365, // 1 year
             netPerformancePercent: new Big(0.05)
@@ -61,7 +61,7 @@ describe('PortfolioCalculatorNew', () => {
        * Source: https://www.investopedia.com/terms/a/annualized-total-return.asp#annualized-return-formula-and-calculation
        */
       expect(
-        portfolioCalculatorNew
+        portfolioCalculator
           .getAnnualizedPerformancePercent({
             daysInMarket: 575, // > 1 year
             netPerformancePercent: new Big(0.2374)

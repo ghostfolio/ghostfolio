@@ -69,14 +69,14 @@ import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import { PortfolioCalculatorNew } from './portfolio-calculator-new';
+import { PortfolioCalculator } from './portfolio-calculator';
 import { RulesService } from './rules.service';
 
 const developedMarkets = require('../../assets/countries/developed-markets.json');
 const emergingMarkets = require('../../assets/countries/emerging-markets.json');
 
 @Injectable()
-export class PortfolioServiceNew {
+export class PortfolioService {
   public constructor(
     private readonly accountService: AccountService,
     private readonly currentRateService: CurrentRateService,
@@ -170,7 +170,7 @@ export class PortfolioServiceNew {
         includeDrafts: true
       });
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency: this.request.user.Settings.currency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
@@ -221,7 +221,7 @@ export class PortfolioServiceNew {
         userId
       });
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency: this.request.user.Settings.currency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
@@ -321,7 +321,7 @@ export class PortfolioServiceNew {
         userId
       });
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency: userCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
@@ -514,7 +514,7 @@ export class PortfolioServiceNew {
         unitPrice: new Big(order.unitPrice)
       }));
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency: positionCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
@@ -704,7 +704,7 @@ export class PortfolioServiceNew {
         userId
       });
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency: this.request.user.Settings.currency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
@@ -781,7 +781,7 @@ export class PortfolioServiceNew {
         userId
       });
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency: this.request.user.Settings.currency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
@@ -856,7 +856,7 @@ export class PortfolioServiceNew {
       };
     }
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
@@ -969,7 +969,7 @@ export class PortfolioServiceNew {
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
-    const annualizedPerformancePercent = new PortfolioCalculatorNew({
+    const annualizedPerformancePercent = new PortfolioCalculator({
       currency: userCurrency,
       currentRateService: this.currentRateService,
       orders: []
@@ -1224,7 +1224,7 @@ export class PortfolioServiceNew {
       )
     }));
 
-    const portfolioCalculator = new PortfolioCalculatorNew({
+    const portfolioCalculator = new PortfolioCalculator({
       currency: userCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders

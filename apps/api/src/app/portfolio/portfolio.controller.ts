@@ -38,7 +38,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
-import { PortfolioServiceNew } from './portfolio.service-new';
+import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -46,7 +46,7 @@ export class PortfolioController {
     private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly portfolioServiceNew: PortfolioServiceNew,
+    private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
@@ -57,7 +57,7 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
   ): Promise<PortfolioChart> {
-    const historicalDataContainer = await this.portfolioServiceNew.getChart(
+    const historicalDataContainer = await this.portfolioService.getChart(
       impersonationId,
       range
     );
@@ -110,7 +110,7 @@ export class PortfolioController {
     let hasError = false;
 
     const { accounts, holdings, hasErrors } =
-      await this.portfolioServiceNew.getDetails(
+      await this.portfolioService.getDetails(
         impersonationId,
         this.request.user.id,
         range
@@ -177,7 +177,7 @@ export class PortfolioController {
       );
     }
 
-    let investments = await this.portfolioServiceNew.getInvestments(
+    let investments = await this.portfolioService.getInvestments(
       impersonationId
     );
 
@@ -206,8 +206,10 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
   ): Promise<PortfolioPerformanceResponse> {
-    const performanceInformation =
-      await this.portfolioServiceNew.getPerformance(impersonationId, range);
+    const performanceInformation = await this.portfolioService.getPerformance(
+      impersonationId,
+      range
+    );
 
     if (
       impersonationId ||
@@ -230,7 +232,7 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') range
   ): Promise<PortfolioPositions> {
-    const result = await this.portfolioServiceNew.getPositions(
+    const result = await this.portfolioService.getPositions(
       impersonationId,
       range
     );
@@ -273,7 +275,7 @@ export class PortfolioController {
       hasDetails = user.subscription.type === 'Premium';
     }
 
-    const { holdings } = await this.portfolioServiceNew.getDetails(
+    const { holdings } = await this.portfolioService.getDetails(
       access.userId,
       access.userId
     );
@@ -328,7 +330,7 @@ export class PortfolioController {
       );
     }
 
-    let summary = await this.portfolioServiceNew.getSummary(impersonationId);
+    let summary = await this.portfolioService.getSummary(impersonationId);
 
     if (
       impersonationId ||
@@ -362,7 +364,7 @@ export class PortfolioController {
     @Param('dataSource') dataSource,
     @Param('symbol') symbol
   ): Promise<PortfolioPositionDetail> {
-    let position = await this.portfolioServiceNew.getPosition(
+    let position = await this.portfolioService.getPosition(
       dataSource,
       impersonationId,
       symbol
@@ -407,6 +409,6 @@ export class PortfolioController {
       );
     }
 
-    return await this.portfolioServiceNew.getReport(impersonationId);
+    return await this.portfolioService.getReport(impersonationId);
   }
 }

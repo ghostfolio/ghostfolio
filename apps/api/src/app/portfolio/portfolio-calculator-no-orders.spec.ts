@@ -3,7 +3,7 @@ import { parseDate } from '@ghostfolio/common/helper';
 import Big from 'big.js';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';
-import { PortfolioCalculatorNew } from './portfolio-calculator-new';
+import { PortfolioCalculator } from './portfolio-calculator';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -14,7 +14,7 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   };
 });
 
-describe('PortfolioCalculatorNew', () => {
+describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
 
   beforeEach(() => {
@@ -23,19 +23,19 @@ describe('PortfolioCalculatorNew', () => {
 
   describe('get current positions', () => {
     it('with no orders', async () => {
-      const portfolioCalculatorNew = new PortfolioCalculatorNew({
+      const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         currency: 'CHF',
         orders: []
       });
 
-      portfolioCalculatorNew.computeTransactionPoints();
+      portfolioCalculator.computeTransactionPoints();
 
       const spy = jest
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2021-12-18').getTime());
 
-      const currentPositions = await portfolioCalculatorNew.getCurrentPositions(
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
         new Date()
       );
 

@@ -1,11 +1,7 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import {
-  ResponseError,
-  TimelinePosition,
-  UniqueAsset
-} from '@ghostfolio/common/interfaces';
+import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
 import { Logger } from '@nestjs/common';
 import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
@@ -36,7 +32,7 @@ import {
 import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
-export class PortfolioCalculatorNew {
+export class PortfolioCalculator {
   private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
     true;
 
@@ -462,7 +458,7 @@ export class PortfolioCalculatorNew {
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
           `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`,
-          'PortfolioCalculatorNew'
+          'PortfolioCalculator'
         );
         hasErrors = true;
       }
@@ -528,7 +524,7 @@ export class PortfolioCalculatorNew {
           Logger.error(
             `Failed to fetch info for date ${startDate} with exception`,
             error,
-            'PortfolioCalculatorNew'
+            'PortfolioCalculator'
           );
           return null;
         }
@@ -913,7 +909,7 @@ export class PortfolioCalculatorNew {
     );
 
     const grossPerformancePercentage =
-      PortfolioCalculatorNew.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
+      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
@@ -935,7 +931,7 @@ export class PortfolioCalculatorNew {
       : new Big(0);
 
     const netPerformancePercentage =
-      PortfolioCalculatorNew.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
+      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
@@ -953,7 +949,7 @@ export class PortfolioCalculatorNew {
             )
             .minus(1);
 
-    if (PortfolioCalculatorNew.ENABLE_LOGGING) {
+    if (PortfolioCalculator.ENABLE_LOGGING) {
       console.log(
         `
         ${symbol}
