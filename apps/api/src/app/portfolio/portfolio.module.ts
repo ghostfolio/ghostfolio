@@ -14,12 +14,12 @@ import { Module } from '@nestjs/common';
 
 import { CurrentRateService } from './current-rate.service';
 import { PortfolioController } from './portfolio.controller';
-import { PortfolioServiceNew } from './portfolio.service-new';
+import { PortfolioService } from './portfolio.service';
 import { RulesService } from './rules.service';
 
 @Module({
   controllers: [PortfolioController],
-  exports: [PortfolioServiceNew],
+  exports: [PortfolioService],
   imports: [
     AccessModule,
     ConfigurationModule,
@@ -36,7 +36,7 @@ import { RulesService } from './rules.service';
   providers: [
     AccountService,
     CurrentRateService,
-    PortfolioServiceNew,
+    PortfolioService,
     RulesService
   ]
 })
