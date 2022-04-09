@@ -222,24 +222,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onNewCalculationChange(aEvent: MatSlideToggleChange) {
-    this.dataService
-      .putUserSetting({ isNewCalculationEngine: aEvent.checked })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService.remove();
-
-        this.userService
-          .get()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
   public onRedeemCoupon() {
     let couponCode = prompt('Please enter your coupon code:');
     couponCode = couponCode?.trim();

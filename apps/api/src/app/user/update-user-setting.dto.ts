@@ -7,10 +7,6 @@ export class UpdateUserSettingDto {
 
   @IsBoolean()
   @IsOptional()
-  isNewCalculationEngine?: boolean;
-
-  @IsBoolean()
-  @IsOptional()
   isRestrictedView?: boolean;
 
   @IsString()
