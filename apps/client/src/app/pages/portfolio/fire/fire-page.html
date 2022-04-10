@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg">
       <h3 class="d-flex justify-content-center mb-3" i18n>FIRE</h3>
-      <div class="mb-4">
+      <div class="mb-5">
         <h4 i18n>4% Rule</h4>
         <div *ngIf="isLoading">
           <ngx-skeleton-loader
@@ -52,5 +52,14 @@
         </div>
       </div>
     </div>
+  </div>
+  <div>
+    <h4 class="mb-3" i18n>Calculator</h4>
+    <gf-fire-calculator
+      [currency]="user?.settings?.baseCurrency"
+      [deviceType]="deviceType"
+      [fireWealth]="fireWealth?.toNumber()"
+      [locale]="user?.settings?.locale"
+    ></gf-fire-calculator>
   </div>
 </div>

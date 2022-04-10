@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import Big from 'big.js';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -14,6 +14,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './fire-page.html'
 })
 export class FirePageComponent implements OnDestroy, OnInit {
+  public deviceType: string;
   public fireWealth: Big;
   public isLoading = false;
   public user: User;
@@ -28,7 +29,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    private impersonationStorageService: ImpersonationStorageService,
+    private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {}
 
@@ -37,6 +38,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
    */
   public ngOnInit() {
     this.isLoading = true;
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.dataService
       .fetchPortfolioSummary()

@@ -1,0 +1,65 @@
+<div class="container p-0">
+  <div class="row">
+    <div class="col-md-3">
+      <form class="" [formGroup]="calculatorForm">
+        <!--<mat-form-field appearance="outline">
+          <input formControlName="principalInvestmentAmount" matInput />
+        </mat-form-field>-->
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Savings Rate</mat-label>
+          <input
+            formControlName="paymentPerPeriod"
+            matInput
+            step="100"
+            type="number"
+          />
+          <span class="ml-2" i18n matSuffix>{{ currency }} per month</span>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Investment Horizon</mat-label>
+          <input formControlName="time" matInput type="number" />
+          <span class="ml-2" i18n matSuffix>years</span>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Annual Interest Rate</mat-label>
+          <input
+            formControlName="annualInterestRate"
+            matInput
+            step="0.25"
+            type="number"
+          />
+          <span class="ml-2" i18n matSuffix>%</span>
+        </mat-form-field>
+
+        <gf-value
+          label="Projected Total Amount"
+          size="large"
+          [currency]="currency"
+          [isCurrency]="true"
+          [locale]="locale"
+          [value]="projectedTotalAmount"
+        ></gf-value>
+      </form>
+    </div>
+    <div class="col-md-9 text-center">
+      <div class="chart-container mb-4">
+        <ngx-skeleton-loader
+          *ngIf="isLoading"
+          animation="pulse"
+          [theme]="{
+            height: '100%',
+            width: '100%'
+          }"
+        ></ngx-skeleton-loader>
+        <canvas
+          #chartCanvas
+          class="h-100"
+          [ngStyle]="{ display: isLoading ? 'none' : 'block' }"
+        ></canvas>
+      </div>
+    </div>
+  </div>
+</div>
