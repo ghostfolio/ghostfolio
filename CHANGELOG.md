@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a calculator to the _FIRE_ section
 - Added support for the cryptocurrency _Terra_ (`LUNA1-USD`)
 - Added support for the cryptocurrency _THORChain_ (`RUNE-USD`)
 
