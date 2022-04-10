@@ -1,0 +1,11 @@
+:host {
+  display: block;
+
+  .chart-container {
+    aspect-ratio: 16 / 9;
+
+    ngx-skeleton-loader {
+      height: 100%;
+    }
+  }
+}

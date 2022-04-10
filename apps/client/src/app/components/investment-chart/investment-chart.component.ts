@@ -10,7 +10,10 @@ import {
   ViewChild
 } from '@angular/core';
 import { primaryColorRgb } from '@ghostfolio/common/config';
-import { parseDate } from '@ghostfolio/common/helper';
+import {
+  parseDate,
+  transformTickToAbbreviation
+} from '@ghostfolio/common/helper';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import {
   Chart,
@@ -148,19 +151,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                   display: false
                 },
                 ticks: {
-                  display: true,
-                  callback: (tickValue, index, ticks) => {
-                    if (index === 0 || index === ticks.length - 1) {
-                      // Only print last and first legend entry
-                      if (typeof tickValue === 'number') {
-                        return tickValue.toFixed(2);
-                      }
-
-                      return tickValue;
-                    }
-
-                    return '';
+                  callback: (value: number) => {
+                    return transformTickToAbbreviation(value);
                   },
+                  display: true,
                   mirror: true,
                   z: 1
                 }
