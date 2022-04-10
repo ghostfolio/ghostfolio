@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for the cryptocurrency _Terra_ (`LUNA1-USD`)
 - Added support for the cryptocurrency _THORChain_ (`RUNE-USD`)
 
 ## 1.134.0 - 09.04.2022
