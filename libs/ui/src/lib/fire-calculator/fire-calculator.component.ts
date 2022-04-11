@@ -84,7 +84,7 @@ export class FireCalculatorComponent
   }
 
   public ngAfterViewInit() {
-    if (this.fireWealth >= 0) {
+    if (this.fireWealth && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
         this.calculatorForm.patchValue({
@@ -98,7 +98,7 @@ export class FireCalculatorComponent
   }
 
   public ngOnChanges() {
-    if (this.fireWealth >= 0) {
+    if (this.fireWealth && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
         this.calculatorForm.patchValue({
