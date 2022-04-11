@@ -20,6 +20,13 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
 
+    case 'NOVN.SW':
+      if (isSameDay(parseDate('2022-04-11'), date)) {
+        return { marketPrice: 87.8 };
+      }
+
+      return { marketPrice: 0 };
+
     default:
       return { marketPrice: 0 };
   }
