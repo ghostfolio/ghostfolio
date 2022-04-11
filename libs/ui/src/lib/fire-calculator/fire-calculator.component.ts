@@ -234,7 +234,7 @@ export class FireCalculatorComponent
       datasetPrincipal.data.push(principal.toNumber());
       datasetInterest.data.push(interest.toNumber());
 
-      if (period === t - 1) {
+      if (period === t) {
         this.projectedTotalAmount = totalAmount.toNumber();
       }
     }
