@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import { transformTickToAbbreviation } from '@ghostfolio/common/helper';
 import {
   BarController,
   BarElement,
@@ -20,10 +21,10 @@ import {
   LinearScale,
   Tooltip
 } from 'chart.js';
+import { isNumber } from 'lodash';
+import { Subject, takeUntil } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
-import { Subject, takeUntil } from 'rxjs';
-import { transformTickToAbbreviation } from '@ghostfolio/common/helper';
 
 @Component({
   selector: 'gf-fire-calculator',
@@ -84,7 +85,7 @@ export class FireCalculatorComponent
   }
 
   public ngAfterViewInit() {
-    if (this.fireWealth >= 0) {
+    if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
         this.calculatorForm.patchValue({
@@ -98,7 +99,7 @@ export class FireCalculatorComponent
   }
 
   public ngOnChanges() {
-    if (this.fireWealth >= 0) {
+    if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
         this.calculatorForm.patchValue({

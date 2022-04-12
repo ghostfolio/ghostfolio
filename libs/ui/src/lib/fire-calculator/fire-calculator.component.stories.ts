@@ -7,8 +7,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { baseCurrency, locale } from '@ghostfolio/common/config';
 import { Meta, Story, moduleMetadata } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { GfValueModule } from '../value';
 
+import { GfValueModule } from '../value';
 import { FireCalculatorComponent } from './fire-calculator.component';
 import { FireCalculatorService } from './fire-calculator.service';
 

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with the calculation of the projected total amount in the _FIRE_ calculator
+- Fixed an issue with the loading state of the _FIRE_ calculator
 
 ## 1.135.0 - 10.04.2022
 
