@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Changed the _Total_ label to _Total Assets_ in the portfolio summary tab on the home page
+
 ### Fixed
 
 - Fixed an issue with the calculation of the projected total amount in the _FIRE_ calculator
