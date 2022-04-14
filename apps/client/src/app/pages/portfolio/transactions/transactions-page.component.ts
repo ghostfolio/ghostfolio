@@ -11,11 +11,11 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
+import { Export, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { DataSource, Order as OrderModel } from '@prisma/client';
+import { DataSource, Order as OrderModel, Type } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
-import { isArray } from 'lodash';
+import { capitalize, isArray } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -152,13 +152,35 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .fetchExport(activityIds)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
+        for (const activity of data.activities) {
+          delete activity.id;
+        }
+
         downloadAsFile(
           data,
           `ghostfolio-export-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,
-          'text/plain'
+          'text/plain',
+          'json'
+        );
+      });
+  }
+
+  public onExportDrafts(activityIds?: string[]) {
+    this.dataService
+      .fetchExport(activityIds)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        downloadAsFile(
+          this.getIcsContent(data.activities),
+          `ghostfolio-drafts-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.ics`,
+          'text/plain',
+          'string'
         );
       });
   }
@@ -291,6 +313,49 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private getIcsContent(aActivities: Export['activities']) {
+    const header = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Ghostfolio//NONSGML v1.0//EN'
+    ];
+    const events = aActivities.map((activity) => {
+      return this.getEvent({
+        date: parseISO(activity.date),
+        id: activity.id,
+        symbol: activity.symbol,
+        type: activity.type
+      });
+    });
+    const footer = ['END:VCALENDAR'];
+
+    return [...header, ...events, ...footer].join('\n');
+  }
+
+  private getEvent({
+    date,
+    id,
+    symbol,
+    type
+  }: {
+    date: Date;
+    id: string;
+    symbol: string;
+    type: Type;
+  }) {
+    const today = format(new Date(), 'yyyyMMdd');
+
+    return [
+      'BEGIN:VEVENT',
+      `UID:${id}`,
+      `DTSTAMP:${today}T000000`,
+      `DTSTART;VALUE=DATE:${format(date, 'yyyyMMdd')}`,
+      `DTEND;VALUE=DATE:${format(date, 'yyyyMMdd')}`,
+      `SUMMARY:${capitalize(type)} ${symbol}`,
+      'END:VEVENT'
+    ].join('\n');
   }
 
   private handleImportError({

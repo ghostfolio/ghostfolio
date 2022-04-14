@@ -356,10 +356,21 @@
             *ngIf="hasPermissionToExportActivities"
             class="align-items-center d-flex"
             mat-menu-item
+            [disabled]="dataSource.data.length === 0"
             (click)="onExport()"
           >
             <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
             <span i18n>Export</span>
+          </button>
+          <button
+            *ngIf="hasPermissionToExportActivities"
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="!hasDrafts"
+            (click)="onExportDrafts()"
+          >
+            <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+            <span i18n>Export Drafts as ICS</span>
           </button>
         </mat-menu>
       </th>

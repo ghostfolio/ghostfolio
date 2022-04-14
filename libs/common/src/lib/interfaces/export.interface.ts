@@ -5,5 +5,14 @@ export interface Export {
     date: string;
     version: string;
   };
-  activities: Partial<Order>[];
+  activities: (Omit<
+    Order,
+    | 'accountUserId'
+    | 'createdAt'
+    | 'date'
+    | 'isDraft'
+    | 'symbolProfileId'
+    | 'updatedAt'
+    | 'userId'
+  > & { date: string; symbol: string })[];
 }

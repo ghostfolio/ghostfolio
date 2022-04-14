@@ -217,7 +217,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,
-          'text/plain'
+          'text/plain',
+          'json'
         );
       });
   }

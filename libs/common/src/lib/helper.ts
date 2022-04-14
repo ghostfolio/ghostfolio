@@ -15,10 +15,17 @@ export function decodeDataSource(encodedDataSource: string) {
 export function downloadAsFile(
   aContent: unknown,
   aFileName: string,
-  aContentType: string
+  aContentType: string,
+  aType: 'json' | 'string'
 ) {
   const a = document.createElement('a');
-  const file = new Blob([JSON.stringify(aContent, undefined, '  ')], {
+  let content = aContent;
+
+  if (aType === 'json') {
+    content = JSON.stringify(aContent, undefined, '  ');
+  }
+
+  const file = new Blob([<string>content], {
     type: aContentType
   });
   a.href = URL.createObjectURL(file);
