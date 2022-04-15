@@ -80,7 +80,7 @@ describe('PortfolioCalculator', () => {
             firstBuyDate: '2022-03-07',
             grossPerformance: new Big('21.93'),
             grossPerformancePercentage: new Big('0.14465699208443271768'),
-            investment: new Big('65.87'),
+            investment: new Big('75.80'),
             netPerformance: new Big('17.68'),
             netPerformancePercentage: new Big('0.11662269129287598945'),
             marketPrice: 87.8,
@@ -89,7 +89,7 @@ describe('PortfolioCalculator', () => {
             transactionCount: 2
           }
         ],
-        totalInvestment: new Big('65.87')
+        totalInvestment: new Big('75.80')
       });
     });
   });
