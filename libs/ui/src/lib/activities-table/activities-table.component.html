@@ -271,6 +271,7 @@
       <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
         <div class="d-flex justify-content-end">
           <gf-value
+            *ngIf="totalValue !== null"
             [isAbsolute]="true"
             [isCurrency]="true"
             [locale]="locale"
@@ -302,6 +303,7 @@
       <td *matFooterCellDef class="d-lg-none d-xl-none px-1" mat-footer-cell>
         <div class="d-flex justify-content-end">
           <gf-value
+            *ngIf="totalValue !== null"
             [isAbsolute]="true"
             [isCurrency]="true"
             [locale]="locale"

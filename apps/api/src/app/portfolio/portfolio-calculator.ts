@@ -77,17 +77,30 @@ export class PortfolioCalculator {
         const newQuantity = order.quantity
           .mul(factor)
           .plus(oldAccumulatedSymbol.quantity);
+
+        let investment = new Big(0);
+
+        if (newQuantity.gt(0)) {
+          if (order.type === 'BUY') {
+            investment = oldAccumulatedSymbol.investment.plus(
+              order.quantity.mul(unitPrice)
+            );
+          } else if (order.type === 'SELL') {
+            const averagePrice = oldAccumulatedSymbol.investment.div(
+              oldAccumulatedSymbol.quantity
+            );
+            investment = oldAccumulatedSymbol.investment.minus(
+              order.quantity.mul(averagePrice)
+            );
+          }
+        }
+
         currentTransactionPointItem = {
+          investment,
           currency: order.currency,
           dataSource: order.dataSource,
           fee: order.fee.plus(oldAccumulatedSymbol.fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
-          investment: newQuantity.eq(0)
-            ? new Big(0)
-            : unitPrice
-                .mul(order.quantity)
-                .mul(factor)
-                .plus(oldAccumulatedSymbol.investment),
           quantity: newQuantity,
           symbol: order.symbol,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1

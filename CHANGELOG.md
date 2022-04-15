@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the search functionality to `yahoo-finance2`
 
+### Fixed
+
+- Fixed an issue in the average price / investment calculation for sell activities
+
 ## 1.136.0 - 13.04.2022
 
 ### Changed

@@ -325,7 +325,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
         if (activity.type === 'BUY' || activity.type === 'ITEM') {
           totalValue = totalValue.plus(activity.valueInBaseCurrency);
         } else if (activity.type === 'SELL') {
-          totalValue = totalValue.minus(activity.valueInBaseCurrency);
+          return null;
         }
       } else {
         return null;
