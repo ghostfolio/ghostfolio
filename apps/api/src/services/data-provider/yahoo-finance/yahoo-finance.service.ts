@@ -248,9 +248,13 @@ export class YahooFinanceService implements DataProviderInterface {
           // filter out undefined symbols
           return quote.symbol;
         })
-        .filter(({ quoteType }) => {
-          return ['CRYPTOCURRENCY', 'EQUITY', 'ETF', 'MUTUALFUND'].includes(
-            quoteType
+        .filter(({ quoteType, symbol }) => {
+          return (
+            (quoteType === 'CRYPTOCURRENCY' &&
+              this.cryptocurrencyService.isCryptocurrency(
+                symbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
+              )) ||
+            ['EQUITY', 'ETF', 'MUTUALFUND'].includes(quoteType)
           );
         })
         .filter(({ quoteType, symbol }) => {
