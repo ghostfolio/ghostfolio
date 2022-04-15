@@ -268,11 +268,17 @@
           ></gf-value>
         </div>
       </td>
-      <td
-        *matFooterCellDef
-        class="d-none d-lg-table-cell px-1"
-        mat-footer-cell
-      ></td>
+      <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            *ngIf="totalValue !== null"
+            [isAbsolute]="true"
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : totalValue"
+          ></gf-value>
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="valueInBaseCurrency">
@@ -294,11 +300,17 @@
           ></gf-value>
         </div>
       </td>
-      <td
-        *matFooterCellDef
-        class="d-lg-none d-xl-none px-1"
-        mat-footer-cell
-      ></td>
+      <td *matFooterCellDef class="d-lg-none d-xl-none px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            *ngIf="totalValue !== null"
+            [isAbsolute]="true"
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : totalValue"
+          ></gf-value>
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="account">

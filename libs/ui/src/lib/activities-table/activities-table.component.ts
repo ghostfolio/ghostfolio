@@ -79,6 +79,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public searchKeywords: string[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public totalFees: number;
+  public totalValue: number;
 
   private allFilters: string[];
   private unsubscribeSubject = new Subject<void>();
@@ -251,6 +252,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       return activity.isDraft === true;
     });
     this.totalFees = this.getTotalFees();
+    this.totalValue = this.getTotalValue();
   }
 
   private getSearchableFieldValues(activities: OrderWithAccount[]): string[] {
@@ -313,5 +315,23 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
 
     return totalFees.toNumber();
+  }
+
+  private getTotalValue() {
+    let totalValue = new Big(0);
+
+    for (const activity of this.dataSource.filteredData) {
+      if (isNumber(activity.valueInBaseCurrency)) {
+        if (activity.type === 'BUY' || activity.type === 'ITEM') {
+          totalValue = totalValue.plus(activity.valueInBaseCurrency);
+        } else if (activity.type === 'SELL') {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    }
+
+    return totalValue.toNumber();
   }
 }
