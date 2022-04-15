@@ -42,6 +42,7 @@ export class ExportService {
           accountId,
           date,
           fee,
+          id,
           quantity,
           SymbolProfile,
           type,
@@ -49,13 +50,14 @@ export class ExportService {
         }) => {
           return {
             accountId,
-            date,
             fee,
+            id,
             quantity,
             type,
             unitPrice,
             currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
+            date: date.toISOString(),
             symbol: type === 'ITEM' ? SymbolProfile.name : SymbolProfile.symbol
           };
         }

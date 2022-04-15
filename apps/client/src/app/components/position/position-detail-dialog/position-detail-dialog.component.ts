@@ -211,14 +211,14 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       )
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
-        downloadAsFile(
-          data,
-          `ghostfolio-export-${this.SymbolProfile?.symbol}-${format(
+        downloadAsFile({
+          content: data,
+          fileName: `ghostfolio-export-${this.SymbolProfile?.symbol}-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,
-          'text/plain'
-        );
+          format: 'json'
+        });
       });
   }
 

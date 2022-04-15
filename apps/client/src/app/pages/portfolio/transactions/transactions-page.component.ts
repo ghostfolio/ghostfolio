@@ -7,6 +7,7 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -50,6 +51,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
+    private icsService: IcsService,
     private impersonationStorageService: ImpersonationStorageService,
     private importTransactionsService: ImportTransactionsService,
     private route: ActivatedRoute,
@@ -152,14 +154,36 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .fetchExport(activityIds)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
-        downloadAsFile(
-          data,
-          `ghostfolio-export-${format(
+        for (const activity of data.activities) {
+          delete activity.id;
+        }
+
+        downloadAsFile({
+          content: data,
+          fileName: `ghostfolio-export-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,
-          'text/plain'
-        );
+          format: 'json'
+        });
+      });
+  }
+
+  public onExportDrafts(activityIds?: string[]) {
+    this.dataService
+      .fetchExport(activityIds)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        downloadAsFile({
+          content: this.icsService.transformActivitiesToIcsContent(
+            data.activities
+          ),
+          fileName: `ghostfolio-drafts-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.ics`,
+          format: 'string'
+        });
       });
   }
 

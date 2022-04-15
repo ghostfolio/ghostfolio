@@ -56,6 +56,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
   @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
   @Output() export = new EventEmitter<string[]>();
+  @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
 
   @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
@@ -68,6 +69,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public endOfToday = endOfToday();
   public filters$: Subject<string[]> = new BehaviorSubject([]);
   public filters: Observable<string[]> = this.filters$.asObservable();
+  public hasDrafts = false;
   public isAfter = isAfter;
   public isLoading = true;
   public isUUID = isUUID;
@@ -198,6 +200,18 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
   }
 
+  public onExportDrafts() {
+    this.exportDrafts.emit(
+      this.dataSource.filteredData
+        .filter((activity) => {
+          return activity.isDraft;
+        })
+        .map((activity) => {
+          return activity.id;
+        })
+    );
+  }
+
   public onImport() {
     this.import.emit();
   }
@@ -234,6 +248,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
     this.filters$.next(this.allFilters);
 
+    this.hasDrafts = this.dataSource.data.some((activity) => {
+      return activity.isDraft === true;
+    });
     this.totalFees = this.getTotalFees();
     this.totalValue = this.getTotalValue();
   }
