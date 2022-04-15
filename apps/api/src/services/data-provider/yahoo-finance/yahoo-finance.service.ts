@@ -16,7 +16,6 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import * as bent from 'bent';
 import Big from 'big.js';
 import { countries } from 'countries-list';
 import { addDays, format, isSameDay } from 'date-fns';
@@ -25,8 +24,6 @@ import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-ifa
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
-  private readonly yahooFinanceHostname = 'https://query1.finance.yahoo.com';
-
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService
   ) {}
@@ -244,16 +241,7 @@ export class YahooFinanceService implements DataProviderInterface {
     const items: LookupItem[] = [];
 
     try {
-      const get = bent(
-        `${this.yahooFinanceHostname}/v1/finance/search?q=${encodeURIComponent(
-          aQuery
-        )}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
-        'GET',
-        'json',
-        200
-      );
-
-      const searchResult = await get();
+      const searchResult = await yahooFinance.search(aQuery);
 
       const quotes = searchResult.quotes
         .filter((quote) => {
@@ -279,20 +267,24 @@ export class YahooFinanceService implements DataProviderInterface {
           return true;
         });
 
-      const marketData = await this.getQuotes(
+      const marketData = await yahooFinance.quote(
         quotes.map(({ symbol }) => {
           return symbol;
         })
       );
 
-      for (const [symbol, value] of Object.entries(marketData)) {
-        const quote = quotes.find((currentQuote: any) => {
-          return currentQuote.symbol === symbol;
+      for (const marketDataItem of marketData) {
+        const quote = quotes.find((currentQuote) => {
+          return currentQuote.symbol === marketDataItem.symbol;
         });
+
+        const symbol = this.convertFromYahooFinanceSymbol(
+          marketDataItem.symbol
+        );
 
         items.push({
           symbol,
-          currency: value.currency,
+          currency: marketDataItem.currency,
           dataSource: this.getName(),
           name: quote?.longname || quote?.shortname || symbol
         });

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to export future activities (drafts) as `.ics` files
 
+### Changed
+
+- Migrated the search functionality to `yahoo-finance2`
+
 ## 1.136.0 - 13.04.2022
 
 ### Changed
