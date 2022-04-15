@@ -12,24 +12,28 @@ export function decodeDataSource(encodedDataSource: string) {
   return Buffer.from(encodedDataSource, 'hex').toString();
 }
 
-export function downloadAsFile(
-  aContent: unknown,
-  aFileName: string,
-  aContentType: string,
-  aType: 'json' | 'string'
-) {
+export function downloadAsFile({
+  content,
+  contentType = 'text/plain',
+  fileName,
+  format
+}: {
+  content: unknown;
+  contentType?: string;
+  fileName: string;
+  format: 'json' | 'string';
+}) {
   const a = document.createElement('a');
-  let content = aContent;
 
-  if (aType === 'json') {
-    content = JSON.stringify(aContent, undefined, '  ');
+  if (format === 'json') {
+    content = JSON.stringify(content, undefined, '  ');
   }
 
   const file = new Blob([<string>content], {
-    type: aContentType
+    type: contentType
   });
   a.href = URL.createObjectURL(file);
-  a.download = aFileName;
+  a.download = fileName;
   a.click();
 }
 
