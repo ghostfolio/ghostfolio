@@ -2,14 +2,12 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  .mat-card {
-    a {
-      color: rgba(var(--palette-primary-500), 1);
-      font-weight: 500;
+  a {
+    color: rgba(var(--palette-primary-500), 1);
+    font-weight: 500;
 
-      &:hover {
-        color: rgba(var(--palette-primary-300), 1);
-      }
+    &:hover {
+      color: rgba(var(--palette-primary-300), 1);
     }
   }
 }

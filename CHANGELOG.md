@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support to export a single future activity (draft) as an `.ics` file
+- Added the _Boringly Getting Rich_ guide to the resources section
 
 ## 1.137.0 - 15.04.2022
 
