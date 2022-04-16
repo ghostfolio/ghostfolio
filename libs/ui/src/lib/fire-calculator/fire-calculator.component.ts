@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import { primaryColorRgb } from '@ghostfolio/common/config';
 import { transformTickToAbbreviation } from '@ghostfolio/common/helper';
 import {
   BarController,
@@ -21,6 +21,7 @@ import {
   LinearScale,
   Tooltip
 } from 'chart.js';
+import * as Color from 'color';
 import { isNumber } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -211,16 +212,30 @@ export class FireCalculatorComponent
       labels.push(year);
     }
 
+    const datasetDeposit = {
+      backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+      data: [],
+      label: 'Deposit'
+    };
+
     const datasetInterest = {
-      backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+      backgroundColor: Color(
+        `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`
+      )
+        .lighten(0.5)
+        .hex(),
       data: [],
       label: 'Interest'
     };
 
-    const datasetPrincipal = {
-      backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+    const datasetSavings = {
+      backgroundColor: Color(
+        `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`
+      )
+        .lighten(0.25)
+        .hex(),
       data: [],
-      label: 'Principal'
+      label: 'Savings'
     };
 
     for (let period = 1; period <= t; period++) {
@@ -232,8 +247,9 @@ export class FireCalculatorComponent
           r
         });
 
-      datasetPrincipal.data.push(principal.toNumber());
+      datasetDeposit.data.push(this.fireWealth);
       datasetInterest.data.push(interest.toNumber());
+      datasetSavings.data.push(principal.minus(this.fireWealth).toNumber());
 
       if (period === t) {
         this.projectedTotalAmount = totalAmount.toNumber();
@@ -242,7 +258,7 @@ export class FireCalculatorComponent
 
     return {
       labels,
-      datasets: [datasetPrincipal, datasetInterest]
+      datasets: [datasetDeposit, datasetSavings, datasetInterest]
     };
   }
 }
