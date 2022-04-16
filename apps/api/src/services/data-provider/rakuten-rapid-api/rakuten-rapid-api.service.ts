@@ -17,8 +17,6 @@ import { format, subMonths, subWeeks, subYears } from 'date-fns';
 
 @Injectable()
 export class RakutenRapidApiService implements DataProviderInterface {
-  public static FEAR_AND_GREED_INDEX_NAME = 'Fear & Greed Index';
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService
