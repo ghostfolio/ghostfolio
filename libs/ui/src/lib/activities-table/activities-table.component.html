@@ -387,14 +387,25 @@
           <ion-icon name="ellipsis-vertical"></ion-icon>
         </button>
         <mat-menu #activityMenu="matMenu" xPosition="before">
-          <button i18n mat-menu-item (click)="onUpdateActivity(element)">
-            Edit
+          <button mat-menu-item (click)="onUpdateActivity(element)">
+            <ion-icon class="mr-2" name="create-outline"></ion-icon>
+            <span i18n>Edit</span>
           </button>
-          <button i18n mat-menu-item (click)="onCloneActivity(element)">
-            Clone
+          <button mat-menu-item (click)="onCloneActivity(element)">
+            <ion-icon class="mr-2" name="copy-outline"></ion-icon>
+            <span i18n>Clone</span>
           </button>
-          <button i18n mat-menu-item (click)="onDeleteActivity(element.id)">
-            Delete
+          <button
+            mat-menu-item
+            [disabled]="!element.isDraft"
+            (click)="onExportDraft(element.id)"
+          >
+            <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+            <span i18n>Export Draft as ICS</span>
+          </button>
+          <button mat-menu-item (click)="onDeleteActivity(element.id)">
+            <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+            <span i18n>Delete</span>
           </button>
         </mat-menu>
       </td>

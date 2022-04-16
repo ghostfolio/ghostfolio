@@ -68,12 +68,12 @@
                 </button>
                 <mat-menu #accountMenu="matMenu" xPosition="before">
                   <button
-                    i18n
                     mat-menu-item
                     [disabled]="userItem.id === user?.id"
                     (click)="onDeleteUser(userItem.id)"
                   >
-                    Delete
+                    <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                    <span i18n>Delete</span>
                   </button>
                 </mat-menu>
               </td>
