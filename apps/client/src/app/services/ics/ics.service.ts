@@ -9,6 +9,7 @@ import { format, parseISO } from 'date-fns';
 })
 export class IcsService {
   private readonly ICS_DATE_FORMAT = 'yyyyMMdd';
+  private readonly ICS_LINE_BREAK = '\r\n';
 
   public constructor() {}
 
@@ -30,7 +31,7 @@ export class IcsService {
     });
     const footer = ['END:VCALENDAR'];
 
-    return [...header, ...events, ...footer].join('\n');
+    return [...header, ...events, ...footer].join(this.ICS_LINE_BREAK);
   }
 
   private getEvent({
@@ -54,6 +55,6 @@ export class IcsService {
       `DTEND;VALUE=DATE:${format(date, this.ICS_DATE_FORMAT)}`,
       `SUMMARY:${capitalize(type)} ${symbol}`,
       'END:VEVENT'
-    ].join('\n');
+    ].join(this.ICS_LINE_BREAK);
   }
 }

@@ -194,16 +194,17 @@
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
       <mat-menu #accountMenu="matMenu" xPosition="before">
-        <button i18n mat-menu-item (click)="onUpdateAccount(element)">
-          Edit
+        <button mat-menu-item (click)="onUpdateAccount(element)">
+          <ion-icon class="mr-2" name="create-outline"></ion-icon>
+          <span i18n>Edit</span>
         </button>
         <button
-          i18n
           mat-menu-item
           [disabled]="element.isDefault || element.Order?.length > 0"
           (click)="onDeleteAccount(element.id)"
         >
-          Delete
+          <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+          <span i18n>Delete</span>
         </button>
       </mat-menu>
     </td>
