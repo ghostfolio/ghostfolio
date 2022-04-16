@@ -178,10 +178,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           content: this.icsService.transformActivitiesToIcsContent(
             data.activities
           ),
-          fileName: `ghostfolio-drafts-${format(
-            parseISO(data.meta.date),
-            'yyyyMMddHHmm'
-          )}.ics`,
+          contentType: 'text/calendar',
+          fileName: `ghostfolio-draft${
+            data.activities.length > 1 ? 's' : ''
+          }-${format(parseISO(data.meta.date), 'yyyyMMddHHmm')}.ics`,
           format: 'string'
         });
       });

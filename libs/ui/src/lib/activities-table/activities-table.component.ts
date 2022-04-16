@@ -200,6 +200,10 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
   }
 
+  public onExportDraft(aActivityId: string) {
+    this.exportDrafts.emit([aActivityId]);
+  }
+
   public onExportDrafts() {
     this.exportDrafts.emit(
       this.dataSource.filteredData
