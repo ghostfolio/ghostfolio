@@ -128,8 +128,10 @@ export class FireCalculatorComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data.labels = chartData.labels;
-        this.chart.data.datasets[0].data = chartData.datasets[0].data;
-        this.chart.data.datasets[1].data = chartData.datasets[1].data;
+
+        for (let index = 0; index < this.chart.data.datasets.length; index++) {
+          this.chart.data.datasets[index].data = chartData.datasets[index].data;
+        }
 
         this.chart.update();
       } else {
@@ -138,7 +140,24 @@ export class FireCalculatorComponent
           options: {
             plugins: {
               tooltip: {
+                itemSort: (a, b) => {
+                  // Reverse order
+                  return b.datasetIndex - a.datasetIndex;
+                },
+                mode: 'index',
                 callbacks: {
+                  footer: (items) => {
+                    const totalAmount = items.reduce(
+                      (a, b) => a + b.parsed.y,
+                      0
+                    );
+
+                    return `Total Amount: ${new Intl.NumberFormat(this.locale, {
+                      currency: this.currency,
+                      currencyDisplay: 'code',
+                      style: 'currency'
+                    }).format(totalAmount)}`;
+                  },
                   label: (context) => {
                     let label = context.dataset.label || '';
 
