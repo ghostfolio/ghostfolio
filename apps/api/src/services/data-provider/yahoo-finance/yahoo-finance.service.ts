@@ -20,7 +20,10 @@ import Big from 'big.js';
 import { countries } from 'countries-list';
 import { addDays, format, isSameDay } from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
-import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
+import type {
+  Price,
+  QuoteSummaryResult
+} from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -89,8 +92,7 @@ export class YahooFinanceService implements DataProviderInterface {
       response.assetSubClass = assetSubClass;
       response.currency = assetProfile.price.currency;
       response.dataSource = this.getName();
-      response.name =
-        assetProfile.price.longName || assetProfile.price.shortName || symbol;
+      response.name = this.formatName(assetProfile);
       response.symbol = aSymbol;
 
       if (
@@ -294,6 +296,25 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return { items };
+  }
+
+  private formatName(aAssetProfile: QuoteSummaryResult) {
+    let name = aAssetProfile.price.longName;
+
+    if (name) {
+      name = name.replace('iShares ETF (CH) - ', '');
+      name = name.replace('iShares III Public Limited Company - ', '');
+      name = name.replace('iShares VI Public Limited Company - ', '');
+      name = name.replace('iShares VII PLC - ', '');
+      name = name.replace('Multi Units Luxembourg - ', '');
+      name = name.replace('VanEck ETFs N.V. - ', '');
+      name = name.replace('Vaneck Vectors Ucits Etfs Plc - ', '');
+      name = name.replace('Vanguard Funds Public Limited Company - ', '');
+      name = name.replace('Vanguard Index Funds - ', '');
+      name = name.replace('Xtrackers (IE) Plc - ', '');
+    }
+
+    return name || aAssetProfile.price.shortName || aAssetProfile.price.symbol;
   }
 
   private parseAssetClass(aPrice: Price): {
