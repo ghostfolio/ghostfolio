@@ -109,38 +109,39 @@
         <mat-card-content>
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">{{ statistics?.activeUsers1d || '-' }}</h3>
-              <div class="h6 mb-0">
-                <span i18n>Active Users</span>&nbsp;<small class="text-muted"
-                  >(Last 24 hours)</small
-                >
-              </div>
+              <gf-value
+                label="Active Users"
+                size="large"
+                subLabel="(Last 24 hours)"
+                [value]="statistics?.activeUsers1d ?? '-'"
+              ></gf-value>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">{{ statistics?.newUsers30d ?? '-' }}</h3>
-              <div class="h6 mb-0">
-                <span i18n>New Users</span>&nbsp;<small class="text-muted"
-                  >(Last 30 days)</small
-                >
-              </div>
+              <gf-value
+                label="New Users"
+                size="large"
+                subLabel="(Last 30 days)"
+                [value]="statistics?.newUsers30d ?? '-'"
+              ></gf-value>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0">{{ statistics?.activeUsers30d ?? '-' }}</h3>
-              <div class="h6 mb-0">
-                <span i18n>Active Users</span>&nbsp;<small class="text-muted"
-                  >(Last 30 days)</small
-                >
-              </div>
+              <gf-value
+                label="Active Users"
+                size="large"
+                subLabel="(Last 30 days)"
+                [value]="statistics?.activeUsers30d ?? '-'"
+              ></gf-value>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <a
                 class="d-block"
                 href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
               >
-                <h3 class="mb-0">
-                  {{ statistics?.slackCommunityUsers ?? '-' }}
-                </h3>
-                <div class="h6 mb-0" i18n>Users in Slack community</div>
+                <gf-value
+                  label="Users in Slack community"
+                  size="large"
+                  [value]="statistics?.slackCommunityUsers ?? '-'"
+                ></gf-value>
               </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
@@ -148,10 +149,11 @@
                 class="d-block"
                 href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
               >
-                <h3 class="mb-0">
-                  {{ statistics?.gitHubContributors ?? '-' }}
-                </h3>
-                <div class="h6 mb-0" i18n>Contributors on GitHub</div>
+                <gf-value
+                  label="Contributors on GitHub"
+                  size="large"
+                  [value]="statistics?.gitHubContributors ?? '-'"
+                ></gf-value>
               </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
@@ -159,8 +161,11 @@
                 class="d-block"
                 href="https://github.com/ghostfolio/ghostfolio/stargazers"
               >
-                <h3 class="mb-0">{{ statistics?.gitHubStargazers ?? '-' }}</h3>
-                <div class="h6 mb-0" i18n>Stars on GitHub</div>
+                <gf-value
+                  label="Stars on GitHub"
+                  size="large"
+                  [value]="statistics?.gitHubStargazers ?? '-'"
+                ></gf-value>
               </a>
             </div>
           </div>
