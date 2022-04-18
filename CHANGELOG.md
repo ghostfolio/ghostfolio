@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with changing the investment horizon in the chart of the _FIRE_ calculator
+- Fixed the data source of the _Fear & Greed Index_ (market mood)
 
 ## 1.138.0 - 16.04.2022
 
