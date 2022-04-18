@@ -181,7 +181,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           contentType: 'text/calendar',
           fileName: `ghostfolio-draft${
             data.activities.length > 1 ? 's' : ''
-          }-${format(parseISO(data.meta.date), 'yyyyMMddHHmm')}.ics`,
+          }-${format(parseISO(data.meta.date), 'yyyyMMddHHmmss')}.ics`,
           format: 'string'
         });
       });
