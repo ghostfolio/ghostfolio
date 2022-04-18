@@ -246,6 +246,8 @@ Ghostfolio is **100% free** and **open source**. We encourage and support an act
 
 Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack channel](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg), tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_) or send an e-mail to hi@ghostfol.io. We would love to hear from you.
 
+If you like to support this project, get **[Ghostfolio Premium](https://ghostfol.io/pricing)** or **[Buy me a coffee](https://www.buymeacoffee.com/ghostfolio)**.
+
 ## License
 
 © 2022 [Ghostfolio](https://ghostfol.io)
