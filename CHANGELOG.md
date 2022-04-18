@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the total amount to the tooltip in the chart of the _FIRE_ calculator
 
+### Changed
+
+- Beautified the ETF names in the symbol profile
+
 ### Fixed
 
 - Fixed an issue with changing the investment horizon in the chart of the _FIRE_ calculator
