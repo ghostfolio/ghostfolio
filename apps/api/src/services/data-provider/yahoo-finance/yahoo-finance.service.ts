@@ -247,7 +247,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       const quotes = searchResult.quotes
         .filter((quote) => {
-          // filter out undefined symbols
+          // Filter out undefined symbols
           return quote.symbol;
         })
         .filter(({ quoteType, symbol }) => {
@@ -256,7 +256,7 @@ export class YahooFinanceService implements DataProviderInterface {
               this.cryptocurrencyService.isCryptocurrency(
                 symbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
               )) ||
-            ['EQUITY', 'ETF', 'MUTUALFUND'].includes(quoteType)
+            ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'].includes(quoteType)
           );
         })
         .filter(({ quoteType, symbol }) => {
@@ -336,6 +336,9 @@ export class YahooFinanceService implements DataProviderInterface {
       case 'etf':
         assetClass = AssetClass.EQUITY;
         assetSubClass = AssetSubClass.ETF;
+        break;
+      case 'future':
+        assetClass = AssetClass.COMMODITY;
         break;
       case 'mutualfund':
         assetClass = AssetClass.EQUITY;
