@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for sub-labels in the value component
+
 ### Changed
 
+- Reused the value component in the _Ghostfolio in Numbers_ section of the about page
 - Upgraded `yahoo-finance2` from version `2.3.0` to `2.3.1`
 
 ## 1.139.0 - 18.04.2022
