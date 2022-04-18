@@ -52,7 +52,6 @@ export class IcsService {
       `UID:${id}`,
       `DTSTAMP:${today}T000000`,
       `DTSTART;VALUE=DATE:${format(date, this.ICS_DATE_FORMAT)}`,
-      `DTEND;VALUE=DATE:${format(date, this.ICS_DATE_FORMAT)}`,
       `SUMMARY:${capitalize(type)} ${symbol}`,
       'END:VEVENT'
     ].join(this.ICS_LINE_BREAK);
