@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added the total amount to the tooltip in the chart of the _FIRE_ calculator
+
+### Fixed
+
+- Fixed an issue with changing the investment horizon in the chart of the _FIRE_ calculator
+
 ## 1.138.0 - 16.04.2022
 
 ### Added
@@ -14,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Separated the deposit and savings in the chart of the the _FIRE_ calculator
+- Separated the deposit and savings in the chart of the _FIRE_ calculator
 
 ## 1.137.0 - 15.04.2022
 
