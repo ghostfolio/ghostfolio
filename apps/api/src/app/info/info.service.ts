@@ -52,9 +52,15 @@ export class InfoService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      info.fearAndGreedDataSource = encodeDataSource(
-        ghostfolioFearAndGreedIndexDataSource
-      );
+      if (
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true
+      ) {
+        info.fearAndGreedDataSource = encodeDataSource(
+          ghostfolioFearAndGreedIndexDataSource
+        );
+      } else {
+        info.fearAndGreedDataSource = ghostfolioFearAndGreedIndexDataSource;
+      }
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
