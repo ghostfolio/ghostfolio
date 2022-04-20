@@ -68,6 +68,13 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onSavingsRateChange(savingsRate: number) {
+    this.dataService
+      .putUserSetting({ savingsRate })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
