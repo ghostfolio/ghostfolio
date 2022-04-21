@@ -12,4 +12,8 @@ export class UpdateUserSettingDto {
   @IsString()
   @IsOptional()
   locale?: string;
+
+  @IsNumber()
+  @IsOptional()
+  savingsRate?: number;
 }

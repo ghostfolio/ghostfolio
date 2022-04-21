@@ -5,9 +5,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -40,6 +42,9 @@ export class FireCalculatorComponent
   @Input() deviceType: string;
   @Input() fireWealth: number;
   @Input() locale: string;
+  @Input() savingsRate = 0;
+
+  @Output() savingsRateChanged = new EventEmitter<number>();
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -73,7 +78,7 @@ export class FireCalculatorComponent
 
     this.calculatorForm.setValue({
       annualInterestRate: 5,
-      paymentPerPeriod: 500,
+      paymentPerPeriod: this.savingsRate,
       principalInvestmentAmount: 0,
       time: 10
     });
@@ -83,15 +88,28 @@ export class FireCalculatorComponent
       .subscribe(() => {
         this.initialize();
       });
+
+    this.calculatorForm
+      .get('paymentPerPeriod')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((savingsRate) => {
+        this.savingsRateChanged.emit(savingsRate);
+      });
   }
 
   public ngAfterViewInit() {
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
-        this.calculatorForm.patchValue({
-          principalInvestmentAmount: this.fireWealth
-        });
+        this.calculatorForm.patchValue(
+          {
+            principalInvestmentAmount: this.fireWealth,
+            paymentPerPeriod: this.savingsRate ?? 0
+          },
+          {
+            emitEvent: false
+          }
+        );
         this.calculatorForm.get('principalInvestmentAmount').disable();
 
         this.changeDetectorRef.markForCheck();
@@ -103,9 +121,15 @@ export class FireCalculatorComponent
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
-        this.calculatorForm.patchValue({
-          principalInvestmentAmount: this.fireWealth
-        });
+        this.calculatorForm.patchValue(
+          {
+            principalInvestmentAmount: this.fireWealth,
+            paymentPerPeriod: this.savingsRate ?? 0
+          },
+          {
+            emitEvent: false
+          }
+        );
         this.calculatorForm.get('principalInvestmentAmount').disable();
 
         this.changeDetectorRef.markForCheck();
@@ -152,7 +176,7 @@ export class FireCalculatorComponent
                       0
                     );
 
-                    return `Total Amount: ${new Intl.NumberFormat(this.locale, {
+                    return `Total: ${new Intl.NumberFormat(this.locale, {
                       currency: this.currency,
                       currencyDisplay: 'code',
                       style: 'currency'

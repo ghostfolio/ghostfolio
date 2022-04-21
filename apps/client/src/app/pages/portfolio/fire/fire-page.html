@@ -41,7 +41,7 @@
               [value]="withdrawalRatePerMonth?.toNumber()"
             ></gf-value>
             per month</span
-          >, based on your investment of
+          >, based on your total assets of
           <gf-value
             class="d-inline-block"
             [currency]="user?.settings?.baseCurrency"
@@ -60,6 +60,8 @@
       [deviceType]="deviceType"
       [fireWealth]="fireWealth?.toNumber()"
       [locale]="user?.settings?.locale"
+      [savingsRate]="user?.settings?.savingsRate"
+      (savingsRateChanged)="onSavingsRateChange($event)"
     ></gf-fire-calculator>
   </div>
 </div>
