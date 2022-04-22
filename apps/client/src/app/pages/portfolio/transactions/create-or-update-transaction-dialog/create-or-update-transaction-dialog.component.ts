@@ -46,6 +46,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   public filteredLookupItemsObservable: Observable<LookupItem[]>;
   public isLoading = false;
   public platforms: { id: string; name: string }[];
+  public total = 0;
   public Validators = Validators;
 
   private unsubscribeSubject = new Subject<void>();
@@ -89,6 +90,25 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       unitPrice: [this.data.activity?.unitPrice, Validators.required]
     });
 
+    this.activityForm.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        if (
+          this.activityForm.controls['type'].value === 'BUY' ||
+          this.activityForm.controls['type'].value === 'ITEM'
+        ) {
+          this.total =
+            this.activityForm.controls['quantity'].value *
+              this.activityForm.controls['unitPrice'].value +
+              this.activityForm.controls['fee'].value ?? 0;
+        } else {
+          this.total =
+            this.activityForm.controls['quantity'].value *
+              this.activityForm.controls['unitPrice'].value -
+              this.activityForm.controls['fee'].value ?? 0;
+        }
+      });
+
     this.filteredLookupItemsObservable = this.activityForm.controls[
       'searchSymbol'
     ].valueChanges.pipe(
@@ -100,9 +120,11 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
           const filteredLookupItemsObservable =
             this.dataService.fetchSymbols(query);
 
-          filteredLookupItemsObservable.subscribe((filteredLookupItems) => {
-            this.filteredLookupItems = filteredLookupItems;
-          });
+          filteredLookupItemsObservable
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe((filteredLookupItems) => {
+              this.filteredLookupItems = filteredLookupItems;
+            });
 
           return filteredLookupItemsObservable;
         }
@@ -111,45 +133,47 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       })
     );
 
-    this.activityForm.controls['type'].valueChanges.subscribe((type: Type) => {
-      if (type === 'ITEM') {
-        this.activityForm.controls['accountId'].removeValidators(
-          Validators.required
-        );
-        this.activityForm.controls['accountId'].updateValueAndValidity();
-        this.activityForm.controls['currency'].setValue(
-          this.data.user.settings.baseCurrency
-        );
-        this.activityForm.controls['dataSource'].removeValidators(
-          Validators.required
-        );
-        this.activityForm.controls['dataSource'].updateValueAndValidity();
-        this.activityForm.controls['name'].setValidators(Validators.required);
-        this.activityForm.controls['name'].updateValueAndValidity();
-        this.activityForm.controls['quantity'].setValue(1);
-        this.activityForm.controls['searchSymbol'].removeValidators(
-          Validators.required
-        );
-        this.activityForm.controls['searchSymbol'].updateValueAndValidity();
-      } else {
-        this.activityForm.controls['accountId'].setValidators(
-          Validators.required
-        );
-        this.activityForm.controls['accountId'].updateValueAndValidity();
-        this.activityForm.controls['dataSource'].setValidators(
-          Validators.required
-        );
-        this.activityForm.controls['dataSource'].updateValueAndValidity();
-        this.activityForm.controls['name'].removeValidators(
-          Validators.required
-        );
-        this.activityForm.controls['name'].updateValueAndValidity();
-        this.activityForm.controls['searchSymbol'].setValidators(
-          Validators.required
-        );
-        this.activityForm.controls['searchSymbol'].updateValueAndValidity();
-      }
-    });
+    this.activityForm.controls['type'].valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((type: Type) => {
+        if (type === 'ITEM') {
+          this.activityForm.controls['accountId'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['accountId'].updateValueAndValidity();
+          this.activityForm.controls['currency'].setValue(
+            this.data.user.settings.baseCurrency
+          );
+          this.activityForm.controls['dataSource'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['dataSource'].updateValueAndValidity();
+          this.activityForm.controls['name'].setValidators(Validators.required);
+          this.activityForm.controls['name'].updateValueAndValidity();
+          this.activityForm.controls['quantity'].setValue(1);
+          this.activityForm.controls['searchSymbol'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+        } else {
+          this.activityForm.controls['accountId'].setValidators(
+            Validators.required
+          );
+          this.activityForm.controls['accountId'].updateValueAndValidity();
+          this.activityForm.controls['dataSource'].setValidators(
+            Validators.required
+          );
+          this.activityForm.controls['dataSource'].updateValueAndValidity();
+          this.activityForm.controls['name'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['name'].updateValueAndValidity();
+          this.activityForm.controls['searchSymbol'].setValidators(
+            Validators.required
+          );
+          this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+        }
+      });
 
     this.activityForm.controls['type'].setValue(this.data.activity?.type);
 
