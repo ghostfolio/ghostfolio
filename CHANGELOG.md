@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for sub-labels in the value component
+- Added a symbol profile overrides model for manual adjustments
 
 ### Changed
 
@@ -20,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the calculation of the total value for sell and dividend activities in the create or edit transaction dialog
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.139.0 - 18.04.2022
 

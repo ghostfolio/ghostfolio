@@ -112,23 +112,35 @@ model Settings {
 }
 
 model SymbolProfile {
-  assetClass           AssetClass?
-  assetSubClass        AssetSubClass?
-  countries            Json?
-  createdAt            DateTime       @default(now())
-  currency             String
-  dataSource           DataSource
-  id                   String         @id @default(uuid())
-  name                 String?
-  Order                Order[]
-  updatedAt            DateTime       @updatedAt
-  scraperConfiguration Json?
-  sectors              Json?
-  symbol               String
-  symbolMapping        Json?
-  url                  String?
+  assetClass             AssetClass?
+  assetSubClass          AssetSubClass?
+  countries              Json?
+  createdAt              DateTime                @default(now())
+  currency               String
+  dataSource             DataSource
+  id                     String                  @id @default(uuid())
+  name                   String?
+  Order                  Order[]
+  updatedAt              DateTime                @updatedAt
+  scraperConfiguration   Json?
+  sectors                Json?
+  symbol                 String
+  symbolMapping          Json?
+  SymbolProfileOverrides SymbolProfileOverrides?
+  url                    String?
 
   @@unique([dataSource, symbol])
+}
+
+model SymbolProfileOverrides {
+  assetClass      AssetClass?
+  assetSubClass   AssetSubClass?
+  countries       Json?
+  name            String?
+  sectors         Json?
+  SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
+  symbolProfileId String        @id
+  updatedAt       DateTime      @updatedAt
 }
 
 model Subscription {
@@ -176,6 +188,7 @@ enum AssetClass {
 
 enum AssetSubClass {
   BOND
+  COMMODITY
   CRYPTOCURRENCY
   ETF
   MUTUALFUND
