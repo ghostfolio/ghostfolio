@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Persisted the savings rate in the _FIRE_ calculator
 - Upgraded `yahoo-finance2` from version `2.3.0` to `2.3.1`
 
+### Fixed
+
+- Fixed the calculation of the total value for sell and dividend activities in the create or edit transaction dialog
+
 ## 1.139.0 - 18.04.2022
 
 ### Added
