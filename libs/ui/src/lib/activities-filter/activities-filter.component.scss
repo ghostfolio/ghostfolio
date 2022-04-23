@@ -1,0 +1,22 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
+:host {
+  display: block;
+
+  ::ng-deep {
+    .mat-form-field-infix {
+      border-top: 0 solid transparent !important;
+    }
+  }
+
+  .mat-chip {
+    cursor: pointer;
+    min-height: 1.5rem !important;
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-form-field {
+    color: rgba(var(--light-primary-text));
+  }
+}

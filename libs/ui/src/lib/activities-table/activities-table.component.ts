@@ -1,8 +1,6 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -11,11 +9,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent
-} from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -27,8 +20,7 @@ import Big from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, format, isAfter } from 'date-fns';
 import { isNumber } from 'lodash';
-import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
 
 const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
 const SEARCH_STRING_SEPARATOR = ',';
@@ -59,16 +51,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
 
-  @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
-  @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
   @ViewChild(MatSort) sort: MatSort;
 
+  public allFilters: string[];
   public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
   public defaultDateFormat: string;
   public displayedColumns = [];
   public endOfToday = endOfToday();
-  public filters$: Subject<string[]> = new BehaviorSubject([]);
-  public filters: Observable<string[]> = this.filters$.asObservable();
   public hasDrafts = false;
   public isAfter = isAfter;
   public isLoading = true;
@@ -77,59 +66,12 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public routeQueryParams: Subscription;
   public searchControl = new FormControl();
   public searchKeywords: string[] = [];
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
   public totalFees: number;
   public totalValue: number;
 
-  private allFilters: string[];
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private router: Router) {
-    this.searchControl.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((keyword) => {
-        if (keyword) {
-          const filterValue = keyword.toLowerCase();
-          this.filters$.next(
-            this.allFilters.filter(
-              (filter) => filter.toLowerCase().indexOf(filterValue) === 0
-            )
-          );
-        } else {
-          this.filters$.next(this.allFilters);
-        }
-      });
-  }
-
-  public addKeyword({ input, value }: MatChipInputEvent): void {
-    if (value?.trim()) {
-      this.searchKeywords.push(value.trim());
-      this.updateFilter();
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-
-    this.searchControl.setValue(null);
-  }
-
-  public removeKeyword(keyword: string): void {
-    const index = this.searchKeywords.indexOf(keyword);
-
-    if (index >= 0) {
-      this.searchKeywords.splice(index, 1);
-      this.updateFilter();
-    }
-  }
-
-  public keywordSelected(event: MatAutocompleteSelectedEvent): void {
-    this.searchKeywords.push(event.option.viewValue);
-    this.updateFilter();
-    this.searchInput.nativeElement.value = '';
-    this.searchControl.setValue(null);
-  }
+  public constructor(private router: Router) {}
 
   public ngOnChanges() {
     this.displayedColumns = [
@@ -230,19 +172,16 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.activityToUpdate.emit(aActivity);
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
-  private updateFilter() {
-    this.dataSource.filter = this.searchKeywords.join(SEARCH_STRING_SEPARATOR);
-    const lowercaseSearchKeywords = this.searchKeywords.map((keyword) =>
+  public updateFilter(filters: string[] = []) {
+    this.dataSource.filter = filters.join(SEARCH_STRING_SEPARATOR);
+    const lowercaseSearchKeywords = filters.map((keyword) =>
       keyword.trim().toLowerCase()
     );
 
     this.placeholder =
       lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
+
+    this.searchKeywords = filters;
 
     this.allFilters = this.getSearchableFieldValues(this.activities).filter(
       (item) => {
@@ -250,13 +189,36 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       }
     );
 
-    this.filters$.next(this.allFilters);
-
     this.hasDrafts = this.dataSource.data.some((activity) => {
       return activity.isDraft === true;
     });
     this.totalFees = this.getTotalFees();
     this.totalValue = this.getTotalValue();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private getFilterableValues(
+    activity: OrderWithAccount,
+    fieldValues: Set<string> = new Set<string>()
+  ): string[] {
+    fieldValues.add(activity.Account?.name);
+    fieldValues.add(activity.Account?.Platform?.name);
+    fieldValues.add(activity.SymbolProfile.currency);
+
+    if (!isUUID(activity.SymbolProfile.symbol)) {
+      fieldValues.add(activity.SymbolProfile.symbol);
+    }
+
+    fieldValues.add(activity.type);
+    fieldValues.add(format(activity.date, 'yyyy'));
+
+    return [...fieldValues].filter((item) => {
+      return item !== undefined;
+    });
   }
 
   private getSearchableFieldValues(activities: OrderWithAccount[]): string[] {
@@ -285,26 +247,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
           return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
         }
       });
-  }
-
-  private getFilterableValues(
-    activity: OrderWithAccount,
-    fieldValues: Set<string> = new Set<string>()
-  ): string[] {
-    fieldValues.add(activity.Account?.name);
-    fieldValues.add(activity.Account?.Platform?.name);
-    fieldValues.add(activity.SymbolProfile.currency);
-
-    if (!isUUID(activity.SymbolProfile.symbol)) {
-      fieldValues.add(activity.SymbolProfile.symbol);
-    }
-
-    fieldValues.add(activity.type);
-    fieldValues.add(format(activity.date, 'yyyy'));
-
-    return [...fieldValues].filter((item) => {
-      return item !== undefined;
-    });
   }
 
   private getTotalFees() {

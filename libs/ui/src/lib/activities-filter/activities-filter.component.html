@@ -1,0 +1,33 @@
+<mat-form-field appearance="outline" class="w-100">
+  <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
+  <mat-chip-list #chipList aria-label="Search keywords">
+    <mat-chip
+      *ngFor="let searchKeyword of searchKeywords"
+      class="mx-1 my-0 px-2 py-0"
+      matChipRemove
+      [removable]="true"
+      (removed)="removeKeyword(searchKeyword)"
+    >
+      {{ searchKeyword | gfSymbol }}
+      <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
+    </mat-chip>
+    <input
+      #searchInput
+      name="close-outline"
+      [formControl]="searchControl"
+      [matAutocomplete]="autocomplete"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [placeholder]="placeholder"
+      (matChipInputTokenEnd)="addKeyword($event)"
+    />
+  </mat-chip-list>
+  <mat-autocomplete
+    #autocomplete="matAutocomplete"
+    (optionSelected)="keywordSelected($event)"
+  >
+    <mat-option *ngFor="let filter of filters | async" [value]="filter">
+      {{ filter | gfSymbol }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

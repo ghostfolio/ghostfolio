@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extracted the activities table filter to a dedicated component
 - Changed the url of the _Get Started_ link to `https://ghostfol.io` on the public page
 - Upgraded `prisma` from version `3.11.1` to `3.12.0`
 
