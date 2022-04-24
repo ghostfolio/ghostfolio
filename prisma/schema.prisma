@@ -81,6 +81,7 @@ model Order {
   quantity        Float
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   symbolProfileId String
+  tags            OrderTags[]
   type            Type
   unitPrice       Float
   updatedAt       DateTime      @updatedAt
@@ -88,6 +89,15 @@ model Order {
   userId          String
 
   @@id([id, userId])
+}
+
+model OrderTags {
+  id          String  @id @default(uuid())
+  order       Order?  @relation(fields: [orderId, orderUserId], references: [id, userId])
+  orderId     String?
+  orderUserId String?
+  tag         Tag?    @relation(fields: [tagId], references: [id])
+  tagId       String?
 }
 
 model Platform {
@@ -138,9 +148,9 @@ model SymbolProfileOverrides {
   countries       Json?
   name            String?
   sectors         Json?
-  SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
-  symbolProfileId String        @id
-  updatedAt       DateTime      @updatedAt
+  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], references: [id])
+  symbolProfileId String         @id
+  updatedAt       DateTime       @updatedAt
 }
 
 model Subscription {
@@ -152,6 +162,12 @@ model Subscription {
   userId    String
 
   @@id([id, userId])
+}
+
+model Tag {
+  id     String      @id @default(uuid())
+  name   String      @unique
+  orders OrderTags[]
 }
 
 model User {

@@ -152,11 +152,13 @@ export class OrderService {
 
   public async getOrders({
     includeDrafts = false,
+    tags,
     types,
     userCurrency,
     userId
   }: {
     includeDrafts?: boolean;
+    tags?: string[];
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
@@ -165,6 +167,16 @@ export class OrderService {
 
     if (includeDrafts === false) {
       where.isDraft = false;
+    }
+
+    if (tags?.length > 0) {
+      where.tags = {
+        some: {
+          tag: {
+            name: tags[0]
+          }
+        }
+      };
     }
 
     if (types) {
