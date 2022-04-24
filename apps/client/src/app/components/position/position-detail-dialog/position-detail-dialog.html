@@ -194,21 +194,31 @@
     </div>
   </div>
 
-  <gf-activities-table
-    *ngIf="orders?.length > 0"
-    [activities]="orders"
-    [baseCurrency]="data.baseCurrency"
-    [deviceType]="data.deviceType"
-    [hasPermissionToCreateActivity]="false"
-    [hasPermissionToExportActivities]="!hasImpersonationId"
-    [hasPermissionToFilter]="false"
-    [hasPermissionToImportActivities]="false"
-    [hasPermissionToOpenDetails]="false"
-    [locale]="data.locale"
-    [showActions]="false"
-    [showSymbolColumn]="false"
-    (export)="onExport()"
-  ></gf-activities-table>
+  <div class="mb-3">
+    <div class="h4 mb-0" i18n>Activities</div>
+    <gf-activities-table
+      *ngIf="orders?.length > 0"
+      [activities]="orders"
+      [baseCurrency]="data.baseCurrency"
+      [deviceType]="data.deviceType"
+      [hasPermissionToCreateActivity]="false"
+      [hasPermissionToExportActivities]="!hasImpersonationId"
+      [hasPermissionToFilter]="false"
+      [hasPermissionToImportActivities]="false"
+      [hasPermissionToOpenDetails]="false"
+      [locale]="data.locale"
+      [showActions]="false"
+      [showSymbolColumn]="false"
+      (export)="onExport()"
+    ></gf-activities-table>
+  </div>
+
+  <div *ngIf="tags?.length > 0">
+    <div class="h4" i18n>Tags</div>
+    <mat-chip-list>
+      <mat-chip *ngFor="let tag of tags">{{ tag.name }}</mat-chip>
+    </mat-chip-list>
+  </div>
 </div>
 
 <gf-dialog-footer

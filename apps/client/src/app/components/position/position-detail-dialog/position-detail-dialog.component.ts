@@ -11,7 +11,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
-import { SymbolProfile } from '@prisma/client';
+import { SymbolProfile, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -48,6 +48,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     [name: string]: { name: string; value: number };
   };
   public SymbolProfile: SymbolProfile;
+  public tags: Tag[];
   public transactionCount: number;
   public value: number;
 
@@ -83,6 +84,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           orders,
           quantity,
           SymbolProfile,
+          tags,
           transactionCount,
           value
         }) => {
@@ -115,6 +117,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.quantity = quantity;
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
+          this.tags = tags;
           this.transactionCount = transactionCount;
           this.value = value;
 

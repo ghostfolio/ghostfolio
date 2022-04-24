@@ -1,5 +1,6 @@
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { Tag } from '@prisma/client';
 
 export interface PortfolioPositionDetail {
   averagePrice: number;
@@ -16,6 +17,7 @@ export interface PortfolioPositionDetail {
   orders: OrderWithAccount[];
   quantity: number;
   SymbolProfile: EnhancedSymbolProfile;
+  tags: Tag[];
   transactionCount: number;
   value: number;
 }

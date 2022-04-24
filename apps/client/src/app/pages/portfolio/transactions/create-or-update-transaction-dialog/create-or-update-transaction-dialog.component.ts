@@ -86,6 +86,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
         },
         Validators.required
       ],
+      tags: [this.data.activity?.tags],
       type: [undefined, Validators.required], // Set after value changes subscription
       unitPrice: [this.data.activity?.unitPrice, Validators.required]
     });
