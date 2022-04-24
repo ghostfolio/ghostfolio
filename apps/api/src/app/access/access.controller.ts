@@ -78,8 +78,12 @@ export class AccessController {
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   public async deleteAccess(@Param('id') id: string): Promise<AccessModule> {
+    const access = await this.accessService.access({ id });
+
     if (
-      !hasPermission(this.request.user.permissions, permissions.deleteAccess)
+      !hasPermission(this.request.user.permissions, permissions.deleteAccess) ||
+      !access ||
+      access.userId !== this.request.user.id
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -88,10 +92,7 @@ export class AccessController {
     }
 
     return this.accessService.deleteAccess({
-      id_userId: {
-        id,
-        userId: this.request.user.id
-      }
+      id
     });
   }
 }

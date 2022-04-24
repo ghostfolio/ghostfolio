@@ -13,12 +13,10 @@ model Access {
   createdAt     DateTime @default(now())
   GranteeUser   User?    @relation(fields: [granteeUserId], name: "accessGet", references: [id])
   granteeUserId String?
-  id            String   @default(uuid())
+  id            String   @id @default(uuid())
   updatedAt     DateTime @updatedAt
   User          User     @relation(fields: [userId], name: "accessGive", references: [id])
   userId        String
-
-  @@id([id, userId])
 }
 
 model Account {
@@ -61,7 +59,7 @@ model MarketData {
   createdAt   DateTime   @default(now())
   dataSource  DataSource
   date        DateTime
-  id          String     @default(uuid())
+  id          String     @id @default(uuid())
   symbol      String
   marketPrice Float
 
@@ -76,7 +74,7 @@ model Order {
   createdAt       DateTime      @default(now())
   date            DateTime
   fee             Float
-  id              String        @default(uuid())
+  id              String        @id @default(uuid())
   isDraft         Boolean       @default(false)
   quantity        Float
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
@@ -86,8 +84,6 @@ model Order {
   updatedAt       DateTime      @updatedAt
   User            User          @relation(fields: [userId], references: [id])
   userId          String
-
-  @@id([id, userId])
 }
 
 model Platform {
@@ -138,20 +134,18 @@ model SymbolProfileOverrides {
   countries       Json?
   name            String?
   sectors         Json?
-  SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
-  symbolProfileId String        @id
-  updatedAt       DateTime      @updatedAt
+  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], references: [id])
+  symbolProfileId String         @id
+  updatedAt       DateTime       @updatedAt
 }
 
 model Subscription {
   createdAt DateTime @default(now())
   expiresAt DateTime
-  id        String   @default(uuid())
+  id        String   @id @default(uuid())
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id])
   userId    String
-
-  @@id([id, userId])
 }
 
 model User {
