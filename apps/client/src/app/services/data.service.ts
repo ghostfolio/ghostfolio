@@ -182,9 +182,15 @@ export class DataService {
     );
   }
 
-  public fetchPortfolioDetails(aParams: { [param: string]: any }) {
+  public fetchPortfolioDetails({ tags }: { tags?: string[] }) {
+    let params = new HttpParams();
+
+    if (tags?.length > 0) {
+      params = params.append('tags', tags.join(','));
+    }
+
     return this.http.get<PortfolioDetails>('/api/v1/portfolio/details', {
-      params: aParams
+      params
     });
   }
 

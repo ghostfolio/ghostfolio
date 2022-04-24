@@ -2,6 +2,7 @@ import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscriptio
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
+import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -19,7 +20,8 @@ import { UserService } from './user.service';
     }),
     PrismaModule,
     PropertyModule,
-    SubscriptionModule
+    SubscriptionModule,
+    TagModule
   ],
   providers: [UserService]
 })

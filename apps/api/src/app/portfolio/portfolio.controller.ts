@@ -105,7 +105,8 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
+    @Query('range') range,
+    @Query('tags') tags?: string
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasError = false;
 
@@ -113,7 +114,8 @@ export class PortfolioController {
       await this.portfolioService.getDetails(
         impersonationId,
         this.request.user.id,
-        range
+        range,
+        tags?.split(',')
       );
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
@@ -159,7 +161,11 @@ export class PortfolioController {
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === 'Basic';
 
-    return { accounts, hasError, holdings: isBasicUser ? {} : holdings };
+    return {
+      hasError,
+      accounts: tags ? {} : accounts,
+      holdings: isBasicUser ? {} : holdings
+    };
   }
 
   @Get('investments')

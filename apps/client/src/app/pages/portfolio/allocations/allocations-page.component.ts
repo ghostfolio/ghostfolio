@@ -48,6 +48,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     { label: 'Initial', value: 'original' },
     { label: 'Current', value: 'current' }
   ];
+  public placeholder = '';
   public portfolioDetails: PortfolioDetails;
   public positions: {
     [symbol: string]: Pick<
@@ -73,6 +74,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
+  public tags: string[] = [];
 
   public user: User;
 
@@ -120,29 +122,22 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!aId;
       });
 
-    this.dataService
-      .fetchPortfolioDetails({})
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioDetails) => {
-        this.portfolioDetails = portfolioDetails;
-
-        this.initializeAnalysisData(this.period);
-
-        this.changeDetectorRef.markForCheck();
-      });
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
 
+          this.tags = this.user.tags.map((tag) => {
+            return tag.name;
+          });
+
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
-  public initializeAnalysisData(aPeriod: string) {
+  public initialize() {
     this.accounts = {};
     this.continents = {
       [UNKNOWN_KEY]: {
@@ -185,6 +180,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
+  }
+
+  public initializeAnalysisData(aPeriod: string) {
+    this.initialize();
 
     for (const [id, { current, name, original }] of Object.entries(
       this.portfolioDetails.accounts
@@ -305,7 +304,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (position.assetClass === AssetClass.EQUITY) {
+      if (position.dataSource) {
         this.symbols[prettifySymbol(symbol)] = {
           dataSource: position.dataSource,
           name: position.name,
@@ -340,6 +339,25 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         queryParams: { dataSource, symbol, positionDetailDialog: true }
       });
     }
+  }
+
+  public onUpdateFilters(tags: string[] = []) {
+    this.update(tags);
+  }
+
+  public update(tags?: string[]) {
+    this.initialize();
+
+    this.dataService
+      .fetchPortfolioDetails({ tags })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((portfolioDetails) => {
+        this.portfolioDetails = portfolioDetails;
+
+        this.initializeAnalysisData(this.period);
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public ngOnDestroy() {

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a tagging system for activities
+
 ### Changed
 
 - Extracted the activities table filter to a dedicated component

@@ -1,3 +1,4 @@
+import { Tag } from '@prisma/client';
 import { Statistics } from './statistics.interface';
 import { Subscription } from './subscription.interface';
 
@@ -13,4 +14,5 @@ export interface InfoItem {
   stripePublicKey?: string;
   subscriptions: Subscription[];
   systemMessage?: string;
+  tags: Tag[];
 }
