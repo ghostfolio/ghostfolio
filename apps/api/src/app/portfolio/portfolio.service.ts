@@ -303,7 +303,8 @@ export class PortfolioService {
   public async getDetails(
     aImpersonationId: string,
     aUserId: string,
-    aDateRange: DateRange = 'max'
+    aDateRange: DateRange = 'max',
+    tags?: string[]
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId, aUserId);
     const user = await this.userService.user({ id: userId });
@@ -318,6 +319,7 @@ export class PortfolioService {
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
+        tags,
         userId
       });
 
@@ -441,8 +443,10 @@ export class PortfolioService {
       value: totalValue
     });
 
-    for (const symbol of Object.keys(cashPositions)) {
-      holdings[symbol] = cashPositions[symbol];
+    if (tags === undefined) {
+      for (const symbol of Object.keys(cashPositions)) {
+        holdings[symbol] = cashPositions[symbol];
+      }
     }
 
     const accounts = await this.getValueOfAccounts(
@@ -1178,9 +1182,11 @@ export class PortfolioService {
 
   private async getTransactionPoints({
     includeDrafts = false,
+    tags,
     userId
   }: {
     includeDrafts?: boolean;
+    tags?: string[];
     userId: string;
   }): Promise<{
     transactionPoints: TransactionPoint[];
@@ -1191,6 +1197,7 @@ export class PortfolioService {
 
     const orders = await this.orderService.getOrders({
       includeDrafts,
+      tags,
       userCurrency,
       userId,
       types: ['BUY', 'SELL']
