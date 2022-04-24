@@ -1197,7 +1197,6 @@ export class PortfolioService {
 
     const orders = await this.orderService.getOrders({
       includeDrafts,
-      tags,
       userCurrency,
       userId,
       types: ['BUY', 'SELL']
