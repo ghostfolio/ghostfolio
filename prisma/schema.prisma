@@ -79,6 +79,7 @@ model Order {
   quantity        Float
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   symbolProfileId String
+  tags            Tag[]
   type            Type
   unitPrice       Float
   updatedAt       DateTime      @updatedAt
@@ -146,6 +147,12 @@ model Subscription {
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id])
   userId    String
+}
+
+model Tag {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  orders Order[]
 }
 
 model User {

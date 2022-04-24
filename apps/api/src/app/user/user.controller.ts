@@ -34,7 +34,7 @@ import { UserService } from './user.service';
 export class UserController {
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
     private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService

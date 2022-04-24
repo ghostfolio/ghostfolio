@@ -74,7 +74,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-  public tags = ['high-risk', 'pension'];
+  public tags: string[] = [];
 
   public user: User;
 
@@ -127,6 +127,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.tags = this.user.tags.map((tag) => {
+            return tag.name;
+          });
 
           this.changeDetectorRef.markForCheck();
         }
@@ -300,7 +304,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (position.assetClass === AssetClass.EQUITY) {
+      if (position.dataSource) {
         this.symbols[prettifySymbol(symbol)] = {
           dataSource: position.dataSource,
           name: position.name,

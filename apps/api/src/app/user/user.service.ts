@@ -2,6 +2,7 @@ import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscripti
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   PROPERTY_IS_READ_ONLY_MODE,
   baseCurrency,
@@ -13,7 +14,6 @@ import {
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User, ViewMode } from '@prisma/client';
 
@@ -30,7 +30,8 @@ export class UserService {
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
-    private readonly subscriptionService: SubscriptionService
+    private readonly subscriptionService: SubscriptionService,
+    private readonly tagService: TagService
   ) {}
 
   public async getUser(
@@ -51,12 +52,21 @@ export class UserService {
       orderBy: { User: { alias: 'asc' } },
       where: { GranteeUser: { id } }
     });
+    let tags = await this.tagService.getByUser(id);
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      subscription.type === 'Basic'
+    ) {
+      tags = [];
+    }
 
     return {
       alias,
       id,
       permissions,
       subscription,
+      tags,
       access: access.map((accessItem) => {
         return {
           alias: accessItem.User.alias,

@@ -161,7 +161,11 @@ export class PortfolioController {
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === 'Basic';
 
-    return { accounts, hasError, holdings: isBasicUser ? {} : holdings };
+    return {
+      hasError,
+      accounts: tags ? {} : accounts,
+      holdings: isBasicUser ? {} : holdings
+    };
   }
 
   @Get('investments')
