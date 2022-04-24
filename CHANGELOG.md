@@ -11,7 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extracted the activities table filter to a dedicated component
 - Changed the url of the _Get Started_ link to `https://ghostfol.io` on the public page
+- Simplified `@@id` using multiple fields with `@id` in the database schema of (`Access`, `Order`, `Subscription`)
 - Upgraded `prisma` from version `3.11.1` to `3.12.0`
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.140.2 - 22.04.2022
 
