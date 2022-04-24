@@ -42,8 +42,12 @@ export class OrderController {
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
+    const order = await this.orderService.order({ id });
+
     if (
-      !hasPermission(this.request.user.permissions, permissions.deleteOrder)
+      !hasPermission(this.request.user.permissions, permissions.deleteOrder) ||
+      !order ||
+      order.userId !== this.request.user.id
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -52,10 +56,7 @@ export class OrderController {
     }
 
     return this.orderService.deleteOrder({
-      id_userId: {
-        id,
-        userId: this.request.user.id
-      }
+      id
     });
   }
 
@@ -135,23 +136,15 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.updateOrder)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const originalOrder = await this.orderService.order({
-      id_userId: {
-        id,
-        userId: this.request.user.id
-      }
+      id
     });
 
-    if (!originalOrder) {
+    if (
+      !hasPermission(this.request.user.permissions, permissions.updateOrder) ||
+      !originalOrder ||
+      originalOrder.userId !== this.request.user.id
+    ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -183,10 +176,7 @@ export class OrderController {
         User: { connect: { id: this.request.user.id } }
       },
       where: {
-        id_userId: {
-          id,
-          userId: this.request.user.id
-        }
+        id
       }
     });
   }
