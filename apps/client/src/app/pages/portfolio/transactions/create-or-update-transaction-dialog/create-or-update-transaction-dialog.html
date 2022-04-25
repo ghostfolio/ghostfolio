@@ -134,6 +134,18 @@
         >
       </mat-form-field>
     </div>
+    <div
+      [ngClass]="{ 'd-none': activityForm.controls['tags']?.value?.length <= 0 }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Tags</mat-label>
+        <mat-chip-list>
+          <mat-chip *ngFor="let tag of activityForm.controls['tags']?.value">
+            {{ tag.name }}
+          </mat-chip>
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
   </div>
   <div class="d-flex" mat-dialog-actions>
     <gf-value

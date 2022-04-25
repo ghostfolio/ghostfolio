@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the tags to the create or edit transaction dialog
+- Added the tags to the position detail dialog
+
 ### Changed
 
 - Changed the date to UTC in the data gathering service

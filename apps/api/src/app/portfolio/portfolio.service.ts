@@ -46,7 +46,12 @@ import type {
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { AssetClass, DataSource, Type as TypeOfOrder } from '@prisma/client';
+import {
+  AssetClass,
+  DataSource,
+  Tag,
+  Type as TypeOfOrder
+} from '@prisma/client';
 import Big from 'big.js';
 import {
   differenceInDays,
@@ -62,7 +67,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, sortBy } from 'lodash';
+import { isEmpty, sortBy, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -476,8 +481,11 @@ export class PortfolioService {
       );
     });
 
+    let tags: Tag[] = [];
+
     if (orders.length <= 0) {
       return {
+        tags,
         averagePrice: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -504,6 +512,8 @@ export class PortfolioService {
 
     const portfolioOrders: PortfolioOrder[] = orders
       .filter((order) => {
+        tags = tags.concat(order.tags);
+
         return order.type === 'BUY' || order.type === 'SELL';
       })
       .map((order) => ({
@@ -517,6 +527,8 @@ export class PortfolioService {
         type: order.type,
         unitPrice: new Big(order.unitPrice)
       }));
+
+    tags = uniqBy(tags, 'id');
 
     const portfolioCalculator = new PortfolioCalculator({
       currency: positionCurrency,
@@ -626,6 +638,7 @@ export class PortfolioService {
         netPerformance,
         orders,
         SymbolProfile,
+        tags,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
         grossPerformancePercent:
@@ -682,6 +695,7 @@ export class PortfolioService {
         minPrice,
         orders,
         SymbolProfile,
+        tags,
         averagePrice: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
