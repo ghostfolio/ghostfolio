@@ -544,6 +544,7 @@ export class DataGatheringService {
       await this.prismaService.marketData.groupBy({
         _count: true,
         by: ['symbol'],
+        orderBy: [{ symbol: 'asc' }],
         where: {
           date: { gt: startDate }
         }
