@@ -377,7 +377,14 @@ export class DataGatheringService {
                 data: {
                   dataSource,
                   symbol,
-                  date: currentDate,
+                  date: new Date(
+                    Date.UTC(
+                      getYear(currentDate),
+                      getMonth(currentDate),
+                      getDate(currentDate),
+                      0
+                    )
+                  ),
                   marketPrice: lastMarketPrice
                 }
               });
@@ -537,6 +544,7 @@ export class DataGatheringService {
       await this.prismaService.marketData.groupBy({
         _count: true,
         by: ['symbol'],
+        orderBy: [{ symbol: 'asc' }],
         where: {
           date: { gt: startDate }
         }

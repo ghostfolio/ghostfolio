@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the tags to the create or edit transaction dialog
+- Added the tags to the position detail dialog
+
 ### Changed
 
+- Changed the date to UTC in the data gathering service
 - Reused the value component in the users table of the admin control panel
 
 ## 1.141.1 - 24.04.2022

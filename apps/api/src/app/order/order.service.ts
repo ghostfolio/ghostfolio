@@ -202,7 +202,8 @@ export class OrderService {
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          SymbolProfile: true
+          SymbolProfile: true,
+          tags: true
         },
         orderBy: { date: 'asc' }
       })
