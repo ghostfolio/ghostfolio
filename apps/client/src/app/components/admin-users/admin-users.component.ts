@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { AdminData } from '@ghostfolio/common/interfaces';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { AdminData, User } from '@ghostfolio/common/interfaces';
 import {
   differenceInSeconds,
   formatDistanceToNowStrict,
@@ -15,6 +16,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
+  public user: User;
   public users: AdminData['users'];
 
   private unsubscribeSubject = new Subject<void>();
@@ -24,8 +26,17 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
    */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
-  ) {}
+    private dataService: DataService,
+    private userService: UserService
+  ) {
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+        }
+      });
+  }
 
   /**
    * Initializes the controller
