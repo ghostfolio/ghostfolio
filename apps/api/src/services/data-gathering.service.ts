@@ -377,7 +377,14 @@ export class DataGatheringService {
                 data: {
                   dataSource,
                   symbol,
-                  date: currentDate,
+                  date: new Date(
+                    Date.UTC(
+                      getYear(currentDate),
+                      getMonth(currentDate),
+                      getDate(currentDate),
+                      0
+                    )
+                  ),
                   marketPrice: lastMarketPrice
                 }
               });
