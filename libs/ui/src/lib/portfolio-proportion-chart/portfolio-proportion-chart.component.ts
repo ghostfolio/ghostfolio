@@ -192,13 +192,8 @@ export class PortfolioProportionChartComponent
         // Reuse color
         item.color = this.colorMap[symbol];
       } else {
-        const color =
+        item.color =
           this.getColorPalette()[index % this.getColorPalette().length];
-
-        // Store color for reuse
-        this.colorMap[symbol] = color;
-
-        item.color = color;
       }
     });
 
@@ -265,6 +260,7 @@ export class PortfolioProportionChartComponent
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: <unknown>{
+            animation: false,
             cutout: '70%',
             layout: {
               padding: this.showLabels === true ? 100 : 0

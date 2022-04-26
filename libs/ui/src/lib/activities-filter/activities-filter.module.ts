@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 
 import { ActivitiesFilterComponent } from './activities-filter.component';
@@ -17,6 +18,7 @@ import { ActivitiesFilterComponent } from './activities-filter.component';
     MatAutocompleteModule,
     MatChipsModule,
     MatInputModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -7,6 +7,10 @@
     .mat-form-field-infix {
       border-top: 0 solid transparent !important;
     }
+
+    .mat-spinner circle {
+      stroke: rgba(var(--dark-dividers));
+    }
   }
 
   .mat-chip {
@@ -18,5 +22,9 @@
 :host-context(.is-dark-theme) {
   .mat-form-field {
     color: rgba(var(--light-primary-text));
+  }
+
+  .mat-spinner circle {
+    stroke: rgba(var(--light-dividers));
   }
 }
