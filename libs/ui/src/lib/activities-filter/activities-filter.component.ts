@@ -8,6 +8,7 @@ import {
   OnChanges,
   OnDestroy,
   Output,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -27,6 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   @Input() allFilters: string[];
+  @Input() isLoading: boolean;
   @Input() placeholder: string;
 
   @Output() valueChanged = new EventEmitter<string[]>();
@@ -59,8 +61,8 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
       });
   }
 
-  public ngOnChanges() {
-    if (this.allFilters) {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.allFilters?.currentValue) {
       this.updateFilter();
     }
   }
@@ -103,6 +105,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   private updateFilter() {
     this.filters$.next(this.allFilters);
 
-    this.valueChanged.emit(this.searchKeywords);
+    // Emit an array with a new reference
+    this.valueChanged.emit([...this.searchKeywords]);
   }
 }

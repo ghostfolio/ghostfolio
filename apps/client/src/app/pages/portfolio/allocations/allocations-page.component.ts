@@ -17,7 +17,7 @@ import { Market, ToggleOption } from '@ghostfolio/common/types';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -39,7 +39,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
+  public filters$ = new Subject<string[]>();
   public hasImpersonationId: boolean;
+  public isLoading = false;
   public markets: {
     [key in Market]: { name: string; value: number };
   };
@@ -120,6 +122,26 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+      });
+
+    this.filters$
+      .pipe(
+        distinctUntilChanged(),
+        switchMap((tags) => {
+          this.isLoading = true;
+
+          return this.dataService.fetchPortfolioDetails({ tags });
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe((portfolioDetails) => {
+        this.portfolioDetails = portfolioDetails;
+
+        this.initializeAnalysisData(this.period);
+
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.userService.stateChanged
@@ -339,25 +361,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         queryParams: { dataSource, symbol, positionDetailDialog: true }
       });
     }
-  }
-
-  public onUpdateFilters(tags: string[] = []) {
-    this.update(tags);
-  }
-
-  public update(tags?: string[]) {
-    this.initialize();
-
-    this.dataService
-      .fetchPortfolioDetails({ tags })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioDetails) => {
-        this.portfolioDetails = portfolioDetails;
-
-        this.initializeAnalysisData(this.period);
-
-        this.changeDetectorRef.markForCheck();
-      });
   }
 
   public ngOnDestroy() {

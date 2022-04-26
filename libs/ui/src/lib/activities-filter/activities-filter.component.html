@@ -30,4 +30,9 @@
       {{ filter | gfSymbol }}
     </mat-option>
   </mat-autocomplete>
+  <mat-spinner
+    matSuffix
+    [diameter]="20"
+    [ngClass]="{ 'd-none': !isLoading }"
+  ></mat-spinner>
 </mat-form-field>
