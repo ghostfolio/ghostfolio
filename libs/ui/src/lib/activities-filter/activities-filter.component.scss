@@ -8,8 +8,10 @@
       border-top: 0 solid transparent !important;
     }
 
-    .mat-spinner circle {
-      stroke: rgba(var(--dark-dividers));
+    .mat-spinner {
+      circle {
+        stroke: rgba(var(--dark-dividers));
+      }
     }
   }
 
@@ -24,7 +26,11 @@
     color: rgba(var(--light-primary-text));
   }
 
-  .mat-spinner circle {
-    stroke: rgba(var(--light-dividers));
+  ::ng-deep {
+    .mat-spinner {
+      circle {
+        stroke: rgba(var(--light-dividers));
+      }
+    }
   }
 }
