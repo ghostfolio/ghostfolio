@@ -5,34 +5,43 @@
   },
   "activities": [
     {
-      "accountId": null,
-      "date": "2021-12-31T23:00:00.000Z",
+      "fee": 0,
+      "quantity": 0,
+      "type": "BUY",
+      "unitPrice": 0,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2050-06-05T22:00:00.000Z",
+      "symbol": "MSFT"
+    },
+    {
       "fee": 0,
       "quantity": 1,
       "type": "ITEM",
       "unitPrice": 500000,
       "currency": "USD",
       "dataSource": "MANUAL",
+      "date": "2021-12-31T22:00:00.000Z",
       "symbol": "Penthouse Apartment"
     },
     {
-      "date": "2021-11-16T23:00:00.000Z",
       "fee": 0,
       "quantity": 5,
       "type": "DIVIDEND",
       "unitPrice": 0.62,
       "currency": "USD",
       "dataSource": "YAHOO",
+      "date": "2021-11-16T22:00:00.000Z",
       "symbol": "MSFT"
     },
     {
-      "date": "2021-09-15T22:00:00.000Z",
       "fee": 19,
       "quantity": 5,
       "type": "BUY",
       "unitPrice": 298.58,
       "currency": "USD",
       "dataSource": "YAHOO",
+      "date": "2021-09-15T22:00:00.000Z",
       "symbol": "MSFT"
     }
   ]
