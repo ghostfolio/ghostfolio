@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the import validation for numbers equal 0
 - Fixed the color of the spinner in the activities filter component (dark mode)
 
 ## 1.143.0 - 26.04.2022
