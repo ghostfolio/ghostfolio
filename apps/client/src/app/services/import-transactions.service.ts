@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Account, DataSource, Type } from '@prisma/client';
 import { parse } from 'date-fns';
-import { isNumber } from 'lodash';
+import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -185,7 +185,7 @@ export class ImportTransactionsService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.FEE_KEYS) {
-      if ((item[key] || item[key] === 0) && isNumber(item[key])) {
+      if (isFinite(item[key])) {
         return item[key];
       }
     }
@@ -208,7 +208,7 @@ export class ImportTransactionsService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.QUANTITY_KEYS) {
-      if (item[key] && isNumber(item[key])) {
+      if (isFinite(item[key])) {
         return item[key];
       }
     }
@@ -288,7 +288,7 @@ export class ImportTransactionsService {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportTransactionsService.UNIT_PRICE_KEYS) {
-      if (item[key] && isNumber(item[key])) {
+      if (isFinite(item[key])) {
         return item[key];
       }
     }
