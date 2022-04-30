@@ -195,6 +195,7 @@ enum AssetSubClass {
   ETF
   MUTUALFUND
   PRECIOUS_METAL
+  PRIVATE_EQUITY
   STOCK
 }
 
