@@ -168,7 +168,7 @@
         </ng-container>
         <ng-template #charts>
           <div class="col-md-6 mb-3">
-            <div class="h4" i18n>Sectors</div>
+            <div class="h5" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
               [baseCurrency]="user?.settings?.baseCurrency"
               [isInPercent]="true"
@@ -179,7 +179,7 @@
             ></gf-portfolio-proportion-chart>
           </div>
           <div class="col-md-6 mb-3">
-            <div class="h4" i18n>Countries</div>
+            <div class="h5" i18n>Countries</div>
             <gf-portfolio-proportion-chart
               [baseCurrency]="user?.settings?.baseCurrency"
               [isInPercent]="true"
@@ -192,32 +192,35 @@
         </ng-template>
       </ng-container>
     </div>
-  </div>
 
-  <div class="mb-3">
-    <div class="h4 mb-0" i18n>Activities</div>
-    <gf-activities-table
-      *ngIf="orders?.length > 0"
-      [activities]="orders"
-      [baseCurrency]="data.baseCurrency"
-      [deviceType]="data.deviceType"
-      [hasPermissionToCreateActivity]="false"
-      [hasPermissionToExportActivities]="!hasImpersonationId"
-      [hasPermissionToFilter]="false"
-      [hasPermissionToImportActivities]="false"
-      [hasPermissionToOpenDetails]="false"
-      [locale]="data.locale"
-      [showActions]="false"
-      [showSymbolColumn]="false"
-      (export)="onExport()"
-    ></gf-activities-table>
-  </div>
+    <div *ngIf="orders?.length > 0" class="row">
+      <div class="col mb-3">
+        <div class="h5 mb-0" i18n>Activities</div>
+        <gf-activities-table
+          [activities]="orders"
+          [baseCurrency]="data.baseCurrency"
+          [deviceType]="data.deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="!hasImpersonationId"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToImportActivities]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="data.locale"
+          [showActions]="false"
+          [showSymbolColumn]="false"
+          (export)="onExport()"
+        ></gf-activities-table>
+      </div>
+    </div>
 
-  <div *ngIf="tags?.length > 0">
-    <div class="h4" i18n>Tags</div>
-    <mat-chip-list>
-      <mat-chip *ngFor="let tag of tags">{{ tag.name }}</mat-chip>
-    </mat-chip-list>
+    <div *ngIf="tags?.length > 0" class="row">
+      <div class="col">
+        <div class="h5" i18n>Tags</div>
+        <mat-chip-list>
+          <mat-chip *ngFor="let tag of tags">{{ tag.name }}</mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
   </div>
 </div>
 
