@@ -20,10 +20,7 @@ import Big from 'big.js';
 import { countries } from 'countries-list';
 import { addDays, format, isSameDay } from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
-import type {
-  Price,
-  QuoteSummaryResult
-} from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
+import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -92,7 +89,12 @@ export class YahooFinanceService implements DataProviderInterface {
       response.assetSubClass = assetSubClass;
       response.currency = assetProfile.price.currency;
       response.dataSource = this.getName();
-      response.name = this.formatName(assetProfile);
+      response.name = this.formatName({
+        longName: assetProfile.price.longName,
+        quoteType: assetProfile.price.quoteType,
+        shortName: assetProfile.price.shortName,
+        symbol: assetProfile.price.symbol
+      });
       response.symbol = aSymbol;
 
       if (
@@ -247,7 +249,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       const quotes = searchResult.quotes
         .filter((quote) => {
-          // filter out undefined symbols
+          // Filter out undefined symbols
           return quote.symbol;
         })
         .filter(({ quoteType, symbol }) => {
@@ -256,7 +258,7 @@ export class YahooFinanceService implements DataProviderInterface {
               this.cryptocurrencyService.isCryptocurrency(
                 symbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
               )) ||
-            ['EQUITY', 'ETF', 'MUTUALFUND'].includes(quoteType)
+            ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'].includes(quoteType)
           );
         })
         .filter(({ quoteType, symbol }) => {
@@ -264,6 +266,9 @@ export class YahooFinanceService implements DataProviderInterface {
             // Only allow cryptocurrencies in base currency to avoid having redundancy in the database.
             // Transactions need to be converted manually to the base currency before
             return symbol.includes(baseCurrency);
+          } else if (quoteType === 'FUTURE') {
+            // Allow GC=F, but not MGC=F
+            return symbol.length === 4;
           }
 
           return true;
@@ -288,7 +293,12 @@ export class YahooFinanceService implements DataProviderInterface {
           symbol,
           currency: marketDataItem.currency,
           dataSource: this.getName(),
-          name: quote?.longname || quote?.shortname || symbol
+          name: this.formatName({
+            longName: quote.longname,
+            quoteType: quote.quoteType,
+            shortName: quote.shortname,
+            symbol: quote.symbol
+          })
         });
       }
     } catch (error) {
@@ -298,8 +308,18 @@ export class YahooFinanceService implements DataProviderInterface {
     return { items };
   }
 
-  private formatName(aAssetProfile: QuoteSummaryResult) {
-    let name = aAssetProfile.price.longName;
+  private formatName({
+    longName,
+    quoteType,
+    shortName,
+    symbol
+  }: {
+    longName: Price['longName'];
+    quoteType: Price['quoteType'];
+    shortName: Price['shortName'];
+    symbol: Price['symbol'];
+  }) {
+    let name = longName;
 
     if (name) {
       name = name.replace('iShares ETF (CH) - ', '');
@@ -314,7 +334,12 @@ export class YahooFinanceService implements DataProviderInterface {
       name = name.replace('Xtrackers (IE) Plc - ', '');
     }
 
-    return name || aAssetProfile.price.shortName || aAssetProfile.price.symbol;
+    if (quoteType === 'FUTURE') {
+      // "Gold Jun 22" -> "Gold"
+      name = shortName?.slice(0, -6);
+    }
+
+    return name || shortName || symbol;
   }
 
   private parseAssetClass(aPrice: Price): {
@@ -336,6 +361,10 @@ export class YahooFinanceService implements DataProviderInterface {
       case 'etf':
         assetClass = AssetClass.EQUITY;
         assetSubClass = AssetSubClass.ETF;
+        break;
+      case 'future':
+        assetClass = AssetClass.COMMODITY;
+        assetSubClass = AssetSubClass.COMMODITY;
         break;
       case 'mutualfund':
         assetClass = AssetClass.EQUITY;

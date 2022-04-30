@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for commodities (via futures)
+
+### Changed
+
+- Upgraded `yahoo-finance2` from version `2.3.1` to `2.3.2`
+
 ### Fixed
 
 - Fixed the import validation for numbers equal 0
