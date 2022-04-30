@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for commodities (via futures)
+- Added support for real estate
 
 ### Changed
 
@@ -20,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the import validation for numbers equal 0
 - Fixed the color of the spinner in the activities filter component (dark mode)
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.143.0 - 26.04.2022
 
