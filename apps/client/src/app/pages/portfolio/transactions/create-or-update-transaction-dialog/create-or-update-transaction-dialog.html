@@ -135,6 +135,36 @@
       </mat-form-field>
     </div>
     <div
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Asset Class</mat-label>
+        <mat-select formControlName="assetClass">
+          <mat-option [value]="null"></mat-option>
+          <mat-option
+            *ngFor="let assetClass of assetClasses"
+            [value]="assetClass"
+            >{{ assetClass }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Asset Sub-Class</mat-label>
+        <mat-select formControlName="assetSubClass">
+          <mat-option [value]="null"></mat-option>
+          <mat-option
+            *ngFor="let assetSubClass of assetSubClasses"
+            [value]="assetSubClass"
+            >{{ assetSubClass }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div
       [ngClass]="{ 'd-none': activityForm.controls['tags']?.value?.length <= 0 }"
     >
       <mat-form-field appearance="outline" class="w-100">
