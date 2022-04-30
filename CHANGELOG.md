@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the layout of the position detail dialog
 - Upgraded `yahoo-finance2` from version `2.3.1` to `2.3.2`
 
 ### Fixed
