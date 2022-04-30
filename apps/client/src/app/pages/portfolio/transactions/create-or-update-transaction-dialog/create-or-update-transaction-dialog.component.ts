@@ -13,7 +13,7 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { Type } from '@prisma/client';
+import { AssetClass, AssetSubClass, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { isString } from 'lodash';
 import { EMPTY, Observable, Subject } from 'rxjs';
@@ -39,7 +39,8 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   @ViewChild('autocomplete') autocomplete;
 
   public activityForm: FormGroup;
-
+  public assetClasses = Object.keys(AssetClass);
+  public assetSubClasses = Object.keys(AssetSubClass);
   public currencies: string[] = [];
   public currentMarketPrice = null;
   public filteredLookupItems: LookupItem[];
@@ -67,6 +68,8 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
     this.activityForm = this.formBuilder.group({
       accountId: [this.data.activity?.accountId, Validators.required],
+      assetClass: [this.data.activity?.SymbolProfile?.assetClass],
+      assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
       currency: [
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
@@ -234,6 +237,8 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   public onSubmit() {
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.controls['accountId'].value,
+      assetClass: this.activityForm.controls['assetClass'].value,
+      assetSubClass: this.activityForm.controls['assetSubClass'].value,
       currency: this.activityForm.controls['currency'].value,
       date: this.activityForm.controls['date'].value,
       dataSource: this.activityForm.controls['dataSource'].value,

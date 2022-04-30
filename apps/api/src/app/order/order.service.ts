@@ -6,7 +6,14 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { DataSource, Order, Prisma, Type as TypeOfOrder } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Order,
+  Prisma,
+  Type as TypeOfOrder
+} from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -55,6 +62,8 @@ export class OrderService {
   public async createOrder(
     data: Prisma.OrderCreateInput & {
       accountId?: string;
+      assetClass?: AssetClass;
+      assetSubClass?: AssetSubClass;
       currency?: string;
       dataSource?: DataSource;
       symbol?: string;
@@ -77,6 +86,8 @@ export class OrderService {
     };
 
     if (data.type === 'ITEM') {
+      const assetClass = data.assetClass;
+      const assetSubClass = data.assetSubClass;
       const currency = data.SymbolProfile.connectOrCreate.create.currency;
       const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
@@ -84,6 +95,8 @@ export class OrderService {
 
       Account = undefined;
       data.id = id;
+      data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
+      data.SymbolProfile.connectOrCreate.create.assetSubClass = assetSubClass;
       data.SymbolProfile.connectOrCreate.create.currency = currency;
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
@@ -120,6 +133,8 @@ export class OrderService {
     await this.cacheService.flush();
 
     delete data.accountId;
+    delete data.assetClass;
+    delete data.assetSubClass;
     delete data.currency;
     delete data.dataSource;
     delete data.symbol;
@@ -232,6 +247,8 @@ export class OrderService {
     where
   }: {
     data: Prisma.OrderUpdateInput & {
+      assetClass?: AssetClass;
+      assetSubClass?: AssetSubClass;
       currency?: string;
       dataSource?: DataSource;
       symbol?: string;
@@ -245,10 +262,10 @@ export class OrderService {
     let isDraft = false;
 
     if (data.type === 'ITEM') {
-      const name = data.SymbolProfile.connect.dataSource_symbol.symbol;
-
-      data.SymbolProfile = { update: { name } };
+      delete data.SymbolProfile.connect;
     } else {
+      delete data.SymbolProfile.update;
+
       isDraft = isAfter(data.date as Date, endOfToday());
 
       if (!isDraft) {
@@ -265,6 +282,8 @@ export class OrderService {
 
     await this.cacheService.flush();
 
+    delete data.assetClass;
+    delete data.assetSubClass;
     delete data.currency;
     delete data.dataSource;
     delete data.symbol;

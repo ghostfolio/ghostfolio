@@ -1,4 +1,4 @@
-import { DataSource, Type } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
 import {
   IsEnum,
   IsISO8601,
@@ -10,14 +10,22 @@ import {
 export class CreateOrderDto {
   @IsString()
   @IsOptional()
-  accountId: string;
+  accountId?: string;
+
+  @IsEnum(AssetClass, { each: true })
+  @IsOptional()
+  assetClass?: AssetClass;
+
+  @IsEnum(AssetSubClass, { each: true })
+  @IsOptional()
+  assetSubClass?: AssetSubClass;
 
   @IsString()
   currency: string;
 
   @IsEnum(DataSource, { each: true })
   @IsOptional()
-  dataSource: DataSource;
+  dataSource?: DataSource;
 
   @IsISO8601()
   date: string;
