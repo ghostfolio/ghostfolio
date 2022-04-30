@@ -365,6 +365,16 @@ export class YahooFinanceService implements DataProviderInterface {
       case 'future':
         assetClass = AssetClass.COMMODITY;
         assetSubClass = AssetSubClass.COMMODITY;
+
+        if (
+          aPrice?.shortName?.toLowerCase()?.startsWith('gold') ||
+          aPrice?.shortName?.toLowerCase()?.startsWith('palladium') ||
+          aPrice?.shortName?.toLowerCase()?.startsWith('platinum') ||
+          aPrice?.shortName?.toLowerCase()?.startsWith('silver')
+        ) {
+          assetSubClass = AssetSubClass.PRECIOUS_METAL;
+        }
+
         break;
       case 'mutualfund':
         assetClass = AssetClass.EQUITY;
