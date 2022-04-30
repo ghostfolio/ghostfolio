@@ -171,6 +171,11 @@ export class OrderController {
               dataSource: data.dataSource,
               symbol: data.symbol
             }
+          },
+          update: {
+            assetClass: data.assetClass,
+            assetSubClass: data.assetSubClass,
+            name: data.symbol
           }
         },
         User: { connect: { id: this.request.user.id } }
