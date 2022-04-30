@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for private equity
 - Extended the form to set the asset and asset sub class for (wealth) items
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.144.0 - 30.04.2022
 
