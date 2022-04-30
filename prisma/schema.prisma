@@ -185,6 +185,7 @@ enum AssetClass {
   COMMODITY
   EQUITY
   FIXED_INCOME
+  REAL_ESTATE
 }
 
 enum AssetSubClass {
@@ -193,6 +194,7 @@ enum AssetSubClass {
   CRYPTOCURRENCY
   ETF
   MUTUALFUND
+  PRECIOUS_METAL
   STOCK
 }
 
