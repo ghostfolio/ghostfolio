@@ -15,7 +15,7 @@ import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
-import { Tooltip } from 'chart.js';
+import { ChartConfiguration, Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';
 import { DoughnutController } from 'chart.js';
@@ -215,7 +215,7 @@ export class PortfolioProportionChartComponent
       });
     });
 
-    const datasets = [
+    const datasets: ChartConfiguration['data']['datasets'] = [
       {
         backgroundColor: chartDataSorted.map(([, item]) => {
           return item.color;
@@ -247,7 +247,7 @@ export class PortfolioProportionChartComponent
       datasets[0].data[0] = Number.MAX_SAFE_INTEGER;
     }
 
-    const data = {
+    const data: ChartConfiguration['data'] = {
       datasets,
       labels
     };
@@ -255,6 +255,8 @@ export class PortfolioProportionChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins.tooltip =
+          this.getTooltipPluginConfiguration(data);
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -302,46 +304,7 @@ export class PortfolioProportionChartComponent
                 }
               },
               legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: (context) => {
-                    const labelIndex =
-                      (data.datasets[context.datasetIndex - 1]?.data?.length ??
-                        0) + context.dataIndex;
-                    let symbol = context.chart.data.labels?.[labelIndex] ?? '';
-
-                    if (symbol === this.OTHER_KEY) {
-                      symbol = 'Other';
-                    } else if (symbol === UNKNOWN_KEY) {
-                      symbol = 'Unknown';
-                    }
-
-                    const name = this.positions[<string>symbol]?.name;
-
-                    let sum = 0;
-                    context.dataset.data.map((item) => {
-                      sum += item;
-                    });
-
-                    const percentage = (context.parsed * 100) / sum;
-
-                    if (<number>context.raw === Number.MAX_SAFE_INTEGER) {
-                      return 'No data available';
-                    } else if (this.isInPercent) {
-                      return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
-                    } else {
-                      const value = <number>context.raw;
-                      return [
-                        `${name ?? symbol}`,
-                        `${value.toLocaleString(this.locale, {
-                          maximumFractionDigits: 2,
-                          minimumFractionDigits: 2
-                        })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
-                      ];
-                    }
-                  }
-                }
-              }
+              tooltip: this.getTooltipPluginConfiguration(data)
             }
           },
           plugins: [ChartDataLabels],
@@ -372,5 +335,48 @@ export class PortfolioProportionChartComponent
       '#ff6b6b', // red 5
       '#cc5de8' // grape 5
     ];
+  }
+
+  private getTooltipPluginConfiguration(data: ChartConfiguration['data']) {
+    return {
+      callbacks: {
+        label: (context) => {
+          const labelIndex =
+            (data.datasets[context.datasetIndex - 1]?.data?.length ?? 0) +
+            context.dataIndex;
+          let symbol = context.chart.data.labels?.[labelIndex] ?? '';
+
+          if (symbol === this.OTHER_KEY) {
+            symbol = 'Other';
+          } else if (symbol === UNKNOWN_KEY) {
+            symbol = 'Unknown';
+          }
+
+          const name = this.positions[<string>symbol]?.name;
+
+          let sum = 0;
+          for (const item of context.dataset.data) {
+            sum += item;
+          }
+
+          const percentage = (context.parsed * 100) / sum;
+
+          if (<number>context.raw === Number.MAX_SAFE_INTEGER) {
+            return 'No data available';
+          } else if (this.isInPercent) {
+            return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
+          } else {
+            const value = <number>context.raw;
+            return [
+              `${name ?? symbol}`,
+              `${value.toLocaleString(this.locale, {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+              })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
+            ];
+          }
+        }
+      }
+    };
   }
 }
