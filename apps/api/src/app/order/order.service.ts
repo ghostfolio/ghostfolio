@@ -189,7 +189,7 @@ export class OrderService {
         some: {
           OR: tags.map((tag) => {
             return {
-              name: tag
+              id: tag
             };
           })
         }

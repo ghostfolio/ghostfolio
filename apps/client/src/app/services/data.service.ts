@@ -19,6 +19,7 @@ import {
   AdminData,
   AdminMarketData,
   Export,
+  Filter,
   InfoItem,
   PortfolioChart,
   PortfolioDetails,
@@ -182,11 +183,21 @@ export class DataService {
     );
   }
 
-  public fetchPortfolioDetails({ tags }: { tags?: string[] }) {
+  public fetchPortfolioDetails({ filters }: { filters?: Filter[] }) {
     let params = new HttpParams();
 
-    if (tags?.length > 0) {
-      params = params.append('tags', tags.join(','));
+    if (filters?.length > 0) {
+      params = params.append(
+        'tags',
+        filters
+          .filter((filter) => {
+            return filter.type === 'tag';
+          })
+          .map((filter) => {
+            return filter.id;
+          })
+          .join(',')
+      );
     }
 
     return this.http.get<PortfolioDetails>('/api/v1/portfolio/details', {

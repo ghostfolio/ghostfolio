@@ -8,6 +8,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
+  Filter,
   PortfolioDetails,
   PortfolioPosition,
   UniqueAsset,
@@ -32,6 +33,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
+  public allFilters: Filter[];
   public continents: {
     [code: string]: { name: string; value: number };
   };
@@ -39,7 +41,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
-  public filters$ = new Subject<string[]>();
+  public filters$ = new Subject<Filter[]>();
   public hasImpersonationId: boolean;
   public isLoading = false;
   public markets: {
@@ -76,7 +78,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-  public tags: string[] = [];
 
   public user: User;
 
@@ -127,10 +128,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.filters$
       .pipe(
         distinctUntilChanged(),
-        switchMap((tags) => {
+        switchMap((filters) => {
           this.isLoading = true;
 
-          return this.dataService.fetchPortfolioDetails({ tags });
+          return this.dataService.fetchPortfolioDetails({ filters });
         }),
         takeUntil(this.unsubscribeSubject)
       )
@@ -150,8 +151,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.tags = this.user.tags.map((tag) => {
-            return tag.name;
+          this.allFilters = this.user.tags.map((tag) => {
+            return {
+              id: tag.id,
+              label: tag.name,
+              type: 'tag'
+            };
           });
 
           this.changeDetectorRef.markForCheck();

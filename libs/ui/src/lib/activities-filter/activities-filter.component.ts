@@ -17,6 +17,7 @@ import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { Filter } from '@ghostfolio/common/interfaces';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -27,19 +28,19 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './activities-filter.component.html'
 })
 export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
-  @Input() allFilters: string[];
+  @Input() allFilters: Filter[];
   @Input() isLoading: boolean;
   @Input() placeholder: string;
 
-  @Output() valueChanged = new EventEmitter<string[]>();
+  @Output() valueChanged = new EventEmitter<Filter[]>();
 
   @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
-  public filters$: Subject<string[]> = new BehaviorSubject([]);
-  public filters: Observable<string[]> = this.filters$.asObservable();
+  public filters$: Subject<Filter[]> = new BehaviorSubject([]);
+  public filters: Observable<Filter[]> = this.filters$.asObservable();
   public searchControl = new FormControl();
-  public searchKeywords: string[] = [];
+  public searchFilters: Filter[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private unsubscribeSubject = new Subject<void>();
@@ -47,13 +48,10 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public constructor() {
     this.searchControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((keyword) => {
-        if (keyword) {
-          const filterValue = keyword.toLowerCase();
+      .subscribe((currentFilter) => {
+        if (currentFilter) {
           this.filters$.next(
-            this.allFilters.filter(
-              (filter) => filter.toLowerCase().indexOf(filterValue) === 0
-            )
+            this.allFilters.filter((filter) => filter.id === currentFilter.id)
           );
         } else {
           this.filters$.next(this.allFilters);
@@ -67,9 +65,8 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public addKeyword({ input, value }: MatChipInputEvent): void {
+  public onAddFilter({ input, value }: MatChipInputEvent): void {
     if (value?.trim()) {
-      this.searchKeywords.push(value.trim());
       this.updateFilter();
     }
 
@@ -81,20 +78,19 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.searchControl.setValue(null);
   }
 
-  public keywordSelected(event: MatAutocompleteSelectedEvent): void {
-    this.searchKeywords.push(event.option.viewValue);
+  public onRemoveFilter(aFilter: Filter): void {
+    this.searchFilters = this.searchFilters.filter((filter) => {
+      return filter.id !== aFilter.id;
+    });
+
+    this.updateFilter();
+  }
+
+  public onSelectFilter(event: MatAutocompleteSelectedEvent): void {
+    this.searchFilters.push(event.option.value);
     this.updateFilter();
     this.searchInput.nativeElement.value = '';
     this.searchControl.setValue(null);
-  }
-
-  public removeKeyword(keyword: string): void {
-    const index = this.searchKeywords.indexOf(keyword);
-
-    if (index >= 0) {
-      this.searchKeywords.splice(index, 1);
-      this.updateFilter();
-    }
   }
 
   public ngOnDestroy() {
@@ -106,6 +102,6 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.filters$.next(this.allFilters);
 
     // Emit an array with a new reference
-    this.valueChanged.emit([...this.searchKeywords]);
+    this.valueChanged.emit([...this.searchFilters]);
   }
 }
