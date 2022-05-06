@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for private equity
 - Extended the form to set the asset and asset sub class for (wealth) items
 
+### Changed
+
+- Refactored the filtering (activities table and allocations page)
+
 ### Fixed
 
 - Fixed the tooltip update in the portfolio proportion chart component
