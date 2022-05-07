@@ -2,13 +2,13 @@
   <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
   <mat-chip-list #chipList aria-label="Search keywords">
     <mat-chip
-      *ngFor="let searchKeyword of searchFilters"
+      *ngFor="let filter of selectedFilters"
       class="mx-1 my-0 px-2 py-0"
       matChipRemove
       [removable]="true"
-      (removed)="onRemoveFilter(searchKeyword)"
+      (removed)="onRemoveFilter(filter)"
     >
-      {{ searchKeyword.label | gfSymbol }}
+      {{ filter.label | gfSymbol }}
       <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
     </mat-chip>
     <input

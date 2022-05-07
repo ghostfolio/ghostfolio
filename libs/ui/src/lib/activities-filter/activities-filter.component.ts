@@ -40,7 +40,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public filters$: Subject<Filter[]> = new BehaviorSubject([]);
   public filters: Observable<Filter[]> = this.filters$.asObservable();
   public searchControl = new FormControl();
-  public searchFilters: Filter[] = [];
+  public selectedFilters: Filter[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private unsubscribeSubject = new Subject<void>();
@@ -79,7 +79,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   }
 
   public onRemoveFilter(aFilter: Filter): void {
-    this.searchFilters = this.searchFilters.filter((filter) => {
+    this.selectedFilters = this.selectedFilters.filter((filter) => {
       return filter.id !== aFilter.id;
     });
 
@@ -87,7 +87,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   }
 
   public onSelectFilter(event: MatAutocompleteSelectedEvent): void {
-    this.searchFilters.push(event.option.value);
+    this.selectedFilters.push(event.option.value);
     this.updateFilter();
     this.searchInput.nativeElement.value = '';
     this.searchControl.setValue(null);
@@ -102,6 +102,6 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.filters$.next(this.allFilters);
 
     // Emit an array with a new reference
-    this.valueChanged.emit([...this.searchFilters]);
+    this.valueChanged.emit([...this.selectedFilters]);
   }
 }
