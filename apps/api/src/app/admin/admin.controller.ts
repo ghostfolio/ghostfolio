@@ -2,12 +2,17 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
+  DATA_GATHERING_QUEUE,
+  GATHER_ASSET_PROFILE_PROCESS
+} from '@ghostfolio/common/config';
+import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+import { InjectQueue } from '@nestjs/bull';
 import {
   Body,
   Controller,
@@ -23,6 +28,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData } from '@prisma/client';
+import { Queue } from 'bull';
 import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -33,6 +39,8 @@ import { UpdateMarketDataDto } from './update-market-data.dto';
 export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
+    @InjectQueue(DATA_GATHERING_QUEUE)
+    private readonly dataGatheringQueue: Queue,
     private readonly dataGatheringService: DataGatheringService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
@@ -71,10 +79,16 @@ export class AdminController {
       );
     }
 
-    await this.dataGatheringService.gatherProfileData();
-    this.dataGatheringService.gatherMax();
+    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    return;
+    for (const { dataSource, symbol } of uniqueAssets) {
+      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+        dataSource,
+        symbol
+      });
+    }
+
+    this.dataGatheringService.gatherMax();
   }
 
   @Post('gather/profile-data')
@@ -92,9 +106,14 @@ export class AdminController {
       );
     }
 
-    this.dataGatheringService.gatherProfileData();
+    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    return;
+    for (const { dataSource, symbol } of uniqueAssets) {
+      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+        dataSource,
+        symbol
+      });
+    }
   }
 
   @Post('gather/profile-data/:dataSource/:symbol')
@@ -115,9 +134,10 @@ export class AdminController {
       );
     }
 
-    this.dataGatheringService.gatherProfileData([{ dataSource, symbol }]);
-
-    return;
+    await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+      dataSource,
+      symbol
+    });
   }
 
   @Post('gather/:dataSource/:symbol')
