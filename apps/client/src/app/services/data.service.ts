@@ -19,6 +19,7 @@ import {
   AdminData,
   AdminMarketData,
   Export,
+  Filter,
   InfoItem,
   PortfolioChart,
   PortfolioDetails,
@@ -33,7 +34,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, groupBy } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -182,11 +183,38 @@ export class DataService {
     );
   }
 
-  public fetchPortfolioDetails({ tags }: { tags?: string[] }) {
+  public fetchPortfolioDetails({ filters }: { filters?: Filter[] }) {
     let params = new HttpParams();
 
-    if (tags?.length > 0) {
-      params = params.append('tags', tags.join(','));
+    if (filters?.length > 0) {
+      const { account: filtersByAccount, tag: filtersByTag } = groupBy(
+        filters,
+        (filter) => {
+          return filter.type;
+        }
+      );
+
+      if (filtersByAccount) {
+        params = params.append(
+          'accounts',
+          filtersByAccount
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByTag) {
+        params = params.append(
+          'tags',
+          filtersByTag
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
     }
 
     return this.http.get<PortfolioDetails>('/api/v1/portfolio/details', {

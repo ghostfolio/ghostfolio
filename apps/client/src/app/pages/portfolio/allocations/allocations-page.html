@@ -3,9 +3,8 @@
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>Allocations</h3>
       <gf-activities-filter
-        [allFilters]="tags"
+        [allFilters]="allFilters"
         [isLoading]="isLoading"
-        [ngClass]="{ 'd-none': tags.length <= 0 }"
         [placeholder]="placeholder"
         (valueChanged)="filters$.next($event)"
       ></gf-activities-filter>

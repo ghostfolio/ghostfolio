@@ -2,13 +2,13 @@
   <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
   <mat-chip-list #chipList aria-label="Search keywords">
     <mat-chip
-      *ngFor="let searchKeyword of searchKeywords"
+      *ngFor="let filter of selectedFilters"
       class="mx-1 my-0 px-2 py-0"
       matChipRemove
       [removable]="true"
-      (removed)="removeKeyword(searchKeyword)"
+      (removed)="onRemoveFilter(filter)"
     >
-      {{ searchKeyword | gfSymbol }}
+      {{ filter.label | gfSymbol }}
       <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
     </mat-chip>
     <input
@@ -19,15 +19,15 @@
       [matChipInputFor]="chipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       [placeholder]="placeholder"
-      (matChipInputTokenEnd)="addKeyword($event)"
+      (matChipInputTokenEnd)="onAddFilter($event)"
     />
   </mat-chip-list>
   <mat-autocomplete
     #autocomplete="matAutocomplete"
-    (optionSelected)="keywordSelected($event)"
+    (optionSelected)="onSelectFilter($event)"
   >
     <mat-option *ngFor="let filter of filters | async" [value]="filter">
-      {{ filter | gfSymbol }}
+      {{ filter.label | gfSymbol }}
     </mat-option>
   </mat-autocomplete>
   <mat-spinner

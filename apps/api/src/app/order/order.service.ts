@@ -4,6 +4,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { Filter } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import {
@@ -16,6 +17,7 @@ import {
 } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
+import { groupBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from './interfaces/activities.interface';
@@ -166,31 +168,44 @@ export class OrderService {
   }
 
   public async getOrders({
+    filters,
     includeDrafts = false,
-    tags,
     types,
     userCurrency,
     userId
   }: {
+    filters?: Filter[];
     includeDrafts?: boolean;
-    tags?: string[];
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
   }): Promise<Activity[]> {
     const where: Prisma.OrderWhereInput = { userId };
 
+    const { account: filtersByAccount, tag: filtersByTag } = groupBy(
+      filters,
+      (filter) => {
+        return filter.type;
+      }
+    );
+
+    if (filtersByAccount?.length > 0) {
+      where.accountId = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
+    }
+
     if (includeDrafts === false) {
       where.isDraft = false;
     }
 
-    if (tags?.length > 0) {
+    if (filtersByTag?.length > 0) {
       where.tags = {
         some: {
-          OR: tags.map((tag) => {
-            return {
-              name: tag
-            };
+          OR: filtersByTag.map(({ id }) => {
+            return { id };
           })
         }
       };

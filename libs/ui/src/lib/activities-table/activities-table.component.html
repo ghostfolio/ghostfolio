@@ -1,8 +1,9 @@
 <gf-activities-filter
   [allFilters]="allFilters"
+  [isLoading]="isLoading"
   [ngClass]="{ 'd-none': !hasPermissionToFilter }"
   [placeholder]="placeholder"
-  (valueChanged)="updateFilter($event)"
+  (valueChanged)="filters$.next($event)"
 ></gf-activities-filter>
 
 <div class="activities">

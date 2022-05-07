@@ -14,13 +14,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { getDateFormatString } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, format, isAfter } from 'date-fns';
 import { isNumber } from 'lodash';
-import { Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, Subject, Subscription, takeUntil } from 'rxjs';
 
 const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
 const SEARCH_STRING_SEPARATOR = ',';
@@ -53,11 +53,12 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public allFilters: string[];
+  public allFilters: Filter[];
   public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
   public defaultDateFormat: string;
   public displayedColumns = [];
   public endOfToday = endOfToday();
+  public filters$ = new Subject<Filter[]>();
   public hasDrafts = false;
   public isAfter = isAfter;
   public isLoading = true;
@@ -71,7 +72,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private router: Router) {}
+  public constructor(private router: Router) {
+    this.filters$
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
+      .subscribe((filters) => {
+        this.updateFilters(filters);
+      });
+  }
 
   public ngOnChanges() {
     this.displayedColumns = [
@@ -95,11 +102,15 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       });
     }
 
-    this.isLoading = true;
-
     this.defaultDateFormat = getDateFormatString(this.locale);
 
     if (this.activities) {
+      this.allFilters = this.getSearchableFieldValues(this.activities).map(
+        (label) => {
+          return { label, id: label, type: 'tag' };
+        }
+      );
+
       this.dataSource = new MatTableDataSource(this.activities);
       this.dataSource.filterPredicate = (data, filter) => {
         const dataString = this.getFilterableValues(data)
@@ -113,8 +124,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
         return contains;
       };
       this.dataSource.sort = this.sort;
-      this.updateFilter();
-      this.isLoading = false;
+
+      this.updateFilters();
     }
   }
 
@@ -170,30 +181,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   public onUpdateActivity(aActivity: OrderWithAccount) {
     this.activityToUpdate.emit(aActivity);
-  }
-
-  public updateFilter(filters: string[] = []) {
-    this.dataSource.filter = filters.join(SEARCH_STRING_SEPARATOR);
-    const lowercaseSearchKeywords = filters.map((keyword) =>
-      keyword.trim().toLowerCase()
-    );
-
-    this.placeholder =
-      lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
-
-    this.searchKeywords = filters;
-
-    this.allFilters = this.getSearchableFieldValues(this.activities).filter(
-      (item) => {
-        return !lowercaseSearchKeywords.includes(item.trim().toLowerCase());
-      }
-    );
-
-    this.hasDrafts = this.dataSource.data.some((activity) => {
-      return activity.isDraft === true;
-    });
-    this.totalFees = this.getTotalFees();
-    this.totalValue = this.getTotalValue();
   }
 
   public ngOnDestroy() {
@@ -279,5 +266,33 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
 
     return totalValue.toNumber();
+  }
+
+  private updateFilters(filters: Filter[] = []) {
+    this.isLoading = true;
+
+    this.dataSource.filter = filters
+      .map((filter) => {
+        return filter.label;
+      })
+      .join(SEARCH_STRING_SEPARATOR);
+    const lowercaseSearchKeywords = filters.map((filter) => {
+      return filter.label.trim().toLowerCase();
+    });
+
+    this.placeholder =
+      lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
+
+    this.searchKeywords = filters.map((filter) => {
+      return filter.label;
+    });
+
+    this.hasDrafts = this.dataSource.filteredData.some((activity) => {
+      return activity.isDraft === true;
+    });
+    this.totalFees = this.getTotalFees();
+    this.totalValue = this.getTotalValue();
+
+    this.isLoading = false;
   }
 }
