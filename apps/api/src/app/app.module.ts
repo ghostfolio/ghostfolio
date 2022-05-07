@@ -37,7 +37,12 @@ import { UserModule } from './user/user.module';
     AccountModule,
     AuthDeviceModule,
     AuthModule,
-    BullModule.forRoot({}),
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT, 10)
+      }
+    }),
     CacheModule,
     ConfigModule.forRoot(),
     ConfigurationModule,

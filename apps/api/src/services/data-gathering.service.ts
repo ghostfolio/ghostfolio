@@ -227,8 +227,6 @@ export class DataGatheringService {
   }
 
   public async gatherAssetProfiles(aUniqueAssets?: UniqueAsset[]) {
-    console.time('data-gathering-asset-profile');
-
     let uniqueAssets = aUniqueAssets?.filter((dataGatheringItem) => {
       return dataGatheringItem.dataSource !== 'MANUAL';
     });
@@ -325,10 +323,13 @@ export class DataGatheringService {
     }
 
     Logger.log(
-      'Asset profile data gathering has been completed.',
+      `Asset profile data gathering has been completed for ${uniqueAssets
+        .map(({ dataSource, symbol }) => {
+          return `${symbol} (${dataSource})`;
+        })
+        .join(',')}.`,
       'DataGatheringService'
     );
-    console.timeEnd('data-gathering-asset-profile');
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {

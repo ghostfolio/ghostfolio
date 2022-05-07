@@ -39,6 +39,7 @@ export class CronService {
   @Cron(CronExpression.EVERY_WEEKEND)
   public async runEveryWeekend() {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+
     for (const { dataSource, symbol } of uniqueAssets) {
       await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
         dataSource,
