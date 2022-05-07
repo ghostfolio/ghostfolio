@@ -349,7 +349,7 @@ export class PortfolioProportionChartComponent
           if (symbol === this.OTHER_KEY) {
             symbol = 'Other';
           } else if (symbol === UNKNOWN_KEY) {
-            symbol = 'Unknown';
+            symbol = 'No data available';
           }
 
           const name = this.positions[<string>symbol]?.name;
