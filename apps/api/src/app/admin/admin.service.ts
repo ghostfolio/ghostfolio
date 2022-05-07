@@ -15,7 +15,7 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
-import { DataSource, Property } from '@prisma/client';
+import { Property } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 
 @Injectable()

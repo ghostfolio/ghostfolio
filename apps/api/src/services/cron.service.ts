@@ -1,5 +1,11 @@
+import {
+  DATA_GATHERING_QUEUE,
+  GATHER_ASSET_PROFILE_PROCESS
+} from '@ghostfolio/common/config';
+import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { Queue } from 'bull';
 
 import { DataGatheringService } from './data-gathering.service';
 import { ExchangeRateDataService } from './exchange-rate-data.service';
@@ -8,6 +14,8 @@ import { TwitterBotService } from './twitter-bot/twitter-bot.service';
 @Injectable()
 export class CronService {
   public constructor(
+    @InjectQueue(DATA_GATHERING_QUEUE)
+    private readonly dataGatheringQueue: Queue,
     private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly twitterBotService: TwitterBotService
@@ -30,6 +38,13 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_WEEKEND)
   public async runEveryWeekend() {
-    await this.dataGatheringService.gatherProfileData();
+    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+
+    for (const { dataSource, symbol } of uniqueAssets) {
+      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+        dataSource,
+        symbol
+      });
+    }
   }
 }
