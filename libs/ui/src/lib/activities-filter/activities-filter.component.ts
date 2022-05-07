@@ -48,13 +48,22 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public constructor() {
     this.searchControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((currentFilter) => {
+      .subscribe((currentFilter: string) => {
         if (currentFilter) {
           this.filters$.next(
-            this.allFilters.filter((filter) => filter.id === currentFilter.id)
+            this.allFilters
+              .filter((filter) => {
+                // Filter selected filters
+                return !this.selectedFilters.some((selectedFilter) => {
+                  return selectedFilter.id === filter.id;
+                });
+              })
+              .filter((filter) => {
+                return filter.label
+                  .toLowerCase()
+                  .startsWith(currentFilter?.toLowerCase());
+              })
           );
-        } else {
-          this.filters$.next(this.allFilters);
         }
       });
   }
@@ -99,7 +108,14 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   }
 
   private updateFilter() {
-    this.filters$.next(this.allFilters);
+    this.filters$.next(
+      this.allFilters.filter((filter) => {
+        // Filter selected filters
+        return !this.selectedFilters.some((selectedFilter) => {
+          return selectedFilter.id === filter.id;
+        });
+      })
+    );
 
     // Emit an array with a new reference
     this.valueChanged.emit([...this.selectedFilters]);
