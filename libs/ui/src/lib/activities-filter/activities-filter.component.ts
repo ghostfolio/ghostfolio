@@ -63,6 +63,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
                   .toLowerCase()
                   .startsWith(currentFilter?.toLowerCase());
               })
+              .sort((a, b) => a.label.localeCompare(b.label))
           );
         }
       });
@@ -109,12 +110,14 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
 
   private updateFilter() {
     this.filters$.next(
-      this.allFilters.filter((filter) => {
-        // Filter selected filters
-        return !this.selectedFilters.some((selectedFilter) => {
-          return selectedFilter.id === filter.id;
-        });
-      })
+      this.allFilters
+        .filter((filter) => {
+          // Filter selected filters
+          return !this.selectedFilters.some((selectedFilter) => {
+            return selectedFilter.id === filter.id;
+          });
+        })
+        .sort((a, b) => a.label.localeCompare(b.label))
     );
 
     // Emit an array with a new reference

@@ -34,7 +34,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, groupBy } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -187,17 +187,34 @@ export class DataService {
     let params = new HttpParams();
 
     if (filters?.length > 0) {
-      params = params.append(
-        'tags',
-        filters
-          .filter((filter) => {
-            return filter.type === 'tag';
-          })
-          .map((filter) => {
-            return filter.id;
-          })
-          .join(',')
+      const { account: filtersByAccount, tag: filtersByTag } = groupBy(
+        filters,
+        (filter) => {
+          return filter.type;
+        }
       );
+
+      if (filtersByAccount) {
+        params = params.append(
+          'accounts',
+          filtersByAccount
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByTag) {
+        params = params.append(
+          'tags',
+          filtersByTag
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
     }
 
     return this.http.get<PortfolioDetails>('/api/v1/portfolio/details', {

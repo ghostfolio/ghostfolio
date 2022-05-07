@@ -5,7 +5,6 @@
       <gf-activities-filter
         [allFilters]="allFilters"
         [isLoading]="isLoading"
-        [ngClass]="{ 'd-none': allFilters.length <= 0 }"
         [placeholder]="placeholder"
         (valueChanged)="filters$.next($event)"
       ></gf-activities-filter>

@@ -11,6 +11,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { baseCurrency } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
+  Filter,
   PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,
@@ -19,7 +20,7 @@ import {
   PortfolioReport,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
   Get,
@@ -105,17 +106,36 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range,
-    @Query('tags') tags?: string
+    @Query('accounts') filterByAccounts?: string,
+    @Query('range') range?: DateRange,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasError = false;
+
+    const accountIds = filterByAccounts?.split(',') ?? [];
+    const tagIds = filterByTags?.split(',') ?? [];
+
+    const filters: Filter[] = [
+      ...accountIds.map((accountId) => {
+        return <Filter>{
+          id: accountId,
+          type: 'account'
+        };
+      }),
+      ...tagIds.map((tagId) => {
+        return <Filter>{
+          id: tagId,
+          type: 'tag'
+        };
+      })
+    ];
 
     const { accounts, holdings, hasErrors } =
       await this.portfolioService.getDetails(
         impersonationId,
         this.request.user.id,
         range,
-        tags?.split(',')
+        filters
       );
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
@@ -163,7 +183,7 @@ export class PortfolioController {
 
     return {
       hasError,
-      accounts: tags ? {} : accounts,
+      accounts: filters ? {} : accounts,
       holdings: isBasicUser ? {} : holdings
     };
   }

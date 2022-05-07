@@ -1,5 +1,5 @@
 export interface Filter {
   id: string;
-  label: string;
-  type: 'tag';
+  label?: string;
+  type: 'account' | 'tag';
 }

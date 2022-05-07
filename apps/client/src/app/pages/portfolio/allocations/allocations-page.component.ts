@@ -151,13 +151,25 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.allFilters = this.user.tags.map((tag) => {
+          const accountFilters: Filter[] = this.user.accounts.map(
+            ({ id, name }) => {
+              return {
+                id: id,
+                label: name,
+                type: 'account'
+              };
+            }
+          );
+
+          const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
             return {
-              id: tag.id,
-              label: tag.name,
+              id,
+              label: name,
               type: 'tag'
             };
           });
+
+          this.allFilters = [...accountFilters, ...tagFilters];
 
           this.changeDetectorRef.markForCheck();
         }

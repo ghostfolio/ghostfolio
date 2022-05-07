@@ -29,6 +29,7 @@ import {
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
+  Filter,
   PortfolioDetails,
   PortfolioPerformanceResponse,
   PortfolioReport,
@@ -309,7 +310,7 @@ export class PortfolioService {
     aImpersonationId: string,
     aUserId: string,
     aDateRange: DateRange = 'max',
-    tags?: string[]
+    aFilters?: Filter[]
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId, aUserId);
     const user = await this.userService.user({ id: userId });
@@ -324,8 +325,8 @@ export class PortfolioService {
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
-        tags,
-        userId
+        userId,
+        filters: aFilters
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -448,7 +449,7 @@ export class PortfolioService {
       value: totalValue
     });
 
-    if (tags === undefined) {
+    if (aFilters === undefined) {
       for (const symbol of Object.keys(cashPositions)) {
         holdings[symbol] = cashPositions[symbol];
       }
@@ -1195,12 +1196,12 @@ export class PortfolioService {
   }
 
   private async getTransactionPoints({
+    filters,
     includeDrafts = false,
-    tags,
     userId
   }: {
+    filters?: Filter[];
     includeDrafts?: boolean;
-    tags?: string[];
     userId: string;
   }): Promise<{
     transactionPoints: TransactionPoint[];
@@ -1210,8 +1211,8 @@ export class PortfolioService {
     const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
 
     const orders = await this.orderService.getOrders({
+      filters,
       includeDrafts,
-      tags,
       userCurrency,
       userId,
       types: ['BUY', 'SELL']
