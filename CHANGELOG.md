@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the the allocations page with no filtering
 - Harmonized the _No data available_ label in the portfolio proportion chart component
 
 ## 1.145.0 - 07.05.2022
