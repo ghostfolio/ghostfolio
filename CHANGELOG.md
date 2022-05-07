@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for filtering by accounts on the allocations page
 - Added support for private equity
 - Extended the form to set the asset and asset sub class for (wealth) items
 
