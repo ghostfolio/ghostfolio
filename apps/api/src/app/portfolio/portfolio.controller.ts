@@ -183,7 +183,7 @@ export class PortfolioController {
 
     return {
       hasError,
-      accounts: filters ? {} : accounts,
+      accounts: filters.length === 0 ? accounts : {},
       holdings: isBasicUser ? {} : holdings
     };
   }
