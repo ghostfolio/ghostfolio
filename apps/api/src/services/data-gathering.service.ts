@@ -226,28 +226,29 @@ export class DataGatheringService {
     }
   }
 
-  public async gatherProfileData(aDataGatheringItems?: IDataGatheringItem[]) {
-    Logger.log(
-      'Profile data gathering has been started.',
-      'DataGatheringService'
-    );
-    console.time('data-gathering-profile');
+  public async gatherAssetProfiles(aUniqueAssets?: UniqueAsset[]) {
+    let uniqueAssets = aUniqueAssets?.filter((dataGatheringItem) => {
+      return dataGatheringItem.dataSource !== 'MANUAL';
+    });
 
-    let dataGatheringItems = aDataGatheringItems?.filter(
-      (dataGatheringItem) => {
-        return dataGatheringItem.dataSource !== 'MANUAL';
-      }
-    );
-
-    if (!dataGatheringItems) {
-      dataGatheringItems = await this.getSymbolsProfileData();
+    if (!uniqueAssets) {
+      uniqueAssets = await this.getUniqueAssets();
     }
 
+    Logger.log(
+      `Asset profile data gathering has been started for ${uniqueAssets
+        .map(({ dataSource, symbol }) => {
+          return `${symbol} (${dataSource})`;
+        })
+        .join(',')}.`,
+      'DataGatheringService'
+    );
+
     const assetProfiles = await this.dataProviderService.getAssetProfiles(
-      dataGatheringItems
+      uniqueAssets
     );
     const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-      dataGatheringItems.map(({ symbol }) => {
+      uniqueAssets.map(({ symbol }) => {
         return symbol;
       })
     );
@@ -322,10 +323,13 @@ export class DataGatheringService {
     }
 
     Logger.log(
-      'Profile data gathering has been completed.',
+      `Asset profile data gathering has been completed for ${uniqueAssets
+        .map(({ dataSource, symbol }) => {
+          return `${symbol} (${dataSource})`;
+        })
+        .join(',')}.`,
       'DataGatheringService'
     );
-    console.timeEnd('data-gathering-profile');
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
@@ -508,6 +512,27 @@ export class DataGatheringService {
     return [...currencyPairsToGather, ...symbolProfilesToGather];
   }
 
+  public async getUniqueAssets(): Promise<UniqueAsset[]> {
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }]
+    });
+
+    return symbolProfiles
+      .filter(({ dataSource }) => {
+        return (
+          dataSource !== DataSource.GHOSTFOLIO &&
+          dataSource !== DataSource.MANUAL &&
+          dataSource !== DataSource.RAKUTEN
+        );
+      })
+      .map(({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol
+        };
+      });
+  }
+
   public async reset() {
     Logger.log('Data gathering has been reset.', 'DataGatheringService');
 
@@ -582,27 +607,6 @@ export class DataGatheringService {
       });
 
     return [...currencyPairsToGather, ...symbolProfilesToGather];
-  }
-
-  private async getSymbolsProfileData(): Promise<IDataGatheringItem[]> {
-    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }]
-    });
-
-    return symbolProfiles
-      .filter((symbolProfile) => {
-        return (
-          symbolProfile.dataSource !== DataSource.GHOSTFOLIO &&
-          symbolProfile.dataSource !== DataSource.MANUAL &&
-          symbolProfile.dataSource !== DataSource.RAKUTEN
-        );
-      })
-      .map((symbolProfile) => {
-        return {
-          dataSource: symbolProfile.dataSource,
-          symbol: symbolProfile.symbol
-        };
-      });
   }
 
   private async isDataGatheringNeeded() {

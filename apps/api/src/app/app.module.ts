@@ -9,6 +9,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -36,6 +37,12 @@ import { UserModule } from './user/user.module';
     AccountModule,
     AuthDeviceModule,
     AuthModule,
+    BullModule.forRoot({
+      redis: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT, 10)
+      }
+    }),
     CacheModule,
     ConfigModule.forRoot(),
     ConfigurationModule,

@@ -4,8 +4,13 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import {
+  DATA_GATHERING_QUEUE,
+  GATHER_ASSET_PROFILE_PROCESS
+} from '@ghostfolio/common/config';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import {
   AssetClass,
@@ -16,6 +21,7 @@ import {
   Type as TypeOfOrder
 } from '@prisma/client';
 import Big from 'big.js';
+import { Queue } from 'bull';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,6 +33,8 @@ export class OrderService {
   public constructor(
     private readonly accountService: AccountService,
     private readonly cacheService: CacheService,
+    @InjectQueue(DATA_GATHERING_QUEUE)
+    private readonly dataGatheringQueue: Queue,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly prismaService: PrismaService,
@@ -112,12 +120,10 @@ export class OrderService {
         data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
     }
 
-    await this.dataGatheringService.gatherProfileData([
-      {
-        dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-        symbol: data.SymbolProfile.connectOrCreate.create.symbol
-      }
-    ]);
+    await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+      dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
+      symbol: data.SymbolProfile.connectOrCreate.create.symbol
+    });
 
     const isDraft = isAfter(data.date as Date, endOfToday());
 

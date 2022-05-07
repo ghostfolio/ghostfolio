@@ -20,7 +20,7 @@ import Big from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, format, isAfter } from 'date-fns';
 import { isNumber } from 'lodash';
-import { distinctUntilChanged, Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, Subscription, distinctUntilChanged, takeUntil } from 'rxjs';
 
 const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
 const SEARCH_STRING_SEPARATOR = ',';

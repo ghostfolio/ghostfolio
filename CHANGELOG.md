@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up a queue for the data gathering jobs
+
 ### Changed
 
+- Migrated the asset profile data gathering to the queue design pattern
 - Improved the the allocations page with no filtering
 - Harmonized the _No data available_ label in the portfolio proportion chart component
 
