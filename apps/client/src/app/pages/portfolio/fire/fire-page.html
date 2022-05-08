@@ -59,6 +59,7 @@
       [currency]="user?.settings?.baseCurrency"
       [deviceType]="deviceType"
       [fireWealth]="fireWealth?.toNumber()"
+      [hasPermissionToUpdateUserSettings]="hasPermissionToUpdateUserSettings"
       [locale]="user?.settings?.locale"
       [savingsRate]="user?.settings?.savingsRate"
       (savingsRateChanged)="onSavingsRateChange($event)"
