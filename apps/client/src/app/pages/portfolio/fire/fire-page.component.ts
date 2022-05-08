@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import Big from 'big.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -16,6 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 export class FirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public fireWealth: Big;
+  public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
   public user: User;
   public withdrawalRatePerMonth: Big;
@@ -62,6 +64,11 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToUpdateUserSettings = hasPermission(
+            this.user.permissions,
+            permissions.updateUserSettings
+          );
 
           this.changeDetectorRef.markForCheck();
         }

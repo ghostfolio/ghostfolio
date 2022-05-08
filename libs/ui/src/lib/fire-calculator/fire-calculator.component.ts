@@ -41,6 +41,7 @@ export class FireCalculatorComponent
   @Input() currency: string;
   @Input() deviceType: string;
   @Input() fireWealth: number;
+  @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() locale: string;
   @Input() savingsRate = 0;
 
@@ -76,12 +77,17 @@ export class FireCalculatorComponent
       Tooltip
     );
 
-    this.calculatorForm.setValue({
-      annualInterestRate: 5,
-      paymentPerPeriod: this.savingsRate,
-      principalInvestmentAmount: 0,
-      time: 10
-    });
+    this.calculatorForm.setValue(
+      {
+        annualInterestRate: 5,
+        paymentPerPeriod: this.savingsRate,
+        principalInvestmentAmount: 0,
+        time: 10
+      },
+      {
+        emitEvent: false
+      }
+    );
 
     this.calculatorForm.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -115,6 +121,12 @@ export class FireCalculatorComponent
         this.changeDetectorRef.markForCheck();
       });
     }
+
+    if (this.hasPermissionToUpdateUserSettings === true) {
+      this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
+    } else {
+      this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
+    }
   }
 
   public ngOnChanges() {
@@ -134,6 +146,12 @@ export class FireCalculatorComponent
 
         this.changeDetectorRef.markForCheck();
       });
+    }
+
+    if (this.hasPermissionToUpdateUserSettings === true) {
+      this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
+    } else {
+      this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
     }
   }
 
