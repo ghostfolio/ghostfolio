@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated the asset profile data gathering to the queue design pattern
 - Improved the allocations page with no filtering
 - Harmonized the _No data available_ label in the portfolio proportion chart component
+- Upgraded `angular` from version `13.2.2` to `13.3.6`
+- Upgraded `Nx` from version `13.8.5` to `14.1.4`
+- Upgraded `storybook` from version `6.4.18` to `6.4.22`
 
 ## 1.145.0 - 07.05.2022
 
@@ -427,7 +430,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded `angular` from version `13.1.2` to `13.2.3`
+- Upgraded `angular` from version `13.1.2` to `13.2.2`
 - Upgraded `Nx` from version `13.4.1` to `13.8.1`
 - Upgraded `storybook` from version `6.4.9` to `6.4.18`
 
