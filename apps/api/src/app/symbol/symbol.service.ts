@@ -1,4 +1,3 @@
-import { HistoricalDataItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import {
   IDataGatheringItem,
@@ -6,6 +5,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { format, subDays } from 'date-fns';

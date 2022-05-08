@@ -1,4 +1,4 @@
-import { HistoricalDataItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { HistoricalDataItem } from './historical-data-item.interface';
 
 export interface PortfolioChart {
   hasError: boolean;

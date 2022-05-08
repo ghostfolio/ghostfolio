@@ -3,8 +3,7 @@ import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/c
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
-  IDataProviderResponse,
-  MarketState
+  IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
@@ -216,8 +215,8 @@ export class YahooFinanceService implements DataProviderInterface {
           marketState:
             quote.marketState === 'REGULAR' ||
             this.cryptocurrencyService.isCryptocurrency(symbol)
-              ? MarketState.open
-              : MarketState.closed,
+              ? 'open'
+              : 'closed',
           marketPrice: quote.regularMarketPrice || 0
         };
 

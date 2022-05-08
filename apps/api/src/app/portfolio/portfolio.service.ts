@@ -18,7 +18,6 @@ import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
@@ -30,6 +29,7 @@ import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   Filter,
+  HistoricalDataItem,
   PortfolioDetails,
   PortfolioPerformanceResponse,
   PortfolioReport,
@@ -72,7 +72,6 @@ import { isEmpty, sortBy, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
-  HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioCalculator } from './portfolio-calculator';
@@ -777,8 +776,7 @@ export class PortfolioService {
             position.grossPerformancePercentage?.toNumber() ?? null,
           investment: new Big(position.investment).toNumber(),
           marketState:
-            dataProviderResponses[position.symbol]?.marketState ??
-            MarketState.delayed,
+            dataProviderResponses[position.symbol]?.marketState ?? 'delayed',
           name: symbolProfileMap[position.symbol].name,
           netPerformance: position.netPerformance?.toNumber() ?? null,
           netPerformancePercentage:
@@ -1062,7 +1060,7 @@ export class PortfolioService {
           grossPerformancePercent: 0,
           investment: convertedBalance,
           marketPrice: 0,
-          marketState: MarketState.open,
+          marketState: 'open',
           name: account.currency,
           netPerformance: 0,
           netPerformancePercent: 0,

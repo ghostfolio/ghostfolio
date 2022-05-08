@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
+import { DateRange, MarketState } from '@ghostfolio/common/types';
 
 @Component({
   selector: 'gf-trend-indicator',

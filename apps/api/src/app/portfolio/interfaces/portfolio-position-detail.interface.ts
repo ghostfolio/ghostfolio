@@ -1,4 +1,5 @@
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Tag } from '@prisma/client';
 
@@ -26,11 +27,4 @@ export interface HistoricalDataContainer {
   isAllTimeHigh: boolean;
   isAllTimeLow: boolean;
   items: HistoricalDataItem[];
-}
-
-export interface HistoricalDataItem {
-  averagePrice?: number;
-  date: string;
-  grossPerformancePercent?: number;
-  value: number;
 }

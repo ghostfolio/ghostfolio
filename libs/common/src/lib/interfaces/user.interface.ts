@@ -1,10 +1,12 @@
-import { Access } from '@ghostfolio/api/app/user/interfaces/access.interface';
 import { Account, Tag } from '@prisma/client';
 
 import { UserSettings } from './user-settings.interface';
 
 export interface User {
-  access: Access[];
+  access: {
+    alias?: string;
+    id: string;
+  }[];
   accounts: Account[];
   alias?: string;
   id: string;

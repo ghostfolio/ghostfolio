@@ -3,8 +3,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
-  IDataProviderResponse,
-  MarketState
+  IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
@@ -114,7 +113,7 @@ export class GoogleSheetsService implements DataProviderInterface {
               return symbolProfile.symbol === symbol;
             })?.currency,
             dataSource: this.getName(),
-            marketState: MarketState.delayed
+            marketState: 'delayed'
           };
         }
       }
