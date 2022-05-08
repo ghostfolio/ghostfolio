@@ -2,15 +2,13 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  .mat-card {
-    &.about-container {
-      a {
-        color: rgba(var(--palette-primary-500), 1);
-        font-weight: 500;
+  .about-container {
+    a {
+      color: rgba(var(--palette-primary-500), 1);
+      font-weight: 500;
 
-        &:hover {
-          color: rgba(var(--palette-primary-300), 1);
-        }
+      &:hover {
+        color: rgba(var(--palette-primary-300), 1);
       }
     }
 
@@ -29,7 +27,7 @@
 :host-context(.is-dark-theme) {
   color: rgb(var(--light-primary-text));
 
-  .mat-card {
+  .about-container {
     .independent-and-bootstrapped-logo {
       background-image: url('/assets/bootstrapped-light.svg');
       opacity: 1;
