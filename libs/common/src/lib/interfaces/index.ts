@@ -9,6 +9,7 @@ import {
 import { Coupon } from './coupon.interface';
 import { Export } from './export.interface';
 import { Filter } from './filter.interface';
+import { HistoricalDataItem } from './historical-data-item.interface';
 import { InfoItem } from './info-item.interface';
 import { PortfolioChart } from './portfolio-chart.interface';
 import { PortfolioDetails } from './portfolio-details.interface';
@@ -40,6 +41,7 @@ export {
   Coupon,
   Export,
   Filter,
+  HistoricalDataItem,
   InfoItem,
   PortfolioChart,
   PortfolioDetails,

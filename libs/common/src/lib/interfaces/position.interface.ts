@@ -1,5 +1,5 @@
-import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
 import { AssetClass, DataSource } from '@prisma/client';
+import { MarketState } from '../types';
 
 export interface Position {
   assetClass: AssetClass;

@@ -1,4 +1,4 @@
-import { HistoricalDataItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { DataSource } from '@prisma/client';
 
 export interface SymbolItem {

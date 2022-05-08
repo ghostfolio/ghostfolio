@@ -2,8 +2,7 @@ import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.in
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
-  IDataProviderResponse,
-  MarketState
+  IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
@@ -133,7 +132,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
           marketPrice: marketData.find((marketDataItem) => {
             return marketDataItem.symbol === symbolProfile.symbol;
           }).marketPrice,
-          marketState: MarketState.delayed
+          marketState: 'delayed'
         };
       }
 
