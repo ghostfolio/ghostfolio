@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up a queue for the data gathering jobs
+- Set up _Nx Cloud_
 
 ### Changed
 
