@@ -22,8 +22,8 @@ RUN node decorate-angular-cli.js
 COPY ./angular.json angular.json
 COPY ./nx.json nx.json
 COPY ./replace.build.js replace.build.js
-COPY ./jest.preset.js jest.preset.js
-COPY ./jest.config.js jest.config.js
+COPY ./jest.preset.ts jest.preset.ts
+COPY ./jest.config.ts jest.config.ts
 COPY ./tsconfig.base.json tsconfig.base.json
 COPY ./libs libs
 COPY ./apps apps
