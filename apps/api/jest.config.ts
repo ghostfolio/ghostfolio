@@ -1,6 +1,6 @@
 module.exports = {
   displayName: 'api',
-  preset: '../../jest.preset.js',
+
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json'
@@ -12,5 +12,6 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
   testTimeout: 10000,
-  testEnvironment: 'node'
+  testEnvironment: 'node',
+  preset: '../../jest.preset.ts'
 };

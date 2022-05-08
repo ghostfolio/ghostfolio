@@ -178,6 +178,8 @@ export class FireCalculatorComponent
 
                     return `Total: ${new Intl.NumberFormat(this.locale, {
                       currency: this.currency,
+                      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                      // @ts-ignore: Only supported from ES2020 or later
                       currencyDisplay: 'code',
                       style: 'currency'
                     }).format(totalAmount)}`;
@@ -192,6 +194,8 @@ export class FireCalculatorComponent
                     if (context.parsed.y !== null) {
                       label += new Intl.NumberFormat(this.locale, {
                         currency: this.currency,
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore: Only supported from ES2020 or later
                         currencyDisplay: 'code',
                         style: 'currency'
                       }).format(context.parsed.y);

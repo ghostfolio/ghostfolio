@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'client',
-  preset: '../../jest.preset.js',
+  displayName: 'ui',
+
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
@@ -8,14 +8,15 @@ module.exports = {
       stringifyContentPathRegex: '\\.(html|svg)$'
     }
   },
-  coverageDirectory: '../../coverage/apps/client',
+  coverageDirectory: '../../coverage/libs/ui',
+  transform: {
+    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
+  },
+  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment'
   ],
-  transform: {
-    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
-  },
-  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)']
+  preset: '../../jest.preset.ts'
 };
