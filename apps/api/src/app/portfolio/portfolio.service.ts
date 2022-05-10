@@ -68,7 +68,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, sortBy, uniqBy } from 'lodash';
+import { isEmpty, sortBy, uniq, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -344,10 +344,11 @@ export class PortfolioService {
       startDate
     );
 
-    const cashDetails = await this.accountService.getCashDetails(
+    const cashDetails = await this.accountService.getCashDetails({
       userId,
-      userCurrency
-    );
+      currency: userCurrency,
+      filters: aFilters
+    });
 
     const holdings: PortfolioDetails['holdings'] = {};
     const totalInvestment = currentPositions.totalInvestment.plus(
@@ -440,26 +441,26 @@ export class PortfolioService {
       };
     }
 
-    const cashPositions = await this.getCashPositions({
-      cashDetails,
-      emergencyFund,
-      userCurrency,
-      investment: totalInvestment,
-      value: totalValue
-    });
-
     if (aFilters?.length === 0) {
+      const cashPositions = await this.getCashPositions({
+        cashDetails,
+        emergencyFund,
+        userCurrency,
+        investment: totalInvestment,
+        value: totalValue
+      });
+
       for (const symbol of Object.keys(cashPositions)) {
         holdings[symbol] = cashPositions[symbol];
       }
     }
 
-    const accounts = await this.getValueOfAccounts(
+    const accounts = await this.getValueOfAccounts({
       orders,
+      userId,
       portfolioItemsNow,
-      userCurrency,
-      userId
-    );
+      filters: aFilters
+    });
 
     return { accounts, holdings, hasErrors: currentPositions.hasErrors };
   }
@@ -890,12 +891,11 @@ export class PortfolioService {
     for (const position of currentPositions.positions) {
       portfolioItemsNow[position.symbol] = position;
     }
-    const accounts = await this.getValueOfAccounts(
+    const accounts = await this.getValueOfAccounts({
       orders,
       portfolioItemsNow,
-      currency,
       userId
-    );
+    });
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
@@ -957,10 +957,10 @@ export class PortfolioService {
 
     const performanceInformation = await this.getPerformance(aImpersonationId);
 
-    const { balanceInBaseCurrency } = await this.accountService.getCashDetails(
+    const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
       userId,
-      userCurrency
-    );
+      currency: userCurrency
+    });
     const orders = await this.orderService.getOrders({
       userCurrency,
       userId
@@ -1253,21 +1253,40 @@ export class PortfolioService {
     portfolioCalculator.computeTransactionPoints();
 
     return {
-      transactionPoints: portfolioCalculator.getTransactionPoints(),
       orders,
-      portfolioOrders
+      portfolioOrders,
+      transactionPoints: portfolioCalculator.getTransactionPoints()
     };
   }
 
-  private async getValueOfAccounts(
-    orders: OrderWithAccount[],
-    portfolioItemsNow: { [p: string]: TimelinePosition },
-    userCurrency: string,
-    userId: string
-  ) {
+  private async getValueOfAccounts({
+    filters = [],
+    orders,
+    portfolioItemsNow,
+    userId
+  }: {
+    filters?: Filter[];
+    orders: OrderWithAccount[];
+    portfolioItemsNow: { [p: string]: TimelinePosition };
+    userId: string;
+  }) {
     const accounts: PortfolioDetails['accounts'] = {};
 
-    const currentAccounts = await this.accountService.getAccounts(userId);
+    let currentAccounts = [];
+
+    if (filters.length === 0) {
+      currentAccounts = await this.accountService.getAccounts(userId);
+    } else {
+      const accountIds = uniq(
+        orders.map(({ accountId }) => {
+          return accountId;
+        })
+      );
+
+      currentAccounts = await this.accountService.accounts({
+        where: { id: { in: accountIds } }
+      });
+    }
 
     for (const account of currentAccounts) {
       const ordersByAccount = orders.filter(({ accountId }) => {
