@@ -33,6 +33,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
+  public activeFilters: Filter[] = [];
   public allFilters: Filter[];
   public continents: {
     [code: string]: { name: string; value: number };
@@ -130,8 +131,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         distinctUntilChanged(),
         switchMap((filters) => {
           this.isLoading = true;
+          this.activeFilters = filters;
 
-          return this.dataService.fetchPortfolioDetails({ filters });
+          return this.dataService.fetchPortfolioDetails({
+            filters: this.activeFilters
+          });
         }),
         takeUntil(this.unsubscribeSubject)
       )
@@ -343,7 +347,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (position.dataSource) {
+      if (
+        this.activeFilters?.length === 0 ||
+        position.assetSubClass !== AssetClass.CASH
+      ) {
         this.symbols[prettifySymbol(symbol)] = {
           dataSource: position.dataSource,
           name: position.name,

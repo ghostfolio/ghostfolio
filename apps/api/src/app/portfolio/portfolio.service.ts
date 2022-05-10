@@ -318,8 +318,8 @@ export class PortfolioService {
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
     const userCurrency =
-      this.request.user?.Settings?.currency ??
       user.Settings?.currency ??
+      this.request.user?.Settings?.currency ??
       baseCurrency;
 
     const { orders, portfolioOrders, transactionPoints } =
@@ -448,7 +448,7 @@ export class PortfolioService {
       value: totalValue
     });
 
-    if (aFilters === undefined) {
+    if (aFilters?.length === 0) {
       for (const symbol of Object.keys(cashPositions)) {
         holdings[symbol] = cashPositions[symbol];
       }

@@ -73,11 +73,6 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  /*public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }*/
-
   public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, positionDetailDialog: true }
