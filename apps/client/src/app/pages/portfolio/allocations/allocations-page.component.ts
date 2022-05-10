@@ -155,15 +155,17 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          const accountFilters: Filter[] = this.user.accounts.map(
-            ({ id, name }) => {
+          const accountFilters: Filter[] = this.user.accounts
+            .filter(({ accountType }) => {
+              return accountType === 'SECURITIES';
+            })
+            .map(({ id, name }) => {
               return {
-                id: id,
+                id,
                 label: name,
                 type: 'account'
               };
-            }
-          );
+            });
 
           const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
             return {
@@ -347,17 +349,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (
-        this.activeFilters?.length === 0 ||
-        position.assetSubClass !== AssetClass.CASH
-      ) {
-        this.symbols[prettifySymbol(symbol)] = {
-          dataSource: position.dataSource,
-          name: position.name,
-          symbol: prettifySymbol(symbol),
-          value: aPeriod === 'original' ? position.investment : position.value
-        };
-      }
+      this.symbols[prettifySymbol(symbol)] = {
+        dataSource: position.dataSource,
+        name: position.name,
+        symbol: prettifySymbol(symbol),
+        value: aPeriod === 'original' ? position.investment : position.value
+      };
     }
 
     const marketsTotal =

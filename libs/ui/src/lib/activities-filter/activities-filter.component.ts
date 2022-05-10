@@ -48,7 +48,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public constructor() {
     this.searchControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((currentFilter: string) => {
+      .subscribe((currentFilter: Filter) => {
         if (currentFilter) {
           this.filters$.next(
             this.allFilters
@@ -61,7 +61,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
               .filter((filter) => {
                 return filter.label
                   .toLowerCase()
-                  .startsWith(currentFilter?.toLowerCase());
+                  .startsWith(currentFilter.label.toLowerCase());
               })
               .sort((a, b) => a.label.localeCompare(b.label))
           );

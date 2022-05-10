@@ -182,8 +182,8 @@ export class PortfolioController {
       this.request.user.subscription.type === 'Basic';
 
     return {
+      accounts,
       hasError,
-      accounts: filters.length === 0 ? accounts : {},
       holdings: isBasicUser ? {} : holdings
     };
   }

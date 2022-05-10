@@ -1,5 +1,6 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { Filter } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
 import Big from 'big.js';
@@ -102,22 +103,39 @@ export class AccountService {
     });
   }
 
-  public async getCashDetails(
-    aUserId: string,
-    aCurrency: string
-  ): Promise<CashDetails> {
+  public async getCashDetails({
+    currency,
+    filters = [],
+    userId
+  }: {
+    currency: string;
+    filters?: Filter[];
+    userId: string;
+  }): Promise<CashDetails> {
     let totalCashBalanceInBaseCurrency = new Big(0);
 
-    const accounts = await this.accounts({
-      where: { userId: aUserId }
-    });
+    const where: Prisma.AccountWhereInput = { userId };
+
+    if (filters?.length > 0) {
+      where.id = {
+        in: filters
+          .filter(({ type }) => {
+            return type === 'account';
+          })
+          .map(({ id }) => {
+            return id;
+          })
+      };
+    }
+
+    const accounts = await this.accounts({ where });
 
     for (const account of accounts) {
       totalCashBalanceInBaseCurrency = totalCashBalanceInBaseCurrency.plus(
         this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
-          aCurrency
+          currency
         )
       );
     }
