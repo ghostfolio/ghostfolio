@@ -8,11 +8,13 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DATE_FORMAT,
   getDateFormatString,
   getLocale
 } from '@ghostfolio/common/helper';
+import { User } from '@ghostfolio/common/interfaces';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DataSource, MarketData } from '@prisma/client';
 import {
@@ -53,14 +55,24 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
       [day: string]: Pick<MarketData, 'date' | 'marketPrice'> & { day: number };
     };
   } = {};
+  public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private deviceService: DeviceDetectorService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private userService: UserService
   ) {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+        }
+      });
   }
 
   public ngOnInit() {}
@@ -145,7 +157,8 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         date,
         marketPrice,
         dataSource: this.dataSource,
-        symbol: this.symbol
+        symbol: this.symbol,
+        user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

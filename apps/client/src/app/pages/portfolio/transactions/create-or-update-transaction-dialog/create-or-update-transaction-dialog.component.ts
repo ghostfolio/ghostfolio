@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
@@ -54,13 +55,18 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTransactionDialogParams,
     private dataService: DataService,
+    private dateAdapter: DateAdapter<any>,
     public dialogRef: MatDialogRef<CreateOrUpdateTransactionDialog>,
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTransactionDialogParams
+    @Inject(MAT_DATE_LOCALE) private locale: string
   ) {}
 
   public ngOnInit() {
+    this.locale = this.data.user?.settings?.locale;
+    this.dateAdapter.setLocale(this.locale);
+
     const { currencies, platforms } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
