@@ -1,6 +1,7 @@
 <form
   class="d-flex flex-column h-100"
   [formGroup]="activityForm"
+  (keyup.enter)="activityForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
   <h1 *ngIf="data.activity.id" mat-dialog-title i18n>Update activity</h1>
