@@ -48,8 +48,8 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public constructor() {
     this.searchControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((currentFilter: Filter) => {
-        if (currentFilter) {
+      .subscribe((filterOrSearchTerm: Filter | string) => {
+        if (filterOrSearchTerm) {
           this.filters$.next(
             this.allFilters
               .filter((filter) => {
@@ -59,9 +59,15 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
                 });
               })
               .filter((filter) => {
+                if (typeof filterOrSearchTerm === 'string') {
+                  return filter.label
+                    .toLowerCase()
+                    .startsWith(filterOrSearchTerm.toLowerCase());
+                }
+
                 return filter.label
                   .toLowerCase()
-                  .startsWith(currentFilter.label.toLowerCase());
+                  .startsWith(filterOrSearchTerm?.label?.toLowerCase());
               })
               .sort((a, b) => a.label.localeCompare(b.label))
           );
