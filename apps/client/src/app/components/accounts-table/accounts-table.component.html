@@ -200,7 +200,7 @@
         </button>
         <button
           mat-menu-item
-          [disabled]="element.isDefault || element.Order?.length > 0"
+          [disabled]="element.isDefault || element.transactionCount > 0"
           (click)="onDeleteAccount(element.id)"
         >
           <ion-icon class="mr-2" name="trash-outline"></ion-icon>
