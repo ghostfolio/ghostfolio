@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the date format of the date picker and support manual changes
+- Fixed the state of the account delete button (disable if account contains activities)
+- Fixed an issue in the activities filter component (typing a search term)
 
 ## 1.147.0 - 10.05.2022
 
