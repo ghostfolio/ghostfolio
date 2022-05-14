@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Supported enter key press to submit the form of the create or edit transaction dialog
+
 ### Fixed
 
 - Fixed the date format of the date picker and support manual changes
