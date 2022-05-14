@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Supported enter key press to submit the form of the create or edit transaction dialog
+- Added a _Report Data Glitch_ button to the position detail dialog
 
 ### Fixed
 
