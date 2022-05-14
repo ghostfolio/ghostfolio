@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -14,6 +15,7 @@ import {
   UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, ToggleOption } from '@ghostfolio/common/types';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -404,12 +406,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
         const dialogRef = this.dialog.open(PositionDetailDialog, {
           autoFocus: false,
-          data: {
+          data: <PositionDetailDialogParams>{
             dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToReportDataGlitch: hasPermission(
+              this.user?.permissions,
+              permissions.reportDataGlitch
+            ),
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',

@@ -17,6 +17,7 @@ import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { PositionDetailDialogParams } from '../position/position-detail-dialog/interfaces/interfaces';
 
 @Component({
   selector: 'gf-home-holdings',
@@ -126,12 +127,16 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
 
         const dialogRef = this.dialog.open(PositionDetailDialog, {
           autoFocus: false,
-          data: {
+          data: <PositionDetailDialogParams>{
             dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToReportDataGlitch: hasPermission(
+              this.user?.permissions,
+              permissions.reportDataGlitch
+            ),
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',

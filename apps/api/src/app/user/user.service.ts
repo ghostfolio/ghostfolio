@@ -102,17 +102,67 @@ export class UserService {
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
-    const userFromDatabase = await this.prismaService.user.findUnique({
+    const {
+      accessToken,
+      Account,
+      alias,
+      authChallenge,
+      createdAt,
+      id,
+      provider,
+      role,
+      Settings,
+      Subscription,
+      thirdPartyId,
+      updatedAt
+    } = await this.prismaService.user.findUnique({
       include: { Account: true, Settings: true, Subscription: true },
       where: userWhereUniqueInput
     });
 
-    const user: UserWithSettings = userFromDatabase;
+    const user: UserWithSettings = {
+      accessToken,
+      Account,
+      alias,
+      authChallenge,
+      createdAt,
+      id,
+      provider,
+      role,
+      Settings,
+      thirdPartyId,
+      updatedAt
+    };
 
-    let currentPermissions = getPermissions(userFromDatabase.role);
+    if (user?.Settings) {
+      if (!user.Settings.currency) {
+        // Set default currency if needed
+        user.Settings.currency = UserService.DEFAULT_CURRENCY;
+      }
+    } else if (user) {
+      // Set default settings if needed
+      user.Settings = {
+        currency: UserService.DEFAULT_CURRENCY,
+        settings: null,
+        updatedAt: new Date(),
+        userId: user?.id,
+        viewMode: ViewMode.DEFAULT
+      };
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      user.subscription =
+        this.subscriptionService.getSubscription(Subscription);
+    }
+
+    let currentPermissions = getPermissions(user.role);
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       currentPermissions.push(permissions.accessFearAndGreedIndex);
+    }
+
+    if (user.subscription?.type === 'Premium') {
+      currentPermissions.push(permissions.reportDataGlitch);
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
@@ -135,29 +185,7 @@ export class UserService {
       }
     }
 
-    user.permissions = currentPermissions;
-
-    if (userFromDatabase?.Settings) {
-      if (!userFromDatabase.Settings.currency) {
-        // Set default currency if needed
-        userFromDatabase.Settings.currency = UserService.DEFAULT_CURRENCY;
-      }
-    } else if (userFromDatabase) {
-      // Set default settings if needed
-      userFromDatabase.Settings = {
-        currency: UserService.DEFAULT_CURRENCY,
-        settings: null,
-        updatedAt: new Date(),
-        userId: userFromDatabase?.id,
-        viewMode: ViewMode.DEFAULT
-      };
-    }
-
-    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      user.subscription = this.subscriptionService.getSubscription(
-        userFromDatabase?.Subscription
-      );
-    }
+    user.permissions = currentPermissions.sort();
 
     return user;
   }
