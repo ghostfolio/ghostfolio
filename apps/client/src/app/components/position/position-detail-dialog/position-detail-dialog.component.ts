@@ -44,6 +44,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public orders: OrderWithAccount[];
   public quantity: number;
   public quantityPrecision = 2;
+  public reportDataGlitchMail: string;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -91,6 +92,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
+          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;
           this.grossPerformancePercent = grossPerformancePercent;

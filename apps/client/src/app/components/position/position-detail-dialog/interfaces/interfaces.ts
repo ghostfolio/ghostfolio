@@ -5,6 +5,7 @@ export interface PositionDetailDialogParams {
   dataSource: DataSource;
   deviceType: string;
   hasImpersonationId: boolean;
+  hasPermissionToReportDataGlitch: boolean;
   locale: string;
   symbol: string;
 }

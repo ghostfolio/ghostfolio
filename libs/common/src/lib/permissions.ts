@@ -20,6 +20,7 @@ export const permissions = {
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',
   enableSystemMessage: 'enableSystemMessage',
+  reportDataGlitch: 'reportDataGlitch',
   toggleReadOnlyMode: 'toggleReadOnlyMode',
   updateAccount: 'updateAccount',
   updateAuthDevice: 'updateAuthDevice',

@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
@@ -406,12 +407,16 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
         const dialogRef = this.dialog.open(PositionDetailDialog, {
           autoFocus: false,
-          data: {
+          data: <PositionDetailDialogParams>{
             dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToReportDataGlitch: hasPermission(
+              this.user?.permissions,
+              permissions.reportDataGlitch
+            ),
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
