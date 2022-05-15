@@ -8,6 +8,7 @@ import {
 } from './admin-market-data.interface';
 import { Coupon } from './coupon.interface';
 import { Export } from './export.interface';
+import { FilterGroup } from './filter-group.interface';
 import { Filter } from './filter.interface';
 import { HistoricalDataItem } from './historical-data-item.interface';
 import { InfoItem } from './info-item.interface';
@@ -41,6 +42,7 @@ export {
   Coupon,
   Export,
   Filter,
+  FilterGroup,
   HistoricalDataItem,
   InfoItem,
   PortfolioChart,

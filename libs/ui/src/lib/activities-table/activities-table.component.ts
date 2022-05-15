@@ -107,7 +107,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     if (this.activities) {
       this.allFilters = this.getSearchableFieldValues(this.activities).map(
         (label) => {
-          return { label, id: label, type: 'tag' };
+          return { label, id: label, type: 'TAG' };
         }
       );
 

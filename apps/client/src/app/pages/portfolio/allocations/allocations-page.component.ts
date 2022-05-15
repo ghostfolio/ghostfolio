@@ -165,7 +165,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               return {
                 id,
                 label: name,
-                type: 'account'
+                type: 'ACCOUNT'
               };
             });
 
@@ -173,7 +173,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             return {
               id,
               label: name,
-              type: 'tag'
+              type: 'TAG'
             };
           });
 

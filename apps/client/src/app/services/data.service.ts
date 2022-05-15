@@ -187,7 +187,7 @@ export class DataService {
     let params = new HttpParams();
 
     if (filters?.length > 0) {
-      const { account: filtersByAccount, tag: filtersByTag } = groupBy(
+      const { ACCOUNT: filtersByAccount, TAG: filtersByTag } = groupBy(
         filters,
         (filter) => {
           return filter.type;

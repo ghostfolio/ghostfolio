@@ -119,13 +119,13 @@ export class PortfolioController {
       ...accountIds.map((accountId) => {
         return <Filter>{
           id: accountId,
-          type: 'account'
+          type: 'ACCOUNT'
         };
       }),
       ...tagIds.map((tagId) => {
         return <Filter>{
           id: tagId,
-          type: 'tag'
+          type: 'TAG'
         };
       })
     ];
