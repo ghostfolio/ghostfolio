@@ -188,7 +188,7 @@ export class OrderService {
   }): Promise<Activity[]> {
     const where: Prisma.OrderWhereInput = { userId };
 
-    const { account: filtersByAccount, tag: filtersByTag } = groupBy(
+    const { ACCOUNT: filtersByAccount, TAG: filtersByTag } = groupBy(
       filters,
       (filter) => {
         return filter.type;

@@ -105,17 +105,17 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.defaultDateFormat = getDateFormatString(this.locale);
 
     if (this.activities) {
-      this.allFilters = this.getSearchableFieldValues(this.activities).map(
-        (label) => {
-          return { label, id: label, type: 'tag' };
-        }
-      );
+      this.allFilters = this.getSearchableFieldValues(this.activities);
 
       this.dataSource = new MatTableDataSource(this.activities);
       this.dataSource.filterPredicate = (data, filter) => {
         const dataString = this.getFilterableValues(data)
+          .map((currentFilter) => {
+            return currentFilter.label;
+          })
           .join(' ')
           .toLowerCase();
+
         let contains = true;
         for (const singleFilter of filter.split(SEARCH_STRING_SEPARATOR)) {
           contains =
@@ -190,50 +190,51 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   private getFilterableValues(
     activity: OrderWithAccount,
-    fieldValues: Set<string> = new Set<string>()
-  ): string[] {
-    fieldValues.add(activity.Account?.name);
-    fieldValues.add(activity.Account?.Platform?.name);
-    fieldValues.add(activity.SymbolProfile.currency);
+    fieldValueMap: { [id: string]: Filter } = {}
+  ): Filter[] {
+    fieldValueMap[activity.Account?.id] = {
+      id: activity.Account?.id,
+      label: activity.Account?.name,
+      type: 'ACCOUNT'
+    };
+
+    fieldValueMap[activity.SymbolProfile.currency] = {
+      id: activity.SymbolProfile.currency,
+      label: activity.SymbolProfile.currency,
+      type: 'TAG'
+    };
 
     if (!isUUID(activity.SymbolProfile.symbol)) {
-      fieldValues.add(activity.SymbolProfile.symbol);
+      fieldValueMap[activity.SymbolProfile.symbol] = {
+        id: activity.SymbolProfile.symbol,
+        label: activity.SymbolProfile.symbol,
+        type: 'SYMBOL'
+      };
     }
 
-    fieldValues.add(activity.type);
-    fieldValues.add(format(activity.date, 'yyyy'));
+    fieldValueMap[activity.type] = {
+      id: activity.type,
+      label: activity.type,
+      type: 'TAG'
+    };
 
-    return [...fieldValues].filter((item) => {
-      return item !== undefined;
-    });
+    fieldValueMap[format(activity.date, 'yyyy')] = {
+      id: format(activity.date, 'yyyy'),
+      label: format(activity.date, 'yyyy'),
+      type: 'TAG'
+    };
+
+    return Object.values(fieldValueMap);
   }
 
-  private getSearchableFieldValues(activities: OrderWithAccount[]): string[] {
-    const fieldValues = new Set<string>();
+  private getSearchableFieldValues(activities: OrderWithAccount[]): Filter[] {
+    const fieldValueMap: { [id: string]: Filter } = {};
 
     for (const activity of activities) {
-      this.getFilterableValues(activity, fieldValues);
+      this.getFilterableValues(activity, fieldValueMap);
     }
 
-    return [...fieldValues]
-      .filter((item) => {
-        return item !== undefined;
-      })
-      .sort((a, b) => {
-        const aFirstChar = a.charAt(0);
-        const bFirstChar = b.charAt(0);
-        const isANumber = aFirstChar >= '0' && aFirstChar <= '9';
-        const isBNumber = bFirstChar >= '0' && bFirstChar <= '9';
-
-        // Sort priority: text, followed by numbers
-        if (isANumber && !isBNumber) {
-          return 1;
-        } else if (!isANumber && isBNumber) {
-          return -1;
-        } else {
-          return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
-        }
-      });
+    return Object.values(fieldValueMap);
   }
 
   private getTotalFees() {
@@ -276,6 +277,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
         return filter.label;
       })
       .join(SEARCH_STRING_SEPARATOR);
+
     const lowercaseSearchKeywords = filters.map((filter) => {
       return filter.label.trim().toLowerCase();
     });

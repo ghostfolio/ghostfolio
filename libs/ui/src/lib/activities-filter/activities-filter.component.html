@@ -26,9 +26,17 @@
     #autocomplete="matAutocomplete"
     (optionSelected)="onSelectFilter($event)"
   >
-    <mat-option *ngFor="let filter of filters | async" [value]="filter">
-      {{ filter.label | gfSymbol }}
-    </mat-option>
+    <mat-optgroup
+      *ngFor="let filterGroup of filterGroups$ | async"
+      [label]="filterGroup.name"
+    >
+      <mat-option
+        *ngFor="let filter of filterGroup.filters"
+        [value]="filter.id"
+      >
+        {{ filter.label | gfSymbol }}
+      </mat-option>
+    </mat-optgroup>
   </mat-autocomplete>
   <mat-spinner
     matSuffix

@@ -120,7 +120,7 @@ export class AccountService {
       where.id = {
         in: filters
           .filter(({ type }) => {
-            return type === 'account';
+            return type === 'ACCOUNT';
           })
           .map(({ id }) => {
             return id;

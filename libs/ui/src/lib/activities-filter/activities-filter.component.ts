@@ -17,7 +17,8 @@ import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Filter } from '@ghostfolio/common/interfaces';
+import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
+import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -37,6 +38,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   @ViewChild('autocomplete') matAutocomplete: MatAutocomplete;
   @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
+  public filterGroups$: Subject<FilterGroup[]> = new BehaviorSubject([]);
   public filters$: Subject<Filter[]> = new BehaviorSubject([]);
   public filters: Observable<Filter[]> = this.filters$.asObservable();
   public searchControl = new FormControl();
@@ -50,40 +52,27 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((filterOrSearchTerm: Filter | string) => {
         if (filterOrSearchTerm) {
-          this.filters$.next(
-            this.allFilters
-              .filter((filter) => {
-                // Filter selected filters
-                return !this.selectedFilters.some((selectedFilter) => {
-                  return selectedFilter.id === filter.id;
-                });
-              })
-              .filter((filter) => {
-                if (typeof filterOrSearchTerm === 'string') {
-                  return filter.label
-                    .toLowerCase()
-                    .startsWith(filterOrSearchTerm.toLowerCase());
-                }
+          const searchTerm =
+            typeof filterOrSearchTerm === 'string'
+              ? filterOrSearchTerm
+              : filterOrSearchTerm?.label;
 
-                return filter.label
-                  .toLowerCase()
-                  .startsWith(filterOrSearchTerm?.label?.toLowerCase());
-              })
-              .sort((a, b) => a.label.localeCompare(b.label))
-          );
+          this.filterGroups$.next(this.getGroupedFilters(searchTerm));
+        } else {
+          this.filterGroups$.next(this.getGroupedFilters());
         }
       });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.allFilters?.currentValue) {
-      this.updateFilter();
+      this.updateFilters();
     }
   }
 
   public onAddFilter({ input, value }: MatChipInputEvent): void {
     if (value?.trim()) {
-      this.updateFilter();
+      this.updateFilters();
     }
 
     // Reset the input value
@@ -99,12 +88,16 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
       return filter.id !== aFilter.id;
     });
 
-    this.updateFilter();
+    this.updateFilters();
   }
 
   public onSelectFilter(event: MatAutocompleteSelectedEvent): void {
-    this.selectedFilters.push(event.option.value);
-    this.updateFilter();
+    this.selectedFilters.push(
+      this.allFilters.find((filter) => {
+        return filter.id === event.option.value;
+      })
+    );
+    this.updateFilters();
     this.searchInput.nativeElement.value = '';
     this.searchControl.setValue(null);
   }
@@ -114,8 +107,8 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.unsubscribeSubject.complete();
   }
 
-  private updateFilter() {
-    this.filters$.next(
+  private getGroupedFilters(searchTerm?: string) {
+    const filterGroupsMap = groupBy(
       this.allFilters
         .filter((filter) => {
           // Filter selected filters
@@ -123,8 +116,43 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
             return selectedFilter.id === filter.id;
           });
         })
-        .sort((a, b) => a.label.localeCompare(b.label))
+        .filter((filter) => {
+          if (searchTerm) {
+            // Filter by search term
+            return filter.label
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          }
+
+          return filter;
+        })
+        .sort((a, b) => a.label.localeCompare(b.label)),
+      (filter) => {
+        return filter.type;
+      }
     );
+
+    const filterGroups: FilterGroup[] = [];
+
+    for (const type of Object.keys(filterGroupsMap)) {
+      filterGroups.push({
+        name: <Filter['type']>type,
+        filters: filterGroupsMap[type]
+      });
+    }
+
+    return filterGroups
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((filterGroup) => {
+        return {
+          ...filterGroup,
+          filters: filterGroup.filters
+        };
+      });
+  }
+
+  private updateFilters() {
+    this.filterGroups$.next(this.getGroupedFilters());
 
     // Emit an array with a new reference
     this.valueChanged.emit([...this.selectedFilters]);
