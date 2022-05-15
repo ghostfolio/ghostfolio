@@ -141,12 +141,14 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
       });
     }
 
-    return filterGroups.map((filterGroup) => {
-      return {
-        ...filterGroup,
-        filters: filterGroup.filters
-      };
-    });
+    return filterGroups
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((filterGroup) => {
+        return {
+          ...filterGroup,
+          filters: filterGroup.filters
+        };
+      });
   }
 
   private updateFilters() {
