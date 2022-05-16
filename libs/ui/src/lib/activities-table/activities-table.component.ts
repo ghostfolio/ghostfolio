@@ -22,9 +22,6 @@ import { endOfToday, format, isAfter } from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject, Subscription, distinctUntilChanged, takeUntil } from 'rxjs';
 
-const SEARCH_PLACEHOLDER = 'Search for account, currency, symbol or type...';
-const SEARCH_STRING_SEPARATOR = ',';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-activities-table',
@@ -70,6 +67,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public totalFees: number;
   public totalValue: number;
 
+  private readonly SEARCH_PLACEHOLDER =
+    'Filter by account, currency, symbol or type...';
+  private readonly SEARCH_STRING_SEPARATOR = ',';
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(private router: Router) {
@@ -117,7 +117,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
           .toLowerCase();
 
         let contains = true;
-        for (const singleFilter of filter.split(SEARCH_STRING_SEPARATOR)) {
+        for (const singleFilter of filter.split(this.SEARCH_STRING_SEPARATOR)) {
           contains =
             contains && dataString.includes(singleFilter.trim().toLowerCase());
         }
@@ -276,14 +276,14 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       .map((filter) => {
         return filter.label;
       })
-      .join(SEARCH_STRING_SEPARATOR);
+      .join(this.SEARCH_STRING_SEPARATOR);
 
     const lowercaseSearchKeywords = filters.map((filter) => {
       return filter.label.trim().toLowerCase();
     });
 
     this.placeholder =
-      lowercaseSearchKeywords.length <= 0 ? SEARCH_PLACEHOLDER : '';
+      lowercaseSearchKeywords.length <= 0 ? this.SEARCH_PLACEHOLDER : '';
 
     this.searchKeywords = filters.map((filter) => {
       return filter.label;
