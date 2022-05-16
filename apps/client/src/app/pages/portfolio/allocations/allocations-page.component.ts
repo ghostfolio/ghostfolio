@@ -84,6 +84,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
   public user: User;
 
+  private readonly SEARCH_PLACEHOLDER = 'Filter by account or tag...';
   private unsubscribeSubject = new Subject<void>();
 
   /**
@@ -134,6 +135,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         switchMap((filters) => {
           this.isLoading = true;
           this.activeFilters = filters;
+          this.placeholder =
+            this.activeFilters.length <= 0 ? this.SEARCH_PLACEHOLDER : '';
 
           return this.dataService.fetchPortfolioDetails({
             filters: this.activeFilters
