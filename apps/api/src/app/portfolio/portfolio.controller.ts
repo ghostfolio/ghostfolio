@@ -107,12 +107,14 @@ export class PortfolioController {
   public async getDetails(
     @Headers('impersonation-id') impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') range?: DateRange,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasError = false;
 
     const accountIds = filterByAccounts?.split(',') ?? [];
+    const assetClasses = filterByAssetClasses?.split(',') ?? [];
     const tagIds = filterByTags?.split(',') ?? [];
 
     const filters: Filter[] = [
@@ -120,6 +122,12 @@ export class PortfolioController {
         return <Filter>{
           id: accountId,
           type: 'ACCOUNT'
+        };
+      }),
+      ...assetClasses.map((assetClass) => {
+        return <Filter>{
+          id: assetClass,
+          type: 'ASSET_CLASS'
         };
       }),
       ...tagIds.map((tagId) => {

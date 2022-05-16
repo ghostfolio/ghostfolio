@@ -172,6 +172,15 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               };
             });
 
+          const assetClassFilters: Filter[] = [];
+          for (const assetClass of Object.keys(AssetClass)) {
+            assetClassFilters.push({
+              id: assetClass,
+              label: assetClass,
+              type: 'ASSET_CLASS'
+            });
+          }
+
           const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
             return {
               id,
@@ -180,7 +189,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             };
           });
 
-          this.allFilters = [...accountFilters, ...tagFilters];
+          this.allFilters = [
+            ...accountFilters,
+            ...assetClassFilters,
+            ...tagFilters
+          ];
 
           this.changeDetectorRef.markForCheck();
         }
