@@ -187,17 +187,29 @@ export class DataService {
     let params = new HttpParams();
 
     if (filters?.length > 0) {
-      const { ACCOUNT: filtersByAccount, TAG: filtersByTag } = groupBy(
-        filters,
-        (filter) => {
-          return filter.type;
-        }
-      );
+      const {
+        ACCOUNT: filtersByAccount,
+        ASSET_CLASS: filtersByAssetClass,
+        TAG: filtersByTag
+      } = groupBy(filters, (filter) => {
+        return filter.type;
+      });
 
       if (filtersByAccount) {
         params = params.append(
           'accounts',
           filtersByAccount
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetClass) {
+        params = params.append(
+          'assetClasses',
+          filtersByAssetClass
             .map(({ id }) => {
               return id;
             })

@@ -4,6 +4,7 @@ import { Filter } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
 import Big from 'big.js';
+import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
 
@@ -116,15 +117,19 @@ export class AccountService {
 
     const where: Prisma.AccountWhereInput = { userId };
 
-    if (filters?.length > 0) {
+    const {
+      ACCOUNT: filtersByAccount,
+      ASSET_CLASS: filtersByAssetClass,
+      TAG: filtersByTag
+    } = groupBy(filters, (filter) => {
+      return filter.type;
+    });
+
+    if (filtersByAccount?.length > 0) {
       where.id = {
-        in: filters
-          .filter(({ type }) => {
-            return type === 'ACCOUNT';
-          })
-          .map(({ id }) => {
-            return id;
-          })
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
       };
     }
 

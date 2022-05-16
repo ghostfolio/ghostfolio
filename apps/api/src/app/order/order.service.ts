@@ -188,12 +188,13 @@ export class OrderService {
   }): Promise<Activity[]> {
     const where: Prisma.OrderWhereInput = { userId };
 
-    const { ACCOUNT: filtersByAccount, TAG: filtersByTag } = groupBy(
-      filters,
-      (filter) => {
-        return filter.type;
-      }
-    );
+    const {
+      ACCOUNT: filtersByAccount,
+      ASSET_CLASS: filtersByAssetClass,
+      TAG: filtersByTag
+    } = groupBy(filters, (filter) => {
+      return filter.type;
+    });
 
     if (filtersByAccount?.length > 0) {
       where.accountId = {
@@ -205,6 +206,34 @@ export class OrderService {
 
     if (includeDrafts === false) {
       where.isDraft = false;
+    }
+
+    if (filtersByAssetClass?.length > 0) {
+      where.SymbolProfile = {
+        OR: [
+          {
+            AND: [
+              {
+                OR: filtersByAssetClass.map(({ id }) => {
+                  return { assetClass: AssetClass[id] };
+                })
+              },
+              {
+                SymbolProfileOverrides: {
+                  is: null
+                }
+              }
+            ]
+          },
+          {
+            SymbolProfileOverrides: {
+              OR: filtersByAssetClass.map(({ id }) => {
+                return { assetClass: AssetClass[id] };
+              })
+            }
+          }
+        ]
+      };
     }
 
     if (filtersByTag?.length > 0) {

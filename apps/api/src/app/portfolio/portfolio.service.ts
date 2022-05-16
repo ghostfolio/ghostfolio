@@ -441,7 +441,12 @@ export class PortfolioService {
       };
     }
 
-    if (aFilters?.length === 0) {
+    if (
+      aFilters?.length === 0 ||
+      (aFilters?.length === 1 &&
+        aFilters[0].type === 'ASSET_CLASS' &&
+        aFilters[0].id === 'CASH')
+    ) {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         emergencyFund,
