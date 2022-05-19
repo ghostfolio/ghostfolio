@@ -24,7 +24,7 @@
   </p>
 </div>
 
-**Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of their wealth like stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.
+**Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.
 
 <div align="center">
   <img src="./apps/client/src/assets/images/screenshot.png" width="300">
