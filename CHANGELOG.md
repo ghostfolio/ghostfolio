@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Skipped data enhancer (_Trackinsight_) if data is inaccurate
 
+### Fixed
+
+- Fixed an issue with countries in the symbol profile overrides
+
 ## 1.149.0 - 16.05.2022
 
 ### Added

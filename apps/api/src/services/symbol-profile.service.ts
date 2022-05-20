@@ -71,7 +71,7 @@ export class SymbolProfileService {
         item.assetSubClass =
           item.SymbolProfileOverrides.assetSubClass ?? item.assetSubClass;
         item.countries =
-          (item.SymbolProfileOverrides.sectors as unknown as Country[]) ??
+          (item.SymbolProfileOverrides.countries as unknown as Country[]) ??
           item.countries;
         item.name = item.SymbolProfileOverrides?.name ?? item.name;
         item.sectors =
