@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Skipped data enhancer (_Trackinsight_) if data is inaccurate
+
 ### Fixed
 
 - Fixed an issue with countries in the symbol profile overrides

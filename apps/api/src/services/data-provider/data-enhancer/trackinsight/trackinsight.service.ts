@@ -32,7 +32,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const holdings = await getJSON(
+    const result = await getJSON(
       `${TrackinsightDataEnhancerService.baseUrl}/${symbol}.json`
     ).catch(() => {
       return getJSON(
@@ -42,12 +42,17 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       );
     });
 
+    if (result.weight < 0.95) {
+      // Skip if data is inaccurate
+      return response;
+    }
+
     if (
       !response.countries ||
       (response.countries as unknown as Country[]).length === 0
     ) {
       response.countries = [];
-      for (const [name, value] of Object.entries<any>(holdings.countries)) {
+      for (const [name, value] of Object.entries<any>(result.countries)) {
         let countryCode: string;
 
         for (const [key, country] of Object.entries<any>(
@@ -75,7 +80,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       (response.sectors as unknown as Sector[]).length === 0
     ) {
       response.sectors = [];
-      for (const [name, value] of Object.entries<any>(holdings.sectors)) {
+      for (const [name, value] of Object.entries<any>(result.sectors)) {
         response.sectors.push({
           name: TrackinsightDataEnhancerService.sectorsMapping[name] ?? name,
           weight: value.weight
