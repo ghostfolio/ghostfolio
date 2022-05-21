@@ -4,6 +4,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data.service'
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
+import { GetValueObject } from './interfaces/get-value-object.interface';
 
 jest.mock('@ghostfolio/api/services/market-data.service', () => {
   return {
@@ -96,15 +97,15 @@ describe('CurrentRateService', () => {
         },
         userCurrency: 'CHF'
       })
-    ).toMatchObject([
+    ).toMatchObject<GetValueObject[]>([
       {
         date: undefined,
-        marketPrice: 1841.823902,
+        marketPriceInBaseCurrency: 1841.823902,
         symbol: 'AMZN'
       },
       {
         date: undefined,
-        marketPrice: 1847.839966,
+        marketPriceInBaseCurrency: 1847.839966,
         symbol: 'AMZN'
       }
     ]);
