@@ -1,27 +1,30 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { Granularity } from '@ghostfolio/common/types';
-import { DataSource } from '@prisma/client';
-
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
-} from '../../interfaces/interfaces';
+} from '@ghostfolio/api/services/interfaces/interfaces';
+import { Granularity } from '@ghostfolio/common/types';
+import { DataSource, SymbolProfile } from '@prisma/client';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;
 
-  get(aSymbols: string[]): Promise<{ [symbol: string]: IDataProviderResponse }>;
+  getAssetProfile(aSymbol: string): Promise<Partial<SymbolProfile>>;
 
   getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity,
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }>;
+  }>; // TODO: Return only one symbol
 
   getName(): DataSource;
 
-  search(aSymbol: string): Promise<{ items: LookupItem[] }>;
+  getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }>;
+
+  search(aQuery: string): Promise<{ items: LookupItem[] }>;
 }

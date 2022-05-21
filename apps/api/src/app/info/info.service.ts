@@ -1,10 +1,19 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { PROPERTY_STRIPE_CONFIG } from '@ghostfolio/common/config';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import {
+  DEMO_USER_ID,
+  PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_SLACK_COMMUNITY_USERS,
+  PROPERTY_STRIPE_CONFIG,
+  PROPERTY_SYSTEM_MESSAGE,
+  ghostfolioFearAndGreedIndexDataSource
+} from '@ghostfolio/common/config';
+import { encodeDataSource } from '@ghostfolio/common/helper';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
@@ -16,25 +25,27 @@ import { subDays } from 'date-fns';
 
 @Injectable()
 export class InfoService {
-  private static DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
   private static CACHE_KEY_STATISTICS = 'STATISTICS';
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
-    private readonly redisCacheService: RedisCacheService
+    private readonly propertyService: PropertyService,
+    private readonly redisCacheService: RedisCacheService,
+    private readonly tagService: TagService
   ) {}
 
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
+    let isReadOnlyMode: boolean;
     const platforms = await this.prismaService.platform.findMany({
       orderBy: { name: 'asc' },
       select: { id: true, name: true }
     });
+    let systemMessage: string;
 
     const globalPermissions: string[] = [];
 
@@ -42,8 +53,26 @@ export class InfoService {
       globalPermissions.push(permissions.enableBlog);
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
+      if (
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true
+      ) {
+        info.fearAndGreedDataSource = encodeDataSource(
+          ghostfolioFearAndGreedIndexDataSource
+        );
+      } else {
+        info.fearAndGreedDataSource = ghostfolioFearAndGreedIndexDataSource;
+      }
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
       globalPermissions.push(permissions.enableImport);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
+      isReadOnlyMode = (await this.propertyService.getByKey(
+        PROPERTY_IS_READ_ONLY_MODE
+      )) as boolean;
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SOCIAL_LOGIN')) {
@@ -60,16 +89,26 @@ export class InfoService {
       info.stripePublicKey = this.configurationService.get('STRIPE_PUBLIC_KEY');
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_SYSTEM_MESSAGE')) {
+      globalPermissions.push(permissions.enableSystemMessage);
+
+      systemMessage = (await this.propertyService.getByKey(
+        PROPERTY_SYSTEM_MESSAGE
+      )) as string;
+    }
+
     return {
       ...info,
       globalPermissions,
+      isReadOnlyMode,
       platforms,
+      systemMessage,
       currencies: this.exchangeRateDataService.getCurrencies(),
       demoAuthToken: this.getDemoAuthToken(),
       lastDataGathering: await this.getLastDataGathering(),
-      primaryDataSource: this.dataProviderService.getPrimaryDataSource(),
       statistics: await this.getStatistics(),
-      subscriptions: await this.getSubscriptions()
+      subscriptions: await this.getSubscriptions(),
+      tags: await this.tagService.get()
     };
   }
 
@@ -114,7 +153,7 @@ export class InfoService {
       const contributors = await get();
       return contributors?.length;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'InfoService');
 
       return undefined;
     }
@@ -135,7 +174,7 @@ export class InfoService {
       const { stargazers_count } = await get();
       return stargazers_count;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'InfoService');
 
       return undefined;
     }
@@ -163,9 +202,15 @@ export class InfoService {
     });
   }
 
+  private async countSlackCommunityUsers() {
+    return (await this.propertyService.getByKey(
+      PROPERTY_SLACK_COMMUNITY_USERS
+    )) as string;
+  }
+
   private getDemoAuthToken() {
     return this.jwtService.sign({
-      id: InfoService.DEMO_USER_ID
+      id: DEMO_USER_ID
     });
   }
 
@@ -194,19 +239,19 @@ export class InfoService {
     } catch {}
 
     const activeUsers1d = await this.countActiveUsers(1);
-    const activeUsers7d = await this.countActiveUsers(7);
     const activeUsers30d = await this.countActiveUsers(30);
     const newUsers30d = await this.countNewUsers(30);
     const gitHubContributors = await this.countGitHubContributors();
     const gitHubStargazers = await this.countGitHubStargazers();
+    const slackCommunityUsers = await this.countSlackCommunityUsers();
 
     statistics = {
       activeUsers1d,
-      activeUsers7d,
       activeUsers30d,
       gitHubContributors,
       gitHubStargazers,
-      newUsers30d
+      newUsers30d,
+      slackCommunityUsers
     };
 
     await this.redisCacheService.set(

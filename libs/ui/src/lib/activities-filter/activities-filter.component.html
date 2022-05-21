@@ -1,0 +1,46 @@
+<mat-form-field appearance="outline" class="w-100">
+  <ion-icon class="mr-1" matPrefix name="search-outline"></ion-icon>
+  <mat-chip-list #chipList aria-label="Search keywords">
+    <mat-chip
+      *ngFor="let filter of selectedFilters"
+      class="mx-1 my-0 px-2 py-0"
+      matChipRemove
+      [removable]="true"
+      (removed)="onRemoveFilter(filter)"
+    >
+      {{ filter.label | gfSymbol }}
+      <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
+    </mat-chip>
+    <input
+      #searchInput
+      name="close-outline"
+      [formControl]="searchControl"
+      [matAutocomplete]="autocomplete"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [placeholder]="placeholder"
+      (matChipInputTokenEnd)="onAddFilter($event)"
+    />
+  </mat-chip-list>
+  <mat-autocomplete
+    #autocomplete="matAutocomplete"
+    (optionSelected)="onSelectFilter($event)"
+  >
+    <mat-optgroup
+      *ngFor="let filterGroup of filterGroups$ | async"
+      [label]="filterGroup.name"
+    >
+      <mat-option
+        *ngFor="let filter of filterGroup.filters"
+        [value]="filter.id"
+      >
+        {{ filter.label | gfSymbol }}
+      </mat-option>
+    </mat-optgroup>
+  </mat-autocomplete>
+  <mat-spinner
+    matSuffix
+    [diameter]="20"
+    [ngClass]="{ 'd-none': !isLoading }"
+  ></mat-spinner>
+</mat-form-field>

@@ -1,15 +1,5 @@
 <div
-  class="
-    align-items-center
-    container
-    d-flex
-    flex-column
-    h-100
-    justify-content-center
-    overview
-    p-0
-    position-relative
-  "
+  class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
   <div class="row w-100">
     <div class="chart-container col">
@@ -23,7 +13,7 @@
         [showYAxis]="false"
       ></gf-line-chart>
       <div
-        *ngIf="historicalDataItems?.length === 0"
+        *ngIf="hasPermissionToCreateOrder && historicalDataItems?.length === 0"
         class="align-items-center d-flex h-100 justify-content-center w-100"
       >
         <div class="d-flex justify-content-center">
@@ -37,14 +27,17 @@
       <gf-portfolio-performance
         class="pb-4"
         [baseCurrency]="user?.settings?.baseCurrency"
+        [deviceType]="deviceType"
+        [errors]="errors"
+        [hasError]="hasError"
         [isAllTimeHigh]="isAllTimeHigh"
         [isAllTimeLow]="isAllTimeLow"
         [isLoading]="isLoadingPerformance"
         [locale]="user?.settings?.locale"
         [performance]="performance"
-        [showDetails]="!hasImpersonationId && !user.settings.isRestrictedView"
+        [showDetails]="showDetails"
       ></gf-portfolio-performance>
-      <div class="text-center">
+      <div *ngIf="showDetails" class="text-center">
         <gf-toggle
           [defaultValue]="dateRange"
           [isLoading]="isLoadingPerformance"

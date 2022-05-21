@@ -1,12 +1,21 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { baseCurrency, locale } from '@ghostfolio/common/config';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
+import {
+  PROPERTY_IS_READ_ONLY_MODE,
+  baseCurrency,
+  locale
+} from '@ghostfolio/common/config';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
-import { getPermissions, permissions } from '@ghostfolio/common/permissions';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
+import {
+  getPermissions,
+  hasRole,
+  permissions
+} from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Provider, User, ViewMode } from '@prisma/client';
+import { Prisma, Role, User, ViewMode } from '@prisma/client';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 import { UserSettings } from './interfaces/user-settings.interface';
@@ -20,17 +29,22 @@ export class UserService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
-    private readonly subscriptionService: SubscriptionService
+    private readonly propertyService: PropertyService,
+    private readonly subscriptionService: SubscriptionService,
+    private readonly tagService: TagService
   ) {}
 
-  public async getUser({
-    Account,
-    alias,
-    id,
-    permissions,
-    Settings,
-    subscription
-  }: UserWithSettings): Promise<IUser> {
+  public async getUser(
+    {
+      Account,
+      alias,
+      id,
+      permissions,
+      Settings,
+      subscription
+    }: UserWithSettings,
+    aLocale = locale
+  ): Promise<IUser> {
     const access = await this.prismaService.access.findMany({
       include: {
         User: true
@@ -38,12 +52,21 @@ export class UserService {
       orderBy: { User: { alias: 'asc' } },
       where: { GranteeUser: { id } }
     });
+    let tags = await this.tagService.getByUser(id);
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      subscription.type === 'Basic'
+    ) {
+      tags = [];
+    }
 
     return {
       alias,
       id,
       permissions,
       subscription,
+      tags,
       access: access.map((accessItem) => {
         return {
           alias: accessItem.User.alias,
@@ -53,11 +76,23 @@ export class UserService {
       accounts: Account,
       settings: {
         ...(<UserSettings>Settings.settings),
-        locale,
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
+        locale: (<UserSettings>Settings.settings)?.locale ?? aLocale,
         viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
       }
     };
+  }
+
+  public async hasAdmin() {
+    const usersWithAdminRole = await this.users({
+      where: {
+        role: {
+          equals: 'ADMIN'
+        }
+      }
+    });
+
+    return usersWithAdminRole.length > 0;
   }
 
   public isRestrictedView(aUser: UserWithSettings) {
@@ -67,49 +102,90 @@ export class UserService {
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
-    const userFromDatabase = await this.prismaService.user.findUnique({
+    const {
+      accessToken,
+      Account,
+      alias,
+      authChallenge,
+      createdAt,
+      id,
+      provider,
+      role,
+      Settings,
+      Subscription,
+      thirdPartyId,
+      updatedAt
+    } = await this.prismaService.user.findUnique({
       include: { Account: true, Settings: true, Subscription: true },
       where: userWhereUniqueInput
     });
 
-    const user: UserWithSettings = userFromDatabase;
+    const user: UserWithSettings = {
+      accessToken,
+      Account,
+      alias,
+      authChallenge,
+      createdAt,
+      id,
+      provider,
+      role,
+      Settings,
+      thirdPartyId,
+      updatedAt
+    };
 
-    const currentPermissions = getPermissions(userFromDatabase.role);
-
-    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      currentPermissions.push(permissions.accessFearAndGreedIndex);
-    }
-
-    user.permissions = currentPermissions;
-
-    if (userFromDatabase?.Settings) {
-      if (!userFromDatabase.Settings.currency) {
+    if (user?.Settings) {
+      if (!user.Settings.currency) {
         // Set default currency if needed
-        userFromDatabase.Settings.currency = UserService.DEFAULT_CURRENCY;
+        user.Settings.currency = UserService.DEFAULT_CURRENCY;
       }
-    } else if (userFromDatabase) {
+    } else if (user) {
       // Set default settings if needed
-      userFromDatabase.Settings = {
+      user.Settings = {
         currency: UserService.DEFAULT_CURRENCY,
         settings: null,
         updatedAt: new Date(),
-        userId: userFromDatabase?.id,
+        userId: user?.id,
         viewMode: ViewMode.DEFAULT
       };
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      user.subscription = this.subscriptionService.getSubscription(
-        userFromDatabase?.Subscription
-      );
+      user.subscription =
+        this.subscriptionService.getSubscription(Subscription);
+    }
 
-      if (user.subscription.type === SubscriptionType.Basic) {
-        user.permissions = user.permissions.filter((permission) => {
-          return permission !== permissions.updateViewMode;
+    let currentPermissions = getPermissions(user.role);
+
+    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
+      currentPermissions.push(permissions.accessFearAndGreedIndex);
+    }
+
+    if (user.subscription?.type === 'Premium') {
+      currentPermissions.push(permissions.reportDataGlitch);
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
+      if (hasRole(user, Role.ADMIN)) {
+        currentPermissions.push(permissions.toggleReadOnlyMode);
+      }
+
+      const isReadOnlyMode = (await this.propertyService.getByKey(
+        PROPERTY_IS_READ_ONLY_MODE
+      )) as boolean;
+
+      if (isReadOnlyMode) {
+        currentPermissions = currentPermissions.filter((permission) => {
+          return !(
+            permission.startsWith('create') ||
+            permission.startsWith('delete') ||
+            permission.startsWith('update')
+          );
         });
-        user.Settings.viewMode = ViewMode.ZEN;
       }
     }
+
+    user.permissions = currentPermissions.sort();
 
     return user;
   }
@@ -138,7 +214,11 @@ export class UserService {
     return hash.digest('hex');
   }
 
-  public async createUser(data?: Prisma.UserCreateInput): Promise<User> {
+  public async createUser(data: Prisma.UserCreateInput): Promise<User> {
+    if (!data?.provider) {
+      data.provider = 'ANONYMOUS';
+    }
+
     let user = await this.prismaService.user.create({
       data: {
         ...data,
@@ -157,7 +237,7 @@ export class UserService {
       }
     });
 
-    if (data.provider === Provider.ANONYMOUS) {
+    if (data.provider === 'ANONYMOUS') {
       const accessToken = this.createAccessToken(
         user.id,
         this.getRandomString(10)

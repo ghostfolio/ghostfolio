@@ -2,7 +2,7 @@
   mat-dialog-title
   position="center"
   [deviceType]="data.deviceType"
-  [title]="name ?? symbol"
+  [title]="SymbolProfile?.name ?? SymbolProfile?.symbol"
   (closeButtonClicked)="onClose()"
 ></gf-dialog-header>
 
@@ -21,7 +21,7 @@
 
     <gf-line-chart
       class="mb-4"
-      benchmarkLabel="Buy Price"
+      benchmarkLabel="Average Unit Price"
       [benchmarkDataItems]="benchmarkDataItems"
       [historicalDataItems]="historicalDataItems"
       [showGradient]="true"
@@ -53,9 +53,9 @@
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Ø Buy Price"
+          label="Average Unit Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="averagePrice"
         ></gf-value>
@@ -64,7 +64,7 @@
         <gf-value
           label="Market Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="marketPrice"
         ></gf-value>
@@ -73,7 +73,7 @@
         <gf-value
           label="Minimum Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="minPrice"
@@ -83,7 +83,7 @@
         <gf-value
           label="Maximum Price"
           size="medium"
-          [currency]="currency"
+          [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="maxPrice"
@@ -111,6 +111,8 @@
         <gf-value
           label="First Buy Date"
           size="medium"
+          [isDate]="true"
+          [locale]="data.locale"
           [value]="firstBuyDate"
         ></gf-value>
       </div>
@@ -121,6 +123,115 @@
           [locale]="data.locale"
           [value]="transactionCount"
         ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Asset Class"
+          size="medium"
+          [hidden]="!SymbolProfile?.assetClass"
+          [value]="SymbolProfile?.assetClass"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Asset Sub Class"
+          size="medium"
+          [hidden]="!SymbolProfile?.assetSubClass"
+          [value]="SymbolProfile?.assetSubClass"
+        ></gf-value>
+      </div>
+      <ng-container
+        *ngIf="SymbolProfile?.countries?.length > 0 || SymbolProfile?.sectors?.length > 0"
+      >
+        <ng-container
+          *ngIf="SymbolProfile?.countries?.length === 1 && SymbolProfile?.sectors?.length === 1; else charts"
+        >
+          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+            <gf-value
+              label="Sector"
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.sectors[0].name"
+            ></gf-value>
+          </div>
+          <div
+            *ngIf="SymbolProfile?.countries?.length === 1"
+            class="col-6 mb-3"
+          >
+            <gf-value
+              label="Country"
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.countries[0].name"
+            ></gf-value>
+          </div>
+        </ng-container>
+        <ng-template #charts>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Sectors</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+              [positions]="sectors"
+            ></gf-portfolio-proportion-chart>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="user?.settings?.baseCurrency"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="user?.settings?.locale"
+              [maxItems]="10"
+              [positions]="countries"
+            ></gf-portfolio-proportion-chart>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <div *ngIf="orders?.length > 0" class="row">
+      <div class="col mb-3">
+        <div class="h5 mb-0" i18n>Activities</div>
+        <gf-activities-table
+          [activities]="orders"
+          [baseCurrency]="data.baseCurrency"
+          [deviceType]="data.deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="!hasImpersonationId"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToImportActivities]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="data.locale"
+          [showActions]="false"
+          [showSymbolColumn]="false"
+          (export)="onExport()"
+        ></gf-activities-table>
+      </div>
+    </div>
+
+    <div *ngIf="tags?.length > 0" class="row">
+      <div class="col mb-3">
+        <div class="h5" i18n>Tags</div>
+        <mat-chip-list>
+          <mat-chip *ngFor="let tag of tags">{{ tag.name }}</mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+
+    <div
+      *ngIf="data.hasPermissionToReportDataGlitch === true && orders?.length > 0"
+      class="row"
+    >
+      <div class="col mb-3">
+        <hr />
+        <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+          ><ion-icon class="mr-1" name="flag-outline"></ion-icon
+          ><span i18n>Report Data Glitch</span></a
+        >
       </div>
     </div>
   </div>

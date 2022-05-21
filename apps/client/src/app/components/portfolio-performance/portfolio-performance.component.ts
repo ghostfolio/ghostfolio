@@ -7,7 +7,14 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { PortfolioPerformance } from '@ghostfolio/common/interfaces';
+import {
+  getNumberFormatDecimal,
+  getNumberFormatGroup
+} from '@ghostfolio/common/helper';
+import {
+  PortfolioPerformance,
+  ResponseError
+} from '@ghostfolio/common/interfaces';
 import { CountUp } from 'countup.js';
 import { isNumber } from 'lodash';
 
@@ -19,6 +26,9 @@ import { isNumber } from 'lodash';
 })
 export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
+  @Input() deviceType: string;
+  @Input() errors: ResponseError['errors'];
+  @Input() hasError: boolean;
   @Input() isAllTimeHigh: boolean;
   @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;
@@ -44,9 +54,14 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
         this.unit = this.baseCurrency;
 
         new CountUp('value', this.performance?.currentValue, {
-          decimalPlaces: 2,
+          decimal: getNumberFormatDecimal(this.locale),
+          decimalPlaces:
+            this.deviceType === 'mobile' &&
+            this.performance?.currentValue >= 100000
+              ? 0
+              : 2,
           duration: 1,
-          separator: `'`
+          separator: getNumberFormatGroup(this.locale)
         }).start();
       } else if (this.performance?.currentValue === null) {
         this.unit = '%';
@@ -55,12 +70,21 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
           'value',
           this.performance?.currentNetPerformancePercent * 100,
           {
+            decimal: getNumberFormatDecimal(this.locale),
             decimalPlaces: 2,
-            duration: 0.75,
-            separator: `'`
+            duration: 1,
+            separator: getNumberFormatGroup(this.locale)
           }
         ).start();
       }
     }
+  }
+
+  public onShowErrors() {
+    const errorMessageParts = this.errors.map((error) => {
+      return `${error.symbol} (${error.dataSource})`;
+    });
+
+    alert(errorMessageParts.join('\n'));
   }
 }

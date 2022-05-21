@@ -13,6 +13,7 @@ import { AccountService } from './account.service';
 
 @Module({
   controllers: [AccountController],
+  exports: [AccountService],
   imports: [
     ConfigurationModule,
     DataProviderModule,

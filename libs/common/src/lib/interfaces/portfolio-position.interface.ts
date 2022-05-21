@@ -1,6 +1,6 @@
-import { MarketState } from '@ghostfolio/api/services/interfaces/interfaces';
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
+import { Market, MarketState } from '../types';
 import { Country } from './country.interface';
 import { Sector } from './sector.interface';
 
@@ -8,9 +8,10 @@ export interface PortfolioPosition {
   allocationCurrent: number;
   allocationInvestment: number;
   assetClass?: AssetClass;
-  assetSubClass?: AssetSubClass | 'CASH';
+  assetSubClass?: AssetSubClass | 'CASH' | 'EMERGENCY_FUND';
   countries: Country[];
   currency: string;
+  dataSource: DataSource;
   exchange?: string;
   grossPerformance: number;
   grossPerformancePercent: number;
@@ -18,6 +19,7 @@ export interface PortfolioPosition {
   marketChange?: number;
   marketChangePercent?: number;
   marketPrice: number;
+  markets?: { [key in Market]: number };
   marketState: MarketState;
   name: string;
   netPerformance: number;

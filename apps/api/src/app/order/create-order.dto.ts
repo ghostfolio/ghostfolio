@@ -1,15 +1,31 @@
-import { DataSource, Type } from '@prisma/client';
-import { IsEnum, IsISO8601, IsNumber, IsString } from 'class-validator';
+import { AssetClass, AssetSubClass, DataSource, Type } from '@prisma/client';
+import {
+  IsEnum,
+  IsISO8601,
+  IsNumber,
+  IsOptional,
+  IsString
+} from 'class-validator';
 
 export class CreateOrderDto {
   @IsString()
-  accountId: string;
+  @IsOptional()
+  accountId?: string;
+
+  @IsEnum(AssetClass, { each: true })
+  @IsOptional()
+  assetClass?: AssetClass;
+
+  @IsEnum(AssetSubClass, { each: true })
+  @IsOptional()
+  assetSubClass?: AssetSubClass;
 
   @IsString()
   currency: string;
 
   @IsEnum(DataSource, { each: true })
-  dataSource: DataSource;
+  @IsOptional()
+  dataSource?: DataSource;
 
   @IsISO8601()
   date: string;

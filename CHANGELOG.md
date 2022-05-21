@@ -7,12 +7,851 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Skipped data enhancer (_Trackinsight_) if data is inaccurate
+
+### Fixed
+
+- Fixed an issue with countries in the symbol profile overrides
+
+## 1.149.0 - 16.05.2022
+
 ### Added
 
-- Supported the management of additional currencies in the admin control panel
+- Added groups to the activities filter component
+- Added support for filtering by asset class on the allocations page
+
+## 1.148.0 - 14.05.2022
+
+### Added
+
+- Supported enter key press to submit the form of the create or edit transaction dialog
+- Added a _Report Data Glitch_ button to the position detail dialog
+
+### Fixed
+
+- Fixed the date format of the date picker and support manual changes
+- Fixed the state of the account delete button (disable if account contains activities)
+- Fixed an issue in the activities filter component (typing a search term)
+
+## 1.147.0 - 10.05.2022
 
 ### Changed
 
+- Improved the allocations page with no filtering (include cash positions)
+
+## 1.146.3 - 08.05.2022
+
+### Added
+
+- Set up a queue for the data gathering jobs
+- Set up _Nx Cloud_
+
+### Changed
+
+- Migrated the asset profile data gathering to the queue design pattern
+- Improved the allocations page with no filtering
+- Harmonized the _No data available_ label in the portfolio proportion chart component
+- Improved the _FIRE_ calculator for the _Live Demo_
+- Simplified the about page
+- Upgraded `angular` from version `13.2.2` to `13.3.6`
+- Upgraded `Nx` from version `13.8.5` to `14.1.4`
+- Upgraded `storybook` from version `6.4.18` to `6.4.22`
+
+### Fixed
+
+- Eliminated the circular dependencies in the `@ghostfolio/common` library
+
+## 1.145.0 - 07.05.2022
+
+### Added
+
+- Added support for filtering by accounts on the allocations page
+- Added support for private equity
+- Extended the form to set the asset and asset sub class for (wealth) items
+
+### Changed
+
+- Refactored the filtering (activities table and allocations page)
+
+### Fixed
+
+- Fixed the tooltip update in the portfolio proportion chart component
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.144.0 - 30.04.2022
+
+### Added
+
+- Added support for commodities (via futures)
+- Added support for real estate
+
+### Changed
+
+- Improved the layout of the position detail dialog
+- Upgraded `yahoo-finance2` from version `2.3.1` to `2.3.2`
+
+### Fixed
+
+- Fixed the import validation for numbers equal 0
+- Fixed the color of the spinner in the activities filter component (dark mode)
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.143.0 - 26.04.2022
+
+### Changed
+
+- Improved the filtering by tags
+
+## 1.142.0 - 25.04.2022
+
+### Added
+
+- Added the tags to the create or edit transaction dialog
+- Added the tags to the position detail dialog
+
+### Changed
+
+- Changed the date to UTC in the data gathering service
+- Reused the value component in the users table of the admin control panel
+
+## 1.141.1 - 24.04.2022
+
+### Added
+
+- Added the database migration
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.141.0 - 24.04.2022
+
+### Added
+
+- Added a tagging system for activities
+
+### Changed
+
+- Extracted the activities table filter to a dedicated component
+- Changed the url of the _Get Started_ link to `https://ghostfol.io` on the public page
+- Simplified `@@id` using multiple fields with `@id` in the database schema of (`Access`, `Order`, `Subscription`)
+- Upgraded `prisma` from version `3.11.1` to `3.12.0`
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.140.2 - 22.04.2022
+
+### Added
+
+- Added support for sub-labels in the value component
+- Added a symbol profile overrides model for manual adjustments
+
+### Changed
+
+- Reused the value component in the _Ghostfolio in Numbers_ section of the about page
+- Persisted the savings rate in the _FIRE_ calculator
+- Upgraded `yahoo-finance2` from version `2.3.0` to `2.3.1`
+
+### Fixed
+
+- Fixed the calculation of the total value for sell and dividend activities in the create or edit transaction dialog
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.139.0 - 18.04.2022
+
+### Added
+
+- Added the total amount to the tooltip in the chart of the _FIRE_ calculator
+
+### Changed
+
+- Beautified the ETF names in the symbol profile
+
+### Fixed
+
+- Fixed an issue with changing the investment horizon in the chart of the _FIRE_ calculator
+- Fixed an issue with the end dates in the `.ics` file of the future activities (drafts) export
+- Fixed the data source of the _Fear & Greed Index_ (market mood)
+
+## 1.138.0 - 16.04.2022
+
+### Added
+
+- Added support to export a single future activity (draft) as an `.ics` file
+- Added the _Boringly Getting Rich_ guide to the resources section
+
+### Changed
+
+- Separated the deposit and savings in the chart of the _FIRE_ calculator
+
+## 1.137.0 - 15.04.2022
+
+### Added
+
+- Added support to export future activities (drafts) as an `.ics` file
+
+### Changed
+
+- Migrated the search functionality to `yahoo-finance2`
+
+### Fixed
+
+- Fixed an issue in the average price / investment calculation for sell activities
+
+## 1.136.0 - 13.04.2022
+
+### Changed
+
+- Changed the _Total_ label to _Total Assets_ in the portfolio summary tab on the home page
+
+### Fixed
+
+- Fixed an issue with the calculation of the projected total amount in the _FIRE_ calculator
+- Fixed an issue with the loading state of the _FIRE_ calculator
+
+## 1.135.0 - 10.04.2022
+
+### Added
+
+- Added a calculator to the _FIRE_ section
+- Added support for the cryptocurrency _Terra_ (`LUNA1-USD`)
+- Added support for the cryptocurrency _THORChain_ (`RUNE-USD`)
+
+## 1.134.0 - 09.04.2022
+
+### Changed
+
+- Switched to the new calculation engine
+- Improved the 4% rule in the _FIRE_ section
+- Changed the background of the header to a solid color
+
+## 1.133.0 - 07.04.2022
+
+### Changed
+
+- Improved the empty state of the portfolio proportion chart component
+
+### Fixed
+
+- Fixed an issue with dates in the value component
+
+## 1.132.1 - 06.04.2022
+
+### Fixed
+
+- Fixed an issue with percentages in the value component
+
+## 1.132.0 - 06.04.2022
+
+### Added
+
+- Added support for localization (date and number format) in user settings
+
+### Changed
+
+- Improved the label of the average price from _Ø Buy Price_ to _Average Unit Price_
+
+## 1.131.1 - 04.04.2022
+
+### Fixed
+
+- Fixed the missing API version in the _Stripe_ success callback url
+
+## 1.131.0 - 02.04.2022
+
+### Added
+
+- Added API versioning
+- Added more durations in the coupon system
+
+### Changed
+
+- Display the value in base currency in the accounts table on mobile
+- Display the value in base currency in the activities table on mobile
+- Renamed `orders` to `activities` in import and export functionality
+- Harmonized the algebraic sign of `currentGrossPerformancePercent` and `currentNetPerformancePercent` with `currentGrossPerformance` and `currentNetPerformance`
+- Improved the pricing page
+- Upgraded `prisma` from version `3.10.0` to `3.11.1`
+- Upgraded `yahoo-finance2` from version `2.2.0` to `2.3.0`
+
+## 1.130.0 - 30.03.2022
+
+### Added
+
+- Added a _FIRE_ (Financial Independence, Retire Early) section including the 4% rule
+- Added more durations in the coupon system
+
+### Fixed
+
+- Fixed an issue with the currency conversion (duplicate) in the account calculations
+
+## 1.129.0 - 26.03.2022
+
+### Added
+
+- Added the calculation for developed vs. emerging markets to the allocations page
+- Added a hover effect to the page tabs
+- Extended the feature overview page by _Bonds_ and _Emergency Fund_
+
+## 1.128.0 - 19.03.2022
+
+### Added
+
+- Added the attribute `defaultMarketPrice` to the scraper configuration to improve the support for bonds
+- Added a hover effect to the table style
+
+### Fixed
+
+- Fixed an issue with the user currency of the public page
+- Fixed an issue of the performance calculation with recent activities in the new calculation engine
+
+## 1.127.0 - 16.03.2022
+
+### Changed
+
+- Improved the error handling in the scraper configuration
+
+### Fixed
+
+- Fixed the support for multiple symbols of the data source `GHOSTFOLIO`
+
+## 1.126.0 - 14.03.2022
+
+### Added
+
+- Added support for bonds
+
+### Changed
+
+- Restructured the portfolio summary tab on the home page
+- Improved the tooltips in the portfolio proportion chart component by introducing multilines
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.125.0 - 12.03.2022
+
+### Added
+
+- Added support for an emergency fund
+- Added the contexts to the logger commands
+
+### Changed
+
+- Upgraded `Nx` from version `13.8.1` to `13.8.5`
+
+## 1.124.0 - 06.03.2022
+
+### Added
+
+- Added support for setting a duration in the coupon system
+
+### Changed
+
+- Upgraded `ngx-skeleton-loader` from version `2.9.1` to `5.0.0`
+- Upgraded `prisma` from version `3.9.1` to `3.10.0`
+- Upgraded `yahoo-finance2` from version `2.1.9` to `2.2.0`
+
+## 1.123.0 - 05.03.2022
+
+### Added
+
+- Included data provider errors in the API response
+
+### Changed
+
+- Removed the redundant attributes (`currency`, `dataSource`, `symbol`) of the activity model
+- Removed the prefix for symbols with the data source `GHOSTFOLIO`
+
+### Fixed
+
+- Improved the account calculations
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.122.0 - 01.03.2022
+
+### Added
+
+- Added support for click in the portfolio proportion chart component
+
+### Fixed
+
+- Fixed an issue with undefined currencies after creating an activity
+
+## 1.121.0 - 27.02.2022
+
+### Added
+
+- Added support for mutual funds
+- Added the url to the symbol profile model
+
+### Changed
+
+- Migrated from `yahoo-finance` to `yahoo-finance2`
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.120.0 - 25.02.2022
+
+### Changed
+
+- Distinguished the labels _Other_ and _Unknown_ in the portfolio proportion chart component
+- Improved the portfolio entry page
+
+### Fixed
+
+- Fixed the _Zen Mode_
+
+## 1.119.0 - 21.02.2022
+
+### Added
+
+- Added a trial for the subscription
+
+## 1.118.0 - 20.02.2022
+
+### Changed
+
+- Improved the calculation of the overall performance percentage in the new calculation engine
+- Displayed features in features overview page based on permissions
+- Extended the data points of historical data in the admin control panel
+
+## 1.117.0 - 19.02.2022
+
+### Changed
+
+- Moved the countries and sectors charts in the position detail dialog
+- Distinguished today's data point of historical data in the admin control panel
+- Restructured the server modules
+
+### Fixed
+
+- Fixed the allocations by account for non-unique account names
+- Added a fallback to the default account if the `accountId` is invalid in the import functionality for activities
+
+## 1.116.0 - 16.02.2022
+
+### Added
+
+- Added a service to tweet the current _Fear & Greed Index_ (market mood)
+
+### Changed
+
+- Improved the mobile layout of the position detail dialog (countries and sectors charts)
+
+### Fixed
+
+- Fixed the `maxItems` attribute of the portfolio proportion chart component
+- Fixed the time in market display of the portfolio summary tab on the home page
+
+## 1.115.0 - 13.02.2022
+
+### Added
+
+- Added a feature overview page
+- Added the asset and asset sub class to the position detail dialog
+- Added the countries and sectors to the position detail dialog
+
+### Changed
+
+- Upgraded `angular` from version `13.1.2` to `13.2.2`
+- Upgraded `Nx` from version `13.4.1` to `13.8.1`
+- Upgraded `storybook` from version `6.4.9` to `6.4.18`
+
+## 1.114.1 - 10.02.2022
+
+### Fixed
+
+- Fixed the creation of (wealth) items
+
+## 1.114.0 - 10.02.2022
+
+### Added
+
+- Added support for (wealth) items
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.113.0 - 09.02.2022
+
+### Changed
+
+- Improved the position of the currency column in the accounts table
+- Improved the position of the currency column in the activities table
+
+### Fixed
+
+- Fixed an issue with the performance calculation in connection with fees in the new calculation engine
+
+## 1.112.1 - 06.02.2022
+
+### Fixed
+
+- Fixed the creation of the user account (missing access token)
+
+## 1.112.0 - 06.02.2022
+
+### Added
+
+- Added the export functionality to the position detail dialog
+
+### Changed
+
+- Improved the export functionality for activities (respect filtering)
+- Removed the _Admin_ user from the database seeding
+- Assigned the role `ADMIN` on sign up (only if there is no admin yet)
+- Upgraded `prisma` from version `3.8.1` to `3.9.1`
+
+### Fixed
+
+- Fixed an issue with the performance calculation in connection with a sell activity in the new calculation engine
+- Fixed the horizontal overflow in the accounts table
+- Fixed the horizontal overflow in the activities table
+- Fixed the total value of the activities table in the position detail dialog (absolute value)
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.111.0 - 03.02.2022
+
+### Added
+
+- Added support for deleting symbol profile data in the admin control panel
+
+### Changed
+
+- Used `dataSource` and `symbol` from `SymbolProfile` instead of the `order` object (in `ExportService` and `PortfolioService`)
+
+### Fixed
+
+- Fixed the symbol selection of the 7d data gathering
+
+## 1.110.0 - 02.02.2022
+
+### Fixed
+
+- Fixed the data source of the _Fear & Greed Index_ (market mood)
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.109.0 - 01.02.2022
+
+### Added
+
+- Added support for the (optional) `accountId` in the import functionality for activities
+- Added support for the (optional) `dataSource` in the import functionality for activities
+- Added support for the data source transformation
+- Added support for the cryptocurrency _Mina Protocol_ (`MINA-USD`)
+
+### Changed
+
+- Improved the usability of the form in the create or edit transaction dialog
+- Improved the consistent use of `symbol` in combination with `dataSource`
+- Removed the primary data source from the client
+
+### Removed
+
+- Removed the unused endpoint `GET api/order/:id`
+
+## 1.108.0 - 27.01.2022
+
+### Changed
+
+- Improved the annualized performance in the new calculation engine
+- Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 90 days
+
+## 1.107.0 - 24.01.2022
+
+### Added
+
+- Added a new calculation engine (experimental)
+
+### Fixed
+
+- Fixed the styling in the footer row of the activities table
+
+## 1.106.0 - 23.01.2022
+
+### Added
+
+- Added the footer row with total fees and total value to the activities table
+
+### Changed
+
+- Extended the historical data view in the admin control panel
+- Upgraded _Stripe_ dependencies
+- Upgraded `prisma` from version `3.7.0` to `3.8.1`
+
+### Fixed
+
+- Improved the redirection on logout
+
+## 1.105.0 - 20.01.2022
+
+### Added
+
+- Added support for fetching multiple symbols in the `GOOGLE_SHEETS` data provider
+
+### Changed
+
+- Improved the data provider with grouping by data source and thereby reducing the number of requests
+
+### Fixed
+
+- Fixed the unresolved account names in the _X-ray_ section
+- Fixed the date conversion in the `GOOGLE_SHEETS` data provider
+
+## 1.104.0 - 16.01.2022
+
+### Fixed
+
+- Fixed the fallback to load currencies directly from the data provider
+- Fixed the missing symbol profile data connection in the import functionality for activities
+
+## 1.103.0 - 13.01.2022
+
+### Changed
+
+- Added links to the statistics section on the about page
+
+### Fixed
+
+- Fixed the currency of the value in the position detail dialog
+
+## 1.102.0 - 11.01.2022
+
+### Changed
+
+- Start eliminating `dataSource` from activity
+
+### Fixed
+
+- Fixed the support for multiple accounts with the same name
+- Fixed the preselected default account of the create activity dialog
+
+## 1.101.0 - 08.01.2022
+
+### Added
+
+- Added `GOOGLE_SHEETS` as a new data source type
+
+### Changed
+
+- Excluded the url pattern of shared portfolios in the `robots.txt` file
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.100.0 - 05.01.2022
+
+### Added
+
+- Added the _Top 3_ and _Bottom 3_ performers to the analysis page
+- Added a blog post
+
+### Fixed
+
+- Fixed the routing of the create activity dialog
+- Fixed the link color in the blog posts
+
+## 1.99.0 - 01.01.2022
+
+### Added
+
+- Exposed the profile data gathering by symbol as an endpoint
+
+### Changed
+
+- Improved the portfolio analysis page: show the y-axis and extend the chart in relation to the days in market
+- Restructured the about page
+- Start refactoring _transactions_ to _activities_
+- Refactored the demo user id
+- Upgraded `angular` from version `13.0.2` to `13.1.1`
+- Upgraded `chart.js` from version `3.5.0` to `3.7.0`
+- Upgraded `Nx` from version `13.3.0` to `13.4.1`
+
+### Fixed
+
+- Hid the data provider warning while loading
+- Fixed an exception with the market state caused by a failed data provider request
+- Fixed an exception in the portfolio position endpoint
+- Fixed the reload of the position detail dialog (with query parameters)
+- Fixed the missing mapping for Russia in the data enhancer for symbol profile data via _Trackinsight_
+
+## 1.98.0 - 29.12.2021
+
+### Added
+
+- Added the date range component to the holdings tab
+
+### Changed
+
+- Extended the statistics section on the about page (users in Slack community)
+
+### Fixed
+
+- Fixed the creation of historical data in the admin control panel (upsert instead of update)
+- Fixed the scrolling issue in the position detail dialog on mobile
+
+## 1.97.0 - 28.12.2021
+
+### Added
+
+- Added the transactions to the position detail dialog
+- Added support for dividend
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.96.0 - 27.12.2021
+
+### Changed
+
+- Made the data provider warning more discreet
+- Upgraded `http-status-codes` from version `2.1.4` to `2.2.0`
+- Upgraded `ngx-device-detector` from version `2.1.1` to `3.0.0`
+- Upgraded `ngx-markdown` from version `12.0.1` to `13.0.0`
+- Upgraded `ngx-stripe` from version `12.0.2` to `13.0.0`
+- Upgraded `prisma` from version `3.6.0` to `3.7.0`
+
+### Fixed
+
+- Fixed the file type detection in the import functionality for transactions
+
+## 1.95.0 - 26.12.2021
+
+### Added
+
+- Added a warning to the log if the data gathering fails
+
+### Fixed
+
+- Filtered potential `null` currencies
+- Improved the 7d data gathering optimization for currencies
+
+## 1.94.0 - 25.12.2021
+
+### Added
+
+- Added support for cryptocurrencies _Cosmos_ (`ATOM-USD`) and _Polkadot_ (`DOT-USD`)
+
+### Changed
+
+- Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 30 days
+- Made the import functionality for transactions by `csv` files more flexible
+- Optimized the 7d data gathering (only consider symbols with incomplete market data)
+- Upgraded `prettier` from version `2.3.2` to `2.5.1`
+
+## 1.93.0 - 21.12.2021
+
+### Added
+
+- Added support for the cryptocurrency _Solana_ (`SOL-USD`)
+- Extended the documentation for self-hosting with the [official Ghostfolio Docker image](https://hub.docker.com/r/ghostfolio/ghostfolio)
+
+### Fixed
+
+- Converted errors to warnings in portfolio calculator
+
+## 1.92.0 - 19.12.2021
+
+### Added
+
+- Added a line chart to the historical data view in the admin control panel
+- Supported the update of historical data in the admin control panel
+
+### Fixed
+
+- Improved the redirection on logout
+- Fixed the permission for the system status page
+
+## 1.91.0 - 18.12.2021
+
+### Changed
+
+- Removed the redundant all time high and all time low from the performance endpoint
+
+### Fixed
+
+- Fixed the symbol conversion from _Yahoo Finance_ including a hyphen
+- Fixed hidden values (`0`) in the statistics section on the about page
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.90.0 - 14.12.2021
+
+### Added
+
+- Extended the validation in the import functionality for transactions by checking the currency of the data provider service
+- Added support for cryptocurrency _Uniswap_
+- Set up pipeline for docker build
+
+### Changed
+
+- Removed the default transactions import limit
+- Improved the landing page in dark mode
+
+### Fixed
+
+- Fixed `/bin/sh: prisma: not found` in docker build
+- Added `apk` in `Dockerfile` (`python3 g++ make openssl`)
+
+## 1.89.0 - 11.12.2021
+
+### Added
+
+- Extended the data gathering by symbol endpoint with an optional date
+
+### Changed
+
+- Upgraded `Nx` from version `13.2.2` to `13.3.0`
+- Upgraded `storybook` from version `6.4.0-rc.3` to `6.4.9`
+
+## 1.88.0 - 09.12.2021
+
+### Added
+
+- Added a coupon system
+
+## 1.87.0 - 07.12.2021
+
+### Added
+
+- Supported the management of additional currencies in the admin control panel
+- Introduced the system message
+- Introduced the read only mode
+
+### Changed
+
+- Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 10 days
 - Upgraded `prisma` from version `2.30.2` to `3.6.0`
 
 ## 1.86.0 - 04.12.2021

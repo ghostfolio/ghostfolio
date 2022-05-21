@@ -1,25 +1,21 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getToday, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import * as bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
 
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse,
-  MarketState
-} from '../../interfaces/interfaces';
-import { DataProviderInterface } from '../interfaces/data-provider.interface';
-
 @Injectable()
 export class RakutenRapidApiService implements DataProviderInterface {
-  public static FEAR_AND_GREED_INDEX_NAME = 'Fear & Greed Index';
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService
@@ -29,50 +25,24 @@ export class RakutenRapidApiService implements DataProviderInterface {
     return !!this.configurationService.get('RAKUTEN_RAPID_API_KEY');
   }
 
-  public async get(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    try {
-      const symbol = aSymbols[0];
-
-      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
-        const fgi = await this.getFearAndGreedIndex();
-
-        return {
-          [ghostfolioFearAndGreedIndexSymbol]: {
-            currency: undefined,
-            dataSource: DataSource.RAKUTEN,
-            marketPrice: fgi.now.value,
-            marketState: MarketState.open,
-            name: RakutenRapidApiService.FEAR_AND_GREED_INDEX_NAME
-          }
-        };
-      }
-    } catch (error) {
-      Logger.error(error);
-    }
-
-    return {};
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
     try {
-      const symbol = aSymbols[0];
+      const symbol = aSymbol;
 
       if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
@@ -85,7 +55,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
-              dataSource: DataSource.RAKUTEN,
+              dataSource: this.getName(),
               date: subWeeks(getToday(), 1),
               marketPrice: fgi.oneWeekAgo.value
             }
@@ -94,7 +64,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
-              dataSource: DataSource.RAKUTEN,
+              dataSource: this.getName(),
               date: subMonths(getToday(), 1),
               marketPrice: fgi.oneMonthAgo.value
             }
@@ -103,7 +73,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
           await this.prismaService.marketData.create({
             data: {
               symbol,
-              dataSource: DataSource.RAKUTEN,
+              dataSource: this.getName(),
               date: subYears(getToday(), 1),
               marketPrice: fgi.oneYearAgo.value
             }
@@ -129,7 +99,36 @@ export class RakutenRapidApiService implements DataProviderInterface {
     return DataSource.RAKUTEN;
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+  public async getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    if (aSymbols.length <= 0) {
+      return {};
+    }
+
+    try {
+      const symbol = aSymbols[0];
+
+      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
+        const fgi = await this.getFearAndGreedIndex();
+
+        return {
+          [ghostfolioFearAndGreedIndexSymbol]: {
+            currency: undefined,
+            dataSource: this.getName(),
+            marketPrice: fgi.now.value,
+            marketState: 'open'
+          }
+        };
+      }
+    } catch (error) {
+      Logger.error(error, 'RakutenRapidApiService');
+    }
+
+    return {};
+  }
+
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
 
@@ -158,7 +157,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
       const { fgi } = await get();
       return fgi;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'RakutenRapidApiService');
 
       return undefined;
     }

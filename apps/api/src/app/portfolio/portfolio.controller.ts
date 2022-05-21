@@ -4,19 +4,23 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { baseCurrency } from '@ghostfolio/common/config';
+import { parseDate } from '@ghostfolio/common/helper';
 import {
+  Filter,
   PortfolioChart,
   PortfolioDetails,
-  PortfolioPerformance,
+  PortfolioInvestments,
+  PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
   Get,
@@ -25,12 +29,12 @@ import {
   Inject,
   Param,
   Query,
-  Res,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { ViewMode } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
@@ -48,48 +52,11 @@ export class PortfolioController {
     private readonly userService: UserService
   ) {}
 
-  @Get('investments')
-  @UseGuards(AuthGuard('jwt'))
-  public async findAll(
-    @Headers('impersonation-id') impersonationId,
-    @Res() res: Response
-  ): Promise<InvestmentItem[]> {
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
-    ) {
-      res.status(StatusCodes.FORBIDDEN);
-      return <any>res.json([]);
-    }
-
-    let investments = await this.portfolioService.getInvestments(
-      impersonationId
-    );
-
-    if (
-      impersonationId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      const maxInvestment = investments.reduce(
-        (investment, item) => Math.max(investment, item.investment),
-        1
-      );
-
-      investments = investments.map((item) => ({
-        date: item.date,
-        investment: item.investment / maxInvestment
-      }));
-    }
-
-    return <any>res.json(investments);
-  }
-
   @Get('chart')
   @UseGuards(AuthGuard('jwt'))
   public async getChart(
-    @Headers('impersonation-id') impersonationId,
-    @Query('range') range,
-    @Res() res: Response
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('range') range
   ): Promise<PortfolioChart> {
     const historicalDataContainer = await this.portfolioService.getChart(
       impersonationId,
@@ -98,17 +65,13 @@ export class PortfolioController {
 
     let chartData = historicalDataContainer.items;
 
-    let hasNullValue = false;
+    let hasError = false;
 
     chartData.forEach((chartDataItem) => {
       if (hasNotDefinedValuesInObject(chartDataItem)) {
-        hasNullValue = true;
+        hasError = true;
       }
     });
-
-    if (hasNullValue) {
-      res.status(StatusCodes.ACCEPTED);
-    }
 
     if (
       impersonationId ||
@@ -130,37 +93,61 @@ export class PortfolioController {
       });
     }
 
-    return <any>res.json({
+    return {
+      hasError,
       chart: chartData,
       isAllTimeHigh: historicalDataContainer.isAllTimeHigh,
       isAllTimeLow: historicalDataContainer.isAllTimeLow
-    });
+    };
   }
 
   @Get('details')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
-    @Headers('impersonation-id') impersonationId,
-    @Query('range') range,
-    @Res() res: Response
-  ): Promise<PortfolioDetails> {
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
-    ) {
-      res.status(StatusCodes.FORBIDDEN);
-      return <any>res.json({ accounts: {}, holdings: {} });
-    }
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('range') range?: DateRange,
+    @Query('tags') filterByTags?: string
+  ): Promise<PortfolioDetails & { hasError: boolean }> {
+    let hasError = false;
+
+    const accountIds = filterByAccounts?.split(',') ?? [];
+    const assetClasses = filterByAssetClasses?.split(',') ?? [];
+    const tagIds = filterByTags?.split(',') ?? [];
+
+    const filters: Filter[] = [
+      ...accountIds.map((accountId) => {
+        return <Filter>{
+          id: accountId,
+          type: 'ACCOUNT'
+        };
+      }),
+      ...assetClasses.map((assetClass) => {
+        return <Filter>{
+          id: assetClass,
+          type: 'ASSET_CLASS'
+        };
+      }),
+      ...tagIds.map((tagId) => {
+        return <Filter>{
+          id: tagId,
+          type: 'TAG'
+        };
+      })
+    ];
 
     const { accounts, holdings, hasErrors } =
       await this.portfolioService.getDetails(
         impersonationId,
         this.request.user.id,
-        range
+        range,
+        filters
       );
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
-      res.status(StatusCodes.ACCEPTED);
+      hasError = true;
     }
 
     if (
@@ -198,54 +185,91 @@ export class PortfolioController {
       }
     }
 
-    return <any>res.json({ accounts, holdings });
+    const isBasicUser =
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic';
+
+    return {
+      accounts,
+      hasError,
+      holdings: isBasicUser ? {} : holdings
+    };
+  }
+
+  @Get('investments')
+  @UseGuards(AuthGuard('jwt'))
+  public async getInvestments(
+    @Headers('impersonation-id') impersonationId: string
+  ): Promise<PortfolioInvestments> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    let investments = await this.portfolioService.getInvestments(
+      impersonationId
+    );
+
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
+      const maxInvestment = investments.reduce(
+        (investment, item) => Math.max(investment, item.investment),
+        1
+      );
+
+      investments = investments.map((item) => ({
+        date: item.date,
+        investment: item.investment / maxInvestment
+      }));
+    }
+
+    return { firstOrderDate: parseDate(investments[0]?.date), investments };
   }
 
   @Get('performance')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPerformance(
-    @Headers('impersonation-id') impersonationId,
-    @Query('range') range,
-    @Res() res: Response
-  ): Promise<PortfolioPerformance> {
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('range') range
+  ): Promise<PortfolioPerformanceResponse> {
     const performanceInformation = await this.portfolioService.getPerformance(
       impersonationId,
       range
     );
 
-    if (performanceInformation?.hasErrors) {
-      res.status(StatusCodes.ACCEPTED);
-    }
-
-    let performance = performanceInformation.performance;
     if (
       impersonationId ||
+      this.request.user.Settings.viewMode === ViewMode.ZEN ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      performance = nullifyValuesInObject(performance, [
-        'currentGrossPerformance',
-        'currentValue'
-      ]);
+      performanceInformation.performance = nullifyValuesInObject(
+        performanceInformation.performance,
+        ['currentGrossPerformance', 'currentValue']
+      );
     }
 
-    return <any>res.json(performance);
+    return performanceInformation;
   }
 
   @Get('positions')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
-    @Headers('impersonation-id') impersonationId,
-    @Query('range') range,
-    @Res() res: Response
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('range') range
   ): Promise<PortfolioPositions> {
     const result = await this.portfolioService.getPositions(
       impersonationId,
       range
     );
-
-    if (result?.hasErrors) {
-      res.status(StatusCodes.ACCEPTED);
-    }
 
     if (
       impersonationId ||
@@ -261,13 +285,12 @@ export class PortfolioController {
       });
     }
 
-    return <any>res.json(result);
+    return result;
   }
 
   @Get('public/:accessId')
   public async getPublic(
-    @Param('accessId') accessId,
-    @Res() res: Response
+    @Param('accessId') accessId
   ): Promise<PortfolioPublicDetails> {
     const access = await this.accessService.access({ id: accessId });
     const user = await this.userService.user({
@@ -275,8 +298,10 @@ export class PortfolioController {
     });
 
     if (!access) {
-      res.status(StatusCodes.NOT_FOUND);
-      return <any>res.json({ accounts: {}, holdings: {} });
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
     }
 
     let hasDetails = true;
@@ -313,6 +338,7 @@ export class PortfolioController {
           allocationCurrent: portfolioPosition.allocationCurrent,
           countries: hasDetails ? portfolioPosition.countries : [],
           currency: portfolioPosition.currency,
+          markets: portfolioPosition.markets,
           name: portfolioPosition.name,
           sectors: hasDetails ? portfolioPosition.sectors : [],
           value: portfolioPosition.value / totalValue
@@ -320,7 +346,7 @@ export class PortfolioController {
       }
     }
 
-    return <any>res.json(portfolioPublicDetails);
+    return portfolioPublicDetails;
   }
 
   @Get('summary')
@@ -328,6 +354,16 @@ export class PortfolioController {
   public async getSummary(
     @Headers('impersonation-id') impersonationId
   ): Promise<PortfolioSummary> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     let summary = await this.portfolioService.getSummary(impersonationId);
 
     if (
@@ -340,7 +376,10 @@ export class PortfolioController {
         'currentGrossPerformance',
         'currentNetPerformance',
         'currentValue',
+        'dividend',
+        'emergencyFund',
         'fees',
+        'items',
         'netWorth',
         'totalBuy',
         'totalSell'
@@ -350,13 +389,17 @@ export class PortfolioController {
     return summary;
   }
 
-  @Get('position/:symbol')
+  @Get('position/:dataSource/:symbol')
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @UseGuards(AuthGuard('jwt'))
   public async getPosition(
-    @Headers('impersonation-id') impersonationId,
+    @Headers('impersonation-id') impersonationId: string,
+    @Param('dataSource') dataSource,
     @Param('symbol') symbol
   ): Promise<PortfolioPositionDetail> {
     let position = await this.portfolioService.getPosition(
+      dataSource,
       impersonationId,
       symbol
     );
@@ -370,6 +413,7 @@ export class PortfolioController {
           'grossPerformance',
           'investment',
           'netPerformance',
+          'orders',
           'quantity',
           'value'
         ]);
@@ -387,19 +431,18 @@ export class PortfolioController {
   @Get('report')
   @UseGuards(AuthGuard('jwt'))
   public async getReport(
-    @Headers('impersonation-id') impersonationId,
-    @Res() res: Response
+    @Headers('impersonation-id') impersonationId: string
   ): Promise<PortfolioReport> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === 'Basic'
     ) {
-      res.status(StatusCodes.FORBIDDEN);
-      return <any>res.json({ rules: [] });
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
     }
 
-    return <any>(
-      res.json(await this.portfolioService.getReport(impersonationId))
-    );
+    return await this.portfolioService.getReport(impersonationId);
   }
 }

@@ -15,8 +15,9 @@
   "npmScope": "ghostfolio",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
+      "runner": "@nrwl/nx-cloud",
       "options": {
+        "accessToken": "Mjg0ZGQ2YjAtNGI4NS00NmYwLThhOWEtMWZmNmQzODM4YzU4fHJlYWQ=",
         "cacheableOperations": [
           "build",
           "lint",

@@ -3,11 +3,16 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
+import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource, Order as OrderModel } from '@prisma/client';
@@ -21,12 +26,13 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
 import { ImportTransactionDialog } from './import-transaction-dialog/import-transaction-dialog.component';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-transactions-page',
   styleUrls: ['./transactions-page.scss'],
   templateUrl: './transactions-page.html'
 })
 export class TransactionsPageComponent implements OnDestroy, OnInit {
+  public activities: Activity[];
   public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -34,10 +40,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public hasPermissionToDeleteOrder: boolean;
   public hasPermissionToImportOrders: boolean;
   public routeQueryParams: Subscription;
-  public transactions: OrderModel[];
   public user: User;
 
-  private primaryDataSource: DataSource;
   private unsubscribeSubject = new Subject<void>();
 
   /**
@@ -48,6 +52,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
+    private icsService: IcsService,
     private impersonationStorageService: ImpersonationStorageService,
     private importTransactionsService: ImportTransactionsService,
     private route: ActivatedRoute,
@@ -55,17 +60,14 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {
-    const { primaryDataSource } = this.dataService.fetchInfo();
-    this.primaryDataSource = primaryDataSource;
-
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['createDialog']) {
           this.openCreateTransactionDialog();
         } else if (params['editDialog']) {
-          if (this.transactions) {
-            const transaction = this.transactions.find(({ id }) => {
+          if (this.activities) {
+            const transaction = this.activities.find(({ id }) => {
               return id === params['transactionId'];
             });
 
@@ -73,6 +75,15 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
+        } else if (
+          params['dataSource'] &&
+          params['positionDetailDialog'] &&
+          params['symbol']
+        ) {
+          this.openPositionDialog({
+            dataSource: params['dataSource'],
+            symbol: params['symbol']
+          });
         }
       });
   }
@@ -83,11 +94,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     const { globalPermissions } = this.dataService.fetchInfo();
 
-    this.hasPermissionToImportOrders = hasPermission(
-      globalPermissions,
-      permissions.enableImport
-    );
-
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
@@ -95,26 +101,17 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+
+        this.hasPermissionToImportOrders =
+          hasPermission(globalPermissions, permissions.enableImport) &&
+          !this.hasImpersonationId;
       });
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
-          this.user = state.user;
-
-          this.defaultAccountId = this.user?.accounts.find((account) => {
-            return account.isDefault;
-          })?.id;
-
-          this.hasPermissionToCreateOrder = hasPermission(
-            this.user.permissions,
-            permissions.createOrder
-          );
-          this.hasPermissionToDeleteOrder = hasPermission(
-            this.user.permissions,
-            permissions.deleteOrder
-          );
+          this.updateUser(state.user);
 
           this.changeDetectorRef.markForCheck();
         }
@@ -127,10 +124,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchOrders()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.transactions = response;
+      .subscribe(({ activities }) => {
+        this.activities = activities;
 
-        if (this.transactions?.length <= 0) {
+        if (this.hasPermissionToCreateOrder && this.activities?.length <= 0) {
           this.router.navigate([], { queryParams: { createDialog: true } });
         }
 
@@ -138,8 +135,8 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCloneTransaction(aTransaction: OrderModel) {
-    this.openCreateTransactionDialog(aTransaction);
+  public onCloneTransaction(aActivity: Activity) {
+    this.openCreateTransactionDialog(aActivity);
   }
 
   public onDeleteTransaction(aId: string) {
@@ -153,19 +150,41 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onExport() {
+  public onExport(activityIds?: string[]) {
     this.dataService
-      .fetchExport()
+      .fetchExport(activityIds)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
-        this.downloadAsFile(
-          data,
-          `ghostfolio-export-${format(
+        for (const activity of data.activities) {
+          delete activity.id;
+        }
+
+        downloadAsFile({
+          content: data,
+          fileName: `ghostfolio-export-${format(
             parseISO(data.meta.date),
             'yyyyMMddHHmm'
           )}.json`,
-          'text/plain'
-        );
+          format: 'json'
+        });
+      });
+  }
+
+  public onExportDrafts(activityIds?: string[]) {
+    this.dataService
+      .fetchExport(activityIds)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        downloadAsFile({
+          content: this.icsService.transformActivitiesToIcsContent(
+            data.activities
+          ),
+          contentType: 'text/calendar',
+          fileName: `ghostfolio-draft${
+            data.activities.length > 1 ? 's' : ''
+          }-${format(parseISO(data.meta.date), 'yyyyMMddHHmmss')}.ics`,
+          format: 'string'
+        });
       });
   }
 
@@ -188,40 +207,52 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         const fileContent = readerEvent.target.result as string;
 
         try {
-          if (file.type === 'application/json') {
+          if (file.name.endsWith('.json')) {
             const content = JSON.parse(fileContent);
 
-            if (!isArray(content.orders)) {
-              throw new Error();
+            if (!isArray(content.activities)) {
+              if (isArray(content.orders)) {
+                this.handleImportError({
+                  activities: [],
+                  error: {
+                    error: {
+                      message: [`orders needs to be renamed to activities`]
+                    }
+                  }
+                });
+                return;
+              } else {
+                throw new Error();
+              }
             }
 
             try {
               await this.importTransactionsService.importJson({
-                content: content.orders,
-                defaultAccountId: this.defaultAccountId
+                content: content.activities
               });
 
               this.handleImportSuccess();
             } catch (error) {
-              this.handleImportError({ error, orders: content.orders });
+              console.error(error);
+              this.handleImportError({ error, activities: content.activities });
             }
 
             return;
-          } else if (file.type === 'text/csv') {
+          } else if (file.name.endsWith('.csv')) {
             try {
               await this.importTransactionsService.importCsv({
                 fileContent,
-                defaultAccountId: this.defaultAccountId,
-                primaryDataSource: this.primaryDataSource
+                userAccounts: this.user.accounts
               });
 
               this.handleImportSuccess();
             } catch (error) {
+              console.error(error);
               this.handleImportError({
+                activities: error?.activities ?? [],
                 error: {
                   error: { message: error?.error?.message ?? [error?.message] }
-                },
-                orders: error?.orders ?? []
+                }
               });
             }
 
@@ -230,9 +261,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
           throw new Error();
         } catch (error) {
+          console.error(error);
           this.handleImportError({
-            error: { error: { message: ['Unexpected format'] } },
-            orders: []
+            activities: [],
+            error: { error: { message: ['Unexpected format'] } }
           });
         }
       };
@@ -247,35 +279,13 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateTransactionDialog({
-    accountId,
-    currency,
-    dataSource,
-    date,
-    fee,
-    id,
-    quantity,
-    symbol,
-    type,
-    unitPrice
-  }: OrderModel): void {
+  public openUpdateTransactionDialog(activity: Activity): void {
     const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
       data: {
+        activity,
         accounts: this.user?.accounts?.filter((account) => {
           return account.accountType === 'SECURITIES';
         }),
-        transaction: {
-          accountId,
-          currency,
-          dataSource,
-          date,
-          fee,
-          id,
-          quantity,
-          symbol,
-          type,
-          unitPrice
-        },
         user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
@@ -286,7 +296,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data: any) => {
-        const transaction: UpdateOrderDto = data?.transaction;
+        const transaction: UpdateOrderDto = data?.activity;
 
         if (transaction) {
           this.dataService
@@ -308,26 +318,18 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private downloadAsFile(
-    aContent: unknown,
-    aFileName: string,
-    aContentType: string
-  ) {
-    const a = document.createElement('a');
-    const file = new Blob([JSON.stringify(aContent, undefined, '  ')], {
-      type: aContentType
-    });
-    a.href = URL.createObjectURL(file);
-    a.download = aFileName;
-    a.click();
-  }
-
-  private handleImportError({ error, orders }: { error: any; orders: any[] }) {
+  private handleImportError({
+    activities,
+    error
+  }: {
+    activities: any[];
+    error: any;
+  }) {
     this.snackBar.dismiss();
 
     this.dialog.open(ImportTransactionDialog, {
       data: {
-        orders,
+        activities,
         deviceType: this.deviceType,
         messages: error?.error?.message
       },
@@ -343,44 +345,107 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  private openCreateTransactionDialog(aTransaction?: OrderModel): void {
-    const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
-      data: {
-        accounts: this.user?.accounts?.filter((account) => {
-          return account.accountType === 'SECURITIES';
-        }),
-        transaction: {
-          accountId: aTransaction?.accountId ?? this.defaultAccountId,
-          currency: aTransaction?.currency ?? null,
-          dataSource: aTransaction?.dataSource ?? null,
-          date: new Date(),
-          fee: 0,
-          quantity: null,
-          symbol: aTransaction?.symbol ?? null,
-          type: aTransaction?.type ?? 'BUY',
-          unitPrice: null
-        },
-        user: this.user
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
+  private openCreateTransactionDialog(aActivity?: Activity): void {
+    this.userService
+      .get()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const transaction: CreateOrderDto = data?.transaction;
+      .subscribe((user) => {
+        this.updateUser(user);
 
-        if (transaction) {
-          this.dataService.postOrder(transaction).subscribe({
-            next: () => {
-              this.fetchOrders();
+        const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
+          data: {
+            accounts: this.user?.accounts?.filter((account) => {
+              return account.accountType === 'SECURITIES';
+            }),
+            activity: {
+              ...aActivity,
+              accountId: aActivity?.accountId ?? this.defaultAccountId,
+              date: new Date(),
+              id: null,
+              fee: 0,
+              quantity: null,
+              type: aActivity?.type ?? 'BUY',
+              unitPrice: null
+            },
+            user: this.user
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((data: any) => {
+            const transaction: CreateOrderDto = data?.activity;
+
+            if (transaction) {
+              this.dataService.postOrder(transaction).subscribe({
+                next: () => {
+                  this.fetchOrders();
+                }
+              });
             }
-          });
-        }
 
-        this.router.navigate(['.'], { relativeTo: this.route });
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
       });
+  }
+
+  private openPositionDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        this.updateUser(user);
+
+        const dialogRef = this.dialog.open(PositionDetailDialog, {
+          autoFocus: false,
+          data: <PositionDetailDialogParams>{
+            dataSource,
+            symbol,
+            baseCurrency: this.user?.settings?.baseCurrency,
+            deviceType: this.deviceType,
+            hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToReportDataGlitch: hasPermission(
+              this.user?.permissions,
+              permissions.reportDataGlitch
+            ),
+            locale: this.user?.settings?.locale
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
+      });
+  }
+
+  private updateUser(aUser: User) {
+    this.user = aUser;
+
+    this.defaultAccountId = this.user?.accounts.find((account) => {
+      return account.isDefault;
+    })?.id;
+
+    this.hasPermissionToCreateOrder = hasPermission(
+      this.user.permissions,
+      permissions.createOrder
+    );
+    this.hasPermissionToDeleteOrder = hasPermission(
+      this.user.permissions,
+      permissions.deleteOrder
+    );
   }
 }

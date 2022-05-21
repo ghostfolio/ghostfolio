@@ -1,9 +1,5 @@
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
@@ -29,7 +25,7 @@ export class AuthDeviceController {
   public async deleteAuthDevice(@Param('id') id: string): Promise<void> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.deleteAuthDevice
       )
     ) {

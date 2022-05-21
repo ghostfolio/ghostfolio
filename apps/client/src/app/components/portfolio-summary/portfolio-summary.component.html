@@ -2,7 +2,6 @@
   <div class="row px-3 py-1">
     <div class="d-flex flex-grow-1" i18n>Time in Market</div>
     <div class="d-flex justify-content-end">
-      {{ timeInMarket }}
       <gf-value class="justify-content-end" [value]="timeInMarket"></gf-value>
     </div>
   </div>
@@ -120,7 +119,7 @@
     <div class="col"><hr /></div>
   </div>
   <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Value</div>
+    <div class="d-flex flex-grow-1" i18n>Total Assets</div>
     <div class="d-flex flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
@@ -132,7 +131,38 @@
     </div>
   </div>
   <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Cash (Buying Power)</div>
+    <div class="d-flex flex-grow-1" i18n>Valuables</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.items"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Emergency Fund</div>
+    <div
+      class="align-items-center d-flex justify-content-end"
+      [ngClass]="{ 'cursor-pointer': hasPermissionToUpdateUserSettings }"
+      (click)="hasPermissionToUpdateUserSettings && onEditEmergencyFund()"
+    >
+      <ion-icon
+        *ngIf="hasPermissionToUpdateUserSettings && !isLoading"
+        class="mr-1 text-muted"
+        name="ellipsis-horizontal-circle-outline"
+      ></ion-icon>
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.emergencyFund"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Buying Power</div>
     <div class="d-flex justify-content-end">
       <gf-value
         class="justify-content-end"
@@ -166,6 +196,20 @@
         [isPercent]="true"
         [locale]="locale"
         [value]="isLoading ? undefined : summary?.annualizedPerformancePercent"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="row px-3 py-1">
+    <div class="d-flex flex-grow-1" i18n>Dividend</div>
+    <div class="d-flex justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [currency]="baseCurrency"
+        [locale]="locale"
+        [value]="isLoading ? undefined : summary?.dividend"
       ></gf-value>
     </div>
   </div>

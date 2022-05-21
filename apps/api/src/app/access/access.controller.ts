@@ -1,9 +1,5 @@
 import { Access } from '@ghostfolio/common/interfaces';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -66,10 +62,7 @@ export class AccessController {
     @Body() data: CreateAccessDto
   ): Promise<AccessModel> {
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.createAccess
-      )
+      !hasPermission(this.request.user.permissions, permissions.createAccess)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -85,11 +78,12 @@ export class AccessController {
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   public async deleteAccess(@Param('id') id: string): Promise<AccessModule> {
+    const access = await this.accessService.access({ id });
+
     if (
-      !hasPermission(
-        getPermissions(this.request.user.role),
-        permissions.deleteAccess
-      )
+      !hasPermission(this.request.user.permissions, permissions.deleteAccess) ||
+      !access ||
+      access.userId !== this.request.user.id
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -98,10 +92,7 @@ export class AccessController {
     }
 
     return this.accessService.deleteAccess({
-      id_userId: {
-        id,
-        userId: this.request.user.id
-      }
+      id
     });
   }
 }

@@ -8,9 +8,11 @@
         <mat-card-content>
           <gf-portfolio-summary
             [baseCurrency]="user?.settings?.baseCurrency"
+            [hasPermissionToUpdateUserSettings]="!hasImpersonationId && hasPermissionToUpdateUserSettings"
             [isLoading]="isLoading"
             [locale]="user?.settings?.locale"
             [summary]="summary"
+            (emergencyFundChanged)="onChangeEmergencyFund($event)"
           ></gf-portfolio-summary>
         </mat-card-content>
       </mat-card>

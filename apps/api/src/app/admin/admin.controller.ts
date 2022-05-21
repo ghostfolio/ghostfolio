@@ -1,21 +1,22 @@
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import {
+  DATA_GATHERING_QUEUE,
+  GATHER_ASSET_PROFILE_PROCESS
+} from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails
 } from '@ghostfolio/common/interfaces';
-import {
-  getPermissions,
-  hasPermission,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+import { InjectQueue } from '@nestjs/bull';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   Inject,
@@ -26,17 +27,22 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
+import { Queue } from 'bull';
+import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
+import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
 export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
+    @InjectQueue(DATA_GATHERING_QUEUE)
+    private readonly dataGatheringQueue: Queue,
     private readonly dataGatheringService: DataGatheringService,
-    private readonly propertyService: PropertyService,
+    private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -45,7 +51,7 @@ export class AdminController {
   public async getAdminData(): Promise<AdminData> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -63,7 +69,7 @@ export class AdminController {
   public async gatherMax(): Promise<void> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -73,10 +79,65 @@ export class AdminController {
       );
     }
 
-    await this.dataGatheringService.gatherProfileData();
-    this.dataGatheringService.gatherMax();
+    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    return;
+    for (const { dataSource, symbol } of uniqueAssets) {
+      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+        dataSource,
+        symbol
+      });
+    }
+
+    this.dataGatheringService.gatherMax();
+  }
+
+  @Post('gather/profile-data')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherProfileData(): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+
+    for (const { dataSource, symbol } of uniqueAssets) {
+      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+        dataSource,
+        symbol
+      });
+    }
+  }
+
+  @Post('gather/profile-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherProfileDataForSymbol(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
+      dataSource,
+      symbol
+    });
   }
 
   @Post('gather/:dataSource/:symbol')
@@ -87,7 +148,7 @@ export class AdminController {
   ): Promise<void> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -102,12 +163,16 @@ export class AdminController {
     return;
   }
 
-  @Post('gather/profile-data')
+  @Post('gather/:dataSource/:symbol/:dateString')
   @UseGuards(AuthGuard('jwt'))
-  public async gatherProfileData(): Promise<void> {
+  public async gatherSymbolForDate(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('dateString') dateString: string,
+    @Param('symbol') symbol: string
+  ): Promise<MarketData> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -117,9 +182,20 @@ export class AdminController {
       );
     }
 
-    this.dataGatheringService.gatherProfileData();
+    const date = new Date(dateString);
 
-    return;
+    if (!isDate(date)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    return this.dataGatheringService.gatherSymbolForDate({
+      dataSource,
+      date,
+      symbol
+    });
   }
 
   @Get('market-data')
@@ -127,7 +203,7 @@ export class AdminController {
   public async getMarketData(): Promise<AdminMarketData> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -140,14 +216,15 @@ export class AdminController {
     return this.adminService.getMarketData();
   }
 
-  @Get('market-data/:symbol')
+  @Get('market-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async getMarketDataBySymbol(
-    @Param('symbol') symbol
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
   ): Promise<AdminMarketDataDetails> {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {
@@ -157,7 +234,61 @@ export class AdminController {
       );
     }
 
-    return this.adminService.getMarketDataBySymbol(symbol);
+    return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
+  }
+
+  @Put('market-data/:dataSource/:symbol/:dateString')
+  @UseGuards(AuthGuard('jwt'))
+  public async update(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('dateString') dateString: string,
+    @Param('symbol') symbol: string,
+    @Body() data: UpdateMarketDataDto
+  ) {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const date = new Date(dateString);
+
+    return this.marketDataService.updateMarketData({
+      data: { ...data, dataSource },
+      where: {
+        date_symbol: {
+          date,
+          symbol
+        }
+      }
+    });
+  }
+
+  @Delete('profile-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteProfileData(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.deleteProfileData({ dataSource, symbol });
   }
 
   @Put('settings/:key')
@@ -168,7 +299,7 @@ export class AdminController {
   ) {
     if (
       !hasPermission(
-        getPermissions(this.request.user.role),
+        this.request.user.permissions,
         permissions.accessAdminControl
       )
     ) {

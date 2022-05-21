@@ -1,12 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { HistoricalDataItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
+import {
+  HistoricalDataItem,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { DataSource } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -19,7 +21,9 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
   public fearAndGreedIndex: number;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalData: HistoricalDataItem[];
+  public info: InfoItem;
   public isLoading = true;
+  public readonly numberOfDays = 90;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -32,6 +36,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
+    this.info = this.dataService.fetchInfo();
     this.isLoading = true;
 
     this.userService.stateChanged
@@ -48,8 +53,8 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
           if (this.hasPermissionToAccessFearAndGreedIndex) {
             this.dataService
               .fetchSymbolItem({
-                dataSource: DataSource.RAKUTEN,
-                includeHistoricalData: true,
+                dataSource: this.info.fearAndGreedDataSource,
+                includeHistoricalData: this.numberOfDays,
                 symbol: ghostfolioFearAndGreedIndexSymbol
               })
               .pipe(takeUntil(this.unsubscribeSubject))

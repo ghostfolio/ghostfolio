@@ -1,32 +1,28 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
+import { baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
-import * as bent from 'bent';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  SymbolProfile
+} from '@prisma/client';
 import Big from 'big.js';
 import { countries } from 'countries-list';
-import { format } from 'date-fns';
-import * as yahooFinance from 'yahoo-finance';
-
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse,
-  MarketState
-} from '../../interfaces/interfaces';
-import { DataProviderInterface } from '../interfaces/data-provider.interface';
-import {
-  IYahooFinanceHistoricalResponse,
-  IYahooFinancePrice,
-  IYahooFinanceQuoteResponse
-} from './interfaces/interfaces';
+import { addDays, format, isSameDay } from 'date-fns';
+import yahooFinance from 'yahoo-finance2';
+import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
-  private yahooFinanceHostname = 'https://query1.finance.yahoo.com';
-
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService
   ) {}
@@ -35,7 +31,166 @@ export class YahooFinanceService implements DataProviderInterface {
     return true;
   }
 
-  public async get(
+  public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
+    const symbol = aYahooFinanceSymbol.replace(
+      new RegExp(`-${baseCurrency}$`),
+      baseCurrency
+    );
+    return symbol.replace('=X', '');
+  }
+
+  /**
+   * Converts a symbol to a Yahoo Finance symbol
+   *
+   * Currency:        USDCHF  -> USDCHF=X
+   * Cryptocurrency:  BTCUSD  -> BTC-USD
+   *                  DOGEUSD -> DOGE-USD
+   */
+  public convertToYahooFinanceSymbol(aSymbol: string) {
+    if (aSymbol.includes(baseCurrency) && aSymbol.length >= 6) {
+      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
+        return `${aSymbol}=X`;
+      } else if (
+        this.cryptocurrencyService.isCryptocurrency(
+          aSymbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
+        )
+      ) {
+        // Add a dash before the last three characters
+        // BTCUSD  -> BTC-USD
+        // DOGEUSD -> DOGE-USD
+        // SOL1USD -> SOL1-USD
+        return aSymbol.replace(
+          new RegExp(`-?${baseCurrency}$`),
+          `-${baseCurrency}`
+        );
+      }
+    }
+
+    return aSymbol;
+  }
+
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    const response: Partial<SymbolProfile> = {};
+
+    try {
+      const symbol = this.convertToYahooFinanceSymbol(aSymbol);
+      const assetProfile = await yahooFinance.quoteSummary(symbol, {
+        modules: ['price', 'summaryProfile']
+      });
+
+      const { assetClass, assetSubClass } = this.parseAssetClass(
+        assetProfile.price
+      );
+
+      response.assetClass = assetClass;
+      response.assetSubClass = assetSubClass;
+      response.currency = assetProfile.price.currency;
+      response.dataSource = this.getName();
+      response.name = this.formatName({
+        longName: assetProfile.price.longName,
+        quoteType: assetProfile.price.quoteType,
+        shortName: assetProfile.price.shortName,
+        symbol: assetProfile.price.symbol
+      });
+      response.symbol = aSymbol;
+
+      if (
+        assetSubClass === AssetSubClass.STOCK &&
+        assetProfile.summaryProfile?.country
+      ) {
+        // Add country if asset is stock and country available
+
+        try {
+          const [code] = Object.entries(countries).find(([, country]) => {
+            return country.name === assetProfile.summaryProfile?.country;
+          });
+
+          if (code) {
+            response.countries = [{ code, weight: 1 }];
+          }
+        } catch {}
+
+        if (assetProfile.summaryProfile?.sector) {
+          response.sectors = [
+            { name: assetProfile.summaryProfile?.sector, weight: 1 }
+          ];
+        }
+      }
+
+      const url = assetProfile.summaryProfile?.website;
+      if (url) {
+        response.url = url;
+      }
+    } catch {}
+
+    return response;
+  }
+
+  public async getHistorical(
+    aSymbol: string,
+    aGranularity: Granularity = 'day',
+    from: Date,
+    to: Date
+  ): Promise<{
+    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+  }> {
+    if (isSameDay(from, to)) {
+      to = addDays(to, 1);
+    }
+
+    const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(aSymbol);
+
+    try {
+      const historicalResult = await yahooFinance.historical(
+        yahooFinanceSymbol,
+        {
+          interval: '1d',
+          period1: format(from, DATE_FORMAT),
+          period2: format(to, DATE_FORMAT)
+        }
+      );
+
+      const response: {
+        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      } = {};
+
+      // Convert symbol back
+      const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
+
+      response[symbol] = {};
+
+      for (const historicalItem of historicalResult) {
+        let marketPrice = historicalItem.close;
+
+        if (symbol === 'USDGBp') {
+          // Convert GPB to GBp (pence)
+          marketPrice = new Big(marketPrice).mul(100).toNumber();
+        }
+
+        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
+          marketPrice,
+          performance: historicalItem.open - historicalItem.close
+        };
+      }
+
+      return response;
+    } catch (error) {
+      Logger.warn(
+        `Skipping yahooFinance2.getHistorical("${aSymbol}"): [${error.name}] ${error.message}`,
+        'YahooFinanceService'
+      );
+
+      return {};
+    }
+  }
+
+  public getName(): DataSource {
+    return DataSource.YAHOO;
+  }
+
+  public async getQuotes(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
     if (aSymbols.length <= 0) {
@@ -48,232 +203,145 @@ export class YahooFinanceService implements DataProviderInterface {
     try {
       const response: { [symbol: string]: IDataProviderResponse } = {};
 
-      const data: {
-        [symbol: string]: IYahooFinanceQuoteResponse;
-      } = await yahooFinance.quote({
-        modules: ['price', 'summaryProfile'],
-        symbols: yahooFinanceSymbols
-      });
+      const quotes = await yahooFinance.quote(yahooFinanceSymbols);
 
-      for (const [yahooFinanceSymbol, value] of Object.entries(data)) {
+      for (const quote of quotes) {
         // Convert symbols back
-        const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
-
-        const { assetClass, assetSubClass } = this.parseAssetClass(value.price);
+        const symbol = this.convertFromYahooFinanceSymbol(quote.symbol);
 
         response[symbol] = {
-          assetClass,
-          assetSubClass,
-          currency: value.price?.currency,
-          dataSource: DataSource.YAHOO,
-          exchange: this.parseExchange(value.price?.exchangeName),
+          currency: quote.currency,
+          dataSource: this.getName(),
           marketState:
-            value.price?.marketState === 'REGULAR' ||
-            this.cryptocurrencyService.isCrypto(symbol)
-              ? MarketState.open
-              : MarketState.closed,
-          marketPrice: value.price?.regularMarketPrice || 0,
-          name: value.price?.longName || value.price?.shortName || symbol
+            quote.marketState === 'REGULAR' ||
+            this.cryptocurrencyService.isCryptocurrency(symbol)
+              ? 'open'
+              : 'closed',
+          marketPrice: quote.regularMarketPrice || 0
         };
 
-        if (value.price?.currency === 'GBp') {
-          // Convert GBp (pence) to GBP
-          response[symbol].currency = 'GBP';
-          response[symbol].marketPrice = new Big(
-            value.price?.regularMarketPrice ?? 0
-          )
-            .div(100)
-            .toNumber();
-        }
-
-        // Add country if stock and available
-        if (
-          assetSubClass === AssetSubClass.STOCK &&
-          value.summaryProfile?.country
-        ) {
-          try {
-            const [code] = Object.entries(countries).find(([, country]) => {
-              return country.name === value.summaryProfile?.country;
-            });
-
-            if (code) {
-              response[symbol].countries = [{ code, weight: 1 }];
-            }
-          } catch {}
-
-          if (value.summaryProfile?.sector) {
-            response[symbol].sectors = [
-              { name: value.summaryProfile?.sector, weight: 1 }
-            ];
-          }
-        }
-
-        // Add url if available
-        const url = value.summaryProfile?.website;
-        if (url) {
-          response[symbol].url = url;
-        }
-      }
-
-      return response;
-    } catch (error) {
-      Logger.error(error);
-
-      return {};
-    }
-  }
-
-  public async getHistorical(
-    aSymbols: string[],
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    const yahooFinanceSymbols = aSymbols.map((symbol) => {
-      return this.convertToYahooFinanceSymbol(symbol);
-    });
-
-    try {
-      const historicalData: {
-        [symbol: string]: IYahooFinanceHistoricalResponse[];
-      } = await yahooFinance.historical({
-        symbols: yahooFinanceSymbols,
-        from: format(from, DATE_FORMAT),
-        to: format(to, DATE_FORMAT)
-      });
-
-      const response: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-      } = {};
-
-      for (const [yahooFinanceSymbol, timeSeries] of Object.entries(
-        historicalData
-      )) {
-        // Convert symbols back
-        const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
-        response[symbol] = {};
-
-        timeSeries.forEach((timeSerie) => {
-          response[symbol][format(timeSerie.date, DATE_FORMAT)] = {
-            marketPrice: timeSerie.close,
-            performance: timeSerie.open - timeSerie.close
+        if (symbol === 'USDGBP' && yahooFinanceSymbols.includes('USDGBp=X')) {
+          // Convert GPB to GBp (pence)
+          response['USDGBp'] = {
+            ...response[symbol],
+            currency: 'GBp',
+            marketPrice: new Big(response[symbol].marketPrice)
+              .mul(100)
+              .toNumber()
           };
-        });
+        }
       }
 
       return response;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'YahooFinanceService');
 
       return {};
     }
   }
 
-  public getName(): DataSource {
-    return DataSource.YAHOO;
-  }
-
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const items: LookupItem[] = [];
 
     try {
-      const get = bent(
-        `${this.yahooFinanceHostname}/v1/finance/search?q=${aSymbol}&lang=en-US&region=US&quotesCount=8&newsCount=0&enableFuzzyQuery=false&quotesQueryId=tss_match_phrase_query&multiQuoteQueryId=multi_quote_single_token_query&newsQueryId=news_cie_vespa&enableCb=true&enableNavLinks=false&enableEnhancedTrivialQuery=true`,
-        'GET',
-        'json',
-        200
-      );
+      const searchResult = await yahooFinance.search(aQuery);
 
-      const searchResult = await get();
-
-      const symbols: string[] = searchResult.quotes
+      const quotes = searchResult.quotes
         .filter((quote) => {
-          // filter out undefined symbols
+          // Filter out undefined symbols
           return quote.symbol;
         })
         .filter(({ quoteType, symbol }) => {
           return (
             (quoteType === 'CRYPTOCURRENCY' &&
-              this.cryptocurrencyService.isCrypto(
-                symbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
+              this.cryptocurrencyService.isCryptocurrency(
+                symbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
               )) ||
-            quoteType === 'EQUITY' ||
-            quoteType === 'ETF'
+            ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'].includes(quoteType)
           );
         })
         .filter(({ quoteType, symbol }) => {
           if (quoteType === 'CRYPTOCURRENCY') {
-            // Only allow cryptocurrencies in USD to avoid having redundancy in the database.
-            // Trades need to be converted manually before to USD (or a UI converter needs to be developed)
-            return symbol.includes('USD');
+            // Only allow cryptocurrencies in base currency to avoid having redundancy in the database.
+            // Transactions need to be converted manually to the base currency before
+            return symbol.includes(baseCurrency);
+          } else if (quoteType === 'FUTURE') {
+            // Allow GC=F, but not MGC=F
+            return symbol.length === 4;
           }
 
           return true;
-        })
-        .map(({ symbol }) => {
-          return symbol;
         });
 
-      const marketData = await this.get(symbols);
+      const marketData = await yahooFinance.quote(
+        quotes.map(({ symbol }) => {
+          return symbol;
+        })
+      );
 
-      for (const [symbol, value] of Object.entries(marketData)) {
+      for (const marketDataItem of marketData) {
+        const quote = quotes.find((currentQuote) => {
+          return currentQuote.symbol === marketDataItem.symbol;
+        });
+
+        const symbol = this.convertFromYahooFinanceSymbol(
+          marketDataItem.symbol
+        );
+
         items.push({
           symbol,
-          currency: value.currency,
-          dataSource: DataSource.YAHOO,
-          name: value.name
+          currency: marketDataItem.currency,
+          dataSource: this.getName(),
+          name: this.formatName({
+            longName: quote.longname,
+            quoteType: quote.quoteType,
+            shortName: quote.shortname,
+            symbol: quote.symbol
+          })
         });
       }
-    } catch {}
+    } catch (error) {
+      Logger.error(error, 'YahooFinanceService');
+    }
 
     return { items };
   }
 
-  private convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
-    const symbol = aYahooFinanceSymbol.replace('-', '');
-    return symbol.replace('=X', '');
-  }
+  private formatName({
+    longName,
+    quoteType,
+    shortName,
+    symbol
+  }: {
+    longName: Price['longName'];
+    quoteType: Price['quoteType'];
+    shortName: Price['shortName'];
+    symbol: Price['symbol'];
+  }) {
+    let name = longName;
 
-  /**
-   * Converts a symbol to a Yahoo Finance symbol
-   *
-   * Currency:        USDCHF  -> USDCHF=X
-   * Cryptocurrency:  BTCUSD  -> BTC-USD
-   *                  DOGEUSD -> DOGE-USD
-   *                  SOL1USD -> SOL1-USD
-   */
-  private convertToYahooFinanceSymbol(aSymbol: string) {
-    if (
-      (aSymbol.includes('CHF') ||
-        aSymbol.includes('EUR') ||
-        aSymbol.includes('USD')) &&
-      aSymbol.length >= 6
-    ) {
-      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
-        return `${aSymbol}=X`;
-      } else if (
-        this.cryptocurrencyService.isCrypto(
-          aSymbol.replace(new RegExp('-USD$'), 'USD').replace('1', '')
-        )
-      ) {
-        // Add a dash before the last three characters
-        // BTCUSD  -> BTC-USD
-        // DOGEUSD -> DOGE-USD
-        // SOL1USD -> SOL1-USD
-        return aSymbol.replace(new RegExp('-?USD$'), '-USD');
-      }
+    if (name) {
+      name = name.replace('iShares ETF (CH) - ', '');
+      name = name.replace('iShares III Public Limited Company - ', '');
+      name = name.replace('iShares VI Public Limited Company - ', '');
+      name = name.replace('iShares VII PLC - ', '');
+      name = name.replace('Multi Units Luxembourg - ', '');
+      name = name.replace('VanEck ETFs N.V. - ', '');
+      name = name.replace('Vaneck Vectors Ucits Etfs Plc - ', '');
+      name = name.replace('Vanguard Funds Public Limited Company - ', '');
+      name = name.replace('Vanguard Index Funds - ', '');
+      name = name.replace('Xtrackers (IE) Plc - ', '');
     }
 
-    return aSymbol;
+    if (quoteType === 'FUTURE') {
+      // "Gold Jun 22" -> "Gold"
+      name = shortName?.slice(0, -6);
+    }
+
+    return name || shortName || symbol;
   }
 
-  private parseAssetClass(aPrice: IYahooFinancePrice): {
+  private parseAssetClass(aPrice: Price): {
     assetClass: AssetClass;
     assetSubClass: AssetSubClass;
   } {
@@ -293,16 +361,26 @@ export class YahooFinanceService implements DataProviderInterface {
         assetClass = AssetClass.EQUITY;
         assetSubClass = AssetSubClass.ETF;
         break;
+      case 'future':
+        assetClass = AssetClass.COMMODITY;
+        assetSubClass = AssetSubClass.COMMODITY;
+
+        if (
+          aPrice?.shortName?.toLowerCase()?.startsWith('gold') ||
+          aPrice?.shortName?.toLowerCase()?.startsWith('palladium') ||
+          aPrice?.shortName?.toLowerCase()?.startsWith('platinum') ||
+          aPrice?.shortName?.toLowerCase()?.startsWith('silver')
+        ) {
+          assetSubClass = AssetSubClass.PRECIOUS_METAL;
+        }
+
+        break;
+      case 'mutualfund':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.MUTUALFUND;
+        break;
     }
 
     return { assetClass, assetSubClass };
-  }
-
-  private parseExchange(aString: string): string {
-    if (aString?.toLowerCase() === 'ccc') {
-      return UNKNOWN_KEY;
-    }
-
-    return aString;
   }
 }

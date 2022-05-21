@@ -1,12 +1,44 @@
 import * as currencies from '@dinero.js/currencies';
+import { DataSource } from '@prisma/client';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
-import { ghostfolioScraperApiSymbolPrefix } from './config';
-
-export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
+import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
+}
+
+export function decodeDataSource(encodedDataSource: string) {
+  return Buffer.from(encodedDataSource, 'hex').toString();
+}
+
+export function downloadAsFile({
+  content,
+  contentType = 'text/plain',
+  fileName,
+  format
+}: {
+  content: unknown;
+  contentType?: string;
+  fileName: string;
+  format: 'json' | 'string';
+}) {
+  const a = document.createElement('a');
+
+  if (format === 'json') {
+    content = JSON.stringify(content, undefined, '  ');
+  }
+
+  const file = new Blob([<string>content], {
+    type: contentType
+  });
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
+}
+
+export function encodeDataSource(aDataSource: DataSource) {
+  return Buffer.from(aDataSource, 'utf-8').toString('hex');
 }
 
 export function getBackgroundColor() {
@@ -21,6 +53,49 @@ export function getCssVariable(aCssVariable: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(
     aCssVariable
   );
+}
+
+export function getDateFormatString(aLocale?: string) {
+  const formatObject = new Intl.DateTimeFormat(aLocale).formatToParts(
+    new Date()
+  );
+
+  return formatObject
+    .map((object) => {
+      switch (object.type) {
+        case 'day':
+          return 'dd';
+        case 'month':
+          return 'MM';
+        case 'year':
+          return 'yyyy';
+        default:
+          return object.value;
+      }
+    })
+    .join('');
+}
+
+export function getLocale() {
+  return navigator.languages?.length
+    ? navigator.languages[0]
+    : navigator.language ?? locale;
+}
+
+export function getNumberFormatDecimal(aLocale?: string) {
+  const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
+
+  return formatObject.find((object) => {
+    return object.type === 'decimal';
+  }).value;
+}
+
+export function getNumberFormatGroup(aLocale?: string) {
+  const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
+
+  return formatObject.find((object) => {
+    return object.type === 'group';
+  }).value;
 }
 
 export function getTextColor() {
@@ -81,10 +156,6 @@ export function isCurrency(aSymbol = '') {
   return currencies[aSymbol];
 }
 
-export function isGhostfolioScraperApiSymbol(aSymbol = '') {
-  return aSymbol.startsWith(ghostfolioScraperApiSymbolPrefix);
-}
-
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);
@@ -115,4 +186,8 @@ export function parseDate(date: string) {
 
 export function prettifySymbol(aSymbol: string): string {
   return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
+}
+
+export function transformTickToAbbreviation(value: number) {
+  return value < 1000000 ? `${value / 1000}K` : `${value / 1000000}M`;
 }

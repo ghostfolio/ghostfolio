@@ -18,6 +18,7 @@ import { PortfolioService } from './portfolio.service';
 import { RulesService } from './rules.service';
 
 @Module({
+  controllers: [PortfolioController],
   exports: [PortfolioService],
   imports: [
     AccessModule,
@@ -32,7 +33,6 @@ import { RulesService } from './rules.service';
     SymbolProfileModule,
     UserModule
   ],
-  controllers: [PortfolioController],
   providers: [
     AccountService,
     CurrentRateService,

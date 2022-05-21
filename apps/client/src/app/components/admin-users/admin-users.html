@@ -5,7 +5,7 @@
         <table class="gf-table">
           <thead>
             <tr class="mat-header-row">
-              <th class="mat-header-cell px-1 py-2 text-right" i18n>#</th>
+              <th class="mat-header-cell px-1 py-2 text-right">#</th>
               <th class="mat-header-cell px-1 py-2" i18n>User</th>
               <th class="mat-header-cell px-1 py-2 text-right" i18n>
                 Registration
@@ -14,12 +14,12 @@
                 Accounts
               </th>
               <th class="mat-header-cell px-1 py-2 text-right" i18n>
-                Transactions
+                Activities
               </th>
               <th class="mat-header-cell px-1 py-2 text-right" i18n>
                 Engagement per Day
               </th>
-              <th class="mat-header-cell px-1 py-2" i18n>Last Activitiy</th>
+              <th class="mat-header-cell px-1 py-2" i18n>Last Request</th>
               <th class="mat-header-cell px-1 py-2"></th>
             </tr>
           </thead>
@@ -45,14 +45,27 @@
               <td class="mat-cell px-1 py-2 text-right">
                 {{ formatDistanceToNow(userItem.createdAt) }}
               </td>
-              <td class="mat-cell px-1 py-2 text-right">
-                {{ userItem.accountCount }}
+              <td class="mat-cell px-1 py-2">
+                <gf-value
+                  class="align-items-end"
+                  [locale]="user?.settings?.locale"
+                  [value]="userItem.accountCount"
+                ></gf-value>
               </td>
-              <td class="mat-cell px-1 py-2 text-right">
-                {{ userItem.transactionCount }}
+              <td class="mat-cell px-1 py-2">
+                <gf-value
+                  class="align-items-end"
+                  [locale]="user?.settings?.locale"
+                  [value]="userItem.transactionCount"
+                ></gf-value>
               </td>
-              <td class="mat-cell px-1 py-2 text-right">
-                {{ userItem.engagement | number: '1.0-0' }}
+              <td class="mat-cell px-1 py-2">
+                <gf-value
+                  class="align-items-end"
+                  [locale]="user?.settings?.locale"
+                  [precision]="0"
+                  [value]="userItem.engagement"
+                ></gf-value>
               </td>
               <td class="mat-cell px-1 py-2">
                 {{ formatDistanceToNow(userItem.lastActivity) }}
@@ -68,12 +81,12 @@
                 </button>
                 <mat-menu #accountMenu="matMenu" xPosition="before">
                   <button
-                    i18n
                     mat-menu-item
                     [disabled]="userItem.id === user?.id"
                     (click)="onDeleteUser(userItem.id)"
                   >
-                    Delete
+                    <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                    <span i18n>Delete</span>
                   </button>
                 </mat-menu>
               </td>

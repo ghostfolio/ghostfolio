@@ -6,9 +6,15 @@ import { Injectable } from '@nestjs/common';
 export class PropertyService {
   public constructor(private readonly prismaService: PrismaService) {}
 
+  public async delete({ key }: { key: string }) {
+    return this.prismaService.property.delete({
+      where: { key }
+    });
+  }
+
   public async get() {
     const response: {
-      [key: string]: object | string | string[];
+      [key: string]: boolean | object | string | string[];
     } = {
       [PROPERTY_CURRENCIES]: []
     };

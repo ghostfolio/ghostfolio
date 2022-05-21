@@ -10,6 +10,13 @@ const routes: Routes = [
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   },
   {
+    path: 'about/changelog',
+    loadChildren: () =>
+      import('./pages/about/changelog/changelog-page.module').then(
+        (m) => m.ChangelogPageModule
+      )
+  },
+  {
     path: 'account',
     loadChildren: () =>
       import('./pages/account/account-page.module').then(
@@ -34,6 +41,11 @@ const routes: Routes = [
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
   },
   {
+    path: 'blog',
+    loadChildren: () =>
+      import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
+  },
+  {
     path: 'de/blog/2021/07/hallo-ghostfolio',
     loadChildren: () =>
       import(
@@ -46,6 +58,20 @@ const routes: Routes = [
       import(
         './pages/blog/2021/07/hello-ghostfolio/hello-ghostfolio-page.module'
       ).then((m) => m.HelloGhostfolioPageModule)
+  },
+  {
+    path: 'en/blog/2022/01/ghostfolio-first-months-in-open-source',
+    loadChildren: () =>
+      import(
+        './pages/blog/2022/01/first-months-in-open-source/first-months-in-open-source-page.module'
+      ).then((m) => m.FirstMonthsInOpenSourcePageModule)
+  },
+  {
+    path: 'features',
+    loadChildren: () =>
+      import('./pages/features/features-page.module').then(
+        (m) => m.FeaturesPageModule
+      )
   },
   {
     path: 'home',
@@ -67,6 +93,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'portfolio/activities',
+    loadChildren: () =>
+      import('./pages/portfolio/transactions/transactions-page.module').then(
+        (m) => m.TransactionsPageModule
+      )
+  },
+  {
     path: 'portfolio/allocations',
     loadChildren: () =>
       import('./pages/portfolio/allocations/allocations-page.module').then(
@@ -81,17 +114,17 @@ const routes: Routes = [
       )
   },
   {
+    path: 'portfolio/fire',
+    loadChildren: () =>
+      import('./pages/portfolio/fire/fire-page.module').then(
+        (m) => m.FirePageModule
+      )
+  },
+  {
     path: 'portfolio/report',
     loadChildren: () =>
       import('./pages/portfolio/report/report-page.module').then(
         (m) => m.ReportPageModule
-      )
-  },
-  {
-    path: 'portfolio/transactions',
-    loadChildren: () =>
-      import('./pages/portfolio/transactions/transactions-page.module').then(
-        (m) => m.TransactionsPageModule
       )
   },
   {

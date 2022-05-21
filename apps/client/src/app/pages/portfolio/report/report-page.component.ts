@@ -1,11 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { PortfolioReportRule, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-report-page',
   styleUrls: ['./report-page.scss'],
   templateUrl: './report-page.html'
@@ -14,6 +16,8 @@ export class ReportPageComponent implements OnDestroy, OnInit {
   public accountClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public feeRules: PortfolioReportRule[];
+  public hasPermissionToCreateOrder: boolean;
+  public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -22,7 +26,8 @@ export class ReportPageComponent implements OnDestroy, OnInit {
    */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
+    private dataService: DataService,
+    private userService: UserService
   ) {}
 
   /**
@@ -40,6 +45,21 @@ export class ReportPageComponent implements OnDestroy, OnInit {
         this.feeRules = portfolioReport.rules['fees'] || null;
 
         this.changeDetectorRef.markForCheck();
+      });
+
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.hasPermissionToCreateOrder = hasPermission(
+            this.user.permissions,
+            permissions.createOrder
+          );
+
+          this.changeDetectorRef.markForCheck();
+        }
       });
   }
 

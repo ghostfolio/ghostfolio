@@ -1,43 +1,28 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import { Position, User } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import { differenceInDays } from 'date-fns';
+import { sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-analysis-page',
   styleUrls: ['./analysis-page.scss'],
   templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
-  public accounts: {
-    [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
-  };
-  public continents: {
-    [code: string]: { name: string; value: number };
-  };
-  public countries: {
-    [code: string]: { name: string; value: number };
-  };
+  public bottom3: Position[];
+  public daysInMarket: number;
   public deviceType: string;
   public hasImpersonationId: boolean;
-  public period = 'current';
-  public periodOptions: ToggleOption[] = [
-    { label: 'Initial', value: 'original' },
-    { label: 'Current', value: 'current' }
-  ];
   public investments: InvestmentItem[];
-  public portfolioPositions: { [symbol: string]: PortfolioPosition };
-  public positions: { [symbol: string]: any };
-  public sectors: {
-    [name: string]: { name: string; value: number };
-  };
+  public top3: Position[];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -69,8 +54,29 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchInvestments()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.investments = response;
+      .subscribe(({ firstOrderDate, investments }) => {
+        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
+        this.investments = investments;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
+      .fetchPositions({ range: 'max' })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ positions }) => {
+        const positionsSorted = sortBy(
+          positions,
+          'netPerformancePercentage'
+        ).reverse();
+
+        this.top3 = positionsSorted.slice(0, 3);
+
+        if (positions?.length > 3) {
+          this.bottom3 = positionsSorted.slice(-3).reverse();
+        } else {
+          this.bottom3 = [];
+        }
 
         this.changeDetectorRef.markForCheck();
       });

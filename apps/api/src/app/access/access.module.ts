@@ -1,4 +1,4 @@
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { Module } from '@nestjs/common';
 
 import { AccessController } from './access.controller';
@@ -7,7 +7,7 @@ import { AccessService } from './access.service';
 @Module({
   controllers: [AccessController],
   exports: [AccessService],
-  imports: [],
-  providers: [AccessService, PrismaService]
+  imports: [PrismaModule],
+  providers: [AccessService]
 })
 export class AccessModule {}

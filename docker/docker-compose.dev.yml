@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:12
+    container_name: postgres
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  redis:
+    image: 'redis:alpine'
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+
+volumes:
+  postgres:

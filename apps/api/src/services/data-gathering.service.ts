@@ -1,10 +1,10 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   PROPERTY_LAST_DATA_GATHERING,
-  PROPERTY_LOCKED_DATA_GATHERING,
-  ghostfolioFearAndGreedIndexSymbol
+  PROPERTY_LOCKED_DATA_GATHERING
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import {
@@ -17,7 +17,6 @@ import {
   subDays
 } from 'date-fns';
 
-import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from './exchange-rate-data.service';
@@ -29,7 +28,6 @@ export class DataGatheringService {
   private dataGatheringProgress: number;
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
     private readonly dataProviderService: DataProviderService,
@@ -42,7 +40,7 @@ export class DataGatheringService {
     const isDataGatheringNeeded = await this.isDataGatheringNeeded();
 
     if (isDataGatheringNeeded) {
-      Logger.log('7d data gathering has been started.');
+      Logger.log('7d data gathering has been started.', 'DataGatheringService');
       console.time('data-gathering-7d');
 
       await this.prismaService.property.create({
@@ -66,7 +64,7 @@ export class DataGatheringService {
           where: { key: PROPERTY_LAST_DATA_GATHERING }
         });
       } catch (error) {
-        Logger.error(error);
+        Logger.error(error, 'DataGatheringService');
       }
 
       await this.prismaService.property.delete({
@@ -75,7 +73,10 @@ export class DataGatheringService {
         }
       });
 
-      Logger.log('7d data gathering has been completed.');
+      Logger.log(
+        '7d data gathering has been completed.',
+        'DataGatheringService'
+      );
       console.timeEnd('data-gathering-7d');
     }
   }
@@ -86,7 +87,10 @@ export class DataGatheringService {
     });
 
     if (!isDataGatheringLocked) {
-      Logger.log('Max data gathering has been started.');
+      Logger.log(
+        'Max data gathering has been started.',
+        'DataGatheringService'
+      );
       console.time('data-gathering-max');
 
       await this.prismaService.property.create({
@@ -110,7 +114,7 @@ export class DataGatheringService {
           where: { key: PROPERTY_LAST_DATA_GATHERING }
         });
       } catch (error) {
-        Logger.error(error);
+        Logger.error(error, 'DataGatheringService');
       }
 
       await this.prismaService.property.delete({
@@ -119,24 +123,24 @@ export class DataGatheringService {
         }
       });
 
-      Logger.log('Max data gathering has been completed.');
+      Logger.log(
+        'Max data gathering has been completed.',
+        'DataGatheringService'
+      );
       console.timeEnd('data-gathering-max');
     }
   }
 
-  public async gatherSymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public async gatherSymbol({ dataSource, symbol }: UniqueAsset) {
     const isDataGatheringLocked = await this.prismaService.property.findUnique({
       where: { key: PROPERTY_LOCKED_DATA_GATHERING }
     });
 
     if (!isDataGatheringLocked) {
-      Logger.log(`Symbol data gathering for ${symbol} has been started.`);
+      Logger.log(
+        `Symbol data gathering for ${symbol} has been started.`,
+        'DataGatheringService'
+      );
       console.time('data-gathering-symbol');
 
       await this.prismaService.property.create({
@@ -167,7 +171,7 @@ export class DataGatheringService {
           where: { key: PROPERTY_LAST_DATA_GATHERING }
         });
       } catch (error) {
-        Logger.error(error);
+        Logger.error(error, 'DataGatheringService');
       }
 
       await this.prismaService.property.delete({
@@ -176,41 +180,96 @@ export class DataGatheringService {
         }
       });
 
-      Logger.log(`Symbol data gathering for ${symbol} has been completed.`);
+      Logger.log(
+        `Symbol data gathering for ${symbol} has been completed.`,
+        'DataGatheringService'
+      );
       console.timeEnd('data-gathering-symbol');
     }
   }
 
-  public async gatherProfileData(aDataGatheringItems?: IDataGatheringItem[]) {
-    Logger.log('Profile data gathering has been started.');
-    console.time('data-gathering-profile');
+  public async gatherSymbolForDate({
+    dataSource,
+    date,
+    symbol
+  }: {
+    dataSource: DataSource;
+    date: Date;
+    symbol: string;
+  }) {
+    try {
+      const historicalData = await this.dataProviderService.getHistoricalRaw(
+        [{ dataSource, symbol }],
+        date,
+        date
+      );
 
-    let dataGatheringItems = aDataGatheringItems;
+      const marketPrice =
+        historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
 
-    if (!dataGatheringItems) {
-      dataGatheringItems = await this.getSymbolsProfileData();
+      if (marketPrice) {
+        return await this.prismaService.marketData.upsert({
+          create: {
+            dataSource,
+            date,
+            marketPrice,
+            symbol
+          },
+          update: { marketPrice },
+          where: { date_symbol: { date, symbol } }
+        });
+      }
+    } catch (error) {
+      Logger.error(error, 'DataGatheringService');
+    } finally {
+      return undefined;
+    }
+  }
+
+  public async gatherAssetProfiles(aUniqueAssets?: UniqueAsset[]) {
+    let uniqueAssets = aUniqueAssets?.filter((dataGatheringItem) => {
+      return dataGatheringItem.dataSource !== 'MANUAL';
+    });
+
+    if (!uniqueAssets) {
+      uniqueAssets = await this.getUniqueAssets();
     }
 
-    const currentData = await this.dataProviderService.get(dataGatheringItems);
+    Logger.log(
+      `Asset profile data gathering has been started for ${uniqueAssets
+        .map(({ dataSource, symbol }) => {
+          return `${symbol} (${dataSource})`;
+        })
+        .join(',')}.`,
+      'DataGatheringService'
+    );
+
+    const assetProfiles = await this.dataProviderService.getAssetProfiles(
+      uniqueAssets
+    );
     const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-      dataGatheringItems.map(({ symbol }) => {
+      uniqueAssets.map(({ symbol }) => {
         return symbol;
       })
     );
 
-    for (const [symbol, response] of Object.entries(currentData)) {
+    for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
       const symbolMapping = symbolProfiles.find((symbolProfile) => {
         return symbolProfile.symbol === symbol;
       })?.symbolMapping;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
-          currentData[symbol] = await dataEnhancer.enhance({
-            response,
-            symbol: symbolMapping[dataEnhancer.getName()] ?? symbol
+          assetProfiles[symbol] = await dataEnhancer.enhance({
+            response: assetProfile,
+            symbol: symbolMapping?.[dataEnhancer.getName()] ?? symbol
           });
         } catch (error) {
-          Logger.error(`Failed to enhance data for symbol ${symbol}`, error);
+          Logger.error(
+            `Failed to enhance data for symbol ${symbol} by ${dataEnhancer.getName()}`,
+            error,
+            'DataGatheringService'
+          );
         }
       }
 
@@ -221,8 +280,9 @@ export class DataGatheringService {
         currency,
         dataSource,
         name,
-        sectors
-      } = currentData[symbol];
+        sectors,
+        url
+      } = assetProfiles[symbol];
 
       try {
         await this.prismaService.symbolProfile.upsert({
@@ -234,7 +294,8 @@ export class DataGatheringService {
             dataSource,
             name,
             sectors,
-            symbol
+            symbol,
+            url
           },
           update: {
             assetClass,
@@ -242,7 +303,8 @@ export class DataGatheringService {
             countries,
             currency,
             name,
-            sectors
+            sectors,
+            url
           },
           where: {
             dataSource_symbol: {
@@ -252,12 +314,22 @@ export class DataGatheringService {
           }
         });
       } catch (error) {
-        Logger.error(`${symbol}: ${error?.meta?.cause}`);
+        Logger.error(
+          `${symbol}: ${error?.meta?.cause}`,
+          error,
+          'DataGatheringService'
+        );
       }
     }
 
-    Logger.log('Profile data gathering has been completed.');
-    console.timeEnd('data-gathering-profile');
+    Logger.log(
+      `Asset profile data gathering has been completed for ${uniqueAssets
+        .map(({ dataSource, symbol }) => {
+          return `${symbol} (${dataSource})`;
+        })
+        .join(',')}.`,
+      'DataGatheringService'
+    );
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
@@ -265,6 +337,10 @@ export class DataGatheringService {
     let symbolCounter = 0;
 
     for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
+      if (dataSource === 'MANUAL') {
+        continue;
+      }
+
       this.dataGatheringProgress = symbolCounter / aSymbolsWithStartDate.length;
 
       try {
@@ -299,16 +375,33 @@ export class DataGatheringService {
                 ?.marketPrice;
           }
 
-          try {
-            await this.prismaService.marketData.create({
-              data: {
-                dataSource,
-                symbol,
-                date: currentDate,
-                marketPrice: lastMarketPrice
-              }
-            });
-          } catch {}
+          if (lastMarketPrice) {
+            try {
+              await this.prismaService.marketData.create({
+                data: {
+                  dataSource,
+                  symbol,
+                  date: new Date(
+                    Date.UTC(
+                      getYear(currentDate),
+                      getMonth(currentDate),
+                      getDate(currentDate),
+                      0
+                    )
+                  ),
+                  marketPrice: lastMarketPrice
+                }
+              });
+            } catch {}
+          } else {
+            Logger.warn(
+              `Failed to gather data for symbol ${symbol} from ${dataSource} at ${format(
+                currentDate,
+                DATE_FORMAT
+              )}.`,
+              'DataGatheringService'
+            );
+          }
 
           // Count month one up for iteration
           currentDate = new Date(
@@ -322,14 +415,15 @@ export class DataGatheringService {
         }
       } catch (error) {
         hasError = true;
-        Logger.error(error);
+        Logger.error(error, 'DataGatheringService');
       }
 
       if (symbolCounter > 0 && symbolCounter % 100 === 0) {
         Logger.log(
           `Data gathering progress: ${(
             this.dataGatheringProgress * 100
-          ).toFixed(2)}%`
+          ).toFixed(2)}%`,
+          'DataGatheringService'
         );
       }
 
@@ -401,6 +495,11 @@ export class DataGatheringService {
           },
           scraperConfiguration: true,
           symbol: true
+        },
+        where: {
+          dataSource: {
+            not: 'MANUAL'
+          }
         }
       })
     ).map((symbolProfile) => {
@@ -410,15 +509,32 @@ export class DataGatheringService {
       };
     });
 
-    return [
-      ...this.getBenchmarksToGather(startDate),
-      ...currencyPairsToGather,
-      ...symbolProfilesToGather
-    ];
+    return [...currencyPairsToGather, ...symbolProfilesToGather];
+  }
+
+  public async getUniqueAssets(): Promise<UniqueAsset[]> {
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }]
+    });
+
+    return symbolProfiles
+      .filter(({ dataSource }) => {
+        return (
+          dataSource !== DataSource.GHOSTFOLIO &&
+          dataSource !== DataSource.MANUAL &&
+          dataSource !== DataSource.RAKUTEN
+        );
+      })
+      .map(({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol
+        };
+      });
   }
 
   public async reset() {
-    Logger.log('Data gathering has been reset.');
+    Logger.log('Data gathering has been reset.', 'DataGatheringService');
 
     await this.prismaService.property.deleteMany({
       where: {
@@ -430,41 +546,58 @@ export class DataGatheringService {
     });
   }
 
-  private getBenchmarksToGather(startDate: Date): IDataGatheringItem[] {
-    const benchmarksToGather: IDataGatheringItem[] = [];
-
-    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      benchmarksToGather.push({
-        dataSource: DataSource.RAKUTEN,
-        date: startDate,
-        symbol: ghostfolioFearAndGreedIndexSymbol
-      });
-    }
-
-    return benchmarksToGather;
-  }
-
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
-    const symbolProfilesToGather = (
-      await this.prismaService.symbolProfile.findMany({
+    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
+      orderBy: [{ symbol: 'asc' }],
+      select: {
+        dataSource: true,
+        scraperConfiguration: true,
+        symbol: true
+      },
+      where: {
+        dataSource: {
+          not: 'MANUAL'
+        }
+      }
+    });
+
+    // Only consider symbols with incomplete market data for the last
+    // 7 days
+    const symbolsNotToGather = (
+      await this.prismaService.marketData.groupBy({
+        _count: true,
+        by: ['symbol'],
         orderBy: [{ symbol: 'asc' }],
-        select: {
-          dataSource: true,
-          scraperConfiguration: true,
-          symbol: true
+        where: {
+          date: { gt: startDate }
         }
       })
-    ).map((symbolProfile) => {
-      return {
-        ...symbolProfile,
-        date: startDate
-      };
-    });
+    )
+      .filter((group) => {
+        return group._count >= 6;
+      })
+      .map((group) => {
+        return group.symbol;
+      });
+
+    const symbolProfilesToGather = symbolProfiles
+      .filter(({ symbol }) => {
+        return !symbolsNotToGather.includes(symbol);
+      })
+      .map((symbolProfile) => {
+        return {
+          ...symbolProfile,
+          date: startDate
+        };
+      });
 
     const currencyPairsToGather = this.exchangeRateDataService
       .getCurrencyPairs()
+      .filter(({ symbol }) => {
+        return !symbolsNotToGather.includes(symbol);
+      })
       .map(({ dataSource, symbol }) => {
         return {
           dataSource,
@@ -473,30 +606,7 @@ export class DataGatheringService {
         };
       });
 
-    return [
-      ...this.getBenchmarksToGather(startDate),
-      ...currencyPairsToGather,
-      ...symbolProfilesToGather
-    ];
-  }
-
-  private async getSymbolsProfileData(): Promise<IDataGatheringItem[]> {
-    const startDate = subDays(resetHours(new Date()), 7);
-
-    const distinctOrders = await this.prismaService.order.findMany({
-      distinct: ['symbol'],
-      orderBy: [{ symbol: 'asc' }],
-      select: { dataSource: true, symbol: true }
-    });
-
-    return [...this.getBenchmarksToGather(startDate), ...distinctOrders].filter(
-      (distinctOrder) => {
-        return (
-          distinctOrder.dataSource !== DataSource.GHOSTFOLIO &&
-          distinctOrder.dataSource !== DataSource.RAKUTEN
-        );
-      }
-    );
+    return [...currencyPairsToGather, ...symbolProfilesToGather];
   }
 
   private async isDataGatheringNeeded() {

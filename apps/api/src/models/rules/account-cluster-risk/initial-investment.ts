@@ -1,10 +1,10 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { UserSettings } from '@ghostfolio/api/models/interfaces/user-settings.interface';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import {
   PortfolioDetails,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { ExchangeRateDataService } from 'apps/api/src/services/exchange-rate-data.service';
 
 import { Rule } from '../../rule';
 
@@ -19,35 +19,35 @@ export class AccountClusterRiskInitialInvestment extends Rule<Settings> {
   }
 
   public evaluate(ruleSettings?: Settings) {
-    const platforms: {
+    const accounts: {
       [symbol: string]: Pick<PortfolioPosition, 'name'> & {
         investment: number;
       };
     } = {};
 
-    for (const account of Object.keys(this.accounts)) {
-      platforms[account] = {
-        name: account,
-        investment: this.accounts[account].original
+    for (const [accountId, account] of Object.entries(this.accounts)) {
+      accounts[accountId] = {
+        name: account.name,
+        investment: account.original
       };
     }
 
     let maxItem;
     let totalInvestment = 0;
 
-    Object.values(platforms).forEach((platform) => {
+    for (const account of Object.values(accounts)) {
       if (!maxItem) {
-        maxItem = platform;
+        maxItem = account;
       }
 
       // Calculate total investment
-      totalInvestment += platform.investment;
+      totalInvestment += account.investment;
 
       // Find maximum
-      if (platform.investment > maxItem?.investment) {
-        maxItem = platform;
+      if (account.investment > maxItem?.investment) {
+        maxItem = account;
       }
-    });
+    }
 
     const maxInvestmentRatio = maxItem.investment / totalInvestment;
 

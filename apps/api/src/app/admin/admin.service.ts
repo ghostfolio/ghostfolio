@@ -5,13 +5,17 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
-  AdminMarketDataDetails
+  AdminMarketDataDetails,
+  AdminMarketDataItem,
+  UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
+import { Property } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 
 @Injectable()
@@ -23,8 +27,14 @@ export class AdminService {
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
-    private readonly subscriptionService: SubscriptionService
+    private readonly subscriptionService: SubscriptionService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async deleteProfileData({ dataSource, symbol }: UniqueAsset) {
+    await this.marketDataService.deleteMany({ dataSource, symbol });
+    await this.symbolProfileService.delete({ dataSource, symbol });
+  }
 
   public async get(): Promise<AdminData> {
     return {
@@ -55,32 +65,95 @@ export class AdminService {
   }
 
   public async getMarketData(): Promise<AdminMarketData> {
-    return {
-      marketData: await (
-        await this.dataGatheringService.getSymbolsMax()
-      ).map((symbol) => {
-        return symbol;
+    const marketData = await this.prismaService.marketData.groupBy({
+      _count: true,
+      by: ['dataSource', 'symbol']
+    });
+
+    const currencyPairsToGather: AdminMarketDataItem[] =
+      this.exchangeRateDataService
+        .getCurrencyPairs()
+        .map(({ dataSource, symbol }) => {
+          const marketDataItemCount =
+            marketData.find((marketDataItem) => {
+              return (
+                marketDataItem.dataSource === dataSource &&
+                marketDataItem.symbol === symbol
+              );
+            })?._count ?? 0;
+
+          return {
+            dataSource,
+            marketDataItemCount,
+            symbol
+          };
+        });
+
+    const symbolProfilesToGather: AdminMarketDataItem[] = (
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: [{ symbol: 'asc' }],
+        select: {
+          _count: {
+            select: { Order: true }
+          },
+          dataSource: true,
+          Order: {
+            orderBy: [{ date: 'asc' }],
+            select: { date: true },
+            take: 1
+          },
+          scraperConfiguration: true,
+          symbol: true
+        }
       })
+    ).map((symbolProfile) => {
+      const marketDataItemCount =
+        marketData.find((marketDataItem) => {
+          return (
+            marketDataItem.dataSource === symbolProfile.dataSource &&
+            marketDataItem.symbol === symbolProfile.symbol
+          );
+        })?._count ?? 0;
+
+      return {
+        marketDataItemCount,
+        activityCount: symbolProfile._count.Order,
+        dataSource: symbolProfile.dataSource,
+        date: symbolProfile.Order?.[0]?.date,
+        symbol: symbolProfile.symbol
+      };
+    });
+
+    return {
+      marketData: [...currencyPairsToGather, ...symbolProfilesToGather]
     };
   }
 
-  public async getMarketDataBySymbol(
-    aSymbol: string
-  ): Promise<AdminMarketDataDetails> {
+  public async getMarketDataBySymbol({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<AdminMarketDataDetails> {
     return {
       marketData: await this.marketDataService.marketDataItems({
         orderBy: {
           date: 'asc'
         },
         where: {
-          symbol: aSymbol
+          dataSource,
+          symbol
         }
       })
     };
   }
 
   public async putSetting(key: string, value: string) {
-    const response = await this.propertyService.put({ key, value });
+    let response: Property;
+
+    if (value === '') {
+      response = await this.propertyService.delete({ key });
+    } else {
+      response = await this.propertyService.put({ key, value });
+    }
 
     if (key === PROPERTY_CURRENCIES) {
       await this.exchangeRateDataService.initialize();

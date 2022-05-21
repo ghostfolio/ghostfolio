@@ -28,6 +28,12 @@
         color: rgba(var(--palette-primary-500), 1);
         opacity: 1;
       }
+
+      .mat-tab-link {
+        &:hover {
+          opacity: 0.75;
+        }
+      }
     }
   }
 }

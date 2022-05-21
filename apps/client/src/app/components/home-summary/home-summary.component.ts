@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -11,6 +13,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-summary.html'
 })
 export class HomeSummaryComponent implements OnDestroy, OnInit {
+  public hasImpersonationId: boolean;
+  public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = true;
   public summary: PortfolioSummary;
   public user: User;
@@ -23,6 +27,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -30,6 +35,11 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToUpdateUserSettings = hasPermission(
+            this.user.permissions,
+            permissions.updateUserSettings
+          );
 
           this.changeDetectorRef.markForCheck();
         }
@@ -40,7 +50,23 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((aId) => {
+        this.hasImpersonationId = !!aId;
+      });
+
     this.update();
+  }
+
+  public onChangeEmergencyFund(emergencyFund: number) {
+    this.dataService
+      .putUserSetting({ emergencyFund })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.update();
+      });
   }
 
   public ngOnDestroy() {

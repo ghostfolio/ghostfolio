@@ -8,8 +8,7 @@ import {
   Output
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-
-import { ToggleOption } from './interfaces/toggle-option.type';
+import { ToggleOption } from '@ghostfolio/common/types';
 
 @Component({
   selector: 'gf-toggle',

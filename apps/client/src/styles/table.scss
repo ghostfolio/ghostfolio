@@ -11,20 +11,22 @@
 
   .mat-row {
     &:nth-child(even) {
-      background-color: rgba(
-        var(--palette-foreground-base),
-        var(--palette-background-hover-alpha)
-      );
+      background-color: rgba(var(--palette-foreground-base), 0.02);
+    }
+
+    &:hover {
+      background-color: rgba(var(--palette-foreground-base), 0.05);
     }
   }
 
   @if $darkTheme {
     .mat-row {
       &:nth-child(even) {
-        background-color: rgba(
-          var(--palette-foreground-base-dark),
-          var(--palette-background-hover-alpha)
-        );
+        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+      }
+
+      &:hover {
+        background-color: rgba(var(--palette-foreground-base-dark), 0.05);
       }
     }
   }

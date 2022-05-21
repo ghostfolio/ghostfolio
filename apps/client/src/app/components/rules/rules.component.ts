@@ -8,6 +8,7 @@ import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
   styleUrls: ['./rules.component.scss']
 })
 export class RulesComponent {
+  @Input() hasPermissionToCreateOrder: boolean;
   @Input() rules: PortfolioReportRule;
 
   public constructor() {}

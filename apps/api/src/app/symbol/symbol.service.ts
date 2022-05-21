@@ -1,11 +1,14 @@
-import { HistoricalDataItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  IDataGatheringItem,
+  IDataProviderHistoricalResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import { subDays } from 'date-fns';
+import { format, subDays } from 'date-fns';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
@@ -14,35 +17,36 @@ import { SymbolItem } from './interfaces/symbol-item.interface';
 export class SymbolService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService,
-    private readonly prismaService: PrismaService
+    private readonly marketDataService: MarketDataService
   ) {}
 
   public async get({
     dataGatheringItem,
-    includeHistoricalData = false
+    includeHistoricalData
   }: {
     dataGatheringItem: IDataGatheringItem;
-    includeHistoricalData?: boolean;
+    includeHistoricalData?: number;
   }): Promise<SymbolItem> {
-    const response = await this.dataProviderService.get([dataGatheringItem]);
-    const { currency, marketPrice } = response[dataGatheringItem.symbol] ?? {};
+    const quotes = await this.dataProviderService.getQuotes([
+      dataGatheringItem
+    ]);
+    const { currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {};
 
     if (dataGatheringItem.dataSource && marketPrice) {
-      let historicalData: HistoricalDataItem[];
+      let historicalData: HistoricalDataItem[] = [];
 
-      if (includeHistoricalData) {
-        const days = 7;
+      if (includeHistoricalData > 0) {
+        const days = includeHistoricalData;
 
         const marketData = await this.marketDataService.getRange({
           dateQuery: { gte: subDays(new Date(), days) },
           symbols: [dataGatheringItem.symbol]
         });
 
-        historicalData = marketData.map(({ date, marketPrice }) => {
+        historicalData = marketData.map(({ date, marketPrice: value }) => {
           return {
-            date: date.toISOString(),
-            value: marketPrice
+            value,
+            date: date.toISOString()
           };
         });
       }
@@ -58,6 +62,27 @@ export class SymbolService {
     return undefined;
   }
 
+  public async getForDate({
+    dataSource,
+    date,
+    symbol
+  }: {
+    dataSource: DataSource;
+    date: Date;
+    symbol: string;
+  }): Promise<IDataProviderHistoricalResponse> {
+    const historicalData = await this.dataProviderService.getHistoricalRaw(
+      [{ dataSource, symbol }],
+      date,
+      date
+    );
+
+    return {
+      marketPrice:
+        historicalData?.[symbol]?.[format(date, DATE_FORMAT)]?.marketPrice
+    };
+  }
+
   public async lookup(aQuery: string): Promise<{ items: LookupItem[] }> {
     const results: { items: LookupItem[] } = { items: [] };
 
@@ -68,35 +93,9 @@ export class SymbolService {
     try {
       const { items } = await this.dataProviderService.search(aQuery);
       results.items = items;
-
-      // Add custom symbols
-      const ghostfolioSymbolProfiles =
-        await this.prismaService.symbolProfile.findMany({
-          select: {
-            currency: true,
-            dataSource: true,
-            name: true,
-            symbol: true
-          },
-          where: {
-            AND: [
-              {
-                dataSource: DataSource.GHOSTFOLIO,
-                name: {
-                  startsWith: aQuery
-                }
-              }
-            ]
-          }
-        });
-
-      for (const ghostfolioSymbolProfile of ghostfolioSymbolProfiles) {
-        results.items.push(ghostfolioSymbolProfile);
-      }
-
       return results;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'SymbolService');
 
       throw error;
     }

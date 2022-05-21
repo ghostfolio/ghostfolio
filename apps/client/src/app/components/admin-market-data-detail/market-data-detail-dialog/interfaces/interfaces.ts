@@ -1,5 +1,10 @@
+import { User } from '@ghostfolio/common/interfaces';
+import { DataSource } from '@prisma/client';
+
 export interface MarketDataDetailDialogParams {
-  date: string;
+  dataSource: DataSource;
+  date: Date;
   marketPrice: number;
   symbol: string;
+  user: User;
 }

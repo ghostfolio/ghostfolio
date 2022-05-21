@@ -1,24 +1,18 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import {
-  DATE_FORMAT,
-  getYesterday,
-  isGhostfolioScraperApiSymbol
-} from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
-import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
-import * as bent from 'bent';
-import * as cheerio from 'cheerio';
-import { format } from 'date-fns';
-
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
-  IDataProviderResponse,
-  MarketState
-} from '../../interfaces/interfaces';
-import { DataProviderInterface } from '../interfaces/data-provider.interface';
+  IDataProviderResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
+import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
+import { Granularity } from '@ghostfolio/common/types';
+import { Injectable, Logger } from '@nestjs/common';
+import { DataSource, SymbolProfile } from '@prisma/client';
+import * as bent from 'bent';
+import * as cheerio from 'cheerio';
+import { addDays, format, isBefore } from 'date-fns';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
@@ -30,73 +24,61 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
   ) {}
 
   public canHandle(symbol: string) {
-    return isGhostfolioScraperApiSymbol(symbol);
+    return true;
   }
 
-  public async get(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
-    try {
-      const [symbol] = aSymbols;
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
-      );
-
-      const { marketPrice } = await this.prismaService.marketData.findFirst({
-        orderBy: {
-          date: 'desc'
-        },
-        where: {
-          symbol
-        }
-      });
-
-      return {
-        [symbol]: {
-          marketPrice,
-          currency: symbolProfile?.currency,
-          dataSource: DataSource.GHOSTFOLIO,
-          marketState: MarketState.delayed
-        }
-      };
-    } catch (error) {
-      Logger.error(error);
-    }
-
-    return {};
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    return {
+      dataSource: this.getName()
+    };
   }
 
   public async getHistorical(
-    aSymbols: string[],
+    aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
     to: Date
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    if (aSymbols.length <= 0) {
-      return {};
-    }
-
     try {
-      const [symbol] = aSymbols;
+      const symbol = aSymbol;
+
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [symbol]
       );
-      const scraperConfiguration = symbolProfile?.scraperConfiguration;
+      const { defaultMarketPrice, selector, url } =
+        symbolProfile.scraperConfiguration;
 
-      const get = bent(scraperConfiguration?.url, 'GET', 'string', 200, {});
+      if (defaultMarketPrice) {
+        const historical: {
+          [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        } = {
+          [symbol]: {}
+        };
+        let date = from;
+
+        while (isBefore(date, to)) {
+          historical[symbol][format(date, DATE_FORMAT)] = {
+            marketPrice: defaultMarketPrice
+          };
+
+          date = addDays(date, 1);
+        }
+
+        return historical;
+      } else if (selector === undefined || url === undefined) {
+        return {};
+      }
+
+      const get = bent(url, 'GET', 'string', 200, {});
 
       const html = await get();
       const $ = cheerio.load(html);
 
-      const value = this.extractNumberFromString(
-        $(scraperConfiguration?.selector).text()
-      );
+      const value = this.extractNumberFromString($(selector).text());
 
       return {
         [symbol]: {
@@ -106,7 +88,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
         }
       };
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'GhostfolioScraperApiService');
     }
 
     return {};
@@ -116,8 +98,81 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     return DataSource.GHOSTFOLIO;
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
-    return { items: [] };
+  public async getQuotes(
+    aSymbols: string[]
+  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    const response: { [symbol: string]: IDataProviderResponse } = {};
+
+    if (aSymbols.length <= 0) {
+      return response;
+    }
+
+    try {
+      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+        aSymbols
+      );
+
+      const marketData = await this.prismaService.marketData.findMany({
+        distinct: ['symbol'],
+        orderBy: {
+          date: 'desc'
+        },
+        take: aSymbols.length,
+        where: {
+          symbol: {
+            in: aSymbols
+          }
+        }
+      });
+
+      for (const symbolProfile of symbolProfiles) {
+        response[symbolProfile.symbol] = {
+          currency: symbolProfile.currency,
+          dataSource: this.getName(),
+          marketPrice: marketData.find((marketDataItem) => {
+            return marketDataItem.symbol === symbolProfile.symbol;
+          }).marketPrice,
+          marketState: 'delayed'
+        };
+      }
+
+      return response;
+    } catch (error) {
+      Logger.error(error, 'GhostfolioScraperApiService');
+    }
+
+    return {};
+  }
+
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+    const items = await this.prismaService.symbolProfile.findMany({
+      select: {
+        currency: true,
+        dataSource: true,
+        name: true,
+        symbol: true
+      },
+      where: {
+        OR: [
+          {
+            dataSource: this.getName(),
+            name: {
+              mode: 'insensitive',
+              startsWith: aQuery
+            }
+          },
+          {
+            dataSource: this.getName(),
+            symbol: {
+              mode: 'insensitive',
+              startsWith: aQuery
+            }
+          }
+        ]
+      }
+    });
+
+    return { items };
   }
 
   private extractNumberFromString(aString: string): number {

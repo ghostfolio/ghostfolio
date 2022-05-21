@@ -2,102 +2,101 @@
   <div class="mb-5 row">
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>About Ghostfolio</h3>
-      <mat-card class="about-container">
-        <mat-card-content>
-          <p>
-            <strong>Ghostfolio</strong> is a lightweight wealth management
-            application for individuals to keep track of their wealth like
-            stocks, ETFs or cryptocurrencies and make solid, data-driven
-            investment decisions. The source code is fully available as open
-            source software (OSS). The project has been initiated by
-            <a href="https://dotsilver.ch" title="Website of Thomas Kaul"
-              >Thomas Kaul</a
-            >
-            and is driven by the efforts of its
-            <a
-              href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
-              title="Contributors to Ghostfolio"
-              >contributors</a
-            >.
-            <ng-container *ngIf="lastPublish">
-              This instance is running Ghostfolio {{ version }} and has been
-              last published on {{ lastPublish }}.
-            </ng-container>
-            <ng-container *ngIf="hasPermissionForSubscription" i18n
-              >Check the system status at
-              <a href="https://status.ghostfol.io" title="Ghostfolio status"
-                >status.ghostfol.io</a
-              >.</ng-container
-            >
-          </p>
-          <p>
-            If you encounter a bug or would like to suggest an improvement or a
-            new feature, please join the Ghostfolio
-            <a
-              href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
-              title="Join the Ghostfolio Slack channel"
-              >Slack channel</a
-            >, tweet to
-            <a
-              href="https://twitter.com/ghostfolio_"
-              title="Tweet to Ghostfolio on Twitter"
-              >@ghostfolio_</a
-            >, send an e-mail to
-            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
-              >hi@ghostfol.io</a
-            >
-            or open an issue at
-            <a
-              href="https://github.com/ghostfolio/ghostfolio"
-              title="Find Ghostfolio on GitHub"
-              >GitHub</a
-            >.
-          </p>
-          <p class="text-center">
-            <a
-              class="mx-2"
-              href="https://twitter.com/ghostfolio_"
-              mat-icon-button
-              title="Follow Ghostfolio on Twitter"
-            >
-              <ion-icon name="logo-twitter" size="large"></ion-icon>
-            </a>
-            <a
-              class="mx-2"
-              href="mailto:hi@ghostfol.io"
-              mat-icon-button
-              title="Send an e-mail"
-            >
-              <ion-icon name="mail" size="large"></ion-icon>
-            </a>
-            <a
-              class="mx-2"
-              href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
-              mat-icon-button
-              title="Join the Ghostfolio Slack channel"
-            >
-              <ion-icon name="logo-slack" size="large"></ion-icon>
-            </a>
-            <a
-              class="mx-2"
-              href="https://github.com/ghostfolio/ghostfolio"
-              mat-icon-button
-              title="Find Ghostfolio on GitHub"
-            >
-              <ion-icon name="logo-github" size="large"></ion-icon>
-            </a>
-          </p>
-          <div
-            *ngIf="hasPermissionForSubscription"
-            class="d-flex justify-content-center"
+      <div class="about-container">
+        <p>
+          <strong>Ghostfolio</strong> is a lightweight wealth management
+          application for individuals to keep track of stocks, ETFs or
+          cryptocurrencies and make solid, data-driven investment decisions. The
+          source code is fully available as open source software (OSS). The
+          project has been initiated by
+          <a href="https://dotsilver.ch" title="Website of Thomas Kaul"
+            >Thomas Kaul</a
           >
-            <div
-              class="independent-and-bootstrapped-logo mb-2"
-              title="Ghostfolio is an independent & bootstrapped business"
-            ></div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          and is driven by the efforts of its
+          <a
+            href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
+            title="Contributors to Ghostfolio"
+            >contributors</a
+          >.
+          <ng-container *ngIf="version">
+            This instance is running Ghostfolio {{ version }}.
+          </ng-container>
+          <ng-container *ngIf="hasPermissionForStatistics" i18n
+            >Check the system status at
+            <a href="https://status.ghostfol.io" title="Ghostfolio status"
+              >status.ghostfol.io</a
+            >.</ng-container
+          >
+        </p>
+        <p>
+          If you encounter a bug or would like to suggest an improvement or a
+          new
+          <a [routerLink]="['/features']">feature</a>, please join the
+          Ghostfolio
+          <a
+            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            title="Join the Ghostfolio Slack community"
+            >Slack community</a
+          >, tweet to
+          <a
+            href="https://twitter.com/ghostfolio_"
+            title="Tweet to Ghostfolio on Twitter"
+            >@ghostfolio_</a
+          >, send an e-mail to
+          <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+            >hi@ghostfol.io</a
+          >
+          or open an issue at
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >GitHub</a
+          >.
+        </p>
+        <p class="text-center">
+          <a
+            class="mx-2"
+            href="https://twitter.com/ghostfolio_"
+            mat-icon-button
+            title="Follow Ghostfolio on Twitter"
+          >
+            <ion-icon name="logo-twitter" size="large"></ion-icon>
+          </a>
+          <a
+            class="mx-2"
+            href="mailto:hi@ghostfol.io"
+            mat-icon-button
+            title="Send an e-mail"
+          >
+            <ion-icon name="mail" size="large"></ion-icon>
+          </a>
+          <a
+            class="mx-2"
+            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            mat-icon-button
+            title="Join the Ghostfolio Slack channel"
+          >
+            <ion-icon name="logo-slack" size="large"></ion-icon>
+          </a>
+          <a
+            class="mx-2"
+            href="https://github.com/ghostfolio/ghostfolio"
+            mat-icon-button
+            title="Find Ghostfolio on GitHub"
+          >
+            <ion-icon name="logo-github" size="large"></ion-icon>
+          </a>
+        </p>
+        <div
+          *ngIf="hasPermissionForSubscription"
+          class="d-flex justify-content-center"
+        >
+          <div
+            class="independent-and-bootstrapped-logo mb-2"
+            title="Ghostfolio is an independent & bootstrapped business"
+          ></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -108,130 +107,94 @@
         <mat-card-content>
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.activeUsers1d">
-                {{ statistics?.activeUsers1d ?? '-' }}
-              </h3>
-              <div class="h6 mb-0">
-                <span i18n>Active Users</span>&nbsp;<small class="text-muted"
-                  >(Last 24 hours)</small
-                >
-              </div>
+              <gf-value
+                label="Active Users"
+                size="large"
+                subLabel="(Last 24 hours)"
+                [value]="statistics?.activeUsers1d ?? '-'"
+              ></gf-value>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.activeUsers7d">
-                {{ statistics?.activeUsers7d ?? '-' }}
-              </h3>
-              <div class="h6 mb-0">
-                <span i18n>Active Users</span>&nbsp;<small class="text-muted"
-                  >(Last 7 days)</small
-                >
-              </div>
+              <gf-value
+                label="New Users"
+                size="large"
+                subLabel="(Last 30 days)"
+                [value]="statistics?.newUsers30d ?? '-'"
+              ></gf-value>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.activeUsers30d">
-                {{ statistics?.activeUsers30d ?? '-' }}
-              </h3>
-              <div class="h6 mb-0">
-                <span i18n>Active Users</span>&nbsp;<small class="text-muted"
-                  >(Last 30 days)</small
-                >
-              </div>
+              <gf-value
+                label="Active Users"
+                size="large"
+                subLabel="(Last 30 days)"
+                [value]="statistics?.activeUsers30d ?? '-'"
+              ></gf-value>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.newUsers30d">
-                {{ statistics?.newUsers30d ?? '-' }}
-              </h3>
-              <div class="h6 mb-0">
-                <span i18n>New Users</span>&nbsp;<small class="text-muted"
-                  >(Last 30 days)</small
-                >
-              </div>
-            </div>
-            <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.gitHubContributors">
-                {{ statistics?.gitHubContributors ?? '-' }}
-              </h3>
-              <div class="h6 mb-0" i18n>Contributors on GitHub</div>
-            </div>
-            <div class="col-xs-12 col-md-4 my-2">
-              <h3 class="mb-0" [hidden]="!statistics?.gitHubStargazers">
-                {{ statistics?.gitHubStargazers ?? '-' }}
-              </h3>
-              <div class="h6 mb-0" i18n>Stars on GitHub</div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
-  <div *ngIf="hasPermissionForBlog" class="mb-5 row">
-    <div class="col">
-      <h3 class="mb-3 text-center" i18n>Blog</h3>
-      <mat-card class="blog-container">
-        <mat-card-content>
-          <div class="container p-0">
-            <div class="flex-nowrap mb-3 no-gutters row">
               <a
-                class="d-flex w-100"
-                [routerLink]="['/en', 'blog', '2021', '07', 'hello-ghostfolio']"
+                class="d-block"
+                href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
               >
-                <div class="flex-grow-1">
-                  <div class="h6 m-0 text-truncate">Hello Ghostfolio</div>
-                  <div class="d-flex text-muted">31.07.2021</div>
-                </div>
-                <div class="align-items-center d-flex">
-                  <ion-icon
-                    class="chevron text-muted"
-                    name="chevron-forward-outline"
-                    size="small"
-                  ></ion-icon>
-                </div>
+                <gf-value
+                  label="Users in Slack community"
+                  size="large"
+                  [value]="statistics?.slackCommunityUsers ?? '-'"
+                ></gf-value>
               </a>
             </div>
-            <div class="flex-nowrap no-gutters row">
+            <div class="col-xs-12 col-md-4 my-2">
               <a
-                class="d-flex w-100"
-                [routerLink]="['/de', 'blog', '2021', '07', 'hallo-ghostfolio']"
+                class="d-block"
+                href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
               >
-                <div class="flex-grow-1">
-                  <div class="h6 m-0 text-truncate">Hallo Ghostfolio</div>
-                  <div class="d-flex text-muted">31.07.2021</div>
-                </div>
-                <div class="align-items-center d-flex">
-                  <ion-icon
-                    class="chevron text-muted"
-                    name="chevron-forward-outline"
-                    size="small"
-                  ></ion-icon>
-                </div>
+                <gf-value
+                  label="Contributors on GitHub"
+                  size="large"
+                  [value]="statistics?.gitHubContributors ?? '-'"
+                ></gf-value>
+              </a>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <a
+                class="d-block"
+                href="https://github.com/ghostfolio/ghostfolio/stargazers"
+              >
+                <gf-value
+                  label="Stars on GitHub"
+                  size="large"
+                  [value]="statistics?.gitHubStargazers ?? '-'"
+                ></gf-value>
               </a>
             </div>
           </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
-  <div class="mb-5 row">
-    <div class="col">
-      <h3 class="mb-3 text-center" i18n>Changelog</h3>
-      <mat-card class="changelog">
-        <mat-card-content>
-          <markdown [src]="'assets/CHANGELOG.md'"></markdown>
         </mat-card-content>
       </mat-card>
     </div>
   </div>
 
   <div class="row">
-    <div class="col">
-      <h3 class="mb-3 text-center" i18n>License</h3>
-      <mat-card>
-        <mat-card-content>
-          <markdown [src]="'assets/LICENSE'"></markdown>
-        </mat-card-content>
-      </mat-card>
+    <div
+      class="col-md-6 col-xs-12 my-2"
+      [ngClass]="{ 'offset-md-3': !hasPermissionForBlog }"
+    >
+      <a
+        class="py-2 w-100"
+        color="primary"
+        i18n
+        mat-stroked-button
+        [routerLink]="['/about', 'changelog']"
+        >Changelog & License</a
+      >
+    </div>
+    <div *ngIf="hasPermissionForBlog" class="col-md-6 col-xs-12 my-2">
+      <a
+        class="py-2 w-100"
+        color="primary"
+        i18n
+        mat-flat-button
+        [routerLink]="['/blog']"
+        >Blog</a
+      >
     </div>
   </div>
 </div>

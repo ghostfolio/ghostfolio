@@ -1,5 +1,5 @@
 export interface ImportTransactionDialogParams {
+  activities: any[];
   deviceType: string;
   messages: string[];
-  orders: any[];
 }

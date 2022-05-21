@@ -36,11 +36,11 @@ export class ImportController {
 
     try {
       return await this.importService.import({
-        orders: importData.orders,
+        activities: importData.activities,
         userId: this.request.user.id
       });
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, ImportController);
 
       throw new HttpException(
         {

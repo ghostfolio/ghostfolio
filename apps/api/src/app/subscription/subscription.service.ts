@@ -3,7 +3,8 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
-import { addDays, isBefore } from 'date-fns';
+import { addMilliseconds, isBefore } from 'date-fns';
+import ms, { StringValue } from 'ms';
 import Stripe from 'stripe';
 
 @Injectable()
@@ -44,7 +45,7 @@ export class SubscriptionService {
       payment_method_types: ['card'],
       success_url: `${this.configurationService.get(
         'ROOT_URL'
-      )}/api/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
+      )}/api/v1/subscription/stripe/callback?checkoutSessionId={CHECKOUT_SESSION_ID}`
     };
 
     if (couponId) {
@@ -64,28 +65,40 @@ export class SubscriptionService {
     };
   }
 
-  public async createSubscription(aCheckoutSessionId: string) {
+  public async createSubscription({
+    duration = '1 year',
+    userId
+  }: {
+    duration?: StringValue;
+    userId: string;
+  }) {
+    await this.prismaService.subscription.create({
+      data: {
+        expiresAt: addMilliseconds(new Date(), ms(duration)),
+        User: {
+          connect: {
+            id: userId
+          }
+        }
+      }
+    });
+  }
+
+  public async createSubscriptionViaStripe(aCheckoutSessionId: string) {
     try {
       const session = await this.stripe.checkout.sessions.retrieve(
         aCheckoutSessionId
       );
 
-      await this.prismaService.subscription.create({
-        data: {
-          expiresAt: addDays(new Date(), 365),
-          User: {
-            connect: {
-              id: session.client_reference_id
-            }
-          }
-        }
-      });
+      await this.createSubscription({ userId: session.client_reference_id });
 
       await this.stripe.customers.update(session.customer as string, {
         description: session.client_reference_id
       });
+
+      return session.client_reference_id;
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'SubscriptionService');
     }
   }
 

@@ -10,9 +10,9 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { format, isValid } from 'date-fns';
-import { isEmpty } from 'lodash';
+import { groupBy, isEmpty } from 'lodash';
 
 @Injectable()
 export class DataProviderService {
@@ -22,33 +22,6 @@ export class DataProviderService {
     private readonly dataProviderInterfaces: DataProviderInterface[],
     private readonly prismaService: PrismaService
   ) {}
-
-  public async get(items: IDataGatheringItem[]): Promise<{
-    [symbol: string]: IDataProviderResponse;
-  }> {
-    const response: {
-      [symbol: string]: IDataProviderResponse;
-    } = {};
-
-    for (const item of items) {
-      const dataProvider = this.getDataProvider(item.dataSource);
-      response[item.symbol] = (await dataProvider.get([item.symbol]))[
-        item.symbol
-      ];
-    }
-
-    const promises = [];
-    for (const symbol of Object.keys(response)) {
-      const promise = Promise.resolve(response[symbol]);
-      promises.push(
-        promise.then((currentResponse) => (response[symbol] = currentResponse))
-      );
-    }
-
-    await Promise.all(promises);
-
-    return response;
-  }
 
   public async getHistorical(
     aItems: IDataGatheringItem[],
@@ -109,7 +82,7 @@ export class DataProviderService {
         return r;
       }, {});
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'DataProviderService');
     } finally {
       return response;
     }
@@ -135,7 +108,7 @@ export class DataProviderService {
       if (dataProvider.canHandle(symbol)) {
         promises.push(
           dataProvider
-            .getHistorical([symbol], undefined, from, to)
+            .getHistorical(symbol, undefined, from, to)
             .then((data) => ({ data: data?.[symbol], symbol }))
         );
       }
@@ -149,13 +122,89 @@ export class DataProviderService {
     return result;
   }
 
-  public async search(aSymbol: string): Promise<{ items: LookupItem[] }> {
+  public getPrimaryDataSource(): DataSource {
+    return DataSource[this.configurationService.get('DATA_SOURCE_PRIMARY')];
+  }
+
+  public async getAssetProfiles(items: IDataGatheringItem[]): Promise<{
+    [symbol: string]: Partial<SymbolProfile>;
+  }> {
+    const response: {
+      [symbol: string]: Partial<SymbolProfile>;
+    } = {};
+
+    const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
+
+    const promises = [];
+
+    for (const [dataSource, dataGatheringItems] of Object.entries(
+      itemsGroupedByDataSource
+    )) {
+      const symbols = dataGatheringItems.map((dataGatheringItem) => {
+        return dataGatheringItem.symbol;
+      });
+
+      for (const symbol of symbols) {
+        const promise = Promise.resolve(
+          this.getDataProvider(DataSource[dataSource]).getAssetProfile(symbol)
+        );
+
+        promises.push(
+          promise.then((symbolProfile) => {
+            response[symbol] = symbolProfile;
+          })
+        );
+      }
+    }
+
+    await Promise.all(promises);
+
+    return response;
+  }
+
+  public async getQuotes(items: IDataGatheringItem[]): Promise<{
+    [symbol: string]: IDataProviderResponse;
+  }> {
+    const response: {
+      [symbol: string]: IDataProviderResponse;
+    } = {};
+
+    const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
+
+    const promises = [];
+
+    for (const [dataSource, dataGatheringItems] of Object.entries(
+      itemsGroupedByDataSource
+    )) {
+      const symbols = dataGatheringItems.map((dataGatheringItem) => {
+        return dataGatheringItem.symbol;
+      });
+
+      const promise = Promise.resolve(
+        this.getDataProvider(DataSource[dataSource]).getQuotes(symbols)
+      );
+
+      promises.push(
+        promise.then((result) => {
+          for (const [symbol, dataProviderResponse] of Object.entries(result)) {
+            response[symbol] = dataProviderResponse;
+          }
+        })
+      );
+    }
+
+    await Promise.all(promises);
+
+    return response;
+  }
+
+  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const promises: Promise<{ items: LookupItem[] }>[] = [];
     let lookupItems: LookupItem[] = [];
 
     for (const dataSource of this.configurationService.get('DATA_SOURCES')) {
       promises.push(
-        this.getDataProvider(DataSource[dataSource]).search(aSymbol)
+        this.getDataProvider(DataSource[dataSource]).search(aQuery)
       );
     }
 
@@ -175,16 +224,13 @@ export class DataProviderService {
     };
   }
 
-  public getPrimaryDataSource(): DataSource {
-    return DataSource[this.configurationService.get('DATA_SOURCES')[0]];
-  }
-
   private getDataProvider(providerName: DataSource) {
     for (const dataProviderInterface of this.dataProviderInterfaces) {
       if (dataProviderInterface.getName() === providerName) {
         return dataProviderInterface;
       }
     }
+
     throw new Error('No data provider has been found.');
   }
 }

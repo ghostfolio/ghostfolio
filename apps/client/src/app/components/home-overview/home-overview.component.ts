@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -7,7 +6,13 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioPerformance, User } from '@ghostfolio/common/interfaces';
+import { defaultDateRangeOptions } from '@ghostfolio/common/config';
+import {
+  PortfolioPerformance,
+  UniqueAsset,
+  User
+} from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -21,20 +26,18 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeOverviewComponent implements OnDestroy, OnInit {
   public dateRange: DateRange;
-  public dateRangeOptions: ToggleOption[] = [
-    { label: 'Today', value: '1d' },
-    { label: 'YTD', value: 'ytd' },
-    { label: '1Y', value: '1y' },
-    { label: '5Y', value: '5y' },
-    { label: 'Max', value: 'max' }
-  ];
+  public dateRangeOptions = defaultDateRangeOptions;
   public deviceType: string;
+  public errors: UniqueAsset[];
+  public hasError: boolean;
   public hasImpersonationId: boolean;
+  public hasPermissionToCreateOrder: boolean;
   public historicalDataItems: LineChartItem[];
   public isAllTimeHigh: boolean;
   public isAllTimeLow: boolean;
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
+  public showDetails = false;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -55,6 +58,11 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateOrder = hasPermission(
+            this.user.permissions,
+            permissions.createOrder
+          );
 
           this.changeDetectorRef.markForCheck();
         }
@@ -77,7 +85,14 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       });
 
     this.dateRange =
-      <DateRange>this.settingsStorageService.getSetting(RANGE) || 'max';
+      this.user.settings.viewMode === 'ZEN'
+        ? 'max'
+        : <DateRange>this.settingsStorageService.getSetting(RANGE) ?? 'max';
+
+    this.showDetails =
+      !this.hasImpersonationId &&
+      !this.user.settings.isRestrictedView &&
+      this.user.settings.viewMode !== 'ZEN';
 
     this.update();
   }
@@ -116,7 +131,9 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .fetchPortfolioPerformance({ range: this.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        this.performance = response;
+        this.errors = response.errors;
+        this.hasError = response.hasErrors;
+        this.performance = response.performance;
         this.isLoadingPerformance = false;
 
         this.changeDetectorRef.markForCheck();

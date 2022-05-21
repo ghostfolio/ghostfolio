@@ -9,18 +9,27 @@
 </header>
 
 <main role="main">
-  <div *ngIf="canCreateAccount" class="container create-account-container">
+  <div
+    *ngIf="canCreateAccount || (info?.systemMessage && user)"
+    class="container info-message-container"
+  >
     <div class="row">
       <div class="col-md-8 offset-md-2 text-center">
-        <a class="text-center" [routerLink]="['/']">
+        <a *ngIf="canCreateAccount" class="text-center" [routerLink]="['/']">
           <div
-            class="create-account-box d-inline-block px-3 py-2"
+            class="cursor-pointer d-inline-block info-message px-3 py-2"
             (click)="onCreateAccount()"
           >
             <span i18n>You are using the Live Demo.</span>
             <a class="ml-2" href="#" i18n>Create Account</a>
           </div></a
         >
+        <div
+          *ngIf="!canCreateAccount && info?.systemMessage && user"
+          class="d-inline-block info-message px-3 py-2"
+        >
+          {{ info.systemMessage }}
+        </div>
       </div>
     </div>
   </div>

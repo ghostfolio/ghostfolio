@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-about-page',
   styleUrls: ['./about-page.scss'],
   templateUrl: './about-page.html'
@@ -22,7 +22,6 @@ export class AboutPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
-  public lastPublish = environment.lastPublish;
   public statistics: Statistics;
   public user: User;
   public version = environment.version;

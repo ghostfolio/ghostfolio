@@ -1,10 +1,10 @@
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { OrderWithAccount } from '@ghostfolio/common/types';
+import { Tag } from '@prisma/client';
 
 export interface PortfolioPositionDetail {
-  assetClass?: AssetClass;
-  assetSubClass?: AssetSubClass;
   averagePrice: number;
-  currency: string;
   firstBuyDate: string;
   grossPerformance: number;
   grossPerformancePercent: number;
@@ -13,11 +13,12 @@ export interface PortfolioPositionDetail {
   marketPrice: number;
   maxPrice: number;
   minPrice: number;
-  name: string;
   netPerformance: number;
   netPerformancePercent: number;
+  orders: OrderWithAccount[];
   quantity: number;
-  symbol: string;
+  SymbolProfile: EnhancedSymbolProfile;
+  tags: Tag[];
   transactionCount: number;
   value: number;
 }
@@ -26,11 +27,4 @@ export interface HistoricalDataContainer {
   isAllTimeHigh: boolean;
   isAllTimeLow: boolean;
   items: HistoricalDataItem[];
-}
-
-export interface HistoricalDataItem {
-  averagePrice?: number;
-  date: string;
-  grossPerformancePercent?: number;
-  value: number;
 }

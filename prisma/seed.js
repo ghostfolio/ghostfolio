@@ -78,30 +78,6 @@ async function main() {
     where: { id: '1377d9df-0d25-42c2-9d9b-e4c63156291f' }
   });
 
-  const userAdmin = await prisma.user.upsert({
-    create: {
-      accessToken:
-        'c689bcc894e4a420cb609ee34271f3e07f200594f7d199c50d75add7102889eb60061a04cd2792ebc853c54e37308271271e7bf588657c9e0c37faacbc28c3c6',
-      Account: {
-        create: [
-          {
-            accountType: AccountType.SECURITIES,
-            balance: 0,
-            currency: 'USD',
-            id: 'f4425b66-9ba9-4ac4-93d7-fdf9a145e8cb',
-            isDefault: true,
-            name: 'Default Account'
-          }
-        ]
-      },
-      alias: 'Admin',
-      id: '4e1af723-95f6-44f8-92a7-464df17f6ec3',
-      role: Role.ADMIN
-    },
-    update: {},
-    where: { id: '4e1af723-95f6-44f8-92a7-464df17f6ec3' }
-  });
-
   const userDemo = await prisma.user.upsert({
     create: {
       accessToken:
@@ -159,12 +135,12 @@ async function main() {
       {
         assetClass: 'CASH',
         assetSubClass: 'CRYPTOCURRENCY',
-        countries: null,
+        countries: undefined,
         currency: 'USD',
         dataSource: DataSource.YAHOO,
         id: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e',
         name: 'Bitcoin USD',
-        sectors: null,
+        sectors: undefined,
         symbol: 'BTCUSD'
       },
       {
@@ -216,14 +192,11 @@ async function main() {
       {
         accountId: '65cfb79d-b6c7-4591-9d46-73426bc62094',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2017, 0, 3, 0, 0, 0)),
         fee: 30,
         id: 'cf7c0418-8535-4089-ae3d-5dbfa0aec2e1',
         quantity: 50,
-        symbol: 'TSLA',
-        symbolProfileId: 'd1ee9681-fb21-4f99-a3b7-afd4fc04df2e',
+        symbolProfileId: 'd1ee9681-fb21-4f99-a3b7-afd4fc04df2e', // TSLA
         type: Type.BUY,
         unitPrice: 42.97,
         userId: userDemo.id
@@ -231,14 +204,11 @@ async function main() {
       {
         accountId: 'd804de69-0429-42dc-b6ca-b308fd7dd926',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2017, 7, 16, 0, 0, 0)),
         fee: 29.9,
         id: 'a1c5d73a-8631-44e5-ac44-356827a5212c',
         quantity: 0.5614682,
-        symbol: 'BTCUSD',
-        symbolProfileId: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e',
+        symbolProfileId: 'fdc42ea6-1321-44f5-9fb0-d7f1f2cf9b1e', // BTCUSD
         type: Type.BUY,
         unitPrice: 3562.089535970158,
         userId: userDemo.id
@@ -246,14 +216,11 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2018, 9, 1, 0, 0, 0)),
         fee: 80.79,
         id: '71c08e2a-4a86-44ae-a890-c337de5d5f9b',
         quantity: 5,
-        symbol: 'AMZN',
-        symbolProfileId: '2bd26362-136e-411c-b578-334084b4cdcc',
+        symbolProfileId: '2bd26362-136e-411c-b578-334084b4cdcc', // AMZN
         type: Type.BUY,
         unitPrice: 2021.99,
         userId: userDemo.id
@@ -261,14 +228,11 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2019, 2, 1, 0, 0, 0)),
         fee: 19.9,
         id: '385f2c2c-d53e-4937-b0e5-e92ef6020d4e',
         quantity: 10,
-        symbol: 'VTI',
-        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796',
+        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796', // VTI
         type: Type.BUY,
         unitPrice: 144.38,
         userId: userDemo.id
@@ -276,14 +240,11 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2019, 8, 3, 0, 0, 0)),
         fee: 19.9,
         id: '185f2c2c-d53e-4937-b0e5-a93ef6020d4e',
         quantity: 10,
-        symbol: 'VTI',
-        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796',
+        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796', // VTI
         type: Type.BUY,
         unitPrice: 147.99,
         userId: userDemo.id
@@ -291,14 +252,11 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2020, 2, 2, 0, 0, 0)),
         fee: 19.9,
         id: '347b0430-a84f-4031-a0f9-390399066ad6',
         quantity: 10,
-        symbol: 'VTI',
-        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796',
+        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796', // VTI
         type: Type.BUY,
         unitPrice: 151.41,
         userId: userDemo.id
@@ -306,14 +264,11 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2020, 8, 1, 0, 0, 0)),
         fee: 19.9,
         id: '67ec3f47-3189-4b63-ba05-60d3a06b302f',
         quantity: 10,
-        symbol: 'VTI',
-        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796',
+        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796', // VTI
         type: Type.BUY,
         unitPrice: 177.69,
         userId: userDemo.id
@@ -321,14 +276,11 @@ async function main() {
       {
         accountId: '480269ce-e12a-4fd1-ac88-c4b0ff3f899c',
         accountUserId: userDemo.id,
-        currency: 'USD',
-        dataSource: DataSource.YAHOO,
         date: new Date(Date.UTC(2020, 2, 1, 0, 0, 0)),
         fee: 19.9,
         id: 'd01c6fbc-fa8d-47e6-8e80-66f882d2bfd2',
         quantity: 10,
-        symbol: 'VTI',
-        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796',
+        symbolProfileId: '7d9c8540-061e-4e7e-b019-0d0f4a84e796', // VTI
         type: Type.BUY,
         unitPrice: 203.15,
         userId: userDemo.id
@@ -345,7 +297,6 @@ async function main() {
     platformInteractiveBrokers,
     platformPostFinance,
     platformSwissquote,
-    userAdmin,
     userDemo
   });
 }

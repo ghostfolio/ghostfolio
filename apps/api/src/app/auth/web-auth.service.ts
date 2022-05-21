@@ -95,7 +95,7 @@ export class WebAuthService {
       };
       verification = await verifyRegistrationResponse(opts);
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'WebAuthService');
       throw new InternalServerErrorException(error.message);
     }
 
@@ -193,7 +193,7 @@ export class WebAuthService {
       };
       verification = verifyAuthenticationResponse(opts);
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'WebAuthService');
       throw new InternalServerErrorException({ error: error.message });
     }
 

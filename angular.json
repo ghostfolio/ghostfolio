@@ -9,7 +9,7 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@nrwl/node:build",
+          "builder": "@nrwl/node:webpack",
           "options": {
             "outputPath": "dist/apps/api",
             "main": "apps/api/src/main.ts",
@@ -33,7 +33,7 @@
           "outputs": ["{options.outputPath}"]
         },
         "serve": {
-          "builder": "@nrwl/node:execute",
+          "builder": "@nrwl/node:node",
           "options": {
             "buildTarget": "api:build"
           }
@@ -47,7 +47,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/api/jest.config.js",
+            "jestConfig": "apps/api/jest.config.ts",
             "passWithNoTests": true
           },
           "outputs": ["coverage/apps/api"]
@@ -180,7 +180,7 @@
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
-            "jestConfig": "apps/client/jest.config.js",
+            "jestConfig": "apps/client/jest.config.ts",
             "passWithNoTests": true
           },
           "outputs": ["coverage/apps/client"]
@@ -225,7 +225,7 @@
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/common"],
           "options": {
-            "jestConfig": "libs/common/jest.config.js",
+            "jestConfig": "libs/common/jest.config.ts",
             "passWithNoTests": true
           }
         }
@@ -247,7 +247,7 @@
           "builder": "@nrwl/jest:jest",
           "outputs": ["coverage/libs/ui"],
           "options": {
-            "jestConfig": "libs/ui/jest.config.js",
+            "jestConfig": "libs/ui/jest.config.ts",
             "passWithNoTests": true
           }
         },
@@ -264,7 +264,8 @@
             "port": 4400,
             "config": {
               "configFolder": "libs/ui/.storybook"
-            }
+            },
+            "projectBuildConfig": "ui:build-storybook"
           },
           "configurations": {
             "ci": {
@@ -280,7 +281,8 @@
             "outputPath": "dist/storybook/ui",
             "config": {
               "configFolder": "libs/ui/.storybook"
-            }
+            },
+            "projectBuildConfig": "ui:build-storybook"
           },
           "configurations": {
             "ci": {

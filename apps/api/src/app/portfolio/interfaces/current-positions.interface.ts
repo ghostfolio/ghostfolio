@@ -1,12 +1,11 @@
-import { TimelinePosition } from '@ghostfolio/common/interfaces';
+import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
 import Big from 'big.js';
 
-export interface CurrentPositions {
-  hasErrors: boolean;
+export interface CurrentPositions extends ResponseError {
   positions: TimelinePosition[];
   grossPerformance: Big;
   grossPerformancePercentage: Big;
-  netAnnualizedPerformance: Big;
+  netAnnualizedPerformance?: Big;
   netPerformance: Big;
   netPerformancePercentage: Big;
   currentValue: Big;

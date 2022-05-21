@@ -1,30 +1,42 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ToggleOption } from '@ghostfolio/client/components/toggle/interfaces/toggle-option.type';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
+import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
+  Filter,
   PortfolioDetails,
   PortfolioPosition,
+  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
-import { AssetClass } from '@prisma/client';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { Market, ToggleOption } from '@ghostfolio/common/types';
+import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'mb-5' },
+  host: { class: 'page' },
   selector: 'gf-allocations-page',
   styleUrls: ['./allocations-page.scss'],
   templateUrl: './allocations-page.html'
 })
 export class AllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {
-    [symbol: string]: Pick<PortfolioPosition, 'name'> & { value: number };
+    [id: string]: Pick<Account, 'name'> & {
+      id: string;
+      value: number;
+    };
   };
+  public activeFilters: Filter[] = [];
+  public allFilters: Filter[];
   public continents: {
     [code: string]: { name: string; value: number };
   };
@@ -32,12 +44,18 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
+  public filters$ = new Subject<Filter[]>();
   public hasImpersonationId: boolean;
+  public isLoading = false;
+  public markets: {
+    [key in Market]: { name: string; value: number };
+  };
   public period = 'current';
   public periodOptions: ToggleOption[] = [
     { label: 'Initial', value: 'original' },
     { label: 'Current', value: 'current' }
   ];
+  public placeholder = '';
   public portfolioDetails: PortfolioDetails;
   public positions: {
     [symbol: string]: Pick<
@@ -51,15 +69,22 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     >;
   };
   public positionsArray: PortfolioPosition[];
+  public routeQueryParams: Subscription;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
   public symbols: {
-    [name: string]: { name: string; symbol: string; value: number };
+    [name: string]: {
+      dataSource?: DataSource;
+      name: string;
+      symbol: string;
+      value: number;
+    };
   };
 
   public user: User;
 
+  private readonly SEARCH_PLACEHOLDER = 'Filter by account or tag...';
   private unsubscribeSubject = new Subject<void>();
 
   /**
@@ -69,9 +94,27 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService
-  ) {}
+  ) {
+    this.routeQueryParams = route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (
+          params['dataSource'] &&
+          params['positionDetailDialog'] &&
+          params['symbol']
+        ) {
+          this.openPositionDialog({
+            dataSource: params['dataSource'],
+            symbol: params['symbol']
+          });
+        }
+      });
+  }
 
   /**
    * Initializes the controller
@@ -86,13 +129,27 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!aId;
       });
 
-    this.dataService
-      .fetchPortfolioDetails({})
-      .pipe(takeUntil(this.unsubscribeSubject))
+    this.filters$
+      .pipe(
+        distinctUntilChanged(),
+        switchMap((filters) => {
+          this.isLoading = true;
+          this.activeFilters = filters;
+          this.placeholder =
+            this.activeFilters.length <= 0 ? this.SEARCH_PLACEHOLDER : '';
+
+          return this.dataService.fetchPortfolioDetails({
+            filters: this.activeFilters
+          });
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
       .subscribe((portfolioDetails) => {
         this.portfolioDetails = portfolioDetails;
 
         this.initializeAnalysisData(this.period);
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -103,12 +160,47 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          const accountFilters: Filter[] = this.user.accounts
+            .filter(({ accountType }) => {
+              return accountType === 'SECURITIES';
+            })
+            .map(({ id, name }) => {
+              return {
+                id,
+                label: name,
+                type: 'ACCOUNT'
+              };
+            });
+
+          const assetClassFilters: Filter[] = [];
+          for (const assetClass of Object.keys(AssetClass)) {
+            assetClassFilters.push({
+              id: assetClass,
+              label: assetClass,
+              type: 'ASSET_CLASS'
+            });
+          }
+
+          const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
+            return {
+              id,
+              label: name,
+              type: 'TAG'
+            };
+          });
+
+          this.allFilters = [
+            ...accountFilters,
+            ...assetClassFilters,
+            ...tagFilters
+          ];
+
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
-  public initializeAnalysisData(aPeriod: string) {
+  public initialize() {
     this.accounts = {};
     this.continents = {
       [UNKNOWN_KEY]: {
@@ -119,6 +211,20 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.countries = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
+        value: 0
+      }
+    };
+    this.markets = {
+      developedMarkets: {
+        name: 'developedMarkets',
+        value: 0
+      },
+      emergingMarkets: {
+        name: 'emergingMarkets',
+        value: 0
+      },
+      otherMarkets: {
+        name: 'otherMarkets',
         value: 0
       }
     };
@@ -137,11 +243,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
+  }
 
-    for (const [name, { current, original }] of Object.entries(
+  public initializeAnalysisData(aPeriod: string) {
+    this.initialize();
+
+    for (const [id, { current, name, original }] of Object.entries(
       this.portfolioDetails.accounts
     )) {
-      this.accounts[name] = {
+      this.accounts[id] = {
+        id,
         name,
         value: aPeriod === 'original' ? original : current
       };
@@ -180,6 +291,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
+          this.markets.developedMarkets.value +=
+            position.markets.developedMarkets *
+            (aPeriod === 'original' ? position.investment : position.value);
+          this.markets.emergingMarkets.value +=
+            position.markets.emergingMarkets *
+            (aPeriod === 'original' ? position.investment : position.value);
+          this.markets.otherMarkets.value +=
+            position.markets.otherMarkets *
+            (aPeriod === 'original' ? position.investment : position.value);
+
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
 
@@ -246,14 +367,25 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (position.assetClass === AssetClass.EQUITY) {
-        this.symbols[prettifySymbol(symbol)] = {
-          name: position.name,
-          symbol: prettifySymbol(symbol),
-          value: aPeriod === 'original' ? position.investment : position.value
-        };
-      }
+      this.symbols[prettifySymbol(symbol)] = {
+        dataSource: position.dataSource,
+        name: position.name,
+        symbol: prettifySymbol(symbol),
+        value: aPeriod === 'original' ? position.investment : position.value
+      };
     }
+
+    const marketsTotal =
+      this.markets.developedMarkets.value +
+      this.markets.emergingMarkets.value +
+      this.markets.otherMarkets.value;
+
+    this.markets.developedMarkets.value =
+      this.markets.developedMarkets.value / marketsTotal;
+    this.markets.emergingMarkets.value =
+      this.markets.emergingMarkets.value / marketsTotal;
+    this.markets.otherMarkets.value =
+      this.markets.otherMarkets.value / marketsTotal;
   }
 
   public onChangePeriod(aValue: string) {
@@ -262,8 +394,56 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.initializeAnalysisData(this.period);
   }
 
+  public onProportionChartClicked({ dataSource, symbol }: UniqueAsset) {
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, positionDetailDialog: true }
+      });
+    }
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private openPositionDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        this.user = user;
+
+        const dialogRef = this.dialog.open(PositionDetailDialog, {
+          autoFocus: false,
+          data: <PositionDetailDialogParams>{
+            dataSource,
+            symbol,
+            baseCurrency: this.user?.settings?.baseCurrency,
+            deviceType: this.deviceType,
+            hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToReportDataGlitch: hasPermission(
+              this.user?.permissions,
+              permissions.reportDataGlitch
+            ),
+            locale: this.user?.settings?.locale
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
+      });
   }
 }

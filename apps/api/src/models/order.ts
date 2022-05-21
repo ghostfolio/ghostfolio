@@ -1,8 +1,7 @@
-import { Account, SymbolProfile } from '@prisma/client';
+import { Account, SymbolProfile, Type as TypeOfOrder } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
 import { IOrder } from '../services/interfaces/interfaces';
-import { OrderType } from './order-type';
 
 export class Order {
   private account: Account;
@@ -15,7 +14,7 @@ export class Order {
   private symbol: string;
   private symbolProfile: SymbolProfile;
   private total: number;
-  private type: OrderType;
+  private type: TypeOfOrder;
   private unitPrice: number;
 
   public constructor(data: IOrder) {

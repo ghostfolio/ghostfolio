@@ -9,17 +9,14 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { Router } from '@angular/router';
+import { ASSET_SUB_CLASS_EMERGENCY_FUND } from '@ghostfolio/common/config';
+import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { AssetClass, Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
-import { PositionDetailDialog } from '../position/position-detail-dialog/position-detail-dialog.component';
 
 @Component({
   selector: 'gf-positions-table',
@@ -42,28 +39,17 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   public dataSource: MatTableDataSource<PortfolioPosition> =
     new MatTableDataSource();
   public displayedColumns = [];
-  public ignoreAssetSubClasses = [AssetClass.CASH.toString()];
+  public ignoreAssetSubClasses = [
+    AssetClass.CASH.toString(),
+    ASSET_SUB_CLASS_EMERGENCY_FUND
+  ];
   public isLoading = true;
   public pageSize = 7;
   public routeQueryParams: Subscription;
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private dialog: MatDialog,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.routeQueryParams = route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (params['positionDetailDialog'] && params['symbol']) {
-          this.openPositionDialog({
-            symbol: params['symbol']
-          });
-        }
-      });
-  }
+  public constructor(private router: Router) {}
 
   public ngOnInit() {}
 
@@ -87,14 +73,9 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  /*public applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }*/
-
-  public onOpenPositionDialog({ symbol }: { symbol: string }): void {
+  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
     this.router.navigate([], {
-      queryParams: { positionDetailDialog: true, symbol }
+      queryParams: { dataSource, symbol, positionDetailDialog: true }
     });
   }
 
@@ -104,27 +85,6 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
     });
-  }
-
-  public openPositionDialog({ symbol }: { symbol: string }): void {
-    const dialogRef = this.dialog.open(PositionDetailDialog, {
-      autoFocus: false,
-      data: {
-        symbol,
-        baseCurrency: this.baseCurrency,
-        deviceType: this.deviceType,
-        locale: this.locale
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
   }
 
   public ngOnDestroy() {

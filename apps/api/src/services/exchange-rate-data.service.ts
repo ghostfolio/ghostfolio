@@ -2,7 +2,7 @@ import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format } from 'date-fns';
-import { isEmpty, isNumber, uniq } from 'lodash';
+import { isNumber, uniq } from 'lodash';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
@@ -58,10 +58,10 @@ export class ExchangeRateDataService {
       getYesterday()
     );
 
-    if (isEmpty(result)) {
+    if (Object.keys(result).length !== this.currencyPairs.length) {
       // Load currencies directly from data provider as a fallback
-      // if historical data is not yet available
-      const historicalData = await this.dataProviderService.get(
+      // if historical data is not fully available
+      const historicalData = await this.dataProviderService.getQuotes(
         this.currencyPairs.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
         })
@@ -114,6 +114,10 @@ export class ExchangeRateDataService {
     aFromCurrency: string,
     aToCurrency: string
   ) {
+    if (aValue === 0) {
+      return 0;
+    }
+
     const hasNaN = Object.values(this.exchangeRates).some((exchangeRate) => {
       return isNaN(exchangeRate);
     });
@@ -145,7 +149,8 @@ export class ExchangeRateDataService {
 
     // Fallback with error, if currencies are not available
     Logger.error(
-      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
+      'ExchangeRateDataService'
     );
     return aValue;
   }
@@ -157,7 +162,12 @@ export class ExchangeRateDataService {
       await this.prismaService.account.findMany({
         distinct: ['currency'],
         orderBy: [{ currency: 'asc' }],
-        select: { currency: true }
+        select: { currency: true },
+        where: {
+          currency: {
+            not: null
+          }
+        }
       })
     ).forEach((account) => {
       currencies.push(account.currency);
@@ -167,7 +177,12 @@ export class ExchangeRateDataService {
       await this.prismaService.settings.findMany({
         distinct: ['currency'],
         orderBy: [{ currency: 'asc' }],
-        select: { currency: true }
+        select: { currency: true },
+        where: {
+          currency: {
+            not: null
+          }
+        }
       })
     ).forEach((userSettings) => {
       currencies.push(userSettings.currency);
@@ -191,7 +206,7 @@ export class ExchangeRateDataService {
       currencies = currencies.concat(customCurrencies);
     }
 
-    return uniq(currencies).sort();
+    return uniq(currencies).filter(Boolean).sort();
   }
 
   private prepareCurrencyPairs(aCurrencies: string[]) {

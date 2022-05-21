@@ -8,6 +8,7 @@ export interface PortfolioPublicDetails {
       | 'allocationCurrent'
       | 'countries'
       | 'currency'
+      | 'markets'
       | 'name'
       | 'sectors'
       | 'value'

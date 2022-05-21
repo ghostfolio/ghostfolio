@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -9,19 +6,17 @@ datasource db {
 generator client {
   provider        = "prisma-client-js"
   binaryTargets   = ["debian-openssl-1.1.x", "native"]
-  previewFeatures = ["orderByRelation", "selectRelationCount"]
+  previewFeatures = []
 }
 
 model Access {
   createdAt     DateTime @default(now())
   GranteeUser   User?    @relation(fields: [granteeUserId], name: "accessGet", references: [id])
   granteeUserId String?
-  id            String   @default(uuid())
+  id            String   @id @default(uuid())
   updatedAt     DateTime @updatedAt
   User          User     @relation(fields: [userId], name: "accessGive", references: [id])
   userId        String
-
-  @@id([id, userId])
 }
 
 model Account {
@@ -64,7 +59,7 @@ model MarketData {
   createdAt   DateTime   @default(now())
   dataSource  DataSource
   date        DateTime
-  id          String     @default(uuid())
+  id          String     @id @default(uuid())
   symbol      String
   marketPrice Float
 
@@ -73,27 +68,23 @@ model MarketData {
 }
 
 model Order {
-  Account         Account?       @relation(fields: [accountId, accountUserId], references: [id, userId])
+  Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   accountId       String?
   accountUserId   String?
-  createdAt       DateTime       @default(now())
-  currency        String?
-  dataSource      DataSource
+  createdAt       DateTime      @default(now())
   date            DateTime
   fee             Float
-  id              String         @default(uuid())
-  isDraft         Boolean        @default(false)
+  id              String        @id @default(uuid())
+  isDraft         Boolean       @default(false)
   quantity        Float
-  symbol          String
-  SymbolProfile   SymbolProfile? @relation(fields: [symbolProfileId], references: [id])
-  symbolProfileId String?
+  SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
+  symbolProfileId String
+  tags            Tag[]
   type            Type
   unitPrice       Float
-  updatedAt       DateTime       @updatedAt
-  User            User           @relation(fields: [userId], references: [id])
+  updatedAt       DateTime      @updatedAt
+  User            User          @relation(fields: [userId], references: [id])
   userId          String
-
-  @@id([id, userId])
 }
 
 model Platform {
@@ -118,33 +109,50 @@ model Settings {
 }
 
 model SymbolProfile {
-  assetClass           AssetClass?
-  assetSubClass        AssetSubClass?
-  countries            Json?
-  createdAt            DateTime       @default(now())
-  currency             String?
-  dataSource           DataSource
-  id                   String         @id @default(uuid())
-  name                 String?
-  Order                Order[]
-  updatedAt            DateTime       @updatedAt
-  scraperConfiguration Json?
-  sectors              Json?
-  symbol               String
-  symbolMapping        Json?
+  assetClass             AssetClass?
+  assetSubClass          AssetSubClass?
+  countries              Json?
+  createdAt              DateTime                @default(now())
+  currency               String
+  dataSource             DataSource
+  id                     String                  @id @default(uuid())
+  name                   String?
+  Order                  Order[]
+  updatedAt              DateTime                @updatedAt
+  scraperConfiguration   Json?
+  sectors                Json?
+  symbol                 String
+  symbolMapping          Json?
+  SymbolProfileOverrides SymbolProfileOverrides?
+  url                    String?
 
   @@unique([dataSource, symbol])
+}
+
+model SymbolProfileOverrides {
+  assetClass      AssetClass?
+  assetSubClass   AssetSubClass?
+  countries       Json?
+  name            String?
+  sectors         Json?
+  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], references: [id])
+  symbolProfileId String         @id
+  updatedAt       DateTime       @updatedAt
 }
 
 model Subscription {
   createdAt DateTime @default(now())
   expiresAt DateTime
-  id        String   @default(uuid())
+  id        String   @id @default(uuid())
   updatedAt DateTime @updatedAt
   User      User     @relation(fields: [userId], references: [id])
   userId    String
+}
 
-  @@id([id, userId])
+model Tag {
+  id     String  @id @default(uuid())
+  name   String  @unique
+  orders Order[]
 }
 
 model User {
@@ -159,7 +167,7 @@ model User {
   createdAt     DateTime       @default(now())
   id            String         @id @default(uuid())
   Order         Order[]
-  provider      Provider?
+  provider      Provider       @default(ANONYMOUS)
   role          Role           @default(USER)
   Settings      Settings?
   Subscription  Subscription[]
@@ -176,17 +184,26 @@ enum AssetClass {
   CASH
   COMMODITY
   EQUITY
+  FIXED_INCOME
+  REAL_ESTATE
 }
 
 enum AssetSubClass {
+  BOND
+  COMMODITY
   CRYPTOCURRENCY
   ETF
+  MUTUALFUND
+  PRECIOUS_METAL
+  PRIVATE_EQUITY
   STOCK
 }
 
 enum DataSource {
   ALPHA_VANTAGE
   GHOSTFOLIO
+  GOOGLE_SHEETS
+  MANUAL
   RAKUTEN
   YAHOO
 }
@@ -209,5 +226,7 @@ enum Role {
 
 enum Type {
   BUY
+  DIVIDEND
+  ITEM
   SELL
 }

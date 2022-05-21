@@ -10,7 +10,7 @@ export class CryptocurrencyService {
 
   public constructor() {}
 
-  public isCrypto(aSymbol = '') {
+  public isCryptocurrency(aSymbol = '') {
     const cryptocurrencySymbol = aSymbol.substring(0, aSymbol.length - 3);
     return this.getCryptocurrencies().includes(cryptocurrencySymbol);
   }

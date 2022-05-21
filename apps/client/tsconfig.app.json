@@ -5,5 +5,6 @@
     "types": ["node"],
     "typeRoots": ["../node_modules/@types"]
   },
-  "files": ["src/main.ts", "src/polyfills.ts"]
+  "files": ["src/main.ts", "src/polyfills.ts"],
+  "exclude": ["jest.config.ts"]
 }
