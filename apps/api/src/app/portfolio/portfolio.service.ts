@@ -462,8 +462,9 @@ export class PortfolioService {
 
     const accounts = await this.getValueOfAccounts({
       orders,
-      userId,
       portfolioItemsNow,
+      userCurrency,
+      userId,
       filters: aFilters
     });
 
@@ -899,7 +900,8 @@ export class PortfolioService {
     const accounts = await this.getValueOfAccounts({
       orders,
       portfolioItemsNow,
-      userId
+      userId,
+      userCurrency: currency
     });
     return {
       rules: {
@@ -1268,11 +1270,13 @@ export class PortfolioService {
     filters = [],
     orders,
     portfolioItemsNow,
+    userCurrency,
     userId
   }: {
     filters?: Filter[];
     orders: OrderWithAccount[];
     portfolioItemsNow: { [p: string]: TimelinePosition };
+    userCurrency: string;
     userId: string;
   }) {
     const accounts: PortfolioDetails['accounts'] = {};
@@ -1301,34 +1305,47 @@ export class PortfolioService {
       accounts[account.id] = {
         balance: account.balance,
         currency: account.currency,
-        current: account.balance,
+        current: this.exchangeRateDataService.toCurrency(
+          account.balance,
+          account.currency,
+          userCurrency
+        ),
         name: account.name,
-        original: account.balance
+        original: this.exchangeRateDataService.toCurrency(
+          account.balance,
+          account.currency,
+          userCurrency
+        )
       };
 
       for (const order of ordersByAccount) {
-        let currentValueOfSymbol =
+        let currentValueOfSymbolInBaseCurrency =
           order.quantity *
           portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
-        let originalValueOfSymbol = order.quantity * order.unitPrice;
+        let originalValueOfSymbolInBaseCurrency =
+          this.exchangeRateDataService.toCurrency(
+            order.quantity * order.unitPrice,
+            order.SymbolProfile.currency,
+            userCurrency
+          );
 
         if (order.type === 'SELL') {
-          currentValueOfSymbol *= -1;
-          originalValueOfSymbol *= -1;
+          currentValueOfSymbolInBaseCurrency *= -1;
+          originalValueOfSymbolInBaseCurrency *= -1;
         }
 
         if (accounts[order.Account?.id || UNKNOWN_KEY]?.current) {
           accounts[order.Account?.id || UNKNOWN_KEY].current +=
-            currentValueOfSymbol;
+            currentValueOfSymbolInBaseCurrency;
           accounts[order.Account?.id || UNKNOWN_KEY].original +=
-            originalValueOfSymbol;
+            originalValueOfSymbolInBaseCurrency;
         } else {
           accounts[order.Account?.id || UNKNOWN_KEY] = {
             balance: 0,
             currency: order.Account?.currency,
-            current: currentValueOfSymbol,
+            current: currentValueOfSymbolInBaseCurrency,
             name: account.name,
-            original: originalValueOfSymbol
+            original: originalValueOfSymbolInBaseCurrency
           };
         }
       }

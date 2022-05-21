@@ -231,9 +231,9 @@ export class PortfolioCalculator {
       if (!marketSymbolMap[date]) {
         marketSymbolMap[date] = {};
       }
-      if (marketSymbol.marketPrice) {
+      if (marketSymbol.marketPriceInBaseCurrency) {
         marketSymbolMap[date][marketSymbol.symbol] = new Big(
-          marketSymbol.marketPrice
+          marketSymbol.marketPriceInBaseCurrency
         );
       }
     }
@@ -548,9 +548,9 @@ export class PortfolioCalculator {
         if (!marketSymbolMap[date]) {
           marketSymbolMap[date] = {};
         }
-        if (marketSymbol.marketPrice) {
+        if (marketSymbol.marketPriceInBaseCurrency) {
           marketSymbolMap[date][marketSymbol.symbol] = new Big(
-            marketSymbol.marketPrice
+            marketSymbol.marketPriceInBaseCurrency
           );
         }
       }
