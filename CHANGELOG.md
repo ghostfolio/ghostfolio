@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the currency conversion in the account calculations
 - Fixed an issue with countries in the symbol profile overrides
 
 ## 1.149.0 - 16.05.2022
