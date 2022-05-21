@@ -84,6 +84,7 @@ describe('PortfolioCalculator', () => {
             netPerformance: new Big('17.68'),
             netPerformancePercentage: new Big('0.11662269129287598945'),
             marketPrice: 87.8,
+            marketPriceInBaseCurrency: 87.8,
             quantity: new Big('1'),
             symbol: 'NOVN.SW',
             transactionCount: 2

@@ -389,7 +389,7 @@ export class PortfolioService {
         continue;
       }
 
-      const value = item.quantity.mul(item.marketPrice);
+      const value = item.quantity.mul(item.marketPriceInBaseCurrency);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
@@ -428,7 +428,7 @@ export class PortfolioService {
         grossPerformancePercent:
           item.grossPerformancePercentage?.toNumber() ?? 0,
         investment: item.investment.toNumber(),
-        marketPrice: item.marketPrice,
+        marketPrice: item.marketPriceInBaseCurrency,
         marketState: dataProviderResponse.marketState,
         name: symbolProfile.name,
         netPerformance: item.netPerformance?.toNumber() ?? 0,
@@ -508,11 +508,10 @@ export class PortfolioService {
         quantity: undefined,
         SymbolProfile: undefined,
         transactionCount: undefined,
-        value: undefined
+        valueInBaseCurrency: undefined
       };
     }
 
-    const positionCurrency = orders[0].SymbolProfile.currency;
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       aSymbol
     ]);
@@ -538,7 +537,7 @@ export class PortfolioService {
     tags = uniqBy(tags, 'id');
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: positionCurrency,
+      currency: userCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -562,6 +561,7 @@ export class PortfolioService {
         dataSource,
         firstBuyDate,
         marketPrice,
+        marketPriceInBaseCurrency,
         quantity,
         transactionCount
       } = position;
@@ -653,11 +653,7 @@ export class PortfolioService {
         historicalData: historicalDataArray,
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         quantity: quantity.toNumber(),
-        value: this.exchangeRateDataService.toCurrency(
-          quantity.mul(marketPrice).toNumber(),
-          currency,
-          userCurrency
-        )
+        valueInBaseCurrency: quantity.mul(marketPriceInBaseCurrency).toNumber()
       };
     } else {
       const currentData = await this.dataProviderService.getQuotes([
@@ -713,7 +709,7 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         quantity: 0,
         transactionCount: undefined,
-        value: 0
+        valueInBaseCurrency: 0
       };
     }
   }
@@ -1321,7 +1317,8 @@ export class PortfolioService {
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
-          portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
+          portfolioItemsNow[order.SymbolProfile.symbol]
+            .marketPriceInBaseCurrency;
         let originalValueOfSymbolInBaseCurrency =
           this.exchangeRateDataService.toCurrency(
             order.quantity * order.unitPrice,

@@ -10,6 +10,7 @@ export interface TimelinePosition {
   grossPerformancePercentage: Big;
   investment: Big;
   marketPrice: number;
+  marketPriceInBaseCurrency: number;
   netPerformance: Big;
   netPerformancePercentage: Big;
   quantity: Big;

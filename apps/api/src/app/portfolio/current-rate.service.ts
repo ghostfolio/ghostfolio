@@ -40,6 +40,9 @@ export class CurrentRateService {
             for (const dataGatheringItem of dataGatheringItems) {
               result.push({
                 date: today,
+                marketPrice:
+                  dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice ??
+                  0,
                 marketPriceInBaseCurrency:
                   this.exchangeRateDataService.toCurrency(
                     dataResultProvider?.[dataGatheringItem.symbol]
@@ -69,6 +72,7 @@ export class CurrentRateService {
           return data.map((marketDataItem) => {
             return {
               date: marketDataItem.date,
+              marketPrice: marketDataItem.marketPrice,
               marketPriceInBaseCurrency:
                 this.exchangeRateDataService.toCurrency(
                   marketDataItem.marketPrice,

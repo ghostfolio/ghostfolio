@@ -6,6 +6,7 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
@@ -273,13 +274,15 @@ export class DataService {
     symbol: string;
   }) {
     return this.http
-      .get<any>(`/api/v1/portfolio/position/${dataSource}/${symbol}`)
+      .get<PortfolioPositionDetail>(
+        `/api/v1/portfolio/position/${dataSource}/${symbol}`
+      )
       .pipe(
         map((data) => {
           if (data.orders) {
             for (const order of data.orders) {
-              order.createdAt = parseISO(order.createdAt);
-              order.date = parseISO(order.date);
+              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
+              order.date = parseISO(<string>(<unknown>order.date));
             }
           }
 

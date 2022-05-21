@@ -36,7 +36,7 @@ export class PortfolioCalculator {
   private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
     true;
 
-  private static readonly ENABLE_LOGGING = false;
+  private static readonly ENABLE_LOGGING = true;
 
   private currency: string;
   private currentRateService: CurrentRateService;
@@ -223,7 +223,9 @@ export class PortfolioCalculator {
     });
 
     const marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
+      [date: string]: {
+        [symbol: string]: { marketPrice: Big; marketPriceInBaseCurrency: Big };
+      };
     } = {};
 
     for (const marketSymbol of marketSymbols) {
@@ -231,11 +233,12 @@ export class PortfolioCalculator {
       if (!marketSymbolMap[date]) {
         marketSymbolMap[date] = {};
       }
-      if (marketSymbol.marketPriceInBaseCurrency) {
-        marketSymbolMap[date][marketSymbol.symbol] = new Big(
+      marketSymbolMap[date][marketSymbol.symbol] = {
+        marketPrice: new Big(marketSymbol.marketPrice),
+        marketPriceInBaseCurrency: new Big(
           marketSymbol.marketPriceInBaseCurrency
-        );
-      }
+        )
+      };
     }
 
     const todayString = format(today, DATE_FORMAT);
@@ -251,7 +254,10 @@ export class PortfolioCalculator {
     const errors: ResponseError['errors'] = [];
 
     for (const item of lastTransactionPoint.items) {
-      const marketValue = marketSymbolMap[todayString]?.[item.symbol];
+      const marketPrice =
+        marketSymbolMap[todayString]?.[item.symbol].marketPrice;
+      const marketValue =
+        marketSymbolMap[todayString]?.[item.symbol].marketPriceInBaseCurrency;
 
       const {
         grossPerformance,
@@ -281,7 +287,8 @@ export class PortfolioCalculator {
           ? grossPerformancePercentage ?? null
           : null,
         investment: item.investment,
-        marketPrice: marketValue?.toNumber() ?? null,
+        marketPrice: marketPrice?.toNumber() ?? null,
+        marketPriceInBaseCurrency: marketValue?.toNumber() ?? null,
         netPerformance: !hasErrors ? netPerformance ?? null : null,
         netPerformancePercentage: !hasErrors
           ? netPerformancePercentage ?? null
@@ -432,9 +439,28 @@ export class PortfolioCalculator {
     let totalInvestment = new Big(0);
 
     for (const currentPosition of positions) {
+      if (currentPosition.symbol === 'GOOG') {
+        console.log(
+          'grossPerformance',
+          currentPosition.grossPerformance.toNumber()
+        );
+        console.log(
+          'netPerformance',
+          currentPosition.netPerformance.toNumber()
+        );
+        console.log('marketPrice', currentPosition.marketPrice);
+        console.log(
+          'marketPriceInBaseCurrency',
+          currentPosition.marketPriceInBaseCurrency
+        );
+      }
+
+      // Market price or market price in base currency?
       if (currentPosition.marketPrice) {
         currentValue = currentValue.plus(
-          new Big(currentPosition.marketPrice).mul(currentPosition.quantity)
+          currentPosition.quantity.mul(
+            currentPosition.marketPriceInBaseCurrency
+          )
         );
       } else {
         hasErrors = true;
@@ -649,7 +675,9 @@ export class PortfolioCalculator {
     symbol
   }: {
     marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
+      [date: string]: {
+        [symbol: string]: { marketPrice: Big; marketPriceInBaseCurrency: Big };
+      };
     };
     start: Date;
     symbol: string;
@@ -673,10 +701,10 @@ export class PortfolioCalculator {
     const endDate = new Date(Date.now());
 
     const unitPriceAtStartDate =
-      marketSymbolMap[format(start, DATE_FORMAT)]?.[symbol];
+      marketSymbolMap[format(start, DATE_FORMAT)]?.[symbol]?.marketPrice;
 
     const unitPriceAtEndDate =
-      marketSymbolMap[format(endDate, DATE_FORMAT)]?.[symbol];
+      marketSymbolMap[format(endDate, DATE_FORMAT)]?.[symbol]?.marketPrice;
 
     if (
       !unitPriceAtEndDate ||
@@ -962,7 +990,9 @@ export class PortfolioCalculator {
             )
             .minus(1);
 
-    if (PortfolioCalculator.ENABLE_LOGGING) {
+    if (PortfolioCalculator.ENABLE_LOGGING && symbol === 'GOOG') {
+      console.log(orders);
+
       console.log(
         `
         ${symbol}

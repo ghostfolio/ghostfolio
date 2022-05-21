@@ -20,7 +20,7 @@ export interface PortfolioPositionDetail {
   SymbolProfile: EnhancedSymbolProfile;
   tags: Tag[];
   transactionCount: number;
-  value: number;
+  valueInBaseCurrency: number;
 }
 
 export interface HistoricalDataContainer {

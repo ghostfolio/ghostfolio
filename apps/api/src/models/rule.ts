@@ -42,7 +42,9 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
           (previousValue, currentValue) =>
             previousValue +
             this.exchangeRateDataService.toCurrency(
-              currentValue.quantity.mul(currentValue.marketPrice).toNumber(),
+              currentValue.quantity
+                .mul(currentValue.marketPriceInBaseCurrency)
+                .toNumber(),
               currentValue.currency,
               baseCurrency
             ),

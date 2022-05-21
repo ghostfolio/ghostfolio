@@ -100,11 +100,13 @@ describe('CurrentRateService', () => {
     ).toMatchObject<GetValueObject[]>([
       {
         date: undefined,
+        marketPrice: 1841.823902,
         marketPriceInBaseCurrency: 1841.823902,
         symbol: 'AMZN'
       },
       {
         date: undefined,
+        marketPrice: 1847.839966,
         marketPriceInBaseCurrency: 1847.839966,
         symbol: 'AMZN'
       }

@@ -84,6 +84,7 @@ describe('PortfolioCalculator', () => {
             netPerformance: new Big('-15.8'),
             netPerformancePercentage: new Big('-0.0552834149755073478'),
             marketPrice: 148.9,
+            marketPriceInBaseCurrency: 148.9,
             quantity: new Big('0'),
             symbol: 'BALN.SW',
             transactionCount: 2
