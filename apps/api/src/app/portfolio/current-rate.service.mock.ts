@@ -1,6 +1,7 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
+import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 function mockGetValue(symbol: string, date: Date) {
@@ -33,8 +34,11 @@ function mockGetValue(symbol: string, date: Date) {
 }
 
 export const CurrentRateServiceMock = {
-  getValues: ({ dataGatheringItems, dateQuery }: GetValuesParams) => {
-    const result = [];
+  getValues: ({
+    dataGatheringItems,
+    dateQuery
+  }: GetValuesParams): Promise<GetValueObject[]> => {
+    const result: GetValueObject[] = [];
     if (dateQuery.lt) {
       for (
         let date = resetHours(dateQuery.gte);
@@ -44,8 +48,10 @@ export const CurrentRateServiceMock = {
         for (const dataGatheringItem of dataGatheringItems) {
           result.push({
             date,
-            marketPrice: mockGetValue(dataGatheringItem.symbol, date)
-              .marketPrice,
+            marketPriceInBaseCurrency: mockGetValue(
+              dataGatheringItem.symbol,
+              date
+            ).marketPrice,
             symbol: dataGatheringItem.symbol
           });
         }
@@ -55,8 +61,10 @@ export const CurrentRateServiceMock = {
         for (const dataGatheringItem of dataGatheringItems) {
           result.push({
             date,
-            marketPrice: mockGetValue(dataGatheringItem.symbol, date)
-              .marketPrice,
+            marketPriceInBaseCurrency: mockGetValue(
+              dataGatheringItem.symbol,
+              date
+            ).marketPrice,
             symbol: dataGatheringItem.symbol
           });
         }

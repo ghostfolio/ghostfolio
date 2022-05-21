@@ -28,13 +28,7 @@ export class CurrentRateService {
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
       (!dateQuery.in || this.containsToday(dateQuery.in));
 
-    const promises: Promise<
-      {
-        date: Date;
-        marketPrice: number;
-        symbol: string;
-      }[]
-    >[] = [];
+    const promises: Promise<GetValueObject[]>[] = [];
 
     if (includeToday) {
       const today = resetHours(new Date());
@@ -42,16 +36,17 @@ export class CurrentRateService {
         this.dataProviderService
           .getQuotes(dataGatheringItems)
           .then((dataResultProvider) => {
-            const result = [];
+            const result: GetValueObject[] = [];
             for (const dataGatheringItem of dataGatheringItems) {
               result.push({
                 date: today,
-                marketPrice: this.exchangeRateDataService.toCurrency(
-                  dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice ??
-                    0,
-                  dataResultProvider?.[dataGatheringItem.symbol]?.currency,
-                  userCurrency
-                ),
+                marketPriceInBaseCurrency:
+                  this.exchangeRateDataService.toCurrency(
+                    dataResultProvider?.[dataGatheringItem.symbol]
+                      ?.marketPrice ?? 0,
+                    dataResultProvider?.[dataGatheringItem.symbol]?.currency,
+                    userCurrency
+                  ),
                 symbol: dataGatheringItem.symbol
               });
             }
@@ -74,11 +69,12 @@ export class CurrentRateService {
           return data.map((marketDataItem) => {
             return {
               date: marketDataItem.date,
-              marketPrice: this.exchangeRateDataService.toCurrency(
-                marketDataItem.marketPrice,
-                currencies[marketDataItem.symbol],
-                userCurrency
-              ),
+              marketPriceInBaseCurrency:
+                this.exchangeRateDataService.toCurrency(
+                  marketDataItem.marketPrice,
+                  currencies[marketDataItem.symbol],
+                  userCurrency
+                ),
               symbol: marketDataItem.symbol
             };
           });
