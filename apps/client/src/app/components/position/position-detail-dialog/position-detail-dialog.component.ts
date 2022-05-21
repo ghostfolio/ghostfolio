@@ -7,11 +7,12 @@ import {
   OnInit
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
-import { SymbolProfile, Tag } from '@prisma/client';
+import { Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -48,7 +49,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
-  public SymbolProfile: SymbolProfile;
+  public SymbolProfile: EnhancedSymbolProfile;
   public tags: Tag[];
   public transactionCount: number;
   public value: number;
