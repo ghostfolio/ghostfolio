@@ -97,6 +97,25 @@ Run the following command to setup the database once Ghostfolio is running:
 docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:setup
 ```
 
+#### For self-hosted environment (e.g Unraid/portainer)
+
+1)  Run the ghostfolio container
+2)  Open the container cli
+3)  Enter the following command ONLY the first time to create the database and relative tables.
+
+```bash
+yarn database:migrate
+```
+migrate perform ONLY the creation of DB and tables
+
+OR
+
+```bash
+yarn database:setup
+```
+
+performs the creation of DB and tables AND add basic data (for demo/dev purposes)
+
 ### b. Build and run environment
 
 Run the following commands to build and start the Docker images:
