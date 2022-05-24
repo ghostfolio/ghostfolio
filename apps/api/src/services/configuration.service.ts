@@ -12,6 +12,7 @@ export class ConfigurationService {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
       ALPHA_VANTAGE_API_KEY: str({ default: '' }),
+      BASE_CURRENCY: str({ default: 'USD' }),
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_PRIMARY: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({ default: JSON.stringify([DataSource.YAHOO]) }),

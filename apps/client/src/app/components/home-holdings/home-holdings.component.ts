@@ -17,6 +17,7 @@ import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
 import { PositionDetailDialogParams } from '../position/position-detail-dialog/interfaces/interfaces';
 
 @Component({

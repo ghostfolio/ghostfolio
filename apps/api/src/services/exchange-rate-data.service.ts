@@ -1,9 +1,10 @@
-import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
+import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
 
+import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider/data-provider.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
 import { PrismaService } from './prisma.service';
@@ -11,11 +12,13 @@ import { PropertyService } from './property/property.service';
 
 @Injectable()
 export class ExchangeRateDataService {
+  private baseCurrency: string;
   private currencies: string[] = [];
   private currencyPairs: IDataGatheringItem[] = [];
   private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
@@ -24,7 +27,7 @@ export class ExchangeRateDataService {
   }
 
   public getCurrencies() {
-    return this.currencies?.length > 0 ? this.currencies : [baseCurrency];
+    return this.currencies?.length > 0 ? this.currencies : [this.baseCurrency];
   }
 
   public getCurrencyPairs() {
@@ -32,6 +35,7 @@ export class ExchangeRateDataService {
   }
 
   public async initialize() {
+    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
     this.currencies = await this.prepareCurrencies();
     this.currencyPairs = [];
     this.exchangeRates = {};
@@ -212,14 +216,14 @@ export class ExchangeRateDataService {
   private prepareCurrencyPairs(aCurrencies: string[]) {
     return aCurrencies
       .filter((currency) => {
-        return currency !== baseCurrency;
+        return currency !== this.baseCurrency;
       })
       .map((currency) => {
         return {
-          currency1: baseCurrency,
+          currency1: this.baseCurrency,
           currency2: currency,
           dataSource: this.dataProviderService.getPrimaryDataSource(),
-          symbol: `${baseCurrency}${currency}`
+          symbol: `${this.baseCurrency}${currency}`
         };
       });
   }

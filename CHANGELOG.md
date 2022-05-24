@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to set the base currency as an environment variable (`BASE_CURRENCY`)
+
 ### Fixed
 
 - Fixed an issue with the missing conversion of countries in the symbol profile overrides

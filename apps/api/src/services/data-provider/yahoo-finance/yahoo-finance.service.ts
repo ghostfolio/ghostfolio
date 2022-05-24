@@ -1,11 +1,11 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { baseCurrency } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -23,9 +23,14 @@ import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-ifa
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
+  private baseCurrency: string;
+
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService
-  ) {}
+  ) {
+    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  }
 
   public canHandle(symbol: string) {
     return true;
@@ -33,8 +38,8 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
     const symbol = aYahooFinanceSymbol.replace(
-      new RegExp(`-${baseCurrency}$`),
-      baseCurrency
+      new RegExp(`-${this.baseCurrency}$`),
+      this.baseCurrency
     );
     return symbol.replace('=X', '');
   }
@@ -47,12 +52,15 @@ export class YahooFinanceService implements DataProviderInterface {
    *                  DOGEUSD -> DOGE-USD
    */
   public convertToYahooFinanceSymbol(aSymbol: string) {
-    if (aSymbol.includes(baseCurrency) && aSymbol.length >= 6) {
+    if (aSymbol.includes(this.baseCurrency) && aSymbol.length >= 6) {
       if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
         return `${aSymbol}=X`;
       } else if (
         this.cryptocurrencyService.isCryptocurrency(
-          aSymbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
+          aSymbol.replace(
+            new RegExp(`-${this.baseCurrency}$`),
+            this.baseCurrency
+          )
         )
       ) {
         // Add a dash before the last three characters
@@ -60,8 +68,8 @@ export class YahooFinanceService implements DataProviderInterface {
         // DOGEUSD -> DOGE-USD
         // SOL1USD -> SOL1-USD
         return aSymbol.replace(
-          new RegExp(`-?${baseCurrency}$`),
-          `-${baseCurrency}`
+          new RegExp(`-?${this.baseCurrency}$`),
+          `-${this.baseCurrency}`
         );
       }
     }
@@ -255,7 +263,10 @@ export class YahooFinanceService implements DataProviderInterface {
           return (
             (quoteType === 'CRYPTOCURRENCY' &&
               this.cryptocurrencyService.isCryptocurrency(
-                symbol.replace(new RegExp(`-${baseCurrency}$`), baseCurrency)
+                symbol.replace(
+                  new RegExp(`-${this.baseCurrency}$`),
+                  this.baseCurrency
+                )
               )) ||
             ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'].includes(quoteType)
           );
@@ -264,7 +275,7 @@ export class YahooFinanceService implements DataProviderInterface {
           if (quoteType === 'CRYPTOCURRENCY') {
             // Only allow cryptocurrencies in base currency to avoid having redundancy in the database.
             // Transactions need to be converted manually to the base currency before
-            return symbol.includes(baseCurrency);
+            return symbol.includes(this.baseCurrency);
           } else if (quoteType === 'FUTURE') {
             // Allow GC=F, but not MGC=F
             return symbol.length === 4;

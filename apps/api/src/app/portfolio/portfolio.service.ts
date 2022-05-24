@@ -15,6 +15,7 @@ import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from '@ghostfolio/ap
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { CurrencyClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/initial-investment';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
@@ -22,8 +23,7 @@ import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbo
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   ASSET_SUB_CLASS_EMERGENCY_FUND,
-  UNKNOWN_KEY,
-  baseCurrency
+  UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
@@ -82,8 +82,11 @@ const emergingMarkets = require('../../assets/countries/emerging-markets.json');
 
 @Injectable()
 export class PortfolioService {
+  private baseCurrency: string;
+
   public constructor(
     private readonly accountService: AccountService,
+    private readonly configurationService: ConfigurationService,
     private readonly currentRateService: CurrentRateService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -93,7 +96,9 @@ export class PortfolioService {
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService,
     private readonly userService: UserService
-  ) {}
+  ) {
+    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  }
 
   public async getAccounts(aUserId: string): Promise<AccountWithValue[]> {
     const [accounts, details] = await Promise.all([
@@ -320,7 +325,7 @@ export class PortfolioService {
     const userCurrency =
       user.Settings?.currency ??
       this.request.user?.Settings?.currency ??
-      baseCurrency;
+      this.baseCurrency;
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -1213,7 +1218,8 @@ export class PortfolioService {
     orders: OrderWithAccount[];
     portfolioOrders: PortfolioOrder[];
   }> {
-    const userCurrency = this.request.user?.Settings?.currency ?? baseCurrency;
+    const userCurrency =
+      this.request.user?.Settings?.currency ?? this.baseCurrency;
 
     const orders = await this.orderService.getOrders({
       filters,

@@ -103,6 +103,7 @@ export class InfoService {
       isReadOnlyMode,
       platforms,
       systemMessage,
+      baseCurrency: this.configurationService.get('BASE_CURRENCY'),
       currencies: this.exchangeRateDataService.getCurrencies(),
       demoAuthToken: this.getDemoAuthToken(),
       lastDataGathering: await this.getLastDataGathering(),

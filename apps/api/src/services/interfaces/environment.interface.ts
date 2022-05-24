@@ -3,6 +3,7 @@ import { CleanedEnvAccessors } from 'envalid';
 export interface Environment extends CleanedEnvAccessors {
   ACCESS_TOKEN_SALT: string;
   ALPHA_VANTAGE_API_KEY: string;
+  BASE_CURRENCY: string;
   CACHE_TTL: number;
   DATA_SOURCE_PRIMARY: string;
   DATA_SOURCES: string | string[]; // string is not correct, error in envalid?

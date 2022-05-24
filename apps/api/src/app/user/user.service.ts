@@ -3,11 +3,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import {
-  PROPERTY_IS_READ_ONLY_MODE,
-  baseCurrency,
-  locale
-} from '@ghostfolio/common/config';
+import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
 import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
@@ -26,13 +22,17 @@ const crypto = require('crypto');
 export class UserService {
   public static DEFAULT_CURRENCY = 'USD';
 
+  private baseCurrency: string;
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
     private readonly tagService: TagService
-  ) {}
+  ) {
+    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  }
 
   public async getUser(
     {
@@ -224,14 +224,14 @@ export class UserService {
         ...data,
         Account: {
           create: {
-            currency: baseCurrency,
+            currency: this.baseCurrency,
             isDefault: true,
             name: 'Default Account'
           }
         },
         Settings: {
           create: {
-            currency: baseCurrency
+            currency: this.baseCurrency
           }
         }
       }

@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 
 import { YahooFinanceService } from './yahoo-finance.service';
@@ -25,13 +26,18 @@ jest.mock(
 );
 
 describe('YahooFinanceService', () => {
+  let configurationService: ConfigurationService;
   let cryptocurrencyService: CryptocurrencyService;
   let yahooFinanceService: YahooFinanceService;
 
   beforeAll(async () => {
+    configurationService = new ConfigurationService();
     cryptocurrencyService = new CryptocurrencyService();
 
-    yahooFinanceService = new YahooFinanceService(cryptocurrencyService);
+    yahooFinanceService = new YahooFinanceService(
+      configurationService,
+      cryptocurrencyService
+    );
   });
 
   it('convertFromYahooFinanceSymbol', async () => {

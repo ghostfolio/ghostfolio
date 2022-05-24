@@ -4,6 +4,7 @@ import { Statistics } from './statistics.interface';
 import { Subscription } from './subscription.interface';
 
 export interface InfoItem {
+  baseCurrency: string;
   currencies: string[];
   demoAuthToken: string;
   fearAndGreedDataSource?: string;
