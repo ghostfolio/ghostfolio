@@ -74,7 +74,12 @@ describe('CurrentRateService', () => {
 
   beforeAll(async () => {
     dataProviderService = new DataProviderService(null, [], null);
-    exchangeRateDataService = new ExchangeRateDataService(null, null, null);
+    exchangeRateDataService = new ExchangeRateDataService(
+      null,
+      null,
+      null,
+      null
+    );
     marketDataService = new MarketDataService(null);
 
     await exchangeRateDataService.initialize();
