@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { baseCurrency } from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -13,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './pricing-page.html'
 })
 export class PricingPageComponent implements OnDestroy, OnInit {
-  public baseCurrency = baseCurrency;
+  public baseCurrency: string;
   public coupon: number;
   public isLoggedIn: boolean;
   public price: number;
@@ -29,8 +28,9 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    const { subscriptions } = this.dataService.fetchInfo();
+    const { baseCurrency, subscriptions } = this.dataService.fetchInfo();
 
+    this.baseCurrency = baseCurrency;
     this.coupon = this.price = subscriptions?.[0]?.coupon;
     this.price = subscriptions?.[0]?.price;
   }

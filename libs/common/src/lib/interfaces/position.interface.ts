@@ -1,4 +1,5 @@
 import { AssetClass, DataSource } from '@prisma/client';
+
 import { MarketState } from '../types';
 
 export interface Position {

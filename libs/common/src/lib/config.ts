@@ -2,8 +2,6 @@ import { DataSource } from '@prisma/client';
 
 import { ToggleOption } from './types';
 
-export const baseCurrency = 'USD';
-
 export const defaultDateRangeOptions: ToggleOption[] = [
   { label: 'Today', value: '1d' },
   { label: 'YTD', value: 'ytd' },
