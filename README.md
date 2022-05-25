@@ -9,7 +9,7 @@
 
   <h1>Ghostfolio</h1>
   <p>
-    <strong>Open Source Wealth Management Software made for Humans</strong>
+    <strong>Open Source Wealth Management Software</strong>
   </p>
   <p>
     <a href="https://ghostfol.io"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/blog"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
@@ -26,8 +26,9 @@
 
 **Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.
 
-<div align="center">
-  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
+  <a href="https://www.youtube.com/watch?v=yY6ObSQVJZk">
+    <img src="./apps/client/src/assets/images/video-preview.jpg" width="600"></a>
 </div>
 
 ## Ghostfolio Premium
@@ -61,6 +62,10 @@ Ghostfolio is for you if you are...
 - ✅ Dark Mode
 - ✅ Zen Mode
 - ✅ Mobile-first design
+
+<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
+  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+</div>
 
 ## Technology Stack
 
