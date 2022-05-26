@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the _Ghostfolio_ trailer to the landing page
+- Extended the markets overview by benchmarks (current change to the all time high)
 
 ## 1.151.0 - 24.05.2022
 
