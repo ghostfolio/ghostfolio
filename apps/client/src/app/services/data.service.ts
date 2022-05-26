@@ -19,6 +19,7 @@ import {
   Accounts,
   AdminData,
   AdminMarketData,
+  BenchmarkResponse,
   Export,
   Filter,
   InfoItem,
@@ -88,6 +89,10 @@ export class DataService {
 
   public fetchAccesses() {
     return this.http.get<Access[]>('/api/v1/access');
+  }
+
+  public fetchBenchmarks() {
+    return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
   }
 
   public fetchChart({ range }: { range: DateRange }) {

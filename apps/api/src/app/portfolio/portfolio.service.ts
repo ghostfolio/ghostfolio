@@ -19,7 +19,6 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   ASSET_SUB_CLASS_EMERGENCY_FUND,
@@ -28,6 +27,7 @@ import {
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
+  EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
   PortfolioDetails,
@@ -375,7 +375,7 @@ export class PortfolioService {
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes(dataGatheringItems),
-      this.symbolProfileService.getSymbolProfiles(symbols)
+      this.symbolProfileService.getSymbolProfilesBySymbols(symbols)
     ]);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
@@ -518,9 +518,8 @@ export class PortfolioService {
     }
 
     const positionCurrency = orders[0].SymbolProfile.currency;
-    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
-      aSymbol
-    ]);
+    const [SymbolProfile] =
+      await this.symbolProfileService.getSymbolProfilesBySymbols([aSymbol]);
 
     const portfolioOrders: PortfolioOrder[] = orders
       .filter((order) => {
@@ -768,7 +767,7 @@ export class PortfolioService {
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes(dataGatheringItem),
-      this.symbolProfileService.getSymbolProfiles(symbols)
+      this.symbolProfileService.getSymbolProfilesBySymbols(symbols)
     ]);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};

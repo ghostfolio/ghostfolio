@@ -91,9 +91,8 @@ export class GoogleSheetsService implements DataProviderInterface {
     try {
       const response: { [symbol: string]: IDataProviderResponse } = {};
 
-      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        aSymbols
-      );
+      const symbolProfiles =
+        await this.symbolProfileService.getSymbolProfilesBySymbols(aSymbols);
 
       const sheet = await this.getSheet({
         sheetId: this.configurationService.get('GOOGLE_SHEETS_ID'),

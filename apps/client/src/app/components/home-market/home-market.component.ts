@@ -4,6 +4,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
+  Benchmark,
   HistoricalDataItem,
   InfoItem,
   User
@@ -18,6 +19,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-market.html'
 })
 export class HomeMarketComponent implements OnDestroy, OnInit {
+  public benchmarks: Benchmark[];
   public fearAndGreedIndex: number;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalData: HistoricalDataItem[];
@@ -72,6 +74,15 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
                 this.changeDetectorRef.markForCheck();
               });
           }
+
+          this.dataService
+            .fetchBenchmarks()
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe(({ benchmarks }) => {
+              this.benchmarks = benchmarks;
+
+              this.changeDetectorRef.markForCheck();
+            });
 
           this.changeDetectorRef.markForCheck();
         }

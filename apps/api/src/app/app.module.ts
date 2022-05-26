@@ -20,6 +20,7 @@ import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
 import { ExportModule } from './export/export.module';
 import { ImportModule } from './import/import.module';
@@ -37,6 +38,7 @@ import { UserModule } from './user/user.module';
     AccountModule,
     AuthDeviceModule,
     AuthModule,
+    BenchmarkModule,
     BullModule.forRoot({
       redis: {
         host: process.env.REDIS_HOST,

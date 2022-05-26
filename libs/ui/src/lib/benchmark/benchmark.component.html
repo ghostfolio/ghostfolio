@@ -1,0 +1,32 @@
+<div class="align-items-center d-flex">
+  <div *ngIf="benchmark?.name" class="flex-grow-1 text-truncate">
+    {{ benchmark.name }}
+  </div>
+  <div *ngIf="!benchmark?.name" class="flex-grow-1">
+    <ngx-skeleton-loader
+      animation="pulse"
+      [theme]="{
+        width: '15rem'
+      }"
+    ></ngx-skeleton-loader>
+  </div>
+  <gf-value
+    class="mx-2"
+    size="medium"
+    [isPercent]="true"
+    [locale]="locale"
+    [ngClass]="{
+      'text-danger':
+        benchmark?.performances?.allTimeHigh?.performancePercent < 0,
+      'text-success':
+        benchmark?.performances?.allTimeHigh?.performancePercent > 0
+    }"
+    [value]="
+      benchmark?.performances?.allTimeHigh?.performancePercent ?? undefined
+    "
+  ></gf-value>
+  <div class="text-muted">
+    <small class="d-none d-sm-block text-nowrap" i18n>from All Time High</small
+    ><small class="d-block d-sm-none text-nowrap" i18n>from ATH</small>
+  </div>
+</div>
