@@ -1,7 +1,10 @@
-import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  EnhancedSymbolProfile,
+  ScraperConfiguration,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
@@ -12,8 +15,6 @@ import {
   SymbolProfileOverrides
 } from '@prisma/client';
 import { continents, countries } from 'countries-list';
-
-import { ScraperConfiguration } from './data-provider/ghostfolio-scraper-api/interfaces/scraper-configuration.interface';
 
 @Injectable()
 export class SymbolProfileService {

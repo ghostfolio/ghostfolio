@@ -1,4 +1,4 @@
-import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
+import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 
 export interface Benchmark {
   name: EnhancedSymbolProfile['name'];

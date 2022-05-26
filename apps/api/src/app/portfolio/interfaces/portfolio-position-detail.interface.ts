@@ -1,5 +1,7 @@
-import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import {
+  EnhancedSymbolProfile,
+  HistoricalDataItem
+} from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Tag } from '@prisma/client';
 
