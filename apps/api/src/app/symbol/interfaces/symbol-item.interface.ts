@@ -1,9 +1,7 @@
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
-import { DataSource } from '@prisma/client';
+import { HistoricalDataItem, UniqueAsset } from '@ghostfolio/common/interfaces';
 
-export interface SymbolItem {
+export interface SymbolItem extends UniqueAsset {
   currency: string;
-  dataSource: DataSource;
   historicalData: HistoricalDataItem[];
   marketPrice: number;
 }

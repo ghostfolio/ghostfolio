@@ -55,7 +55,8 @@ export class SymbolService {
         currency,
         historicalData,
         marketPrice,
-        dataSource: dataGatheringItem.dataSource
+        dataSource: dataGatheringItem.dataSource,
+        symbol: dataGatheringItem.symbol
       };
     }
 

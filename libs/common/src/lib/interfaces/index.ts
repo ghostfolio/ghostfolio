@@ -6,6 +6,7 @@ import {
   AdminMarketData,
   AdminMarketDataItem
 } from './admin-market-data.interface';
+import { Benchmark } from './benchmark.interface';
 import { Coupon } from './coupon.interface';
 import { Export } from './export.interface';
 import { FilterGroup } from './filter-group.interface';
@@ -24,6 +25,7 @@ import { PortfolioReportRule } from './portfolio-report-rule.interface';
 import { PortfolioReport } from './portfolio-report.interface';
 import { PortfolioSummary } from './portfolio-summary.interface';
 import { Position } from './position.interface';
+import { BenchmarkResponse } from './responses/benchmark-response.interface';
 import { ResponseError } from './responses/errors.interface';
 import { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import { TimelinePosition } from './timeline-position.interface';
@@ -39,6 +41,8 @@ export {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  Benchmark,
+  BenchmarkResponse,
   Coupon,
   Export,
   Filter,

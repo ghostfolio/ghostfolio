@@ -375,7 +375,7 @@ export class PortfolioService {
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes(dataGatheringItems),
-      this.symbolProfileService.getSymbolProfiles(symbols)
+      this.symbolProfileService.getSymbolProfilesBySymbols(symbols)
     ]);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
@@ -518,9 +518,8 @@ export class PortfolioService {
     }
 
     const positionCurrency = orders[0].SymbolProfile.currency;
-    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
-      aSymbol
-    ]);
+    const [SymbolProfile] =
+      await this.symbolProfileService.getSymbolProfilesBySymbols([aSymbol]);
 
     const portfolioOrders: PortfolioOrder[] = orders
       .filter((order) => {
@@ -768,7 +767,7 @@ export class PortfolioService {
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes(dataGatheringItem),
-      this.symbolProfileService.getSymbolProfiles(symbols)
+      this.symbolProfileService.getSymbolProfilesBySymbols(symbols)
     ]);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};

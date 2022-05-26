@@ -46,9 +46,8 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     try {
       const symbol = aSymbol;
 
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
-      );
+      const [symbolProfile] =
+        await this.symbolProfileService.getSymbolProfilesBySymbols([symbol]);
       const { defaultMarketPrice, selector, url } =
         symbolProfile.scraperConfiguration;
 
@@ -108,9 +107,8 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
 
     try {
-      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        aSymbols
-      );
+      const symbolProfiles =
+        await this.symbolProfileService.getSymbolProfilesBySymbols(aSymbols);
 
       const marketData = await this.prismaService.marketData.findMany({
         distinct: ['symbol'],
