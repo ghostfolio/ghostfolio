@@ -102,6 +102,14 @@ Run the following command to setup the database once Ghostfolio is running:
 docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:setup
 ```
 
+## For self-hosted environment (e.g Unraid)
+
+Please follow the guide at the following link for Unraid.
+
+[https://forums.unraid.net/topic/123829-support-community-applications-ghostfolio/](https://forums.unraid.net/topic/123829-support-community-applications-ghostfolio/)
+
+
+
 ### b. Build and run environment
 
 Run the following commands to build and start the Docker images:
