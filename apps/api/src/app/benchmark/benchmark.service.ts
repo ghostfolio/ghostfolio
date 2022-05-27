@@ -53,6 +53,9 @@ export class BenchmarkService {
         .minus(1);
 
       return {
+        marketCondition: this.getMarketCondition(
+          performancePercentFromAllTimeHigh
+        ),
         name: assetProfiles.find(({ dataSource, symbol }) => {
           return (
             dataSource === benchmarkAssets[index].dataSource &&
@@ -73,5 +76,9 @@ export class BenchmarkService {
     );
 
     return benchmarks;
+  }
+
+  private getMarketCondition(aPerformanceInPercent: Big) {
+    return aPerformanceInPercent.lte(-0.2) ? 'BEAR_MARKET' : 'NEUTRAL_MARKET';
   }
 }

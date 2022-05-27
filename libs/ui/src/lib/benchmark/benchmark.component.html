@@ -29,4 +29,21 @@
     <small class="d-none d-sm-block text-nowrap" i18n>from All Time High</small
     ><small class="d-block d-sm-none text-nowrap" i18n>from ATH</small>
   </div>
+  <div class="ml-2">
+    <div
+      *ngIf="benchmark?.marketCondition"
+      [title]="benchmark?.marketCondition"
+    >
+      {{ resolveMarketCondition(benchmark.marketCondition).emoji }}
+    </div>
+    <ngx-skeleton-loader
+      *ngIf="!benchmark?.marketCondition"
+      animation="pulse"
+      appearance="circle"
+      [theme]="{
+        height: '1rem',
+        width: '1rem'
+      }"
+    ></ngx-skeleton-loader>
+  </div>
 </div>
