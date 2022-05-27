@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the twitter bot service to rest on the weekend
 - Upgraded `prisma` from version `3.12.0` to `3.14.0`
 
 ### Fixed
