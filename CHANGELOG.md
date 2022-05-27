@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the benchmarks of the markets overview by the current market condition (bear and bull market)
 - Extended the twitter bot service by benchmarks
 
+### Changed
+
+- Upgraded `prisma` from version `3.12.0` to `3.14.0`
+
+### Fixed
+
+- Fixed a styling issue in the benchmark component on mobile
+
 ## 1.152.0 - 26.05.2022
 
 ### Added
