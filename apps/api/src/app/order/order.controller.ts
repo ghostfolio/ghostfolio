@@ -1,6 +1,6 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
-import { RedactValueInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-value-in-response.interceptor';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
@@ -63,7 +63,7 @@ export class OrderController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(RedactValueInResponseInterceptor)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllOrders(
     @Headers('impersonation-id') impersonationId

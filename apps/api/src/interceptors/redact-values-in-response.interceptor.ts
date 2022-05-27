@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class RedactValueInResponseInterceptor<T>
+export class RedactValuesInResponseInterceptor<T>
   implements NestInterceptor<T, any>
 {
   public constructor() {}
