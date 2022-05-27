@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the benchmarks of the markets overview by the current market condition (bear and bull market)
 - Extended the twitter bot service by benchmarks
+- Added value redaction for the impersonation mode in the API response as an interceptor
 
 ### Changed
 

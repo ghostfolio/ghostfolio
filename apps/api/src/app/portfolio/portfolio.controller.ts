@@ -4,6 +4,7 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
@@ -106,6 +107,7 @@ export class PortfolioController {
 
   @Get('details')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
     @Headers('impersonation-id') impersonationId: string,
