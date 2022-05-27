@@ -11,7 +11,11 @@ import {
   ViewChild
 } from '@angular/core';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import { getBackgroundColor } from '@ghostfolio/common/helper';
+import {
+  getBackgroundColor,
+  getDateFormatString,
+  getTextColor
+} from '@ghostfolio/common/helper';
 import {
   Chart,
   Filler,
@@ -19,7 +23,8 @@ import {
   LineElement,
   LinearScale,
   PointElement,
-  TimeScale
+  TimeScale,
+  Tooltip
 } from 'chart.js';
 
 import { LineChartItem } from './interfaces/line-chart.interface';
@@ -34,6 +39,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
   @Input() historicalDataItems: LineChartItem[];
+  @Input() locale: string;
   @Input() showGradient = false;
   @Input() showLegend = false;
   @Input() showLoader = true;
@@ -57,8 +63,19 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       LineElement,
       PointElement,
       LinearScale,
-      TimeScale
+      TimeScale,
+      Tooltip
     );
+
+    Tooltip.positioners['top'] = (elements, position) => {
+      if (position === false) {
+        return false;
+      }
+      return {
+        x: position.x,
+        y: this.chart.chartArea.top
+      };
+    };
   }
 
   public ngAfterViewInit() {
@@ -148,20 +165,43 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
           data,
           options: {
             animation: false,
-            plugins: {
+            elements: {
+              point: {
+                hoverBackgroundColor: getBackgroundColor(),
+                hoverRadius: 2
+              }
+            },
+            interaction: { intersect: false, mode: 'index' },
+            plugins: <any>{
               legend: {
                 align: 'start',
                 display: this.showLegend,
                 position: 'bottom'
+              },
+              tooltip: {
+                itemSort: (a, b) => {
+                  // Reverse order
+                  return b.datasetIndex - a.datasetIndex;
+                },
+                mode: 'index',
+                position: <any>'top',
+                xAlign: 'center',
+                yAlign: 'bottom'
+              },
+              verticalHoverLine: {
+                color: `rgba(${getTextColor()}, 0.1)`
               }
             },
             scales: {
               x: {
                 display: this.showXAxis,
                 grid: {
+                  borderColor: `rgba(${getTextColor()}, 0.2)`,
+                  color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
                 time: {
+                  tooltipFormat: getDateFormatString(this.locale),
                   unit: 'year'
                 },
                 type: 'time'
@@ -169,6 +209,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               y: {
                 display: this.showYAxis,
                 grid: {
+                  borderColor: `rgba(${getTextColor()}, 0.2)`,
+                  color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
                 max: this.yMax,
@@ -204,6 +246,35 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             },
             spanGaps: true
           },
+          plugins: [
+            {
+              afterDatasetsDraw: (chart, x, options) => {
+                const active = chart.getActiveElements();
+
+                if (!active || active.length === 0) {
+                  return;
+                }
+
+                const color = options.color || `rgb(${getTextColor()})`;
+                const width = options.width || 1;
+
+                const {
+                  chartArea: { bottom, top }
+                } = chart;
+                const xValue = active[0].element.x;
+
+                const context = this.chartCanvas.nativeElement.getContext('2d');
+                context.lineWidth = width;
+                context.strokeStyle = color;
+
+                context.beginPath();
+                context.moveTo(xValue, top);
+                context.lineTo(xValue, bottom);
+                context.stroke();
+              },
+              id: 'verticalHoverLine'
+            }
+          ],
           type: 'line'
         });
       }
