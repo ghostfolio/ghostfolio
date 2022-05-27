@@ -11,9 +11,11 @@
         <mat-card-content>
           <gf-investment-chart
             class="h-100"
+            [currency]="user?.settings?.baseCurrency"
             [daysInMarket]="daysInMarket"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [investments]="investments"
+            [locale]="user?.settings?.locale"
           ></gf-investment-chart>
         </mat-card-content>
       </mat-card>

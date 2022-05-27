@@ -10,6 +10,11 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import {
+  getTooltipOptions,
+  getTooltipPositionerMapTop,
+  getVerticalHoverLinePlugin
+} from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
@@ -38,6 +43,7 @@ import { LineChartItem } from './interfaces/line-chart.interface';
 export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
+  @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() locale: string;
   @Input() showGradient = false;
@@ -67,15 +73,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       Tooltip
     );
 
-    Tooltip.positioners['top'] = (elements, position) => {
-      if (position === false) {
-        return false;
-      }
-      return {
-        x: position.x,
-        y: this.chart.chartArea.top
-      };
-    };
+    Tooltip.positioners['top'] = (elements, position) =>
+      getTooltipPositionerMapTop(this.chart, position);
   }
 
   public ngAfterViewInit() {
@@ -159,6 +158,9 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins.tooltip = <unknown>(
+          this.getTooltipPluginConfiguration()
+        );
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -172,22 +174,13 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               }
             },
             interaction: { intersect: false, mode: 'index' },
-            plugins: <any>{
+            plugins: <unknown>{
               legend: {
                 align: 'start',
                 display: this.showLegend,
                 position: 'bottom'
               },
-              tooltip: {
-                itemSort: (a, b) => {
-                  // Reverse order
-                  return b.datasetIndex - a.datasetIndex;
-                },
-                mode: 'index',
-                position: <any>'top',
-                xAlign: 'center',
-                yAlign: 'bottom'
-              },
+              tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
                 color: `rgba(${getTextColor()}, 0.1)`
               }
@@ -196,7 +189,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               x: {
                 display: this.showXAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.2)`,
+                  borderColor: `rgba(${getTextColor()}, 0.1)`,
                   color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
@@ -209,7 +202,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               y: {
                 display: this.showYAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.2)`,
+                  borderColor: `rgba(${getTextColor()}, 0.1)`,
                   color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
@@ -246,40 +239,22 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             },
             spanGaps: true
           },
-          plugins: [
-            {
-              afterDatasetsDraw: (chart, x, options) => {
-                const active = chart.getActiveElements();
-
-                if (!active || active.length === 0) {
-                  return;
-                }
-
-                const color = options.color || `rgb(${getTextColor()})`;
-                const width = options.width || 1;
-
-                const {
-                  chartArea: { bottom, top }
-                } = chart;
-                const xValue = active[0].element.x;
-
-                const context = this.chartCanvas.nativeElement.getContext('2d');
-                context.lineWidth = width;
-                context.strokeStyle = color;
-
-                context.beginPath();
-                context.moveTo(xValue, top);
-                context.lineTo(xValue, bottom);
-                context.stroke();
-              },
-              id: 'verticalHoverLine'
-            }
-          ],
+          plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
           type: 'line'
         });
       }
     }
 
     this.isLoading = false;
+  }
+
+  private getTooltipPluginConfiguration() {
+    return {
+      ...getTooltipOptions(this.currency, this.locale),
+      mode: 'index',
+      position: <unknown>'top',
+      xAlign: 'center',
+      yAlign: 'bottom'
+    };
   }
 }
