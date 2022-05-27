@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `prisma` from version `3.12.0` to `3.14.0`
+
 ### Fixed
 
 - Fixed a styling issue in the benchmark component on mobile
