@@ -11,6 +11,7 @@ import { BenchmarkService } from './benchmark.service';
 
 @Module({
   controllers: [BenchmarkController],
+  exports: [BenchmarkService],
   imports: [
     ConfigurationModule,
     DataProviderModule,

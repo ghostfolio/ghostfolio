@@ -3,6 +3,7 @@ import { DataSource } from '@prisma/client';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
+import { Benchmark } from './interfaces';
 
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
@@ -175,6 +176,18 @@ export function resolveFearAndGreedIndex(aValue: number) {
     return { emoji: '😜', text: 'Greed' };
   } else {
     return { emoji: '🤪', text: 'Extreme Greed' };
+  }
+}
+
+export function resolveMarketCondition(
+  aMarketCondition: Benchmark['marketCondition']
+) {
+  if (aMarketCondition === 'BEAR_MARKET') {
+    return { emoji: '🐻' };
+  } else if (aMarketCondition === 'BULL_MARKET') {
+    return { emoji: '🐮' };
+  } else {
+    return { emoji: '⚪' };
   }
 }
 
