@@ -13,7 +13,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
-import { isSunday } from 'date-fns';
+import { isWeekend } from 'date-fns';
 import * as roundTo from 'round-to';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
@@ -40,7 +40,7 @@ export class TwitterBotService {
   public async tweetFearAndGreedIndex() {
     if (
       !this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX') ||
-      isSunday(new Date())
+      isWeekend(new Date())
     ) {
       return;
     }
