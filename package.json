@@ -111,7 +111,6 @@
     "passport-jwt": "4.0.0",
     "prisma": "3.14.0",
     "reflect-metadata": "0.1.13",
-    "round-to": "5.0.0",
     "rxjs": "7.4.0",
     "stripe": "8.199.0",
     "svgmap": "2.6.0",

@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the tooltips of the chart components (content and style)
 - Simplified the pricing page
+- Improved the rounding numbers in the twitter bot service
+- Removed the dependency `round-to`
 
 ## 1.153.0 - 27.05.2022
 
