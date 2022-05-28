@@ -7,11 +7,13 @@
       </div>
       <gf-line-chart
         class="mb-3"
+        symbol="Fear & Greed Index"
         yMax="100"
         yMaxLabel="Greed"
         yMin="0"
         yMinLabel="Fear"
         [historicalDataItems]="historicalData"
+        [locale]="user?.settings?.locale"
         [showXAxis]="true"
         [showYAxis]="true"
       ></gf-line-chart>

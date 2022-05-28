@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a vertical hover line to inspect data points in the line chart component
+
 ### Changed
 
+- Improved the tooltips of the chart components (content and style)
 - Simplified the pricing page
 
 ## 1.153.0 - 27.05.2022

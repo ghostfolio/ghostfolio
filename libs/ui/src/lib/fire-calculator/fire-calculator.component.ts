@@ -13,6 +13,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { transformTickToAbbreviation } from '@ghostfolio/common/helper';
 import {
@@ -182,10 +183,7 @@ export class FireCalculatorComponent
           options: {
             plugins: {
               tooltip: {
-                itemSort: (a, b) => {
-                  // Reverse order
-                  return b.datasetIndex - a.datasetIndex;
-                },
+                ...getTooltipOptions(),
                 mode: 'index',
                 callbacks: {
                   footer: (items) => {
