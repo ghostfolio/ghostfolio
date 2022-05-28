@@ -14,7 +14,6 @@ import {
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
-import * as roundTo from 'round-to';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
 
 @Injectable()
@@ -100,10 +99,9 @@ export class TwitterBotService {
       }
 
       benchmarkListing.push(
-        `${benchmark.name} ${roundTo(
-          benchmark.performances.allTimeHigh.performancePercent * 100,
-          1
-        )}%${
+        `${benchmark.name} ${(
+          benchmark.performances.allTimeHigh.performancePercent * 100
+        ).toFixed(1)}%${
           benchmark.marketCondition !== 'NEUTRAL_MARKET'
             ? ' ' + resolveMarketCondition(benchmark.marketCondition).emoji
             : ''
