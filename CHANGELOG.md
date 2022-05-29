@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Exposed the environment variable `REDIS_PASSWORD`
 
+### Fixed
+
+- Fixed the empty state of the portfolio proportion chart component (with 2 levels)
+
 ### Todo
 
 - Apply data migration (`yarn database:migrate`)
