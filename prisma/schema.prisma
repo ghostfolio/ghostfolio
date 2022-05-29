@@ -201,6 +201,7 @@ enum AssetSubClass {
 
 enum DataSource {
   ALPHA_VANTAGE
+  EOD_HISTORICAL_DATA
   GHOSTFOLIO
   GOOGLE_SHEETS
   MANUAL

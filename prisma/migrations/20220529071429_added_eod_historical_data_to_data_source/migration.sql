@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "DataSource" ADD VALUE 'EOD_HISTORICAL_DATA';
