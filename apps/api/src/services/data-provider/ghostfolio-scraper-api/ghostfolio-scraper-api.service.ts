@@ -10,7 +10,7 @@ import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import * as bent from 'bent';
+import bent from 'bent';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
 
