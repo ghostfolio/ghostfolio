@@ -28,6 +28,7 @@ export interface Environment extends CleanedEnvAccessors {
   PORT: number;
   RAKUTEN_RAPID_API_KEY: string;
   REDIS_HOST: string;
+  REDIS_PASSWORD: string;
   REDIS_PORT: number;
   ROOT_URL: string;
   STRIPE_PUBLIC_KEY: string;

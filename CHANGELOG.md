@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `EOD_HISTORICAL_DATA` as a new data source type
 
+### Changed
+
+- Exposed the environment variable `REDIS_PASSWORD`
+
 ### Todo
 
 - Apply data migration (`yarn database:migrate`)
