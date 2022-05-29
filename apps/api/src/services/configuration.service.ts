@@ -37,6 +37,7 @@ export class ConfigurationService {
       RAKUTEN_RAPID_API_KEY: str({ default: '' }),
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PORT: port({ default: 6379 }),
+      REDIS_PASSWORD: str({ default: '' }),
       ROOT_URL: str({ default: 'http://localhost:4200' }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),

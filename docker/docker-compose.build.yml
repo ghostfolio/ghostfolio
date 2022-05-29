@@ -7,6 +7,7 @@ services:
     environment:
       DATABASE_URL: postgresql://user:password@postgres:5432/ghostfolio-db?sslmode=prefer
       REDIS_HOST: 'redis'
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - 3333:3333
 
