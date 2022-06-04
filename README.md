@@ -91,7 +91,7 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 Run the following command to start the Docker images from [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio):
 
 ```bash
-docker-compose -f docker/docker-compose.yml up -d
+docker-compose --env-file ./.env -f docker/docker-compose.yml up -d
 ```
 
 #### Setup Database
@@ -99,7 +99,7 @@ docker-compose -f docker/docker-compose.yml up -d
 Run the following command to setup the database once Ghostfolio is running:
 
 ```bash
-docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:setup
+docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:setup
 ```
 
 ### b. Build and run environment
@@ -107,8 +107,8 @@ docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:setup
 Run the following commands to build and start the Docker images:
 
 ```bash
-docker-compose -f docker/docker-compose.build.yml build
-docker-compose -f docker/docker-compose.build.yml up -d
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml build
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 ```
 
 #### Setup Database
@@ -116,7 +116,7 @@ docker-compose -f docker/docker-compose.build.yml up -d
 Run the following command to setup the database once Ghostfolio is running:
 
 ```bash
-docker-compose -f docker/docker-compose.build.yml exec ghostfolio yarn database:setup
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml exec ghostfolio yarn database:setup
 ```
 
 ### Fetch Historical Data
@@ -130,8 +130,8 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 ### Upgrade Version
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
-1. Run the following command to start the new Docker image: `docker-compose -f docker/docker-compose.yml up -d`
-1. Then, run the following command to keep your database schema in sync: `docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
+1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`
+1. Then, run the following command to keep your database schema in sync: `docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
 
 ## Run with _Unraid_ (self-hosting)
 
@@ -149,7 +149,7 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 ### Setup
 
 1. Run `yarn install`
-1. Run `docker-compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
+1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
 1. Start the server and the client (see [_Development_](#Development))
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
