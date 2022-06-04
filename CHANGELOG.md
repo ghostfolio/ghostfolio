@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified the features page
 - Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `4.1.0` to `5.2.1`
 
+### Fixed
+
+- Fixed the `docker-compose` files to resolve variables correctly
+
 ## 1.155.0 - 29.05.2022
 
 ### Added
