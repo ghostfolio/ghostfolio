@@ -4,6 +4,7 @@ import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-dat
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  AdminJobs,
   AdminMarketDataDetails,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -40,6 +41,10 @@ export class AdminService {
           return data;
         })
       );
+  }
+
+  public fetchJobs() {
+    return this.http.get<AdminJobs>(`/api/v1/admin/queue/jobs`);
   }
 
   public gatherMax() {

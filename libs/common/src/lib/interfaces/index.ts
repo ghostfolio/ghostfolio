@@ -1,6 +1,7 @@
 import { Access } from './access.interface';
 import { Accounts } from './accounts.interface';
 import { AdminData } from './admin-data.interface';
+import { AdminJobs } from './admin-jobs.interface';
 import { AdminMarketDataDetails } from './admin-market-data-details.interface';
 import {
   AdminMarketData,
@@ -40,6 +41,7 @@ export {
   Access,
   Accounts,
   AdminData,
+  AdminJobs,
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,

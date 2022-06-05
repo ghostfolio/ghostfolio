@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the user id to the account page
+- Added a new view with jobs of the queue to the admin control panel
 
 ### Changed
 

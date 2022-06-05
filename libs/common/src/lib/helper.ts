@@ -77,6 +77,10 @@ export function getDateFormatString(aLocale?: string) {
     .join('');
 }
 
+export function getDateWithTimeFormatString(aLocale?: string) {
+  return `${getDateFormatString(aLocale)}, HH:mm:ss`;
+}
+
 export function getLocale() {
   return navigator.languages?.length
     ? navigator.languages[0]

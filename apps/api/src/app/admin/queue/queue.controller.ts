@@ -1,29 +1,29 @@
-import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { AdminJobs } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
+  Get,
   HttpException,
   Inject,
-  Post,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-@Controller('cache')
-export class CacheController {
+import { QueueService } from './queue.service';
+
+@Controller('admin/queue')
+export class QueueController {
   public constructor(
-    private readonly cacheService: CacheService,
-    private readonly redisCacheService: RedisCacheService,
+    private readonly queueService: QueueService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Post('flush')
+  @Get('jobs')
   @UseGuards(AuthGuard('jwt'))
-  public async flushCache(): Promise<void> {
+  public async getJobs(): Promise<AdminJobs> {
     if (
       !hasPermission(
         this.request.user.permissions,
@@ -36,8 +36,6 @@ export class CacheController {
       );
     }
 
-    this.redisCacheService.reset();
-
-    return this.cacheService.flush();
+    return this.queueService.getJobs({});
   }
 }

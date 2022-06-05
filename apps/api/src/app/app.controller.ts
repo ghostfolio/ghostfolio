@@ -1,20 +1,15 @@
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { Controller } from '@nestjs/common';
 
-import { RedisCacheService } from './redis-cache/redis-cache.service';
-
 @Controller()
 export class AppController {
   public constructor(
-    private readonly dataGatheringService: DataGatheringService,
-    private readonly redisCacheService: RedisCacheService
+    private readonly dataGatheringService: DataGatheringService
   ) {
     this.initialize();
   }
 
   private async initialize() {
-    this.redisCacheService.reset();
-
     const isDataGatheringInProgress =
       await this.dataGatheringService.getIsInProgress();
 
