@@ -26,7 +26,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: leonstoldt/ghostfolio
+          images: ghostfolio/ghostfolio
           tags: |
             type=ref,event=tag
           flavor: |
