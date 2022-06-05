@@ -126,7 +126,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
 
           return filter;
         })
-        .sort((a, b) => a.label.localeCompare(b.label)),
+        .sort((a, b) => a.label?.localeCompare(b.label)),
       (filter) => {
         return filter.type;
       }
@@ -142,7 +142,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     }
 
     return filterGroups
-      .sort((a, b) => a.name.localeCompare(b.name))
+      .sort((a, b) => a.name?.localeCompare(b.name))
       .map((filterGroup) => {
         return {
           ...filterGroup,
