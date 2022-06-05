@@ -1,6 +1,10 @@
-import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import {
+  EnhancedSymbolProfile,
+  ScraperConfiguration,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
@@ -11,8 +15,6 @@ import {
   SymbolProfileOverrides
 } from '@prisma/client';
 import { continents, countries } from 'countries-list';
-
-import { ScraperConfiguration } from './data-provider/ghostfolio-scraper-api/interfaces/scraper-configuration.interface';
 
 @Injectable()
 export class SymbolProfileService {
@@ -37,6 +39,35 @@ export class SymbolProfileService {
   }
 
   public async getSymbolProfiles(
+    aUniqueAssets: UniqueAsset[]
+  ): Promise<EnhancedSymbolProfile[]> {
+    return this.prismaService.symbolProfile
+      .findMany({
+        include: { SymbolProfileOverrides: true },
+        where: {
+          AND: [
+            {
+              dataSource: {
+                in: aUniqueAssets.map(({ dataSource }) => {
+                  return dataSource;
+                })
+              },
+              symbol: {
+                in: aUniqueAssets.map(({ symbol }) => {
+                  return symbol;
+                })
+              }
+            }
+          ]
+        }
+      })
+      .then((symbolProfiles) => this.getSymbols(symbolProfiles));
+  }
+
+  /**
+   * @deprecated
+   */
+  public async getSymbolProfilesBySymbols(
     symbols: string[]
   ): Promise<EnhancedSymbolProfile[]> {
     return this.prismaService.symbolProfile
@@ -59,7 +90,9 @@ export class SymbolProfileService {
     return symbolProfiles.map((symbolProfile) => {
       const item = {
         ...symbolProfile,
-        countries: this.getCountries(symbolProfile),
+        countries: this.getCountries(
+          symbolProfile?.countries as unknown as Prisma.JsonArray
+        ),
         scraperConfiguration: this.getScraperConfiguration(symbolProfile),
         sectors: this.getSectors(symbolProfile),
         symbolMapping: this.getSymbolMapping(symbolProfile)
@@ -70,9 +103,17 @@ export class SymbolProfileService {
           item.SymbolProfileOverrides.assetClass ?? item.assetClass;
         item.assetSubClass =
           item.SymbolProfileOverrides.assetSubClass ?? item.assetSubClass;
-        item.countries =
-          (item.SymbolProfileOverrides.countries as unknown as Country[]) ??
-          item.countries;
+
+        if (
+          (item.SymbolProfileOverrides.countries as unknown as Prisma.JsonArray)
+            ?.length > 0
+        ) {
+          item.countries = this.getCountries(
+            item.SymbolProfileOverrides
+              ?.countries as unknown as Prisma.JsonArray
+          );
+        }
+
         item.name = item.SymbolProfileOverrides?.name ?? item.name;
         item.sectors =
           (item.SymbolProfileOverrides.sectors as unknown as Sector[]) ??
@@ -85,20 +126,22 @@ export class SymbolProfileService {
     });
   }
 
-  private getCountries(symbolProfile: SymbolProfile): Country[] {
-    return ((symbolProfile?.countries as Prisma.JsonArray) ?? []).map(
-      (country) => {
-        const { code, weight } = country as Prisma.JsonObject;
+  private getCountries(aCountries: Prisma.JsonArray = []): Country[] {
+    if (aCountries === null) {
+      return [];
+    }
 
-        return {
-          code: code as string,
-          continent:
-            continents[countries[code as string]?.continent] ?? UNKNOWN_KEY,
-          name: countries[code as string]?.name ?? UNKNOWN_KEY,
-          weight: weight as number
-        };
-      }
-    );
+    return aCountries.map((country: Pick<Country, 'code' | 'weight'>) => {
+      const { code, weight } = country;
+
+      return {
+        code,
+        weight,
+        continent:
+          continents[countries[code as string]?.continent] ?? UNKNOWN_KEY,
+        name: countries[code as string]?.name ?? UNKNOWN_KEY
+      };
+    });
   }
 
   private getScraperConfiguration(

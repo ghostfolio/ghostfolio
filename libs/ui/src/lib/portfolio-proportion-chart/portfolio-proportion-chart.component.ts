@@ -10,6 +10,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -247,6 +248,12 @@ export class PortfolioProportionChartComponent
       datasets[0].data[0] = Number.MAX_SAFE_INTEGER;
     }
 
+    if (datasets[1]?.data?.length === 0 || datasets[1]?.data?.[1] === 0) {
+      labels = [''];
+      datasets[1].backgroundColor = [this.colorMap[UNKNOWN_KEY]];
+      datasets[1].data[1] = Number.MAX_SAFE_INTEGER;
+    }
+
     const data: ChartConfiguration['data'] = {
       datasets,
       labels
@@ -255,8 +262,9 @@ export class PortfolioProportionChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration(data);
+        this.chart.options.plugins.tooltip = <unknown>(
+          this.getTooltipPluginConfiguration(data)
+        );
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -339,6 +347,7 @@ export class PortfolioProportionChartComponent
 
   private getTooltipPluginConfiguration(data: ChartConfiguration['data']) {
     return {
+      ...getTooltipOptions(this.baseCurrency, this.locale),
       callbacks: {
         label: (context) => {
           const labelIndex =

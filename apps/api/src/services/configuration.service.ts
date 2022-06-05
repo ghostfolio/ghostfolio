@@ -12,6 +12,7 @@ export class ConfigurationService {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
       ALPHA_VANTAGE_API_KEY: str({ default: '' }),
+      BASE_CURRENCY: str({ default: 'USD' }),
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_PRIMARY: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({ default: JSON.stringify([DataSource.YAHOO]) }),
@@ -24,6 +25,7 @@ export class ConfigurationService {
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
       ENABLE_FEATURE_SUBSCRIPTION: bool({ default: false }),
       ENABLE_FEATURE_SYSTEM_MESSAGE: bool({ default: false }),
+      EOD_HISTORICAL_DATA_API_KEY: str({ default: '' }),
       GOOGLE_CLIENT_ID: str({ default: 'dummyClientId' }),
       GOOGLE_SECRET: str({ default: 'dummySecret' }),
       GOOGLE_SHEETS_ACCOUNT: str({ default: '' }),
@@ -35,6 +37,7 @@ export class ConfigurationService {
       PORT: port({ default: 3333 }),
       RAKUTEN_RAPID_API_KEY: str({ default: '' }),
       REDIS_HOST: str({ default: 'localhost' }),
+      REDIS_PASSWORD: str({ default: '' }),
       REDIS_PORT: port({ default: 6379 }),
       ROOT_URL: str({ default: 'http://localhost:4200' }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),

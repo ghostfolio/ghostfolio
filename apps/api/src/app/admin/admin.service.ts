@@ -6,7 +6,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data.service'
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { PROPERTY_CURRENCIES, baseCurrency } from '@ghostfolio/common/config';
+import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
@@ -20,6 +20,8 @@ import { differenceInDays } from 'date-fns';
 
 @Injectable()
 export class AdminService {
+  private baseCurrency: string;
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
@@ -29,7 +31,9 @@ export class AdminService {
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
     private readonly symbolProfileService: SymbolProfileService
-  ) {}
+  ) {
+    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  }
 
   public async deleteProfileData({ dataSource, symbol }: UniqueAsset) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
@@ -43,15 +47,15 @@ export class AdminService {
       exchangeRates: this.exchangeRateDataService
         .getCurrencies()
         .filter((currency) => {
-          return currency !== baseCurrency;
+          return currency !== this.baseCurrency;
         })
         .map((currency) => {
           return {
-            label1: baseCurrency,
+            label1: this.baseCurrency,
             label2: currency,
             value: this.exchangeRateDataService.toCurrency(
               1,
-              baseCurrency,
+              this.baseCurrency,
               currency
             )
           };

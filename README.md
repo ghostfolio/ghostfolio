@@ -9,7 +9,7 @@
 
   <h1>Ghostfolio</h1>
   <p>
-    <strong>Open Source Wealth Management Software made for Humans</strong>
+    <strong>Open Source Wealth Management Software</strong>
   </p>
   <p>
     <a href="https://ghostfol.io"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/blog"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
@@ -26,8 +26,9 @@
 
 **Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.
 
-<div align="center">
-  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
+  <a href="https://www.youtube.com/watch?v=yY6ObSQVJZk">
+    <img src="./apps/client/src/assets/images/video-preview.jpg" width="600"></a>
 </div>
 
 ## Ghostfolio Premium
@@ -47,7 +48,7 @@ Ghostfolio is for you if you are...
 - 🧘 into minimalism
 - 🧺 caring about diversifying your financial resources
 - 🆓 interested in financial independence
-- 🙅 saying no to spreadsheets in 2021
+- 🙅 saying no to spreadsheets in 2022
 - 😎 still reading this list
 
 ## Features
@@ -61,6 +62,10 @@ Ghostfolio is for you if you are...
 - ✅ Dark Mode
 - ✅ Zen Mode
 - ✅ Mobile-first design
+
+<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
+  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+</div>
 
 ## Technology Stack
 
@@ -86,7 +91,7 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 Run the following command to start the Docker images from [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio):
 
 ```bash
-docker-compose -f docker/docker-compose.yml up -d
+docker-compose --env-file ./.env -f docker/docker-compose.yml up -d
 ```
 
 #### Setup Database
@@ -94,7 +99,7 @@ docker-compose -f docker/docker-compose.yml up -d
 Run the following command to setup the database once Ghostfolio is running:
 
 ```bash
-docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:setup
+docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:setup
 ```
 
 ### b. Build and run environment
@@ -102,8 +107,8 @@ docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:setup
 Run the following commands to build and start the Docker images:
 
 ```bash
-docker-compose -f docker/docker-compose.build.yml build
-docker-compose -f docker/docker-compose.build.yml up -d
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml build
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 ```
 
 #### Setup Database
@@ -111,7 +116,7 @@ docker-compose -f docker/docker-compose.build.yml up -d
 Run the following command to setup the database once Ghostfolio is running:
 
 ```bash
-docker-compose -f docker/docker-compose.build.yml exec ghostfolio yarn database:setup
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml exec ghostfolio yarn database:setup
 ```
 
 ### Fetch Historical Data
@@ -125,8 +130,12 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 ### Upgrade Version
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
-1. Run the following command to start the new Docker image: `docker-compose -f docker/docker-compose.yml up -d`
-1. Then, run the following command to keep your database schema in sync: `docker-compose -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
+1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`
+1. Then, run the following command to keep your database schema in sync: `docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
+
+## Run with _Unraid_ (self-hosting)
+
+Please follow the instructions of the Ghostfolio [Unraid Community App](https://unraid.net/community/apps?q=ghostfolio).
 
 ## Development
 
@@ -140,7 +149,7 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 ### Setup
 
 1. Run `yarn install`
-1. Run `docker-compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
+1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
 1. Start the server and the client (see [_Development_](#Development))
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)

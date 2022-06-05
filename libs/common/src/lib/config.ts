@@ -2,8 +2,6 @@ import { DataSource } from '@prisma/client';
 
 import { ToggleOption } from './types';
 
-export const baseCurrency = 'USD';
-
 export const defaultDateRangeOptions: ToggleOption[] = [
   { label: 'Today', value: '1d' },
   { label: 'YTD', value: 'ytd' },
@@ -50,6 +48,7 @@ export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
 
+export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_COUPONS = 'COUPONS';
 export const PROPERTY_CURRENCIES = 'CURRENCIES';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';

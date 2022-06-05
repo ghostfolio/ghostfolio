@@ -6,6 +6,7 @@
       <gf-line-chart
         symbol="Performance"
         [historicalDataItems]="historicalDataItems"
+        [locale]="user?.settings?.locale"
         [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
         [showGradient]="true"
         [showLoader]="false"

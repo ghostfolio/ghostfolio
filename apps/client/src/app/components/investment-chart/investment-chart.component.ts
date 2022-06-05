@@ -6,11 +6,18 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
+import {
+  getTooltipOptions,
+  getTooltipPositionerMapTop,
+  getVerticalHoverLinePlugin
+} from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import {
+  getBackgroundColor,
+  getDateFormatString,
+  getTextColor,
   parseDate,
   transformTickToAbbreviation
 } from '@ghostfolio/common/helper';
@@ -21,7 +28,8 @@ import {
   LineElement,
   LinearScale,
   PointElement,
-  TimeScale
+  TimeScale,
+  Tooltip
 } from 'chart.js';
 import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 
@@ -32,9 +40,11 @@ import { addDays, isAfter, parseISO, subDays } from 'date-fns';
   styleUrls: ['./investment-chart.component.scss']
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
+  @Input() currency: string;
   @Input() daysInMarket: number;
   @Input() investments: InvestmentItem[];
   @Input() isInPercent = false;
+  @Input() locale: string;
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -47,8 +57,12 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       LineController,
       LineElement,
       PointElement,
-      TimeScale
+      TimeScale,
+      Tooltip
     );
+
+    Tooltip.positioners['top'] = (elements, position) =>
+      getTooltipPositionerMapTop(this.chart, position);
   }
 
   public ngOnChanges() {
@@ -98,6 +112,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           data: this.investments.map((position) => {
             return position.investment;
           }),
+          label: 'Investment',
           segment: {
             borderColor: (context: unknown) =>
               this.isInFuture(
@@ -114,6 +129,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins.tooltip = <unknown>(
+          this.getTooltipPluginConfiguration()
+        );
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -124,13 +142,20 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 tension: 0
               },
               point: {
+                hoverBackgroundColor: getBackgroundColor(),
+                hoverRadius: 2,
                 radius: 0
               }
             },
+            interaction: { intersect: false, mode: 'index' },
             maintainAspectRatio: true,
-            plugins: {
+            plugins: <unknown>{
               legend: {
                 display: false
+              },
+              tooltip: this.getTooltipPluginConfiguration(),
+              verticalHoverLine: {
+                color: `rgba(${getTextColor()}, 0.1)`
               }
             },
             responsive: true,
@@ -138,16 +163,21 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               x: {
                 display: true,
                 grid: {
+                  borderColor: `rgba(${getTextColor()}, 0.1)`,
+                  color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
                 type: 'time',
                 time: {
+                  tooltipFormat: getDateFormatString(this.locale),
                   unit: 'year'
                 }
               },
               y: {
                 display: !this.isInPercent,
                 grid: {
+                  borderColor: `rgba(${getTextColor()}, 0.1)`,
+                  color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
                 ticks: {
@@ -161,12 +191,26 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               }
             }
           },
+          plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
           type: 'line'
         });
 
         this.isLoading = false;
       }
     }
+  }
+
+  private getTooltipPluginConfiguration() {
+    return {
+      ...getTooltipOptions(
+        this.isInPercent ? undefined : this.currency,
+        this.isInPercent ? undefined : this.locale
+      ),
+      mode: 'index',
+      position: <unknown>'top',
+      xAlign: 'center',
+      yAlign: 'bottom'
+    };
   }
 
   private isInFuture<T>(aContext: any, aValue: T) {

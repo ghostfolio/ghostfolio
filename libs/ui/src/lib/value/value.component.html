@@ -58,7 +58,7 @@
   *ngIf="value === undefined"
   animation="pulse"
   [theme]="{
-    height: size === 'large' ? '2.5rem' : '1.5rem',
+    height: size === 'large' ? '2.5rem' : size === 'medium' ? '2rem' : '1.5rem',
     width: '5rem'
   }"
 ></ngx-skeleton-loader>

@@ -4,11 +4,11 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { baseCurrency } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   Filter,
@@ -43,6 +43,8 @@ import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
 export class PortfolioController {
+  private baseCurrency: string;
+
   public constructor(
     private readonly accessService: AccessService,
     private readonly configurationService: ConfigurationService,
@@ -50,7 +52,9 @@ export class PortfolioController {
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
-  ) {}
+  ) {
+    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  }
 
   @Get('chart')
   @UseGuards(AuthGuard('jwt'))
@@ -103,6 +107,7 @@ export class PortfolioController {
 
   @Get('details')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
     @Headers('impersonation-id') impersonationId: string,
@@ -327,7 +332,7 @@ export class PortfolioController {
         return this.exchangeRateDataService.toCurrency(
           portfolioPosition.quantity * portfolioPosition.marketPrice,
           portfolioPosition.currency,
-          this.request.user?.Settings?.currency ?? baseCurrency
+          this.request.user?.Settings?.currency ?? this.baseCurrency
         );
       })
       .reduce((a, b) => a + b, 0);

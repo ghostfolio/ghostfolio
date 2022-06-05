@@ -60,12 +60,8 @@ body {
     }
 
     ngx-skeleton-loader {
-      line-height: 0;
-      outline: 0;
-
       .loader {
         background-color: #323232;
-        outline: 0;
       }
     }
 
@@ -117,9 +113,13 @@ ion-icon {
 
 ngx-skeleton-loader {
   display: block;
+  line-height: 0;
+  outline: 0;
 
   .loader {
+    display: flex;
     margin: 0 !important;
+    outline: 0;
   }
 }
 

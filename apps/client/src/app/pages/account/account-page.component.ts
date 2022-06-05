@@ -20,7 +20,6 @@ import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { baseCurrency } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -43,7 +42,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   signInWithFingerprintElement: MatSlideToggle;
 
   public accesses: Access[];
-  public baseCurrency = baseCurrency;
+  public baseCurrency: string;
   public coupon: number;
   public couponId: string;
   public currencies: string[] = [];
@@ -79,8 +78,10 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
-    const { currencies, globalPermissions, subscriptions } =
+    const { baseCurrency, currencies, globalPermissions, subscriptions } =
       this.dataService.fetchInfo();
+
+    this.baseCurrency = baseCurrency;
     this.coupon = subscriptions?.[0]?.coupon;
     this.couponId = subscriptions?.[0]?.couponId;
     this.currencies = currencies;

@@ -2,8 +2,10 @@
   <gf-line-chart
     class="mb-4"
     [historicalDataItems]="historicalDataItems"
+    [locale]="locale"
     [showXAxis]="true"
     [showYAxis]="true"
+    [symbol]="symbol"
   ></gf-line-chart>
   <div *ngFor="let itemByMonth of marketDataByMonth | keyvalue" class="d-flex">
     <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>

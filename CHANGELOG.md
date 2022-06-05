@@ -5,6 +5,87 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added the user id to the account page
+
+### Changed
+
+- Simplified the features page
+- Restructured the _FIRE_ section
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `4.1.0` to `5.2.1`
+
+### Fixed
+
+- Fixed the `docker-compose` files to resolve variables correctly
+
+## 1.155.0 - 29.05.2022
+
+### Added
+
+- Added `EOD_HISTORICAL_DATA` as a new data source type
+
+### Changed
+
+- Exposed the environment variable `REDIS_PASSWORD`
+
+### Fixed
+
+- Fixed the empty state of the portfolio proportion chart component (with 2 levels)
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
+
+## 1.154.0 - 28.05.2022
+
+### Added
+
+- Added a vertical hover line to inspect data points in the line chart component
+
+### Changed
+
+- Improved the tooltips of the chart components (content and style)
+- Simplified the pricing page
+- Improved the rounding numbers in the twitter bot service
+- Removed the dependency `round-to`
+
+## 1.153.0 - 27.05.2022
+
+### Added
+
+- Extended the benchmarks of the markets overview by the current market condition (bear and bull market)
+- Extended the twitter bot service by benchmarks
+- Added value redaction for the impersonation mode in the API response as an interceptor
+
+### Changed
+
+- Changed the twitter bot service to rest on the weekend
+- Upgraded `prisma` from version `3.12.0` to `3.14.0`
+
+### Fixed
+
+- Fixed a styling issue in the benchmark component on mobile
+
+## 1.152.0 - 26.05.2022
+
+### Added
+
+- Added the _Ghostfolio_ trailer to the landing page
+- Extended the markets overview by benchmarks (current change to the all time high)
+
+## 1.151.0 - 24.05.2022
+
+### Added
+
+- Added support to set the base currency as an environment variable (`BASE_CURRENCY`)
+
+### Fixed
+
+- Fixed an issue with the missing conversion of countries in the symbol profile overrides
+
 ## 1.150.0 - 21.05.2022
 
 ### Changed

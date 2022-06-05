@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { baseCurrency } from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -17,7 +16,6 @@ import { environment } from '../../../environments/environment';
   templateUrl: './about-page.html'
 })
 export class AboutPageComponent implements OnDestroy, OnInit {
-  public baseCurrency = baseCurrency;
   public hasPermissionForBlog: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;

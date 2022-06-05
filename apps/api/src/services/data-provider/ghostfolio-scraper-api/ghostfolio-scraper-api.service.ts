@@ -10,7 +10,7 @@ import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import * as bent from 'bent';
+import bent from 'bent';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
 
@@ -46,9 +46,8 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     try {
       const symbol = aSymbol;
 
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [symbol]
-      );
+      const [symbolProfile] =
+        await this.symbolProfileService.getSymbolProfilesBySymbols([symbol]);
       const { defaultMarketPrice, selector, url } =
         symbolProfile.scraperConfiguration;
 
@@ -108,9 +107,8 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     }
 
     try {
-      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        aSymbols
-      );
+      const symbolProfiles =
+        await this.symbolProfileService.getSymbolProfilesBySymbols(aSymbols);
 
       const marketData = await this.prismaService.marketData.findMany({
         distinct: ['symbol'],

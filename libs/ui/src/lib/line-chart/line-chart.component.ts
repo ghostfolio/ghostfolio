@@ -10,8 +10,17 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import {
+  getTooltipOptions,
+  getTooltipPositionerMapTop,
+  getVerticalHoverLinePlugin
+} from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import { getBackgroundColor } from '@ghostfolio/common/helper';
+import {
+  getBackgroundColor,
+  getDateFormatString,
+  getTextColor
+} from '@ghostfolio/common/helper';
 import {
   Chart,
   Filler,
@@ -19,7 +28,8 @@ import {
   LineElement,
   LinearScale,
   PointElement,
-  TimeScale
+  TimeScale,
+  Tooltip
 } from 'chart.js';
 
 import { LineChartItem } from './interfaces/line-chart.interface';
@@ -33,7 +43,9 @@ import { LineChartItem } from './interfaces/line-chart.interface';
 export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
+  @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
+  @Input() locale: string;
   @Input() showGradient = false;
   @Input() showLegend = false;
   @Input() showLoader = true;
@@ -57,8 +69,12 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       LineElement,
       PointElement,
       LinearScale,
-      TimeScale
+      TimeScale,
+      Tooltip
     );
+
+    Tooltip.positioners['top'] = (elements, position) =>
+      getTooltipPositionerMapTop(this.chart, position);
   }
 
   public ngAfterViewInit() {
@@ -142,26 +158,43 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins.tooltip = <unknown>(
+          this.getTooltipPluginConfiguration()
+        );
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
             animation: false,
-            plugins: {
+            elements: {
+              point: {
+                hoverBackgroundColor: getBackgroundColor(),
+                hoverRadius: 2
+              }
+            },
+            interaction: { intersect: false, mode: 'index' },
+            plugins: <unknown>{
               legend: {
                 align: 'start',
                 display: this.showLegend,
                 position: 'bottom'
+              },
+              tooltip: this.getTooltipPluginConfiguration(),
+              verticalHoverLine: {
+                color: `rgba(${getTextColor()}, 0.1)`
               }
             },
             scales: {
               x: {
                 display: this.showXAxis,
                 grid: {
+                  borderColor: `rgba(${getTextColor()}, 0.1)`,
+                  color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
                 time: {
+                  tooltipFormat: getDateFormatString(this.locale),
                   unit: 'year'
                 },
                 type: 'time'
@@ -169,6 +202,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               y: {
                 display: this.showYAxis,
                 grid: {
+                  borderColor: `rgba(${getTextColor()}, 0.1)`,
+                  color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
                 max: this.yMax,
@@ -204,11 +239,22 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             },
             spanGaps: true
           },
+          plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
           type: 'line'
         });
       }
     }
 
     this.isLoading = false;
+  }
+
+  private getTooltipPluginConfiguration() {
+    return {
+      ...getTooltipOptions(this.currency, this.locale),
+      mode: 'index',
+      position: <unknown>'top',
+      xAlign: 'center',
+      yAlign: 'bottom'
+    };
   }
 }

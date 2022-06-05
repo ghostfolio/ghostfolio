@@ -1,11 +1,13 @@
+import { BenchmarkModule } from '@ghostfolio/api/app/benchmark/benchmark.module';
 import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
 import { Module } from '@nestjs/common';
 
 @Module({
   exports: [TwitterBotService],
-  imports: [ConfigurationModule, SymbolModule],
+  imports: [BenchmarkModule, ConfigurationModule, PropertyModule, SymbolModule],
   providers: [TwitterBotService]
 })
 export class TwitterBotModule {}
