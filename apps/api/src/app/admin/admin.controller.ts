@@ -3,6 +3,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data.service'
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
   DATA_GATHERING_QUEUE,
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS
 } from '@ghostfolio/common/config';
 import {
@@ -31,6 +32,7 @@ import { DataSource, MarketData } from '@prisma/client';
 import { Queue } from 'bull';
 import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import ms from 'ms';
 
 import { AdminService } from './admin.service';
 import { UpdateMarketDataDto } from './update-market-data.dto';
@@ -82,10 +84,21 @@ export class AdminController {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-        dataSource,
-        symbol
-      });
+      await this.dataGatheringQueue.add(
+        GATHER_ASSET_PROFILE_PROCESS,
+        {
+          dataSource,
+          symbol
+        },
+        {
+          attempts: 20,
+          backoff: {
+            delay: ms('1 minute'),
+            type: 'exponential'
+          },
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+        }
+      );
     }
 
     this.dataGatheringService.gatherMax();
@@ -109,10 +122,21 @@ export class AdminController {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-        dataSource,
-        symbol
-      });
+      await this.dataGatheringQueue.add(
+        GATHER_ASSET_PROFILE_PROCESS,
+        {
+          dataSource,
+          symbol
+        },
+        {
+          attempts: 20,
+          backoff: {
+            delay: ms('1 minute'),
+            type: 'exponential'
+          },
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+        }
+      );
     }
   }
 
@@ -134,10 +158,21 @@ export class AdminController {
       );
     }
 
-    await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-      dataSource,
-      symbol
-    });
+    await this.dataGatheringQueue.add(
+      GATHER_ASSET_PROFILE_PROCESS,
+      {
+        dataSource,
+        symbol
+      },
+      {
+        attempts: 20,
+        backoff: {
+          delay: ms('1 minute'),
+          type: 'exponential'
+        },
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      }
+    );
   }
 
   @Post('gather/:dataSource/:symbol')

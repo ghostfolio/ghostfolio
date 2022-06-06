@@ -1,21 +1,19 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
+  DATA_GATHERING_QUEUE,
+  DATA_GATHERING_QUEUE_PRIORITY_LOW,
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS,
   PROPERTY_LAST_DATA_GATHERING,
   PROPERTY_LOCKED_DATA_GATHERING
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import {
-  differenceInHours,
-  format,
-  getDate,
-  getMonth,
-  getYear,
-  isBefore,
-  subDays
-} from 'date-fns';
+import { Queue } from 'bull';
+import { differenceInHours, format, subDays } from 'date-fns';
+import ms from 'ms';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
@@ -30,6 +28,8 @@ export class DataGatheringService {
   public constructor(
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
+    @InjectQueue(DATA_GATHERING_QUEUE)
+    private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
@@ -50,10 +50,10 @@ export class DataGatheringService {
         }
       });
 
-      const symbols = await this.getSymbols7D();
+      const dataGatheringItems = await this.getSymbols7D();
 
       try {
-        await this.gatherSymbols(symbols);
+        await this.gatherSymbols(dataGatheringItems);
 
         await this.prismaService.property.upsert({
           create: {
@@ -334,107 +334,27 @@ export class DataGatheringService {
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
-    let hasError = false;
-    let symbolCounter = 0;
-
     for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
       if (dataSource === 'MANUAL') {
         continue;
       }
 
-      this.dataGatheringProgress = symbolCounter / aSymbolsWithStartDate.length;
-
-      try {
-        const historicalData = await this.dataProviderService.getHistoricalRaw(
-          [{ dataSource, symbol }],
+      await this.dataGatheringQueue.add(
+        GATHER_HISTORICAL_MARKET_DATA_PROCESS,
+        {
+          dataSource,
           date,
-          new Date()
-        );
-
-        let currentDate = date;
-        let lastMarketPrice: number;
-
-        while (
-          isBefore(
-            currentDate,
-            new Date(
-              Date.UTC(
-                getYear(new Date()),
-                getMonth(new Date()),
-                getDate(new Date()),
-                0
-              )
-            )
-          )
-        ) {
-          if (
-            historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-              ?.marketPrice
-          ) {
-            lastMarketPrice =
-              historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-                ?.marketPrice;
-          }
-
-          if (lastMarketPrice) {
-            try {
-              await this.prismaService.marketData.create({
-                data: {
-                  dataSource,
-                  symbol,
-                  date: new Date(
-                    Date.UTC(
-                      getYear(currentDate),
-                      getMonth(currentDate),
-                      getDate(currentDate),
-                      0
-                    )
-                  ),
-                  marketPrice: lastMarketPrice
-                }
-              });
-            } catch {}
-          } else {
-            Logger.warn(
-              `Failed to gather data for symbol ${symbol} from ${dataSource} at ${format(
-                currentDate,
-                DATE_FORMAT
-              )}.`,
-              'DataGatheringService'
-            );
-          }
-
-          // Count month one up for iteration
-          currentDate = new Date(
-            Date.UTC(
-              getYear(currentDate),
-              getMonth(currentDate),
-              getDate(currentDate) + 1,
-              0
-            )
-          );
+          symbol
+        },
+        {
+          attempts: 20,
+          backoff: {
+            delay: ms('1 minute'),
+            type: 'exponential'
+          },
+          priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
         }
-      } catch (error) {
-        hasError = true;
-        Logger.error(error, 'DataGatheringService');
-      }
-
-      if (symbolCounter > 0 && symbolCounter % 100 === 0) {
-        Logger.log(
-          `Data gathering progress: ${(
-            this.dataGatheringProgress * 100
-          ).toFixed(2)}%`,
-          'DataGatheringService'
-        );
-      }
-
-      symbolCounter += 1;
-    }
-
-    await this.exchangeRateDataService.initialize();
-
-    if (hasError) {
-      throw '';
+      );
     }
   }
 

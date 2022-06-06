@@ -11,6 +11,10 @@ export class QueueService {
     private readonly dataGatheringQueue: Queue
   ) {}
 
+  public async deleteJob(aId: string) {
+    return (await this.dataGatheringQueue.getJob(aId))?.remove();
+  }
+
   public async getJobs({
     limit = 1000
   }: {
@@ -25,8 +29,23 @@ export class QueueService {
       'waiting'
     ]);
 
+    const jobsWithState = await Promise.all(
+      jobs.slice(0, limit).map(async (job) => {
+        return {
+          attemptsMade: job.attemptsMade + 1,
+          data: job.data,
+          finishedOn: job.finishedOn,
+          id: job.id,
+          name: job.name,
+          stacktrace: job.stacktrace,
+          state: await job.getState(),
+          timestamp: job.timestamp
+        };
+      })
+    );
+
     return {
-      jobs: jobs.slice(0, limit)
+      jobs: jobsWithState
     };
   }
 }

@@ -3,9 +3,11 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
+  Delete,
   Get,
   HttpException,
   Inject,
+  Param,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -21,7 +23,7 @@ export class QueueController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get('jobs')
+  @Get('job')
   @UseGuards(AuthGuard('jwt'))
   public async getJobs(): Promise<AdminJobs> {
     if (
@@ -37,5 +39,23 @@ export class QueueController {
     }
 
     return this.queueService.getJobs({});
+  }
+
+  @Delete('job/:id')
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteJob(@Param('id') id: string): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.queueService.deleteJob(id);
   }
 }

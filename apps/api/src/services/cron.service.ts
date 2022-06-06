@@ -1,11 +1,13 @@
 import {
   DATA_GATHERING_QUEUE,
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS
 } from '@ghostfolio/common/config';
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Queue } from 'bull';
+import ms from 'ms';
 
 import { DataGatheringService } from './data-gathering.service';
 import { ExchangeRateDataService } from './exchange-rate-data.service';
@@ -41,10 +43,21 @@ export class CronService {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-        dataSource,
-        symbol
-      });
+      await this.dataGatheringQueue.add(
+        GATHER_ASSET_PROFILE_PROCESS,
+        {
+          dataSource,
+          symbol
+        },
+        {
+          attempts: 20,
+          backoff: {
+            delay: ms('1 minute'),
+            type: 'exponential'
+          },
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+        }
+      );
     }
   }
 }

@@ -53,6 +53,15 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     this.fetchJobs();
   }
 
+  public onDeleteJob(aId: string) {
+    this.adminService
+      .deleteJob(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchJobs();
+      });
+  }
+
   public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
     alert(JSON.stringify(aStacktrace, null, '  '));
   }

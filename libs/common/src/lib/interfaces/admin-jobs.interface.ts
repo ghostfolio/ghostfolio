@@ -1,5 +1,16 @@
-import { Job } from 'bull';
+import { Job, JobStatus } from 'bull';
 
 export interface AdminJobs {
-  jobs: Job<any>[];
+  jobs: (Pick<
+    Job<any>,
+    | 'attemptsMade'
+    | 'data'
+    | 'finishedOn'
+    | 'id'
+    | 'name'
+    | 'stacktrace'
+    | 'timestamp'
+  > & {
+    state: JobStatus | 'stuck';
+  })[];
 }

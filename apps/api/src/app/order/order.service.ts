@@ -6,6 +6,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE,
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS
 } from '@ghostfolio/common/config';
 import { Filter } from '@ghostfolio/common/interfaces';
@@ -24,6 +25,7 @@ import Big from 'big.js';
 import { Queue } from 'bull';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy } from 'lodash';
+import ms from 'ms';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from './interfaces/activities.interface';
@@ -120,10 +122,21 @@ export class OrderService {
         data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
     }
 
-    await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-      dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-      symbol: data.SymbolProfile.connectOrCreate.create.symbol
-    });
+    await this.dataGatheringQueue.add(
+      GATHER_ASSET_PROFILE_PROCESS,
+      {
+        dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
+        symbol: data.SymbolProfile.connectOrCreate.create.symbol
+      },
+      {
+        attempts: 20,
+        backoff: {
+          delay: ms('1 minute'),
+          type: 'exponential'
+        },
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      }
+    );
 
     const isDraft = isAfter(data.date as Date, endOfToday());
 
@@ -137,8 +150,6 @@ export class OrderService {
         }
       ]);
     }
-
-    await this.cacheService.flush();
 
     delete data.accountId;
     delete data.assetClass;
@@ -329,8 +340,6 @@ export class OrderService {
         ]);
       }
     }
-
-    await this.cacheService.flush();
 
     delete data.assetClass;
     delete data.assetSubClass;

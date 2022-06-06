@@ -18,6 +18,10 @@ import { Observable, map } from 'rxjs';
 export class AdminService {
   public constructor(private http: HttpClient) {}
 
+  public deleteJob(aId: string) {
+    return this.http.delete<void>(`/api/v1/admin/queue/job/${aId}`);
+  }
+
   public deleteProfileData({ dataSource, symbol }: UniqueAsset) {
     return this.http.delete<void>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`
@@ -44,7 +48,7 @@ export class AdminService {
   }
 
   public fetchJobs() {
-    return this.http.get<AdminJobs>(`/api/v1/admin/queue/jobs`);
+    return this.http.get<AdminJobs>(`/api/v1/admin/queue/job`);
   }
 
   public gatherMax() {
