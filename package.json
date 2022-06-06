@@ -84,7 +84,7 @@
     "bull": "4.8.2",
     "cache-manager": "3.4.3",
     "cache-manager-redis-store": "2.0.0",
-    "chart.js": "3.7.0",
+    "chart.js": "3.8.0",
     "chartjs-adapter-date-fns": "2.0.0",
     "chartjs-plugin-datalabels": "2.0.0",
     "cheerio": "1.0.0-rc.6",
