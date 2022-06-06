@@ -9012,10 +9012,10 @@ env-paths@^2.2.0:
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-2.2.1.tgz#420399d416ce1fbe9bc0a07c62fa68d67fd0f8f2"
   integrity sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==
 
-envalid@7.2.1:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/envalid/-/envalid-7.2.1.tgz#7e9e62f3bc1ed209517f65b563e24c7b79c9793b"
-  integrity sha512-NU0ty82LSvHF+Uio9cLNKhrDyivFv7GSvhOu91WbtOOyNKRzXWeDZaopldXJkGBAZ5UuquqXp6VBUXuTfXrUrw==
+envalid@7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/envalid/-/envalid-7.3.1.tgz#5bf6bbb4effab2d64a1991d8078b4ae38924f0d2"
+  integrity sha512-KL1YRwn8WcoF/Ty7t+yLLtZol01xr9ZJMTjzoGRM8NaSU+nQQjSWOQKKJhJP2P57bpdakJ9jbxqQX4fGTOicZg==
   dependencies:
     tslib "2.3.1"
 
