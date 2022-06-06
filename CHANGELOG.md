@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `chart.js` from version `3.7.0` to `3.8.0`
+- Upgraded `envalid` from version `7.2.1` to `7.3.1`
 
 ## 1.156.0 - 05.06.2022
 
