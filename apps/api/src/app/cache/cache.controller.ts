@@ -36,8 +36,6 @@ export class CacheController {
       );
     }
 
-    this.redisCacheService.reset();
-
-    return this.cacheService.flush();
+    return this.redisCacheService.reset();
   }
 }

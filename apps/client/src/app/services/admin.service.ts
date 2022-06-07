@@ -51,6 +51,10 @@ export class AdminService {
     return this.http.get<AdminJobs>(`/api/v1/admin/queue/job`);
   }
 
+  public gather7Days() {
+    return this.http.post<void>(`/api/v1/admin/gather`, {});
+  }
+
   public gatherMax() {
     return this.http.post<void>(`/api/v1/admin/gather/max`, {});
   }

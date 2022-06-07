@@ -66,6 +66,24 @@ export class AdminController {
     return this.adminService.get();
   }
 
+  @Post('gather')
+  @UseGuards(AuthGuard('jwt'))
+  public async gather7Days(): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    this.dataGatheringService.gather7Days();
+  }
+
   @Post('gather/max')
   @UseGuards(AuthGuard('jwt'))
   public async gatherMax(): Promise<void> {
