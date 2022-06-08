@@ -8,10 +8,12 @@ import {
   HttpException,
   Inject,
   Param,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { JobStatus } from 'bull';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { QueueService } from './queue.service';
@@ -23,9 +25,11 @@ export class QueueController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get('job')
+  @Delete('job')
   @UseGuards(AuthGuard('jwt'))
-  public async getJobs(): Promise<AdminJobs> {
+  public async deleteJobs(
+    @Query('status') filterByStatus?: string
+  ): Promise<void> {
     if (
       !hasPermission(
         this.request.user.permissions,
@@ -38,7 +42,29 @@ export class QueueController {
       );
     }
 
-    return this.queueService.getJobs({});
+    const status = <JobStatus[]>filterByStatus?.split(',') ?? undefined;
+    return this.queueService.deleteJobs({ status });
+  }
+
+  @Get('job')
+  @UseGuards(AuthGuard('jwt'))
+  public async getJobs(
+    @Query('status') filterByStatus?: string
+  ): Promise<AdminJobs> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const status = <JobStatus[]>filterByStatus?.split(',') ?? undefined;
+    return this.queueService.getJobs({ status });
   }
 
   @Delete('job/:id')

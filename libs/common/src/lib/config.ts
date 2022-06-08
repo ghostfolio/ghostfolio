@@ -1,4 +1,5 @@
 import { DataSource } from '@prisma/client';
+import { JobStatus } from 'bull';
 
 import { ToggleOption } from './types';
 
@@ -59,5 +60,14 @@ export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
+
+export const QUEUE_JOB_STATUS_LIST = <JobStatus[]>[
+  'active',
+  'completed',
+  'delayed',
+  'failed',
+  'paused',
+  'waiting'
+];
 
 export const UNKNOWN_KEY = 'UNKNOWN';

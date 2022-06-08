@@ -1,6 +1,26 @@
 <div class="container">
   <div class="row">
     <div class="col">
+      <form class="align-items-center d-flex" [formGroup]="filterForm">
+        <mat-form-field appearance="outline" class="flex-grow-1">
+          <mat-select formControlName="status">
+            <mat-option></mat-option>
+            <mat-option
+              *ngFor="let statusFilterOption of statusFilterOptions"
+              [value]="statusFilterOption"
+              >{{ statusFilterOption }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <button
+          class="ml-1"
+          color="warn"
+          mat-flat-button
+          (click)="onDeleteJobs()"
+        >
+          <span i18n>Delete Jobs</span>
+        </button>
+      </form>
       <table class="gf-table w-100">
         <thead>
           <tr class="mat-header-row">
@@ -48,6 +68,10 @@
               </td>
               <td class="mat-cell px-1 py-2">
                 <ion-icon
+                  *ngIf="job.state === 'active'"
+                  name="play-outline"
+                ></ion-icon>
+                <ion-icon
                   *ngIf="job.state === 'completed'"
                   class="text-success"
                   name="checkmark-circle-outline"
@@ -60,6 +84,14 @@
                   *ngIf="job.state === 'failed'"
                   class="text-danger"
                   name="alert-circle-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="job.state === 'paused'"
+                  name="pause-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="job.state === 'waiting'"
+                  name="cafe-outline"
                 ></ion-icon>
               </td>
               <td class="mat-cell px-1 py-2">
