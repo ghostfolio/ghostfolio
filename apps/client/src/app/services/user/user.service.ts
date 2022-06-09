@@ -16,13 +16,13 @@ export class UserService extends ObservableStore<UserStoreState> {
   public constructor(private http: HttpClient) {
     super({ trackStateHistory: true });
 
-    this.setState({ user: undefined }, 'INIT_STATE');
+    this.setState({ user: undefined }, UserStoreActions.Initialize);
   }
 
-  public get() {
+  public get(force = false) {
     const state = this.getState();
 
-    if (state?.user) {
+    if (state?.user && force !== true) {
       // Get from cache
       return of(state.user);
     } else {

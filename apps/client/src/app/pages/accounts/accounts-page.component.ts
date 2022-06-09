@@ -133,6 +133,11 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({
         next: () => {
+          this.userService
+            .get(true)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe();
+
           this.fetchAccounts();
         }
       });
@@ -179,6 +184,11 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
+                this.userService
+                  .get(true)
+                  .pipe(takeUntil(this.unsubscribeSubject))
+                  .subscribe();
+
                 this.fetchAccounts();
               }
             });
@@ -220,6 +230,11 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
+                this.userService
+                  .get(true)
+                  .pipe(takeUntil(this.unsubscribeSubject))
+                  .subscribe();
+
                 this.fetchAccounts();
               }
             });
