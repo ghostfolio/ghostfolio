@@ -25,7 +25,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
   public historicalData: HistoricalDataItem[];
   public info: InfoItem;
   public isLoading = true;
-  public readonly numberOfDays = 90;
+  public readonly numberOfDays = 180;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
