@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-const cryptocurrencies = require('cryptocurrencies');
-
-const customCryptocurrencies = require('./custom-cryptocurrencies.json');
+const cryptocurrencies = require('../../assets/cryptocurrencies/cryptocurrencies.json');
+const customCryptocurrencies = require('../../assets/cryptocurrencies/custom.json');
 
 @Injectable()
 export class CryptocurrencyService {
@@ -18,7 +17,7 @@ export class CryptocurrencyService {
   private getCryptocurrencies() {
     if (!this.combinedCryptocurrencies) {
       this.combinedCryptocurrencies = [
-        ...cryptocurrencies.symbols(),
+        ...Object.keys(cryptocurrencies),
         ...Object.keys(customCryptocurrencies)
       ];
     }
