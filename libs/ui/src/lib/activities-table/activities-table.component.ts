@@ -192,11 +192,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     activity: OrderWithAccount,
     fieldValueMap: { [id: string]: Filter } = {}
   ): Filter[] {
-    fieldValueMap[activity.Account?.id] = {
-      id: activity.Account?.id,
-      label: activity.Account?.name,
-      type: 'ACCOUNT'
-    };
+    if (activity.Account?.id) {
+      fieldValueMap[activity.Account.id] = {
+        id: activity.Account.id,
+        label: activity.Account.name,
+        type: 'ACCOUNT'
+      };
+    }
 
     fieldValueMap[activity.SymbolProfile.currency] = {
       id: activity.SymbolProfile.currency,
