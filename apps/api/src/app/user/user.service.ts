@@ -12,6 +12,7 @@ import {
 } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User, ViewMode } from '@prisma/client';
+import { sortBy } from 'lodash';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 import { UserSettings } from './interfaces/user-settings.interface';
@@ -185,6 +186,9 @@ export class UserService {
       }
     }
 
+    user.Account = sortBy(user.Account, (account) => {
+      return account.name;
+    });
     user.permissions = currentPermissions.sort();
 
     return user;

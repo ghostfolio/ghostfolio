@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Reloaded the accounts of a user after creating, editing or deleting one
 - Excluded empty items in the activities filter
 
 ## 1.156.0 - 05.06.2022
