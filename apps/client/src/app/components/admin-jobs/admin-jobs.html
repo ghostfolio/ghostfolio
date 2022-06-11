@@ -79,6 +79,7 @@
                 <ion-icon
                   *ngIf="job.state === 'delayed'"
                   name="time-outline"
+                  [ngClass]="{ 'text-danger': job.stacktrace?.length > 0 }"
                 ></ion-icon>
                 <ion-icon
                   *ngIf="job.state === 'failed'"
@@ -107,7 +108,7 @@
                   <button
                     i18n
                     mat-menu-item
-                    [disabled]="job.stacktrace?.length < 1"
+                    [disabled]="job.stacktrace?.length <= 0"
                     (click)="onViewStacktrace(job.stacktrace)"
                   >
                     View Stacktrace

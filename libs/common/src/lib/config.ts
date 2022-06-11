@@ -1,5 +1,6 @@
 import { DataSource } from '@prisma/client';
-import { JobStatus } from 'bull';
+import { JobOptions, JobStatus } from 'bull';
+import ms from 'ms';
 
 import { ToggleOption } from './types';
 
@@ -50,8 +51,30 @@ export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
+export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
+  attempts: 20,
+  backoff: {
+    delay: ms('1 minute'),
+    type: 'exponential'
+  },
+  priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  removeOnComplete: {
+    age: ms('2 weeks') / 1000
+  }
+};
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
   'GATHER_HISTORICAL_MARKET_DATA';
+export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
+  attempts: 20,
+  backoff: {
+    delay: ms('1 minute'),
+    type: 'exponential'
+  },
+  priority: DATA_GATHERING_QUEUE_PRIORITY_LOW,
+  removeOnComplete: {
+    age: ms('2 weeks') / 1000
+  }
+};
 
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_COUPONS = 'COUPONS';

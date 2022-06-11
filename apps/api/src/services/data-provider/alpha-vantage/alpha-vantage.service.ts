@@ -9,7 +9,7 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import { isAfter, isBefore, parse } from 'date-fns';
+import { format, isAfter, isBefore, parse } from 'date-fns';
 
 import { IAlphaVantageHistoricalResponse } from './interfaces/interfaces';
 
@@ -76,9 +76,12 @@ export class AlphaVantageService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'AlphaVantageService');
-
-      return {};
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
     }
   }
 

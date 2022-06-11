@@ -71,10 +71,13 @@ export class GoogleSheetsService implements DataProviderInterface {
         [symbol]: historicalData
       };
     } catch (error) {
-      Logger.error(error, 'GoogleSheetsService');
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
     }
-
-    return {};
   }
 
   public getName(): DataSource {

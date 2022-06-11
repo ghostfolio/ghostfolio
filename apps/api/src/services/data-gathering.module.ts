@@ -16,7 +16,7 @@ import { SymbolProfileModule } from './symbol-profile.module';
   imports: [
     BullModule.registerQueue({
       limiter: {
-        duration: ms('1 second'),
+        duration: ms('5 seconds'),
         max: 1
       },
       name: DATA_GATHERING_QUEUE

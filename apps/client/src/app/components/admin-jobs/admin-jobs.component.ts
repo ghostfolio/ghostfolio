@@ -80,11 +80,12 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteJobs() {
+    const currentFilter = this.filterForm.get('status').value;
+
     this.adminService
-      .deleteJobs({})
+      .deleteJobs({ status: currentFilter ? [currentFilter] : undefined })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        const currentFilter = this.filterForm.get('status').value;
         this.fetchJobs(currentFilter ? [currentFilter] : undefined);
       });
   }

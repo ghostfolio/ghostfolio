@@ -23,7 +23,7 @@ export class AdminService {
     return this.http.delete<void>(`/api/v1/admin/queue/job/${aId}`);
   }
 
-  public deleteJobs({ status }: { status?: JobStatus[] }) {
+  public deleteJobs({ status }: { status: JobStatus[] }) {
     let params = new HttpParams();
 
     if (status?.length > 0) {

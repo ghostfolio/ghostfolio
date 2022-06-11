@@ -1,17 +1,17 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE,
-  DATA_GATHERING_QUEUE_PRIORITY_LOW,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS,
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
+  QUEUE_JOB_STATUS_LIST
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import { Queue } from 'bull';
+import { JobOptions, Queue } from 'bull';
 import { format, subDays } from 'date-fns';
-import ms from 'ms';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
@@ -21,8 +21,6 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class DataGatheringService {
-  private dataGatheringProgress: number;
-
   public constructor(
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
@@ -33,6 +31,19 @@ export class DataGatheringService {
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async addJobToQueue(name: string, data: any, options?: JobOptions) {
+    const hasJob = await this.hasJob(name, data);
+
+    if (hasJob) {
+      Logger.log(
+        `Job ${name} with data ${JSON.stringify(data)} already exists.`,
+        'DataGatheringService'
+      );
+    } else {
+      return this.dataGatheringQueue.add(name, data, options);
+    }
+  }
 
   public async gather7Days() {
     const dataGatheringItems = await this.getSymbols7D();
@@ -100,15 +111,6 @@ export class DataGatheringService {
     if (!uniqueAssets) {
       uniqueAssets = await this.getUniqueAssets();
     }
-
-    Logger.log(
-      `Asset profile data gathering has been started for ${uniqueAssets
-        .map(({ dataSource, symbol }) => {
-          return `${symbol} (${dataSource})`;
-        })
-        .join(',')}.`,
-      'DataGatheringService'
-    );
 
     const assetProfiles = await this.dataProviderService.getAssetProfiles(
       uniqueAssets
@@ -205,21 +207,14 @@ export class DataGatheringService {
         continue;
       }
 
-      await this.dataGatheringQueue.add(
+      await this.addJobToQueue(
         GATHER_HISTORICAL_MARKET_DATA_PROCESS,
         {
           dataSource,
           date,
           symbol
         },
-        {
-          attempts: 20,
-          backoff: {
-            delay: ms('1 minute'),
-            type: 'exponential'
-          },
-          priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
-        }
+        GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS
       );
     }
   }
@@ -353,5 +348,19 @@ export class DataGatheringService {
       });
 
     return [...currencyPairsToGather, ...symbolProfilesToGather];
+  }
+
+  private async hasJob(name: string, data: any) {
+    const jobs = await this.dataGatheringQueue.getJobs(
+      QUEUE_JOB_STATUS_LIST.filter((status) => {
+        return status !== 'completed';
+      })
+    );
+
+    return jobs.some((job) => {
+      return (
+        job.name === name && JSON.stringify(job.data) === JSON.stringify(data)
+      );
+    });
   }
 }

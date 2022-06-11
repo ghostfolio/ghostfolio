@@ -99,14 +99,6 @@ export class DataGatheringProcessor {
               }
             });
           } catch {}
-        } else {
-          Logger.warn(
-            `Failed to gather data for symbol ${symbol} from ${dataSource} at ${format(
-              currentDate,
-              DATE_FORMAT
-            )}.`,
-            `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
-          );
         }
 
         // Count month one up for iteration
@@ -119,6 +111,11 @@ export class DataGatheringProcessor {
           )
         );
       }
+
+      Logger.log(
+        `Historical market data gathering has been completed for ${symbol} (${dataSource}).`,
+        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
+      );
     } catch (error) {
       Logger.error(
         error,

@@ -1,17 +1,14 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
-  DATA_GATHERING_QUEUE,
-  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-  GATHER_ASSET_PROFILE_PROCESS
+  GATHER_ASSET_PROFILE_PROCESS,
+  GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import {
   AssetClass,
@@ -22,10 +19,8 @@ import {
   Type as TypeOfOrder
 } from '@prisma/client';
 import Big from 'big.js';
-import { Queue } from 'bull';
 import { endOfToday, isAfter } from 'date-fns';
 import { groupBy } from 'lodash';
-import ms from 'ms';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from './interfaces/activities.interface';
@@ -34,11 +29,8 @@ import { Activity } from './interfaces/activities.interface';
 export class OrderService {
   public constructor(
     private readonly accountService: AccountService,
-    private readonly cacheService: CacheService,
-    @InjectQueue(DATA_GATHERING_QUEUE)
-    private readonly dataGatheringQueue: Queue,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -122,20 +114,13 @@ export class OrderService {
         data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
     }
 
-    await this.dataGatheringQueue.add(
+    await this.dataGatheringService.addJobToQueue(
       GATHER_ASSET_PROFILE_PROCESS,
       {
         dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
         symbol: data.SymbolProfile.connectOrCreate.create.symbol
       },
-      {
-        attempts: 20,
-        backoff: {
-          delay: ms('1 minute'),
-          type: 'exponential'
-        },
-        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
-      }
+      GATHER_ASSET_PROFILE_PROCESS_OPTIONS
     );
 
     const isDraft = isAfter(data.date as Date, endOfToday());
