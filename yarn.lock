@@ -8201,11 +8201,6 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
-cryptocurrencies@7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/cryptocurrencies/-/cryptocurrencies-7.0.0.tgz#4f8fc826a63c14a1294e0b401bb69503506f98a5"
-  integrity sha512-jCA+ykHJg0BAH4eR3T5uhZJ31kp9JrZZqn7Cga4tUgONSPdg4MGLv0SuL272llVXfUgvZZX2lYM4ZjJa/+hjYw==
-
 css-blank-pseudo@^3.0.2:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/css-blank-pseudo/-/css-blank-pseudo-3.0.3.tgz#36523b01c12a25d812df343a32c322d2a2324561"
