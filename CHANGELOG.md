@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the historical market data gathering to the queue design pattern
+- Extended the queue jobs view in the admin control panel by the number of attempts and the status
 - Refreshed the cryptocurrencies list to support more coins by default
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 180 days
 - Upgraded `chart.js` from version `3.7.0` to `3.8.0`

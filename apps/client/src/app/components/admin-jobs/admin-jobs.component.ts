@@ -5,10 +5,13 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { QUEUE_JOB_STATUS_LIST } from '@ghostfolio/common/config';
 import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
 import { AdminJobs, User } from '@ghostfolio/common/interfaces';
+import { JobStatus } from 'bull';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -20,7 +23,9 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AdminJobsComponent implements OnDestroy, OnInit {
   public defaultDateTimeFormat: string;
+  public filterForm: FormGroup;
   public jobs: AdminJobs['jobs'] = [];
+  public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -31,6 +36,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
+    private formBuilder: FormBuilder,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -50,7 +56,38 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
    * Initializes the controller
    */
   public ngOnInit() {
+    this.filterForm = this.formBuilder.group({
+      status: []
+    });
+
+    this.filterForm.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        const currentFilter = this.filterForm.get('status').value;
+        this.fetchJobs(currentFilter ? [currentFilter] : undefined);
+      });
+
     this.fetchJobs();
+  }
+
+  public onDeleteJob(aId: string) {
+    this.adminService
+      .deleteJob(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchJobs();
+      });
+  }
+
+  public onDeleteJobs() {
+    const currentFilter = this.filterForm.get('status').value;
+
+    this.adminService
+      .deleteJobs({ status: currentFilter ? [currentFilter] : undefined })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchJobs(currentFilter ? [currentFilter] : undefined);
+      });
   }
 
   public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
@@ -62,9 +99,9 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private fetchJobs() {
+  private fetchJobs(aStatus?: JobStatus[]) {
     this.adminService
-      .fetchJobs()
+      .fetchJobs({ status: aStatus })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ jobs }) => {
         this.jobs = jobs;

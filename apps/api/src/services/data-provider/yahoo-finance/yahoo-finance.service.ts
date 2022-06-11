@@ -131,7 +131,13 @@ export class YahooFinanceService implements DataProviderInterface {
       if (url) {
         response.url = url;
       }
-    } catch {}
+    } catch (error) {
+      throw new Error(
+        `Could not get asset profile for ${aSymbol} (${this.getName()}): [${
+          error.name
+        }] ${error.message}`
+      );
+    }
 
     return response;
   }
@@ -185,12 +191,12 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.warn(
-        `Skipping yahooFinance2.getHistorical("${aSymbol}"): [${error.name}] ${error.message}`,
-        'YahooFinanceService'
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
-
-      return {};
     }
   }
 

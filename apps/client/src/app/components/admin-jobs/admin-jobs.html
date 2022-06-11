@@ -1,13 +1,34 @@
 <div class="container">
   <div class="row">
     <div class="col">
+      <form class="align-items-center d-flex" [formGroup]="filterForm">
+        <mat-form-field appearance="outline" class="flex-grow-1">
+          <mat-select formControlName="status">
+            <mat-option></mat-option>
+            <mat-option
+              *ngFor="let statusFilterOption of statusFilterOptions"
+              [value]="statusFilterOption"
+              >{{ statusFilterOption }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <button
+          class="ml-1"
+          color="warn"
+          mat-flat-button
+          (click)="onDeleteJobs()"
+        >
+          <span i18n>Delete Jobs</span>
+        </button>
+      </form>
       <table class="gf-table w-100">
         <thead>
           <tr class="mat-header-row">
-            <th class="mat-header-cell px-1 py-2" i18n>#</th>
+            <th class="mat-header-cell px-1 py-2 text-right" i18n>#</th>
             <th class="mat-header-cell px-1 py-2" i18n>Type</th>
-            <th class="mat-header-cell px-1 py-2" i18n>Data Source</th>
             <th class="mat-header-cell px-1 py-2" i18n>Symbol</th>
+            <th class="mat-header-cell px-1 py-2" i18n>Data Source</th>
+            <th class="mat-header-cell px-1 py-2 text-right" i18n>Attempts</th>
             <th class="mat-header-cell px-1 py-2" i18n>Created</th>
             <th class="mat-header-cell px-1 py-2" i18n>Finished</th>
             <th class="mat-header-cell px-1 py-2" i18n>Status</th>
@@ -17,10 +38,28 @@
         <tbody>
           <ng-container *ngFor="let job of jobs">
             <tr class="mat-row">
-              <td class="mat-cell px-1 py-2">{{ job.id }}</td>
-              <td class="mat-cell px-1 py-2">{{ job.name }}</td>
-              <td class="mat-cell px-1 py-2">{{ job.data?.dataSource }}</td>
+              <td class="mat-cell px-1 py-2 text-right">{{ job.id }}</td>
+              <td class="mat-cell px-1 py-2">
+                <span class="align-items-center d-flex">
+                  <ion-icon
+                    class="mr-1"
+                    name="arrow-down-circle-outline"
+                  ></ion-icon>
+                  <ng-container *ngIf="job.name === 'GATHER_ASSET_PROFILE'">
+                    <span i18n>Asset Profile</span>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="job.name === 'GATHER_HISTORICAL_MARKET_DATA'"
+                  >
+                    <span i18n>Historical Market Data</span>
+                  </ng-container>
+                </span>
+              </td>
               <td class="mat-cell px-1 py-2">{{ job.data?.symbol }}</td>
+              <td class="mat-cell px-1 py-2">{{ job.data?.dataSource }}</td>
+              <td class="mat-cell px-1 py-2 text-right">
+                {{ job.attemptsMade }}
+              </td>
               <td class="mat-cell px-1 py-2">
                 {{ job.timestamp | date: defaultDateTimeFormat }}
               </td>
@@ -29,21 +68,32 @@
               </td>
               <td class="mat-cell px-1 py-2">
                 <ion-icon
-                  *ngIf="job.finishedOn"
+                  *ngIf="job.state === 'active'"
+                  name="play-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="job.state === 'completed'"
                   class="text-success"
                   name="checkmark-circle-outline"
                 ></ion-icon>
-                <ng-container *ngIf="!job.finishedOn">
-                  <ion-icon
-                    *ngIf="job.stacktrace?.length >= 1"
-                    class="text-danger"
-                    name="alert-circle-outline"
-                  ></ion-icon>
-                  <ion-icon
-                    *ngIf="job.stacktrace?.length < 1"
-                    name="time-outline"
-                  ></ion-icon>
-                </ng-container>
+                <ion-icon
+                  *ngIf="job.state === 'delayed'"
+                  name="time-outline"
+                  [ngClass]="{ 'text-danger': job.stacktrace?.length > 0 }"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="job.state === 'failed'"
+                  class="text-danger"
+                  name="alert-circle-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="job.state === 'paused'"
+                  name="pause-outline"
+                ></ion-icon>
+                <ion-icon
+                  *ngIf="job.state === 'waiting'"
+                  name="cafe-outline"
+                ></ion-icon>
               </td>
               <td class="mat-cell px-1 py-2">
                 <button
@@ -58,10 +108,13 @@
                   <button
                     i18n
                     mat-menu-item
-                    [disabled]="job.stacktrace?.length < 1"
+                    [disabled]="job.stacktrace?.length <= 0"
                     (click)="onViewStacktrace(job.stacktrace)"
                   >
                     View Stacktrace
+                  </button>
+                  <button i18n mat-menu-item (click)="onDeleteJob(job.id)">
+                    Delete Job
                   </button>
                 </mat-menu>
               </td>

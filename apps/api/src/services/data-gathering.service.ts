@@ -1,21 +1,17 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
-  PROPERTY_LAST_DATA_GATHERING,
-  PROPERTY_LOCKED_DATA_GATHERING
+  DATA_GATHERING_QUEUE,
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS,
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
+  QUEUE_JOB_STATUS_LIST
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import {
-  differenceInHours,
-  format,
-  getDate,
-  getMonth,
-  getYear,
-  isBefore,
-  subDays
-} from 'date-fns';
+import { JobOptions, Queue } from 'bull';
+import { format, subDays } from 'date-fns';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
@@ -25,167 +21,48 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class DataGatheringService {
-  private dataGatheringProgress: number;
-
   public constructor(
     @Inject('DataEnhancers')
     private readonly dataEnhancers: DataEnhancerInterface[],
+    @InjectQueue(DATA_GATHERING_QUEUE)
+    private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
-  public async gather7Days() {
-    const isDataGatheringNeeded = await this.isDataGatheringNeeded();
+  public async addJobToQueue(name: string, data: any, options?: JobOptions) {
+    const hasJob = await this.hasJob(name, data);
 
-    if (isDataGatheringNeeded) {
-      Logger.log('7d data gathering has been started.', 'DataGatheringService');
-      console.time('data-gathering-7d');
-
-      await this.prismaService.property.create({
-        data: {
-          key: PROPERTY_LOCKED_DATA_GATHERING,
-          value: new Date().toISOString()
-        }
-      });
-
-      const symbols = await this.getSymbols7D();
-
-      try {
-        await this.gatherSymbols(symbols);
-
-        await this.prismaService.property.upsert({
-          create: {
-            key: PROPERTY_LAST_DATA_GATHERING,
-            value: new Date().toISOString()
-          },
-          update: { value: new Date().toISOString() },
-          where: { key: PROPERTY_LAST_DATA_GATHERING }
-        });
-      } catch (error) {
-        Logger.error(error, 'DataGatheringService');
-      }
-
-      await this.prismaService.property.delete({
-        where: {
-          key: PROPERTY_LOCKED_DATA_GATHERING
-        }
-      });
-
+    if (hasJob) {
       Logger.log(
-        '7d data gathering has been completed.',
+        `Job ${name} with data ${JSON.stringify(data)} already exists.`,
         'DataGatheringService'
       );
-      console.timeEnd('data-gathering-7d');
+    } else {
+      return this.dataGatheringQueue.add(name, data, options);
     }
+  }
+
+  public async gather7Days() {
+    const dataGatheringItems = await this.getSymbols7D();
+    await this.gatherSymbols(dataGatheringItems);
   }
 
   public async gatherMax() {
-    const isDataGatheringLocked = await this.prismaService.property.findUnique({
-      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
-    });
-
-    if (!isDataGatheringLocked) {
-      Logger.log(
-        'Max data gathering has been started.',
-        'DataGatheringService'
-      );
-      console.time('data-gathering-max');
-
-      await this.prismaService.property.create({
-        data: {
-          key: PROPERTY_LOCKED_DATA_GATHERING,
-          value: new Date().toISOString()
-        }
-      });
-
-      const symbols = await this.getSymbolsMax();
-
-      try {
-        await this.gatherSymbols(symbols);
-
-        await this.prismaService.property.upsert({
-          create: {
-            key: PROPERTY_LAST_DATA_GATHERING,
-            value: new Date().toISOString()
-          },
-          update: { value: new Date().toISOString() },
-          where: { key: PROPERTY_LAST_DATA_GATHERING }
-        });
-      } catch (error) {
-        Logger.error(error, 'DataGatheringService');
-      }
-
-      await this.prismaService.property.delete({
-        where: {
-          key: PROPERTY_LOCKED_DATA_GATHERING
-        }
-      });
-
-      Logger.log(
-        'Max data gathering has been completed.',
-        'DataGatheringService'
-      );
-      console.timeEnd('data-gathering-max');
-    }
+    const dataGatheringItems = await this.getSymbolsMax();
+    await this.gatherSymbols(dataGatheringItems);
   }
 
   public async gatherSymbol({ dataSource, symbol }: UniqueAsset) {
-    const isDataGatheringLocked = await this.prismaService.property.findUnique({
-      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
+    const symbols = (await this.getSymbolsMax()).filter((dataGatheringItem) => {
+      return (
+        dataGatheringItem.dataSource === dataSource &&
+        dataGatheringItem.symbol === symbol
+      );
     });
-
-    if (!isDataGatheringLocked) {
-      Logger.log(
-        `Symbol data gathering for ${symbol} has been started.`,
-        'DataGatheringService'
-      );
-      console.time('data-gathering-symbol');
-
-      await this.prismaService.property.create({
-        data: {
-          key: PROPERTY_LOCKED_DATA_GATHERING,
-          value: new Date().toISOString()
-        }
-      });
-
-      const symbols = (await this.getSymbolsMax()).filter(
-        (dataGatheringItem) => {
-          return (
-            dataGatheringItem.dataSource === dataSource &&
-            dataGatheringItem.symbol === symbol
-          );
-        }
-      );
-
-      try {
-        await this.gatherSymbols(symbols);
-
-        await this.prismaService.property.upsert({
-          create: {
-            key: PROPERTY_LAST_DATA_GATHERING,
-            value: new Date().toISOString()
-          },
-          update: { value: new Date().toISOString() },
-          where: { key: PROPERTY_LAST_DATA_GATHERING }
-        });
-      } catch (error) {
-        Logger.error(error, 'DataGatheringService');
-      }
-
-      await this.prismaService.property.delete({
-        where: {
-          key: PROPERTY_LOCKED_DATA_GATHERING
-        }
-      });
-
-      Logger.log(
-        `Symbol data gathering for ${symbol} has been completed.`,
-        'DataGatheringService'
-      );
-      console.timeEnd('data-gathering-symbol');
-    }
+    await this.gatherSymbols(symbols);
   }
 
   public async gatherSymbolForDate({
@@ -234,15 +111,6 @@ export class DataGatheringService {
     if (!uniqueAssets) {
       uniqueAssets = await this.getUniqueAssets();
     }
-
-    Logger.log(
-      `Asset profile data gathering has been started for ${uniqueAssets
-        .map(({ dataSource, symbol }) => {
-          return `${symbol} (${dataSource})`;
-        })
-        .join(',')}.`,
-      'DataGatheringService'
-    );
 
     const assetProfiles = await this.dataProviderService.getAssetProfiles(
       uniqueAssets
@@ -334,136 +202,21 @@ export class DataGatheringService {
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
-    let hasError = false;
-    let symbolCounter = 0;
-
     for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
       if (dataSource === 'MANUAL') {
         continue;
       }
 
-      this.dataGatheringProgress = symbolCounter / aSymbolsWithStartDate.length;
-
-      try {
-        const historicalData = await this.dataProviderService.getHistoricalRaw(
-          [{ dataSource, symbol }],
+      await this.addJobToQueue(
+        GATHER_HISTORICAL_MARKET_DATA_PROCESS,
+        {
+          dataSource,
           date,
-          new Date()
-        );
-
-        let currentDate = date;
-        let lastMarketPrice: number;
-
-        while (
-          isBefore(
-            currentDate,
-            new Date(
-              Date.UTC(
-                getYear(new Date()),
-                getMonth(new Date()),
-                getDate(new Date()),
-                0
-              )
-            )
-          )
-        ) {
-          if (
-            historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-              ?.marketPrice
-          ) {
-            lastMarketPrice =
-              historicalData[symbol]?.[format(currentDate, DATE_FORMAT)]
-                ?.marketPrice;
-          }
-
-          if (lastMarketPrice) {
-            try {
-              await this.prismaService.marketData.create({
-                data: {
-                  dataSource,
-                  symbol,
-                  date: new Date(
-                    Date.UTC(
-                      getYear(currentDate),
-                      getMonth(currentDate),
-                      getDate(currentDate),
-                      0
-                    )
-                  ),
-                  marketPrice: lastMarketPrice
-                }
-              });
-            } catch {}
-          } else {
-            Logger.warn(
-              `Failed to gather data for symbol ${symbol} from ${dataSource} at ${format(
-                currentDate,
-                DATE_FORMAT
-              )}.`,
-              'DataGatheringService'
-            );
-          }
-
-          // Count month one up for iteration
-          currentDate = new Date(
-            Date.UTC(
-              getYear(currentDate),
-              getMonth(currentDate),
-              getDate(currentDate) + 1,
-              0
-            )
-          );
-        }
-      } catch (error) {
-        hasError = true;
-        Logger.error(error, 'DataGatheringService');
-      }
-
-      if (symbolCounter > 0 && symbolCounter % 100 === 0) {
-        Logger.log(
-          `Data gathering progress: ${(
-            this.dataGatheringProgress * 100
-          ).toFixed(2)}%`,
-          'DataGatheringService'
-        );
-      }
-
-      symbolCounter += 1;
+          symbol
+        },
+        GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS
+      );
     }
-
-    await this.exchangeRateDataService.initialize();
-
-    if (hasError) {
-      throw '';
-    }
-  }
-
-  public async getDataGatheringProgress() {
-    const isInProgress = await this.getIsInProgress();
-
-    if (isInProgress) {
-      return this.dataGatheringProgress;
-    }
-
-    return undefined;
-  }
-
-  public async getIsInProgress() {
-    return await this.prismaService.property.findUnique({
-      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
-    });
-  }
-
-  public async getLastDataGathering() {
-    const lastDataGathering = await this.prismaService.property.findUnique({
-      where: { key: PROPERTY_LAST_DATA_GATHERING }
-    });
-
-    if (lastDataGathering?.value) {
-      return new Date(lastDataGathering.value);
-    }
-
-    return undefined;
   }
 
   public async getSymbolsMax(): Promise<IDataGatheringItem[]> {
@@ -534,19 +287,6 @@ export class DataGatheringService {
       });
   }
 
-  public async reset() {
-    Logger.log('Data gathering has been reset.', 'DataGatheringService');
-
-    await this.prismaService.property.deleteMany({
-      where: {
-        OR: [
-          { key: PROPERTY_LAST_DATA_GATHERING },
-          { key: PROPERTY_LOCKED_DATA_GATHERING }
-        ]
-      }
-    });
-  }
-
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
@@ -610,15 +350,17 @@ export class DataGatheringService {
     return [...currencyPairsToGather, ...symbolProfilesToGather];
   }
 
-  private async isDataGatheringNeeded() {
-    const lastDataGathering = await this.getLastDataGathering();
+  private async hasJob(name: string, data: any) {
+    const jobs = await this.dataGatheringQueue.getJobs(
+      QUEUE_JOB_STATUS_LIST.filter((status) => {
+        return status !== 'completed';
+      })
+    );
 
-    const isDataGatheringLocked = await this.prismaService.property.findUnique({
-      where: { key: PROPERTY_LOCKED_DATA_GATHERING }
+    return jobs.some((job) => {
+      return (
+        job.name === name && JSON.stringify(job.data) === JSON.stringify(data)
+      );
     });
-
-    const diffInHours = differenceInHours(new Date(), lastDataGathering);
-
-    return (diffInHours >= 1 || !lastDataGathering) && !isDataGatheringLocked;
   }
 }

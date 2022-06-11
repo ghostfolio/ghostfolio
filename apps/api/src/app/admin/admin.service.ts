@@ -42,8 +42,6 @@ export class AdminService {
 
   public async get(): Promise<AdminData> {
     return {
-      dataGatheringProgress:
-        await this.dataGatheringService.getDataGatheringProgress(),
       exchangeRates: this.exchangeRateDataService
         .getCurrencies()
         .filter((currency) => {
@@ -60,7 +58,6 @@ export class AdminService {
             )
           };
         }),
-      lastDataGathering: await this.getLastDataGathering(),
       settings: await this.propertyService.get(),
       transactionCount: await this.prismaService.order.count(),
       userCount: await this.prismaService.user.count(),
@@ -161,28 +158,9 @@ export class AdminService {
 
     if (key === PROPERTY_CURRENCIES) {
       await this.exchangeRateDataService.initialize();
-      await this.dataGatheringService.reset();
     }
 
     return response;
-  }
-
-  private async getLastDataGathering() {
-    const lastDataGathering =
-      await this.dataGatheringService.getLastDataGathering();
-
-    if (lastDataGathering) {
-      return lastDataGathering;
-    }
-
-    const dataGatheringInProgress =
-      await this.dataGatheringService.getIsInProgress();
-
-    if (dataGatheringInProgress) {
-      return 'IN_PROGRESS';
-    }
-
-    return undefined;
   }
 
   private async getUsersWithAnalytics(): Promise<AdminData['users']> {

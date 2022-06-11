@@ -6,6 +6,7 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { DATA_GATHERING_QUEUE } from '@ghostfolio/common/config';
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import ms from 'ms';
 
 import { DataGatheringProcessor } from './data-gathering.processor';
 import { ExchangeRateDataModule } from './exchange-rate-data.module';
@@ -14,6 +15,10 @@ import { SymbolProfileModule } from './symbol-profile.module';
 @Module({
   imports: [
     BullModule.registerQueue({
+      limiter: {
+        duration: ms('5 seconds'),
+        max: 1
+      },
       name: DATA_GATHERING_QUEUE
     }),
     ConfigurationModule,

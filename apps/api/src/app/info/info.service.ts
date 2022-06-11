@@ -106,7 +106,6 @@ export class InfoService {
       baseCurrency: this.configurationService.get('BASE_CURRENCY'),
       currencies: this.exchangeRateDataService.getCurrencies(),
       demoAuthToken: this.getDemoAuthToken(),
-      lastDataGathering: await this.getLastDataGathering(),
       statistics: await this.getStatistics(),
       subscriptions: await this.getSubscriptions(),
       tags: await this.tagService.get()
@@ -213,13 +212,6 @@ export class InfoService {
     return this.jwtService.sign({
       id: DEMO_USER_ID
     });
-  }
-
-  private async getLastDataGathering() {
-    const lastDataGathering =
-      await this.dataGatheringService.getLastDataGathering();
-
-    return lastDataGathering ?? null;
   }
 
   private async getStatistics() {

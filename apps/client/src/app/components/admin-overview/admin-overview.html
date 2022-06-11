@@ -19,37 +19,30 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>Data Gathering</div>
             <div class="w-50">
-              <div>
-                <ng-container *ngIf="lastDataGathering"
-                  >{{ lastDataGathering }}</ng-container
-                >
-                <ng-container *ngIf="dataGatheringInProgress" i18n
-                  >In Progress ({{ dataGatheringProgress | percent : '1.2-2'
-                  }})</ng-container
-                >
-              </div>
-              <div class="mt-2 overflow-hidden">
+              <div class="overflow-hidden">
                 <div class="mb-2">
                   <button
                     color="accent"
                     mat-flat-button
-                    (click)="onFlushCache()"
+                    (click)="onGather7Days()"
                   >
                     <ion-icon
                       class="mr-1"
-                      name="close-circle-outline"
+                      name="cloud-download-outline"
                     ></ion-icon>
-                    <span i18n>Reset Data Gathering</span>
+                    <span i18n>Gather Recent Data</span>
                   </button>
                 </div>
                 <div class="mb-2">
                   <button
-                    color="warn"
+                    color="accent"
                     mat-flat-button
-                    [disabled]="dataGatheringInProgress"
                     (click)="onGatherMax()"
                   >
-                    <ion-icon class="mr-1" name="warning-outline"></ion-icon>
+                    <ion-icon
+                      class="mr-1"
+                      name="cloud-download-outline"
+                    ></ion-icon>
                     <span i18n>Gather All Data</span>
                   </button>
                 </div>
@@ -58,7 +51,6 @@
                     class="mb-2 mr-2"
                     color="accent"
                     mat-flat-button
-                    [disabled]="dataGatheringInProgress"
                     (click)="onGatherProfileData()"
                   >
                     <ion-icon
@@ -97,7 +89,6 @@
                       *ngIf="customCurrencies.includes(exchangeRate.label2)"
                       class="mini-icon mx-1 no-min-width px-2"
                       mat-button
-                      [disabled]="dataGatheringInProgress"
                       (click)="onDeleteCurrency(exchangeRate.label2)"
                     >
                       <ion-icon name="trash-outline"></ion-icon>
@@ -109,7 +100,6 @@
                 <button
                   color="primary"
                   mat-flat-button
-                  [disabled]="dataGatheringInProgress"
                   (click)="onAddCurrency()"
                 >
                   <ion-icon class="mr-1" name="add-outline"></ion-icon>
@@ -126,7 +116,6 @@
                 <button
                   class="mini-icon mx-1 no-min-width px-2"
                   mat-button
-                  [disabled]="dataGatheringInProgress"
                   (click)="onDeleteSystemMessage()"
                 >
                   <ion-icon name="trash-outline"></ion-icon>
@@ -195,6 +184,15 @@
                   </button>
                 </form>
               </div>
+            </div>
+          </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>Housekeeping</div>
+            <div class="w-50">
+              <button color="warn" mat-flat-button (click)="onFlushCache()">
+                <ion-icon class="mr-1" name="close-circle-outline"></ion-icon>
+                <span i18n>Flush Cache</span>
+              </button>
             </div>
           </div>
         </mat-card-content>

@@ -72,10 +72,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
         { [aSymbol]: {} }
       );
     } catch (error) {
-      Logger.error(error, 'EodHistoricalDataService');
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
     }
-
-    return {};
   }
 
   public getName(): DataSource {

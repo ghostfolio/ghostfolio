@@ -1,3 +1,4 @@
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
 import {
   Account,
@@ -32,8 +33,6 @@ export interface IDataProviderResponse {
   marketState: MarketState;
 }
 
-export interface IDataGatheringItem {
-  dataSource: DataSource;
+export interface IDataGatheringItem extends UniqueAsset {
   date?: Date;
-  symbol: string;
 }

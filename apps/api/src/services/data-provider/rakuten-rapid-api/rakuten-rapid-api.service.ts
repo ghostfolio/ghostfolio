@@ -90,7 +90,14 @@ export class RakutenRapidApiService implements DataProviderInterface {
           }
         };
       }
-    } catch (error) {}
+    } catch (error) {
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
+    }
 
     return {};
   }

@@ -15,7 +15,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   differenceInSeconds,
   formatDistanceToNowStrict,
-  isValid,
   parseISO
 } from 'date-fns';
 import { uniq } from 'lodash';
@@ -32,14 +31,11 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public couponDuration: StringValue = '30 days';
   public coupons: Coupon[];
   public customCurrencies: string[];
-  public dataGatheringInProgress: boolean;
-  public dataGatheringProgress: number;
   public exchangeRates: { label1: string; label2: string; value: number }[];
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
-  public lastDataGathering: string;
   public transactionCount: number;
   public userCount: number;
   public user: User;
@@ -128,7 +124,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public onDeleteCoupon(aCouponCode: string) {
     const confirmation = confirm('Do you really want to delete this coupon?');
 
-    if (confirmation) {
+    if (confirmation === true) {
       const coupons = this.coupons.filter((coupon) => {
         return coupon.code !== aCouponCode;
       });
@@ -139,7 +135,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public onDeleteCurrency(aCurrency: string) {
     const confirmation = confirm('Do you really want to delete this currency?');
 
-    if (confirmation) {
+    if (confirmation === true) {
       const currencies = this.customCurrencies.filter((currency) => {
         return currency !== aCurrency;
       });
@@ -152,8 +148,23 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onFlushCache() {
-    this.cacheService
-      .flush()
+    const confirmation = confirm('Do you really want to flush the cache?');
+
+    if (confirmation === true) {
+      this.cacheService
+        .flush()
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        });
+    }
+  }
+
+  public onGather7Days() {
+    this.adminService
+      .gather7Days()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         setTimeout(() => {
@@ -163,20 +174,14 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onGatherMax() {
-    const confirmation = confirm(
-      'This action may take some time. Do you want to proceed?'
-    );
-
-    if (confirmation === true) {
-      this.adminService
-        .gatherMax()
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
-        });
-    }
+    this.adminService
+      .gatherMax()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
   }
 
   public onGatherProfileData() {
@@ -207,39 +212,15 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(
-        ({
-          dataGatheringProgress,
-          exchangeRates,
-          lastDataGathering,
-          settings,
-          transactionCount,
-          userCount
-        }) => {
-          this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
-          this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
-          this.dataGatheringProgress = dataGatheringProgress;
-          this.exchangeRates = exchangeRates;
+      .subscribe(({ exchangeRates, settings, transactionCount, userCount }) => {
+        this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
+        this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
+        this.exchangeRates = exchangeRates;
+        this.transactionCount = transactionCount;
+        this.userCount = userCount;
 
-          if (isValid(parseISO(lastDataGathering?.toString()))) {
-            this.lastDataGathering = formatDistanceToNowStrict(
-              new Date(lastDataGathering),
-              {
-                addSuffix: true
-              }
-            );
-          } else if (lastDataGathering === 'IN_PROGRESS') {
-            this.dataGatheringInProgress = true;
-          } else {
-            this.lastDataGathering = 'Starting soon...';
-          }
-
-          this.transactionCount = transactionCount;
-          this.userCount = userCount;
-
-          this.changeDetectorRef.markForCheck();
-        }
-      );
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private generateCouponCode(aLength: number) {

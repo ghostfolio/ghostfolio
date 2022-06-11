@@ -2,8 +2,8 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.se
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
-  DATA_GATHERING_QUEUE,
-  GATHER_ASSET_PROFILE_PROCESS
+  GATHER_ASSET_PROFILE_PROCESS,
+  GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import {
   AdminData,
@@ -12,7 +12,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
-import { InjectQueue } from '@nestjs/bull';
 import {
   Body,
   Controller,
@@ -28,7 +27,6 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData } from '@prisma/client';
-import { Queue } from 'bull';
 import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -39,8 +37,6 @@ import { UpdateMarketDataDto } from './update-market-data.dto';
 export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
-    @InjectQueue(DATA_GATHERING_QUEUE)
-    private readonly dataGatheringQueue: Queue,
     private readonly dataGatheringService: DataGatheringService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
@@ -64,6 +60,24 @@ export class AdminController {
     return this.adminService.get();
   }
 
+  @Post('gather')
+  @UseGuards(AuthGuard('jwt'))
+  public async gather7Days(): Promise<void> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    this.dataGatheringService.gather7Days();
+  }
+
   @Post('gather/max')
   @UseGuards(AuthGuard('jwt'))
   public async gatherMax(): Promise<void> {
@@ -82,10 +96,14 @@ export class AdminController {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-        dataSource,
-        symbol
-      });
+      await this.dataGatheringService.addJobToQueue(
+        GATHER_ASSET_PROFILE_PROCESS,
+        {
+          dataSource,
+          symbol
+        },
+        GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+      );
     }
 
     this.dataGatheringService.gatherMax();
@@ -109,10 +127,14 @@ export class AdminController {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-        dataSource,
-        symbol
-      });
+      await this.dataGatheringService.addJobToQueue(
+        GATHER_ASSET_PROFILE_PROCESS,
+        {
+          dataSource,
+          symbol
+        },
+        GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+      );
     }
   }
 
@@ -134,10 +156,14 @@ export class AdminController {
       );
     }
 
-    await this.dataGatheringQueue.add(GATHER_ASSET_PROFILE_PROCESS, {
-      dataSource,
-      symbol
-    });
+    await this.dataGatheringService.addJobToQueue(
+      GATHER_ASSET_PROFILE_PROCESS,
+      {
+        dataSource,
+        symbol
+      },
+      GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+    );
   }
 
   @Post('gather/:dataSource/:symbol')

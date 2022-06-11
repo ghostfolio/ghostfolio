@@ -1,4 +1,3 @@
-import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -16,7 +15,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 @Controller('cache')
 export class CacheController {
   public constructor(
-    private readonly cacheService: CacheService,
     private readonly redisCacheService: RedisCacheService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -36,8 +34,6 @@ export class CacheController {
       );
     }
 
-    this.redisCacheService.reset();
-
-    return this.cacheService.flush();
+    return this.redisCacheService.reset();
   }
 }

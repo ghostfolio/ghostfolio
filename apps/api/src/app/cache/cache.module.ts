@@ -1,4 +1,3 @@
-import { CacheService } from '@ghostfolio/api/app/cache/cache.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
@@ -11,7 +10,6 @@ import { Module } from '@nestjs/common';
 import { CacheController } from './cache.controller';
 
 @Module({
-  exports: [CacheService],
   controllers: [CacheController],
   imports: [
     ConfigurationModule,
@@ -21,7 +19,6 @@ import { CacheController } from './cache.controller';
     PrismaModule,
     RedisCacheModule,
     SymbolProfileModule
-  ],
-  providers: [CacheService]
+  ]
 })
 export class CacheModule {}
