@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Decreased the number of attempts of queue jobs from `20` to `10` (fail earlier)
 - Improved the message for data provider errors in the client
 - Changed the label from _Balance_ to _Cash Balance_ in the account dialog
+- Restructured the documentation for self-hosting
 
 ## 1.157.0 - 11.06.2022
 
