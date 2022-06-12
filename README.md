@@ -79,14 +79,17 @@ The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://
 
 The frontend is built with [Angular](https://angular.io) and uses [Angular Material](https://material.angular.io) with utility classes from [Bootstrap](https://getbootstrap.com).
 
-## Run with Docker (self-hosting)
+## Self-hosting
 
-### Prerequisites
+### Run with Docker Compose
 
-- [Docker](https://www.docker.com/products/docker-desktop)
-- A local copy of this Git repository (clone)
+#### Prerequisites
 
-### a. Run environment
+- Basic knowledge of Docker
+- Installation of [Docker](https://www.docker.com/products/docker-desktop)
+- Local copy of this Git repository (clone)
+
+#### a. Run environment
 
 Run the following command to start the Docker images from [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio):
 
@@ -94,7 +97,7 @@ Run the following command to start the Docker images from [Docker Hub](https://h
 docker-compose --env-file ./.env -f docker/docker-compose.yml up -d
 ```
 
-#### Setup Database
+##### Setup Database
 
 Run the following command to setup the database once Ghostfolio is running:
 
@@ -102,7 +105,7 @@ Run the following command to setup the database once Ghostfolio is running:
 docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:setup
 ```
 
-### b. Build and run environment
+#### b. Build and run environment
 
 Run the following commands to build and start the Docker images:
 
@@ -111,7 +114,7 @@ docker-compose --env-file ./.env -f docker/docker-compose.build.yml build
 docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 ```
 
-#### Setup Database
+##### Setup Database
 
 Run the following command to setup the database once Ghostfolio is running:
 
@@ -119,7 +122,7 @@ Run the following command to setup the database once Ghostfolio is running:
 docker-compose --env-file ./.env -f docker/docker-compose.build.yml exec ghostfolio yarn database:setup
 ```
 
-### Fetch Historical Data
+#### Fetch Historical Data
 
 Open http://localhost:3333 in your browser and accomplish these steps:
 
@@ -127,13 +130,13 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
 
-### Upgrade Version
+#### Upgrade Version
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
 1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`
 1. Then, run the following command to keep your database schema in sync: `docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
 
-## Run with _Unraid_ (self-hosting)
+### Run with _Unraid_ (unofficial)
 
 Please follow the instructions of the Ghostfolio [Unraid Community App](https://unraid.net/community/apps?q=ghostfolio).
 
