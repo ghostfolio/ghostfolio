@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Changed the label from _Balance_ to _Cash Balance_ in the account dialog
+
 ## 1.157.0 - 11.06.2022
 
 ### Changed
