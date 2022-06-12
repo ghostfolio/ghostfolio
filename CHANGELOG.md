@@ -7,16 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the queue jobs view in the admin control panel by a data dialog
+
 ### Changed
 
 - Changed the label from _Balance_ to _Cash Balance_ in the account dialog
 
 ## 1.157.0 - 11.06.2022
 
+### Added
+
+- Extended the queue jobs view in the admin control panel by the number of attempts and the status
+
 ### Changed
 
 - Migrated the historical market data gathering to the queue design pattern
-- Extended the queue jobs view in the admin control panel by the number of attempts and the status
 - Refreshed the cryptocurrencies list to support more coins by default
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 180 days
 - Upgraded `chart.js` from version `3.7.0` to `3.8.0`
