@@ -81,9 +81,11 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   }
 
   public onShowErrors() {
-    const errorMessageParts = this.errors.map((error) => {
-      return `${error.symbol} (${error.dataSource})`;
-    });
+    const errorMessageParts = ['Data Provider Errors for'];
+
+    for (const error of this.errors) {
+      errorMessageParts.push(`${error.symbol} (${error.dataSource})`);
+    }
 
     alert(errorMessageParts.join('\n'));
   }
