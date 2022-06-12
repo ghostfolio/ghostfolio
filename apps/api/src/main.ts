@@ -20,10 +20,11 @@ async function bootstrap() {
     })
   );
 
+  const host = process.env.HOST || 'localhost';
   const port = process.env.PORT || 3333;
-  await app.listen(port, () => {
+  await app.listen(port, host, () => {
     logLogo();
-    Logger.log(`Listening at http://localhost:${port}`);
+    Logger.log(`Listening at http://${host}:${port}`);
     Logger.log('');
   });
 }
