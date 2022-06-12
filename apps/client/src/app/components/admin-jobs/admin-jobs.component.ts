@@ -90,6 +90,10 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onViewData(aData: AdminJobs['jobs'][0]['data']) {
+    alert(JSON.stringify(aData, null, '  '));
+  }
+
   public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
     alert(JSON.stringify(aStacktrace, null, '  '));
   }

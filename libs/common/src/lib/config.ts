@@ -52,7 +52,7 @@ export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
-  attempts: 20,
+  attempts: 10,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
@@ -65,7 +65,7 @@ export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
-  attempts: 20,
+  attempts: 10,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
