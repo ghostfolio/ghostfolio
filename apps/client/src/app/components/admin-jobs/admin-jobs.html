@@ -105,6 +105,9 @@
                   <ion-icon name="ellipsis-vertical"></ion-icon>
                 </button>
                 <mat-menu #accountMenu="matMenu" xPosition="before">
+                  <button i18n mat-menu-item (click)="onViewData(job.data)">
+                    View Data
+                  </button>
                   <button
                     i18n
                     mat-menu-item
