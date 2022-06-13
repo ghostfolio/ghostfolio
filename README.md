@@ -35,7 +35,7 @@
 
 Our official **[Ghostfolio Premium](https://ghostfol.io/pricing)** cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs.
 
-If you prefer to run Ghostfolio on your own infrastructure (self-hosting), please find further instructions in the section [Run with Docker](#run-with-docker-self-hosting).
+If you prefer to run Ghostfolio on your own infrastructure, please find further instructions in the [Self-hosting](#self-hosting) section.
 
 ## Why Ghostfolio?
 
