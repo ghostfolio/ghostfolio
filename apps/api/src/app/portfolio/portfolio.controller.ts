@@ -316,7 +316,9 @@ export class PortfolioController {
 
     const { holdings } = await this.portfolioService.getDetails(
       access.userId,
-      access.userId
+      access.userId,
+      '1d',
+      [{ id: 'EQUITY', type: 'ASSET_CLASS' }]
     );
 
     const portfolioPublicDetails: PortfolioPublicDetails = {
@@ -325,9 +327,6 @@ export class PortfolioController {
     };
 
     const totalValue = Object.values(holdings)
-      .filter((holding) => {
-        return holding.assetClass === 'EQUITY';
-      })
       .map((portfolioPosition) => {
         return this.exchangeRateDataService.toCurrency(
           portfolioPosition.quantity * portfolioPosition.marketPrice,
@@ -338,17 +337,15 @@ export class PortfolioController {
       .reduce((a, b) => a + b, 0);
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-      if (portfolioPosition.assetClass === 'EQUITY') {
-        portfolioPublicDetails.holdings[symbol] = {
-          allocationCurrent: portfolioPosition.allocationCurrent,
-          countries: hasDetails ? portfolioPosition.countries : [],
-          currency: portfolioPosition.currency,
-          markets: portfolioPosition.markets,
-          name: portfolioPosition.name,
-          sectors: hasDetails ? portfolioPosition.sectors : [],
-          value: portfolioPosition.value / totalValue
-        };
-      }
+      portfolioPublicDetails.holdings[symbol] = {
+        allocationCurrent: portfolioPosition.allocationCurrent,
+        countries: hasDetails ? portfolioPosition.countries : [],
+        currency: portfolioPosition.currency,
+        markets: portfolioPosition.markets,
+        name: portfolioPosition.name,
+        sectors: hasDetails ? portfolioPosition.sectors : [],
+        value: portfolioPosition.value / totalValue
+      };
     }
 
     return portfolioPublicDetails;
