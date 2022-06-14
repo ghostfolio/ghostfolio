@@ -31,7 +31,7 @@ export class ConfigurationService {
       GOOGLE_SHEETS_ACCOUNT: str({ default: '' }),
       GOOGLE_SHEETS_ID: str({ default: '' }),
       GOOGLE_SHEETS_PRIVATE_KEY: str({ default: '' }),
-      HOST: host({ default: 'localhost' }),
+      HOST: host({ default: '0.0.0.0' }),
       JWT_SECRET_KEY: str({}),
       MAX_ITEM_IN_CACHE: num({ default: 9999 }),
       MAX_ORDERS_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
