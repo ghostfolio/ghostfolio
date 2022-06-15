@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the `No data provider has been found` error in the search (regression after `envalid` upgrade to `7.3.1`)
+- Fixed the `No data provider has been found` error in the search (regression after `envalid` upgrade to `7.3.1` in Ghostfolio `1.157.0`)
 
 ## 1.159.0 - 15.06.2022
 
