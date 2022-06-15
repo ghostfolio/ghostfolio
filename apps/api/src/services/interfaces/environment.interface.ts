@@ -6,7 +6,7 @@ export interface Environment extends CleanedEnvAccessors {
   BASE_CURRENCY: string;
   CACHE_TTL: number;
   DATA_SOURCE_PRIMARY: string;
-  DATA_SOURCES: string | string[]; // string is not correct, error in envalid?
+  DATA_SOURCES: string[];
   ENABLE_FEATURE_BLOG: boolean;
   ENABLE_FEATURE_CUSTOM_SYMBOLS: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
