@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the default `HOST` to `0.0.0.0`
+- Refactored the endpoint of the public page (filter by equity)
 
 ## 1.158.1 - 12.06.2022
 
