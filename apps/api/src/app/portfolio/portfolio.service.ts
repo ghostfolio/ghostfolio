@@ -394,7 +394,7 @@ export class PortfolioService {
         continue;
       }
 
-      const value = item.quantity.mul(item.marketPrice);
+      const value = item.quantity.mul(item.marketPrice ?? 0);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
@@ -658,7 +658,7 @@ export class PortfolioService {
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
-          quantity.mul(marketPrice).toNumber(),
+          quantity.mul(marketPrice ?? 0).toNumber(),
           currency,
           userCurrency
         )
