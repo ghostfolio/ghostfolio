@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the landing page
 - Upgraded `angular` from version `13.3.6` to `14.0.2`
 - Upgraded `Nx` from version `14.1.4` to `14.3.5`
 - Upgraded `storybook` from version `6.4.22` to `6.5.9`

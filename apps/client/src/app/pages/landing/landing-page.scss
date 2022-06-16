@@ -1,3 +1,5 @@
+@import '~apps/client/src/styles/ghostfolio-style';
+
 :host {
   display: block;
 
@@ -13,19 +15,32 @@
     }
   }
 
-  .intro-container {
-    margin-top: -5rem;
+  .intro {
+    font-size: 4vw;
+    line-height: 1;
 
-    .intro-inner-container {
-      aspect-ratio: 16 / 9;
-      max-height: 66vh;
+    @media (max-width: 575.98px) {
+      font-size: 10vw;
+    }
+  }
 
-      .intro {
-        background-image: url('/assets/intro.jpg');
-        background-position: top left;
-        background-repeat: no-repeat;
-        background-size: contain;
-      }
+  .outro-inner-container {
+    aspect-ratio: 16 / 9;
+    max-height: 66vh;
+
+    div {
+      background-image: url('/assets/intro.jpg');
+      background-position: top left;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+  }
+
+  .video {
+    border: 1px solid rgba(var(--dark-dividers));
+
+    &:hover {
+      border-color: rgba(var(--palette-primary-500), 1);
     }
   }
 }
@@ -37,9 +52,13 @@
     }
   }
 
-  .intro-container {
-    .intro {
+  .outro-inner-container {
+    div {
       background-image: url('/assets/intro-dark.jpg') !important;
     }
+  }
+
+  .video {
+    border-color: rgba(var(--light-dividers));
   }
 }
