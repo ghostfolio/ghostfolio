@@ -12,7 +12,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { transformTickToAbbreviation } from '@ghostfolio/common/helper';
@@ -51,10 +51,10 @@ export class FireCalculatorComponent
   @ViewChild('chartCanvas') chartCanvas;
 
   public calculatorForm = this.formBuilder.group({
-    annualInterestRate: new UntypedFormControl(),
-    paymentPerPeriod: new UntypedFormControl(),
-    principalInvestmentAmount: new UntypedFormControl(),
-    time: new UntypedFormControl()
+    annualInterestRate: new FormControl<number>(undefined),
+    paymentPerPeriod: new FormControl<number>(undefined),
+    principalInvestmentAmount: new FormControl<number>(undefined),
+    time: new FormControl<number>(undefined)
   });
   public chart: Chart;
   public isLoading = true;
@@ -68,7 +68,7 @@ export class FireCalculatorComponent
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private fireCalculatorService: FireCalculatorService,
-    private formBuilder: UntypedFormBuilder
+    private formBuilder: FormBuilder
   ) {
     Chart.register(
       BarController,
@@ -261,15 +261,13 @@ export class FireCalculatorComponent
       this.calculatorForm.get('principalInvestmentAmount').value || 0;
 
     // Payment per period
-    const PMT: number = parseFloat(
-      this.calculatorForm.get('paymentPerPeriod').value
-    );
+    const PMT = this.calculatorForm.get('paymentPerPeriod').value;
 
     // Annual interest rate
     const r: number = this.calculatorForm.get('annualInterestRate').value / 100;
 
     // Time
-    const t: number = parseFloat(this.calculatorForm.get('time').value);
+    const t = this.calculatorForm.get('time').value;
 
     for (let year = currentYear; year < currentYear + t; year++) {
       labels.push(year);

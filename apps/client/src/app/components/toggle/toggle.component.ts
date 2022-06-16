@@ -7,7 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ToggleOption } from '@ghostfolio/common/types';
 
 @Component({
@@ -23,7 +23,7 @@ export class ToggleComponent implements OnChanges, OnInit {
 
   @Output() change = new EventEmitter<Pick<ToggleOption, 'value'>>();
 
-  public option = new UntypedFormControl();
+  public option = new FormControl<string>(undefined);
 
   public constructor() {}
 
