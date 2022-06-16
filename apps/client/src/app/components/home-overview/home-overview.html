@@ -4,7 +4,9 @@
   <div class="row w-100">
     <div class="chart-container col">
       <gf-line-chart
+        class="position-absolute"
         symbol="Performance"
+        [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
         [locale]="user?.settings?.locale"
         [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
