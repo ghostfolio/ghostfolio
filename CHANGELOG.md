@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the error handling of missing market prices
+- Improved the error handling of missing market prices
 
 ## 1.160.0 - 15.06.2022
 
