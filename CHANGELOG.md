@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `Nx` from version `14.1.4` to `14.3.5`
 - Upgraded `storybook` from version `6.4.22` to `6.5.9`
 
+### Fixed
+
+- Improved the error handling of missing market prices
+
 ## 1.160.0 - 15.06.2022
 
 ### Fixed
