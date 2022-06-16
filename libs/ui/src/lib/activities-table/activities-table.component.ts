@@ -8,7 +8,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -62,7 +61,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public isUUID = isUUID;
   public placeholder = '';
   public routeQueryParams: Subscription;
-  public searchControl = new FormControl();
   public searchKeywords: string[] = [];
   public totalFees: number;
   public totalValue: number;

@@ -41,7 +41,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public filterGroups$: Subject<FilterGroup[]> = new BehaviorSubject([]);
   public filters$: Subject<Filter[]> = new BehaviorSubject([]);
   public filters: Observable<Filter[]> = this.filters$.asObservable();
-  public searchControl = new FormControl();
+  public searchControl = new FormControl<Filter | string>(undefined);
   public selectedFilters: Filter[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -50,7 +50,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public constructor() {
     this.searchControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((filterOrSearchTerm: Filter | string) => {
+      .subscribe((filterOrSearchTerm) => {
         if (filterOrSearchTerm) {
           const searchTerm =
             typeof filterOrSearchTerm === 'string'
@@ -80,7 +80,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
       input.value = '';
     }
 
-    this.searchControl.setValue(null);
+    this.searchControl.setValue(undefined);
   }
 
   public onRemoveFilter(aFilter: Filter): void {
@@ -99,7 +99,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     );
     this.updateFilters();
     this.searchInput.nativeElement.value = '';
-    this.searchControl.setValue(null);
+    this.searchControl.setValue(undefined);
   }
 
   public ngOnDestroy() {

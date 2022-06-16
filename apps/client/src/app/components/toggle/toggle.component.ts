@@ -23,7 +23,7 @@ export class ToggleComponent implements OnChanges, OnInit {
 
   @Output() change = new EventEmitter<Pick<ToggleOption, 'value'>>();
 
-  public option = new FormControl();
+  public option = new FormControl<string>(undefined);
 
   public constructor() {}
 

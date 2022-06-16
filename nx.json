@@ -29,17 +29,6 @@
       }
     }
   },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
-  "cli": {
-    "defaultCollection": "@nrwl/nest"
-  },
   "defaultProject": "api",
   "generators": {
     "@nrwl/angular:application": {
@@ -53,5 +42,11 @@
     },
     "@nrwl/nest": {},
     "@nrwl/angular:component": {}
+  },
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    }
   }
 }
