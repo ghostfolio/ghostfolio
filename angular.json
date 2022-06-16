@@ -2,6 +2,7 @@
   "version": 1,
   "projects": {
     "api": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/api",
       "sourceRoot": "apps/api/src",
       "projectType": "application",
@@ -56,6 +57,7 @@
       "tags": []
     },
     "client": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -189,6 +191,7 @@
       "tags": []
     },
     "client-e2e": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/client-e2e",
       "sourceRoot": "apps/client-e2e/src",
       "projectType": "application",
@@ -211,6 +214,7 @@
       "implicitDependencies": ["client"]
     },
     "common": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "libs/common",
       "sourceRoot": "libs/common/src",
       "projectType": "library",
@@ -233,6 +237,7 @@
       "tags": []
     },
     "ui": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "projectType": "library",
       "schematics": {
         "@schematics/angular:component": {
@@ -258,14 +263,12 @@
           }
         },
         "storybook": {
-          "builder": "@nrwl/storybook:storybook",
+          "builder": "@storybook/angular:start-storybook",
           "options": {
-            "uiFramework": "@storybook/angular",
             "port": 4400,
-            "config": {
-              "configFolder": "libs/ui/.storybook"
-            },
-            "projectBuildConfig": "ui:build-storybook"
+            "configDir": "libs/ui/.storybook",
+            "browserTarget": "ui:build-storybook",
+            "compodoc": false
           },
           "configurations": {
             "ci": {
@@ -274,15 +277,13 @@
           }
         },
         "build-storybook": {
-          "builder": "@nrwl/storybook:build",
+          "builder": "@storybook/angular:build-storybook",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "uiFramework": "@storybook/angular",
-            "outputPath": "dist/storybook/ui",
-            "config": {
-              "configFolder": "libs/ui/.storybook"
-            },
-            "projectBuildConfig": "ui:build-storybook"
+            "outputDir": "dist/storybook/ui",
+            "configDir": "libs/ui/.storybook",
+            "browserTarget": "ui:build-storybook",
+            "compodoc": false
           },
           "configurations": {
             "ci": {
@@ -294,6 +295,7 @@
       "tags": []
     },
     "ui-e2e": {
+      "$schema": "../../node_modules/nx/schemas/project-schema.json",
       "root": "apps/ui-e2e",
       "sourceRoot": "apps/ui-e2e/src",
       "projectType": "application",

@@ -11,7 +11,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent
@@ -41,7 +41,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
   public filterGroups$: Subject<FilterGroup[]> = new BehaviorSubject([]);
   public filters$: Subject<Filter[]> = new BehaviorSubject([]);
   public filters: Observable<Filter[]> = this.filters$.asObservable();
-  public searchControl = new FormControl();
+  public searchControl = new UntypedFormControl();
   public selectedFilters: Filter[] = [];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 

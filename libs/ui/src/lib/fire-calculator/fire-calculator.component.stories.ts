@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { baseCurrency, locale } from '@ghostfolio/common/config';
+import { locale } from '@ghostfolio/common/config';
 import { Meta, Story, moduleMetadata } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -42,7 +42,7 @@ const Template: Story<FireCalculatorComponent> = (
 
 export const Simple = Template.bind({});
 Simple.args = {
-  currency: baseCurrency,
+  currency: 'USD',
   fireWealth: 0,
   locale: locale
 };

@@ -6,7 +6,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -39,7 +39,7 @@ import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
 export class CreateOrUpdateTransactionDialog implements OnDestroy {
   @ViewChild('autocomplete') autocomplete;
 
-  public activityForm: FormGroup;
+  public activityForm: UntypedFormGroup;
   public assetClasses = Object.keys(AssetClass);
   public assetSubClasses = Object.keys(AssetSubClass);
   public currencies: string[] = [];
@@ -59,7 +59,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
     private dataService: DataService,
     private dateAdapter: DateAdapter<any>,
     public dialogRef: MatDialogRef<CreateOrUpdateTransactionDialog>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string
   ) {}
 

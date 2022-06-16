@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   displayName: 'api',
 
   globals: {
@@ -13,5 +13,5 @@ module.exports = {
   coverageDirectory: '../../coverage/apps/api',
   testTimeout: 10000,
   testEnvironment: 'node',
-  preset: '../../jest.preset.ts'
+  preset: '../../jest.preset.js'
 };

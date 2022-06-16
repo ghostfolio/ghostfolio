@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { QUEUE_JOB_STATUS_LIST } from '@ghostfolio/common/config';
@@ -23,7 +23,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AdminJobsComponent implements OnDestroy, OnInit {
   public defaultDateTimeFormat: string;
-  public filterForm: FormGroup;
+  public filterForm: UntypedFormGroup;
   public jobs: AdminJobs['jobs'] = [];
   public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
   public user: User;
@@ -36,7 +36,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private userService: UserService
   ) {
     this.userService.stateChanged

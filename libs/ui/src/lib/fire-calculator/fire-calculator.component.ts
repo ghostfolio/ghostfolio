@@ -12,7 +12,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { transformTickToAbbreviation } from '@ghostfolio/common/helper';
@@ -51,10 +51,10 @@ export class FireCalculatorComponent
   @ViewChild('chartCanvas') chartCanvas;
 
   public calculatorForm = this.formBuilder.group({
-    annualInterestRate: new FormControl(),
-    paymentPerPeriod: new FormControl(),
-    principalInvestmentAmount: new FormControl(),
-    time: new FormControl()
+    annualInterestRate: new UntypedFormControl(),
+    paymentPerPeriod: new UntypedFormControl(),
+    principalInvestmentAmount: new UntypedFormControl(),
+    time: new UntypedFormControl()
   });
   public chart: Chart;
   public isLoading = true;
@@ -68,7 +68,7 @@ export class FireCalculatorComponent
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private fireCalculatorService: FireCalculatorService,
-    private formBuilder: FormBuilder
+    private formBuilder: UntypedFormBuilder
   ) {
     Chart.register(
       BarController,
