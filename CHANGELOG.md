@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the vertical hover line to inspect data points in the performance chart on the home page
+
 ### Changed
 
 - Upgraded `angular` from version `13.3.6` to `14.0.2`
