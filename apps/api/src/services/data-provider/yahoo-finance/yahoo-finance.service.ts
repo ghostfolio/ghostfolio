@@ -181,6 +181,9 @@ export class YahooFinanceService implements DataProviderInterface {
         if (symbol === 'USDGBp') {
           // Convert GPB to GBp (pence)
           marketPrice = new Big(marketPrice).mul(100).toNumber();
+        } else if (symbol === 'USDILA') {
+          // Convert ILS to ILA
+          marketPrice = new Big(marketPrice).mul(100).toNumber();
         }
 
         response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
@@ -239,6 +242,18 @@ export class YahooFinanceService implements DataProviderInterface {
           response['USDGBp'] = {
             ...response[symbol],
             currency: 'GBp',
+            marketPrice: new Big(response[symbol].marketPrice)
+              .mul(100)
+              .toNumber()
+          };
+        } else if (
+          symbol === 'USDILS' &&
+          yahooFinanceSymbols.includes('USDILA=X')
+        ) {
+          // Convert ILS to ILA
+          response['USDILA'] = {
+            ...response[symbol],
+            currency: 'ILA',
             marketPrice: new Big(response[symbol].marketPrice)
               .mul(100)
               .toNumber()
