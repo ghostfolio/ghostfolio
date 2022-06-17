@@ -16,7 +16,9 @@
             <div class="pr-1 w-50" i18n>Membership</div>
             <div class="pl-1 w-50">
               <div class="align-items-center d-flex mb-1">
-                {{ user?.subscription?.type }}
+                <a [routerLink]="['/pricing']"
+                  >{{ user?.subscription?.type }}</a
+                >
                 <ion-icon
                   *ngIf="user?.subscription?.type === 'Premium'"
                   class="ml-1 text-muted"
