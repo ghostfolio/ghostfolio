@@ -2,15 +2,6 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  a {
-    color: rgba(var(--palette-primary-500), 1);
-    font-weight: 500;
-
-    &:hover {
-      color: rgba(var(--palette-primary-300), 1);
-    }
-  }
-
   gf-access-table {
     overflow-x: auto;
 

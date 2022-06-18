@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Simplified the header
+
 ### Fixed
 
 - Fixed an issue with the currency inconsistency in the _Yahoo Finance_ service (convert from `ILA` to `ILS`)
