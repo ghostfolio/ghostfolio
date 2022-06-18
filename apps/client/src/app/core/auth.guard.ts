@@ -17,6 +17,7 @@ export class AuthGuard implements CanActivate {
   private static PUBLIC_PAGE_ROUTES = [
     '/about',
     '/about/changelog',
+    '/about/privacy-policy',
     '/blog',
     '/de/blog',
     '/en/blog',
