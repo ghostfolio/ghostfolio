@@ -17,6 +17,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'about/privacy-policy',
+    loadChildren: () =>
+      import('./pages/about/privacy-policy/privacy-policy-page.module').then(
+        (m) => m.PrivacyPolicyPageModule
+      )
+  },
+  {
     path: 'account',
     loadChildren: () =>
       import('./pages/account/account-page.module').then(
