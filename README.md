@@ -186,7 +186,7 @@ yarn database:push
 
 Run `yarn test`
 
-## Public API (experimental)
+## Public API
 
 ### Import Activities
 
