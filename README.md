@@ -136,7 +136,7 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`
 1. Then, run the following command to keep your database schema in sync: `docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
 
-### Run with _Unraid_ (unofficial)
+### Run with _Unraid_ (Community)
 
 Please follow the instructions of the Ghostfolio [Unraid Community App](https://unraid.net/community/apps?q=ghostfolio).
 
