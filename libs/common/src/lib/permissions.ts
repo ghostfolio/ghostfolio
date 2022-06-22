@@ -73,6 +73,28 @@ export function getPermissions(aRole: Role): string[] {
   }
 }
 
+export function filterGlobalPermissions(
+  aGlobalPermissions: string[],
+  aUtmSource: 'ios' | 'trusted-web-activity'
+) {
+  const globalPermissions = aGlobalPermissions;
+
+  if (aUtmSource === 'ios') {
+    return globalPermissions.filter((permission) => {
+      return (
+        permission !== permissions.enableSocialLogin &&
+        permission !== permissions.enableSubscription
+      );
+    });
+  } else if (aUtmSource === 'trusted-web-activity') {
+    return globalPermissions.filter((permission) => {
+      return permission !== permissions.enableSubscription;
+    });
+  }
+
+  return globalPermissions;
+}
+
 export function hasPermission(
   aPermissions: string[] = [],
   aPermission: string

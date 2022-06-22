@@ -32,7 +32,7 @@ import {
   PortfolioSummary,
   User
 } from '@ghostfolio/common/interfaces';
-import { permissions } from '@ghostfolio/common/permissions';
+import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
@@ -115,12 +115,14 @@ export class DataService {
 
   public fetchInfo(): InfoItem {
     const info = cloneDeep((window as any).info);
+    const utmSource = <'ios' | 'trusted-web-activity'>(
+      window.localStorage.getItem('utm_source')
+    );
 
-    if (window.localStorage.getItem('utm_source') === 'trusted-web-activity') {
-      info.globalPermissions = info.globalPermissions.filter(
-        (permission) => permission !== permissions.enableSubscription
-      );
-    }
+    info.globalPermissions = filterGlobalPermissions(
+      info.globalPermissions,
+      utmSource
+    );
 
     return info;
   }
