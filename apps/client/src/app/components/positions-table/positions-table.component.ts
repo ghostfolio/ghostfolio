@@ -27,6 +27,7 @@ import { Subject, Subscription } from 'rxjs';
 export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
+  @Input() hasPermissionToShowValues = true;
   @Input() locale: string;
   @Input() positions: PortfolioPosition[];
 
@@ -54,13 +55,19 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = [
-      'symbol',
-      'value',
-      'performance',
-      'allocationInvestment',
-      'allocationCurrent'
-    ];
+    this.displayedColumns = ['symbol'];
+
+    if (this.hasPermissionToShowValues) {
+      this.displayedColumns.push('value');
+    }
+
+    this.displayedColumns.push('performance');
+
+    if (this.hasPermissionToShowValues) {
+      this.displayedColumns.push('allocationInvestment');
+    }
+
+    this.displayedColumns.push('allocationCurrent');
 
     this.isLoading = true;
 

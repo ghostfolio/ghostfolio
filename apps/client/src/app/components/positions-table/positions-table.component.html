@@ -11,7 +11,7 @@
       Symbol
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
-      {{ element.symbol | gfSymbol }}
+      <span [title]="element.name">{{ element.symbol | gfSymbol }}</span>
     </td>
   </ng-container>
 
@@ -104,10 +104,13 @@
     *matRowDef="let row; columns: displayedColumns"
     mat-row
     [ngClass]="{
-      'cursor-pointer': !ignoreAssetSubClasses.includes(row.assetSubClass)
+      'cursor-pointer':
+        hasPermissionToShowValues &&
+        !ignoreAssetSubClasses.includes(row.assetSubClass)
     }"
     (click)="
-      !ignoreAssetSubClasses.includes(row.assetSubClass) &&
+      hasPermissionToShowValues &&
+        !ignoreAssetSubClasses.includes(row.assetSubClass) &&
         onOpenPositionDialog({ dataSource: row.dataSource, symbol: row.symbol })
     "
   ></tr>

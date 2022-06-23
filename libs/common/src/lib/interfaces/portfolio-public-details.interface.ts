@@ -10,7 +10,9 @@ export interface PortfolioPublicDetails {
       | 'currency'
       | 'markets'
       | 'name'
+      | 'netPerformancePercent'
       | 'sectors'
+      | 'symbol'
       | 'value'
     >;
   };

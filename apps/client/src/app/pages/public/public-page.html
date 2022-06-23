@@ -109,6 +109,15 @@
       </mat-card>
     </div>
   </div>
+  <div class="row">
+    <div class="col-lg">
+      <gf-positions-table
+        [deviceType]="deviceType"
+        [hasPermissionToShowValues]="false"
+        [positions]="positionsArray"
+      ></gf-positions-table>
+    </div>
+  </div>
   <div class="row my-5">
     <div class="col-md-10 offset-md-1">
       <h2 class="h4 mb-1 text-center">

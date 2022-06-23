@@ -317,7 +317,7 @@ export class PortfolioController {
     const { holdings } = await this.portfolioService.getDetails(
       access.userId,
       access.userId,
-      '1d',
+      'max',
       [{ id: 'EQUITY', type: 'ASSET_CLASS' }]
     );
 
@@ -338,12 +338,14 @@ export class PortfolioController {
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       portfolioPublicDetails.holdings[symbol] = {
-        allocationCurrent: portfolioPosition.allocationCurrent,
+        allocationCurrent: portfolioPosition.value / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: portfolioPosition.currency,
         markets: portfolioPosition.markets,
         name: portfolioPosition.name,
+        netPerformancePercent: portfolioPosition.netPerformancePercent,
         sectors: hasDetails ? portfolioPosition.sectors : [],
+        symbol: portfolioPosition.symbol,
         value: portfolioPosition.value / totalValue
       };
     }

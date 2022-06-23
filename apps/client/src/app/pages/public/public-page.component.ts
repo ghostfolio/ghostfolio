@@ -34,6 +34,10 @@ export class PublicPageComponent implements OnInit {
   public positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name' | 'value'>;
   };
+  public positionsArray: Pick<
+    PortfolioPosition,
+    'currency' | 'name' | 'netPerformancePercent' | 'symbol' | 'value'
+  >[];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -115,6 +119,7 @@ export class PublicPageComponent implements OnInit {
       }
     };
     this.positions = {};
+    this.positionsArray = [];
     this.sectors = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
@@ -139,6 +144,7 @@ export class PublicPageComponent implements OnInit {
         currency: position.currency,
         name: position.name
       };
+      this.positionsArray.push(position);
 
       if (position.countries.length > 0) {
         this.markets.developedMarkets.value +=
