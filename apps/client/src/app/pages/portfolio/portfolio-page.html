@@ -24,11 +24,10 @@
       <mat-card class="d-flex flex-column h-100">
         <h4 class="align-items-center d-flex">
           <span i18n>Allocations</span>
-          <ion-icon
+          <gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1 text-muted"
-            name="diamond-outline"
-          ></ion-icon>
+            class="ml-1"
+          ></gf-premium-indicator>
         </h4>
         <div class="flex-grow-1">
           Check the allocations of your portfolio by account, asset class,
@@ -50,11 +49,10 @@
       <mat-card class="d-flex flex-column h-100">
         <h4 class="align-items-center d-flex">
           <span i18n>Analysis</span>
-          <ion-icon
+          <gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1 text-muted"
-            name="diamond-outline"
-          ></ion-icon>
+            class="ml-1"
+          ></gf-premium-indicator>
         </h4>
         <div class="flex-grow-1">
           Ghostfolio Analysis visualizes your portfolio and shows your top and
@@ -76,11 +74,10 @@
       <mat-card class="d-flex flex-column h-100">
         <h4 class="align-items-center d-flex">
           <span i18n>X-ray</span>
-          <ion-icon
+          <gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1 text-muted"
-            name="diamond-outline"
-          ></ion-icon>
+            class="ml-1"
+          ></gf-premium-indicator>
         </h4>
         <div class="flex-grow-1">
           Ghostfolio X-ray uses static analysis to identify potential issues and
@@ -98,11 +95,10 @@
       <mat-card class="d-flex flex-column h-100">
         <h4 class="align-items-center d-flex">
           <span i18n>FIRE</span>
-          <ion-icon
+          <gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1 text-muted"
-            name="diamond-outline"
-          ></ion-icon>
+            class="ml-1"
+          ></gf-premium-indicator>
         </h4>
         <div class="flex-grow-1">
           Ghostfolio FIRE calculates metrics for the
