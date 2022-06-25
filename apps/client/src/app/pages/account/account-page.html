@@ -19,11 +19,10 @@
                 <a [routerLink]="['/pricing']"
                   >{{ user?.subscription?.type }}</a
                 >
-                <ion-icon
+                <gf-premium-indicator
                   *ngIf="user?.subscription?.type === 'Premium'"
-                  class="ml-1 text-muted"
-                  name="diamond-outline"
-                ></ion-icon>
+                  class="ml-1"
+                ></gf-premium-indicator>
               </div>
               <div *ngIf="user?.subscription?.type === 'Premium'">
                 Valid until {{ user?.subscription?.expiresAt | date:
@@ -56,11 +55,11 @@
                   class="mr-2 my-2"
                   mat-stroked-button
                   [href]="trySubscriptionMail"
-                  ><span i18n>Try Premium</span
-                  ><ion-icon
-                    class="ml-1 text-muted"
-                    name="diamond-outline"
-                  ></ion-icon
+                  ><span i18n>Try Premium</span>
+                  <gf-premium-indicator
+                    class="d-inline-block ml-1"
+                    [enableLink]="false"
+                  ></gf-premium-indicator
                 ></a>
                 <a
                   class="mr-2 my-2"

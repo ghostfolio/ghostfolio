@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added an icon and name column to the positions table
+- Added a reusable premium indicator component
 
 ### Changed
 

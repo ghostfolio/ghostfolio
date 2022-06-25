@@ -35,11 +35,10 @@
                     >{{ userItem.alias || (userItem.id | slice:0:5) +
                     '...' }}</span
                   >
-                  <ion-icon
+                  <gf-premium-indicator
                     *ngIf="userItem?.subscription?.type === 'Premium'"
-                    class="ml-1 text-muted"
-                    name="diamond-outline"
-                  ></ion-icon>
+                    class="ml-1"
+                  ></gf-premium-indicator>
                 </div>
               </td>
               <td class="mat-cell px-1 py-2 text-right">
