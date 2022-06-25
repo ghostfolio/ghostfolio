@@ -21,18 +21,12 @@ export class ReportPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private userService: UserService
   ) {}
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.dataService
       .fetchPortfolioReport()

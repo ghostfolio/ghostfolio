@@ -23,9 +23,6 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private route: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,

@@ -10,9 +10,6 @@ import { Subject } from 'rxjs';
 export class ChangelogPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor() {}
 
   public ngOnDestroy() {

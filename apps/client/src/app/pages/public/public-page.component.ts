@@ -48,9 +48,6 @@ export class PublicPageComponent implements OnInit {
   private id: string;
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
@@ -63,9 +60,6 @@ export class PublicPageComponent implements OnInit {
     });
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 

@@ -42,9 +42,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private adminService: AdminService,
     private cacheService: CacheService,
@@ -78,9 +75,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       });
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.fetchAdminData();
   }

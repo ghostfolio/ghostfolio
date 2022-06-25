@@ -62,9 +62,6 @@ export class FireCalculatorComponent
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private fireCalculatorService: FireCalculatorService,

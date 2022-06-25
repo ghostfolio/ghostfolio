@@ -26,9 +26,6 @@ export class AboutPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -54,9 +51,6 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     this.statistics = statistics;
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))

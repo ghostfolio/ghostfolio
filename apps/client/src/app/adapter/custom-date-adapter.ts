@@ -5,9 +5,6 @@ import { getDateFormatString } from '@ghostfolio/common/helper';
 import { format, parse } from 'date-fns';
 
 export class CustomDateAdapter extends NativeDateAdapter {
-  /**
-   * @constructor
-   */
   public constructor(
     @Inject(MAT_DATE_LOCALE) public locale: string,
     @Inject(forwardRef(() => MAT_DATE_LOCALE)) matDateLocale: string,
