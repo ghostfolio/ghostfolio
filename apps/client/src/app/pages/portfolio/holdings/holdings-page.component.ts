@@ -41,9 +41,6 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   private readonly SEARCH_PLACEHOLDER = 'Filter by account or tag...';
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -70,9 +67,6 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
