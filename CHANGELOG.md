@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the positions table to a dedicated section (_Holdings_)
 - Changed the data gathering by symbol endpoint to delete data first
 
 ## 1.164.0 - 23.06.2022
