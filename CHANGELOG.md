@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a reusable premium indicator component
 
+### Changed
+
+- Changed the data gathering by symbol endpoint to delete data first
+
 ## 1.164.0 - 23.06.2022
 
 ### Added
