@@ -10,6 +10,7 @@ import ms from 'ms';
 
 import { DataGatheringProcessor } from './data-gathering.processor';
 import { ExchangeRateDataModule } from './exchange-rate-data.module';
+import { MarketDataModule } from './market-data.module';
 import { SymbolProfileModule } from './symbol-profile.module';
 
 @Module({
@@ -25,6 +26,7 @@ import { SymbolProfileModule } from './symbol-profile.module';
     DataEnhancerModule,
     DataProviderModule,
     ExchangeRateDataModule,
+    MarketDataModule,
     PrismaModule,
     SymbolProfileModule
   ],

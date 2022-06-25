@@ -17,6 +17,7 @@ import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
 import { ExchangeRateDataService } from './exchange-rate-data.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
+import { MarketDataService } from './market-data.service';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
@@ -28,6 +29,7 @@ export class DataGatheringService {
     private readonly dataGatheringQueue: Queue,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -56,6 +58,8 @@ export class DataGatheringService {
   }
 
   public async gatherSymbol({ dataSource, symbol }: UniqueAsset) {
+    await this.marketDataService.deleteMany({ dataSource, symbol });
+
     const symbols = (await this.getSymbolsMax()).filter((dataGatheringItem) => {
       return (
         dataGatheringItem.dataSource === dataSource &&
