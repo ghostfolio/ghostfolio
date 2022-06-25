@@ -128,6 +128,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'portfolio/holdings',
+    loadChildren: () =>
+      import('./pages/portfolio/holdings/holdings-page.module').then(
+        (m) => m.HoldingsPageModule
+      )
+  },
+  {
     path: 'portfolio/report',
     loadChildren: () =>
       import('./pages/portfolio/report/report-page.module').then(

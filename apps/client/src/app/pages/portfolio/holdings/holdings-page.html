@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="d-flex justify-content-center mb-3" i18n>Holdings</h3>
+      <gf-activities-filter
+        [allFilters]="allFilters"
+        [isLoading]="isLoading"
+        [placeholder]="placeholder"
+        (valueChanged)="filters$.next($event)"
+      ></gf-activities-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg">
+      <gf-positions-table
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [deviceType]="deviceType"
+        [locale]="user?.settings?.locale"
+        [positions]="positionsArray"
+      ></gf-positions-table>
+      <div *ngIf="hasPermissionToCreateOrder" class="text-center">
+        <a
+          class="mt-3"
+          i18n
+          mat-stroked-button
+          [routerLink]="['/portfolio', 'activities']"
+          >Manage Activities</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
