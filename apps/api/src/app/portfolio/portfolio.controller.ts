@@ -346,6 +346,7 @@ export class PortfolioController {
         netPerformancePercent: portfolioPosition.netPerformancePercent,
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
+        url: portfolioPosition.url,
         value: portfolioPosition.value / totalValue
       };
     }

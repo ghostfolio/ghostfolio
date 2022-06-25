@@ -13,6 +13,7 @@ export interface PortfolioPublicDetails {
       | 'netPerformancePercent'
       | 'sectors'
       | 'symbol'
+      | 'url'
       | 'value'
     >;
   };
