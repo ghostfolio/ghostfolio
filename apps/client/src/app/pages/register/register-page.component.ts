@@ -30,9 +30,6 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
@@ -45,9 +42,6 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     this.tokenStorageService.signOut();
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     const { demoAuthToken, globalPermissions } = this.dataService.fetchInfo();
 

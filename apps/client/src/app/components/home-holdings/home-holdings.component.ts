@@ -36,9 +36,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -81,9 +78,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 

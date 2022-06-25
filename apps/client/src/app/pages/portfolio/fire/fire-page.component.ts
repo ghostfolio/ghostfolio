@@ -25,9 +25,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -35,9 +32,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {}
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.isLoading = true;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;

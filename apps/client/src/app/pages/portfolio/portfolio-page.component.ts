@@ -18,9 +18,6 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -34,9 +31,6 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
     );
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))

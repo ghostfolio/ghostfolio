@@ -44,9 +44,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -88,9 +85,6 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     const { globalPermissions } = this.dataService.fetchInfo();
 

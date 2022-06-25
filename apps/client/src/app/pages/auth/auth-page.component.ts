@@ -16,9 +16,6 @@ import { takeUntil } from 'rxjs/operators';
 export class AuthPageComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -26,9 +23,6 @@ export class AuthPageComponent implements OnDestroy, OnInit {
     private tokenStorageService: TokenStorageService
   ) {}
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.route.params
       .pipe(takeUntil(this.unsubscribeSubject))

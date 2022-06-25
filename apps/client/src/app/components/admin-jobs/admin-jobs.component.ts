@@ -30,9 +30,6 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -52,9 +49,6 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
       });
   }
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {
     this.filterForm = this.formBuilder.group({
       status: []

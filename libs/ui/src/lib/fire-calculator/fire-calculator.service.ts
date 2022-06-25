@@ -6,9 +6,6 @@ export class FireCalculatorService {
   private readonly COMPOUND_PERIOD = 12;
   private readonly CONTRIBUTION_PERIOD = 12;
 
-  /**
-   * @constructor
-   */
   public constructor() {}
 
   public calculateCompoundInterest({

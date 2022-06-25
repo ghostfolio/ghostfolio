@@ -10,14 +10,8 @@ import { Subject } from 'rxjs';
 export class ResourcesPageComponent implements OnInit {
   private unsubscribeSubject = new Subject<void>();
 
-  /**
-   * @constructor
-   */
   public constructor() {}
 
-  /**
-   * Initializes the controller
-   */
   public ngOnInit() {}
 
   public ngOnDestroy() {
