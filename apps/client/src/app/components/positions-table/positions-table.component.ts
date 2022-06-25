@@ -29,6 +29,7 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() deviceType: string;
   @Input() hasPermissionToShowValues = true;
   @Input() locale: string;
+  @Input() pageSize = Number.MAX_SAFE_INTEGER;
   @Input() positions: PortfolioPosition[];
 
   @Output() transactionDeleted = new EventEmitter<string>();
@@ -45,7 +46,6 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
     ASSET_SUB_CLASS_EMERGENCY_FUND
   ];
   public isLoading = true;
-  public pageSize = 7;
   public routeQueryParams: Subscription;
 
   private unsubscribeSubject = new Subject<void>();

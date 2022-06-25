@@ -68,7 +68,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       | 'value'
     >;
   };
-  public positionsArray: PortfolioPosition[];
   public routeQueryParams: Subscription;
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -229,7 +228,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
     };
     this.positions = {};
-    this.positionsArray = [];
     this.sectors = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
@@ -285,7 +283,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         exchange: position.exchange,
         name: position.name
       };
-      this.positionsArray.push(position);
 
       if (position.assetClass !== AssetClass.CASH) {
         // Prepare analysis data by continents, countries and sectors except for cash
