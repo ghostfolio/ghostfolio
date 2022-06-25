@@ -441,6 +441,7 @@ export class PortfolioService {
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
         transactionCount: item.transactionCount,
+        url: symbolProfile.url,
         value: value.toNumber()
       };
     }

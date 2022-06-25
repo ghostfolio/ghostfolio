@@ -6,12 +6,40 @@
   mat-table
   [dataSource]="dataSource"
 >
+  <ng-container matColumnDef="icon">
+    <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <gf-symbol-icon
+        *ngIf="element.url"
+        [tooltip]="element.name"
+        [url]="element.url"
+      ></gf-symbol-icon>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="symbol">
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
       Symbol
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <span [title]="element.name">{{ element.symbol | gfSymbol }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell px-1"
+      i18n
+      mat-header-cell
+      mat-sort-header
+    >
+      Name
+    </th>
+    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
+      <ng-container *ngIf="element.name !== element.symbol">{{
+        element.name
+      }}</ng-container>
     </td>
   </ng-container>
 
@@ -36,48 +64,6 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="performance">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell px-1 text-right"
-      i18n
-      mat-header-cell
-    >
-      Performance
-    </th>
-    <td class="d-none d-lg-table-cell px-1" mat-cell *matCellDef="let element">
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [colorizeSign]="true"
-          [isPercent]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : element.netPerformancePercent"
-        ></gf-value>
-      </div>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="allocationInvestment">
-    <th
-      *matHeaderCellDef
-      class="justify-content-end px-1"
-      i18n
-      mat-header-cell
-      mat-sort-header
-    >
-      Initial Allocation
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <div class="d-flex justify-content-end px-1">
-        <gf-value
-          [isPercent]="true"
-          [locale]="locale"
-          [value]="isLoading ? undefined : element.allocationInvestment"
-        ></gf-value>
-      </div>
-    </td>
-  </ng-container>
-
   <ng-container matColumnDef="allocationCurrent">
     <th
       *matHeaderCellDef
@@ -86,7 +72,7 @@
       mat-header-cell
       mat-sort-header
     >
-      Current Allocation
+      Allocation
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <div class="d-flex justify-content-end">
@@ -99,7 +85,28 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <ng-container matColumnDef="performance">
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell px-1 text-right"
+      i18n
+      mat-header-cell
+    >
+      Performance
+    </th>
+    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
+      <div class="d-flex justify-content-end">
+        <gf-value
+          [colorizeSign]="true"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="isLoading ? undefined : element.netPerformancePercent"
+        ></gf-value>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr
     *matRowDef="let row; columns: displayedColumns"
     mat-row
