@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `nestjs` from version `8.2.3` to `8.4.7`
+- Upgraded `prisma` from version `3.14.0` to `3.15.2`
 
 ## 1.165.0 - 25.06.2022
 
