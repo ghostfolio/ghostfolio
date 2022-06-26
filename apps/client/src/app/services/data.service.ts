@@ -33,7 +33,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import { DateRange } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { cloneDeep, groupBy } from 'lodash';
@@ -60,13 +60,7 @@ export class DataService {
   }
 
   public fetchAccount(aAccountId: string) {
-    return this.http.get<Accounts>('/api/v1/account').pipe(
-      map((response) => {
-        return response.accounts.find((account) => {
-          return account.id === aAccountId;
-        });
-      })
-    );
+    return this.http.get<AccountWithValue>(`/api/v1/account/${aAccountId}`);
   }
 
   public fetchAccounts() {

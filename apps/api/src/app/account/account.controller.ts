@@ -7,7 +7,10 @@ import {
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { Accounts } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type {
+  AccountWithValue,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -123,13 +126,45 @@ export class AccountController {
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  public async getAccountById(@Param('id') id: string): Promise<AccountModel> {
-    return this.accountService.account({
-      id_userId: {
-        id,
-        userId: this.request.user.id
-      }
-    });
+  public async getAccountById(
+    @Headers('impersonation-id') impersonationId,
+    @Param('id') id: string
+  ): Promise<AccountWithValue> {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(
+        impersonationId,
+        this.request.user.id
+      );
+
+    let accountsWithAggregations =
+      await this.portfolioService.getAccountsWithAggregations(
+        impersonationUserId || this.request.user.id,
+        [{ id, type: 'ACCOUNT' }]
+      );
+
+    if (
+      impersonationUserId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
+      accountsWithAggregations = {
+        ...nullifyValuesInObject(accountsWithAggregations, [
+          'totalBalanceInBaseCurrency',
+          'totalValueInBaseCurrency'
+        ]),
+        accounts: nullifyValuesInObjects(accountsWithAggregations.accounts, [
+          'balance',
+          'balanceInBaseCurrency',
+          'convertedBalance',
+          'fee',
+          'quantity',
+          'unitPrice',
+          'value',
+          'valueInBaseCurrency'
+        ])
+      };
+    }
+
+    return accountsWithAggregations.accounts[0];
   }
 
   @Post()

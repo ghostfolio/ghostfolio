@@ -50,6 +50,7 @@ import { REQUEST } from '@nestjs/core';
 import {
   AssetClass,
   DataSource,
+  Prisma,
   Tag,
   Type as TypeOfOrder
 } from '@prisma/client';
@@ -100,14 +101,23 @@ export class PortfolioService {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
-  public async getAccounts(aUserId: string): Promise<AccountWithValue[]> {
+  public async getAccounts(
+    aUserId: string,
+    aFilters?: Filter[]
+  ): Promise<AccountWithValue[]> {
+    const where: Prisma.AccountWhereInput = { userId: aUserId };
+
+    if (aFilters?.[0].id && aFilters?.[0].type === 'ACCOUNT') {
+      where.id = aFilters[0].id;
+    }
+
     const [accounts, details] = await Promise.all([
       this.accountService.accounts({
+        where,
         include: { Order: true, Platform: true },
-        orderBy: { name: 'asc' },
-        where: { userId: aUserId }
+        orderBy: { name: 'asc' }
       }),
-      this.getDetails(aUserId, aUserId)
+      this.getDetails(aUserId, aUserId, undefined, aFilters)
     ]);
 
     const userCurrency = this.request.user.Settings.currency;
@@ -145,8 +155,11 @@ export class PortfolioService {
     });
   }
 
-  public async getAccountsWithAggregations(aUserId: string): Promise<Accounts> {
-    const accounts = await this.getAccounts(aUserId);
+  public async getAccountsWithAggregations(
+    aUserId: string,
+    aFilters?: Filter[]
+  ): Promise<Accounts> {
+    const accounts = await this.getAccounts(aUserId, aFilters);
     let totalBalanceInBaseCurrency = new Big(0);
     let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
@@ -1290,6 +1303,10 @@ export class PortfolioService {
 
     if (filters.length === 0) {
       currentAccounts = await this.accountService.getAccounts(userId);
+    } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
+      currentAccounts = await this.accountService.accounts({
+        where: { id: filters[0].id }
+      });
     } else {
       const accountIds = uniq(
         orders.map(({ accountId }) => {
