@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an account detail dialog
+
 ### Changed
 
 - Upgraded `nestjs` from version `8.2.3` to `8.4.7`
