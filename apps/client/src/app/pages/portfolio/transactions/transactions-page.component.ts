@@ -111,12 +111,12 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
         }
       });
 
-    this.fetchOrders();
+    this.fetchActivities();
   }
 
-  public fetchOrders() {
+  public fetchActivities() {
     this.dataService
-      .fetchOrders()
+      .fetchActivities({})
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities }) => {
         this.activities = activities;
@@ -139,7 +139,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({
         next: () => {
-          this.fetchOrders();
+          this.fetchActivities();
         }
       });
   }
@@ -298,7 +298,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {
-                this.fetchOrders();
+                this.fetchActivities();
               }
             });
         }
@@ -332,7 +332,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   }
 
   private handleImportSuccess() {
-    this.fetchOrders();
+    this.fetchActivities();
 
     this.snackBar.open('✅ Import has been completed', undefined, {
       duration: 3000
@@ -376,7 +376,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             if (transaction) {
               this.dataService.postOrder(transaction).subscribe({
                 next: () => {
-                  this.fetchOrders();
+                  this.fetchActivities();
                 }
               });
             }

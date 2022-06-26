@@ -1,0 +1,65 @@
+<gf-dialog-header
+  mat-dialog-title
+  position="center"
+  [deviceType]="data.deviceType"
+  [title]="name"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-header>
+
+<div class="flex-grow-1" mat-dialog-content>
+  <div class="container p-0">
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center mb-3">
+        <gf-value
+          size="large"
+          [currency]="user?.settings?.baseCurrency"
+          [locale]="user?.settings?.locale"
+          [value]="valueInBaseCurrency"
+        ></gf-value>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Account Type"
+          size="medium"
+          [value]="accountType"
+        ></gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          label="Platform"
+          size="medium"
+          [value]="platformName"
+        ></gf-value>
+      </div>
+    </div>
+
+    <div *ngIf="orders?.length > 0" class="row">
+      <div class="col mb-3">
+        <div class="h5 mb-0" i18n>Activities</div>
+        <gf-activities-table
+          [activities]="orders"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="data.deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="!hasImpersonationId"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToImportActivities]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="user?.settings?.locale"
+          [showActions]="false"
+          [showSymbolColumn]="false"
+          (export)="onExport()"
+        ></gf-activities-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<gf-dialog-footer
+  mat-dialog-actions
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-footer>
