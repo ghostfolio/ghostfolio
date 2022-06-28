@@ -29,7 +29,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateAccount: boolean;
   public hasPermissionToDeleteAccount: boolean;
-  public hasPermissionToShowValues: boolean;
   public routeQueryParams: Subscription;
   public totalBalanceInBaseCurrency = 0;
   public totalValueInBaseCurrency = 0;
@@ -61,7 +60,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
         } else if (params['editDialog']) {
           if (this.accounts) {
             const account = this.accounts.find((account) => {
-              return account.id === params['transactionId'];
+              return account.id === params['accountId'];
             });
 
             this.openUpdateAccountDialog(account);
@@ -80,8 +79,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
-
-        this.hasPermissionToShowValues = !this.hasImpersonationId;
       });
 
     this.userService.stateChanged
@@ -149,7 +146,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
 
   public onUpdateAccount(aAccount: AccountModel) {
     this.router.navigate([], {
-      queryParams: { editDialog: true, transactionId: aAccount.id }
+      queryParams: { accountId: aAccount.id, editDialog: true }
     });
   }
 
@@ -207,7 +204,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openAccountDetailDialog(aAccountId) {
+  private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open(AccountDetailDialog, {
       autoFocus: false,
       data: <AccountDetailDialogParams>{

@@ -276,12 +276,14 @@ export class PortfolioProportionChartComponent
               padding: this.showLabels === true ? 100 : 0
             },
             onClick: (event, activeElements) => {
-              const dataIndex = activeElements[0].index;
-              const symbol: string = event.chart.data.labels[dataIndex];
+              try {
+                const dataIndex = activeElements[0].index;
+                const symbol: string = event.chart.data.labels[dataIndex];
 
-              const dataSource = this.positions[symbol]?.dataSource;
+                const dataSource = this.positions[symbol]?.dataSource;
 
-              this.proportionChartClicked.emit({ dataSource, symbol });
+                this.proportionChartClicked.emit({ dataSource, symbol });
+              } catch {}
             },
             onHover: (event, chartElement) => {
               if (this.cursor) {

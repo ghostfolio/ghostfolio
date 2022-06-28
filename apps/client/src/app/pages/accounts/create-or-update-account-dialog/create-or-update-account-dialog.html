@@ -50,6 +50,17 @@
         </mat-select>
       </mat-form-field>
     </div>
+    <div *ngIf="data.account.id">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Account ID</mat-label>
+        <input
+          disabled
+          matInput
+          name="accountId"
+          [(ngModel)]="data.account.id"
+        />
+      </mat-form-field>
+    </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button i18n mat-button (click)="onCancel()">Cancel</button>

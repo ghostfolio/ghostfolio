@@ -23,7 +23,6 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() accounts: AccountModel[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
-  @Input() hasPermissionToShowValues = true;
   @Input() locale: string;
   @Input() showActions: boolean;
   @Input() totalBalanceInBaseCurrency: number;

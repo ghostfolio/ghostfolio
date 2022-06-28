@@ -214,9 +214,9 @@
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr
     *matRowDef="let row; columns: displayedColumns"
+    class="cursor-pointer"
     mat-row
-    [ngClass]="{ 'cursor-pointer': hasPermissionToShowValues }"
-    (click)="hasPermissionToShowValues && onOpenAccountDetailDialog(row.id)"
+    (click)="onOpenAccountDetailDialog(row.id)"
   ></tr>
   <tr
     *matFooterRowDef="displayedColumns"

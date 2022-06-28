@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
+import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -99,7 +101,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.routeQueryParams = route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (
+        if (params['accountId'] && params['accountDetailDialog']) {
+          this.openAccountDetailDialog(params['accountId']);
+        } else if (
           params['dataSource'] &&
           params['positionDetailDialog'] &&
           params['symbol']
@@ -379,13 +383,21 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets.otherMarkets.value / marketsTotal;
   }
 
+  public onAccountChartClicked({ symbol }: UniqueAsset) {
+    if (symbol) {
+      this.router.navigate([], {
+        queryParams: { accountId: symbol, accountDetailDialog: true }
+      });
+    }
+  }
+
   public onChangePeriod(aValue: string) {
     this.period = aValue;
 
     this.initializeAnalysisData(this.period);
   }
 
-  public onProportionChartClicked({ dataSource, symbol }: UniqueAsset) {
+  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
     if (dataSource && symbol) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, positionDetailDialog: true }
@@ -396,6 +408,26 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private openAccountDetailDialog(aAccountId: string) {
+    const dialogRef = this.dialog.open(AccountDetailDialog, {
+      autoFocus: false,
+      data: <AccountDetailDialogParams>{
+        accountId: aAccountId,
+        deviceType: this.deviceType,
+        hasImpersonationId: this.hasImpersonationId
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   private openPositionDialog({

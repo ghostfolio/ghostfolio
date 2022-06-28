@@ -1,6 +1,8 @@
 import { Platform } from '@angular/cdk/platform';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
@@ -38,6 +40,8 @@ export function NgxStripeFactory(): string {
     GfHeaderModule,
     HttpClientModule,
     MarkdownModule.forRoot(),
+    MatAutocompleteModule,
+    MatChipsModule,
     MaterialCssVarsModule.forRoot({
       darkThemeClass: 'is-dark-theme',
       isAutoContrast: true,
