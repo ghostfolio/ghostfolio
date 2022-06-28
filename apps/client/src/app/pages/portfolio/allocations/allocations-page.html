@@ -24,11 +24,13 @@
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
+            cursor="pointer"
             [baseCurrency]="user?.settings?.baseCurrency"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['id']"
             [locale]="user?.settings?.locale"
             [positions]="accounts"
+            (proportionChartClicked)="onAccountChartClicked($event)"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
@@ -116,7 +118,7 @@
             [locale]="user?.settings?.locale"
             [positions]="symbols"
             [showLabels]="deviceType !== 'mobile'"
-            (proportionChartClicked)="onProportionChartClicked($event)"
+            (proportionChartClicked)="onSymbolChartClicked($event)"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>

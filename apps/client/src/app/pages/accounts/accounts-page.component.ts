@@ -3,6 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
+import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
+import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -48,12 +50,17 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['createDialog'] && this.hasPermissionToCreateAccount) {
+        if (params['accountId'] && params['accountDetailDialog']) {
+          this.openAccountDetailDialog(params['accountId']);
+        } else if (
+          params['createDialog'] &&
+          this.hasPermissionToCreateAccount
+        ) {
           this.openCreateAccountDialog();
         } else if (params['editDialog']) {
           if (this.accounts) {
             const account = this.accounts.find((account) => {
-              return account.id === params['transactionId'];
+              return account.id === params['accountId'];
             });
 
             this.openUpdateAccountDialog(account);
@@ -139,7 +146,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
 
   public onUpdateAccount(aAccount: AccountModel) {
     this.router.navigate([], {
-      queryParams: { editDialog: true, transactionId: aAccount.id }
+      queryParams: { accountId: aAccount.id, editDialog: true }
     });
   }
 
@@ -195,6 +202,26 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private openAccountDetailDialog(aAccountId: string) {
+    const dialogRef = this.dialog.open(AccountDetailDialog, {
+      autoFocus: false,
+      data: <AccountDetailDialogParams>{
+        accountId: aAccountId,
+        deviceType: this.deviceType,
+        hasImpersonationId: this.hasImpersonationId
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 
   private openCreateAccountDialog(): void {

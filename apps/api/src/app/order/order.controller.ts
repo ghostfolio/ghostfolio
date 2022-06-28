@@ -4,6 +4,7 @@ import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
+import { Filter } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
@@ -17,6 +18,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
@@ -66,8 +68,36 @@ export class OrderController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllOrders(
-    @Headers('impersonation-id') impersonationId
+    @Headers('impersonation-id') impersonationId,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('tags') filterByTags?: string
   ): Promise<Activities> {
+    const accountIds = filterByAccounts?.split(',') ?? [];
+    const assetClasses = filterByAssetClasses?.split(',') ?? [];
+    const tagIds = filterByTags?.split(',') ?? [];
+
+    const filters: Filter[] = [
+      ...accountIds.map((accountId) => {
+        return <Filter>{
+          id: accountId,
+          type: 'ACCOUNT'
+        };
+      }),
+      ...assetClasses.map((assetClass) => {
+        return <Filter>{
+          id: assetClass,
+          type: 'ASSET_CLASS'
+        };
+      }),
+      ...tagIds.map((tagId) => {
+        return <Filter>{
+          id: tagId,
+          type: 'TAG'
+        };
+      })
+    ];
+
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(
         impersonationId,
@@ -76,6 +106,7 @@ export class OrderController {
     const userCurrency = this.request.user.Settings.currency;
 
     let activities = await this.orderService.getOrders({
+      filters,
       userCurrency,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id

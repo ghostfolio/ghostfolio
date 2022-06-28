@@ -33,7 +33,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import { DateRange } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { cloneDeep, groupBy } from 'lodash';
@@ -59,8 +59,73 @@ export class DataService {
     });
   }
 
+  public fetchAccount(aAccountId: string) {
+    return this.http.get<AccountWithValue>(`/api/v1/account/${aAccountId}`);
+  }
+
   public fetchAccounts() {
     return this.http.get<Accounts>('/api/v1/account');
+  }
+
+  public fetchActivities({
+    filters
+  }: {
+    filters?: Filter[];
+  }): Observable<Activities> {
+    let params = new HttpParams();
+
+    if (filters?.length > 0) {
+      const {
+        ACCOUNT: filtersByAccount,
+        ASSET_CLASS: filtersByAssetClass,
+        TAG: filtersByTag
+      } = groupBy(filters, (filter) => {
+        return filter.type;
+      });
+
+      if (filtersByAccount) {
+        params = params.append(
+          'accounts',
+          filtersByAccount
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetClass) {
+        params = params.append(
+          'assetClasses',
+          filtersByAssetClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByTag) {
+        params = params.append(
+          'tags',
+          filtersByTag
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+    }
+
+    return this.http.get<any>('/api/v1/order', { params }).pipe(
+      map(({ activities }) => {
+        for (const activity of activities) {
+          activity.createdAt = parseISO(activity.createdAt);
+          activity.date = parseISO(activity.date);
+        }
+        return { activities };
+      })
+    );
   }
 
   public fetchAdminData() {
@@ -177,18 +242,6 @@ export class DataService {
           return respose.items;
         })
       );
-  }
-
-  public fetchOrders(): Observable<Activities> {
-    return this.http.get<any>('/api/v1/order').pipe(
-      map(({ activities }) => {
-        for (const activity of activities) {
-          activity.createdAt = parseISO(activity.createdAt);
-          activity.date = parseISO(activity.date);
-        }
-        return { activities };
-      })
-    );
   }
 
   public fetchPortfolioDetails({ filters }: { filters?: Filter[] }) {

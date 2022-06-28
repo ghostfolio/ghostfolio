@@ -65,7 +65,7 @@
   <ng-container matColumnDef="transactions">
     <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
       <span class="d-block d-sm-none">#</span>
-      <span class="d-none d-sm-block" i18n>Transactions</span>
+      <span class="d-none d-sm-block" i18n>Activities</span>
     </th>
     <td *matCellDef="let element" class="px-1 text-right" mat-cell>
       <ng-container *ngIf="element.accountType === 'SECURITIES'">{{
@@ -212,7 +212,12 @@
   </ng-container>
 
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+  <tr
+    *matRowDef="let row; columns: displayedColumns"
+    class="cursor-pointer"
+    mat-row
+    (click)="onOpenAccountDetailDialog(row.id)"
+  ></tr>
   <tr
     *matFooterRowDef="displayedColumns"
     mat-footer-row

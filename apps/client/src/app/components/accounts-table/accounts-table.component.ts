@@ -9,6 +9,7 @@ import {
   Output
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 
@@ -39,7 +40,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
+  public constructor(private router: Router) {}
 
   public ngOnInit() {}
 
@@ -73,6 +74,12 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     if (confirmation) {
       this.accountDeleted.emit(aId);
     }
+  }
+
+  public onOpenAccountDetailDialog(accountId: string) {
+    this.router.navigate([], {
+      queryParams: { accountId, accountDetailDialog: true }
+    });
   }
 
   public onUpdateAccount(aAccount: AccountModel) {
