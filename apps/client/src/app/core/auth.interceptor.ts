@@ -5,7 +5,6 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { ImpersonationStorageService } from '../services/impersonation-storage.service';
@@ -18,7 +17,6 @@ const TOKEN_HEADER_KEY = 'Authorization';
 export class AuthInterceptor implements HttpInterceptor {
   public constructor(
     private impersonationStorageService: ImpersonationStorageService,
-    private router: Router,
     private tokenStorageService: TokenStorageService
   ) {}
 

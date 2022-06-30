@@ -12,7 +12,10 @@
             <div class="pr-1 w-50" i18n>Alias</div>
             <div class="pl-1 w-50">{{ user.alias }}</div>
           </div>
-          <div *ngIf="user?.subscription" class="d-flex py-1">
+          <div
+            *ngIf="hasPermissionToUpdateUserSettings && user?.subscription"
+            class="d-flex py-1"
+          >
             <div class="pr-1 w-50" i18n>Membership</div>
             <div class="pl-1 w-50">
               <div class="align-items-center d-flex mb-1">

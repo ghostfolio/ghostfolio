@@ -5,12 +5,11 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
+import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { ViewMode } from '@prisma/client';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
-import { SettingsStorageService } from '../services/settings-storage.service';
-import { UserService } from '../services/user/user.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -20,6 +19,7 @@ export class AuthGuard implements CanActivate {
     '/about/privacy-policy',
     '/blog',
     '/de/blog',
+    '/demo',
     '/en/blog',
     '/features',
     '/p',
@@ -35,11 +35,10 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (route.queryParams?.utm_source) {
-      this.settingsStorageService.setSetting(
-        'utm_source',
-        route.queryParams?.utm_source
-      );
+    const utmSource = route.queryParams?.utm_source;
+
+    if (utmSource) {
+      this.settingsStorageService.setSetting('utm_source', utmSource);
     }
 
     return new Promise<boolean>((resolve) => {
@@ -47,7 +46,10 @@ export class AuthGuard implements CanActivate {
         .get()
         .pipe(
           catchError(() => {
-            if (route.queryParams?.utm_source) {
+            if (utmSource === 'ios') {
+              this.router.navigate(['/demo']);
+              resolve(false);
+            } else if (utmSource === 'trusted-web-activity') {
               this.router.navigate(['/register']);
               resolve(false);
             } else if (
