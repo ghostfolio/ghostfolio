@@ -1,7 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 
@@ -39,23 +36,9 @@ export class LandingPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private dataService: DataService,
-    private router: Router,
-    private tokenStorageService: TokenStorageService
-  ) {}
+  public constructor() {}
 
-  public ngOnInit() {
-    const { demoAuthToken } = this.dataService.fetchInfo();
-
-    this.demoAuthToken = demoAuthToken;
-  }
-
-  public setToken(aToken: string) {
-    this.tokenStorageService.saveToken(aToken, true);
-
-    this.router.navigate(['/']);
-  }
+  public ngOnInit() {}
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

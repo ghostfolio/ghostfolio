@@ -31,20 +31,19 @@
           color="primary"
           i18n
           mat-flat-button
-          [disabled]="!demoAuthToken"
           [routerLink]="['/register']"
         >
           Get Started
         </a>
         <div class="d-inline-block mx-3 text-muted" i18n>or</div>
-        <button
+        <a
           class="d-inline-block"
+          i18n
           mat-stroked-button
-          [disabled]="!demoAuthToken"
-          (click)="setToken(demoAuthToken)"
+          [routerLink]="['/demo']"
         >
-          <span i18n>Live Demo</span>
-        </button>
+          Live Demo
+        </a>
       </div>
     </div>
   </div>
@@ -163,24 +162,18 @@
         Join now or check out the example account
       </p>
       <div class="py-2 text-center">
-        <a
-          color="primary"
-          i18n
-          mat-flat-button
-          [disabled]="!demoAuthToken"
-          [routerLink]="['/register']"
-        >
+        <a color="primary" i18n mat-flat-button [routerLink]="['/register']">
           Get Started
         </a>
         <div class="d-inline-block mx-3 text-muted" i18n>or</div>
-        <button
+        <a
           class="d-inline-block"
+          i18n
           mat-stroked-button
-          [disabled]="!demoAuthToken"
-          (click)="setToken(demoAuthToken)"
+          [routerLink]="['/demo']"
         >
-          <span i18n>Live Demo</span>
-        </button>
+          Live Demo
+        </a>
       </div>
     </div>
   </div>

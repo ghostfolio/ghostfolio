@@ -60,6 +60,11 @@ const routes: Routes = [
       ).then((m) => m.HalloGhostfolioPageModule)
   },
   {
+    path: 'demo',
+    loadChildren: () =>
+      import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
+  },
+  {
     path: 'en/blog/2021/07/hello-ghostfolio',
     loadChildren: () =>
       import(
