@@ -115,7 +115,7 @@
     "svgmap": "2.6.0",
     "twitter-api-v2": "1.10.3",
     "uuid": "8.3.2",
-    "yahoo-finance2": "2.3.2",
+    "yahoo-finance2": "2.3.3",
     "zone.js": "0.11.6"
   },
   "devDependencies": {
@@ -123,7 +123,7 @@
     "@angular-eslint/eslint-plugin": "13.2.1",
     "@angular-eslint/eslint-plugin-template": "13.2.1",
     "@angular-eslint/template-parser": "13.2.1",
-    "@angular/cli": "~14.0.0",
+    "@angular/cli": "14.0.0",
     "@angular/compiler-cli": "14.0.2",
     "@angular/language-service": "14.0.2",
     "@angular/localize": "14.0.2",
