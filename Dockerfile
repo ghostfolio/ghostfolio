@@ -12,7 +12,7 @@ COPY ./package.json package.json
 COPY ./yarn.lock yarn.lock
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN apk add --no-cache python3 g++ make openssl
+RUN apk add --no-cache python3 g++ make openssl git
 RUN yarn install
 
 # See https://github.com/nrwl/nx/issues/6586 for further details
