@@ -270,6 +270,18 @@
       >Pricing</a
     >
     <a
+      *ngIf="hasPermissionToAccessFearAndGreedIndex"
+      class="d-none d-sm-block mx-1"
+      i18n
+      mat-flat-button
+      [ngClass]="{
+        'font-weight-bold': currentRoute === 'markets',
+        'text-decoration-underline': currentRoute === 'markets'
+      }"
+      [routerLink]="['/markets']"
+      >Markets</a
+    >
+    <a
       class="d-none d-sm-block mx-1 no-min-width px-1"
       href="https://github.com/ghostfolio/ghostfolio"
       mat-flat-button

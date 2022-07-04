@@ -28,16 +28,17 @@
   <div class="mb-3 row">
     <div class="col-xs-12 col-md-8 offset-md-2">
       <gf-benchmark
-        *ngFor="let benchmark of benchmarks"
-        class="py-2"
-        [benchmark]="benchmark"
+        [benchmarks]="benchmarks"
         [locale]="user?.settings?.locale"
       ></gf-benchmark>
-      <gf-benchmark
-        *ngIf="!benchmarks"
-        class="py-2"
-        [benchmark]="undefined"
-      ></gf-benchmark>
+      <ngx-skeleton-loader
+        *ngIf="isLoading"
+        animation="pulse"
+        [theme]="{
+          height: '1.5rem',
+          width: '100%'
+        }"
+      ></ngx-skeleton-loader>
     </div>
   </div>
 </div>

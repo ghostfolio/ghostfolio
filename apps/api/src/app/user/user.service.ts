@@ -158,10 +158,6 @@ export class UserService {
 
     let currentPermissions = getPermissions(user.role);
 
-    if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      currentPermissions.push(permissions.accessFearAndGreedIndex);
-    }
-
     if (user.subscription?.type === 'Premium') {
       currentPermissions.push(permissions.reportDataGlitch);
     }

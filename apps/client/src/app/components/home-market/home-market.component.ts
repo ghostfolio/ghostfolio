@@ -44,49 +44,49 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-            this.user.permissions,
-            permissions.accessFearAndGreedIndex
-          );
-
-          if (this.hasPermissionToAccessFearAndGreedIndex) {
-            this.dataService
-              .fetchSymbolItem({
-                dataSource: this.info.fearAndGreedDataSource,
-                includeHistoricalData: this.numberOfDays,
-                symbol: ghostfolioFearAndGreedIndexSymbol
-              })
-              .pipe(takeUntil(this.unsubscribeSubject))
-              .subscribe(({ historicalData, marketPrice }) => {
-                this.fearAndGreedIndex = marketPrice;
-                this.historicalData = [
-                  ...historicalData,
-                  {
-                    date: resetHours(new Date()).toISOString(),
-                    value: marketPrice
-                  }
-                ];
-                this.isLoading = false;
-
-                this.changeDetectorRef.markForCheck();
-              });
-          }
-
-          this.dataService
-            .fetchBenchmarks()
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe(({ benchmarks }) => {
-              this.benchmarks = benchmarks;
-
-              this.changeDetectorRef.markForCheck();
-            });
-
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableFearAndGreedIndex
+    );
+
+    if (this.hasPermissionToAccessFearAndGreedIndex) {
+      this.dataService
+        .fetchSymbolItem({
+          dataSource: this.info.fearAndGreedDataSource,
+          includeHistoricalData: this.numberOfDays,
+          symbol: ghostfolioFearAndGreedIndexSymbol
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ historicalData, marketPrice }) => {
+          this.fearAndGreedIndex = marketPrice;
+          this.historicalData = [
+            ...historicalData,
+            {
+              date: resetHours(new Date()).toISOString(),
+              value: marketPrice
+            }
+          ];
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
+
+    this.dataService
+      .fetchBenchmarks()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ benchmarks }) => {
+        this.benchmarks = benchmarks;
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

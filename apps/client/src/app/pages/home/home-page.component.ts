@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,6 +24,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
 
   public hasMessage: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
+  public info: InfoItem;
   public tabs: { iconName: string; path: string }[] = [];
   public user: User;
 
@@ -34,7 +35,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    const { systemMessage } = this.dataService.fetchInfo();
+    this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -51,11 +52,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
             hasPermission(
               this.user?.permissions,
               permissions.createUserAccount
-            ) || !!systemMessage;
+            ) || !!this.info.systemMessage;
 
           this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-            this.user.permissions,
-            permissions.accessFearAndGreedIndex
+            this.info?.globalPermissions,
+            permissions.enableFearAndGreedIndex
           );
 
           if (this.hasPermissionToAccessFearAndGreedIndex) {

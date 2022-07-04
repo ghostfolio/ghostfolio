@@ -63,6 +63,8 @@ export class InfoService {
       } else {
         info.fearAndGreedDataSource = ghostfolioFearAndGreedIndexDataSource;
       }
+
+      globalPermissions.push(permissions.enableFearAndGreedIndex);
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
