@@ -1,49 +1,50 @@
-<div class="align-items-center d-flex">
-  <div *ngIf="benchmark?.name" class="flex-grow-1 text-truncate">
-    {{ benchmark.name }}
-  </div>
-  <div *ngIf="!benchmark?.name" class="flex-grow-1">
-    <ngx-skeleton-loader
-      animation="pulse"
-      [theme]="{
-        width: '67%'
-      }"
-    ></ngx-skeleton-loader>
-  </div>
-  <gf-value
-    class="mx-2"
-    size="medium"
-    [isPercent]="true"
-    [locale]="locale"
-    [ngClass]="{
-      'text-danger':
-        benchmark?.performances?.allTimeHigh?.performancePercent < 0,
-      'text-success':
-        benchmark?.performances?.allTimeHigh?.performancePercent > 0
-    }"
-    [value]="
-      benchmark?.performances?.allTimeHigh?.performancePercent ?? undefined
-    "
-  ></gf-value>
-  <div class="text-muted">
-    <small class="d-none d-sm-block text-nowrap" i18n>from All Time High</small
-    ><small class="d-block d-sm-none text-nowrap" i18n>from ATH</small>
-  </div>
-  <div class="ml-2">
-    <div
-      *ngIf="benchmark?.marketCondition"
-      [title]="benchmark?.marketCondition"
-    >
-      {{ resolveMarketCondition(benchmark.marketCondition).emoji }}
-    </div>
-    <ngx-skeleton-loader
-      *ngIf="!benchmark?.marketCondition"
-      animation="pulse"
-      appearance="circle"
-      [theme]="{
-        height: '1rem',
-        width: '1rem'
-      }"
-    ></ngx-skeleton-loader>
-  </div>
-</div>
+<table class="gf-table w-100">
+  <thead>
+    <tr class="mat-header-row">
+      <th class="mat-header-cell px-1 py-2" i18n>Index</th>
+      <th class="mat-header-cell px-1 py-2 text-right">
+        <span class="d-none d-sm-block text-nowrap" i18n
+          >Change from All Time High</span
+        >
+        <span class="d-block d-sm-none text-nowrap" i18n>from ATH</span>
+      </th>
+      <th class="mat-header-cell px-1 py-2 text-right" i18n></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let benchmark of benchmarks" class="mat-row">
+      <td class="mat-cell px-1 py-2">
+        <div class="d-flex align-items-center">
+          {{ benchmark.name }}
+        </div>
+      </td>
+      <td class="mat-cell px-1 py-2 text-right">
+        <gf-value
+          class="d-inline-block justify-content-end"
+          size="medium"
+          [isPercent]="true"
+          [locale]="locale"
+          [ngClass]="{
+            'text-danger':
+              benchmark?.performances?.allTimeHigh?.performancePercent < 0,
+            'text-success':
+              benchmark?.performances?.allTimeHigh?.performancePercent > 0
+          }"
+          [value]="
+            benchmark?.performances?.allTimeHigh?.performancePercent ??
+            undefined
+          "
+        ></gf-value>
+      </td>
+      <td class="mat-cell px-1 py-2">
+        <div
+          *ngIf="benchmark?.marketCondition"
+          class="text-center"
+          [title]="benchmark?.marketCondition"
+        >
+          {{ resolveMarketCondition(benchmark.marketCondition).emoji }}
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

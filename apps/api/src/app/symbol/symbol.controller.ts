@@ -46,7 +46,6 @@ export class SymbolController {
    * Must be after /lookup
    */
   @Get(':dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getSymbolData(

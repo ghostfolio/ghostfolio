@@ -4,7 +4,6 @@ import { UserWithSettings } from './interfaces';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
-  accessFearAndGreedIndex: 'accessFearAndGreedIndex',
   createAccess: 'createAccess',
   createAccount: 'createAccount',
   createOrder: 'createOrder',
@@ -14,6 +13,7 @@ export const permissions = {
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
   deleteUser: 'deleteUser',
+  enableFearAndGreedIndex: 'enableFearAndGreedIndex',
   enableImport: 'enableImport',
   enableBlog: 'enableBlog',
   enableSocialLogin: 'enableSocialLogin',

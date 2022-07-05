@@ -15,7 +15,11 @@ import {
   getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import {
+  locale,
+  primaryColorRgb,
+  secondaryColorRgb
+} from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
@@ -96,6 +100,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
+    }
+
+    if (!this.locale) {
+      this.locale = locale;
     }
   }
 

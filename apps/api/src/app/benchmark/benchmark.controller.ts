@@ -3,8 +3,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_BENCHMARKS } from '@ghostfolio/common/config';
 import { BenchmarkResponse, UniqueAsset } from '@ghostfolio/common/interfaces';
-import { Controller, Get, UseGuards, UseInterceptors } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
 
 import { BenchmarkService } from './benchmark.service';
 
@@ -16,7 +15,6 @@ export class BenchmarkController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getBenchmark(): Promise<BenchmarkResponse> {

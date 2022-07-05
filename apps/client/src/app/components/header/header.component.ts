@@ -37,6 +37,7 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
+  public hasPermissionToAccessFearAndGreedIndex: boolean;
   public impersonationId: string;
   public isMenuOpen: boolean;
 
@@ -72,6 +73,11 @@ export class HeaderComponent implements OnChanges {
     this.hasPermissionToAccessAdminControl = hasPermission(
       this.user?.permissions,
       permissions.accessAdminControl
+    );
+
+    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableFearAndGreedIndex
     );
   }
 

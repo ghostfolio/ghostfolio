@@ -91,6 +91,13 @@ const routes: Routes = [
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
   {
+    path: 'markets',
+    loadChildren: () =>
+      import('./pages/markets/markets-page.module').then(
+        (m) => m.MarketsPageModule
+      )
+  },
+  {
     path: 'p',
     loadChildren: () =>
       import('./pages/public/public-page.module').then(

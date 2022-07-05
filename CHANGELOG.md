@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added _Markets_ to the public pages
+
 ### Changed
 
 - Upgraded `ngx-markdown` from version `13.0.0` to `14.0.1`
