@@ -8,14 +8,12 @@ import { HomeSummaryComponent } from './home-summary.component';
 
 @NgModule({
   declarations: [HomeSummaryComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfPortfolioSummaryModule,
     MatCardModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfHomeSummaryModule {}

@@ -8,7 +8,6 @@ import { DialogHeaderComponent } from './dialog-header.component';
   declarations: [DialogHeaderComponent],
   exports: [DialogHeaderComponent],
   imports: [CommonModule, MatButtonModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfDialogHeaderModule {}

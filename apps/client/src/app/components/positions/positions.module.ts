@@ -15,7 +15,6 @@ import { PositionsComponent } from './positions.component';
     GfPositionModule,
     MatButtonModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfPositionsModule {}

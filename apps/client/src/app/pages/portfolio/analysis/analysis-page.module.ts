@@ -10,7 +10,6 @@ import { AnalysisPageComponent } from './analysis-page.component';
 
 @NgModule({
   declarations: [AnalysisPageComponent],
-  exports: [],
   imports: [
     AnalysisPageRoutingModule,
     CommonModule,
@@ -19,7 +18,6 @@ import { AnalysisPageComponent } from './analysis-page.component';
     MatCardModule,
     NgxSkeletonLoaderModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AnalysisPageModule {}

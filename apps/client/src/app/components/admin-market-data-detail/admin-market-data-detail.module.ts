@@ -9,7 +9,6 @@ import { GfMarketDataDetailDialogModule } from './market-data-detail-dialog/mark
   declarations: [AdminMarketDataDetailComponent],
   exports: [AdminMarketDataDetailComponent],
   imports: [CommonModule, GfLineChartModule, GfMarketDataDetailDialogModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfAdminMarketDataDetailModule {}

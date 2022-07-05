@@ -10,7 +10,6 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog.com
 
 @NgModule({
   declarations: [CreateOrUpdateAccessDialog],
-  exports: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -19,7 +18,6 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog.com
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule
-  ],
-  providers: []
+  ]
 })
 export class GfCreateOrUpdateAccessDialogModule {}

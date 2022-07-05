@@ -23,7 +23,6 @@ import { PositionComponent } from './position.component';
     NgxSkeletonLoaderModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfPositionModule {}

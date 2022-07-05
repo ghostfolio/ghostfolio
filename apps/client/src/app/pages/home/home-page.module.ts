@@ -12,7 +12,6 @@ import { HomePageComponent } from './home-page.component';
 
 @NgModule({
   declarations: [HomePageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfHomeHoldingsModule,
@@ -23,7 +22,6 @@ import { HomePageComponent } from './home-page.component';
     MatTabsModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePageModule {}

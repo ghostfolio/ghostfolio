@@ -7,7 +7,6 @@ import { SymbolIconComponent } from './symbol-icon.component';
   declarations: [SymbolIconComponent],
   exports: [SymbolIconComponent],
   imports: [CommonModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfSymbolIconModule {}

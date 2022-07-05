@@ -21,7 +21,6 @@ import { HeaderComponent } from './header.component';
     MatToolbarModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfHeaderModule {}

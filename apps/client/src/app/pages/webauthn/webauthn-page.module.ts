@@ -9,14 +9,12 @@ import { WebauthnPageRoutingModule } from './webauthn-page-routing.module';
 
 @NgModule({
   declarations: [WebauthnPageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfLogoModule,
     MatButtonModule,
     MatProgressSpinnerModule,
     WebauthnPageRoutingModule
-  ],
-  providers: []
+  ]
 })
 export class WebauthnPageModule {}

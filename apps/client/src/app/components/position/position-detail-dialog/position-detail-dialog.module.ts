@@ -15,7 +15,6 @@ import { PositionDetailDialog } from './position-detail-dialog.component';
 
 @NgModule({
   declarations: [PositionDetailDialog],
-  exports: [],
   imports: [
     CommonModule,
     GfActivitiesTableModule,
@@ -29,7 +28,6 @@ import { PositionDetailDialog } from './position-detail-dialog.component';
     MatDialogModule,
     NgxSkeletonLoaderModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfPositionDetailDialogModule {}

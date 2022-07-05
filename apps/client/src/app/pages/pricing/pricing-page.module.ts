@@ -10,7 +10,6 @@ import { PricingPageComponent } from './pricing-page.component';
 
 @NgModule({
   declarations: [PricingPageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfPremiumIndicatorModule,
@@ -19,7 +18,6 @@ import { PricingPageComponent } from './pricing-page.component';
     PricingPageRoutingModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PricingPageModule {}

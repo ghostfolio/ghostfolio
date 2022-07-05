@@ -8,7 +8,6 @@ import { PortfolioPerformanceComponent } from './portfolio-performance.component
 @NgModule({
   declarations: [PortfolioPerformanceComponent],
   exports: [PortfolioPerformanceComponent],
-  imports: [CommonModule, GfValueModule, NgxSkeletonLoaderModule],
-  providers: []
+  imports: [CommonModule, GfValueModule, NgxSkeletonLoaderModule]
 })
 export class GfPortfolioPerformanceModule {}

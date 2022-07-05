@@ -19,7 +19,6 @@ import { RulesComponent } from './rules.component';
     MatButtonModule,
     MatCardModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RulesModule {}

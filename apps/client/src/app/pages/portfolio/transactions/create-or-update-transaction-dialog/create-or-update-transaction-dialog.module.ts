@@ -17,7 +17,6 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
 
 @NgModule({
   declarations: [CreateOrUpdateTransactionDialog],
-  exports: [],
   imports: [
     CommonModule,
     GfSymbolModule,
@@ -34,7 +33,6 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
     MatSelectModule,
     ReactiveFormsModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfCreateOrUpdateTransactionDialogModule {}

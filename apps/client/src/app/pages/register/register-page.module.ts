@@ -11,7 +11,6 @@ import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-acc
 
 @NgModule({
   declarations: [RegisterPageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfLogoModule,
@@ -21,7 +20,6 @@ import { ShowAccessTokenDialogModule } from './show-access-token-dialog/show-acc
     RouterModule,
     ShowAccessTokenDialogModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RegisterPageModule {}
