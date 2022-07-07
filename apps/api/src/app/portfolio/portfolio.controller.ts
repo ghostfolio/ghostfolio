@@ -190,14 +190,27 @@ export class PortfolioController {
       }
     }
 
-    const isBasicUser =
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic';
+    let hasDetails = true;
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      hasDetails = this.request.user.subscription.type === 'Premium';
+    }
+
+    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+      holdings[symbol] = {
+        ...portfolioPosition,
+        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
+        assetSubClass: hasDetails ? portfolioPosition.assetSubClass : undefined,
+        countries: hasDetails ? portfolioPosition.countries : [],
+        currency: hasDetails ? portfolioPosition.currency : undefined,
+        markets: hasDetails ? portfolioPosition.markets : undefined,
+        sectors: hasDetails ? portfolioPosition.sectors : []
+      };
+    }
 
     return {
       accounts,
       hasError,
-      holdings: isBasicUser ? {} : holdings
+      holdings
     };
   }
 
@@ -340,8 +353,8 @@ export class PortfolioController {
       portfolioPublicDetails.holdings[symbol] = {
         allocationCurrent: portfolioPosition.value / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
-        currency: portfolioPosition.currency,
-        markets: portfolioPosition.markets,
+        currency: hasDetails ? portfolioPosition.currency : undefined,
+        markets: hasDetails ? portfolioPosition.markets : undefined,
         name: portfolioPosition.name,
         netPerformancePercent: portfolioPosition.netPerformancePercent,
         sectors: hasDetails ? portfolioPosition.sectors : [],

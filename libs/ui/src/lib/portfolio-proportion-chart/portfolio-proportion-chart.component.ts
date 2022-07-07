@@ -205,7 +205,7 @@ export class PortfolioProportionChartComponent
     chartDataSorted.forEach(([, item]) => {
       let lightnessRatio = 0.2;
 
-      Object.keys(item.subCategory).forEach((subCategory) => {
+      Object.keys(item.subCategory ?? {}).forEach((subCategory) => {
         backgroundColorSubCategory.push(
           Color(item.color).lighten(lightnessRatio).hex()
         );
