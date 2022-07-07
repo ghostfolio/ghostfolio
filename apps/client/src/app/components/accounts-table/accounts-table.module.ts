@@ -25,7 +25,6 @@ import { AccountsTableComponent } from './accounts-table.component';
     NgxSkeletonLoaderModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfAccountsTableModule {}

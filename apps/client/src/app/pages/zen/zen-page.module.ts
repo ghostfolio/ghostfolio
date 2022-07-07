@@ -10,7 +10,6 @@ import { ZenPageComponent } from './zen-page.component';
 
 @NgModule({
   declarations: [ZenPageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfHomeHoldingsModule,
@@ -19,7 +18,6 @@ import { ZenPageComponent } from './zen-page.component';
     RouterModule,
     ZenPageRoutingModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ZenPageModule {}

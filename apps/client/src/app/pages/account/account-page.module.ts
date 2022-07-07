@@ -19,7 +19,6 @@ import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-di
 
 @NgModule({
   declarations: [AccountPageComponent],
-  exports: [],
   imports: [
     AccountPageRoutingModule,
     CommonModule,
@@ -37,7 +36,6 @@ import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-di
     MatSlideToggleModule,
     ReactiveFormsModule,
     RouterModule
-  ],
-  providers: []
+  ]
 })
 export class AccountPageModule {}

@@ -9,7 +9,6 @@ import { LandingPageComponent } from './landing-page.component';
 
 @NgModule({
   declarations: [LandingPageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfLogoModule,
@@ -17,7 +16,6 @@ import { LandingPageComponent } from './landing-page.component';
     MatButtonModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LandingPageModule {}

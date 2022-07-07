@@ -10,7 +10,6 @@ import { AccessTableComponent } from './access-table.component';
   declarations: [AccessTableComponent],
   exports: [AccessTableComponent],
   imports: [CommonModule, MatButtonModule, MatMenuModule, MatTableModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfPortfolioAccessTableModule {}

@@ -9,7 +9,6 @@ import { AboutPageComponent } from './about-page.component';
 
 @NgModule({
   declarations: [AboutPageComponent],
-  exports: [],
   imports: [
     AboutPageRoutingModule,
     CommonModule,
@@ -17,7 +16,6 @@ import { AboutPageComponent } from './about-page.component';
     MatButtonModule,
     MatCardModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AboutPageModule {}

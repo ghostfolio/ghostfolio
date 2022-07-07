@@ -8,7 +8,6 @@ import { DialogFooterComponent } from './dialog-footer.component';
   declarations: [DialogFooterComponent],
   exports: [DialogFooterComponent],
   imports: [CommonModule, MatButtonModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfDialogFooterModule {}

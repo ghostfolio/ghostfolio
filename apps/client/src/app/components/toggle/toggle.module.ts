@@ -8,7 +8,6 @@ import { ToggleComponent } from './toggle.component';
 @NgModule({
   declarations: [ToggleComponent],
   exports: [ToggleComponent],
-  imports: [CommonModule, MatRadioModule, ReactiveFormsModule],
-  providers: []
+  imports: [CommonModule, MatRadioModule, ReactiveFormsModule]
 })
 export class GfToggleModule {}

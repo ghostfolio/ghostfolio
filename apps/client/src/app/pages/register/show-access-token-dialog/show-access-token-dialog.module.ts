@@ -12,7 +12,6 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog.component';
 
 @NgModule({
   declarations: [ShowAccessTokenDialog],
-  exports: [],
   imports: [
     ClipboardModule,
     CommonModule,
@@ -24,7 +23,6 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog.component';
     ReactiveFormsModule,
     TextFieldModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ShowAccessTokenDialogModule {}

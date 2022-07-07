@@ -11,7 +11,6 @@ import { HomeHoldingsComponent } from './home-holdings.component';
 
 @NgModule({
   declarations: [HomeHoldingsComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfPositionDetailDialogModule,
@@ -21,7 +20,6 @@ import { HomeHoldingsComponent } from './home-holdings.component';
     MatCardModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfHomeHoldingsModule {}

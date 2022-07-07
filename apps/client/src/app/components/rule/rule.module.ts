@@ -8,7 +8,6 @@ import { RuleComponent } from './rule.component';
   declarations: [RuleComponent],
   exports: [RuleComponent],
   imports: [CommonModule, NgxSkeletonLoaderModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfRuleModule {}

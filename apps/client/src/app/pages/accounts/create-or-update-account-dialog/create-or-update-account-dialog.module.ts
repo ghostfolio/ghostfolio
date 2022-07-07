@@ -11,7 +11,6 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
 
 @NgModule({
   declarations: [CreateOrUpdateAccountDialog],
-  exports: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -21,7 +20,6 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
     MatInputModule,
     MatSelectModule,
     ReactiveFormsModule
-  ],
-  providers: []
+  ]
 })
 export class GfCreateOrUpdateAccountDialogModule {}

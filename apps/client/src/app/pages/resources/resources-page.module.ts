@@ -7,9 +7,7 @@ import { ResourcesPageComponent } from './resources-page.component';
 
 @NgModule({
   declarations: [ResourcesPageComponent],
-  exports: [],
   imports: [CommonModule, MatCardModule, ResourcesPageRoutingModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ResourcesPageModule {}

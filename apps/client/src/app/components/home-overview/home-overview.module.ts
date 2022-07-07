@@ -10,7 +10,6 @@ import { HomeOverviewComponent } from './home-overview.component';
 
 @NgModule({
   declarations: [HomeOverviewComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfLineChartModule,
@@ -19,7 +18,6 @@ import { HomeOverviewComponent } from './home-overview.component';
     GfToggleModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfHomeOverviewModule {}

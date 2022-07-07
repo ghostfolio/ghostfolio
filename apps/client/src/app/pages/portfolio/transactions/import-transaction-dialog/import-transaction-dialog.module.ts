@@ -10,7 +10,6 @@ import { ImportTransactionDialog } from './import-transaction-dialog.component';
 
 @NgModule({
   declarations: [ImportTransactionDialog],
-  exports: [],
   imports: [
     CommonModule,
     GfDialogFooterModule,
@@ -19,7 +18,6 @@ import { ImportTransactionDialog } from './import-transaction-dialog.component';
     MatDialogModule,
     MatExpansionModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfImportTransactionDialogModule {}

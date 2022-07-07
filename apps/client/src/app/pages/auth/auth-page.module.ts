@@ -6,8 +6,6 @@ import { AuthPageComponent } from './auth-page.component';
 
 @NgModule({
   declarations: [AuthPageComponent],
-  exports: [],
-  imports: [AuthPageRoutingModule, CommonModule],
-  providers: []
+  imports: [AuthPageRoutingModule, CommonModule]
 })
 export class AuthPageModule {}

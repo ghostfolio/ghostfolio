@@ -10,7 +10,6 @@ import { PortfolioPageComponent } from './portfolio-page.component';
 
 @NgModule({
   declarations: [PortfolioPageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfPremiumIndicatorModule,
@@ -19,7 +18,6 @@ import { PortfolioPageComponent } from './portfolio-page.component';
     PortfolioPageRoutingModule,
     RouterModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PortfolioPageModule {}

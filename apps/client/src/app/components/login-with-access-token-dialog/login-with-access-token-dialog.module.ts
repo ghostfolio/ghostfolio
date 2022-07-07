@@ -13,7 +13,6 @@ import { LoginWithAccessTokenDialog } from './login-with-access-token-dialog.com
 
 @NgModule({
   declarations: [LoginWithAccessTokenDialog],
-  exports: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -26,7 +25,6 @@ import { LoginWithAccessTokenDialog } from './login-with-access-token-dialog.com
     ReactiveFormsModule,
     TextFieldModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginWithAccessTokenDialogModule {}

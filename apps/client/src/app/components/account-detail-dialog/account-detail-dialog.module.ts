@@ -12,7 +12,6 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
 
 @NgModule({
   declarations: [AccountDetailDialog],
-  exports: [],
   imports: [
     CommonModule,
     GfActivitiesTableModule,
@@ -23,7 +22,6 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
     MatDialogModule,
     NgxSkeletonLoaderModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfAccountDetailDialogModule {}

@@ -7,9 +7,7 @@ import { ReportPageComponent } from './report-page.component';
 
 @NgModule({
   declarations: [ReportPageComponent],
-  exports: [],
   imports: [CommonModule, ReportPageRoutingModule, RulesModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ReportPageModule {}

@@ -11,7 +11,6 @@ import { MarketDataDetailDialog } from './market-data-detail-dialog.component';
 
 @NgModule({
   declarations: [MarketDataDetailDialog],
-  exports: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -22,7 +21,6 @@ import { MarketDataDetailDialog } from './market-data-detail-dialog.component';
     MatInputModule,
     ReactiveFormsModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfMarketDataDetailDialogModule {}

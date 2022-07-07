@@ -7,7 +7,6 @@ import { WorldMapChartComponent } from './world-map-chart.component';
 @NgModule({
   declarations: [WorldMapChartComponent],
   exports: [WorldMapChartComponent],
-  imports: [CommonModule, NgxSkeletonLoaderModule],
-  providers: []
+  imports: [CommonModule, NgxSkeletonLoaderModule]
 })
 export class GfWorldMapChartModule {}

@@ -12,7 +12,6 @@ import { PublicPageComponent } from './public-page.component';
 
 @NgModule({
   declarations: [PublicPageComponent],
-  exports: [],
   imports: [
     CommonModule,
     GfPortfolioProportionChartModule,
@@ -23,7 +22,6 @@ import { PublicPageComponent } from './public-page.component';
     MatCardModule,
     PublicPageRoutingModule
   ],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PublicPageModule {}
