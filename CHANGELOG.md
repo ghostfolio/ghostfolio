@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the _Create Account_ link in the _Live Demo_
 - Upgraded `ngx-markdown` from version `13.0.0` to `14.0.1`
 
+### Fixed
+
+- Fixed an issue in the _Holdings_ section for users without a subscription
+
 ## 1.166.0 - 30.06.2022
 
 ### Added
