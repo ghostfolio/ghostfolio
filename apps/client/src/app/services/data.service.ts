@@ -204,6 +204,22 @@ export class DataService {
     );
   }
 
+  public fetchInvestmentsByMonth(): Observable<PortfolioInvestments> {
+    return this.http
+      .get<any>('/api/v1/portfolio/investments', {
+        params: { groupBy: 'month' }
+      })
+      .pipe(
+        map((response) => {
+          if (response.firstOrderDate) {
+            response.firstOrderDate = parseISO(response.firstOrderDate);
+          }
+
+          return response;
+        })
+      );
+  }
+
   public fetchSymbolItem({
     dataSource,
     includeHistoricalData,

@@ -43,7 +43,7 @@ export function getTooltipPositionerMapTop(
   chart: Chart,
   position: TooltipPosition
 ) {
-  if (!position) {
+  if (!position || !chart?.chartArea) {
     return false;
   }
   return {

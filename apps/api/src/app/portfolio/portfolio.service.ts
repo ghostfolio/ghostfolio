@@ -183,7 +183,8 @@ export class PortfolioService {
   }
 
   public async getInvestments(
-    aImpersonationId: string
+    aImpersonationId: string,
+    groupBy?: string
   ): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
@@ -204,28 +205,39 @@ export class PortfolioService {
       return [];
     }
 
-    const investments = portfolioCalculator.getInvestments().map((item) => {
-      return {
-        date: item.date,
-        investment: item.investment.toNumber()
-      };
-    });
+    let investments: InvestmentItem[];
 
-    // Add investment of today
-    const investmentOfToday = investments.filter((investment) => {
-      return investment.date === format(new Date(), DATE_FORMAT);
-    });
-
-    if (investmentOfToday.length <= 0) {
-      const pastInvestments = investments.filter((investment) => {
-        return isBefore(parseDate(investment.date), new Date());
+    if (groupBy === 'month') {
+      investments = portfolioCalculator.getInvestmentsByMonth().map((item) => {
+        return {
+          date: item.date,
+          investment: item.investment.toNumber()
+        };
       });
-      const lastInvestment = pastInvestments[pastInvestments.length - 1];
-
-      investments.push({
-        date: format(new Date(), DATE_FORMAT),
-        investment: lastInvestment?.investment ?? 0
+    } else {
+      investments = portfolioCalculator.getInvestments().map((item) => {
+        return {
+          date: item.date,
+          investment: item.investment.toNumber()
+        };
       });
+
+      // Add investment of today
+      const investmentOfToday = investments.filter((investment) => {
+        return investment.date === format(new Date(), DATE_FORMAT);
+      });
+
+      if (investmentOfToday.length <= 0) {
+        const pastInvestments = investments.filter((investment) => {
+          return isBefore(parseDate(investment.date), new Date());
+        });
+        const lastInvestment = pastInvestments[pastInvestments.length - 1];
+
+        investments.push({
+          date: format(new Date(), DATE_FORMAT),
+          investment: lastInvestment?.investment ?? 0
+        });
+      }
     }
 
     return sortBy(investments, (investment) => {
