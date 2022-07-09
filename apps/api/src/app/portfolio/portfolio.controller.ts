@@ -20,7 +20,12 @@ import {
   PortfolioReport,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
-import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import type {
+  DateRange,
+  GroupBy,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 import {
   Controller,
   Get,
@@ -217,7 +222,8 @@ export class PortfolioController {
   @Get('investments')
   @UseGuards(AuthGuard('jwt'))
   public async getInvestments(
-    @Headers('impersonation-id') impersonationId: string
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('groupBy') groupBy?: GroupBy
   ): Promise<PortfolioInvestments> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
@@ -229,9 +235,16 @@ export class PortfolioController {
       );
     }
 
-    let investments = await this.portfolioService.getInvestments(
-      impersonationId
-    );
+    let investments: InvestmentItem[];
+
+    if (groupBy === 'month') {
+      investments = await this.portfolioService.getInvestments(
+        impersonationId,
+        'month'
+      );
+    } else {
+      investments = await this.portfolioService.getInvestments(impersonationId);
+    }
 
     if (
       impersonationId ||

@@ -22,7 +22,10 @@ import {
   transformTickToAbbreviation
 } from '@ghostfolio/common/helper';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import { GroupBy } from '@ghostfolio/common/types';
 import {
+  BarController,
+  BarElement,
   Chart,
   LineController,
   LineElement,
@@ -42,6 +45,7 @@ import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() currency: string;
   @Input() daysInMarket: number;
+  @Input() groupBy: GroupBy;
   @Input() investments: InvestmentItem[];
   @Input() isInPercent = false;
   @Input() locale: string;
@@ -53,6 +57,8 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
   public constructor() {
     Chart.register(
+      BarController,
+      BarElement,
       LinearScale,
       LineController,
       LineElement,
@@ -78,7 +84,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   private initialize() {
     this.isLoading = true;
 
-    if (this.investments?.length > 0) {
+    if (!this.groupBy && this.investments?.length > 0) {
       // Extend chart by 5% of days in market (before)
       const firstItem = this.investments[0];
       this.investments.unshift({
@@ -102,13 +108,14 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     }
 
     const data = {
-      labels: this.investments.map((position) => {
-        return position.date;
+      labels: this.investments.map((investmentItem) => {
+        return investmentItem.date;
       }),
       datasets: [
         {
+          backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderWidth: 2,
+          borderWidth: this.groupBy ? 0 : 2,
           data: this.investments.map((position) => {
             return position.investment;
           }),
@@ -137,6 +144,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
+            animation: false,
             elements: {
               line: {
                 tension: 0
@@ -192,12 +200,12 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             }
           },
           plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
-          type: 'line'
+          type: this.groupBy ? 'bar' : 'line'
         });
-
-        this.isLoading = false;
       }
     }
+
+    this.isLoading = false;
   }
 
   private getTooltipPluginConfiguration() {

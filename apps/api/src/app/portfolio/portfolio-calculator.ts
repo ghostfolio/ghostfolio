@@ -14,8 +14,11 @@ import {
   format,
   isAfter,
   isBefore,
+  isSameMonth,
+  isSameYear,
   max,
-  min
+  min,
+  set
 } from 'date-fns';
 import { first, flatten, isNumber, sortBy } from 'lodash';
 
@@ -321,6 +324,46 @@ export class PortfolioCalculator {
         )
       };
     });
+  }
+
+  public getInvestmentsByMonth(): { date: string; investment: Big }[] {
+    if (this.orders.length === 0) {
+      return [];
+    }
+
+    const investments = [];
+    let currentDate = parseDate(this.orders[0].date);
+    let investmentByMonth = new Big(0);
+
+    for (const [index, order] of this.orders.entries()) {
+      if (
+        isSameMonth(parseDate(order.date), currentDate) &&
+        isSameYear(parseDate(order.date), currentDate)
+      ) {
+        investmentByMonth = investmentByMonth.plus(
+          order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
+        );
+
+        if (index === this.orders.length - 1) {
+          investments.push({
+            date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
+            investment: investmentByMonth
+          });
+        }
+      } else {
+        investments.push({
+          date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
+          investment: investmentByMonth
+        });
+
+        currentDate = parseDate(order.date);
+        investmentByMonth = order.quantity
+          .mul(order.unitPrice)
+          .mul(this.getFactor(order.type));
+      }
+    }
+
+    return investments;
   }
 
   public async calculateTimeline(
