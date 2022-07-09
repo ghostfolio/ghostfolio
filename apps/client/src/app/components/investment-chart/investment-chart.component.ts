@@ -22,16 +22,17 @@ import {
   transformTickToAbbreviation
 } from '@ghostfolio/common/helper';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import { GroupBy } from '@ghostfolio/common/types';
 import {
+  BarController,
+  BarElement,
   Chart,
   LineController,
   LineElement,
   LinearScale,
   PointElement,
   TimeScale,
-  Tooltip,
-  BarController,
-  BarElement
+  Tooltip
 } from 'chart.js';
 import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 
@@ -44,7 +45,7 @@ import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() currency: string;
   @Input() daysInMarket: number;
-  @Input() groupBy: string;
+  @Input() groupBy: GroupBy;
   @Input() investments: InvestmentItem[];
   @Input() isInPercent = false;
   @Input() locale: string;
@@ -143,6 +144,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
+            animation: false,
             elements: {
               line: {
                 tension: 0
@@ -200,10 +202,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
           type: this.groupBy ? 'bar' : 'line'
         });
-
-        this.isLoading = false;
       }
     }
+
+    this.isLoading = false;
   }
 
   private getTooltipPluginConfiguration() {

@@ -21,7 +21,11 @@ import {
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
+import type {
+  DateRange,
+  GroupBy,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 import {
   Controller,
   Get,
@@ -219,7 +223,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'))
   public async getInvestments(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('groupBy') groupBy?: string // TODO: Add type
+    @Query('groupBy') groupBy?: GroupBy
   ): Promise<PortfolioInvestments> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&

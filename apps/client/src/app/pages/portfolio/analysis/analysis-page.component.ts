@@ -4,7 +4,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Position, User } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { ToggleOption } from '@ghostfolio/common/types';
+import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { differenceInDays } from 'date-fns';
 import { sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -24,7 +24,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
   public investmentsByMonth: InvestmentItem[];
-  public mode;
+  public mode: GroupBy;
   public modeOptions: ToggleOption[] = [
     { label: 'Monthly', value: 'month' },
     { label: 'Accumulating', value: undefined }
@@ -65,7 +65,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchInvestmentsByMonth()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ firstOrderDate, investments }) => {
+      .subscribe(({ investments }) => {
         this.investmentsByMonth = investments;
 
         this.changeDetectorRef.markForCheck();
@@ -102,8 +102,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onChangeGroupBy(aValue: string) {
-    this.mode = aValue;
+  public onChangeGroupBy(aMode: GroupBy) {
+    this.mode = aMode;
   }
 
   public ngOnDestroy() {

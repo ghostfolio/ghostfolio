@@ -41,6 +41,7 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import type {
   AccountWithValue,
   DateRange,
+  GroupBy,
   Market,
   OrderWithAccount,
   RequestWithUser
@@ -184,7 +185,7 @@ export class PortfolioService {
 
   public async getInvestments(
     aImpersonationId: string,
-    groupBy?: string
+    groupBy?: GroupBy
   ): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
