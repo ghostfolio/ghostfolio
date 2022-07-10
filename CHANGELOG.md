@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the investment timeline grouped by month
 
+### Changed
+
+- Handled an occasional currency pair inconsistency in the _Yahoo Finance_ service (`GBP=X` instead of `USDGBP=X`)
+
 ### Fixed
 
 - Fixed the content height of the account detail dialog
