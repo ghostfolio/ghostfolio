@@ -186,8 +186,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 grid: {
                   borderColor: `rgba(${getTextColor()}, 0.1)`,
                   color: `rgba(${getTextColor()}, 0.8)`,
-                  display: false
+                  display: false,
+                  drawBorder: false
                 },
+                position: 'right',
                 ticks: {
                   callback: (value: number) => {
                     return transformTickToAbbreviation(value);

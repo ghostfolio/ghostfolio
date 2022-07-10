@@ -65,6 +65,7 @@ import {
   max,
   parse,
   parseISO,
+  set,
   setDayOfYear,
   startOfDay,
   subDays,
@@ -215,22 +216,40 @@ export class PortfolioService {
           investment: item.investment.toNumber()
         };
       });
-    } else {
-      investments = portfolioCalculator.getInvestments().map((item) => {
-        return {
-          date: item.date,
-          investment: item.investment.toNumber()
-        };
+
+      // Add investment of current month
+      const dateOfCurrentMonth = format(
+        set(new Date(), { date: 1 }),
+        DATE_FORMAT
+      );
+      const investmentOfCurrentMonth = investments.filter(({ date }) => {
+        return date === dateOfCurrentMonth;
       });
 
+      if (investmentOfCurrentMonth.length <= 0) {
+        investments.push({
+          date: dateOfCurrentMonth,
+          investment: 0
+        });
+      }
+    } else {
+      investments = portfolioCalculator
+        .getInvestments()
+        .map(({ date, investment }) => {
+          return {
+            date,
+            investment: investment.toNumber()
+          };
+        });
+
       // Add investment of today
-      const investmentOfToday = investments.filter((investment) => {
-        return investment.date === format(new Date(), DATE_FORMAT);
+      const investmentOfToday = investments.filter(({ date }) => {
+        return date === format(new Date(), DATE_FORMAT);
       });
 
       if (investmentOfToday.length <= 0) {
-        const pastInvestments = investments.filter((investment) => {
-          return isBefore(parseDate(investment.date), new Date());
+        const pastInvestments = investments.filter(({ date }) => {
+          return isBefore(parseDate(date), new Date());
         });
         const lastInvestment = pastInvestments[pastInvestments.length - 1];
 
