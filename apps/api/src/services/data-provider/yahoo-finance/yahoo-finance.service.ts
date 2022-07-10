@@ -37,10 +37,15 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
-    const symbol = aYahooFinanceSymbol.replace(
+    let symbol = aYahooFinanceSymbol.replace(
       new RegExp(`-${this.baseCurrency}$`),
       this.baseCurrency
     );
+
+    if (symbol.includes('=X') && !symbol.includes(this.baseCurrency)) {
+      symbol = `${this.baseCurrency}${symbol}`;
+    }
+
     return symbol.replace('=X', '');
   }
 
