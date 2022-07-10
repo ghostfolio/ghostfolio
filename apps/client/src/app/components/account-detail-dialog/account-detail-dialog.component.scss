@@ -1,3 +1,7 @@
 :host {
   display: block;
+
+  .mat-dialog-content {
+    max-height: unset;
+  }
 }
