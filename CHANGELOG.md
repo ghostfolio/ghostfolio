@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added support for the cryptocurrency _Songbird_ (`SGB1-USD`)
+- Added support for the cryptocurrency _Terra 2.0_ (`LUNA2-USD`)
+
 ### Changed
 
 - Upgraded `date-fns` from version `2.22.1` to `2.28.0`
