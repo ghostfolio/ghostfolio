@@ -2,10 +2,36 @@
   <div class="mb-5 row">
     <div class="col">
       <h3 class="mb-3 text-center" i18n>Blog</h3>
-      <mat-card class="blog-container">
+      <mat-card class="mb-3">
         <mat-card-content>
           <div class="container p-0">
-            <div class="flex-nowrap mb-3 no-gutters row">
+            <div class="flex-nowrap no-gutters row">
+              <a
+                class="d-flex w-100"
+                [routerLink]="['/en', 'blog', '2022', '07', 'how-do-i-get-my-finances-in-order']"
+              >
+                <div class="flex-grow-1">
+                  <div class="h6 m-0 text-truncate">
+                    How do I get my finances in order?
+                  </div>
+                  <div class="d-flex text-muted">14.07.2022</div>
+                </div>
+                <div class="align-items-center d-flex">
+                  <ion-icon
+                    class="chevron text-muted"
+                    name="chevron-forward-outline"
+                    size="small"
+                  ></ion-icon>
+                </div>
+              </a>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <div class="container p-0">
+            <div class="flex-nowrap no-gutters row">
               <a
                 class="d-flex w-100"
                 [routerLink]="['/en', 'blog', '2022', '01', 'ghostfolio-first-months-in-open-source']"
@@ -25,7 +51,13 @@
                 </div>
               </a>
             </div>
-            <div class="flex-nowrap mb-3 no-gutters row">
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <div class="container p-0">
+            <div class="flex-nowrap no-gutters row">
               <a
                 class="d-flex w-100"
                 [routerLink]="['/en', 'blog', '2021', '07', 'hello-ghostfolio']"
@@ -43,6 +75,12 @@
                 </div>
               </a>
             </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="mb-3">
+        <mat-card-content>
+          <div class="container p-0">
             <div class="flex-nowrap no-gutters row">
               <a
                 class="d-flex w-100"

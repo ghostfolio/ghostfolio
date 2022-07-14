@@ -79,6 +79,13 @@ const routes: Routes = [
       ).then((m) => m.FirstMonthsInOpenSourcePageModule)
   },
   {
+    path: 'en/blog/2022/07/how-do-i-get-my-finances-in-order',
+    loadChildren: () =>
+      import(
+        './pages/blog/2022/07/how-do-i-get-my-finances-in-order/how-do-i-get-my-finances-in-order-page.module'
+      ).then((m) => m.HowDoIGetMyFinancesInOrderPageModule)
+  },
+  {
     path: 'features',
     loadChildren: () =>
       import('./pages/features/features-page.module').then(

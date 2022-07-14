@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post
+
 ### Changed
 
 - Upgraded `date-fns` from version `2.22.1` to `2.28.0`
