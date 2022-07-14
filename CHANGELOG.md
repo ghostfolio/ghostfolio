@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for the cryptocurrency _Songbird_ (`SGB1-USD`)
+- Added support for the cryptocurrency _Terra 2.0_ (`LUNA2-USD`)
 - Added a blog post
 
 ### Changed
