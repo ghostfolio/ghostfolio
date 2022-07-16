@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -34,6 +35,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
+    private internetIdentityService: InternetIdentityService,
     private router: Router,
     private tokenStorageService: TokenStorageService
   ) {
@@ -60,6 +62,14 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
       .subscribe(({ accessToken, authToken, role }) => {
         this.openShowAccessTokenDialog(accessToken, authToken, role);
       });
+  }
+
+  public async onLoginWithInternetIdentity() {
+    try {
+      const { authToken } = await this.internetIdentityService.login();
+      this.tokenStorageService.saveToken(authToken);
+      this.router.navigate(['/']);
+    } catch {}
   }
 
   public openShowAccessTokenDialog(

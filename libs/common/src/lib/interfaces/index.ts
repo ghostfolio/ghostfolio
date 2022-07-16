@@ -29,6 +29,7 @@ import { PortfolioSummary } from './portfolio-summary.interface';
 import { Position } from './position.interface';
 import { BenchmarkResponse } from './responses/benchmark-response.interface';
 import { ResponseError } from './responses/errors.interface';
+import { OAuthResponse } from './responses/oauth-response.interface';
 import { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import { ScraperConfiguration } from './scraper-configuration.interface';
 import { TimelinePosition } from './timeline-position.interface';
@@ -54,6 +55,7 @@ export {
   FilterGroup,
   HistoricalDataItem,
   InfoItem,
+  OAuthResponse,
   PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,

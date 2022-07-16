@@ -28,16 +28,25 @@
           Create Account
         </button>
         <ng-container *ngIf="hasPermissionForSocialLogin">
-          <div
-            class="m-3 text-muted"
-            i18n
-            [ngClass]="{'d-inline': deviceType !== 'mobile' }"
+          <div class="my-3 text-muted" i18n>or</div>
+          <button
+            class="d-block mb-2"
+            mat-stroked-button
+            (click)="onLoginWithInternetIdentity()"
           >
-            or
-          </div>
-          <a color="accent" href="/api/v1/auth/google" mat-flat-button
-            ><ion-icon class="mr-1" name="logo-google"></ion-icon
-            ><span i18n>Continue with Google</span></a
+            <img
+              class="mr-2"
+              src="./assets/icons/internet-computer.svg"
+              style="height: 0.75rem"
+            />
+            <span i18n>Continue with Internet Identity</span>
+          </button>
+          <a class="d-block" href="/api/v1/auth/google" mat-stroked-button
+            ><img
+              class="mr-2"
+              src="./assets/icons/google.svg"
+              style="height: 1rem"
+            /><span i18n>Continue with Google</span></a
           >
         </ng-container>
       </div>
