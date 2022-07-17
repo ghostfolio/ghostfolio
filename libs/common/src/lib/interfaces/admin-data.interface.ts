@@ -5,7 +5,6 @@ export interface AdminData {
   userCount: number;
   users: {
     accountCount: number;
-    alias: string;
     createdAt: Date;
     engagement: number;
     id: string;

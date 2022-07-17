@@ -36,14 +36,7 @@ export class UserService {
   }
 
   public async getUser(
-    {
-      Account,
-      alias,
-      id,
-      permissions,
-      Settings,
-      subscription
-    }: UserWithSettings,
+    { Account, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
     const access = await this.prismaService.access.findMany({
@@ -63,7 +56,6 @@ export class UserService {
     }
 
     return {
-      alias,
       id,
       permissions,
       subscription,

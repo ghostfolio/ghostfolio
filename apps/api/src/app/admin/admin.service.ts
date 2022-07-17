@@ -1,6 +1,5 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
@@ -24,7 +23,6 @@ export class AdminService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
@@ -174,7 +172,6 @@ export class AdminService {
         _count: {
           select: { Account: true, Order: true }
         },
-        alias: true,
         Analytics: {
           select: {
             activityCount: true,
@@ -194,7 +191,7 @@ export class AdminService {
     });
 
     return usersWithAnalytics.map(
-      ({ _count, alias, Analytics, createdAt, id, Subscription }) => {
+      ({ _count, Analytics, createdAt, id, Subscription }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
         const engagement = Analytics.activityCount / daysSinceRegistration;
@@ -206,7 +203,6 @@ export class AdminService {
           : undefined;
 
         return {
-          alias,
           createdAt,
           engagement,
           id,

@@ -8,10 +8,6 @@
     <div class="col">
       <mat-card class="mb-3">
         <mat-card-content>
-          <div *ngIf="user.alias" class="d-flex py-1">
-            <div class="pr-1 w-50" i18n>Alias</div>
-            <div class="pl-1 w-50">{{ user.alias }}</div>
-          </div>
           <div
             *ngIf="hasPermissionToUpdateUserSettings && user?.subscription"
             class="d-flex py-1"
