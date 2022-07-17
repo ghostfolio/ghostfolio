@@ -124,13 +124,11 @@
                 : 'radio-button-on-outline'
             "
           ></ion-icon>
-          <span *ngIf="user?.alias">{{ user.alias }}</span>
-          <span *ngIf="!user?.alias" i18n><span></span>Me</span>
+          <span i18n>Me</span>
         </button>
         <button
           *ngFor="let accessItem of user?.access"
           class="align-items-center d-flex"
-          disabled="false"
           mat-menu-item
           (click)="impersonateAccount(accessItem.id)"
         >
