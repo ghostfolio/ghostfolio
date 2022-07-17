@@ -8,7 +8,6 @@ export interface User {
     id: string;
   }[];
   accounts: Account[];
-  alias?: string;
   id: string;
   permissions: string[];
   settings: UserSettings;

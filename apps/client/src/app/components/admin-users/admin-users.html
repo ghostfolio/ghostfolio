@@ -29,11 +29,10 @@
               <td class="mat-cell px-1 py-2">
                 <div class="d-flex align-items-center">
                   <span class="d-none d-sm-inline-block"
-                    >{{ userItem.alias || userItem.id }}</span
+                    >{{ userItem.id }}</span
                   >
                   <span class="d-inline-block d-sm-none"
-                    >{{ userItem.alias || (userItem.id | slice:0:5) +
-                    '...' }}</span
+                    >{{ (userItem.id | slice:0:5) + '...' }}</span
                   >
                   <gf-premium-indicator
                     *ngIf="userItem?.subscription?.type === 'Premium'"
