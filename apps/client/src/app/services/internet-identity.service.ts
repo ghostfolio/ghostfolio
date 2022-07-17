@@ -14,7 +14,12 @@ export class InternetIdentityService implements OnDestroy {
   public constructor(private http: HttpClient) {}
 
   public async login(): Promise<OAuthResponse> {
-    const authClient = await AuthClient.create();
+    const authClient = await AuthClient.create({
+      idleOptions: {
+        disableDefaultIdleCallback: true,
+        disableIdle: true
+      }
+    });
 
     return new Promise((resolve, reject) => {
       authClient.login({
