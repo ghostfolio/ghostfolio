@@ -34,8 +34,20 @@ export class ImportController {
       );
     }
 
+    let maxActivitiesToImport = this.configurationService.get(
+      'MAX_ACTIVITIES_TO_IMPORT'
+    );
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Premium'
+    ) {
+      maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
+    }
+
     try {
       return await this.importService.import({
+        maxActivitiesToImport,
         activities: importData.activities,
         userId: this.request.user.id
       });
