@@ -17,9 +17,11 @@ export class ImportService {
 
   public async import({
     activities,
+    maxActivitiesToImport,
     userId
   }: {
     activities: Partial<CreateOrderDto>[];
+    maxActivitiesToImport: number;
     userId: string;
   }): Promise<void> {
     for (const activity of activities) {
@@ -32,7 +34,11 @@ export class ImportService {
       }
     }
 
-    await this.validateActivities({ activities, userId });
+    await this.validateActivities({
+      activities,
+      maxActivitiesToImport,
+      userId
+    });
 
     const accountIds = (await this.accountService.getAccounts(userId)).map(
       (account) => {
@@ -81,19 +87,15 @@ export class ImportService {
 
   private async validateActivities({
     activities,
+    maxActivitiesToImport,
     userId
   }: {
     activities: Partial<CreateOrderDto>[];
+    maxActivitiesToImport: number;
     userId: string;
   }) {
-    if (
-      activities?.length > this.configurationService.get('MAX_ORDERS_TO_IMPORT')
-    ) {
-      throw new Error(
-        `Too many activities (${this.configurationService.get(
-          'MAX_ORDERS_TO_IMPORT'
-        )} at most)`
-      );
+    if (activities?.length > maxActivitiesToImport) {
+      throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
     }
 
     const existingActivities = await this.orderService.orders({

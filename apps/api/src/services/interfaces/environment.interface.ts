@@ -23,8 +23,8 @@ export interface Environment extends CleanedEnvAccessors {
   GOOGLE_SHEETS_ID: string;
   GOOGLE_SHEETS_PRIVATE_KEY: string;
   JWT_SECRET_KEY: string;
+  MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_ITEM_IN_CACHE: number;
-  MAX_ORDERS_TO_IMPORT: number;
   PORT: number;
   RAKUTEN_RAPID_API_KEY: string;
   REDIS_HOST: string;
