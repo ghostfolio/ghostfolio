@@ -1,20 +1,22 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AuthClient } from '@dfinity/auth-client';
 import { OAuthResponse } from '@ghostfolio/common/interfaces';
-import { EMPTY } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InternetIdentityService {
+export class InternetIdentityService implements OnDestroy {
+  private unsubscribeSubject = new Subject<void>();
+
   public constructor(private http: HttpClient) {}
 
   public async login(): Promise<OAuthResponse> {
     const authClient = await AuthClient.create();
 
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       authClient.login({
         onError: async () => {
           return reject();
@@ -30,7 +32,8 @@ export class InternetIdentityService {
               catchError(() => {
                 reject();
                 return EMPTY;
-              })
+              }),
+              takeUntil(this.unsubscribeSubject)
             )
             .subscribe((response) => {
               resolve(response);
@@ -38,5 +41,10 @@ export class InternetIdentityService {
         }
       });
     });
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }
