@@ -255,6 +255,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
         isUUID(this.activityForm.controls['searchSymbol'].value.symbol)
           ? this.activityForm.controls['name'].value
           : this.activityForm.controls['searchSymbol'].value.symbol,
+      tags: this.activityForm.controls['tags'].value,
       type: this.activityForm.controls['type'].value,
       unitPrice: this.activityForm.controls['unitPrice'].value
     };
