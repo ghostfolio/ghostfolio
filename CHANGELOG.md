@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Supported the tags in the create or edit transaction dialog
+
 ### Changed
 
 - Removed the alias from the user interface as a preparation to remove it from the `User` database schema

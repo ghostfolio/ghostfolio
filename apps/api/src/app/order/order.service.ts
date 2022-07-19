@@ -16,6 +16,7 @@ import {
   DataSource,
   Order,
   Prisma,
+  Tag,
   Type as TypeOfOrder
 } from '@prisma/client';
 import Big from 'big.js';
@@ -71,6 +72,7 @@ export class OrderService {
       currency?: string;
       dataSource?: DataSource;
       symbol?: string;
+      tags?: Tag[];
       userId: string;
     }
   ): Promise<Order> {
@@ -79,6 +81,8 @@ export class OrderService {
     ).find((account) => {
       return account.isDefault === true;
     });
+
+    const tags = data.tags ?? [];
 
     let Account = {
       connect: {
@@ -142,6 +146,7 @@ export class OrderService {
     delete data.currency;
     delete data.dataSource;
     delete data.symbol;
+    delete data.tags;
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
@@ -150,7 +155,12 @@ export class OrderService {
       data: {
         ...orderData,
         Account,
-        isDraft
+        isDraft,
+        tags: {
+          connect: tags.map(({ id }) => {
+            return { id };
+          })
+        }
       }
     });
   }
@@ -298,12 +308,15 @@ export class OrderService {
       currency?: string;
       dataSource?: DataSource;
       symbol?: string;
+      tags?: Tag[];
     };
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
     if (data.Account.connect.id_userId.id === null) {
       delete data.Account;
     }
+
+    const tags = data.tags ?? [];
 
     let isDraft = false;
 
@@ -331,11 +344,17 @@ export class OrderService {
     delete data.currency;
     delete data.dataSource;
     delete data.symbol;
+    delete data.tags;
 
     return this.prismaService.order.update({
       data: {
         ...data,
-        isDraft
+        isDraft,
+        tags: {
+          connect: tags.map(({ id }) => {
+            return { id };
+          })
+        }
       },
       where
     });
