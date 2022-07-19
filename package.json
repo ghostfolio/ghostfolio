@@ -20,6 +20,7 @@
     "database:format-schema": "prisma format",
     "database:generate-typings": "prisma generate",
     "database:gui": "prisma studio",
+    "database:gui:prod": "npx dotenv-cli -e .env.prod -- prisma studio",
     "database:migrate": "prisma migrate deploy",
     "database:push": "prisma db push",
     "database:seed": "prisma db seed",
