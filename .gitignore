@@ -24,15 +24,16 @@
 
 # misc
 /.angular/cache
+.env.prod
 /.sass-cache
 /connect.lock
 /coverage
 /dist
 /libpeerconnection.log
 npm-debug.log
-yarn-error.log
 testem.log
 /typings
+yarn-error.log
 
 # System Files
 .DS_Store
