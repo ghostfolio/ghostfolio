@@ -2,19 +2,21 @@
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
   <div class="row w-100">
-    <div class="chart-container col">
-      <gf-line-chart
-        class="position-absolute"
-        symbol="Performance"
-        [currency]="user?.settings?.baseCurrency"
-        [historicalDataItems]="historicalDataItems"
-        [locale]="user?.settings?.locale"
-        [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
-        [showGradient]="true"
-        [showLoader]="false"
-        [showXAxis]="false"
-        [showYAxis]="false"
-      ></gf-line-chart>
+    <div class="col p-0">
+      <div class="chart-container mx-auto position-relative">
+        <gf-line-chart
+          class="position-absolute"
+          symbol="Performance"
+          [currency]="user?.settings?.baseCurrency"
+          [historicalDataItems]="historicalDataItems"
+          [locale]="user?.settings?.locale"
+          [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
+          [showGradient]="true"
+          [showLoader]="false"
+          [showXAxis]="false"
+          [showYAxis]="false"
+        ></gf-line-chart>
+      </div>
       <div
         *ngIf="hasPermissionToCreateOrder && historicalDataItems?.length === 0"
         class="align-items-center d-flex h-100 justify-content-center w-100"

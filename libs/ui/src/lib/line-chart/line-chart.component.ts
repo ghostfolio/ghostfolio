@@ -175,6 +175,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
           data,
           options: {
             animation: false,
+            aspectRatio: 16 / 9,
             elements: {
               point: {
                 hoverBackgroundColor: getBackgroundColor(),
