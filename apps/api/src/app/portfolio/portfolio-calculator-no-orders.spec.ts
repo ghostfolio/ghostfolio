@@ -39,6 +39,8 @@ describe('PortfolioCalculator', () => {
         new Date()
       );
 
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByMonth();
+
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
@@ -51,6 +53,8 @@ describe('PortfolioCalculator', () => {
         positions: [],
         totalInvestment: new Big(0)
       });
+
+      expect(investmentsByMonth).toEqual([]);
     });
   });
 });

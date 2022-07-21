@@ -62,6 +62,8 @@ describe('PortfolioCalculator', () => {
         parseDate('2021-11-22')
       );
 
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByMonth();
+
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
@@ -91,6 +93,10 @@ describe('PortfolioCalculator', () => {
         ],
         totalInvestment: new Big('0')
       });
+
+      expect(investmentsByMonth).toEqual([
+        { date: '2021-11-01', investment: new Big('12.6') }
+      ]);
     });
   });
 });
