@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the empty state of the
+  - _Analysis_ section
+  - _Holdings_ section
+  - performance chart on the home page
+
 ### Fixed
 
 - Fixed the distorted tooltip in the performance chart on the home page
