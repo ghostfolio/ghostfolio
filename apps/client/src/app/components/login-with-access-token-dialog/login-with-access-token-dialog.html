@@ -5,16 +5,7 @@
 ></gf-dialog-header>
 
 <div mat-dialog-content>
-  <div>
-    <ng-container *ngIf="data.hasPermissionToUseSocialLogin">
-      <div class="text-center">
-        <a color="accent" href="/api/v1/auth/google" mat-flat-button
-          ><ion-icon class="mr-1" name="logo-google"></ion-icon
-          ><span i18n>Sign in with Google</span></a
-        >
-      </div>
-      <div class="my-3 text-center text-muted" i18n>or</div>
-    </ng-container>
+  <div class="align-items-center d-flex flex-column">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label i18n>Security Token</mat-label>
       <textarea
@@ -24,6 +15,29 @@
         [(ngModel)]="data.accessToken"
       ></textarea>
     </mat-form-field>
+    <ng-container *ngIf="data.hasPermissionToUseSocialLogin">
+      <div class="my-3 text-center text-muted" i18n>or</div>
+      <div class="d-flex flex-column">
+        <button
+          class="mb-2"
+          mat-stroked-button
+          (click)="onLoginWithInternetIdentity()"
+        >
+          <img
+            class="mr-2"
+            src="./assets/icons/internet-computer.svg"
+            style="height: 0.75rem"
+          /><span i18n>Sign in with Internet Identity</span>
+        </button>
+        <a href="/api/v1/auth/google" mat-stroked-button
+          ><img
+            class="mr-2"
+            src="./assets/icons/google.svg"
+            style="height: 1rem"
+          /><span i18n>Sign in with Google</span></a
+        >
+      </div>
+    </ng-container>
   </div>
 </div>
 <div mat-dialog-actions>

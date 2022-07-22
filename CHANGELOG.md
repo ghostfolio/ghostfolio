@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added _Internet Identity_ as a new social login provider
+
 ### Changed
 
 - Improved the empty state of the
@@ -18,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the distorted tooltip in the performance chart on the home page
 - Fixed a calculation issue of the current month in the investment timeline grouped by month
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.170.0 - 19.07.2022
 

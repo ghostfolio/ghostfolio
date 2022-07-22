@@ -217,6 +217,7 @@ enum ViewMode {
 enum Provider {
   ANONYMOUS
   GOOGLE
+  INTERNET_IDENTITY
 }
 
 enum Role {

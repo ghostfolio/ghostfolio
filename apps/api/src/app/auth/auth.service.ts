@@ -2,6 +2,7 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Provider } from '@prisma/client';
 
 import { ValidateOAuthLoginParams } from './interfaces/interfaces';
 
@@ -13,7 +14,7 @@ export class AuthService {
     private readonly userService: UserService
   ) {}
 
-  public async validateAnonymousLogin(accessToken: string) {
+  public async validateAnonymousLogin(accessToken: string): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
         const hashedAccessToken = this.userService.createAccessToken(
@@ -26,7 +27,7 @@ export class AuthService {
         });
 
         if (user) {
-          const jwt: string = this.jwtService.sign({
+          const jwt = this.jwtService.sign({
             id: user.id
           });
 
@@ -38,6 +39,33 @@ export class AuthService {
         reject();
       }
     });
+  }
+
+  public async validateInternetIdentityLogin(principalId: string) {
+    try {
+      const provider: Provider = 'INTERNET_IDENTITY';
+
+      let [user] = await this.userService.users({
+        where: { provider, thirdPartyId: principalId }
+      });
+
+      if (!user) {
+        // Create new user if not found
+        user = await this.userService.createUser({
+          provider,
+          thirdPartyId: principalId
+        });
+      }
+
+      return this.jwtService.sign({
+        id: user.id
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'validateInternetIdentityLogin',
+        error.message
+      );
+    }
   }
 
   public async validateOAuthLogin({
@@ -57,13 +85,14 @@ export class AuthService {
         });
       }
 
-      const jwt: string = this.jwtService.sign({
+      return this.jwtService.sign({
         id: user.id
       });
-
-      return jwt;
-    } catch (err) {
-      throw new InternalServerErrorException('validateOAuthLogin', err.message);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'validateOAuthLogin',
+        error.message
+      );
     }
   }
 }

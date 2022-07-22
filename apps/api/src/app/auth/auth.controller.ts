@@ -1,5 +1,6 @@
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { OAuthResponse } from '@ghostfolio/common/interfaces';
 import {
   Body,
   Controller,
@@ -31,7 +32,9 @@ export class AuthController {
   ) {}
 
   @Get('anonymous/:accessToken')
-  public async accessTokenLogin(@Param('accessToken') accessToken: string) {
+  public async accessTokenLogin(
+    @Param('accessToken') accessToken: string
+  ): Promise<OAuthResponse> {
     try {
       const authToken = await this.authService.validateAnonymousLogin(
         accessToken
@@ -62,6 +65,23 @@ export class AuthController {
       res.redirect(`${this.configurationService.get('ROOT_URL')}/auth/${jwt}`);
     } else {
       res.redirect(`${this.configurationService.get('ROOT_URL')}/auth`);
+    }
+  }
+
+  @Get('internet-identity/:principalId')
+  public async internetIdentityLogin(
+    @Param('principalId') principalId: string
+  ): Promise<OAuthResponse> {
+    try {
+      const authToken = await this.authService.validateInternetIdentityLogin(
+        principalId
+      );
+      return { authToken };
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
     }
   }
 
