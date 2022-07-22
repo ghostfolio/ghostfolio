@@ -332,7 +332,7 @@ export class PortfolioCalculator {
     }
 
     const investments = [];
-    let currentDate = parseDate(this.orders[0].date);
+    let currentDate: Date;
     let investmentByMonth = new Big(0);
 
     for (const [index, order] of this.orders.entries()) {
@@ -340,26 +340,33 @@ export class PortfolioCalculator {
         isSameMonth(parseDate(order.date), currentDate) &&
         isSameYear(parseDate(order.date), currentDate)
       ) {
+        // Same month: Add up investments
+
         investmentByMonth = investmentByMonth.plus(
           order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
         );
+      } else {
+        // New month: Store previous month and reset
 
-        if (index === this.orders.length - 1) {
+        if (currentDate) {
           investments.push({
             date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
             investment: investmentByMonth
           });
         }
-      } else {
-        investments.push({
-          date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
-          investment: investmentByMonth
-        });
 
         currentDate = parseDate(order.date);
         investmentByMonth = order.quantity
           .mul(order.unitPrice)
           .mul(this.getFactor(order.type));
+      }
+
+      if (index === this.orders.length - 1) {
+        // Store current month (latest order)
+        investments.push({
+          date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
+          investment: investmentByMonth
+        });
       }
     }
 
