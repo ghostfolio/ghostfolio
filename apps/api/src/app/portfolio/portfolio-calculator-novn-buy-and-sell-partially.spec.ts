@@ -62,6 +62,8 @@ describe('PortfolioCalculator', () => {
         parseDate('2022-03-07')
       );
 
+      const investments = portfolioCalculator.getInvestments();
+
       const investmentsByMonth = portfolioCalculator.getInvestmentsByMonth();
 
       spy.mockRestore();
@@ -93,6 +95,11 @@ describe('PortfolioCalculator', () => {
         ],
         totalInvestment: new Big('75.80')
       });
+
+      expect(investments).toEqual([
+        { date: '2022-03-07', investment: new Big('151.6') },
+        { date: '2022-04-08', investment: new Big('75.8') }
+      ]);
 
       expect(investmentsByMonth).toEqual([
         { date: '2022-03-01', investment: new Big('151.6') },
