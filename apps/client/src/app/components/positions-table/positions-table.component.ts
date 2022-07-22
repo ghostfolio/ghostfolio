@@ -27,6 +27,7 @@ import { Subject, Subscription } from 'rxjs';
 export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
+  @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToShowValues = true;
   @Input() locale: string;
   @Input() pageSize = Number.MAX_SAFE_INTEGER;

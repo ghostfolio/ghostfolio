@@ -1,11 +1,17 @@
 <div class="container">
-  <div class="investment-chart row">
+  <div class="row">
     <div class="col-lg">
       <h3 class="d-flex justify-content-center mb-3" i18n>Analysis</h3>
       <div class="mb-4">
         <div class="align-items-center d-flex mb-4">
-          <div class="flex-grow-1 h5 mb-0 text-truncate" i18n>
-            Investment Timeline
+          <div
+            class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
+          >
+            <span i18n>Investment Timeline</span>
+            <gf-premium-indicator
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1"
+            ></gf-premium-indicator>
           </div>
           <gf-toggle
             class="d-none d-lg-block"
@@ -15,25 +21,27 @@
             (change)="onChangeGroupBy($event.value)"
           ></gf-toggle>
         </div>
-        <gf-investment-chart
-          class="h-100"
-          [currency]="user?.settings?.baseCurrency"
-          [daysInMarket]="daysInMarket"
-          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-          [investments]="investments"
-          [locale]="user?.settings?.locale"
-          [ngClass]="{ 'd-none': mode }"
-        ></gf-investment-chart>
-        <gf-investment-chart
-          class="h-100"
-          groupBy="month"
-          [currency]="user?.settings?.baseCurrency"
-          [daysInMarket]="daysInMarket"
-          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-          [investments]="investmentsByMonth"
-          [locale]="user?.settings?.locale"
-          [ngClass]="{ 'd-none': !mode }"
-        ></gf-investment-chart>
+        <div class="chart-container">
+          <gf-investment-chart
+            class="h-100"
+            [currency]="user?.settings?.baseCurrency"
+            [daysInMarket]="daysInMarket"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [investments]="investments"
+            [locale]="user?.settings?.locale"
+            [ngClass]="{ 'd-none': mode }"
+          ></gf-investment-chart>
+          <gf-investment-chart
+            class="h-100"
+            groupBy="month"
+            [currency]="user?.settings?.baseCurrency"
+            [daysInMarket]="daysInMarket"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [investments]="investmentsByMonth"
+            [locale]="user?.settings?.locale"
+            [ngClass]="{ 'd-none': !mode }"
+          ></gf-investment-chart>
+        </div>
       </div>
     </div>
   </div>
