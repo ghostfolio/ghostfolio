@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the distorted tooltip in the performance chart on the home page
+- Fixed a calculation issue of the current month in the investment timeline grouped by month
 
 ## 1.170.0 - 19.07.2022
 
