@@ -1,11 +1,7 @@
 :host {
   display: block;
 
-  .investment-chart {
-    .mat-card {
-      .mat-card-content {
-        aspect-ratio: 16 / 9;
-      }
-    }
+  .chart-container {
+    aspect-ratio: 16 / 9;
   }
 }

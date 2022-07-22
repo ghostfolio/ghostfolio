@@ -142,4 +142,15 @@
   </button>
 </div>
 
+<div
+  *ngIf="
+    dataSource.data.length === 0 && hasPermissionToCreateActivity && !isLoading
+  "
+  class="p-3 text-center"
+>
+  <gf-no-transactions-info-indicator
+    [hasBorder]="false"
+  ></gf-no-transactions-info-indicator>
+</div>
+
 <mat-paginator class="d-none" [pageSize]="pageSize"></mat-paginator>
