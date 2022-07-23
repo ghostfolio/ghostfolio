@@ -266,6 +266,16 @@ export class YahooFinanceService implements DataProviderInterface {
         }
       }
 
+      if (yahooFinanceSymbols.includes('USDUSX=X')) {
+        // Convert USD to USX (cent)
+        response['USDUSX'] = {
+          currency: 'USX',
+          dataSource: this.getName(),
+          marketPrice: new Big(1).mul(100).toNumber(),
+          marketState: 'open'
+        };
+      }
+
       return response;
     } catch (error) {
       Logger.error(error, 'YahooFinanceService');
