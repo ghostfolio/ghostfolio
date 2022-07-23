@@ -122,15 +122,6 @@ export class ExchangeRateDataService {
       return 0;
     }
 
-    const hasNaN = Object.values(this.exchangeRates).some((exchangeRate) => {
-      return isNaN(exchangeRate);
-    });
-
-    if (hasNaN) {
-      // Reinitialize if data is not loaded correctly
-      this.initialize();
-    }
-
     let factor = 1;
 
     if (aFromCurrency !== aToCurrency) {
