@@ -79,6 +79,13 @@ const routes: Routes = [
       ).then((m) => m.FirstMonthsInOpenSourcePageModule)
   },
   {
+    path: 'en/blog/2022/07/ghostfolio-meets-internet-identity',
+    loadChildren: () =>
+      import(
+        './pages/blog/2022/07/ghostfolio-meets-internet-identity/ghostfolio-meets-internet-identity-page.module'
+      ).then((m) => m.GhostfolioMeetsInternetIdentityPageModule)
+  },
+  {
     path: 'en/blog/2022/07/how-do-i-get-my-finances-in-order',
     loadChildren: () =>
       import(
