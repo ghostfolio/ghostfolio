@@ -76,6 +76,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       accountId: [this.data.activity?.accountId, Validators.required],
       assetClass: [this.data.activity?.SymbolProfile?.assetClass],
       assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
+      comment: [this.data.activity?.comment],
       currency: [
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
@@ -245,6 +246,7 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
       accountId: this.activityForm.controls['accountId'].value,
       assetClass: this.activityForm.controls['assetClass'].value,
       assetSubClass: this.activityForm.controls['assetSubClass'].value,
+      comment: this.activityForm.controls['comment'].value,
       currency: this.activityForm.controls['currency'].value,
       date: this.activityForm.controls['date'].value,
       dataSource: this.activityForm.controls['dataSource'].value,

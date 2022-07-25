@@ -28,6 +28,10 @@ export class UpdateOrderDto {
   assetSubClass?: AssetSubClass;
 
   @IsString()
+  @IsOptional()
+  comment?: string;
+
+  @IsString()
   currency: string;
 
   @IsString()

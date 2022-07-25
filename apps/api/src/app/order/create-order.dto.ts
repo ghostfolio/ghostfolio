@@ -28,6 +28,10 @@ export class CreateOrderDto {
   assetSubClass?: AssetSubClass;
 
   @IsString()
+  @IsOptional()
+  comment?: string;
+
+  @IsString()
   currency: string;
 
   @IsEnum(DataSource, { each: true })

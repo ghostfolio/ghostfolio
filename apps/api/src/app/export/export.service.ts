@@ -18,6 +18,7 @@ export class ExportService {
       orderBy: { date: 'desc' },
       select: {
         accountId: true,
+        comment: true,
         date: true,
         fee: true,
         id: true,
@@ -40,6 +41,7 @@ export class ExportService {
       activities: activities.map(
         ({
           accountId,
+          comment,
           date,
           fee,
           id,
@@ -50,6 +52,7 @@ export class ExportService {
         }) => {
           return {
             accountId,
+            comment,
             fee,
             id,
             quantity,
