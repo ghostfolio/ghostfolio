@@ -137,8 +137,12 @@
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Comment</mat-label>
-        <textarea formControlName="comment" matInput></textarea>
+        <mat-label i18n>Note</mat-label>
+        <textarea
+          formControlName="comment"
+          matInput
+          (keyup.enter)="$event.stopPropagation()"
+        ></textarea>
       </mat-form-field>
     </div>
     <div
