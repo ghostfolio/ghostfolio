@@ -139,6 +139,8 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Note</mat-label>
         <textarea
+          cdkAutosizeMinRows="2"
+          cdkTextareaAutosize
           formControlName="comment"
           matInput
           (keyup.enter)="$event.stopPropagation()"
