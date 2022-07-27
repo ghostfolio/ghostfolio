@@ -71,6 +71,7 @@ model Order {
   Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   accountId       String?
   accountUserId   String?
+  comment         String?
   createdAt       DateTime      @default(now())
   date            DateTime
   fee             Float

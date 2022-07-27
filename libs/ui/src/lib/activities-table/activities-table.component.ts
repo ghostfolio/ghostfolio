@@ -171,6 +171,10 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.import.emit();
   }
 
+  public onOpenComment(aComment: string) {
+    alert(aComment);
+  }
+
   public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, positionDetailDialog: true }

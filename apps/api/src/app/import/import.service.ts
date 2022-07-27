@@ -48,6 +48,7 @@ export class ImportService {
 
     for (const {
       accountId,
+      comment,
       currency,
       dataSource,
       date,
@@ -58,6 +59,7 @@ export class ImportService {
       unitPrice
     } of activities) {
       await this.orderService.createOrder({
+        comment,
         fee,
         quantity,
         type,

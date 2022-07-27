@@ -5,6 +5,7 @@ import {
   Tag,
   Type
 } from '@prisma/client';
+import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -13,25 +14,33 @@ import {
   IsOptional,
   IsString
 } from 'class-validator';
+import { isString } from 'lodash';
 
 export class CreateOrderDto {
-  @IsString()
   @IsOptional()
+  @IsString()
   accountId?: string;
 
-  @IsEnum(AssetClass, { each: true })
   @IsOptional()
+  @IsEnum(AssetClass, { each: true })
   assetClass?: AssetClass;
 
-  @IsEnum(AssetSubClass, { each: true })
   @IsOptional()
+  @IsEnum(AssetSubClass, { each: true })
   assetSubClass?: AssetSubClass;
+
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) ? value.trim() : value
+  )
+  comment?: string;
 
   @IsString()
   currency: string;
 
-  @IsEnum(DataSource, { each: true })
   @IsOptional()
+  @IsEnum(DataSource, { each: true })
   dataSource?: DataSource;
 
   @IsISO8601()
