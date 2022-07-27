@@ -21,7 +21,7 @@ import {
 } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy, isString } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from './interfaces/activities.interface';
@@ -143,6 +143,11 @@ export class OrderService {
     delete data.accountId;
     delete data.assetClass;
     delete data.assetSubClass;
+
+    if (!data.comment) {
+      delete data.comment;
+    }
+
     delete data.currency;
     delete data.dataSource;
     delete data.symbol;
@@ -314,6 +319,10 @@ export class OrderService {
   }): Promise<Order> {
     if (data.Account.connect.id_userId.id === null) {
       delete data.Account;
+    }
+
+    if (!data.comment) {
+      data.comment = null;
     }
 
     const tags = data.tags ?? [];

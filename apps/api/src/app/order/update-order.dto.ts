@@ -5,6 +5,7 @@ import {
   Tag,
   Type
 } from '@prisma/client';
+import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -13,6 +14,7 @@ import {
   IsOptional,
   IsString
 } from 'class-validator';
+import { isString } from 'lodash';
 
 export class UpdateOrderDto {
   @IsOptional()
@@ -27,8 +29,11 @@ export class UpdateOrderDto {
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
-  @IsString()
   @IsOptional()
+  @IsString()
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) ? value.trim() : value
+  )
   comment?: string;
 
   @IsString()
