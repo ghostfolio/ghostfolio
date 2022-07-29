@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the savings rate to the investment timeline grouped by month
 
+### Fixed
+
+- Added the symbols to the activities in the account detail dialog
+
 ## 1.174.0 - 27.07.2022
 
 ### Added
