@@ -93,6 +93,11 @@ const routes: Routes = [
       ).then((m) => m.HowDoIGetMyFinancesInOrderPageModule)
   },
   {
+    path: 'faq',
+    loadChildren: () =>
+      import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
+  },
+  {
     path: 'features',
     loadChildren: () =>
       import('./pages/features/features-page.module').then(
