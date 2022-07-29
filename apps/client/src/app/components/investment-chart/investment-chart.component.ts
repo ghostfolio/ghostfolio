@@ -13,7 +13,7 @@ import {
   getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb } from '@ghostfolio/common/config';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
@@ -34,6 +34,7 @@ import {
   TimeScale,
   Tooltip
 } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
 import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 
 @Component({
@@ -49,6 +50,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() investments: InvestmentItem[];
   @Input() isInPercent = false;
   @Input() locale: string;
+  @Input() savingsRate = 0;
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -57,6 +59,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
   public constructor() {
     Chart.register(
+      annotationPlugin,
       BarController,
       BarElement,
       LinearScale,
@@ -158,6 +161,39 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             interaction: { intersect: false, mode: 'index' },
             maintainAspectRatio: true,
             plugins: <unknown>{
+              annotation: {
+                annotations: {
+                  savingsRate: this.savingsRate
+                    ? {
+                        borderColor: `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.75)`,
+                        borderWidth: 1,
+                        label: {
+                          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+                          borderRadius: 2,
+                          color: 'white',
+                          content: 'Savings Rate',
+                          display: true,
+                          font: { size: '10px', weight: 'normal' },
+                          padding: {
+                            x: 4,
+                            y: 2
+                          },
+                          position: 'start'
+                        },
+                        scaleID: 'y',
+                        type: 'line',
+                        value: this.savingsRate
+                      }
+                    : undefined,
+                  yAxis: {
+                    borderColor: `rgba(${getTextColor()}, 0.1)`,
+                    borderWidth: 1,
+                    scaleID: 'y',
+                    type: 'line',
+                    value: 0
+                  }
+                }
+              },
               legend: {
                 display: false
               },
@@ -172,6 +208,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 display: true,
                 grid: {
                   borderColor: `rgba(${getTextColor()}, 0.1)`,
+                  borderWidth: this.groupBy ? 0 : 1,
                   color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
