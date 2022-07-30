@@ -1,13 +1,21 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
+  const configApp = await NestFactory.create(AppModule);
+  const configService = configApp.get<ConfigService>(ConfigService);
+
+  const NODE_ENV =
+    configService.get<'development' | 'production'>('NODE_ENV') ??
+    'development';
+
   const app = await NestFactory.create(AppModule, {
     logger:
-      process.env.NODE_ENV === 'production'
+      NODE_ENV === 'production'
         ? ['error', 'log', 'warn']
         : ['debug', 'error', 'log', 'verbose', 'warn']
   });
@@ -25,11 +33,11 @@ async function bootstrap() {
     })
   );
 
-  const host = process.env.HOST || '0.0.0.0';
-  const port = process.env.PORT || 3333;
-  await app.listen(port, host, () => {
+  const HOST = configService.get<string>('HOST') || '0.0.0.0';
+  const PORT = configService.get<number>('PORT') || 3333;
+  await app.listen(PORT, HOST, () => {
     logLogo();
-    Logger.log(`Listening at http://${host}:${port}`);
+    Logger.log(`Listening at http://${HOST}:${PORT}`);
     Logger.log('');
   });
 }
