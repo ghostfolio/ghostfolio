@@ -10,8 +10,6 @@ import { HomePageComponent } from './home-page.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: HomePageComponent,
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -19,7 +17,10 @@ const routes: Routes = [
       { path: 'holdings', component: HomeHoldingsComponent },
       { path: 'summary', component: HomeSummaryComponent },
       { path: 'market', component: HomeMarketComponent }
-    ]
+    ],
+    component: HomePageComponent,
+    path: '',
+    title: 'Overview'
   }
 ];
 

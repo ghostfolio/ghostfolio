@@ -6,9 +6,10 @@ import { HalloGhostfolioPageComponent } from './hallo-ghostfolio-page.component'
 
 const routes: Routes = [
   {
-    path: '',
+    canActivate: [AuthGuard],
     component: HalloGhostfolioPageComponent,
-    canActivate: [AuthGuard]
+    path: '',
+    title: 'Hallo Ghostfolio'
   }
 ];
 

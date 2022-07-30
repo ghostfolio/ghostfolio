@@ -4,8 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthPageComponent } from './auth-page.component';
 
 const routes: Routes = [
-  { path: '', component: AuthPageComponent },
-  { path: ':jwt', component: AuthPageComponent }
+  { component: AuthPageComponent, path: '' },
+  { component: AuthPageComponent, path: ':jwt' }
 ];
 
 @NgModule({

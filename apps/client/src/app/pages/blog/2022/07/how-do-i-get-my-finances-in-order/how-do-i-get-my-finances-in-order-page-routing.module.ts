@@ -6,9 +6,10 @@ import { HowDoIGetMyFinancesInOrderPageComponent } from './how-do-i-get-my-finan
 
 const routes: Routes = [
   {
-    path: '',
+    canActivate: [AuthGuard],
     component: HowDoIGetMyFinancesInOrderPageComponent,
-    canActivate: [AuthGuard]
+    path: '',
+    title: 'How do I get my finances in order?'
   }
 ];
 

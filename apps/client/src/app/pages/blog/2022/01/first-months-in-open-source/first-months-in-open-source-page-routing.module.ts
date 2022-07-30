@@ -6,9 +6,10 @@ import { FirstMonthsInOpenSourcePageComponent } from './first-months-in-open-sou
 
 const routes: Routes = [
   {
-    path: '',
+    canActivate: [AuthGuard],
     component: FirstMonthsInOpenSourcePageComponent,
-    canActivate: [AuthGuard]
+    path: '',
+    title: 'First months in Open Source'
   }
 ];
 
