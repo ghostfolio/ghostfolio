@@ -1,4 +1,4 @@
-FROM node:14-alpine as builder
+FROM node:16-alpine as builder
 
 # Build application and add additional files
 
@@ -45,7 +45,7 @@ COPY package.json /ghostfolio/dist/apps/api
 RUN yarn database:generate-typings
 
 # Image to run, copy everything needed from builder
-FROM node:14-alpine
+FROM node:16-alpine
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 WORKDIR /ghostfolio/apps/api
 EXPOSE 3333
