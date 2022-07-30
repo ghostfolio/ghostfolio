@@ -20,6 +20,8 @@ export interface DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }>; // TODO: Return only one symbol
 
+  getMaxNumberOfSymbolsPerRequest?(): number;
+
   getName(): DataSource;
 
   getQuotes(

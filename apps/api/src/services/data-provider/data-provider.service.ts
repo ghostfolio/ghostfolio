@@ -168,6 +168,7 @@ export class DataProviderService {
     const response: {
       [symbol: string]: IDataProviderResponse;
     } = {};
+    const startTimeTotal = performance.now();
 
     const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
 
@@ -176,24 +177,58 @@ export class DataProviderService {
     for (const [dataSource, dataGatheringItems] of Object.entries(
       itemsGroupedByDataSource
     )) {
+      const dataProvider = this.getDataProvider(DataSource[dataSource]);
+
       const symbols = dataGatheringItems.map((dataGatheringItem) => {
         return dataGatheringItem.symbol;
       });
 
-      const promise = Promise.resolve(
-        this.getDataProvider(DataSource[dataSource]).getQuotes(symbols)
-      );
+      const maximumNumberOfSymbolsPerRequest =
+        dataProvider.getMaxNumberOfSymbolsPerRequest?.() ??
+        Number.MAX_SAFE_INTEGER;
+      for (
+        let i = 0;
+        i < symbols.length;
+        i += maximumNumberOfSymbolsPerRequest
+      ) {
+        const startTimeDataSource = performance.now();
 
-      promises.push(
-        promise.then((result) => {
-          for (const [symbol, dataProviderResponse] of Object.entries(result)) {
-            response[symbol] = dataProviderResponse;
-          }
-        })
-      );
+        const symbolsChunk = symbols.slice(
+          i,
+          i + maximumNumberOfSymbolsPerRequest
+        );
+
+        const promise = Promise.resolve(dataProvider.getQuotes(symbolsChunk));
+
+        promises.push(
+          promise.then((result) => {
+            for (const [symbol, dataProviderResponse] of Object.entries(
+              result
+            )) {
+              response[symbol] = dataProviderResponse;
+            }
+
+            Logger.debug(
+              `Fetched ${symbolsChunk.length} quotes from ${dataSource} in ${(
+                (performance.now() - startTimeDataSource) /
+                1000
+              ).toFixed(3)} seconds`
+            );
+          })
+        );
+      }
     }
 
     await Promise.all(promises);
+
+    Logger.debug('------------------------------------------------');
+    Logger.debug(
+      `Fetched ${items.length} quotes in ${(
+        (performance.now() - startTimeTotal) /
+        1000
+      ).toFixed(3)} seconds`
+    );
+    Logger.debug('================================================');
 
     return response;
   }
