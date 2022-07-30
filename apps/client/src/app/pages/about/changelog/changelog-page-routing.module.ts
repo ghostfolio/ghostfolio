@@ -5,7 +5,12 @@ import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { ChangelogPageComponent } from './changelog-page.component';
 
 const routes: Routes = [
-  { path: '', component: ChangelogPageComponent, canActivate: [AuthGuard] }
+  {
+    canActivate: [AuthGuard],
+    component: ChangelogPageComponent,
+    path: '',
+    title: 'Changelog & License'
+  }
 ];
 
 @NgModule({

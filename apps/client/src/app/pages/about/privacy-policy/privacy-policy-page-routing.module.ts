@@ -5,7 +5,12 @@ import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { PrivacyPolicyPageComponent } from './privacy-policy-page.component';
 
 const routes: Routes = [
-  { path: '', component: PrivacyPolicyPageComponent, canActivate: [AuthGuard] }
+  {
+    canActivate: [AuthGuard],
+    component: PrivacyPolicyPageComponent,
+    path: '',
+    title: 'Privacy Policy'
+  }
 ];
 
 @NgModule({

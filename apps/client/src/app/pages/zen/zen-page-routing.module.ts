@@ -8,14 +8,15 @@ import { ZenPageComponent } from './zen-page.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: ZenPageComponent,
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: HomeOverviewComponent },
       { path: 'holdings', component: HomeHoldingsComponent }
-    ]
+    ],
+    component: ZenPageComponent,
+    path: '',
+    title: 'Overview'
   }
 ];
 

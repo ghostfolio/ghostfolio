@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, TitleStrategy } from '@angular/router';
+import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 
 import { ModulePreloadService } from './core/module-preload.service';
 
@@ -234,7 +235,10 @@ const routes: Routes = [
       }
     )
   ],
-  providers: [ModulePreloadService],
+  providers: [
+    ModulePreloadService,
+    { provide: TitleStrategy, useClass: PageTitleStrategy }
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

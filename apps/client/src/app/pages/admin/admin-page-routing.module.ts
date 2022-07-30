@@ -10,8 +10,6 @@ import { AdminPageComponent } from './admin-page.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: AdminPageComponent,
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -19,7 +17,10 @@ const routes: Routes = [
       { path: 'market-data', component: AdminMarketDataComponent },
       { path: 'overview', component: AdminOverviewComponent },
       { path: 'users', component: AdminUsersComponent }
-    ]
+    ],
+    component: AdminPageComponent,
+    path: '',
+    title: 'Admin Control'
   }
 ];
 

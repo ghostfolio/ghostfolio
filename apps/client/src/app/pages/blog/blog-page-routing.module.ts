@@ -5,7 +5,12 @@ import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { BlogPageComponent } from './blog-page.component';
 
 const routes: Routes = [
-  { path: '', component: BlogPageComponent, canActivate: [AuthGuard] }
+  {
+    canActivate: [AuthGuard],
+    component: BlogPageComponent,
+    path: '',
+    title: 'Blog'
+  }
 ];
 
 @NgModule({

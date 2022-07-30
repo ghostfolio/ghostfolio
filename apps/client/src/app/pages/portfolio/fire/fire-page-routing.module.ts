@@ -5,7 +5,12 @@ import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { FirePageComponent } from './fire-page.component';
 
 const routes: Routes = [
-  { path: '', component: FirePageComponent, canActivate: [AuthGuard] }
+  {
+    canActivate: [AuthGuard],
+    component: FirePageComponent,
+    path: '',
+    title: 'FIRE'
+  }
 ];
 
 @NgModule({

@@ -6,9 +6,10 @@ import { GhostfolioMeetsInternetIdentityPageComponent } from './ghostfolio-meets
 
 const routes: Routes = [
   {
-    path: '',
+    canActivate: [AuthGuard],
     component: GhostfolioMeetsInternetIdentityPageComponent,
-    canActivate: [AuthGuard]
+    path: '',
+    title: 'Ghostfolio meets Internet Identity'
   }
 ];
 
