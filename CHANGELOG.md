@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added page titles
+
 ### Changed
 
 - Improved the performance of data provider requests by introducing a maximum number of symbols per request (chunk size)
