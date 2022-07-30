@@ -81,6 +81,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
     }
   }
 
+  public getMaxNumberOfSymbolsPerRequest() {
+    // It is not recommended using more than 15-20 tickers per request
+    // https://eodhistoricaldata.com/financial-apis/live-realtime-stocks-api
+    return 20;
+  }
+
   public getName(): DataSource {
     return DataSource.EOD_HISTORICAL_DATA;
   }

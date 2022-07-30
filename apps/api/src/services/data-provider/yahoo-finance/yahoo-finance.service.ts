@@ -208,6 +208,10 @@ export class YahooFinanceService implements DataProviderInterface {
     }
   }
 
+  public getMaxNumberOfSymbolsPerRequest() {
+    return 50;
+  }
+
   public getName(): DataSource {
     return DataSource.YAHOO;
   }

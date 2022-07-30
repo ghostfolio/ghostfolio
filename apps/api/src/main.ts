@@ -5,7 +5,12 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger:
+      process.env.NODE_ENV === 'production'
+        ? ['error', 'log', 'warn']
+        : ['debug', 'error', 'log', 'verbose', 'warn']
+  });
   app.enableCors();
   app.enableVersioning({
     defaultVersion: '1',
