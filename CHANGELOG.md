@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the performance of data provider requests by introducing a maximum number of symbols per request (chunk size)
 - Changed the log level settings
+- Refactored the access of the environment variables in the bootstrap function (api)
 
 ## 1.175.0 - 29.07.2022
 
