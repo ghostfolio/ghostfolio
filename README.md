@@ -81,6 +81,23 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 
 ## Self-hosting
 
+### Supported Environment Variables
+
+| Name                | Default Value | Description |
+| ------------------- | ------------- | ----------- |
+| `ACCESS_TOKEN_SALT` |               |             |
+| `BASE_CURRENCY`     | `USD`         |             |
+| `DATABASE_URL`      |               |             |
+| `HOST`              | `0.0.0.0`     |             |
+| `JWT_SECRET_KEY`    |               |             |
+| `PORT`              | `3333`        |             |
+| `POSTGRES_DB`       |               |             |
+| `POSTGRES_PASSWORD` |               |             |
+| `POSTGRES_USER`     |               |             |
+| `REDIS_HOST`        | `localhost`   |             |
+| `REDIS_PASSWORD`    |               |             |
+| `REDIS_PORT`        | `6379`        |             |
+
 ### Run with Docker Compose
 
 #### Prerequisites
