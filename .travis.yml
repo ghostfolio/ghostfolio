@@ -2,7 +2,7 @@ language: node_js
 git:
   depth: false
 node_js:
-  - 14
+  - 16
 
 services:
   - docker
