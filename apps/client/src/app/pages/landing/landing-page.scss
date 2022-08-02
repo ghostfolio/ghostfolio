@@ -3,6 +3,16 @@
 :host {
   display: block;
 
+  .agplv3-logo {
+    background-color: rgba(var(--dark-primary-text));
+    height: 3rem;
+    mask-image: url('/assets/images/AGPLv3-logo.svg');
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    width: 7.5rem;
+  }
+
   .button-container {
     .mat-stroked-button {
       background-color: var(--light-background);
@@ -46,6 +56,10 @@
 }
 
 :host-context(.is-dark-theme) {
+  .agplv3-logo {
+    background-color: rgba(var(--light-primary-text));
+  }
+
   .button-container {
     .mat-stroked-button {
       background-color: var(--dark-background);
