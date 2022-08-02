@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `GHOSTFOLIO` as a default to `DATA_SOURCES`
+
 ### Changed
 
 - Upgraded `angular` from version `14.0.2` to `14.1.0`
