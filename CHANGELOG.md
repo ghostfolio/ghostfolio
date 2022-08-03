@@ -13,9 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the initialization of the exchange rate service
 - Upgraded `angular` from version `14.0.2` to `14.1.0`
 - Upgraded `nestjs` from version `8.4.7` to `9.0.7`
 - Upgraded `Nx` from version `14.3.5` to `14.5.1`
+
+### Fixed
+
+- Handled database connection errors (do not exit process)
 
 ## 1.176.2 - 31.07.2022
 
