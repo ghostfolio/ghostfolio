@@ -15,7 +15,9 @@ export class ConfigurationService {
       BASE_CURRENCY: str({ default: 'USD' }),
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_PRIMARY: str({ default: DataSource.YAHOO }),
-      DATA_SOURCES: json({ default: [DataSource.YAHOO] }),
+      DATA_SOURCES: json({
+        default: [DataSource.GHOSTFOLIO, DataSource.YAHOO]
+      }),
       ENABLE_FEATURE_BLOG: bool({ default: false }),
       ENABLE_FEATURE_CUSTOM_SYMBOLS: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `GHOSTFOLIO` as a default to `DATA_SOURCES`
 - Added the `AGPLv3` logo to the landing page
 
 ### Changed
