@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# List all migration scripts based on folder name, and mark it as "applied"
+# List all migration scripts based on the directory name and mark the migration as "applied"
 
 for directory in ./prisma/migrations/*/; do 
 	migration=$(echo "$directory" | sed 's/.\/prisma\/migrations\///' | sed 's/\///')
