@@ -1,22 +1,22 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+  binaryTargets   = ["debian-openssl-1.1.x", "native"]
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["debian-openssl-1.1.x", "native"]
-  previewFeatures = []
-}
-
 model Access {
   createdAt     DateTime @default(now())
-  GranteeUser   User?    @relation(fields: [granteeUserId], name: "accessGet", references: [id])
   granteeUserId String?
   id            String   @id @default(uuid())
   updatedAt     DateTime @updatedAt
-  User          User     @relation(fields: [userId], name: "accessGive", references: [id])
   userId        String
+  GranteeUser   User?    @relation("accessGet", fields: [granteeUserId], references: [id])
+  User          User     @relation("accessGive", fields: [userId], references: [id])
 }
 
 model Account {
@@ -27,12 +27,12 @@ model Account {
   id          String      @default(uuid())
   isDefault   Boolean     @default(false)
   name        String?
-  Order       Order[]
-  Platform    Platform?   @relation(fields: [platformId], references: [id])
   platformId  String?
   updatedAt   DateTime    @updatedAt
-  User        User        @relation(fields: [userId], references: [id])
   userId      String
+  Platform    Platform?   @relation(fields: [platformId], references: [id])
+  User        User        @relation(fields: [userId], references: [id])
+  Order       Order[]
 
   @@id([id, userId])
 }
@@ -40,8 +40,8 @@ model Account {
 model Analytics {
   activityCount Int      @default(0)
   updatedAt     DateTime @updatedAt
-  User          User     @relation(fields: [userId], references: [id])
   userId        String   @id
+  User          User     @relation(fields: [userId], references: [id])
 }
 
 model AuthDevice {
@@ -51,8 +51,8 @@ model AuthDevice {
   counter             Int
   id                  String   @id @default(uuid())
   updatedAt           DateTime @updatedAt
-  User                User     @relation(fields: [userId], references: [id])
   userId              String
+  User                User     @relation(fields: [userId], references: [id])
 }
 
 model MarketData {
@@ -64,11 +64,10 @@ model MarketData {
   marketPrice Float
 
   @@unique([date, symbol])
-  @@index(fields: [symbol])
+  @@index([symbol])
 }
 
 model Order {
-  Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   accountId       String?
   accountUserId   String?
   comment         String?
@@ -78,21 +77,22 @@ model Order {
   id              String        @id @default(uuid())
   isDraft         Boolean       @default(false)
   quantity        Float
-  SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   symbolProfileId String
-  tags            Tag[]
   type            Type
   unitPrice       Float
   updatedAt       DateTime      @updatedAt
-  User            User          @relation(fields: [userId], references: [id])
   userId          String
+  Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
+  SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
+  User            User          @relation(fields: [userId], references: [id])
+  tags            Tag[]
 }
 
 model Platform {
-  Account Account[]
   id      String    @id @default(uuid())
   name    String?
   url     String    @unique
+  Account Account[]
 }
 
 model Property {
@@ -105,8 +105,8 @@ model Settings {
   settings  Json?
   updatedAt DateTime  @updatedAt
   viewMode  ViewMode?
-  User      User      @relation(fields: [userId], references: [id])
   userId    String    @id
+  User      User      @relation(fields: [userId], references: [id])
 }
 
 model SymbolProfile {
@@ -118,14 +118,14 @@ model SymbolProfile {
   dataSource             DataSource
   id                     String                  @id @default(uuid())
   name                   String?
-  Order                  Order[]
   updatedAt              DateTime                @updatedAt
   scraperConfiguration   Json?
   sectors                Json?
   symbol                 String
   symbolMapping          Json?
-  SymbolProfileOverrides SymbolProfileOverrides?
   url                    String?
+  Order                  Order[]
+  SymbolProfileOverrides SymbolProfileOverrides?
 
   @@unique([dataSource, symbol])
 }
@@ -136,9 +136,9 @@ model SymbolProfileOverrides {
   countries       Json?
   name            String?
   sectors         Json?
-  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], references: [id])
   symbolProfileId String         @id
   updatedAt       DateTime       @updatedAt
+  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], references: [id])
 }
 
 model Subscription {
@@ -146,8 +146,8 @@ model Subscription {
   expiresAt DateTime
   id        String   @id @default(uuid())
   updatedAt DateTime @updatedAt
-  User      User     @relation(fields: [userId], references: [id])
   userId    String
+  User      User     @relation(fields: [userId], references: [id])
 }
 
 model Tag {
@@ -157,23 +157,23 @@ model Tag {
 }
 
 model User {
-  Access        Access[]       @relation("accessGet")
-  AccessGive    Access[]       @relation(name: "accessGive")
   accessToken   String?
-  Account       Account[]
   alias         String?
-  Analytics     Analytics?
   authChallenge String?
-  AuthDevice    AuthDevice[]
   createdAt     DateTime       @default(now())
   id            String         @id @default(uuid())
-  Order         Order[]
   provider      Provider       @default(ANONYMOUS)
   role          Role           @default(USER)
-  Settings      Settings?
-  Subscription  Subscription[]
   thirdPartyId  String?
   updatedAt     DateTime       @updatedAt
+  Access        Access[]       @relation("accessGet")
+  AccessGive    Access[]       @relation("accessGive")
+  Account       Account[]
+  Analytics     Analytics?
+  AuthDevice    AuthDevice[]
+  Order         Order[]
+  Settings      Settings?
+  Subscription  Subscription[]
 }
 
 enum AccountType {
