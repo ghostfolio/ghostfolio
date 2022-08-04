@@ -21,7 +21,7 @@ import {
 } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
-import { groupBy, isString } from 'lodash';
+import { groupBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activity } from './interfaces/activities.interface';

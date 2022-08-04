@@ -22,9 +22,7 @@ export class ExchangeRateDataService {
     private readonly dataProviderService: DataProviderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
-  ) {
-    this.initialize();
-  }
+  ) {}
 
   public getCurrencies() {
     return this.currencies?.length > 0 ? this.currencies : [this.baseCurrency];
