@@ -26,6 +26,7 @@
     "database:push": "prisma db push",
     "database:seed": "prisma db seed",
     "database:setup": "yarn database:push && yarn database:seed && yarn database:baseline",
+    "database:validate": "prisma validate",
     "dep-graph": "nx dep-graph",
     "e2e": "ng e2e",
     "format": "nx format:write",
