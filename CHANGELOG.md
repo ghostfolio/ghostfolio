@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `url` to the symbol profile overrides model for manual adjustments
+
 ### Changed
 
 - Simplified the initialization of the exchange rate service
+- Improved the orders query for `assetClass` with symbol profile overrides
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.177.0 - 04.08.2022
 
