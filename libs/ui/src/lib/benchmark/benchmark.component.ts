@@ -18,6 +18,7 @@ export class BenchmarkComponent implements OnChanges {
   @Input() benchmarks: Benchmark[];
   @Input() locale: string;
 
+  public displayedColumns = ['name', 'change', 'marketCondition'];
   public resolveMarketCondition = resolveMarketCondition;
 
   public constructor() {}

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simplified the initialization of the exchange rate service
 - Improved the orders query for `assetClass` with symbol profile overrides
+- Improved the styling of the benchmarks in the markets overview
 
 ### Todo
 
