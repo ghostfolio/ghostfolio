@@ -231,7 +231,7 @@ export class OrderService {
               },
               {
                 SymbolProfileOverrides: {
-                  is: null
+                  assetClass: null
                 }
               }
             ]

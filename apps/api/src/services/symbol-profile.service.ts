@@ -115,9 +115,16 @@ export class SymbolProfileService {
         }
 
         item.name = item.SymbolProfileOverrides?.name ?? item.name;
-        item.sectors =
-          (item.SymbolProfileOverrides.sectors as unknown as Sector[]) ??
-          item.sectors;
+
+        if (
+          (item.SymbolProfileOverrides.sectors as unknown as Sector[])?.length >
+          0
+        ) {
+          item.sectors = item.SymbolProfileOverrides
+            .sectors as unknown as Sector[];
+        }
+
+        item.url = item.SymbolProfileOverrides?.url ?? item.url;
 
         delete item.SymbolProfileOverrides;
       }

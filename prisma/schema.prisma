@@ -136,6 +136,7 @@ model SymbolProfileOverrides {
   countries       Json?
   name            String?
   sectors         Json?
+  url             String?
   symbolProfileId String         @id
   updatedAt       DateTime       @updatedAt
   SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], references: [id])
