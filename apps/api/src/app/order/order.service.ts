@@ -230,9 +230,10 @@ export class OrderService {
                 })
               },
               {
-                SymbolProfileOverrides: {
-                  assetClass: null
-                }
+                OR: [
+                  { SymbolProfileOverrides: { is: null } },
+                  { SymbolProfileOverrides: { assetClass: null } }
+                ]
               }
             ]
           },
