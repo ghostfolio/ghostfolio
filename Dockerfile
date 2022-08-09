@@ -18,7 +18,7 @@ RUN apt update && apt install -y \
     openssl \
     python3 \
     && rm -rf /var/lib/apt/lists/*
-RUN yarn install
+RUN yarn install --network-timeout 1000000
 
 # See https://github.com/nrwl/nx/issues/6586 for further details
 COPY ./decorate-angular-cli.js decorate-angular-cli.js
