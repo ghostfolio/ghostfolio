@@ -6,7 +6,7 @@
   .chart-container {
     aspect-ratio: 16 / 9;
     height: auto;
-    max-width: 67rem;
+    max-width: 50rem;
 
     // Fallback for aspect-ratio (using padding hack)
     @supports not (aspect-ratio: 16 / 9) {
