@@ -133,9 +133,9 @@ model SymbolProfile {
 model SymbolProfileOverrides {
   assetClass      AssetClass?
   assetSubClass   AssetSubClass?
-  countries       Json?
+  countries       Json?          @default("[]")
   name            String?
-  sectors         Json?
+  sectors         Json?          @default("[]")
   url             String?
   symbolProfileId String         @id
   updatedAt       DateTime       @updatedAt

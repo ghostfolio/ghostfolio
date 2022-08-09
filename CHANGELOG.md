@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `url` to the symbol profile overrides model for manual adjustments
+- Added default values for `countries` and `sectors` of the symbol profile overrides model
 
 ### Changed
 
