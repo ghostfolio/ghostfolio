@@ -1,0 +1,26 @@
+name: Docker image CD
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: install buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+      - name: login to docker hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+      - name: build the image
+        run: |
+          docker buildx build --push \
+            --tag grobut939/ghostfolio:latest \
+            --platform linux/amd64,linux/arm/v7,linux/arm64 .
