@@ -1,7 +1,6 @@
 FROM node:16-slim as builder
 
 # Build application and add additional files
-
 WORKDIR /ghostfolio
 
 # Only add basic files without the application itself to avoid rebuilding
@@ -13,11 +12,11 @@ COPY ./yarn.lock yarn.lock
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
 RUN apt update && apt install -y \
-    python3 \
+    git \
     g++ \
     make \
     openssl \
-    git \
+    python3 \
     && rm -rf /var/lib/apt/lists/*
 RUN yarn install
 
@@ -55,6 +54,7 @@ FROM node:16-slim
 RUN apt update && apt install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 WORKDIR /ghostfolio/apps/api
 EXPOSE 3333
