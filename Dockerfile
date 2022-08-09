@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:16-slim as builder
 
 # Build application and add additional files
 
@@ -12,7 +12,13 @@ COPY ./package.json package.json
 COPY ./yarn.lock yarn.lock
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN apk add --no-cache python3 g++ make openssl git
+RUN apt update && apt install -y \
+    python3 \
+    g++ \
+    make \
+    openssl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 RUN yarn install
 
 # See https://github.com/nrwl/nx/issues/6586 for further details
@@ -45,7 +51,10 @@ COPY package.json /ghostfolio/dist/apps/api
 RUN yarn database:generate-typings
 
 # Image to run, copy everything needed from builder
-FROM node:16-alpine
+FROM node:16-slim
+RUN apt update && apt install -y \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 WORKDIR /ghostfolio/apps/api
 EXPOSE 3333
