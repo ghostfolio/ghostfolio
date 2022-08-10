@@ -89,6 +89,13 @@ const routes: Routes = [
       ).then((m) => m.HowDoIGetMyFinancesInOrderPageModule)
   },
   {
+    path: 'blog/2022/08/500-stars-on-github',
+    loadChildren: () =>
+      import(
+        './pages/blog/2022/08/500-stars-on-github/500-stars-on-github-page.module'
+      ).then((m) => m.FiveHundredStarsOnGitHubPageModule)
+  },
+  {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
