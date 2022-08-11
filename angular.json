@@ -114,6 +114,7 @@
                 "output": "./"
               }
             ],
+            "localize": ["en"],
             "styles": ["apps/client/src/styles.scss"],
             "scripts": ["node_modules/marked/marked.min.js"],
             "vendorChunk": true,
@@ -187,6 +188,15 @@
           },
           "outputs": ["coverage/apps/client"]
         }
+      },
+      "i18n": {
+        "locales": {
+          "de": {
+            "baseHref": "/de/",
+            "translation": "apps/client/src/locales/messages.de.xlf"
+          }
+        },
+        "sourceLocale": "en"
       },
       "tags": []
     },
