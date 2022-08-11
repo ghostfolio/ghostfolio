@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up i18n support
+
 ### Changed
 
 - Reduced the maximum width of the performance chart on the home page
