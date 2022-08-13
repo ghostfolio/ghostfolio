@@ -48,8 +48,6 @@ export class AuthGuard implements CanActivate {
         .get()
         .pipe(
           catchError(() => {
-            console.log(`TODO: canActivate error (${state.url})`);
-
             if (utmSource === 'ios') {
               this.router.navigate(['/demo']);
               resolve(false);
@@ -74,8 +72,6 @@ export class AuthGuard implements CanActivate {
           })
         )
         .subscribe((user) => {
-          console.log(`TODO: canActivate`, user);
-
           if (
             state.url.startsWith('/home') &&
             user.settings.viewMode === ViewMode.ZEN

@@ -24,14 +24,10 @@ export class AuthPageComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    console.log('TODO: Init AuthPageComponent');
-
     this.route.params
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         const jwt = params['jwt'];
-
-        console.log(`TODO: ${jwt}`);
 
         this.tokenStorageService.saveToken(
           jwt,

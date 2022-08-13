@@ -22,8 +22,6 @@ export class TokenStorageService {
   }
 
   public saveToken(token: string, staySignedIn = false): void {
-    console.log('TODO: saveToken', token);
-
     if (staySignedIn) {
       window.localStorage.setItem(TOKEN_KEY, token);
     }
