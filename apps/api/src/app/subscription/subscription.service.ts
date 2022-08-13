@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
@@ -33,7 +34,9 @@ export class SubscriptionService {
     userId: string;
   }) {
     const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
-      cancel_url: `${this.configurationService.get('ROOT_URL')}/account`,
+      cancel_url: `${this.configurationService.get(
+        'ROOT_URL'
+      )}/${DEFAULT_LANGUAGE_CODE}/account`,
       client_reference_id: userId,
       line_items: [
         {
