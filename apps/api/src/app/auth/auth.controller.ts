@@ -1,5 +1,6 @@
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { OAuthResponse } from '@ghostfolio/common/interfaces';
 import {
   Body,
@@ -62,9 +63,17 @@ export class AuthController {
     const jwt: string = req.user.jwt;
 
     if (jwt) {
-      res.redirect(`${this.configurationService.get('ROOT_URL')}/auth/${jwt}`);
+      res.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
+      );
     } else {
-      res.redirect(`${this.configurationService.get('ROOT_URL')}/auth`);
+      res.redirect(
+        `${this.configurationService.get(
+          'ROOT_URL'
+        )}/${DEFAULT_LANGUAGE_CODE}/auth`
+      );
     }
   }
 

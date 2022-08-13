@@ -21,8 +21,10 @@
     <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
       <ng-container *ngIf="element.type === 'PUBLIC'">
         <ion-icon class="mr-1" name="link-outline"></ion-icon>
-        <a href="{{ baseUrl }}/p/{{ element.id }}" target="_blank"
-          >{{ baseUrl }}/p/{{ element.id }}</a
+        <a
+          href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
+          target="_blank"
+          >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
         >
       </ng-container>
     </td>

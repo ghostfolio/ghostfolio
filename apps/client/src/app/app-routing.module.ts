@@ -54,44 +54,44 @@ const routes: Routes = [
       import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
   },
   {
-    path: 'de/blog/2021/07/hallo-ghostfolio',
+    path: 'blog/2021/07/hallo-ghostfolio',
     loadChildren: () =>
       import(
         './pages/blog/2021/07/hallo-ghostfolio/hallo-ghostfolio-page.module'
       ).then((m) => m.HalloGhostfolioPageModule)
   },
   {
-    path: 'demo',
-    loadChildren: () =>
-      import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
-  },
-  {
-    path: 'en/blog/2021/07/hello-ghostfolio',
+    path: 'blog/2021/07/hello-ghostfolio',
     loadChildren: () =>
       import(
         './pages/blog/2021/07/hello-ghostfolio/hello-ghostfolio-page.module'
       ).then((m) => m.HelloGhostfolioPageModule)
   },
   {
-    path: 'en/blog/2022/01/ghostfolio-first-months-in-open-source',
+    path: 'blog/2022/01/ghostfolio-first-months-in-open-source',
     loadChildren: () =>
       import(
         './pages/blog/2022/01/first-months-in-open-source/first-months-in-open-source-page.module'
       ).then((m) => m.FirstMonthsInOpenSourcePageModule)
   },
   {
-    path: 'en/blog/2022/07/ghostfolio-meets-internet-identity',
+    path: 'blog/2022/07/ghostfolio-meets-internet-identity',
     loadChildren: () =>
       import(
         './pages/blog/2022/07/ghostfolio-meets-internet-identity/ghostfolio-meets-internet-identity-page.module'
       ).then((m) => m.GhostfolioMeetsInternetIdentityPageModule)
   },
   {
-    path: 'en/blog/2022/07/how-do-i-get-my-finances-in-order',
+    path: 'blog/2022/07/how-do-i-get-my-finances-in-order',
     loadChildren: () =>
       import(
         './pages/blog/2022/07/how-do-i-get-my-finances-in-order/how-do-i-get-my-finances-in-order-page.module'
       ).then((m) => m.HowDoIGetMyFinancesInOrderPageModule)
+  },
+  {
+    path: 'demo',
+    loadChildren: () =>
+      import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
   },
   {
     path: 'faq',

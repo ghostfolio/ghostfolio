@@ -77,41 +77,50 @@
             "polyfills": "apps/client/src/polyfills.ts",
             "tsConfig": "apps/client/tsconfig.app.json",
             "assets": [
-              "apps/client/src/assets",
               {
                 "glob": "assetlinks.json",
                 "input": "apps/client/src/assets",
-                "output": "./.well-known"
+                "output": "./../.well-known"
               },
               {
                 "glob": "CHANGELOG.md",
                 "input": "",
-                "output": "./assets"
+                "output": "./../assets"
+              },
+              {
+                "glob": "index.html",
+                "input": "apps/client/src/assets",
+                "output": "./../"
               },
               {
                 "glob": "LICENSE",
                 "input": "",
-                "output": "./assets"
+                "output": "./../assets"
               },
               {
                 "glob": "robots.txt",
                 "input": "apps/client/src/assets",
-                "output": "./"
+                "output": "./../"
               },
               {
                 "glob": "sitemap.xml",
                 "input": "apps/client/src/assets",
-                "output": "./"
+                "output": "./../"
               },
               {
                 "glob": "**/*",
                 "input": "node_modules/ionicons/dist/ionicons",
-                "output": "./ionicons"
+                "output": "./../ionicons"
               },
               {
                 "glob": "**/*.js",
                 "input": "node_modules/ionicons/dist/",
-                "output": "./"
+                "output": "./../"
+              },
+              {
+                "glob": "**/*",
+                "input": "apps/client/src/assets",
+                "output": "./../assets/"
               }
             ],
             "styles": ["apps/client/src/styles.scss"],
@@ -124,6 +133,10 @@
             "namedChunks": true
           },
           "configurations": {
+            "development-en": {
+              "baseHref": "/en/",
+              "localize": ["en"]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -162,6 +175,9 @@
             "proxyConfig": "apps/client/proxy.conf.json"
           },
           "configurations": {
+            "development-en": {
+              "browserTarget": "client:build:development-en"
+            },
             "production": {
               "browserTarget": "client:build:production"
             }
@@ -187,6 +203,15 @@
           },
           "outputs": ["coverage/apps/client"]
         }
+      },
+      "i18n": {
+        "locales": {
+          "de": {
+            "baseHref": "/de/",
+            "translation": "apps/client/src/locales/messages.de.xlf"
+          }
+        },
+        "sourceLocale": "en"
       },
       "tags": []
     },

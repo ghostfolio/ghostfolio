@@ -1,6 +1,9 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_COUPONS } from '@ghostfolio/common/config';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  PROPERTY_COUPONS
+} from '@ghostfolio/common/config';
 import { Coupon } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
@@ -93,7 +96,11 @@ export class SubscriptionController {
       'SubscriptionController'
     );
 
-    res.redirect(`${this.configurationService.get('ROOT_URL')}/account`);
+    res.redirect(
+      `${this.configurationService.get(
+        'ROOT_URL'
+      )}/${DEFAULT_LANGUAGE_CODE}/account`
+    );
   }
 
   @Post('stripe/checkout-session')

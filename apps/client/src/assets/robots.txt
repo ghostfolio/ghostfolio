@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /about/privacy-policy
-Disallow: /p/*
+Disallow: /en/about/privacy-policy
+Disallow: /en/p/*
 
 Sitemap: https://ghostfol.io/sitemap.xml
