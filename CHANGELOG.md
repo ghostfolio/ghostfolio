@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up i18n support
+- Added a blog post: _500 Stars on GitHub_
 
 ### Changed
 
