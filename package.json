@@ -41,7 +41,7 @@
     "postinstall": "prisma generate && ngcc --properties es2020 browser module main",
     "replace-placeholders-in-build": "node ./replace.build.js",
     "start": "node dist/apps/api/main",
-    "start:client": "ng serve client --hmr -o",
+    "start:client": "ng serve client --configuration=development-en --hmr -o",
     "start:prod": "node apps/api/main",
     "start:server": "nx serve api --watch",
     "start:storybook": "nx run ui:storybook",

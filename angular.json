@@ -134,6 +134,9 @@
             "namedChunks": true
           },
           "configurations": {
+            "development-en": {
+              "baseHref": "/en/"
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -172,6 +175,9 @@
             "proxyConfig": "apps/client/proxy.conf.json"
           },
           "configurations": {
+            "development-en": {
+              "browserTarget": "client:build:development-en"
+            },
             "production": {
               "browserTarget": "client:build:production"
             }
