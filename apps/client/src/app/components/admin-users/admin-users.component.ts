@@ -55,7 +55,9 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteUser(aId: string) {
-    const confirmation = confirm('Do you really want to delete this user?');
+    const confirmation = confirm(
+      $localize`Do you really want to delete this user?`
+    );
 
     if (confirmation) {
       this.dataService

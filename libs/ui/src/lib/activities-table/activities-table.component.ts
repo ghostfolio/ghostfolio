@@ -132,7 +132,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   }
 
   public onDeleteActivity(aId: string) {
-    const confirmation = confirm('Do you really want to delete this activity?');
+    const confirmation = confirm(
+      $localize`Do you really want to delete this activity?`
+    );
 
     if (confirmation) {
       this.activityDeleted.emit(aId);

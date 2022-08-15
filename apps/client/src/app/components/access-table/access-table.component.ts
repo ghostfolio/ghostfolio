@@ -46,7 +46,7 @@ export class AccessTableComponent implements OnChanges, OnInit {
 
   public onDeleteAccess(aId: string) {
     const confirmation = confirm(
-      'Do you really want to revoke this granted access?'
+      $localize`Do you really want to revoke this granted access?`
     );
 
     if (confirmation) {

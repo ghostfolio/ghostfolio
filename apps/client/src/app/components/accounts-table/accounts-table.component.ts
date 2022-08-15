@@ -69,7 +69,9 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onDeleteAccount(aId: string) {
-    const confirmation = confirm('Do you really want to delete this account?');
+    const confirmation = confirm(
+      $localize`Do you really want to delete this account?`
+    );
 
     if (confirmation) {
       this.accountDeleted.emit(aId);

@@ -123,7 +123,7 @@ export class HeaderComponent implements OnChanges {
             .loginAnonymous(data?.accessToken)
             .pipe(
               catchError(() => {
-                alert('Oops! Incorrect Security Token.');
+                alert($localize`Oops! Incorrect Security Token.`);
 
                 return EMPTY;
               }),
