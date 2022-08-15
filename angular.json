@@ -88,11 +88,6 @@
                 "output": "./../assets"
               },
               {
-                "glob": "index.html",
-                "input": "apps/client/src/assets",
-                "output": "./../"
-              },
-              {
                 "glob": "LICENSE",
                 "input": "",
                 "output": "./../assets"
