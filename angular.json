@@ -179,9 +179,12 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "ng-extract-i18n-merge:ng-extract-i18n-merge",
           "options": {
-            "browserTarget": "client:build"
+            "browserTarget": "client:build",
+            "includeContext": true,
+            "outputPath": "src/locales",
+            "targetFiles": ["messages.de.xlf"]
           }
         },
         "lint": {
