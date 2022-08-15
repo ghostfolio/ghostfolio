@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tagged template literal strings in components for localization with `$localize`
 
+### Changed
+
+- Tagged template literal strings in components for localization with `$localize`
+
 ## 1.179.5 - 15.08.2022
 
 ### Added
