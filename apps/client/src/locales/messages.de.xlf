@@ -557,6 +557,7 @@
       </trans-unit>
       <trans-unit id="e95ae009d0bdb45fcc656e8b65248cf7396080d5" datatype="html">
         <source>Overview</source>
+        <target>Übersicht</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">21</context>
@@ -568,6 +569,7 @@
       </trans-unit>
       <trans-unit id="323af13292ecc714ab3848b9dff48f923893be32" datatype="html">
         <source>Portfolio</source>
+        <target>Portfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">32</context>
@@ -583,6 +585,7 @@
       </trans-unit>
       <trans-unit id="4fe84c1d0eef5726c017f64c691145db7a61f879" datatype="html">
         <source>Accounts</source>
+        <target>Konten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">43</context>
@@ -598,6 +601,7 @@
       </trans-unit>
       <trans-unit id="b0f210a3147d1b669e081dae1fcd0918fe7c3021" datatype="html">
         <source>Admin Control</source>
+        <target>Administration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">55</context>
@@ -609,6 +613,7 @@
       </trans-unit>
       <trans-unit id="452ef1b96854fe05618303ee601f8fed3b866c9f" datatype="html">
         <source>Resources</source>
+        <target>Ressourcen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">66</context>
@@ -639,6 +644,7 @@
       </trans-unit>
       <trans-unit id="004b222ff9ef9dd4771b777950ca1d0e4cd4348a" datatype="html">
         <source>About</source>
+        <target>Über</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">91</context>
@@ -2250,7 +2256,6 @@
       </trans-unit>
       <trans-unit id="9066319854608270526" datatype="html">
         <source>Oops! Incorrect Security Token.</source>
-        <target state="new">Oops! Incorrect Security Token.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.ts</context>
           <context context-type="linenumber">126</context>
@@ -2258,7 +2263,6 @@
       </trans-unit>
       <trans-unit id="8264698726451826067" datatype="html">
         <source>Do you really want to revoke this granted access?</source>
-        <target state="new">Do you really want to revoke this granted access?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
           <context context-type="linenumber">49</context>
@@ -2266,7 +2270,6 @@
       </trans-unit>
       <trans-unit id="8280212421112607879" datatype="html">
         <source>Do you really want to delete this account?</source>
-        <target state="new">Do you really want to delete this account?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -2274,7 +2277,6 @@
       </trans-unit>
       <trans-unit id="912825160188860007" datatype="html">
         <source>Please add a currency:</source>
-        <target state="new">Please add a currency:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">106</context>
@@ -2282,7 +2284,6 @@
       </trans-unit>
       <trans-unit id="8122024350760043460" datatype="html">
         <source>Do you really want to delete this coupon?</source>
-        <target state="new">Do you really want to delete this coupon?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">120</context>
@@ -2290,7 +2291,6 @@
       </trans-unit>
       <trans-unit id="1110981355132746478" datatype="html">
         <source>Do you really want to delete this currency?</source>
-        <target state="new">Do you really want to delete this currency?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">133</context>
@@ -2298,7 +2298,6 @@
       </trans-unit>
       <trans-unit id="6470890277760887814" datatype="html">
         <source>Do you really want to flush the cache?</source>
-        <target state="new">Do you really want to flush the cache?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">150</context>
@@ -2306,7 +2305,6 @@
       </trans-unit>
       <trans-unit id="2712770700065625080" datatype="html">
         <source>Please set your system message:</source>
-        <target state="new">Please set your system message:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">199</context>
@@ -2314,7 +2312,6 @@
       </trans-unit>
       <trans-unit id="2817099043823177227" datatype="html">
         <source>Do you really want to delete this user?</source>
-        <target state="new">Do you really want to delete this user?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -2322,7 +2319,6 @@
       </trans-unit>
       <trans-unit id="6785405835169448749" datatype="html">
         <source>Please enter the amount of your emergency fund:</source>
-        <target state="new">Please enter the amount of your emergency fund:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
           <context context-type="linenumber">48</context>
@@ -2330,7 +2326,6 @@
       </trans-unit>
       <trans-unit id="9125861665818782838" datatype="html">
         <source>This feature is currently unavailable. Please try again later.</source>
-        <target state="new">This feature is currently unavailable. Please try again later.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">59</context>
@@ -2338,7 +2333,6 @@
       </trans-unit>
       <trans-unit id="3041670542776846470" datatype="html">
         <source>This feature requires a subscription.</source>
-        <target state="new">This feature requires a subscription.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">65</context>
@@ -2346,7 +2340,6 @@
       </trans-unit>
       <trans-unit id="5499742151525073097" datatype="html">
         <source>Upgrade Plan</source>
-        <target state="new">Upgrade Plan</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">67</context>
@@ -2354,7 +2347,6 @@
       </trans-unit>
       <trans-unit id="5185931223939324051" datatype="html">
         <source>Oops! Something went wrong. Please try again later.</source>
-        <target state="new">Oops! Something went wrong. Please try again later.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">84</context>
@@ -2362,7 +2354,6 @@
       </trans-unit>
       <trans-unit id="1579692722565712588" datatype="html">
         <source>Okay</source>
-        <target state="new">Okay</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">85</context>
@@ -2370,7 +2361,6 @@
       </trans-unit>
       <trans-unit id="5196970976032945030" datatype="html">
         <source>Please enter your coupon code:</source>
-        <target state="new">Please enter your coupon code:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
           <context context-type="linenumber">221</context>
@@ -2378,7 +2368,6 @@
       </trans-unit>
       <trans-unit id="4420880039966769543" datatype="html">
         <source>Could not redeem coupon code</source>
-        <target state="new">Could not redeem coupon code</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
           <context context-type="linenumber">231</context>
@@ -2386,7 +2375,6 @@
       </trans-unit>
       <trans-unit id="4819099731531004979" datatype="html">
         <source>Coupon code has been redeemed</source>
-        <target state="new">Coupon code has been redeemed</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
           <context context-type="linenumber">243</context>
@@ -2394,7 +2382,6 @@
       </trans-unit>
       <trans-unit id="7967484035994732534" datatype="html">
         <source>Reload</source>
-        <target state="new">Reload</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
           <context context-type="linenumber">244</context>
@@ -2402,7 +2389,6 @@
       </trans-unit>
       <trans-unit id="7963559562180316948" datatype="html">
         <source>Do you really want to remove this sign in method?</source>
-        <target state="new">Do you really want to remove this sign in method?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
           <context context-type="linenumber">290</context>
@@ -2410,7 +2396,6 @@
       </trans-unit>
       <trans-unit id="7407412980480383749" datatype="html">
         <source>As you are already logged in, you cannot access the demo account.</source>
-        <target state="new">As you are already logged in, you cannot access the demo account.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/demo/demo-page.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -2418,7 +2403,6 @@
       </trans-unit>
       <trans-unit id="848497846891931418" datatype="html">
         <source>Importing data...</source>
-        <target state="new">Importing data...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/transactions-page.component.ts</context>
           <context context-type="linenumber">191</context>
@@ -2426,7 +2410,6 @@
       </trans-unit>
       <trans-unit id="7500216440144530775" datatype="html">
         <source>Import has been completed</source>
-        <target state="new">Import has been completed</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/transactions-page.component.ts</context>
           <context context-type="linenumber">337</context>
@@ -2434,10 +2417,49 @@
       </trans-unit>
       <trans-unit id="670983159637074283" datatype="html">
         <source>Do you really want to delete this activity?</source>
-        <target state="new">Do you really want to delete this activity?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
           <context context-type="linenumber">136</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6048892649018070225" datatype="html">
+        <source>Today</source>
+        <target>Heute</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7377728350294749129" datatype="html">
+        <source>YTD</source>
+        <target>YTD</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8768104874317770689" datatype="html">
+        <source>1Y</source>
+        <target>1J</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7304247106520037555" datatype="html">
+        <source>5Y</source>
+        <target>5J</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3667949571823271511" datatype="html">
+        <source>Max</source>
+        <target>Max</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
     </body>

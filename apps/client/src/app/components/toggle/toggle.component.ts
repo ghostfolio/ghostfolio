@@ -17,6 +17,14 @@ import { ToggleOption } from '@ghostfolio/common/types';
   styleUrls: ['./toggle.component.scss']
 })
 export class ToggleComponent implements OnChanges, OnInit {
+  public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [
+    { label: $localize`Today`, value: '1d' },
+    { label: $localize`YTD`, value: 'ytd' },
+    { label: $localize`1Y`, value: '1y' },
+    { label: $localize`5Y`, value: '5y' },
+    { label: $localize`Max`, value: 'max' }
+  ];
+
   @Input() defaultValue: string;
   @Input() isLoading: boolean;
   @Input() options: ToggleOption[];

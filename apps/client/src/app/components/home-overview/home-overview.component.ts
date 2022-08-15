@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -6,7 +7,6 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { defaultDateRangeOptions } from '@ghostfolio/common/config';
 import {
   PortfolioPerformance,
   UniqueAsset,
@@ -26,7 +26,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeOverviewComponent implements OnDestroy, OnInit {
   public dateRange: DateRange;
-  public dateRangeOptions = defaultDateRangeOptions;
+  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public errors: UniqueAsset[];
   public hasError: boolean;

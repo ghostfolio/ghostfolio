@@ -10,6 +10,8 @@ export class FrontendMiddleware implements NestMiddleware {
     if (req.path.startsWith('/api/') || this.isFileRequest(req.url)) {
       // Skip
       next();
+    } else if (req.path.startsWith('/de/')) {
+      res.sendFile(path.join(__dirname, '..', 'client', 'de', 'index.html'));
     } else {
       res.sendFile(
         path.join(
