@@ -68,7 +68,7 @@
         <source> Revoke </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
-          <context context-type="linenumber">44,46</context>
+          <context context-type="linenumber">46,48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dd3b6c367381ddfa8f317b8e9b31c55368c65136" datatype="html">
@@ -835,8 +835,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="e5c369abfbe1bd70f577aa03b2679797e38d7590" datatype="html">
-        <source> Fees for <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1
-      {transaction} other {transactions}}"/> </source>
+        <source> Fees for <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">77,80</context>
@@ -992,9 +991,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2eee1075add05a69b66d936e8de85477d7bf3c4d" datatype="html">
-        <source>Check the system status at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://status.ghostfol.io&quot; title=&quot;Ghostfolio status&quot;
-              &gt;"/>status.ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-            &gt;"/>.</source>
+        <source>Check the system status at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://status.ghostfol.io&quot; title=&quot;Ghostfolio status&quot; &gt;"/>status.ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
           <context context-type="linenumber">25,28</context>
@@ -1305,12 +1302,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="0f4ac030d2e4b14156479b4e975e3062a68c1001" datatype="html">
-        <source> You can sign up via the “<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/register&apos;]&quot;
-            &gt;"/>Get Started<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/>” button at the top of the page. You have multiple options to join Ghostfolio: Create an account with a security token, using <x id="START_LINK_1" equiv-text="&lt;a
-            [routerLink]=&quot;[&apos;/en&apos;, &apos;blog&apos;, &apos;2022&apos;, &apos;07&apos;, &apos;ghostfolio-meets-internet-identity&apos;]&quot;
-            &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/> or <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Google Sign<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>. We will guide you to set up your portfolio. </source>
+        <source> You can sign up via the “<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/register&apos;]&quot; &gt;"/>Get Started<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>” button at the top of the page. You have multiple options to join Ghostfolio: Create an account with a security token, using <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;[&apos;/en&apos;, &apos;blog&apos;, &apos;2022&apos;, &apos;07&apos;, &apos;ghostfolio-meets-internet-identity&apos;]&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> or <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Google Sign<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>. We will guide you to set up your portfolio. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
           <context context-type="linenumber">33,43</context>
@@ -1324,10 +1316,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="f5f0aba31c8f75c0f99704f29ba4455d01dc4847" datatype="html">
-        <source> Yes, the authentication systems (via security token or <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-            [routerLink]=&quot;[&apos;/en&apos;, &apos;blog&apos;, &apos;2022&apos;, &apos;07&apos;, &apos;ghostfolio-meets-internet-identity&apos;]&quot;
-            &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/>) enable you to sign in securely and anonymously to Ghostfolio. There is no need for an email address, phone number, or a username. </source>
+        <source> Yes, the authentication systems (via security token or <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/en&apos;, &apos;blog&apos;, &apos;2022&apos;, &apos;07&apos;, &apos;ghostfolio-meets-internet-identity&apos;]&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>) enable you to sign in securely and anonymously to Ghostfolio. There is no need for an email address, phone number, or a username. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
           <context context-type="linenumber">47,54</context>
@@ -1397,10 +1386,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="3857de6a20ee308a2f24d36fb1f871d2e008ea9b" datatype="html">
-        <source>Ghostfolio works in every modern web browser on smartphones, tablets and desktop computers (where you have even more analysis options and statistics). For Android users, there is a dedicated Ghostfolio app available in the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-            href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot;
-            &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/>.</source>
+        <source>Ghostfolio works in every modern web browser on smartphones, tablets and desktop computers (where you have even more analysis options and statistics). For Android users, there is a dedicated Ghostfolio app available in the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot; &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
           <context context-type="linenumber">98,105</context>
@@ -1414,14 +1400,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="af87cf8c2f87296336a7df63966b141494e63561" datatype="html">
-        <source>Any support for Ghostfolio is welcome. Be it with a <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/> subscription to finance the hosting, a positive rating in the <x id="START_LINK_1" equiv-text="&lt;a
-            href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot;
-            &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/>, a star on <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/>, feedback, bug reports, feature requests and of course contributions! You can reach us by email at <x id="START_LINK_3" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/> or on Twitter <x id="START_LINK_4" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a
-          &gt;"/>.</source>
+        <source>Any support for Ghostfolio is welcome. Be it with a <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> subscription to finance the hosting, a positive rating in the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot; &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, a star on <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, feedback, bug reports, feature requests and of course contributions! You can reach us by email at <x id="START_LINK_3" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> or on Twitter <x id="START_LINK_4" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
           <context context-type="linenumber">113,125</context>
@@ -1435,9 +1414,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="927f00fb1a461665df2225d3ce48f5bfcc7e2dce" datatype="html">
-        <source>Join the Ghostfolio <x id="START_LINK" ctype="x-a" equiv-text="&lt;a
-            href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot;
-            &gt;"/>Slack community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, tweet to <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or send an e-mail to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <source>Join the Ghostfolio <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; &gt;"/>Slack community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, tweet to <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or send an e-mail to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
           <context context-type="linenumber">131,138</context>
@@ -1848,9 +1825,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="6e619b6be887b6d0d9636e92680cbadfa4bfe37f" datatype="html">
-        <source> Ghostfolio X-ray uses static analysis to identify potential issues and risks in your portfolio. <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;d-none&quot;
-          &gt;"/>It will be highly configurable in the future: activate / deactivate rules and customize the thresholds to match your personal investment style.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span
-        &gt;"/></source>
+        <source> Ghostfolio X-ray uses static analysis to identify potential issues and risks in your portfolio. <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;d-none&quot; &gt;"/>It will be highly configurable in the future: activate / deactivate rules and customize the thresholds to match your personal investment style.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/report/report-page.html</context>
           <context context-type="linenumber">7,14</context>
@@ -2271,6 +2246,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/no-transactions-info/no-transactions-info.component.html</context>
           <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9066319854608270526" datatype="html">
+        <source>Oops! Incorrect Security Token.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/header/header.component.ts</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
     </body>
