@@ -683,7 +683,7 @@
       </trans-unit>
       <trans-unit id="e95ae009d0bdb45fcc656e8b65248cf7396080d5" datatype="html">
         <source>Overview</source>
-        <target state="new">Overview</target>
+        <target state="translated">Übersicht</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">21</context>
@@ -695,7 +695,7 @@
       </trans-unit>
       <trans-unit id="323af13292ecc714ab3848b9dff48f923893be32" datatype="html">
         <source>Portfolio</source>
-        <target state="new">Portfolio</target>
+        <target state="translated">Portfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">32</context>
@@ -711,7 +711,7 @@
       </trans-unit>
       <trans-unit id="4fe84c1d0eef5726c017f64c691145db7a61f879" datatype="html">
         <source>Accounts</source>
-        <target state="new">Accounts</target>
+        <target state="translated">Konten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">43</context>
@@ -727,7 +727,7 @@
       </trans-unit>
       <trans-unit id="b0f210a3147d1b669e081dae1fcd0918fe7c3021" datatype="html">
         <source>Admin Control</source>
-        <target state="new">Admin Control</target>
+        <target state="translated">Administration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">55</context>
@@ -739,7 +739,7 @@
       </trans-unit>
       <trans-unit id="452ef1b96854fe05618303ee601f8fed3b866c9f" datatype="html">
         <source>Resources</source>
-        <target state="new">Resources</target>
+        <target state="translated">Ressourcen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">66</context>
@@ -771,7 +771,7 @@
       </trans-unit>
       <trans-unit id="004b222ff9ef9dd4771b777950ca1d0e4cd4348a" datatype="html">
         <source>About</source>
-        <target state="new">About</target>
+        <target state="translated">Über</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">91</context>
@@ -1191,7 +1191,7 @@
       </trans-unit>
       <trans-unit id="6048892649018070225" datatype="html">
         <source>Today</source>
-        <target state="new">Today</target>
+        <target state="translated">Heute</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">21</context>
@@ -1199,7 +1199,7 @@
       </trans-unit>
       <trans-unit id="7377728350294749129" datatype="html">
         <source>YTD</source>
-        <target state="new">YTD</target>
+        <target state="translated">YTD</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">22</context>
@@ -1207,7 +1207,7 @@
       </trans-unit>
       <trans-unit id="8768104874317770689" datatype="html">
         <source>1Y</source>
-        <target state="new">1Y</target>
+        <target state="translated">1J</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">23</context>
@@ -1215,7 +1215,7 @@
       </trans-unit>
       <trans-unit id="7304247106520037555" datatype="html">
         <source>5Y</source>
-        <target state="new">5Y</target>
+        <target state="translated">5J</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">24</context>
@@ -1223,7 +1223,7 @@
       </trans-unit>
       <trans-unit id="3667949571823271511" datatype="html">
         <source>Max</source>
-        <target state="new">Max</target>
+        <target state="translated">Max</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">25</context>
@@ -1271,7 +1271,7 @@
       </trans-unit>
       <trans-unit id="1726363342938046830" datatype="html">
         <source>About</source>
-        <target state="new">About</target>
+        <target state="translated">Über Ghostfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page-routing.module.ts</context>
           <context context-type="linenumber">12</context>
@@ -1563,7 +1563,7 @@
       </trans-unit>
       <trans-unit id="5016419499983434110" datatype="html">
         <source>Accounts</source>
-        <target state="new">Accounts</target>
+        <target state="translated">Konten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page-routing.module.ts</context>
           <context context-type="linenumber">12</context>
@@ -1639,7 +1639,7 @@
       </trans-unit>
       <trans-unit id="4979019387603946865" datatype="html">
         <source>Admin Control</source>
-        <target state="new">Admin Control</target>
+        <target state="translated">Administration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">23</context>
@@ -2019,7 +2019,7 @@
       </trans-unit>
       <trans-unit id="2614607010577950577" datatype="html">
         <source>Overview</source>
-        <target state="new">Overview</target>
+        <target state="translated">Übersicht</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/home/home-page-routing.module.ts</context>
           <context context-type="linenumber">23</context>
@@ -2603,7 +2603,7 @@
       </trans-unit>
       <trans-unit id="9201103587777813545" datatype="html">
         <source>Portfolio</source>
-        <target state="new">Portfolio</target>
+        <target state="translated">Portfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page-routing.module.ts</context>
           <context context-type="linenumber">12</context>
@@ -2699,7 +2699,7 @@
       </trans-unit>
       <trans-unit id="2446117790692479672" datatype="html">
         <source>Resources</source>
-        <target state="new">Resources</target>
+        <target state="translated">Ressourcen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/resources-page-routing.module.ts</context>
           <context context-type="linenumber">12</context>
