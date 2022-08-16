@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: RegisterPageComponent,
     path: '',
-    title: 'Registration'
+    title: $localize`Registration`
   }
 ];
 

@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: FirePageComponent,
     path: '',
-    title: 'FIRE'
+    title: $localize`FIRE`
   }
 ];
 

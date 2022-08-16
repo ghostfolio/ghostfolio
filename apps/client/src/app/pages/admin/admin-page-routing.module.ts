@@ -20,7 +20,7 @@ const routes: Routes = [
     ],
     component: AdminPageComponent,
     path: '',
-    title: 'Admin Control'
+    title: $localize`Admin Control`
   }
 ];
 
