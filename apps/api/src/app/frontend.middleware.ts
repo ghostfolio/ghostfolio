@@ -11,22 +11,20 @@ export class FrontendMiddleware implements NestMiddleware {
       // Skip
       next();
     } else if (req.path.startsWith('/de/')) {
-      res.sendFile(path.join(__dirname, '..', 'client', 'de', 'index.html'));
+      res.sendFile(this.getPathOfIndexHtmlFile('de'));
     } else {
-      res.sendFile(
-        path.join(
-          __dirname,
-          '..',
-          'client',
-          DEFAULT_LANGUAGE_CODE,
-          'index.html'
-        )
-      );
+      res.sendFile(this.getPathOfIndexHtmlFile(DEFAULT_LANGUAGE_CODE));
     }
   }
 
+  private getPathOfIndexHtmlFile(aLocale: string) {
+    return path.join(__dirname, '..', 'client', aLocale, 'index.html');
+  }
+
   private isFileRequest(filename: string) {
-    if (filename.includes('auth/ey')) {
+    if (filename === '/assets/LICENSE') {
+      return true;
+    } else if (filename.includes('auth/ey')) {
       return false;
     }
 
