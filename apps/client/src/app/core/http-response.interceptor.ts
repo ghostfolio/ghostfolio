@@ -56,14 +56,16 @@ export class HttpResponseInterceptor implements HttpInterceptor {
           if (!this.snackBarRef) {
             if (this.info.isReadOnlyMode) {
               this.snackBarRef = this.snackBar.open(
-                'This feature is currently unavailable. Please try again later.',
+                $localize`This feature is currently unavailable. Please try again later.`,
                 undefined,
                 { duration: 6000 }
               );
             } else {
               this.snackBarRef = this.snackBar.open(
-                'This feature requires a subscription.',
-                this.hasPermissionForSubscription ? 'Upgrade Plan' : undefined,
+                $localize`This feature requires a subscription.`,
+                this.hasPermissionForSubscription
+                  ? $localize`Upgrade Plan`
+                  : undefined,
                 { duration: 6000 }
               );
             }
@@ -79,8 +81,8 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         } else if (error.status === StatusCodes.INTERNAL_SERVER_ERROR) {
           if (!this.snackBarRef) {
             this.snackBarRef = this.snackBar.open(
-              'Oops! Something went wrong. Please try again later.',
-              'Okay',
+              $localize`Oops! Something went wrong. Please try again later.`,
+              $localize`Okay`,
               { duration: 6000 }
             );
 

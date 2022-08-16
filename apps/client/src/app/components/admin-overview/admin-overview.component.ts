@@ -103,7 +103,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onAddCurrency() {
-    const currency = prompt('Please add a currency:');
+    const currency = prompt($localize`Please add a currency:`);
 
     if (currency) {
       const currencies = uniq([...this.customCurrencies, currency]);
@@ -116,7 +116,9 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteCoupon(aCouponCode: string) {
-    const confirmation = confirm('Do you really want to delete this coupon?');
+    const confirmation = confirm(
+      $localize`Do you really want to delete this coupon?`
+    );
 
     if (confirmation === true) {
       const coupons = this.coupons.filter((coupon) => {
@@ -127,7 +129,9 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteCurrency(aCurrency: string) {
-    const confirmation = confirm('Do you really want to delete this currency?');
+    const confirmation = confirm(
+      $localize`Do you really want to delete this currency?`
+    );
 
     if (confirmation === true) {
       const currencies = this.customCurrencies.filter((currency) => {
@@ -142,7 +146,9 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onFlushCache() {
-    const confirmation = confirm('Do you really want to flush the cache?');
+    const confirmation = confirm(
+      $localize`Do you really want to flush the cache?`
+    );
 
     if (confirmation === true) {
       this.cacheService
@@ -190,7 +196,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onSetSystemMessage() {
-    const systemMessage = prompt('Please set your system message:');
+    const systemMessage = prompt($localize`Please set your system message:`);
 
     if (systemMessage) {
       this.putSystemMessage(systemMessage);
