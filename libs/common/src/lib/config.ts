@@ -2,16 +2,6 @@ import { DataSource } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ToggleOption } from './types';
-
-export const defaultDateRangeOptions: ToggleOption[] = [
-  { label: 'Today', value: '1d' },
-  { label: 'YTD', value: 'ytd' },
-  { label: '1Y', value: '1y' },
-  { label: '5Y', value: '5y' },
-  { label: 'Max', value: 'max' }
-];
-
 export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
 
 export const ghostfolioScraperApiSymbolPrefix = '_GF_';

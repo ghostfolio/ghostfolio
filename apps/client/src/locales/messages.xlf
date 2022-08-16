@@ -2416,6 +2416,41 @@
           <context context-type="linenumber">106</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="6048892649018070225" datatype="html">
+        <source>Today</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3667949571823271511" datatype="html">
+        <source>Max</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7304247106520037555" datatype="html">
+        <source>5Y</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7377728350294749129" datatype="html">
+        <source>YTD</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8768104874317770689" datatype="html">
+        <source>1Y</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
