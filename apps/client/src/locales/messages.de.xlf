@@ -863,7 +863,7 @@
       </trans-unit>
       <trans-unit id="ec8b93e2ecc776c8dc2e43a791b6974612a90148" datatype="html">
         <source>Manage Activities</source>
-        <target state="new">Manage Activities</target>
+        <target state="translated">Aktivitäten verwalten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
           <context context-type="linenumber">30</context>
@@ -883,7 +883,7 @@
       </trans-unit>
       <trans-unit id="a8233de047500bf0f0d9f9f1712ddb071501a283" datatype="html">
         <source>Summary</source>
-        <target state="new">Summary</target>
+        <target state="translated">Zusammenfassung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-summary/home-summary.html</context>
           <context context-type="linenumber">6</context>
@@ -959,7 +959,7 @@
       </trans-unit>
       <trans-unit id="41c1e1f19aabc4a4bf198e4a189436a1f69257bb" datatype="html">
         <source>Time in Market</source>
-        <target state="new">Time in Market</target>
+        <target state="translated">Zeit im Markt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">3</context>
@@ -967,7 +967,7 @@
       </trans-unit>
       <trans-unit id="1befce3c6f0c468b06ae5199116e5b096a35a3ef" datatype="html">
         <source>Buy</source>
-        <target state="new">Buy</target>
+        <target state="translated">Kauf</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">12</context>
@@ -975,7 +975,7 @@
       </trans-unit>
       <trans-unit id="fe708b572beec788b18edd1b5852d63c07dfaead" datatype="html">
         <source>Sell</source>
-        <target state="new">Sell</target>
+        <target state="translated">Verkauf</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">23</context>
@@ -983,7 +983,7 @@
       </trans-unit>
       <trans-unit id="9bbc9e4cebf91162be7d3e324ca5984d576e462c" datatype="html">
         <source>Investment</source>
-        <target state="new">Investment</target>
+        <target state="translated">Einlage</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">40</context>
@@ -991,7 +991,7 @@
       </trans-unit>
       <trans-unit id="a64cd8d0131a583e3de081c9e6458af7aecdafbc" datatype="html">
         <source>Absolute Gross Performance</source>
-        <target state="new">Absolute Gross Performance</target>
+        <target state="translated">Absolute Brutto Performance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">51</context>
@@ -999,7 +999,7 @@
       </trans-unit>
       <trans-unit id="e98a980fc12d6479b9c61431b905ce0c8ddc3ec5" datatype="html">
         <source>Gross Performance (TWR)</source>
-        <target state="new">Gross Performance (TWR)</target>
+        <target state="translated">Brutto Performance (TWR)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">62</context>
@@ -1007,7 +1007,7 @@
       </trans-unit>
       <trans-unit id="e5c369abfbe1bd70f577aa03b2679797e38d7590" datatype="html">
         <source> Fees for <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </source>
-        <target state="new"> Fees for <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </target>
+        <target state="translated"> Gebühren für <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {Transaktion} other {Transaktionen}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">77,80</context>
@@ -1023,7 +1023,7 @@
       </trans-unit>
       <trans-unit id="de518fa0cd3a454e84102c0d9984c4a3cfdb590d" datatype="html">
         <source>Absolute Net Performance</source>
-        <target state="new">Absolute Net Performance</target>
+        <target state="translated">Absolute Netto Performance</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">95</context>
@@ -1031,7 +1031,7 @@
       </trans-unit>
       <trans-unit id="ba987f3e4d4458aa36c61c03bedb60d98ad20393" datatype="html">
         <source>Net Performance (TWR)</source>
-        <target state="new">Net Performance (TWR)</target>
+        <target state="translated">Netto Performance (TWR)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">106</context>
@@ -1039,7 +1039,7 @@
       </trans-unit>
       <trans-unit id="f159ffb7a09c8c1fe7913ef063462db50ddcd878" datatype="html">
         <source>Total Assets</source>
-        <target state="new">Total Assets</target>
+        <target state="translated">Gesamtanlagevermögen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">122</context>
@@ -1047,7 +1047,7 @@
       </trans-unit>
       <trans-unit id="59d87bdb983dda90c1e86d086430552ec05c7a4d" datatype="html">
         <source>Valuables</source>
-        <target state="new">Valuables</target>
+        <target state="translated">Wertsachen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">134</context>
@@ -1055,7 +1055,7 @@
       </trans-unit>
       <trans-unit id="2201b2004bc4997a66f6f8ea2511a4e1311f3de1" datatype="html">
         <source>Emergency Fund</source>
-        <target state="new">Emergency Fund</target>
+        <target state="translated">Notfallfonds</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">145</context>
@@ -1067,7 +1067,7 @@
       </trans-unit>
       <trans-unit id="8cce9d03787606e0052d19c2ae7e7fa5ff785e94" datatype="html">
         <source>Buying Power</source>
-        <target state="new">Buying Power</target>
+        <target state="translated">Kaufkraft</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">165</context>
@@ -1075,7 +1075,7 @@
       </trans-unit>
       <trans-unit id="67251f04518ae452230c68a748b3fa2838b4db74" datatype="html">
         <source>Net Worth</source>
-        <target state="new">Net Worth</target>
+        <target state="translated">Reinvermögen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">179</context>
@@ -1083,7 +1083,7 @@
       </trans-unit>
       <trans-unit id="e1b20ce1622d86ae0a75a3555a1a9ae7c2c60e58" datatype="html">
         <source>Annualized Performance</source>
-        <target state="new">Annualized Performance</target>
+        <target state="translated">Performance pro Jahr</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">190</context>
@@ -1091,7 +1091,7 @@
       </trans-unit>
       <trans-unit id="d3aa83bd247983dd056a62f56ffb25269bd98d47" datatype="html">
         <source>Dividend</source>
-        <target state="new">Dividend</target>
+        <target state="translated">Dividenden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">206</context>
