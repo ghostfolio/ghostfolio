@@ -109,7 +109,7 @@ export class HeaderComponent implements OnChanges {
       data: {
         accessToken: '',
         hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
-        title: 'Sign in'
+        title: $localize`Sign in`
       },
       width: '30rem'
     });

@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: AccountPageComponent,
     path: '',
-    title: 'My Ghostfolio'
+    title: $localize`My Ghostfolio`
   }
 ];
 

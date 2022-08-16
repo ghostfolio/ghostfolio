@@ -20,7 +20,7 @@ const routes: Routes = [
     ],
     component: HomePageComponent,
     path: '',
-    title: 'Overview'
+    title: $localize`Overview`
   }
 ];
 
