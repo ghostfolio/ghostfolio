@@ -42,7 +42,7 @@
     "replace-placeholders-in-build": "node ./replace.build.js",
     "start": "node dist/apps/api/main",
     "start:client": "ng serve client --configuration=development-en --hmr -o",
-    "start:prod": "node apps/api/main",
+    "start:prod": "yarn database:migrate && yarn database:seed && node main",
     "start:server": "nx serve api --watch",
     "start:storybook": "nx run ui:storybook",
     "test": "nx test",
