@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up `ng-extract-i18n-merge` to improve the i18n extraction and merge workflow
 - Set up language localization for German (`de`)
+- Resolved the feature graphic of the blog post
 
 ### Changed
 
