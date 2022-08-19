@@ -1,44 +1,72 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
+import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class FrontendMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
-    if (req.url.includes('cover.png')) {
-      Logger.log(`Referer: ${req.headers.referer}`, 'FrontendMiddleware');
+  public indexHtmlDe = fs.readFileSync(
+    this.getPathOfIndexHtmlFile('de'),
+    'utf8'
+  );
+  public indexHtmlEn = fs.readFileSync(
+    this.getPathOfIndexHtmlFile(DEFAULT_LANGUAGE_CODE),
+    'utf8'
+  );
 
-      // Resolve feature graphic for blog post
-      if (req.headers.referer?.includes('500-stars-on-github')) {
-        res.sendFile(
-          path.join(
-            __dirname,
-            '..',
-            'client',
-            'assets',
-            'images',
-            'blog',
-            '500-stars-on-github.jpg'
-          )
-        );
-      } else {
-        // Skip
-        next();
-      }
-    } else if (req.path.startsWith('/api/') || this.isFileRequest(req.url)) {
+  public constructor(
+    private readonly configurationService: ConfigurationService
+  ) {}
+
+  public use(req: Request, res: Response, next: NextFunction) {
+    let featureGraphicPath = 'assets/cover.png';
+
+    if (
+      req.path === '/en/blog/2022/08/500-stars-on-github' ||
+      req.path === '/en/blog/2022/08/500-stars-on-github/'
+    ) {
+      featureGraphicPath = 'assets/images/blog/500-stars-on-github.jpg';
+    }
+
+    if (req.path.startsWith('/api/') || this.isFileRequest(req.url)) {
       // Skip
       next();
-    } else if (req.path.startsWith('/de/')) {
-      res.sendFile(this.getPathOfIndexHtmlFile('de'));
+    } else if (req.path === '/de' || req.path.startsWith('/de/')) {
+      res.send(
+        this.interpolate(this.indexHtmlDe, {
+          featureGraphicPath,
+          languageCode: 'de',
+          path: req.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
     } else {
-      res.sendFile(this.getPathOfIndexHtmlFile(DEFAULT_LANGUAGE_CODE));
+      res.send(
+        this.interpolate(this.indexHtmlEn, {
+          featureGraphicPath,
+          languageCode: DEFAULT_LANGUAGE_CODE,
+          path: req.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
     }
   }
 
   private getPathOfIndexHtmlFile(aLocale: string) {
     return path.join(__dirname, '..', 'client', aLocale, 'index.html');
+  }
+
+  private interpolate(template: string, context: any) {
+    return template.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
+      const properties = objectPath.split('.');
+      return properties.reduce(
+        (previous, current) => previous?.[current],
+        context
+      );
+    });
   }
 
   private isFileRequest(filename: string) {
