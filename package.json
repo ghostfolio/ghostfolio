@@ -14,7 +14,7 @@
     "affected:test": "nx affected:test",
     "angular": "node --max_old_space_size=32768 ./node_modules/@angular/cli/bin/ng",
     "build:all": "nx run api:build:production && nx run client:build:production --localize && yarn replace-placeholders-in-build",
-    "build:dev": "nx run api:build && nx run client:build && yarn replace-placeholders-in-build",
+    "build:dev": "nx run api:build && nx run client:build --localize && yarn replace-placeholders-in-build",
     "build:storybook": "nx run ui:build-storybook",
     "clean": "rimraf dist",
     "database:baseline": "sh ./prisma/baseline.sh",
