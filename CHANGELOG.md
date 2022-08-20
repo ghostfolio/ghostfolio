@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Integrated the commands `database:setup` and `database:migrate` into the container start
+
+### Todo
+
+- Apply manual data migration (`yarn database:migrate`) is not needed anymore
+
 ## 1.180.1 - 18.08.2022
 
 ### Added
