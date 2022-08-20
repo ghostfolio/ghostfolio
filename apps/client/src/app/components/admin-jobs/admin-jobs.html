@@ -105,19 +105,18 @@
                   <ion-icon name="ellipsis-vertical"></ion-icon>
                 </button>
                 <mat-menu #accountMenu="matMenu" xPosition="before">
-                  <button i18n mat-menu-item (click)="onViewData(job.data)">
-                    View Data
+                  <button mat-menu-item (click)="onViewData(job.data)">
+                    <ng-container i18n>View Data</ng-container>
                   </button>
                   <button
-                    i18n
                     mat-menu-item
                     [disabled]="job.stacktrace?.length <= 0"
                     (click)="onViewStacktrace(job.stacktrace)"
                   >
-                    View Stacktrace
+                    <ng-container i18n>View Stacktrace</ng-container>
                   </button>
-                  <button i18n mat-menu-item (click)="onDeleteJob(job.id)">
-                    Delete Job
+                  <button mat-menu-item (click)="onDeleteJob(job.id)">
+                    <ng-container i18n>Delete Job</ng-container>
                   </button>
                 </mat-menu>
               </td>

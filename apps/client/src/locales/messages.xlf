@@ -16,6 +16,10 @@
           <context context-type="linenumber">28</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
+          <context context-type="linenumber">27,29</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
@@ -56,6 +60,10 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">12,14</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="4f8b2bb476981727ab34ed40fde1218361f92c45" datatype="html">
         <source>Details</source>
@@ -64,11 +72,11 @@
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="92425f7850deb6891175254363a7b066cac596d0" datatype="html">
-        <source> Revoke </source>
+      <trans-unit id="53ea2772322e7d4d21515bb0c6dead283f8e18a5" datatype="html">
+        <source>Revoke</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
-          <context context-type="linenumber">46,48</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8264698726451826067" datatype="html">
@@ -86,7 +94,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/position/position-detail-dialog/position-detail-dialog.html</context>
@@ -108,6 +120,10 @@
           <context context-type="linenumber">3</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
@@ -127,58 +143,45 @@
           <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="df84f26c95a72e7e228cf495084b7c45ad7d95fd" datatype="html">
-        <source> Currency </source>
+      <trans-unit id="5049e204c14c648691ac775a64fb504467aeb549" datatype="html">
+        <source>Value</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">27,29</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="11eaf742abf26c33100374fb26e43652e72404cd" datatype="html">
-        <source> Platform </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">44,46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="82f0fe620ae57945a19bbca9fca7bf25db878895" datatype="html">
-        <source> Cash Balance </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">86,88</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="b6a48ff213c8178547714040f6141c8f9191c417" datatype="html">
-        <source> Value </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">121,123</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">156,158</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
-          <context context-type="linenumber">53,55</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">221</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">256</context>
         </context-group>
       </trans-unit>
       <trans-unit id="28f86ffd419b869711aa13f5e5ff54be6d70731c" datatype="html">
         <source>Edit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">199</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">371</context>
+          <context context-type="linenumber">365</context>
         </context-group>
       </trans-unit>
       <trans-unit id="826b25211922a1b46436589233cb6f1a163d89b7" datatype="html">
         <source>Delete</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
@@ -186,7 +189,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">387</context>
+          <context context-type="linenumber">381</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8280212421112607879" datatype="html">
@@ -219,6 +222,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1b6bc6d5daaa6ec75d201690bb6f782f30bf98a0" datatype="html">
@@ -278,25 +289,25 @@
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="f81252aed404932ab8fdacdffdec170d81e9f252" datatype="html">
-        <source> View Data </source>
+      <trans-unit id="30afc50625f30e4ac97acc23fd7e77031a341a8f" datatype="html">
+        <source>View Data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
-          <context context-type="linenumber">108,110</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="d6ec69d38eaafc83bfc61e435946cba819883953" datatype="html">
-        <source> View Stacktrace </source>
+      <trans-unit id="94e6ec0f0d021b88dfa4ef191447315fc1898f00" datatype="html">
+        <source>View Stacktrace</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
-          <context context-type="linenumber">116,118</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="fd3986becc8970ef71baa72b80104f0d5eca4214" datatype="html">
-        <source> Delete Job </source>
+      <trans-unit id="de50f7bcb18ed16c00012741202155acb5c61acf" datatype="html">
+        <source>Delete Job</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
-          <context context-type="linenumber">119,121</context>
+          <context context-type="linenumber">119</context>
         </context-group>
       </trans-unit>
       <trans-unit id="bfb6a28329c452254e363723ef9718b5178dfd1d" datatype="html">
@@ -315,6 +326,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">92,93</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="78a0f1c3cb3e3af864d2c21e621ba3b40b4e0afc" datatype="html">
@@ -347,19 +362,23 @@
           <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2a62a59d9424e9e869061ebf3e8f8b8f95411571" datatype="html">
-        <source> Save </source>
+      <trans-unit id="52c9a103b812f258bcddc3d90a6e3f46871d25fe" datatype="html">
+        <source>Save</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data-detail/market-data-detail-dialog/market-data-detail-dialog.html</context>
-          <context context-type="linenumber">46,48</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">21,23</context>
+          <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
-          <context context-type="linenumber">73,75</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
+          <context context-type="linenumber">208,213</context>
         </context-group>
       </trans-unit>
       <trans-unit id="86c6e9437398addbc04b6570de19b2cb4afe6084" datatype="html">
@@ -383,25 +402,18 @@
           <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="648e5c394f05f4d06bbab029a053dc0c438e6249" datatype="html">
-        <source> Gather Data </source>
+      <trans-unit id="f835caf68bff562ddd23556a651e834d5af3380b" datatype="html">
+        <source>Gather Data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">42,44</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4b9b3e18ec18303f753d9309933972950fdc194f" datatype="html">
-        <source> Gather Profile Data </source>
+      <trans-unit id="3c2847311660a1a00b728b72e8f3aae665e8ec93" datatype="html">
+        <source>Delete Profile Data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">49,51</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="e935a2a929aac5ee3ee0088f401edd0294c5964d" datatype="html">
-        <source> Delete Profile Data </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">57,59</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="912825160188860007" datatype="html">
@@ -483,6 +495,10 @@
       </trans-unit>
       <trans-unit id="cc65b67b46b69cf06ff1f16a909e61612c9d57b8" datatype="html">
         <source>Gather Profile Data</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">60</context>
@@ -569,32 +585,18 @@
           <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="eba04ed4ac2b4f7420a61ea9ab6f5823b3c25e6a" datatype="html">
-        <source> Registration </source>
+      <trans-unit id="7d6573fb998f3a1cf1356623b85850d9d10edaa9" datatype="html">
+        <source>Registration</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">10,12</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="7b0ec747824e94cba03c05f84ce61d1ad9f385f3" datatype="html">
-        <source> Accounts </source>
+      <trans-unit id="ee6a93295a4311c0968e99a6a8d0521684af361b" datatype="html">
+        <source>Engagement per Day</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">13,15</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5599feec05ef5f8c5701764e0fd810e2042eae56" datatype="html">
-        <source> Activities </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">16,18</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="21dadc70464ed99a4e17222fdd7f37f1bb1ef121" datatype="html">
-        <source> Engagement per Day </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
-          <context context-type="linenumber">19,21</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="083561a93ac2071e11aeac8580394b43fabf2f46" datatype="html">
@@ -639,6 +641,10 @@
       </trans-unit>
       <trans-unit id="4fe84c1d0eef5726c017f64c691145db7a61f879" datatype="html">
         <source>Accounts</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">43</context>
@@ -724,10 +730,6 @@
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">222</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html">
         <source>Features</source>
@@ -747,18 +749,22 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="51f33a11f3ab625a1be4597bb7055b8e5290415f" datatype="html">
-        <source> Sign In </source>
+      <trans-unit id="ba4f24bf9bf3dc4db3d6bc1b8b63339295f0b806" datatype="html">
+        <source>Sign In</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
-          <context context-type="linenumber">288,290</context>
+          <context context-type="linenumber">289</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="74945c5082c47c78c7373c503068440682655e45" datatype="html">
-        <source>Get Started </source>
+      <trans-unit id="802222cb4754d74846b18f651b1f94e21576185d" datatype="html">
+        <source>Get Started</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
-          <context context-type="linenumber">298,299</context>
+          <context context-type="linenumber">297</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5207635742003539443" datatype="html">
@@ -818,20 +824,12 @@
           <context context-type="linenumber">20,22</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">168</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
-          <context context-type="linenumber">32,34</context>
+          <context context-type="linenumber">31,33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/webauthn/webauthn-page.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="06ce3d665f2d87f69884667d21699ab1cc6fa585" datatype="html">
@@ -855,11 +853,11 @@
           <context context-type="linenumber">46,52</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="113310de7fe9a0dda96c9bb1ea21e856c40a3e02" datatype="html">
-        <source> Sign in </source>
+      <trans-unit id="287d3301a32a65a1b31116bda5d3a6463158c42a" datatype="html">
+        <source>Sign in</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/login-with-access-token-dialog/login-with-access-token-dialog.html</context>
-          <context context-type="linenumber">57,61</context>
+          <context context-type="linenumber">56,60</context>
         </context-group>
       </trans-unit>
       <trans-unit id="41c1e1f19aabc4a4bf198e4a189436a1f69257bb" datatype="html">
@@ -952,10 +950,6 @@
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">145</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">79</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="8cce9d03787606e0052d19c2ae7e7fa5ff785e94" datatype="html">
         <source>Buying Power</source>
@@ -983,10 +977,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">206</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6785405835169448749" datatype="html">
@@ -1032,39 +1022,25 @@
           <context context-type="linenumber">235</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="d340c166b09588948bdc08b3c9b39d62c7426fc2" datatype="html">
-        <source> Symbol </source>
+      <trans-unit id="2ee26d58f2707416e636887111d5603b35346c4a" datatype="html">
+        <source>Allocation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
-          <context context-type="linenumber">21,23</context>
+          <context context-type="linenumber">72</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="27285b3a37fbbb6dcd68219fcee230f74b1a18f6" datatype="html">
-        <source> Name </source>
+      <trans-unit id="3cc9c2ae277393b3946b38c088dabff671b1ee1b" datatype="html">
+        <source>Performance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
-          <context context-type="linenumber">36,38</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="1aae2ab2f2032df20ecdeb0ef1a15ca7e94dc5bd" datatype="html">
-        <source> Allocation </source>
+      <trans-unit id="4eb84de23219c85432e38fb4fbdeb6c0f103ff8b" datatype="html">
+        <source>Show all</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
-          <context context-type="linenumber">74,76</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5472bf71c256bab9e97c0df8b93f9e75910324ac" datatype="html">
-        <source> Performance </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
-          <context context-type="linenumber">94,96</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1e71c36a12b9adbe6e86b552cd105cd17a03ecfe" datatype="html">
-        <source> Show all </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/positions-table/positions-table.component.html</context>
-          <context context-type="linenumber">140,142</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6048892649018070225" datatype="html">
@@ -1144,40 +1120,8 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2eee1075add05a69b66d936e8de85477d7bf3c4d" datatype="html">
-        <source>Check the system status at <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://status.ghostfol.io&quot; title=&quot;Ghostfolio status&quot; &gt;"/>status.ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
-          <context context-type="linenumber">25,28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="53b9c324ee4aac53c6f7908e70ec2c6979e1d10b" datatype="html">
-        <source>Ghostfolio in Numbers</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
-          <context context-type="linenumber">105</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4b6dbf2d92858e82bcf6ae5dbc8dfb4b29d82ad0" datatype="html">
-        <source>FAQ</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
-          <context context-type="linenumber">183</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="047bbaa6688d60d0b0e5ca230d076450bdbf1e60" datatype="html">
-        <source>Changelog &amp; License</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
-          <context context-type="linenumber">196</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="b8d10cd55fae4e4ad4f87d28e18251694f159bf7" datatype="html">
         <source>Privacy Policy</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
-          <context context-type="linenumber">206</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/privacy-policy/privacy-policy-page.html</context>
           <context context-type="linenumber">4</context>
@@ -1185,10 +1129,6 @@
       </trans-unit>
       <trans-unit id="013acfd8797bf5ade4a15c71fa24178f913c4cae" datatype="html">
         <source>Blog</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.html</context>
-          <context context-type="linenumber">216</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/blog-page.html</context>
           <context context-type="linenumber">4</context>
@@ -1276,7 +1216,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">288</context>
+          <context context-type="linenumber">282</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3c33a66194384cf8c14e25170416767efa56fd98" datatype="html">
@@ -1286,99 +1226,95 @@
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="949d22ed9a32d993d15b853772f0f699d6a9af57" datatype="html">
-        <source> Upgrade </source>
+      <trans-unit id="f147d0f7f965cccee2e77294cba8e1b88021fa08" datatype="html">
+        <source>Upgrade</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">37,39</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="218afa01afa0cfc71b1a6507a3387763ecaa9332" datatype="html">
         <source>per year</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="de39d1e0259f376956df2f14bb285f98ad8a1bcc" datatype="html">
         <source>Try Premium</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e34001a9b79e0e3de1491662187e1d6b29c4c04e" datatype="html">
         <source>Redeem Coupon</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="049ff8024875936b5837b8f9a2441870458fe3cc" datatype="html">
         <source>Presenter View</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="31b2f7072bfeddc35fec6b3f731fc47d44eba155" datatype="html">
         <source> Hides sensitive values such as absolute performances and quantities. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">77,80</context>
+          <context context-type="linenumber">76,79</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="eda298b94d3510605c88818f1b3ad896f657d7f4" datatype="html">
-        <source> Base Currency </source>
+      <trans-unit id="68baf7bff1f9242d0f6e4c0952dafefa6553cecd" datatype="html">
+        <source>Base Currency</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">94,96</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6b939b00e8481ed8aa8a24d8add7a209d7116759" datatype="html">
         <source>Locale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">133</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5869b28c16bbf3be96714ed1632366a4da9da35d" datatype="html">
-        <source> Date and number format </source>
+      <trans-unit id="4402006eb2c97591dd8c87a5bd8f721fe9e4dc00" datatype="html">
+        <source>Date and number format</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">135,137</context>
+          <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="c4857058e4222c27858692d3d3aaf8b5a005ef44" datatype="html">
-        <source> View Mode </source>
+      <trans-unit id="234d001ccf20d47ac6a2846bb029eebb61444d15" datatype="html">
+        <source>View Mode</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">158,160</context>
+          <context context-type="linenumber">158</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9ae348ee3a7319c2fc4794fa8bc425999d355f8f" datatype="html">
         <source>Sign in with fingerprint</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
       <trans-unit id="83c4d4d764d2e2725ab8e919ec16ac400e1f290a" datatype="html">
         <source>User ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">190</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9021c579c084e68d9db06a569d76f024111c6c54" datatype="html">
         <source>Granted Access</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5e41f1b4c46ad9e0a9bc83fa36445483aa5cc324" datatype="html">
@@ -1433,6 +1369,10 @@
       <trans-unit id="32072c7fb0469aaf82d256a59b3e0d6ecce973b9" datatype="html">
         <source>Currency</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
@@ -1440,9 +1380,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">76,77</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">109</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="237bd6e6d07f448b7884f05f56a20e30df8622c4" datatype="html">
         <source>Cash Balance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">32</context>
@@ -1450,6 +1398,10 @@
       </trans-unit>
       <trans-unit id="f53dff66901984e217d461bf10fde4e26612c3d3" datatype="html">
         <source>Platform</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
+          <context context-type="linenumber">35</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">44</context>
@@ -1490,309 +1442,11 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6992d42edf46c12a4a9ecb3b7a46761a967c8ee1" datatype="html">
-        <source>Frequently Asked Questions (FAQ)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8862bc3bf3a4c34361993fffd4d592c8fff5ec63" datatype="html">
-        <source>What is Ghostfolio?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="a5b57781077724512f45038b6094f6e61c2015ed" datatype="html">
-        <source> Ghostfolio is a lightweight, open source wealth management application for individuals to keep track of their net worth. The software empowers you to make solid, data-driven investment decisions. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">7,11</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c0e51e48dd9241e8babf9f29e8336afd7eafab3d" datatype="html">
-        <source>What assets can I track with Ghostfolio?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="d780b08748b9959042dafcf14a9b33d852278cac" datatype="html">
-        <source> With Ghostfolio, you can keep track of various assets like stocks, ETFs or cryptocurrencies. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">17,20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="cd42692f6f714bb53ee7331dcd2248cf12af4e5b" datatype="html">
-        <source>What else is included in Ghostfolio?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="db8996316633ac094e69b7b2403c7d7339fe0b43" datatype="html">
-        <source> Please find a feature overview to manage your wealth <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/features&apos;]&quot;&gt;"/>here<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">26,29</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="77b6fb69ad1d6f3fd857bcddf45f1cdb590627a6" datatype="html">
-        <source>How do I start?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="0f4ac030d2e4b14156479b4e975e3062a68c1001" datatype="html">
-        <source> You can sign up via the “<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/register&apos;]&quot; &gt;"/>Get Started<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>” button at the top of the page. You have multiple options to join Ghostfolio: Create an account with a security token, using <x id="START_LINK_1" equiv-text="&lt;a href=&quot;../en/blog/2022/07/ghostfolio-meets-internet-identity&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> or <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Google Sign<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>. We will guide you to set up your portfolio. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">33,42</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="b551dd5354b491d5ca4037c715f65f2e6f1f60c2" datatype="html">
-        <source>Can I use Ghostfolio anonymously?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f5f0aba31c8f75c0f99704f29ba4455d01dc4847" datatype="html">
-        <source> Yes, the authentication systems (via security token or <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2022/07/ghostfolio-meets-internet-identity&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>) enable you to sign in securely and anonymously to Ghostfolio. There is no need for an email address, phone number, or a username. </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">46,52</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="270ef72e7894b5eee63c20f1bff4c117f5d221ea" datatype="html">
-        <source>How can Ghostfolio be free?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="293afca8afc9b8e8309ddc947467929c70848ec2" datatype="html">
-        <source>This project is driven by the efforts of contributors from around the world. The <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>source code<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is fully available as open source software (OSS). Our <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> users and <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://www.buymeacoffee.com/ghostfolio&quot;&gt;"/>sponsors<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> allow us to run a free, limited plan for new investors.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">57,63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f671b39e2b04b5f43aa10b1f216772f2c06d9e21" datatype="html">
-        <source>Is it really free?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="d1640e4903c1f75aa3beba644ab8ea154185fab8" datatype="html">
-        <source>Yes, it is! Our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>pricing page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> details everything you get for free.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">69,71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="76c055bdd8f09b20dd2e7d4ffee2516156125ab9" datatype="html">
-        <source>What is Ghostfolio Premium?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="23c360b07ceeb5e8710d62bcf3e421f6e15455fa" datatype="html">
-        <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a fully managed Ghostfolio cloud offering for ambitious investors. The revenue is used to cover the hosting infrastructure. It is the Open Source code base with some extras like the market overview.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">77,80</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="362d8bed3e56bf91a2b9b117ac06e1c9a5c9cf7c" datatype="html">
-        <source>Can I start with a trial version?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="d59f0f7e8c4a8c611e991b536a0751c1d70af91c" datatype="html">
-        <source>Yes, you can try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by signing up for Ghostfolio and applying for a trial (see “My Ghostfolio”). It’s easy, free and there is no commitment. You can stop using it at any time.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">86,90</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f9552766d30e5c75410ee808252a88f469a28de3" datatype="html">
-        <source>Which devices are supported?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">94</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="3857de6a20ee308a2f24d36fb1f871d2e008ea9b" datatype="html">
-        <source>Ghostfolio works in every modern web browser on smartphones, tablets and desktop computers (where you have even more analysis options and statistics). For Android users, there is a dedicated Ghostfolio app available in the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot; &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">96,103</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6772ef3e95415a3d006abeb82af5e9c7baac0288" datatype="html">
-        <source>Ghostfolio sounds cool, how can I get involved?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">108</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="af87cf8c2f87296336a7df63966b141494e63561" datatype="html">
-        <source>Any support for Ghostfolio is welcome. Be it with a <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> subscription to finance the hosting, a positive rating in the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot; &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, a star on <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, feedback, bug reports, feature requests and of course contributions! You can reach us by email at <x id="START_LINK_3" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> or on Twitter <x id="START_LINK_4" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">111,123</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="d6dc1aeef50bf35c649d1eff9ba01fdb23f1c52b" datatype="html">
-        <source>Got any other questions?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">127</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="927f00fb1a461665df2225d3ce48f5bfcc7e2dce" datatype="html">
-        <source>Join the Ghostfolio <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; &gt;"/>Slack community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, tweet to <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or send an e-mail to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">129,136</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="6599364831830861985" datatype="html">
         <source>Features</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page-routing.module.ts</context>
           <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="764c4b6614bcb398f476cd53d07ce9fb138fc2fe" datatype="html">
-        <source> Features </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">4,6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8bbe5db3e351356b09093540ba6049fb1a4025f7" datatype="html">
-        <source>Stocks</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="3da55a109f8deb0ad08e6ef251d671aedc9cb86d" datatype="html">
-        <source>ETFs</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="0257a39bc8708671af56049fd29692053cfdc2c1" datatype="html">
-        <source>Bonds</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="840ac161ba55cea730f1b843665ea080997758c1" datatype="html">
-        <source>Cryptocurrencies</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="99395b471152c8b3d9d6c13f1b8eeb1aa427d959" datatype="html">
-        <source>Wealth Items</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="0a5577da9dc0b9d05ef768b08f18238b370d812a" datatype="html">
-        <source>Import and Export</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">90</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="12cb3e586df6e002cab10eb3fbe2ad22026109cc" datatype="html">
-        <source>Multi-Accounts</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">98</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f1b8545b429cec4bc2b558f14e78e540d3e9d489" datatype="html">
-        <source>Portfolio Calculations</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">110</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="a6f322a22d0ae0b95dd9c70d43ba2c92de7ed49b" datatype="html">
-        <source>Portfolio Allocations</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">128</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c943d5ecc32b916a210d7c984fe5f55771ad0b1a" datatype="html">
-        <source>Dark Mode</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">144</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="b5dc65493e3e15fbe15b7d9c17f7626321d82e76" datatype="html">
-        <source>Zen Mode</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">155</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dbf8136366f55644df4ce493c233c74c12d79257" datatype="html">
-        <source>Market Mood</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">169</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="122bc975c17dc774c324f7d3ea82517ff3ac7c10" datatype="html">
-        <source>Static Analysis</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">184</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ec2d3a89b366d1ca80be056e9e71f0165ae75c7b" datatype="html">
-        <source>Community</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">200</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="b1153caa5b48efa22a2d312e07b8e28cf3e0e1ea" datatype="html">
-        <source>Open Source Software</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">217</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c3b1dd9b4529bd13e214d24584f4bc4fa411c106" datatype="html">
-        <source> Get Started </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
-          <context context-type="linenumber">235,237</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">206,208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2614607010577950577" datatype="html">
@@ -1804,46 +1458,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/zen/zen-page-routing.module.ts</context>
           <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="1be07764640e49ab8b6f59b079e31d42083abf5b" datatype="html">
-        <source> Manage your wealth like a boss </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">4,6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="50fefcca3f8b7dd5a34141329118014a8c4b7d1b" datatype="html">
-        <source> Get Started </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">35,37</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">165,167</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">132,134</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="70305591fa8e46cf3d43c2e6b3e1221f47c02458" datatype="html">
-        <source> Live Demo </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">44,46</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">174,176</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8c11c506c55700ca9883f360c52df5a432a51dcf" datatype="html">
-        <source>Learn more about Ghostfolio</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
-          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7307236732616849044" datatype="html">
@@ -1892,11 +1506,11 @@
           <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="a9376cafc1c65d05c55099c13b80357ce8b991a0" datatype="html">
-        <source> By Holding</source>
+      <trans-unit id="b64539bb7815eb3275b55ad723d3897fc6ba8d23" datatype="html">
+        <source>By Holding</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
-          <context context-type="linenumber">97,98</context>
+          <context context-type="linenumber">98</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9f86714c9a6b74e13c96ab02102ce40c34fe13b9" datatype="html">
@@ -2115,41 +1729,6 @@
           <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="1fade3d148be9161f8723bb514c5fcbcdeb62c77" datatype="html">
-        <source> X-ray </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/report/report-page.html</context>
-          <context context-type="linenumber">4,6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6e619b6be887b6d0d9636e92680cbadfa4bfe37f" datatype="html">
-        <source> Ghostfolio X-ray uses static analysis to identify potential issues and risks in your portfolio. <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;d-none&quot; &gt;"/>It will be highly configurable in the future: activate / deactivate rules and customize the thresholds to match your personal investment style.<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/report/report-page.html</context>
-          <context context-type="linenumber">7,14</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="50760c2140335b2324deaee120f40d9aa64b3238" datatype="html">
-        <source>Currency Cluster Risks</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/report/report-page.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c7b797e5df289241021db16010efb6ac3c6cfb86" datatype="html">
-        <source>Account Cluster Risks</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/report/report-page.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="c20172223f84462032664d717d739297e5a9e2fe" datatype="html">
-        <source>Fees</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/report/report-page.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="72ba3bcdd8350cb8bf462e217a28ec7f7a48bb44" datatype="html">
         <source>Update activity</source>
         <context-group purpose="location">
@@ -2205,6 +1784,10 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">106,107</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="6713459747f0f67e53a8a0be0bba45ed324bc112" datatype="html">
         <source>Unit Price</source>
@@ -2212,12 +1795,20 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">112,113</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="160f1ffbd26df073d0fbd02cf8ce0d8cea7603b0" datatype="html">
         <source>Fee</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">131,132</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
+          <context context-type="linenumber">188</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5c54befce78d70e20c215f10a00e617245f53bc9" datatype="html">
@@ -2239,13 +1830,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">169,171</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f8b53b407af242e77dc3391947f23988f3451e64" datatype="html">
-        <source> Save </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
-          <context context-type="linenumber">209,214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2309808536212982229" datatype="html">
@@ -2274,41 +1858,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page-routing.module.ts</context>
           <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ee2ab60d7e9f9d176ff93e48f6c03f0f432759be" datatype="html">
-        <source> Pricing Plans </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">4,6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ebc1c2623f53ce48c714e00161a2f31f732c815b" datatype="html">
-        <source>Open Source</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="380ab580741bec31346978e7cab8062d6970408d" datatype="html">
-        <source>Basic</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7cc75a1915bf9ca24e7bd793f95dc84c669b362c" datatype="html">
-        <source>Premium</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">127</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="0518b78d9ebfa536f1369bde42f0ee8c38e1a9ef" datatype="html">
-        <source> Upgrade Plan </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">199,201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9201103587777813545" datatype="html">
@@ -2353,25 +1902,18 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="f5bd7755846b5925c8a6c19895fd97422a0fb25d" datatype="html">
-        <source> Create Account </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
-          <context context-type="linenumber">28,30</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="e1c4e91c3cf021ce1810d037887e0d7d4d1cface" datatype="html">
         <source>Continue with Internet Identity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
-          <context context-type="linenumber">42,44</context>
+          <context context-type="linenumber">41,43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c7eb7fc17d2f646c6c835f4da0b96f255b515cf4" datatype="html">
         <source>Continue with Google</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/register-page.html</context>
-          <context context-type="linenumber">49,54</context>
+          <context context-type="linenumber">48,53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3a6e5a6aa78ca864f6542410c5dafb6334538106" datatype="html">
@@ -2409,46 +1951,25 @@
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="c36e31ac447d2074fe450f43484627e4cec6b2ff" datatype="html">
-        <source> Oops, authentication has failed. </source>
+      <trans-unit id="495a0574bd9a3d619a8b16dd5b893c6f617beded" datatype="html">
+        <source>Oops, authentication has failed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/webauthn/webauthn-page.html</context>
-          <context context-type="linenumber">17,19</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4d08aec7737baac0e166c199d3ae47520527657a" datatype="html">
-        <source> Try again </source>
+      <trans-unit id="bc22a9b838eed800a62c38fcb16425d8e255c7d1" datatype="html">
+        <source>Try again</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/webauthn/webauthn-page.html</context>
-          <context context-type="linenumber">26,28</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="cb9ba3a7324d2dd62652b54881a33adb8075aef5" datatype="html">
-        <source> Go back to Home Page </source>
+      <trans-unit id="52cd09f578994ef3573e434007c1f9c86d3e8fc0" datatype="html">
+        <source>Go back to Home Page</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/webauthn/webauthn-page.html</context>
-          <context context-type="linenumber">30,32</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="045457876bd05be8b81a314b6197f10707ef04f5" datatype="html">
-        <source> Date </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">39,41</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7658c6f658289ac5fbf7cb63cba8e11177bb2c77" datatype="html">
-        <source> Type </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">51,53</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="00a3c8bdeb2f6d42240ee868c1dd3b99e3897476" datatype="html">
-        <source> Symbol </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">83,85</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="86022280b7836d1aff7fdc0182415b041ae3625c" datatype="html">
@@ -2458,78 +1979,39 @@
           <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="1d76fb4bb0283ef36989311caa7b1f40ca5de2f7" datatype="html">
-        <source> Currency </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">109,111</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="e585410163792281410fd4845447625338101d15" datatype="html">
-        <source> Quantity </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">131,133</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="555b960a4b1a3b09a00f31ef1cd67dbf1d7c942c" datatype="html">
-        <source> Unit Price </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">161,163</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="17d3ed51b73c5cf929f443079e5eb7bb7d9cc1e1" datatype="html">
-        <source> Fee </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">191,193</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="450b8a5b26db635b58cf9a7d8bda60a476fff153" datatype="html">
-        <source> Value </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">225,227</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">261,263</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ed1d0d3031aba025b9bf280c1d7c54f44982ed46" datatype="html">
         <source>Import Activities</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">325</context>
+          <context context-type="linenumber">319</context>
         </context-group>
       </trans-unit>
       <trans-unit id="446d1376bd7f6cf33d75d7a6022c33d2910327a2" datatype="html">
         <source>Export Activities</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">335</context>
+          <context context-type="linenumber">329</context>
         </context-group>
       </trans-unit>
       <trans-unit id="db4ffd639aac51ba929921856f8b15ea29e53695" datatype="html">
         <source>Export Drafts as ICS</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">345</context>
+          <context context-type="linenumber">339</context>
         </context-group>
       </trans-unit>
       <trans-unit id="54a4a3132b693575728a45a5f3154ad4c9af404b" datatype="html">
         <source>Clone</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">375</context>
+          <context context-type="linenumber">369</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d8c19dd72422ee41c5ca9ad38b80592239e0fd08" datatype="html">
         <source>Export Draft as ICS</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
-          <context context-type="linenumber">383</context>
+          <context context-type="linenumber">377</context>
         </context-group>
       </trans-unit>
       <trans-unit id="670983159637074283" datatype="html">
@@ -2599,7 +2081,7 @@
         <source>Beta</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">117</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c004f99bac91f7dc28e87d458f80e5035ae99884" datatype="html">
@@ -2613,7 +2095,7 @@
         <source>Language</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
     </body>

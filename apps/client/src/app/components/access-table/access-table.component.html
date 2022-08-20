@@ -43,8 +43,8 @@
         <ion-icon name="ellipsis-vertical"></ion-icon>
       </button>
       <mat-menu #transactionMenu="matMenu" xPosition="before">
-        <button i18n mat-menu-item (click)="onDeleteAccess(element.id)">
-          Revoke
+        <button mat-menu-item (click)="onDeleteAccess(element.id)">
+          <ng-container i18n>Revoke</ng-container>
         </button>
       </mat-menu>
     </td>

@@ -285,17 +285,16 @@
       mat-flat-button
       ><ion-icon name="logo-github"></ion-icon
     ></a>
-    <button class="mx-1" i18n mat-flat-button (click)="openLoginDialog()">
-      Sign In
+    <button class="mx-1" mat-flat-button (click)="openLoginDialog()">
+      <ng-container i18n>Sign In</ng-container>
     </button>
     <a
       *ngIf="currentRoute !== 'register' && !info?.isReadOnlyMode"
       class="d-none d-sm-block"
       color="primary"
-      i18n
       mat-flat-button
       [routerLink]="['/register']"
-      >Get Started
+      ><ng-container i18n>Get Started</ng-container>
     </a>
   </ng-container>
 </mat-toolbar>

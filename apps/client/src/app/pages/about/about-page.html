@@ -1,7 +1,7 @@
 <div class="container">
   <div class="mb-5 row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3" i18n>About Ghostfolio</h3>
+      <h3 class="d-flex justify-content-center mb-3">About Ghostfolio</h3>
       <div class="about-container">
         <p>
           Ghostfolio is a lightweight wealth management application for
@@ -21,7 +21,7 @@
           <ng-container *ngIf="version">
             This instance is running Ghostfolio {{ version }}.
           </ng-container>
-          <ng-container *ngIf="hasPermissionForStatistics" i18n
+          <ng-container *ngIf="hasPermissionForStatistics"
             >Check the system status at
             <a href="https://status.ghostfol.io" title="Ghostfolio status"
               >status.ghostfol.io</a
@@ -102,7 +102,7 @@
 
   <div *ngIf="hasPermissionForStatistics" class="mb-5 row">
     <div class="col">
-      <h3 class="mb-3 text-center" i18n>Ghostfolio in Numbers</h3>
+      <h3 class="mb-3 text-center">Ghostfolio in Numbers</h3>
       <mat-card>
         <mat-card-content>
           <div class="row">
@@ -177,7 +177,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-stroked-button
         [routerLink]="['/faq']"
         >FAQ</a
@@ -190,7 +189,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-stroked-button
         [routerLink]="['/about', 'changelog']"
         >Changelog & License</a
@@ -200,7 +198,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-stroked-button
         [routerLink]="['/about', 'privacy-policy']"
         >Privacy Policy</a
@@ -210,7 +207,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-flat-button
         [routerLink]="['/blog']"
         >Blog</a

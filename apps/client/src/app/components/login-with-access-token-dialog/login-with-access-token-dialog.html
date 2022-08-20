@@ -49,12 +49,11 @@
   <div>
     <button
       color="primary"
-      i18n
       mat-flat-button
       [disabled]="!data.accessToken"
       [mat-dialog-close]="data"
     >
-      Sign in
+      <ng-container i18n>Sign in</ng-container>
     </button>
   </div>
 </div>

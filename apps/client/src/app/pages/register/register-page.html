@@ -20,12 +20,11 @@
         <button
           class="d-inline-block"
           color="primary"
-          i18n
           mat-flat-button
           [disabled]="!demoAuthToken || info?.isReadOnlyMode"
           (click)="createAccount()"
         >
-          Create Account
+          <ng-container i18n>Create Account</ng-container>
         </button>
         <ng-container *ngIf="hasPermissionForSocialLogin">
           <div class="my-3 text-muted" i18n>or</div>

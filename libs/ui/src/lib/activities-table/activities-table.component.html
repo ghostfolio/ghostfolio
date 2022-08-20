@@ -36,8 +36,8 @@
       ></td>
     </ng-container>
     <ng-container matColumnDef="date">
-      <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-        Date
+      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+        <ng-container i18n>Date</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
@@ -48,8 +48,8 @@
     </ng-container>
 
     <ng-container matColumnDef="type">
-      <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-        Type
+      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+        <ng-container i18n>Type</ng-container>
       </th>
       <td *matCellDef="let element" mat-cell class="px-1">
         <div
@@ -80,8 +80,8 @@
     </ng-container>
 
     <ng-container matColumnDef="symbol">
-      <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-        Symbol
+      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+        <ng-container i18n>Symbol</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex align-items-center">
@@ -103,11 +103,10 @@
       <th
         *matHeaderCellDef
         class="d-none d-lg-table-cell px-1"
-        i18n
         mat-header-cell
         mat-sort-header
       >
-        Currency
+        <ng-container i18n>Currency</ng-container>
       </th>
       <td
         *matCellDef="let element"
@@ -125,11 +124,10 @@
       <th
         *matHeaderCellDef
         class="d-none d-lg-table-cell justify-content-end px-1"
-        i18n
         mat-header-cell
         mat-sort-header
       >
-        Quantity
+        <ng-container i18n>Quantity</ng-container>
       </th>
       <td
         *matCellDef="let element"
@@ -155,11 +153,10 @@
       <th
         *matHeaderCellDef
         class="d-none d-lg-table-cell justify-content-end px-1"
-        i18n
         mat-header-cell
         mat-sort-header
       >
-        Unit Price
+        <ng-container i18n>Unit Price</ng-container>
       </th>
       <td
         *matCellDef="let element"
@@ -185,11 +182,10 @@
       <th
         *matHeaderCellDef
         class="d-none d-lg-table-cell justify-content-end px-1"
-        i18n
         mat-header-cell
         mat-sort-header
       >
-        Fee
+        <ng-container i18n>Fee</ng-container>
       </th>
       <td
         *matCellDef="let element"
@@ -219,11 +215,10 @@
       <th
         *matHeaderCellDef
         class="d-none d-lg-table-cell justify-content-end px-1"
-        i18n
         mat-header-cell
         mat-sort-header
       >
-        Value
+        <ng-container i18n>Value</ng-container>
       </th>
       <td
         *matCellDef="let element"
@@ -255,11 +250,10 @@
       <th
         *matHeaderCellDef
         class="d-lg-none d-xl-none justify-content-end px-1"
-        i18n
         mat-header-cell
         mat-sort-header
       >
-        Value
+        <ng-container i18n>Value</ng-container>
       </th>
       <td *matCellDef="let element" class="d-lg-none d-xl-none px-1" mat-cell>
         <div class="d-flex justify-content-end">

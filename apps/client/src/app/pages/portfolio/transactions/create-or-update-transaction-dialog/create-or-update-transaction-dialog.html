@@ -201,12 +201,11 @@
       <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
       <button
         color="primary"
-        i18n
         mat-flat-button
         type="submit"
         [disabled]="!activityForm.valid"
       >
-        Save
+        <ng-container i18n>Save</ng-container>
       </button>
     </div>
   </div>

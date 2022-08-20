@@ -36,26 +36,23 @@
                 </button>
                 <mat-menu #accountMenu="matMenu" xPosition="before">
                   <button
-                    i18n
                     mat-menu-item
                     (click)="onGatherSymbol({dataSource: item.dataSource, symbol: item.symbol})"
                   >
-                    Gather Data
+                    <ng-container i18n>Gather Data</ng-container>
                   </button>
                   <button
-                    i18n
                     mat-menu-item
                     (click)="onGatherProfileDataBySymbol({dataSource: item.dataSource, symbol: item.symbol})"
                   >
-                    Gather Profile Data
+                    <ng-container i18n>Gather Profile Data</ng-container>
                   </button>
                   <button
-                    i18n
                     mat-menu-item
                     [disabled]="item.activityCount !== 0"
                     (click)="onDeleteProfileData({dataSource: item.dataSource, symbol: item.symbol})"
                   >
-                    Delete Profile Data
+                    <ng-container i18n>Delete Profile Data</ng-container>
                   </button>
                 </mat-menu>
               </td>
