@@ -1233,35 +1233,35 @@
         <source>Please enter your coupon code:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4420880039966769543" datatype="html">
         <source>Could not redeem coupon code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">231</context>
+          <context context-type="linenumber">236</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4819099731531004979" datatype="html">
         <source>Coupon code has been redeemed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">243</context>
+          <context context-type="linenumber">248</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7967484035994732534" datatype="html">
         <source>Reload</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">244</context>
+          <context context-type="linenumber">249</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7963559562180316948" datatype="html">
         <source>Do you really want to remove this sign in method?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
       <trans-unit id="29881a45dafbe5aa05cd9d0441a4c0c2fb06df92" datatype="html">
@@ -1343,42 +1343,42 @@
         <source>Locale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5869b28c16bbf3be96714ed1632366a4da9da35d" datatype="html">
         <source> Date and number format </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">117,119</context>
+          <context context-type="linenumber">135,137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c4857058e4222c27858692d3d3aaf8b5a005ef44" datatype="html">
         <source> View Mode </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">140,142</context>
+          <context context-type="linenumber">158,160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9ae348ee3a7319c2fc4794fa8bc425999d355f8f" datatype="html">
         <source>Sign in with fingerprint</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">180</context>
         </context-group>
       </trans-unit>
       <trans-unit id="83c4d4d764d2e2725ab8e919ec16ac400e1f290a" datatype="html">
         <source>User ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">191</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9021c579c084e68d9db06a569d76f024111c6c54" datatype="html">
         <source>Granted Access</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">182</context>
+          <context context-type="linenumber">200</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5e41f1b4c46ad9e0a9bc83fa36445483aa5cc324" datatype="html">
@@ -1547,122 +1547,122 @@
         </context-group>
       </trans-unit>
       <trans-unit id="0f4ac030d2e4b14156479b4e975e3062a68c1001" datatype="html">
-        <source> You can sign up via the “<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/register&apos;]&quot; &gt;"/>Get Started<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>” button at the top of the page. You have multiple options to join Ghostfolio: Create an account with a security token, using <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;[&apos;/en&apos;, &apos;blog&apos;, &apos;2022&apos;, &apos;07&apos;, &apos;ghostfolio-meets-internet-identity&apos;]&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> or <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Google Sign<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>. We will guide you to set up your portfolio. </source>
+        <source> You can sign up via the “<x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/register&apos;]&quot; &gt;"/>Get Started<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>” button at the top of the page. You have multiple options to join Ghostfolio: Create an account with a security token, using <x id="START_LINK_1" equiv-text="&lt;a href=&quot;../en/blog/2022/07/ghostfolio-meets-internet-identity&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> or <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Google Sign<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/>. We will guide you to set up your portfolio. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">33,43</context>
+          <context context-type="linenumber">33,42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b551dd5354b491d5ca4037c715f65f2e6f1f60c2" datatype="html">
         <source>Can I use Ghostfolio anonymously?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f5f0aba31c8f75c0f99704f29ba4455d01dc4847" datatype="html">
-        <source> Yes, the authentication systems (via security token or <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/en&apos;, &apos;blog&apos;, &apos;2022&apos;, &apos;07&apos;, &apos;ghostfolio-meets-internet-identity&apos;]&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>) enable you to sign in securely and anonymously to Ghostfolio. There is no need for an email address, phone number, or a username. </source>
+        <source> Yes, the authentication systems (via security token or <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;../en/blog/2022/07/ghostfolio-meets-internet-identity&quot; &gt;"/>Internet Identity<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>) enable you to sign in securely and anonymously to Ghostfolio. There is no need for an email address, phone number, or a username. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">47,54</context>
+          <context context-type="linenumber">46,52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="270ef72e7894b5eee63c20f1bff4c117f5d221ea" datatype="html">
         <source>How can Ghostfolio be free?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="293afca8afc9b8e8309ddc947467929c70848ec2" datatype="html">
         <source>This project is driven by the efforts of contributors from around the world. The <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>source code<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is fully available as open source software (OSS). Our <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> users and <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://www.buymeacoffee.com/ghostfolio&quot;&gt;"/>sponsors<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> allow us to run a free, limited plan for new investors.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">59,65</context>
+          <context context-type="linenumber">57,63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f671b39e2b04b5f43aa10b1f216772f2c06d9e21" datatype="html">
         <source>Is it really free?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d1640e4903c1f75aa3beba644ab8ea154185fab8" datatype="html">
         <source>Yes, it is! Our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>pricing page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> details everything you get for free.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">71,73</context>
+          <context context-type="linenumber">69,71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="76c055bdd8f09b20dd2e7d4ffee2516156125ab9" datatype="html">
         <source>What is Ghostfolio Premium?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit id="23c360b07ceeb5e8710d62bcf3e421f6e15455fa" datatype="html">
         <source><x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> is a fully managed Ghostfolio cloud offering for ambitious investors. The revenue is used to cover the hosting infrastructure. It is the Open Source code base with some extras like the market overview.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">79,82</context>
+          <context context-type="linenumber">77,80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="362d8bed3e56bf91a2b9b117ac06e1c9a5c9cf7c" datatype="html">
         <source>Can I start with a trial version?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d59f0f7e8c4a8c611e991b536a0751c1d70af91c" datatype="html">
         <source>Yes, you can try <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by signing up for Ghostfolio and applying for a trial (see “My Ghostfolio”). It’s easy, free and there is no commitment. You can stop using it at any time.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">88,92</context>
+          <context context-type="linenumber">86,90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f9552766d30e5c75410ee808252a88f469a28de3" datatype="html">
         <source>Which devices are supported?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3857de6a20ee308a2f24d36fb1f871d2e008ea9b" datatype="html">
         <source>Ghostfolio works in every modern web browser on smartphones, tablets and desktop computers (where you have even more analysis options and statistics). For Android users, there is a dedicated Ghostfolio app available in the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot; &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">98,105</context>
+          <context context-type="linenumber">96,103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6772ef3e95415a3d006abeb82af5e9c7baac0288" datatype="html">
         <source>Ghostfolio sounds cool, how can I get involved?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="af87cf8c2f87296336a7df63966b141494e63561" datatype="html">
         <source>Any support for Ghostfolio is welcome. Be it with a <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;[&apos;/pricing&apos;]&quot;&gt;"/>Ghostfolio Premium<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> subscription to finance the hosting, a positive rating in the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa&quot; &gt;"/>Google Play Store<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, a star on <x id="START_LINK_2" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>, feedback, bug reports, feature requests and of course contributions! You can reach us by email at <x id="START_LINK_3" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> or on Twitter <x id="START_LINK_4" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">113,125</context>
+          <context context-type="linenumber">111,123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d6dc1aeef50bf35c649d1eff9ba01fdb23f1c52b" datatype="html">
         <source>Got any other questions?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="927f00fb1a461665df2225d3ce48f5bfcc7e2dce" datatype="html">
         <source>Join the Ghostfolio <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg&quot; &gt;"/>Slack community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, tweet to <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://twitter.com/ghostfolio_&quot;&gt;"/>@ghostfolio_<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or send an e-mail to <x id="START_LINK_2" equiv-text="&lt;a href=&quot;mailto:hi@ghostfol.io&quot;&gt;"/>hi@ghostfol.io<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page.html</context>
-          <context context-type="linenumber">131,138</context>
+          <context context-type="linenumber">129,136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6599364831830861985" datatype="html">
@@ -2595,11 +2595,11 @@
           <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="816738098ea4c671c96d6f25e0424bb0483c7544" datatype="html">
-        <source>%</source>
+      <trans-unit id="313fcf0f8dac5ff5800a3e6bd67cb1955089ccca" datatype="html">
+        <source>Beta</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c004f99bac91f7dc28e87d458f80e5035ae99884" datatype="html">
@@ -2607,6 +2607,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/no-transactions-info/no-transactions-info.component.html</context>
           <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="fe46ccaae902ce974e2441abe752399288298619" datatype="html">
+        <source>Language</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
     </body>
