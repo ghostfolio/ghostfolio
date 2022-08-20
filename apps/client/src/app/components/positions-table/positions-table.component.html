@@ -18,8 +18,8 @@
   </ng-container>
 
   <ng-container matColumnDef="symbol">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell mat-sort-header>
-      Symbol
+    <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+      <ng-container i18n>Symbol</ng-container>
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <span [title]="element.name">{{ element.symbol | gfSymbol }}</span>
@@ -30,11 +30,10 @@
     <th
       *matHeaderCellDef
       class="d-none d-lg-table-cell px-1"
-      i18n
       mat-header-cell
       mat-sort-header
     >
-      Name
+      <ng-container i18n>Name</ng-container>
     </th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       <ng-container *ngIf="element.name !== element.symbol">{{
@@ -47,11 +46,10 @@
     <th
       *matHeaderCellDef
       class="d-none d-lg-table-cell justify-content-end px-1"
-      i18n
       mat-header-cell
       mat-sort-header
     >
-      Value
+      <ng-container i18n>Value</ng-container>
     </th>
     <td class="d-none d-lg-table-cell px-1" mat-cell *matCellDef="let element">
       <div class="d-flex justify-content-end">
@@ -68,11 +66,10 @@
     <th
       *matHeaderCellDef
       class="justify-content-end px-1"
-      i18n
       mat-header-cell
       mat-sort-header
     >
-      Allocation
+      <ng-container i18n>Allocation</ng-container>
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <div class="d-flex justify-content-end">
@@ -89,10 +86,9 @@
     <th
       *matHeaderCellDef
       class="d-none d-lg-table-cell px-1 text-right"
-      i18n
       mat-header-cell
     >
-      Performance
+      <ng-container i18n>Performance</ng-container>
     </th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       <div class="d-flex justify-content-end">
@@ -137,8 +133,8 @@
   *ngIf="dataSource.data.length > pageSize && !isLoading"
   class="my-3 text-center"
 >
-  <button i18n mat-stroked-button (click)="onShowAllPositions()">
-    Show all
+  <button mat-stroked-button (click)="onShowAllPositions()">
+    <ng-container i18n>Show all</ng-container>
   </button>
 </div>
 

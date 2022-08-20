@@ -14,12 +14,11 @@
     <button i18n mat-button (click)="onCancel()">Cancel</button>
     <button
       color="primary"
-      i18n
       mat-flat-button
       [disabled]="!addAccessForm.form.valid"
       [mat-dialog-close]="data"
     >
-      Save
+      <ng-container i18n>Save</ng-container>
     </button>
   </div>
 </form>

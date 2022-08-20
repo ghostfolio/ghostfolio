@@ -19,13 +19,8 @@
   </ng-container>
 
   <ng-container matColumnDef="currency">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell px-1"
-      i18n
-      mat-header-cell
-    >
-      Currency
+    <th *matHeaderCellDef class="d-none d-lg-table-cell px-1" mat-header-cell>
+      <ng-container i18n>Currency</ng-container>
     </th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       {{ element.currency }}
@@ -36,13 +31,8 @@
   </ng-container>
 
   <ng-container matColumnDef="platform">
-    <th
-      *matHeaderCellDef
-      class="d-none d-lg-table-cell px-1"
-      i18n
-      mat-header-cell
-    >
-      Platform
+    <th *matHeaderCellDef class="d-none d-lg-table-cell px-1" mat-header-cell>
+      <ng-container i18n>Platform</ng-container>
     </th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       <div class="d-flex">
@@ -81,10 +71,9 @@
     <th
       *matHeaderCellDef
       class="d-none d-lg-table-cell px-1 text-right"
-      i18n
       mat-header-cell
     >
-      Cash Balance
+      <ng-container i18n>Cash Balance</ng-container>
     </th>
     <td
       *matCellDef="let element"
@@ -116,10 +105,9 @@
     <th
       *matHeaderCellDef
       class="d-none d-lg-table-cell px-1 text-right"
-      i18n
       mat-header-cell
     >
-      Value
+      <ng-container i18n>Value</ng-container>
     </th>
     <td
       *matCellDef="let element"
@@ -151,10 +139,9 @@
     <th
       *matHeaderCellDef
       class="d-lg-none d-xl-none px-1 text-right"
-      i18n
       mat-header-cell
     >
-      Value
+      <ng-container i18n>Value</ng-container>
     </th>
     <td
       *matCellDef="let element"
