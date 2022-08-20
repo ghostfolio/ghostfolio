@@ -49,4 +49,4 @@ FROM node:16-alpine
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 WORKDIR /ghostfolio/apps/api
 EXPOSE 3333
-CMD [ "node", "main" ]
+CMD [  "yarn", "start:prod" ]

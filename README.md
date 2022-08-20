@@ -114,14 +114,6 @@ Run the following command to start the Docker images from [Docker Hub](https://h
 docker-compose --env-file ./.env -f docker/docker-compose.yml up -d
 ```
 
-##### Setup Database
-
-Run the following command to setup the database once Ghostfolio is running:
-
-```bash
-docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:setup
-```
-
 #### b. Build and run environment
 
 Run the following commands to build and start the Docker images:
@@ -129,14 +121,6 @@ Run the following commands to build and start the Docker images:
 ```bash
 docker-compose --env-file ./.env -f docker/docker-compose.build.yml build
 docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
-```
-
-##### Setup Database
-
-Run the following command to setup the database once Ghostfolio is running:
-
-```bash
-docker-compose --env-file ./.env -f docker/docker-compose.build.yml exec ghostfolio yarn database:setup
 ```
 
 #### Fetch Historical Data
@@ -150,8 +134,8 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 #### Upgrade Version
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
-1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`
-1. Then, run the following command to keep your database schema in sync: `docker-compose --env-file ./.env -f docker/docker-compose.yml exec ghostfolio yarn database:migrate`
+1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
+At each start container will automatically upgrade database schema if needed.
 
 ### Run with _Unraid_ (Community)
 
