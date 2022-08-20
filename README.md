@@ -135,7 +135,7 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
 1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
-At each start container will automatically upgrade database schema if needed.
+   At each start, the container will automatically apply the database schema migrations if needed.
 
 ### Run with _Unraid_ (Community)
 
