@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a language selector to the account page
+
 ### Changed
 
 - Integrated the commands `database:setup` and `database:migrate` into the container start

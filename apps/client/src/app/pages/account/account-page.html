@@ -113,6 +113,24 @@
               </div>
               <div class="align-items-center d-flex mb-2">
                 <div class="pr-1 w-50">
+                  <div i18n>Language</div>
+                  <div class="hint-text text-muted" i18n>Beta</div>
+                </div>
+                <div class="pl-1 w-50">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-select
+                      name="language"
+                      [value]="language"
+                      (selectionChange)="onChangeLanguage($event.value)"
+                    >
+                      <mat-option value="de">Deutsch</mat-option>
+                      <mat-option value="en">English</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="align-items-center d-flex mb-2">
+                <div class="pr-1 w-50">
                   <div i18n>Locale</div>
                   <div class="hint-text text-muted" i18n>
                     Date and number format

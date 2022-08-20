@@ -53,6 +53,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public language = document.documentElement.lang;
   public locales = ['de', 'de-CH', 'en-GB', 'en-US'];
   public price: number;
   public priceId: string;
@@ -146,6 +147,10 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.update();
+  }
+
+  public onChangeLanguage(aLanguage: string) {
+    window.location.href = `../${aLanguage}/account`;
   }
 
   public onChangeUserSetting(aKey: string, aValue: string) {
