@@ -56,7 +56,9 @@ export class HttpResponseInterceptor implements HttpInterceptor {
           if (!this.snackBarRef) {
             if (this.info.isReadOnlyMode) {
               this.snackBarRef = this.snackBar.open(
-                $localize`This feature is currently unavailable. Please try again later.`,
+                $localize`This feature is currently unavailable.` +
+                  ' ' +
+                  $localize`Please try again later.`,
                 undefined,
                 { duration: 6000 }
               );
@@ -81,7 +83,9 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         } else if (error.status === StatusCodes.INTERNAL_SERVER_ERROR) {
           if (!this.snackBarRef) {
             this.snackBarRef = this.snackBar.open(
-              $localize`Oops! Something went wrong. Please try again later.`,
+              $localize`Oops! Something went wrong.` +
+                ' ' +
+                $localize`Please try again later.`,
               $localize`Okay`,
               { duration: 6000 }
             );
