@@ -1,3 +1,4 @@
+<ng-template #label><ng-content></ng-content></ng-template>
 <ng-container *ngIf="value || value === 0 || value === null">
   <div
     class="d-flex"
@@ -45,11 +46,13 @@
   </div>
   <ng-container>
     <div *ngIf="size === 'large'">
-      <span class="h6"><ng-content></ng-content></span>
+      <span class="h6"
+        ><ng-container *ngTemplateOutlet="label"></ng-container
+      ></span>
       <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
     </div>
     <small *ngIf="size !== 'large'">
-      <ng-content></ng-content>
+      <ng-container *ngTemplateOutlet="label"></ng-container>
     </small>
   </ng-container>
 </ng-container>
