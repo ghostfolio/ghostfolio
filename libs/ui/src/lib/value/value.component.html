@@ -43,13 +43,13 @@
       </div>
     </ng-container>
   </div>
-  <ng-container *ngIf="label">
+  <ng-container>
     <div *ngIf="size === 'large'">
-      <span class="h6">{{ label }}</span>
+      <span class="h6"><ng-content></ng-content></span>
       <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
     </div>
     <small *ngIf="size !== 'large'">
-      {{ label }}
+      <ng-content></ng-content>
     </small>
   </ng-container>
 </ng-container>
