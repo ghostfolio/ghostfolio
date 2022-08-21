@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Integrated the commands `database:setup` and `database:migrate` into the container start
 
+### Fixed
+
+- Fixed a division by zero error in the benchmarks calculation
+
 ### Todo
 
 - Apply manual data migration (`yarn database:migrate`) is not needed anymore

@@ -48,9 +48,13 @@ export class BenchmarkService {
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
       const { marketPrice } = quotes[benchmarkAssets[index].symbol];
 
-      const performancePercentFromAllTimeHigh = new Big(marketPrice)
-        .div(allTimeHigh)
-        .minus(1);
+      let performancePercentFromAllTimeHigh = new Big(0);
+
+      if (allTimeHigh) {
+        performancePercentFromAllTimeHigh = new Big(marketPrice)
+          .div(allTimeHigh)
+          .minus(1);
+      }
 
       return {
         marketCondition: this.getMarketCondition(
