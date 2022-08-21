@@ -149,10 +149,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     this.update();
   }
 
-  public onChangeLanguage(aLanguage: string) {
-    window.location.href = `../${aLanguage}/account`;
-  }
-
   public onChangeUserSetting(aKey: string, aValue: string) {
     this.dataService
       .putUserSetting({ [aKey]: aValue })
@@ -167,6 +163,14 @@ export class AccountPageComponent implements OnDestroy, OnInit {
             this.user = user;
 
             this.changeDetectorRef.markForCheck();
+
+            if (aKey === 'language') {
+              if (aValue) {
+                window.location.href = `../${aValue}/account`;
+              } else {
+                window.location.href = `../`;
+              }
+            }
           });
       });
   }

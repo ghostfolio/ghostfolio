@@ -120,8 +120,9 @@
                     <mat-select
                       name="language"
                       [value]="language"
-                      (selectionChange)="onChangeLanguage($event.value)"
+                      (selectionChange)="onChangeUserSetting('language', $event.value)"
                     >
+                      <mat-option [value]="null"></mat-option>
                       <mat-option value="de">Deutsch</mat-option>
                       <mat-option value="en">English</mat-option>
                     </mat-select>
