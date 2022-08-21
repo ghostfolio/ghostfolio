@@ -1646,13 +1646,6 @@
           <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="caac4bf6e98661b096f034b3d1f09099be04285a" datatype="html">
-        <source>X-ray</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">94</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="ec6301d6468572fa466f56eb3243c6c58e9cf189" datatype="html">
         <source> Ghostfolio X-ray uses static analysis to identify potential issues and risks in your portfolio. </source>
         <context-group purpose="location">
