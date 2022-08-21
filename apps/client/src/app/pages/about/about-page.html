@@ -108,27 +108,30 @@
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
-                label="Active Users"
+                i18n
                 size="large"
                 subLabel="(Last 24 hours)"
                 [value]="statistics?.activeUsers1d ?? '-'"
-              ></gf-value>
+                >Active Users</gf-value
+              >
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
-                label="New Users"
+                i18n
                 size="large"
                 subLabel="(Last 30 days)"
                 [value]="statistics?.newUsers30d ?? '-'"
-              ></gf-value>
+                >New Users</gf-value
+              >
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
-                label="Active Users"
+                i18n
                 size="large"
                 subLabel="(Last 30 days)"
                 [value]="statistics?.activeUsers30d ?? '-'"
-              ></gf-value>
+                >Active Users</gf-value
+              >
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <a
@@ -136,10 +139,11 @@
                 href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
               >
                 <gf-value
-                  label="Users in Slack community"
+                  i18n
                   size="large"
                   [value]="statistics?.slackCommunityUsers ?? '-'"
-                ></gf-value>
+                  >Users in Slack community</gf-value
+                >
               </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
@@ -148,10 +152,11 @@
                 href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
               >
                 <gf-value
-                  label="Contributors on GitHub"
+                  i18n
                   size="large"
                   [value]="statistics?.gitHubContributors ?? '-'"
-                ></gf-value>
+                  >Contributors on GitHub</gf-value
+                >
               </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
@@ -160,10 +165,11 @@
                 href="https://github.com/ghostfolio/ghostfolio/stargazers"
               >
                 <gf-value
-                  label="Stars on GitHub"
+                  i18n
                   size="large"
                   [value]="statistics?.gitHubStargazers ?? '-'"
-                ></gf-value>
+                  >Stars on GitHub</gf-value
+                >
               </a>
             </div>
           </div>
