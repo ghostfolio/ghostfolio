@@ -2493,6 +2493,14 @@
           <context context-type="linenumber">171</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="e34e2478d2d30c9d01758d01b7212411171b9bd5" datatype="html">
+        <source>Projected Total Amount</source>
+        <target state="translated">Geschätzter Gesamtbetrag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
