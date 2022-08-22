@@ -2501,14 +2501,6 @@
           <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8580549503047096056" datatype="html">
-        <source>Investment</source>
-        <target state="translated">Einlage</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
-          <context context-type="linenumber">125</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="2937311350146031865" datatype="html">
         <source>Initial</source>
         <target state="new">Beginn</target>
@@ -2544,6 +2536,10 @@
       <trans-unit id="5213771062241898526" datatype="html">
         <source>Deposit</source>
         <target state="translated">Einlage</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.ts</context>
           <context context-type="linenumber">276</context>
