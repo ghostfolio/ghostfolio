@@ -122,7 +122,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           data: this.investments.map((position) => {
             return position.investment;
           }),
-          label: 'Investment',
+          label: $localize`Deposit`,
           segment: {
             borderColor: (context: unknown) =>
               this.isInFuture(

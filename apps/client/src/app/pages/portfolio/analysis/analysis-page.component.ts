@@ -26,8 +26,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public investmentsByMonth: InvestmentItem[];
   public mode: GroupBy;
   public modeOptions: ToggleOption[] = [
-    { label: 'Monthly', value: 'month' },
-    { label: 'Accumulating', value: undefined }
+    { label: $localize`Monthly`, value: 'month' },
+    { label: $localize`Accumulating`, value: undefined }
   ];
   public top3: Position[];
   public user: User;
