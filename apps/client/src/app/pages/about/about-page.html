@@ -1,7 +1,7 @@
 <div class="container">
   <div class="mb-5 row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3" i18n>About Ghostfolio</h3>
+      <h3 class="d-flex justify-content-center mb-3">About Ghostfolio</h3>
       <div class="about-container">
         <p>
           Ghostfolio is a lightweight wealth management application for
@@ -21,7 +21,7 @@
           <ng-container *ngIf="version">
             This instance is running Ghostfolio {{ version }}.
           </ng-container>
-          <ng-container *ngIf="hasPermissionForStatistics" i18n
+          <ng-container *ngIf="hasPermissionForStatistics"
             >Check the system status at
             <a href="https://status.ghostfol.io" title="Ghostfolio status"
               >status.ghostfol.io</a
@@ -102,33 +102,36 @@
 
   <div *ngIf="hasPermissionForStatistics" class="mb-5 row">
     <div class="col">
-      <h3 class="mb-3 text-center" i18n>Ghostfolio in Numbers</h3>
+      <h3 class="mb-3 text-center">Ghostfolio in Numbers</h3>
       <mat-card>
         <mat-card-content>
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
-                label="Active Users"
+                i18n
                 size="large"
                 subLabel="(Last 24 hours)"
                 [value]="statistics?.activeUsers1d ?? '-'"
-              ></gf-value>
+                >Active Users</gf-value
+              >
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
-                label="New Users"
+                i18n
                 size="large"
                 subLabel="(Last 30 days)"
                 [value]="statistics?.newUsers30d ?? '-'"
-              ></gf-value>
+                >New Users</gf-value
+              >
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
-                label="Active Users"
+                i18n
                 size="large"
                 subLabel="(Last 30 days)"
                 [value]="statistics?.activeUsers30d ?? '-'"
-              ></gf-value>
+                >Active Users</gf-value
+              >
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <a
@@ -136,10 +139,11 @@
                 href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
               >
                 <gf-value
-                  label="Users in Slack community"
+                  i18n
                   size="large"
                   [value]="statistics?.slackCommunityUsers ?? '-'"
-                ></gf-value>
+                  >Users in Slack community</gf-value
+                >
               </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
@@ -148,10 +152,11 @@
                 href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
               >
                 <gf-value
-                  label="Contributors on GitHub"
+                  i18n
                   size="large"
                   [value]="statistics?.gitHubContributors ?? '-'"
-                ></gf-value>
+                  >Contributors on GitHub</gf-value
+                >
               </a>
             </div>
             <div class="col-xs-12 col-md-4 my-2">
@@ -160,10 +165,11 @@
                 href="https://github.com/ghostfolio/ghostfolio/stargazers"
               >
                 <gf-value
-                  label="Stars on GitHub"
+                  i18n
                   size="large"
                   [value]="statistics?.gitHubStargazers ?? '-'"
-                ></gf-value>
+                  >Stars on GitHub</gf-value
+                >
               </a>
             </div>
           </div>
@@ -177,7 +183,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-stroked-button
         [routerLink]="['/faq']"
         >FAQ</a
@@ -190,7 +195,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-stroked-button
         [routerLink]="['/about', 'changelog']"
         >Changelog & License</a
@@ -200,7 +204,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-stroked-button
         [routerLink]="['/about', 'privacy-policy']"
         >Privacy Policy</a
@@ -210,7 +213,6 @@
       <a
         class="py-2 w-100"
         color="primary"
-        i18n
         mat-flat-button
         [routerLink]="['/blog']"
         >Blog</a

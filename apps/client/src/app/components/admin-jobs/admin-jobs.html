@@ -24,7 +24,7 @@
       <table class="gf-table w-100">
         <thead>
           <tr class="mat-header-row">
-            <th class="mat-header-cell px-1 py-2 text-right" i18n>#</th>
+            <th class="mat-header-cell px-1 py-2 text-right">#</th>
             <th class="mat-header-cell px-1 py-2" i18n>Type</th>
             <th class="mat-header-cell px-1 py-2" i18n>Symbol</th>
             <th class="mat-header-cell px-1 py-2" i18n>Data Source</th>
@@ -105,19 +105,18 @@
                   <ion-icon name="ellipsis-vertical"></ion-icon>
                 </button>
                 <mat-menu #accountMenu="matMenu" xPosition="before">
-                  <button i18n mat-menu-item (click)="onViewData(job.data)">
-                    View Data
+                  <button mat-menu-item (click)="onViewData(job.data)">
+                    <ng-container i18n>View Data</ng-container>
                   </button>
                   <button
-                    i18n
                     mat-menu-item
                     [disabled]="job.stacktrace?.length <= 0"
                     (click)="onViewStacktrace(job.stacktrace)"
                   >
-                    View Stacktrace
+                    <ng-container i18n>View Stacktrace</ng-container>
                   </button>
-                  <button i18n mat-menu-item (click)="onDeleteJob(job.id)">
-                    Delete Job
+                  <button mat-menu-item (click)="onDeleteJob(job.id)">
+                    <ng-container i18n>Delete Job</ng-container>
                   </button>
                 </mat-menu>
               </td>

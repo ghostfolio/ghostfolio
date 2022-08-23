@@ -2,16 +2,6 @@ import { DataSource } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-import { ToggleOption } from './types';
-
-export const defaultDateRangeOptions: ToggleOption[] = [
-  { label: 'Today', value: '1d' },
-  { label: 'YTD', value: 'ytd' },
-  { label: '1Y', value: '1y' },
-  { label: '5Y', value: '5y' },
-  { label: 'Max', value: 'max' }
-];
-
 export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
 
 export const ghostfolioScraperApiSymbolPrefix = '_GF_';
@@ -49,6 +39,7 @@ export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
 
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
+export const DEFAULT_LANGUAGE_CODE = 'en';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {

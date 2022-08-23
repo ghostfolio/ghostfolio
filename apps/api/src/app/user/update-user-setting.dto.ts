@@ -11,6 +11,10 @@ export class UpdateUserSettingDto {
 
   @IsString()
   @IsOptional()
+  language?: string;
+
+  @IsString()
+  @IsOptional()
   locale?: string;
 
   @IsNumber()

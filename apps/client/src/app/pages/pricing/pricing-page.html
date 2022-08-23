@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3 text-center" i18n>
+      <h3 class="d-flex justify-content-center mb-3 text-center">
         Pricing Plans
       </h3>
       <div class="mb-4">
@@ -20,7 +20,7 @@
         <div class="col-xs-12 col-md-4 mb-3">
           <mat-card class="d-flex flex-column h-100">
             <div class="flex-grow-1">
-              <h4 i18n>Open Source</h4>
+              <h4>Open Source</h4>
               <p>
                 For tech-savvy investors who prefer to run
                 <strong>Ghostfolio</strong> on their own infrastructure.
@@ -73,7 +73,7 @@
             [ngClass]="{ 'active': user?.subscription?.type === 'Basic' }"
           >
             <div class="flex-grow-1">
-              <h4 class="align-items-center d-flex" i18n>Basic</h4>
+              <h4 class="align-items-center d-flex">Basic</h4>
               <p>
                 For new investors who are just getting started with trading.
               </p>
@@ -124,7 +124,7 @@
           >
             <div class="flex-grow-1">
               <h4 class="align-items-center d-flex">
-                <span i18n>Premium</span>
+                <span>Premium</span>
                 <gf-premium-indicator
                   class="ml-1"
                   [enableLink]="false"
@@ -186,7 +186,7 @@
                   >{{ baseCurrency }}&nbsp;<strong
                     >{{ price }}</strong
                   ></ng-container
-                >&nbsp;<span i18n>per year</span></span
+                >&nbsp;<span>per year</span></span
               >
             </p>
           </mat-card>
@@ -196,14 +196,14 @@
   </div>
   <div *ngIf="user?.subscription?.type === 'Basic'" class="row">
     <div class="col mt-3 text-center">
-      <a color="primary" i18n mat-flat-button [routerLink]="['/account']">
+      <a color="primary" mat-flat-button [routerLink]="['/account']">
         Upgrade Plan
       </a>
     </div>
   </div>
   <div *ngIf="!user" class="row">
     <div class="col mt-3 text-center">
-      <a color="primary" i18n mat-flat-button [routerLink]="['/register']">
+      <a color="primary" mat-flat-button [routerLink]="['/register']">
         Get Started
       </a>
       <p class="text-muted"><small>It's free</small></p>

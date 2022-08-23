@@ -28,6 +28,7 @@ export class AuthPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         const jwt = params['jwt'];
+
         this.tokenStorageService.saveToken(
           jwt,
           this.settingsStorageService.getSetting(STAY_SIGNED_IN) === 'true'

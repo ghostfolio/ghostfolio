@@ -188,7 +188,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     input.type = 'file';
 
     input.onchange = (event) => {
-      this.snackBar.open('⏳ Importing data...');
+      this.snackBar.open('⏳' + $localize`Importing data...`);
 
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files[0];
@@ -334,7 +334,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   private handleImportSuccess() {
     this.fetchActivities();
 
-    this.snackBar.open('✅ Import has been completed', undefined, {
+    this.snackBar.open('✅' + $localize`Import has been completed`, undefined, {
       duration: 3000
     });
   }

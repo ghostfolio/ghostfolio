@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: TransactionsPageComponent,
     path: '',
-    title: 'Activities'
+    title: $localize`Activities`
   }
 ];
 

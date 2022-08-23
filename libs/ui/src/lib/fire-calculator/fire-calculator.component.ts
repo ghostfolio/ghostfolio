@@ -273,7 +273,7 @@ export class FireCalculatorComponent
     const datasetDeposit = {
       backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
       data: [],
-      label: 'Deposit'
+      label: $localize`Deposit`
     };
 
     const datasetInterest = {
@@ -283,7 +283,7 @@ export class FireCalculatorComponent
         .lighten(0.5)
         .hex(),
       data: [],
-      label: 'Interest'
+      label: $localize`Interest`
     };
 
     const datasetSavings = {
@@ -293,7 +293,7 @@ export class FireCalculatorComponent
         .lighten(0.25)
         .hex(),
       data: [],
-      label: 'Savings'
+      label: $localize`Savings`
     };
 
     for (let period = 1; period <= t; period++) {

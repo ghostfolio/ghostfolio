@@ -14,21 +14,20 @@
         *ngIf="hasError"
         class="align-items-center col d-flex flex-column justify-content-center"
       >
-        <h1 class="d-flex h5 justify-content-center mb-0 text-center" i18n>
-          Oops, authentication has failed.
+        <h1 class="d-flex h5 justify-content-center mb-0 text-center">
+          <ng-container i18n>Oops, authentication has failed.</ng-container>
         </h1>
         <button
           class="mb-3 mt-4"
           color="primary"
-          i18n
           mat-flat-button
           (click)="signIn()"
         >
-          Try again
+          <ng-container i18n>Try again</ng-container>
         </button>
-        <div class="text-muted" i18n>or</div>
-        <button class="mt-1" i18n mat-flat-button (click)="deregisterDevice()">
-          Go back to Home Page
+        <div class="text-muted"><ng-container i18n>or</ng-container></div>
+        <button class="mt-1" mat-flat-button (click)="deregisterDevice()">
+          <ng-container i18n>Go back to Home Page</ng-container>
         </button>
       </div>
     </div>

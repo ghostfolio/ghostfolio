@@ -8,6 +8,7 @@ import {
   Output
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { Access } from '@ghostfolio/common/interfaces';
 
 @Component({
@@ -24,6 +25,7 @@ export class AccessTableComponent implements OnChanges, OnInit {
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
+  public defaultLanguageCode = DEFAULT_LANGUAGE_CODE;
   public displayedColumns = [];
 
   public constructor() {}
@@ -44,7 +46,7 @@ export class AccessTableComponent implements OnChanges, OnInit {
 
   public onDeleteAccess(aId: string) {
     const confirmation = confirm(
-      'Do you really want to revoke this granted access?'
+      $localize`Do you really want to revoke this granted access?`
     );
 
     if (confirmation) {

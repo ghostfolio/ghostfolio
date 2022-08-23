@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
+import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -9,7 +10,6 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { defaultDateRangeOptions } from '@ghostfolio/common/config';
 import { Position, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
@@ -27,7 +27,7 @@ import { PositionDetailDialogParams } from '../position/position-detail-dialog/i
 })
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public dateRange: DateRange;
-  public dateRangeOptions = defaultDateRangeOptions;
+  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;

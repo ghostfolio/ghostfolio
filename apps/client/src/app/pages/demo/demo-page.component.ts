@@ -28,7 +28,7 @@ export class DemoPageComponent implements OnDestroy {
 
     if (hasToken) {
       alert(
-        'As you are already logged in, you cannot access the demo account.'
+        $localize`As you are already logged in, you cannot access the demo account.`
       );
     } else {
       this.tokenStorageService.saveToken(this.info.demoAuthToken, true);

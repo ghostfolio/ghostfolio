@@ -10,7 +10,7 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -23,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
 import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
 import { ExportModule } from './export/export.module';
+import { FrontendMiddleware } from './frontend.middleware';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { OrderModule } from './order/order.module';
@@ -82,4 +83,10 @@ import { UserModule } from './user/user.module';
   controllers: [AppController],
   providers: [CronService]
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(FrontendMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

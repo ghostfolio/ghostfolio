@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-100 position-relative" lang="en">
+<html class="h-100 position-relative" lang="${languageCode}">
   <head>
     <title>Ghostfolio – Open Source Wealth Management Software</title>
     <base href="/" />
@@ -19,10 +19,7 @@
       name="twitter:description"
       content="Ghostfolio is a lightweight wealth management application for individuals to keep track of stocks, ETFs or cryptocurrencies"
     />
-    <meta
-      name="twitter:image"
-      content="https://www.ghostfol.io/assets/cover.png"
-    />
+    <meta name="twitter:image" content="${rootUrl}/${featureGraphicPath}" />
     <meta
       name="twitter:title"
       content="Ghostfolio – Open Source Wealth Management Software"
@@ -37,12 +34,9 @@
       content="Ghostfolio – Open Source Wealth Management Software"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.ghostfol.io" />
-    <meta
-      property="og:image"
-      content="https://www.ghostfol.io/assets/cover.png"
-    />
-    <meta property="og:updated_time" content="2022-05-28T00:00:00+00:00" />
+    <meta property="og:url" content="${rootUrl}${path}" />
+    <meta property="og:image" content="${rootUrl}/${featureGraphicPath}" />
+    <meta property="og:updated_time" content="2022-08-18T00:00:00+00:00" />
     <meta
       property="og:site_name"
       content="Ghostfolio – Open Source Wealth Management Software"
@@ -51,26 +45,26 @@
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="/assets/apple-touch-icon.png"
+      href="../assets/apple-touch-icon.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="/assets/favicon-32x32.png"
+      href="../assets/favicon-32x32.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="/assets/favicon-16x16.png"
+      href="../assets/favicon-16x16.png"
     />
-    <link rel="manifest" href="/assets/site.webmanifest" />
+    <link rel="manifest" href="../assets/site.webmanifest" />
   </head>
   <body>
     <gf-root></gf-root>
 
-    <script type="module" src="ionicons/ionicons.esm.js"></script>
+    <script type="module" src="../ionicons/ionicons.esm.js"></script>
     <script nomodule="" src="ionicons.js"></script>
 
     <noscript

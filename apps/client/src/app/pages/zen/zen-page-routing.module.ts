@@ -16,7 +16,7 @@ const routes: Routes = [
     ],
     component: ZenPageComponent,
     path: '',
-    title: 'Overview'
+    title: $localize`Overview`
   }
 ];
 

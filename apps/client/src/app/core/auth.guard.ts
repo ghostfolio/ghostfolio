@@ -72,7 +72,13 @@ export class AuthGuard implements CanActivate {
           })
         )
         .subscribe((user) => {
-          if (
+          const userLanguage = user?.settings?.language;
+
+          if (userLanguage && document.documentElement.lang !== userLanguage) {
+            window.location.href = `../${userLanguage}`;
+            resolve(false);
+            return;
+          } else if (
             state.url.startsWith('/home') &&
             user.settings.viewMode === ViewMode.ZEN
           ) {

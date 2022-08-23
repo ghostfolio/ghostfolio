@@ -45,7 +45,7 @@ export class PortfolioSummaryComponent implements OnChanges, OnInit {
 
   public onEditEmergencyFund() {
     const emergencyFundInput = prompt(
-      'Please enter the amount of your emergency fund:',
+      $localize`Please enter the amount of your emergency fund:`,
       this.summary.emergencyFund.toString()
     );
     const emergencyFund = parseFloat(emergencyFundInput?.trim());

@@ -54,8 +54,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   };
   public period = 'current';
   public periodOptions: ToggleOption[] = [
-    { label: 'Initial', value: 'original' },
-    { label: 'Current', value: 'current' }
+    { label: $localize`Initial`, value: 'original' },
+    { label: $localize`Current`, value: 'current' }
   ];
   public placeholder = '';
   public portfolioDetails: PortfolioDetails;

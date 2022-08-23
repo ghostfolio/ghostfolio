@@ -35,112 +35,124 @@
     <div class="row">
       <div class="col-6 mb-3">
         <gf-value
-          label="Change"
+          i18n
           size="medium"
           [colorizeSign]="true"
           [currency]="data.baseCurrency"
           [locale]="data.locale"
           [value]="netPerformance"
-        ></gf-value>
+          >Change</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Performance"
+          i18n
           size="medium"
           [colorizeSign]="true"
           [isPercent]="true"
           [locale]="data.locale"
           [value]="netPerformancePercent"
-        ></gf-value>
+          >Performance</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Average Unit Price"
+          i18n
           size="medium"
           [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="averagePrice"
-        ></gf-value>
+          >Average Unit Price</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Market Price"
+          i18n
           size="medium"
           [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [value]="marketPrice"
-        ></gf-value>
+          >Market Price</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Minimum Price"
+          i18n
           size="medium"
           [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="minPrice"
-        ></gf-value>
+          >Minimum Price</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Maximum Price"
+          i18n
           size="medium"
           [currency]="SymbolProfile?.currency"
           [locale]="data.locale"
           [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
           [value]="maxPrice"
-        ></gf-value>
+          >Maximum Price</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Quantity"
+          i18n
           size="medium"
           [locale]="data.locale"
           [precision]="quantityPrecision"
           [value]="quantity"
-        ></gf-value>
+          >Quantity</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Investment"
+          i18n
           size="medium"
           [currency]="data.baseCurrency"
           [locale]="data.locale"
           [value]="investment"
-        ></gf-value>
+          >Investment</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="First Buy Date"
+          i18n
           size="medium"
           [isDate]="true"
           [locale]="data.locale"
           [value]="firstBuyDate"
-        ></gf-value>
+          >First Buy Date</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
+          i18n
           size="medium"
-          [label]="transactionCount === 1 ? 'Transaction' : 'Transactions'"
           [locale]="data.locale"
           [value]="transactionCount"
-        ></gf-value>
+          >Transactions</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Asset Class"
+          i18n
           size="medium"
           [hidden]="!SymbolProfile?.assetClass"
           [value]="SymbolProfile?.assetClass"
-        ></gf-value>
+          >Asset Class</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value
-          label="Asset Sub Class"
+          i18n
           size="medium"
           [hidden]="!SymbolProfile?.assetSubClass"
           [value]="SymbolProfile?.assetSubClass"
-        ></gf-value>
+          >Asset Sub Class</gf-value
+        >
       </div>
       <ng-container
         *ngIf="SymbolProfile?.countries?.length > 0 || SymbolProfile?.sectors?.length > 0"
@@ -150,22 +162,24 @@
         >
           <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
             <gf-value
-              label="Sector"
+              i18n
               size="medium"
               [locale]="data.locale"
               [value]="SymbolProfile.sectors[0].name"
-            ></gf-value>
+              >Sector</gf-value
+            >
           </div>
           <div
             *ngIf="SymbolProfile?.countries?.length === 1"
             class="col-6 mb-3"
           >
             <gf-value
-              label="Country"
+              i18n
               size="medium"
               [locale]="data.locale"
               [value]="SymbolProfile.countries[0].name"
-            ></gf-value>
+              >Country</gf-value
+            >
           </div>
         </ng-container>
         <ng-template #charts>

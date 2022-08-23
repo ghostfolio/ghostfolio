@@ -31,7 +31,6 @@ Currency.args = {
 
 export const Label = Template.bind({});
 Label.args = {
-  label: 'Label',
   locale: 'en-US',
   value: 7.25
 };

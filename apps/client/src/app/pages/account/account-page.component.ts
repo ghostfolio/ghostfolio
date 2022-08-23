@@ -53,6 +53,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public language = document.documentElement.lang;
   public locales = ['de', 'de-CH', 'en-GB', 'en-US'];
   public price: number;
   public priceId: string;
@@ -162,6 +163,14 @@ export class AccountPageComponent implements OnDestroy, OnInit {
             this.user = user;
 
             this.changeDetectorRef.markForCheck();
+
+            if (aKey === 'language') {
+              if (aValue) {
+                window.location.href = `../${aValue}/account`;
+              } else {
+                window.location.href = `../`;
+              }
+            }
           });
       });
   }
@@ -218,7 +227,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   }
 
   public onRedeemCoupon() {
-    let couponCode = prompt('Please enter your coupon code:');
+    let couponCode = prompt($localize`Please enter your coupon code:`);
     couponCode = couponCode?.trim();
 
     if (couponCode) {
@@ -227,17 +236,21 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         .pipe(
           takeUntil(this.unsubscribeSubject),
           catchError(() => {
-            this.snackBar.open('😞 Could not redeem coupon code', undefined, {
-              duration: 3000
-            });
+            this.snackBar.open(
+              '😞 ' + $localize`Could not redeem coupon code`,
+              undefined,
+              {
+                duration: 3000
+              }
+            );
 
             return EMPTY;
           })
         )
         .subscribe(() => {
           this.snackBarRef = this.snackBar.open(
-            '✅ Coupon code has been redeemed',
-            'Reload',
+            '✅' + $localize`Coupon code has been redeemed`,
+            $localize`Reload`,
             {
               duration: 3000
             }
@@ -283,7 +296,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       this.registerDevice();
     } else {
       const confirmation = confirm(
-        'Do you really want to remove this sign in method?'
+        $localize`Do you really want to remove this sign in method?`
       );
 
       if (confirmation) {

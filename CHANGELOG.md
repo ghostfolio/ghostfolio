@@ -9,7 +9,71 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
+
+## 1.181.2 - 21.08.2022
+
+### Added
+
+- Added a language selector to the account page
+- Added support for translated labels in the value component
+
+### Changed
+
+- Integrated the commands `database:setup` and `database:migrate` into the container start
+
+### Fixed
+
+- Fixed a division by zero error in the benchmarks calculation
+
+### Todo
+
+- Apply manual data migration (`yarn database:migrate`) is not needed anymore
+
+## 1.180.1 - 18.08.2022
+
+### Added
+
+- Set up `ng-extract-i18n-merge` to improve the i18n extraction and merge workflow
+- Set up language localization for German (`de`)
+- Resolved the feature graphic of the blog post
+
+### Changed
+
+- Tagged template literal strings in components for localization with `$localize`
+
+### Fixed
+
+- Fixed the license component in the about page
+- Fixed the links to the blog posts
+
+## 1.179.5 - 15.08.2022
+
+### Added
+
+- Set up i18n support
+- Added a blog post: _500 Stars on GitHub_
+
+### Changed
+
+- Reduced the maximum width of the performance chart on the home page
+
+## 1.178.0 - 09.08.2022
+
+### Added
+
+- Added `url` to the symbol profile overrides model for manual adjustments
+- Added default values for `countries` and `sectors` of the symbol profile overrides model
+
+### Changed
+
 - Simplified the initialization of the exchange rate service
+- Improved the orders query for `assetClass` with symbol profile overrides
+- Improved the styling of the benchmarks in the markets overview
+
+### Todo
+
+- Apply data migration (`yarn database:migrate`)
 
 ## 1.177.0 - 04.08.2022
 

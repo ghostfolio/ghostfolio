@@ -109,7 +109,7 @@ export class HeaderComponent implements OnChanges {
       data: {
         accessToken: '',
         hasPermissionToUseSocialLogin: this.hasPermissionForSocialLogin,
-        title: 'Sign in'
+        title: $localize`Sign in`
       },
       width: '30rem'
     });
@@ -123,7 +123,7 @@ export class HeaderComponent implements OnChanges {
             .loginAnonymous(data?.accessToken)
             .pipe(
               catchError(() => {
-                alert('Oops! Incorrect Security Token.');
+                alert($localize`Oops! Incorrect Security Token.`);
 
                 return EMPTY;
               }),

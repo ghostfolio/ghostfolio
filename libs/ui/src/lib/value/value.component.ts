@@ -20,7 +20,6 @@ export class ValueComponent implements OnChanges {
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() label = '';
   @Input() locale = getLocale();
   @Input() position = '';
   @Input() precision: number | undefined;

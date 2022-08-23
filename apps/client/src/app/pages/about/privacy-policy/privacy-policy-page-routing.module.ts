@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: PrivacyPolicyPageComponent,
     path: '',
-    title: 'Privacy Policy'
+    title: $localize`Privacy Policy`
   }
 ];
 
