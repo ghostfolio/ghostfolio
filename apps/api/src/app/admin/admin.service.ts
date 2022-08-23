@@ -84,7 +84,9 @@ export class AdminService {
           return {
             dataSource,
             marketDataItemCount,
-            symbol
+            symbol,
+            countriesCount: 0,
+            sectorsCount: 0
           };
         });
 
@@ -95,6 +97,10 @@ export class AdminService {
           _count: {
             select: { Order: true }
           },
+          assetClass: true,
+          assetSubClass: true,
+          countries: true,
+          sectors: true,
           dataSource: true,
           Order: {
             orderBy: [{ date: 'asc' }],
@@ -106,6 +112,9 @@ export class AdminService {
         }
       })
     ).map((symbolProfile) => {
+      const countriesCount = symbolProfile.countries
+        ? Object.keys(symbolProfile.countries).length
+        : 0;
       const marketDataItemCount =
         marketData.find((marketDataItem) => {
           return (
@@ -113,10 +122,17 @@ export class AdminService {
             marketDataItem.symbol === symbolProfile.symbol
           );
         })?._count ?? 0;
+      const sectorsCount = symbolProfile.sectors
+        ? Object.keys(symbolProfile.sectors).length
+        : 0;
 
       return {
+        countriesCount,
         marketDataItemCount,
+        sectorsCount,
         activityCount: symbolProfile._count.Order,
+        assetClass: symbolProfile.assetClass,
+        assetSubClass: symbolProfile.assetSubClass,
         dataSource: symbolProfile.dataSource,
         date: symbolProfile.Order?.[0]?.date,
         symbol: symbolProfile.symbol

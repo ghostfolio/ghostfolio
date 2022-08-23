@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Extended and made the columns of the asset profiles sortable in the admin control
+- Moved the asset profile details in the admin control panel to a dialog
 
 ## 1.181.2 - 21.08.2022
 

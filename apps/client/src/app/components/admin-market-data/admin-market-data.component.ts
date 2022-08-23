@@ -3,17 +3,26 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getDateFormatString } from '@ghostfolio/common/helper';
 import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource } from '@prisma/client';
+import { format, parseISO } from 'date-fns';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
+import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,11 +31,26 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-market-data.html'
 })
 export class AdminMarketDataComponent implements OnDestroy, OnInit {
+  @ViewChild(MatSort) sort: MatSort;
+
   public currentDataSource: DataSource;
   public currentSymbol: string;
+  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
   public defaultDateFormat: string;
+  public deviceType: string;
+  public displayedColumns = [
+    'symbol',
+    'dataSource',
+    'assetClass',
+    'assetSubClass',
+    'date',
+    'activityCount',
+    'marketDataItemCount',
+    'countriesCount',
+    'sectorsCount',
+    'actions'
+  ];
   public marketData: AdminMarketDataItem[] = [];
-  public marketDataDetails: MarketData[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -35,8 +59,29 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
     private userService: UserService
   ) {
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (
+          params['assetProfileDialog'] &&
+          params['dataSource'] &&
+          params['dateOfFirstActivity'] &&
+          params['symbol']
+        ) {
+          this.openAssetProfileDialog({
+            dataSource: params['dataSource'],
+            dateOfFirstActivity: params['dateOfFirstActivity'],
+            symbol: params['symbol']
+          });
+        }
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -51,6 +96,8 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.fetchAdminMarketData();
   }
 
@@ -75,28 +122,19 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
-  public onMarketDataChanged(withRefresh: boolean = false) {
-    if (withRefresh) {
-      this.fetchAdminMarketData();
-      this.fetchAdminMarketDataBySymbol({
-        dataSource: this.currentDataSource,
-        symbol: this.currentSymbol
-      });
-    }
-  }
-
-  public setCurrentProfile({ dataSource, symbol }: UniqueAsset) {
-    this.marketDataDetails = [];
-
-    if (this.currentSymbol === symbol) {
-      this.currentDataSource = undefined;
-      this.currentSymbol = '';
-    } else {
-      this.currentDataSource = dataSource;
-      this.currentSymbol = symbol;
-
-      this.fetchAdminMarketDataBySymbol({ dataSource, symbol });
-    }
+  public onOpenAssetProfileDialog({
+    dataSource,
+    dateOfFirstActivity,
+    symbol
+  }: UniqueAsset & { dateOfFirstActivity: string }) {
+    this.router.navigate([], {
+      queryParams: {
+        dataSource,
+        symbol,
+        assetProfileDialog: true,
+        dateOfFirstActivity: format(parseISO(dateOfFirstActivity), DATE_FORMAT)
+      }
+    });
   }
 
   public ngOnDestroy() {
@@ -109,20 +147,48 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .fetchAdminMarketData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ marketData }) => {
-        this.marketData = marketData;
+        this.dataSource = new MatTableDataSource(marketData);
+
+        this.dataSource.sort = this.sort;
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
-  private fetchAdminMarketDataBySymbol({ dataSource, symbol }: UniqueAsset) {
-    this.adminService
-      .fetchAdminMarketDataBySymbol({ dataSource, symbol })
+  private openAssetProfileDialog({
+    dataSource,
+    dateOfFirstActivity,
+    symbol
+  }: {
+    dataSource: DataSource;
+    dateOfFirstActivity: string;
+    symbol: string;
+  }) {
+    this.userService
+      .get()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ marketData }) => {
-        this.marketDataDetails = marketData;
+      .subscribe((user) => {
+        this.user = user;
 
-        this.changeDetectorRef.markForCheck();
+        const dialogRef = this.dialog.open(AssetProfileDialog, {
+          autoFocus: false,
+          data: <AssetProfileDialogParams>{
+            dataSource,
+            dateOfFirstActivity,
+            symbol,
+            deviceType: this.deviceType,
+            locale: this.user?.settings?.locale
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
       });
   }
 }

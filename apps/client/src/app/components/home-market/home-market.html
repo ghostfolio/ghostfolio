@@ -9,13 +9,13 @@
         class="mb-3"
         symbol="Fear & Greed Index"
         yMax="100"
-        yMaxLabel="Greed"
         yMin="0"
-        yMinLabel="Fear"
         [historicalDataItems]="historicalData"
         [locale]="user?.settings?.locale"
         [showXAxis]="true"
         [showYAxis]="true"
+        [yMaxLabel]="greedLabel"
+        [yMinLabel]="fearLabel"
       ></gf-line-chart>
       <gf-fear-and-greed-index
         class="d-flex justify-content-center"

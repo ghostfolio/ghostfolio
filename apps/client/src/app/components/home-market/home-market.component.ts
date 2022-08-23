@@ -21,6 +21,8 @@ import { takeUntil } from 'rxjs/operators';
 export class HomeMarketComponent implements OnDestroy, OnInit {
   public benchmarks: Benchmark[];
   public fearAndGreedIndex: number;
+  public fearLabel = $localize`Fear`;
+  public greedLabel = $localize`Greed`;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalData: HistoricalDataItem[];
   public info: InfoItem;
