@@ -2585,6 +2585,22 @@
           <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="5486880308148746399" datatype="html">
+        <source>Fear</source>
+        <target state="translated">Angst</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-market/home-market.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6844699413925472826" datatype="html">
+        <source>Greed</source>
+        <target state="translated">Gier</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-market/home-market.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
