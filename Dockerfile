@@ -1,4 +1,4 @@
-FROM node:16-slim as builder
+FROM --platform=$BUILDPLATFORM node:16-slim as builder
 
 # Build application and add additional files
 WORKDIR /ghostfolio
@@ -9,6 +9,7 @@ COPY ./CHANGELOG.md CHANGELOG.md
 COPY ./LICENSE LICENSE
 COPY ./package.json package.json
 COPY ./yarn.lock yarn.lock
+COPY ./.yarnrc .yarnrc
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
 RUN apt update && apt install -y \
@@ -18,7 +19,7 @@ RUN apt update && apt install -y \
     openssl \
     python3 \
     && rm -rf /var/lib/apt/lists/*
-RUN yarn install --network-timeout 1000000
+RUN yarn install
 
 # See https://github.com/nrwl/nx/issues/6586 for further details
 COPY ./decorate-angular-cli.js decorate-angular-cli.js
