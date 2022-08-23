@@ -84,7 +84,9 @@ export class AdminService {
           return {
             dataSource,
             marketDataItemCount,
-            symbol
+            symbol,
+            countriesCount: 0,
+            sectorsCount: 0
           };
         });
 
