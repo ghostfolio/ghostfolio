@@ -1,0 +1,24 @@
+<gf-dialog-header
+  mat-dialog-title
+  position="center"
+  [deviceType]="data.deviceType"
+  [title]="data.symbol"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-header>
+
+<div class="flex-grow-1" mat-dialog-content>
+  <gf-admin-market-data-detail
+    [dataSource]="data.dataSource"
+    [dateOfFirstActivity]="data.dateOfFirstActivity"
+    [locale]="data.locale"
+    [marketData]="marketDataDetails"
+    [symbol]="data.symbol"
+    (marketDataChanged)="onMarketDataChanged($event)"
+  ></gf-admin-market-data-detail>
+</div>
+
+<gf-dialog-footer
+  mat-dialog-actions
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-footer>
