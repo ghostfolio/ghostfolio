@@ -27,6 +27,24 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="assetClass">
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+            <ng-container i18n>Asset Class</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            {{ element.assetClass }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetSubClass">
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+            <ng-container i18n>Asset Sub Class</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            {{ element.assetSubClass }}
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="date">
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>First Activity</ng-container>
@@ -40,7 +58,7 @@
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Activity Count</ng-container>
           </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
             {{ element.activityCount }}
           </td>
         </ng-container>
@@ -49,8 +67,26 @@
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Historical Data</ng-container>
           </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
             {{ element.marketDataItemCount }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="countriesCount">
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+            <ng-container i18n>Countries Count</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            {{ element.countriesCount }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sectorsCount">
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+            <ng-container i18n>Sectors Count</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            {{ element.sectorsCount }}
           </td>
         </ng-container>
 

@@ -16,7 +16,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, getDateFormatString } from '@ghostfolio/common/helper';
 import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -41,9 +41,13 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public displayedColumns = [
     'symbol',
     'dataSource',
+    'assetClass',
+    'assetSubClass',
     'date',
     'activityCount',
     'marketDataItemCount',
+    'countriesCount',
+    'sectorsCount',
     'actions'
   ];
   public marketData: AdminMarketDataItem[] = [];
