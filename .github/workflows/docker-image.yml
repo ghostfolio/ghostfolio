@@ -19,7 +19,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: grobut939/ghostfolio
+          images: ghostfolio/ghostfolio
           tags: |
             type=raw,value=arm64
 
