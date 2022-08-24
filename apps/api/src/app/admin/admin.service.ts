@@ -11,11 +11,13 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
-import { Property } from '@prisma/client';
+import { AssetSubClass, Prisma, Property } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
+import { groupBy } from 'lodash';
 
 @Injectable()
 export class AdminService {
@@ -63,14 +65,27 @@ export class AdminService {
     };
   }
 
-  public async getMarketData(): Promise<AdminMarketData> {
+  public async getMarketData(filters?: Filter[]): Promise<AdminMarketData> {
+    const where: Prisma.SymbolProfileWhereInput = {};
+
+    const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
+      filters,
+      (filter) => {
+        return filter.type;
+      }
+    );
+
     const marketData = await this.prismaService.marketData.groupBy({
       _count: true,
       by: ['dataSource', 'symbol']
     });
 
-    const currencyPairsToGather: AdminMarketDataItem[] =
-      this.exchangeRateDataService
+    let currencyPairsToGather: AdminMarketDataItem[] = [];
+
+    if (filtersByAssetSubClass) {
+      where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
+    } else {
+      currencyPairsToGather = this.exchangeRateDataService
         .getCurrencyPairs()
         .map(({ dataSource, symbol }) => {
           const marketDataItemCount =
@@ -89,9 +104,11 @@ export class AdminService {
             sectorsCount: 0
           };
         });
+    }
 
     const symbolProfilesToGather: AdminMarketDataItem[] = (
       await this.prismaService.symbolProfile.findMany({
+        where,
         orderBy: [{ symbol: 'asc' }],
         select: {
           _count: {
@@ -100,7 +117,6 @@ export class AdminService {
           assetClass: true,
           assetSubClass: true,
           countries: true,
-          sectors: true,
           dataSource: true,
           Order: {
             orderBy: [{ date: 'asc' }],
@@ -108,6 +124,7 @@ export class AdminService {
             take: 1
           },
           scraperConfiguration: true,
+          sectors: true,
           symbol: true
         }
       })
