@@ -4,9 +4,9 @@ on:
   push:
     tags:
       - '*.*.*'
-    pull_request:
-      branches:
-        - 'main'
+  pull_request:
+    branches:
+      - 'main'
 
 jobs:
   build_and_push:
