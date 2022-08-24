@@ -1,6 +1,16 @@
 <div class="container">
   <div class="row">
     <div class="col">
+      <gf-activities-filter
+        [allFilters]="allFilters"
+        [isLoading]="isLoading"
+        [placeholder]="placeholder"
+        (valueChanged)="filters$.next($event)"
+      ></gf-activities-filter>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
       <table
         class="gf-table w-100"
         matSort

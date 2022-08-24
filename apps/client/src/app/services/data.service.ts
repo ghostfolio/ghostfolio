@@ -133,8 +133,32 @@ export class DataService {
     return this.http.get<AdminData>('/api/v1/admin');
   }
 
-  public fetchAdminMarketData() {
-    return this.http.get<AdminMarketData>('/api/v1/admin/market-data');
+  public fetchAdminMarketData({ filters }: { filters?: Filter[] }) {
+    let params = new HttpParams();
+
+    if (filters?.length > 0) {
+      const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
+        filters,
+        (filter) => {
+          return filter.type;
+        }
+      );
+
+      if (filtersByAssetSubClass) {
+        params = params.append(
+          'assetSubClasses',
+          filtersByAssetSubClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+    }
+
+    return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
+      params
+    });
   }
 
   public deleteAccess(aId: string) {

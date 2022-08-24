@@ -14,13 +14,14 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, getDateFormatString } from '@ghostfolio/common/helper';
-import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
-import { DataSource } from '@prisma/client';
+import { AssetSubClass, DataSource } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 
@@ -33,9 +34,27 @@ import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/inte
 export class AdminMarketDataComponent implements OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
+  public activeFilters: Filter[] = [];
+  public allFilters: Filter[] = [
+    AssetSubClass.BOND,
+    AssetSubClass.COMMODITY,
+    AssetSubClass.CRYPTOCURRENCY,
+    AssetSubClass.ETF,
+    AssetSubClass.MUTUALFUND,
+    AssetSubClass.PRECIOUS_METAL,
+    AssetSubClass.PRIVATE_EQUITY,
+    AssetSubClass.STOCK
+  ].map((id) => {
+    return {
+      id,
+      label: id,
+      type: 'ASSET_SUB_CLASS'
+    };
+  });
   public currentDataSource: DataSource;
   public currentSymbol: string;
-  public dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<AdminMarketDataItem> =
+    new MatTableDataSource();
   public defaultDateFormat: string;
   public deviceType: string;
   public displayedColumns = [
@@ -50,7 +69,9 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     'sectorsCount',
     'actions'
   ];
-  public marketData: AdminMarketDataItem[] = [];
+  public filters$ = new Subject<Filter[]>();
+  public isLoading = false;
+  public placeholder = '';
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -98,7 +119,29 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
-    this.fetchAdminMarketData();
+    this.filters$
+      .pipe(
+        distinctUntilChanged(),
+        switchMap((filters) => {
+          this.isLoading = true;
+          this.activeFilters = filters;
+          this.placeholder =
+            this.activeFilters.length <= 0 ? $localize`Filter by...` : '';
+
+          return this.dataService.fetchAdminMarketData({
+            filters: this.activeFilters
+          });
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(({ marketData }) => {
+        this.dataSource = new MatTableDataSource(marketData);
+        this.dataSource.sort = this.sort;
+
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
@@ -140,19 +183,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  private fetchAdminMarketData() {
-    this.dataService
-      .fetchAdminMarketData()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ marketData }) => {
-        this.dataSource = new MatTableDataSource(marketData);
-
-        this.dataSource.sort = this.sort;
-
-        this.changeDetectorRef.markForCheck();
-      });
   }
 
   private openAssetProfileDialog({

@@ -8,7 +8,8 @@ import {
 import {
   AdminData,
   AdminMarketData,
-  AdminMarketDataDetails
+  AdminMarketDataDetails,
+  Filter
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -22,6 +23,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -226,7 +228,9 @@ export class AdminController {
 
   @Get('market-data')
   @UseGuards(AuthGuard('jwt'))
-  public async getMarketData(): Promise<AdminMarketData> {
+  public async getMarketData(
+    @Query('assetSubClasses') filterByAssetSubClasses?: string
+  ): Promise<AdminMarketData> {
     if (
       !hasPermission(
         this.request.user.permissions,
@@ -239,7 +243,18 @@ export class AdminController {
       );
     }
 
-    return this.adminService.getMarketData();
+    const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
+
+    const filters: Filter[] = [
+      ...assetSubClasses.map((assetSubClass) => {
+        return <Filter>{
+          id: assetSubClass,
+          type: 'ASSET_SUB_CLASS'
+        };
+      })
+    ];
+
+    return this.adminService.getMarketData(filters);
   }
 
   @Get('market-data/:dataSource/:symbol')
