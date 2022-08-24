@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a filter by asset sub class for the asset profiles in the admin control
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 1.182.0 - 23.08.2022
 
 ### Changed
