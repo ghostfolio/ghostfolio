@@ -65,8 +65,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public totalFees: number;
   public totalValue: number;
 
-  private readonly SEARCH_PLACEHOLDER =
-    'Filter by account, currency, symbol or type...';
   private readonly SEARCH_STRING_SEPARATOR = ',';
   private unsubscribeSubject = new Subject<void>();
 
@@ -289,7 +287,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     });
 
     this.placeholder =
-      lowercaseSearchKeywords.length <= 0 ? this.SEARCH_PLACEHOLDER : '';
+      lowercaseSearchKeywords.length <= 0
+        ? $localize`Filter by account, currency, symbol or type...`
+        : '';
 
     this.searchKeywords = filters.map((filter) => {
       return filter.label;
