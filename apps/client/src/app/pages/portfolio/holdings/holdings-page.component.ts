@@ -38,7 +38,6 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   public routeQueryParams: Subscription;
   public user: User;
 
-  private readonly SEARCH_PLACEHOLDER = 'Filter by account or tag...';
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -84,7 +83,9 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
           this.isLoading = true;
           this.activeFilters = filters;
           this.placeholder =
-            this.activeFilters.length <= 0 ? this.SEARCH_PLACEHOLDER : '';
+            this.activeFilters.length <= 0
+              ? $localize`Filter by account or tag...`
+              : '';
 
           return this.dataService.fetchPortfolioDetails({
             filters: this.activeFilters

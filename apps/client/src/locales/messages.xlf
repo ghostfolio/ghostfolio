@@ -1973,7 +1973,7 @@
         <source>Do you really want to delete this activity?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="170f7de02b14690fb9c1999a16926c0044bfd5c1" datatype="html">
@@ -2329,12 +2329,23 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.component.ts</context>
           <context context-type="linenumber">136</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/holdings/holdings-page.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="4550487415324294802" datatype="html">
         <source>Filter by...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
           <context context-type="linenumber">129</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="303469635941752458" datatype="html">
+        <source>Filter by account, currency, symbol or type...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
+          <context context-type="linenumber">291</context>
         </context-group>
       </trans-unit>
     </body>
