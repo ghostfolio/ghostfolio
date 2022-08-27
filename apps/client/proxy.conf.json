@@ -2,5 +2,13 @@
   "/api": {
     "target": "http://localhost:3333",
     "secure": false
+  },
+  "/assets": {
+    "target": "http://localhost:3333",
+    "secure": false
+  },
+  "/ionicons": {
+    "target": "http://localhost:3333",
+    "secure": false
   }
 }

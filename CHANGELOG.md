@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed the missing assets during the local development
+
 ## 1.183.0 - 24.08.2022
 
 ### Added
