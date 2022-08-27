@@ -10,6 +10,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [hasPermissionToUpdateUserSettings]="!hasImpersonationId && hasPermissionToUpdateUserSettings"
             [isLoading]="isLoading"
+            [language]="user?.settings?.language"
             [locale]="user?.settings?.locale"
             [summary]="summary"
             (emergencyFundChanged)="onChangeEmergencyFund($event)"
