@@ -57,8 +57,8 @@ export function getCssVariable(aCssVariable: string) {
   );
 }
 
-export function getDateFnsLocale(aLocale = '') {
-  if (aLocale.startsWith('de')) {
+export function getDateFnsLocale(aLanguageCode: string) {
+  if (aLanguageCode === 'de') {
     return de;
   }
 
