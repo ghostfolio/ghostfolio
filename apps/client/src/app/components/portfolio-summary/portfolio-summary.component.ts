@@ -7,6 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { getDateFnsLocale } from '@ghostfolio/common/helper';
 import { PortfolioSummary } from '@ghostfolio/common/interfaces';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -20,6 +21,7 @@ export class PortfolioSummaryComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
+  @Input() language: string;
   @Input() locale: string;
   @Input() summary: PortfolioSummary;
 
@@ -34,7 +36,9 @@ export class PortfolioSummaryComponent implements OnChanges, OnInit {
   public ngOnChanges() {
     if (this.summary) {
       if (this.summary.firstOrderDate) {
-        this.timeInMarket = formatDistanceToNow(this.summary.firstOrderDate);
+        this.timeInMarket = formatDistanceToNow(this.summary.firstOrderDate, {
+          locale: getDateFnsLocale(this.language)
+        });
       } else {
         this.timeInMarket = '-';
       }
