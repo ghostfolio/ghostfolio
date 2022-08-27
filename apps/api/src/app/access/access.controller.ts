@@ -42,14 +42,16 @@ export class AccessController {
     return accessesWithGranteeUser.map((access) => {
       if (access.GranteeUser) {
         return {
-          granteeAlias: access.GranteeUser?.alias,
+          alias: access.alias,
+          grantee: access.GranteeUser?.id,
           id: access.id,
           type: 'RESTRICTED_VIEW'
         };
       }
 
       return {
-        granteeAlias: 'Public',
+        alias: access.alias,
+        grantee: 'Public',
         id: access.id,
         type: 'PUBLIC'
       };
@@ -71,6 +73,10 @@ export class AccessController {
     }
 
     return this.accessService.createAccess({
+      alias: data.alias || undefined,
+      GranteeUser: data.granteeUserId
+        ? { connect: { id: data.granteeUserId } }
+        : undefined,
       User: { connect: { id: this.request.user.id } }
     });
   }

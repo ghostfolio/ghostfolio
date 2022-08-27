@@ -1,8 +1,15 @@
 <table class="gf-table w-100" mat-table [dataSource]="dataSource">
-  <ng-container matColumnDef="granteeAlias">
+  <ng-container matColumnDef="alias">
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Alias</th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
+      {{ element.alias }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="grantee">
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Grantee</th>
     <td *matCellDef="let element" class="px-1" mat-cell>
-      {{ element.granteeAlias }}
+      {{ element.grantee }}
     </td>
   </ng-container>
 

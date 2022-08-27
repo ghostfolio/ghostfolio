@@ -316,6 +316,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(CreateOrUpdateAccessDialog, {
       data: {
         access: {
+          alias: '',
           type: 'PUBLIC'
         }
       },
@@ -331,7 +332,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
         if (access) {
           this.dataService
-            .postAccess({})
+            .postAccess({ alias: access.alias })
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {

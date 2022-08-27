@@ -33,7 +33,7 @@ export class AccessTableComponent implements OnChanges, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = ['granteeAlias', 'type', 'details'];
+    this.displayedColumns = ['alias', 'grantee', 'type', 'details'];
 
     if (this.showActions) {
       this.displayedColumns.push('actions');

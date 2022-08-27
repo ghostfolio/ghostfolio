@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the alias to the `Access` database schema
 - Added support for translated time distances
 
 ### Changed
