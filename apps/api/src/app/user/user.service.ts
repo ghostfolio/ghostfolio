@@ -62,7 +62,7 @@ export class UserService {
       tags,
       access: access.map((accessItem) => {
         return {
-          alias: accessItem.User.alias,
+          alias: accessItem.alias,
           id: accessItem.id
         };
       }),

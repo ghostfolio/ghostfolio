@@ -1,5 +1,6 @@
 export interface Access {
-  granteeAlias: string;
+  alias?: string;
+  grantee: string;
   id: string;
   type: 'PUBLIC' | 'RESTRICTED_VIEW';
 }

@@ -349,6 +349,7 @@ export class PortfolioController {
 
     const portfolioPublicDetails: PortfolioPublicDetails = {
       hasDetails,
+      alias: access.alias,
       holdings: {}
     };
 
