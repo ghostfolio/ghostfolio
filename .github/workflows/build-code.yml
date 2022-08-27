@@ -1,0 +1,33 @@
+name: Build code
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version:
+          - 16
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+  
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+          cache: 'yarn'
+      
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Check formatting
+        run: yarn format:check
+
+      - name: Execute tests
+        run: yarn test
+
+      - name: Build application
+        run: yarn build:all
