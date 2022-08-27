@@ -1,6 +1,7 @@
 import * as currencies from '@dinero.js/currencies';
 import { DataSource } from '@prisma/client';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
+import { de } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark } from './interfaces';
@@ -54,6 +55,14 @@ export function getCssVariable(aCssVariable: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(
     aCssVariable
   );
+}
+
+export function getDateFnsLocale(aLocale = '') {
+  if (aLocale.startsWith('de')) {
+    return de;
+  }
+
+  return undefined;
 }
 
 export function getDateFormatString(aLocale?: string) {
