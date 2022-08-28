@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the alias to the `Access` database schema
 - Added support for translated time distances
+- Added a _GitHub Action_ to create an `arm64` docker image
 
 ### Changed
 
