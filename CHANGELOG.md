@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved the build pipeline from _Travis_ to _GitHub Actions_
 
+### Fixed
+
+- Disabled the language selector for the demo user
+
 ## 1.184.2 - 28.08.2022
 
 ### Added
