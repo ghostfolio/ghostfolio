@@ -21,7 +21,7 @@ jobs:
         with:
           images: ghostfolio/ghostfolio
           tags: |
-            type=raw,value=arm64
+            type=raw,value=linux-arm64-{{version}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
