@@ -119,6 +119,7 @@
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-select
                       name="language"
+                      [disabled]="!hasPermissionToUpdateUserSettings"
                       [value]="language"
                       (selectionChange)="onChangeUserSetting('language', $event.value)"
                     >
