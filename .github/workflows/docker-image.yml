@@ -21,7 +21,7 @@ jobs:
         with:
           images: ghostfolio/ghostfolio
           tags: |
-            type=raw,value=linux-arm64-{{version}}
+            type=semver,pattern={{version}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -41,7 +41,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          platforms: linux/arm64
+          platforms: linux/amd64,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.output.labels }}
