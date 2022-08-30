@@ -1,13 +1,23 @@
-<div class="align-items-center d-flex flex-row">
-  <div class="h2 mb-0 mr-2">{{ fearAndGreedIndexEmoji }}</div>
-  <div>
-    <div class="h4 mb-0">
-      <span class="mr-2">{{ fearAndGreedIndexText }}</span>
-      <small class="text-muted"
-        ><strong>{{ fearAndGreedIndex }}</strong
-        >/100</small
-      >
+<div class="position-relative">
+  <div class="align-items-center d-flex flex-row" [hidden]="!fearAndGreedIndex">
+    <div class="h2 mb-0 mr-2">{{ fearAndGreedIndexEmoji }}</div>
+    <div>
+      <div class="h4 mb-0">
+        <span class="mr-2">{{ fearAndGreedIndexText }}</span>
+        <small class="text-muted"
+          ><strong>{{ fearAndGreedIndex }}</strong
+          >/100</small
+        >
+      </div>
+      <small class="d-block" i18n>Current Market Mood</small>
     </div>
-    <small class="d-block" i18n>Current Market Mood</small>
   </div>
+  <ngx-skeleton-loader
+    *ngIf="!fearAndGreedIndex"
+    animation="pulse"
+    class="position-absolute w-100"
+    [theme]="{
+      height: '100%'
+    }"
+  ></ngx-skeleton-loader>
 </div>

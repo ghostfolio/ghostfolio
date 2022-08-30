@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a skeleton loader to the market mood component in the markets overview
+
 ### Changed
 
 - Moved the build pipeline from _Travis_ to _GitHub Actions_
+- Increased the caching of the benchmarks
 
 ### Fixed
 

@@ -7,7 +7,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
   exports: [TwitterBotService],
-  imports: [BenchmarkModule, ConfigurationModule, PropertyModule, SymbolModule],
+  imports: [BenchmarkModule, ConfigurationModule, SymbolModule],
   providers: [TwitterBotService]
 })
 export class TwitterBotModule {}
