@@ -1,30 +1,20 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_BENCHMARKS } from '@ghostfolio/common/config';
-import { BenchmarkResponse, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { BenchmarkResponse } from '@ghostfolio/common/interfaces';
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 
 import { BenchmarkService } from './benchmark.service';
 
 @Controller('benchmark')
 export class BenchmarkController {
-  public constructor(
-    private readonly benchmarkService: BenchmarkService,
-    private readonly propertyService: PropertyService
-  ) {}
+  public constructor(private readonly benchmarkService: BenchmarkService) {}
 
   @Get()
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getBenchmark(): Promise<BenchmarkResponse> {
-    const benchmarkAssets: UniqueAsset[] =
-      ((await this.propertyService.getByKey(
-        PROPERTY_BENCHMARKS
-      )) as UniqueAsset[]) ?? [];
-
     return {
-      benchmarks: await this.benchmarkService.getBenchmarks(benchmarkAssets)
+      benchmarks: await this.benchmarkService.getBenchmarks()
     };
   }
 }

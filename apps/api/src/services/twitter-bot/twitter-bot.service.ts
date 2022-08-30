@@ -1,9 +1,7 @@
 import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
-  PROPERTY_BENCHMARKS,
   ghostfolioFearAndGreedIndexDataSource,
   ghostfolioFearAndGreedIndexSymbol
 } from '@ghostfolio/common/config';
@@ -11,7 +9,6 @@ import {
   resolveFearAndGreedIndex,
   resolveMarketCondition
 } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';
@@ -23,7 +20,6 @@ export class TwitterBotService {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
-    private readonly propertyService: PropertyService,
     private readonly symbolService: SymbolService
   ) {
     this.twitterClient = new TwitterApi({
@@ -82,14 +78,9 @@ export class TwitterBotService {
   }
 
   private async getBenchmarkListing(aMax: number) {
-    const benchmarkAssets: UniqueAsset[] =
-      ((await this.propertyService.getByKey(
-        PROPERTY_BENCHMARKS
-      )) as UniqueAsset[]) ?? [];
-
-    const benchmarks = await this.benchmarkService.getBenchmarks(
-      benchmarkAssets
-    );
+    const benchmarks = await this.benchmarkService.getBenchmarks({
+      useCache: false
+    });
 
     const benchmarkListing: string[] = [];
 
