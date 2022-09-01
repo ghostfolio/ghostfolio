@@ -92,9 +92,9 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 | `POSTGRES_DB`       |               | The name of the _PostgreSQL_ database                                                                                               |
 | `POSTGRES_PASSWORD` |               | The password of the _PostgreSQL_ database                                                                                           |
 | `POSTGRES_USER`     |               | The user of the _PostgreSQL_ database                                                                                               |
-| `REDIS_HOST`        | `localhost`   | The host where _Redis_ is running                                                                                                   |
+| `REDIS_HOST`        |               | The host where _Redis_ is running                                                                                                   |
 | `REDIS_PASSWORD`    |               | The password of _Redis_                                                                                                             |
-| `REDIS_PORT`        | `6379`        | The port where _Redis_ is running                                                                                                   |
+| `REDIS_PORT`        |               | The port where _Redis_ is running                                                                                                   |
 
 ### Run with Docker Compose
 
