@@ -327,10 +327,10 @@ export class PortfolioService {
     }
 
     let isAllTimeHigh = timelineInfo.maxNetPerformance?.eq(
-      lastItem?.netPerformance
+      lastItem?.netPerformance ?? 0
     );
     let isAllTimeLow = timelineInfo.minNetPerformance?.eq(
-      lastItem?.netPerformance
+      lastItem?.netPerformance ?? 0
     );
     if (isAllTimeHigh && isAllTimeLow) {
       isAllTimeHigh = false;
@@ -466,7 +466,9 @@ export class PortfolioService {
 
       holdings[item.symbol] = {
         markets,
-        allocationCurrent: value.div(totalValue).toNumber(),
+        allocationCurrent: totalValue.eq(0)
+          ? 0
+          : value.div(totalValue).toNumber(),
         allocationInvestment: item.investment.div(totalInvestment).toNumber(),
         assetClass: symbolProfile.assetClass,
         assetSubClass: symbolProfile.assetSubClass,
@@ -478,7 +480,7 @@ export class PortfolioService {
           item.grossPerformancePercentage?.toNumber() ?? 0,
         investment: item.investment.toNumber(),
         marketPrice: item.marketPrice,
-        marketState: dataProviderResponse.marketState,
+        marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: symbolProfile.name,
         netPerformance: item.netPerformance?.toNumber() ?? 0,
         netPerformancePercent: item.netPerformancePercentage?.toNumber() ?? 0,
