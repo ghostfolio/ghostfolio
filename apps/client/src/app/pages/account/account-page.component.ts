@@ -226,6 +226,24 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
+    this.dataService
+      .putUserSetting({ isExperimentalFeatures: aEvent.checked })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
   public onRedeemCoupon() {
     let couponCode = prompt($localize`Please enter your coupon code:`);
     couponCode = couponCode?.trim();

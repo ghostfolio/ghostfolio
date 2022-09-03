@@ -185,8 +185,8 @@ export class DataService {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
   }
 
-  public fetchChart({ range }: { range: DateRange }) {
-    return this.http.get<PortfolioChart>('/api/v1/portfolio/chart', {
+  public fetchChart({ range, version }: { range: DateRange; version: number }) {
+    return this.http.get<PortfolioChart>(`/api/v${version}/portfolio/chart`, {
       params: { range }
     });
   }

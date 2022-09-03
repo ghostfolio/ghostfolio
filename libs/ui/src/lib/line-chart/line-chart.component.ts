@@ -47,7 +47,6 @@ import { LineChartItem } from './interfaces/line-chart.interface';
 export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
-  @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() locale: string;
   @Input() showGradient = false;
@@ -56,6 +55,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() showXAxis = false;
   @Input() showYAxis = false;
   @Input() symbol: string;
+  @Input() unit: string;
   @Input() yMax: number;
   @Input() yMaxLabel: string;
   @Input() yMin: number;
@@ -259,7 +259,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private getTooltipPluginConfiguration() {
     return {
-      ...getTooltipOptions(this.currency, this.locale),
+      ...getTooltipOptions({ locale: this.locale, unit: this.unit }),
       mode: 'index',
       position: <unknown>'top',
       xAlign: 'center',

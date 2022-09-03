@@ -2,7 +2,13 @@ import { Chart, TooltipPosition } from 'chart.js';
 
 import { getBackgroundColor, getTextColor } from './helper';
 
-export function getTooltipOptions(currency = '', locale = '') {
+export function getTooltipOptions({
+  locale = '',
+  unit = ''
+}: {
+  locale?: string;
+  unit?: string;
+} = {}) {
   return {
     backgroundColor: getBackgroundColor(),
     bodyColor: `rgb(${getTextColor()})`,
@@ -15,11 +21,11 @@ export function getTooltipOptions(currency = '', locale = '') {
           label += ': ';
         }
         if (context.parsed.y !== null) {
-          if (currency) {
+          if (unit) {
             label += `${context.parsed.y.toLocaleString(locale, {
               maximumFractionDigits: 2,
               minimumFractionDigits: 2
-            })} ${currency}`;
+            })} ${unit}`;
           } else {
             label += context.parsed.y.toFixed(2);
           }
