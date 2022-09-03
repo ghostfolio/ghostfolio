@@ -111,7 +111,6 @@ async function main() {
           }
         ]
       },
-      alias: 'Demo',
       id: '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f',
       role: Role.DEMO
     },

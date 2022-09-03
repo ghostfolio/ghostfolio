@@ -160,7 +160,6 @@ model Tag {
 
 model User {
   accessToken   String?
-  alias         String?
   authChallenge String?
   createdAt     DateTime       @default(now())
   id            String         @id @default(uuid())
