@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.186.0 - 03.09.2022
+## 1.186.1 - 03.09.2022
 
 ### Changed
 
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Made the environment variables `REDIS_HOST` and `REDIS_PORT` mandatory
+- Fixed the environment variables `REDIS_HOST`, `REDIS_PASSWORD` and `REDIS_PORT` in the Redis configuration
 - Handled errors in the portfolio calculation if there is no internet connection
 - Fixed the _GitHub_ contributors count on the about page
 
