@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Made the environment variables `REDIS_HOST` and `REDIS_PORT` mandatory
 - Handled errors in the portfolio calculation if there is no internet connection
+- Fixed the _GitHub_ contributors count on the about page
 
 ## 1.185.0 - 30.08.2022
 

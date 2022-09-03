@@ -6,6 +6,8 @@ import { de } from 'date-fns/locale';
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark } from './interfaces';
 
+const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
+
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
 }
@@ -41,6 +43,15 @@ export function downloadAsFile({
 
 export function encodeDataSource(aDataSource: DataSource) {
   return Buffer.from(aDataSource, 'utf-8').toString('hex');
+}
+
+export function extractNumberFromString(aString: string): number {
+  try {
+    const [numberString] = aString.match(NUMERIC_REGEXP);
+    return parseFloat(numberString.trim());
+  } catch {
+    return undefined;
+  }
 }
 
 export function getBackgroundColor() {

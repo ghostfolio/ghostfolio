@@ -6,7 +6,11 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  extractNumberFromString,
+  getYesterday
+} from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -16,8 +20,6 @@ import { addDays, format, isBefore } from 'date-fns';
 
 @Injectable()
 export class GhostfolioScraperApiService implements DataProviderInterface {
-  private static NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
-
   public constructor(
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
@@ -77,7 +79,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
       const html = await get();
       const $ = cheerio.load(html);
 
-      const value = this.extractNumberFromString($(selector).text());
+      const value = extractNumberFromString($(selector).text());
 
       return {
         [symbol]: {
@@ -174,16 +176,5 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
     });
 
     return { items };
-  }
-
-  private extractNumberFromString(aString: string): number {
-    try {
-      const [numberString] = aString.match(
-        GhostfolioScraperApiService.NUMERIC_REGEXP
-      );
-      return parseFloat(numberString.trim());
-    } catch {
-      return undefined;
-    }
   }
 }
