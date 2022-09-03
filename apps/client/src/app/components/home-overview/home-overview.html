@@ -15,7 +15,6 @@
         <gf-line-chart
           class="position-absolute"
           symbol="Performance"
-          [currency]="user?.settings?.baseCurrency"
           [historicalDataItems]="historicalDataItems"
           [hidden]="historicalDataItems?.length === 0"
           [locale]="user?.settings?.locale"
@@ -24,6 +23,7 @@
           [showLoader]="false"
           [showXAxis]="false"
           [showYAxis]="false"
+          [unit]="user?.settings?.isExperimentalFeatures ? '%' : user?.settings?.baseCurrency"
         ></gf-line-chart>
       </div>
     </div>

@@ -106,7 +106,10 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     this.isLoadingPerformance = true;
 
     this.dataService
-      .fetchChart({ range: this.dateRange })
+      .fetchChart({
+        range: this.dateRange,
+        version: this.user?.settings?.isExperimentalFeatures ? 2 : 1
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((chartData) => {
         this.historicalDataItems = chartData.chart.map((chartDataItem) => {

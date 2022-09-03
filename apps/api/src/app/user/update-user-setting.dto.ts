@@ -7,6 +7,10 @@ export class UpdateUserSettingDto {
 
   @IsBoolean()
   @IsOptional()
+  isExperimentalFeatures?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
   isRestrictedView?: boolean;
 
   @IsString()

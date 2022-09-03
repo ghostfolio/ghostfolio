@@ -583,7 +583,7 @@
         <source>Current Market Mood</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/fear-and-greed-index/fear-and-greed-index.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e95ae009d0bdb45fcc656e8b65248cf7396080d5" datatype="html">
@@ -957,7 +957,7 @@
         <source>Please enter the amount of your emergency fund:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="fc61416d48adb7af122b8697e806077eb251fb57" datatype="html">
@@ -1137,35 +1137,35 @@
         <source>Please enter your coupon code:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">248</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4420880039966769543" datatype="html">
         <source>Could not redeem coupon code</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">240</context>
+          <context context-type="linenumber">258</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4819099731531004979" datatype="html">
         <source>Coupon code has been redeemed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">252</context>
+          <context context-type="linenumber">270</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7967484035994732534" datatype="html">
         <source>Reload</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7963559562180316948" datatype="html">
         <source>Do you really want to remove this sign in method?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
-          <context context-type="linenumber">299</context>
+          <context context-type="linenumber">317</context>
         </context-group>
       </trans-unit>
       <trans-unit id="29881a45dafbe5aa05cd9d0441a4c0c2fb06df92" datatype="html">
@@ -1243,42 +1243,42 @@
         <source>Locale</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">135</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4402006eb2c97591dd8c87a5bd8f721fe9e4dc00" datatype="html">
         <source>Date and number format</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">137</context>
         </context-group>
       </trans-unit>
       <trans-unit id="234d001ccf20d47ac6a2846bb029eebb61444d15" datatype="html">
         <source>View Mode</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">159</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9ae348ee3a7319c2fc4794fa8bc425999d355f8f" datatype="html">
         <source>Sign in with fingerprint</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">180</context>
+          <context context-type="linenumber">181</context>
         </context-group>
       </trans-unit>
       <trans-unit id="83c4d4d764d2e2725ab8e919ec16ac400e1f290a" datatype="html">
         <source>User ID</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">208</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9021c579c084e68d9db06a569d76f024111c6c54" datatype="html">
         <source>Granted Access</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5e41f1b4c46ad9e0a9bc83fa36445483aa5cc324" datatype="html">
@@ -2357,6 +2357,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="03b120b05e0922e5e830c3466fda9ee0bfbf59e9" datatype="html">
+        <source>Experimental Features</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
     </body>

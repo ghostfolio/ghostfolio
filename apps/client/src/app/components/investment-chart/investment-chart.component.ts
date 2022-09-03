@@ -249,10 +249,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
   private getTooltipPluginConfiguration() {
     return {
-      ...getTooltipOptions(
-        this.isInPercent ? undefined : this.currency,
-        this.isInPercent ? undefined : this.locale
-      ),
+      ...getTooltipOptions({
+        locale: this.isInPercent ? undefined : this.locale,
+        unit: this.isInPercent ? undefined : this.currency
+      }),
       mode: 'index',
       position: <unknown>'top',
       xAlign: 'center',

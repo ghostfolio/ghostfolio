@@ -57,6 +57,7 @@ import {
 } from '@prisma/client';
 import Big from 'big.js';
 import {
+  addDays,
   differenceInDays,
   endOfToday,
   format,
@@ -71,7 +72,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, sortBy, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, sortBy, uniq, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -85,6 +86,7 @@ const emergingMarkets = require('../../assets/countries/emerging-markets.json');
 
 @Injectable()
 export class PortfolioService {
+  private static readonly MAX_CHART_ITEMS = 250;
   private baseCurrency: string;
 
   public constructor(
@@ -351,6 +353,78 @@ export class PortfolioService {
         // Filter items of date range
         return !isAfter(portfolioStart, parseDate(item.date));
       })
+    };
+  }
+
+  public async getChartV2(
+    aImpersonationId: string,
+    aDateRange: DateRange = 'max'
+  ): Promise<HistoricalDataContainer> {
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+
+    const { portfolioOrders, transactionPoints } =
+      await this.getTransactionPoints({
+        userId
+      });
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: this.request.user.Settings.currency,
+      currentRateService: this.currentRateService,
+      orders: portfolioOrders
+    });
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+    if (transactionPoints.length === 0) {
+      return {
+        isAllTimeHigh: false,
+        isAllTimeLow: false,
+        items: []
+      };
+    }
+    const endDate = new Date();
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(aDateRange, portfolioStart);
+
+    const daysInMarket = differenceInDays(new Date(), startDate);
+    const step = Math.round(
+      daysInMarket / Math.min(daysInMarket, PortfolioService.MAX_CHART_ITEMS)
+    );
+
+    const items: HistoricalDataItem[] = [];
+
+    let currentEndDate = startDate;
+
+    while (isBefore(currentEndDate, endDate)) {
+      const currentPositions = await portfolioCalculator.getCurrentPositions(
+        startDate,
+        currentEndDate
+      );
+
+      items.push({
+        date: format(currentEndDate, DATE_FORMAT),
+        value: currentPositions.netPerformancePercentage.toNumber() * 100
+      });
+
+      currentEndDate = addDays(currentEndDate, step);
+    }
+
+    const today = new Date();
+
+    if (last(items)?.date !== format(today, DATE_FORMAT)) {
+      // Add today
+      const { netPerformancePercentage } =
+        await portfolioCalculator.getCurrentPositions(startDate, today);
+      items.push({
+        date: format(today, DATE_FORMAT),
+        value: netPerformancePercentage.toNumber() * 100
+      });
+    }
+
+    return {
+      isAllTimeHigh: false,
+      isAllTimeLow: false,
+      items: items
     };
   }
 

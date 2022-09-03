@@ -35,7 +35,8 @@ import {
   Param,
   Query,
   UseGuards,
-  UseInterceptors
+  UseInterceptors,
+  Version
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -107,6 +108,26 @@ export class PortfolioController {
       chart: chartData,
       isAllTimeHigh: historicalDataContainer.isAllTimeHigh,
       isAllTimeLow: historicalDataContainer.isAllTimeLow
+    };
+  }
+
+  @Get('chart')
+  @UseGuards(AuthGuard('jwt'))
+  @Version('2')
+  public async getChartV2(
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('range') range
+  ): Promise<PortfolioChart> {
+    const historicalDataContainer = await this.portfolioService.getChartV2(
+      impersonationId,
+      range
+    );
+
+    return {
+      chart: historicalDataContainer.items,
+      hasError: false,
+      isAllTimeHigh: false,
+      isAllTimeLow: false
     };
   }
 

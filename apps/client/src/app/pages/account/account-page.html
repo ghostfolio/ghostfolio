@@ -188,6 +188,22 @@
               ></mat-slide-toggle>
             </div>
           </div>
+          <div
+            *ngIf="hasPermissionToUpdateUserSettings && user?.subscription"
+            class="align-items-center d-flex mt-4 py-1"
+          >
+            <div class="pr-1 w-50">
+              <div i18n>Experimental Features</div>
+            </div>
+            <div class="pl-1 w-50">
+              <mat-slide-toggle
+                color="primary"
+                [checked]="user.settings.isExperimentalFeatures"
+                [disabled]="!hasPermissionToUpdateUserSettings"
+                (change)="onExperimentalFeaturesChange($event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
           <div class="align-items-center d-flex mt-4 py-1">
             <div class="pr-1 w-50" i18n>User ID</div>
             <div class="pl-1 w-50">{{ user?.id }}</div>
