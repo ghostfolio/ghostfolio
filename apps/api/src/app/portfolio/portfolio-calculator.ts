@@ -432,30 +432,36 @@ export class PortfolioCalculator {
       }
     }
 
+    let minNetPerformance = new Big(0);
+    let maxNetPerformance = new Big(0);
+
     const timelineInfoInterfaces: TimelineInfoInterface[] = await Promise.all(
       timelinePeriodPromises
     );
-    const minNetPerformance = timelineInfoInterfaces
-      .map((timelineInfo) => timelineInfo.minNetPerformance)
-      .filter((performance) => performance !== null)
-      .reduce((minPerformance, current) => {
-        if (minPerformance.lt(current)) {
-          return minPerformance;
-        } else {
-          return current;
-        }
-      });
 
-    const maxNetPerformance = timelineInfoInterfaces
-      .map((timelineInfo) => timelineInfo.maxNetPerformance)
-      .filter((performance) => performance !== null)
-      .reduce((maxPerformance, current) => {
-        if (maxPerformance.gt(current)) {
-          return maxPerformance;
-        } else {
-          return current;
-        }
-      });
+    try {
+      minNetPerformance = timelineInfoInterfaces
+        .map((timelineInfo) => timelineInfo.minNetPerformance)
+        .filter((performance) => performance !== null)
+        .reduce((minPerformance, current) => {
+          if (minPerformance.lt(current)) {
+            return minPerformance;
+          } else {
+            return current;
+          }
+        });
+
+      maxNetPerformance = timelineInfoInterfaces
+        .map((timelineInfo) => timelineInfo.maxNetPerformance)
+        .filter((performance) => performance !== null)
+        .reduce((maxPerformance, current) => {
+          if (maxPerformance.gt(current)) {
+            return maxPerformance;
+          } else {
+            return current;
+          }
+        });
+    } catch {}
 
     const timelinePeriods = timelineInfoInterfaces.map(
       (timelineInfo) => timelineInfo.timelinePeriods

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Made the environment variables `REDIS_HOST` and `REDIS_PORT` mandatory
+- Handled errors in the portfolio calculation if there is no internet connection
 
 ## 1.185.0 - 30.08.2022
 
