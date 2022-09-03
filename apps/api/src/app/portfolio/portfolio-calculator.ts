@@ -172,15 +172,12 @@ export class PortfolioCalculator {
     start: Date,
     end = new Date(Date.now())
   ): Promise<CurrentPositions> {
-    const transactionPointsInRange =
+    const transactionPointsUntilEndDate =
       this.transactionPoints?.filter((transactionPoint) => {
-        return isWithinInterval(parseDate(transactionPoint.date), {
-          start,
-          end
-        });
+        return isBefore(parseDate(transactionPoint.date), end);
       }) ?? [];
 
-    if (!transactionPointsInRange.length) {
+    if (!transactionPointsUntilEndDate.length) {
       return {
         currentValue: new Big(0),
         grossPerformance: new Big(0),
@@ -194,32 +191,34 @@ export class PortfolioCalculator {
     }
 
     const lastTransactionPoint =
-      transactionPointsInRange[transactionPointsInRange.length - 1];
+      transactionPointsUntilEndDate[transactionPointsUntilEndDate.length - 1];
 
     let firstTransactionPoint: TransactionPoint = null;
-    let firstIndex = transactionPointsInRange.length;
+    let firstIndex = transactionPointsUntilEndDate.length;
     const dates = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
     const currencies: { [symbol: string]: string } = {};
 
     dates.push(resetHours(start));
-    for (const item of transactionPointsInRange[firstIndex - 1].items) {
+    for (const item of transactionPointsUntilEndDate[firstIndex - 1].items) {
       dataGatheringItems.push({
         dataSource: item.dataSource,
         symbol: item.symbol
       });
       currencies[item.symbol] = item.currency;
     }
-    for (let i = 0; i < transactionPointsInRange.length; i++) {
+    for (let i = 0; i < transactionPointsUntilEndDate.length; i++) {
       if (
-        !isBefore(parseDate(transactionPointsInRange[i].date), start) &&
+        !isBefore(parseDate(transactionPointsUntilEndDate[i].date), start) &&
         firstTransactionPoint === null
       ) {
-        firstTransactionPoint = transactionPointsInRange[i];
+        firstTransactionPoint = transactionPointsUntilEndDate[i];
         firstIndex = i;
       }
       if (firstTransactionPoint !== null) {
-        dates.push(resetHours(parseDate(transactionPointsInRange[i].date)));
+        dates.push(
+          resetHours(parseDate(transactionPointsUntilEndDate[i].date))
+        );
       }
     }
 
