@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Removed the alias from the `User` database schema
+
 ### Fixed
 
 - Made the environment variables `REDIS_HOST` and `REDIS_PORT` mandatory
