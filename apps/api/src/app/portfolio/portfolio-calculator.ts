@@ -183,9 +183,9 @@ export class PortfolioCalculator {
     if (!transactionPointsInRange.length) {
       return {
         currentValue: new Big(0),
-        hasErrors: false,
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
+        hasErrors: false,
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         positions: [],
