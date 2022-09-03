@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Decreased the rate limiter duration of queue jobs from 5 to 4 seconds
 - Removed the alias from the `User` database schema
+- Upgraded `angular` from version `14.1.0` to `14.2.0`
+- Upgraded `Nx` from version `14.5.1` to `14.6.4`
 
 ### Fixed
 
