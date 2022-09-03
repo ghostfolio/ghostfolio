@@ -54,7 +54,7 @@ export class WebAuthService {
       rpName: 'Ghostfolio',
       rpID: this.rpID,
       userID: user.id,
-      userName: user.alias,
+      userName: '',
       timeout: 60000,
       attestationType: 'indirect',
       authenticatorSelection: {

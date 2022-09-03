@@ -43,7 +43,7 @@ export class UserService {
       include: {
         User: true
       },
-      orderBy: { User: { alias: 'asc' } },
+      orderBy: { alias: 'asc' },
       where: { GranteeUser: { id } }
     });
     let tags = await this.tagService.getByUser(id);
@@ -98,7 +98,6 @@ export class UserService {
     const {
       accessToken,
       Account,
-      alias,
       authChallenge,
       createdAt,
       id,
@@ -116,7 +115,6 @@ export class UserService {
     const user: UserWithSettings = {
       accessToken,
       Account,
-      alias,
       authChallenge,
       createdAt,
       id,

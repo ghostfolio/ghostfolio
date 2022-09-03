@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Decreased the rate limiter duration of queue jobs from 5 to 4 seconds
+- Removed the alias from the `User` database schema
 
 ### Fixed
 
