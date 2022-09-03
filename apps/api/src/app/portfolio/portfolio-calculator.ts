@@ -273,6 +273,7 @@ export class PortfolioCalculator {
         netPerformance,
         netPerformancePercentage
       } = this.getSymbolMetrics({
+        end,
         marketSymbolMap,
         start,
         symbol: item.symbol
@@ -709,10 +710,12 @@ export class PortfolioCalculator {
   }
 
   private getSymbolMetrics({
+    end,
     marketSymbolMap,
     start,
     symbol
   }: {
+    end: Date;
     marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     };
@@ -735,13 +738,12 @@ export class PortfolioCalculator {
     }
 
     const dateOfFirstTransaction = new Date(first(orders).date);
-    const endDate = new Date(Date.now());
 
     const unitPriceAtStartDate =
       marketSymbolMap[format(start, DATE_FORMAT)]?.[symbol];
 
     const unitPriceAtEndDate =
-      marketSymbolMap[format(endDate, DATE_FORMAT)]?.[symbol];
+      marketSymbolMap[format(end, DATE_FORMAT)]?.[symbol];
 
     if (
       !unitPriceAtEndDate ||
@@ -794,7 +796,7 @@ export class PortfolioCalculator {
     orders.push({
       symbol,
       currency: null,
-      date: format(endDate, DATE_FORMAT),
+      date: format(end, DATE_FORMAT),
       dataSource: null,
       fee: new Big(0),
       itemType: 'end',
