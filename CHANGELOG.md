@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Decreased the rate limiter duration of queue jobs from 5 to 4 seconds
+
 ### Fixed
 
 - Made the environment variables `REDIS_HOST` and `REDIS_PORT` mandatory
