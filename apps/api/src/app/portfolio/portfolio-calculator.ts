@@ -16,6 +16,7 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
+  isWithinInterval,
   max,
   min,
   set
@@ -167,13 +168,24 @@ export class PortfolioCalculator {
     this.transactionPoints = transactionPoints;
   }
 
-  public async getCurrentPositions(start: Date): Promise<CurrentPositions> {
-    if (!this.transactionPoints?.length) {
+  public async getCurrentPositions(
+    start: Date,
+    end = new Date(Date.now())
+  ): Promise<CurrentPositions> {
+    const transactionPointsInRange =
+      this.transactionPoints?.filter((transactionPoint) => {
+        return isWithinInterval(parseDate(transactionPoint.date), {
+          start,
+          end
+        });
+      }) ?? [];
+
+    if (!transactionPointsInRange.length) {
       return {
         currentValue: new Big(0),
-        hasErrors: false,
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
+        hasErrors: false,
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         positions: [],
@@ -182,39 +194,36 @@ export class PortfolioCalculator {
     }
 
     const lastTransactionPoint =
-      this.transactionPoints[this.transactionPoints.length - 1];
-
-    // use Date.now() to use the mock for today
-    const today = new Date(Date.now());
+      transactionPointsInRange[transactionPointsInRange.length - 1];
 
     let firstTransactionPoint: TransactionPoint = null;
-    let firstIndex = this.transactionPoints.length;
+    let firstIndex = transactionPointsInRange.length;
     const dates = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
     const currencies: { [symbol: string]: string } = {};
 
     dates.push(resetHours(start));
-    for (const item of this.transactionPoints[firstIndex - 1].items) {
+    for (const item of transactionPointsInRange[firstIndex - 1].items) {
       dataGatheringItems.push({
         dataSource: item.dataSource,
         symbol: item.symbol
       });
       currencies[item.symbol] = item.currency;
     }
-    for (let i = 0; i < this.transactionPoints.length; i++) {
+    for (let i = 0; i < transactionPointsInRange.length; i++) {
       if (
-        !isBefore(parseDate(this.transactionPoints[i].date), start) &&
+        !isBefore(parseDate(transactionPointsInRange[i].date), start) &&
         firstTransactionPoint === null
       ) {
-        firstTransactionPoint = this.transactionPoints[i];
+        firstTransactionPoint = transactionPointsInRange[i];
         firstIndex = i;
       }
       if (firstTransactionPoint !== null) {
-        dates.push(resetHours(parseDate(this.transactionPoints[i].date)));
+        dates.push(resetHours(parseDate(transactionPointsInRange[i].date)));
       }
     }
 
-    dates.push(resetHours(today));
+    dates.push(resetHours(end));
 
     const marketSymbols = await this.currentRateService.getValues({
       currencies,
@@ -241,7 +250,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const todayString = format(today, DATE_FORMAT);
+    const endDateString = format(end, DATE_FORMAT);
 
     if (firstIndex > 0) {
       firstIndex--;
@@ -254,7 +263,7 @@ export class PortfolioCalculator {
     const errors: ResponseError['errors'] = [];
 
     for (const item of lastTransactionPoint.items) {
-      const marketValue = marketSymbolMap[todayString]?.[item.symbol];
+      const marketValue = marketSymbolMap[endDateString]?.[item.symbol];
 
       const {
         grossPerformance,
@@ -264,6 +273,7 @@ export class PortfolioCalculator {
         netPerformance,
         netPerformancePercentage
       } = this.getSymbolMetrics({
+        end,
         marketSymbolMap,
         start,
         symbol: item.symbol
@@ -700,10 +710,12 @@ export class PortfolioCalculator {
   }
 
   private getSymbolMetrics({
+    end,
     marketSymbolMap,
     start,
     symbol
   }: {
+    end: Date;
     marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     };
@@ -726,13 +738,12 @@ export class PortfolioCalculator {
     }
 
     const dateOfFirstTransaction = new Date(first(orders).date);
-    const endDate = new Date(Date.now());
 
     const unitPriceAtStartDate =
       marketSymbolMap[format(start, DATE_FORMAT)]?.[symbol];
 
     const unitPriceAtEndDate =
-      marketSymbolMap[format(endDate, DATE_FORMAT)]?.[symbol];
+      marketSymbolMap[format(end, DATE_FORMAT)]?.[symbol];
 
     if (
       !unitPriceAtEndDate ||
@@ -785,7 +796,7 @@ export class PortfolioCalculator {
     orders.push({
       symbol,
       currency: null,
-      date: format(endDate, DATE_FORMAT),
+      date: format(end, DATE_FORMAT),
       dataSource: null,
       fee: new Big(0),
       itemType: 'end',
