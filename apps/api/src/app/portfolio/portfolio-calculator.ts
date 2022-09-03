@@ -172,12 +172,12 @@ export class PortfolioCalculator {
     start: Date,
     end = new Date(Date.now())
   ): Promise<CurrentPositions> {
-    const transactionPointsUntilEndDate =
+    const transactionPointsBeforeEndDate =
       this.transactionPoints?.filter((transactionPoint) => {
         return isBefore(parseDate(transactionPoint.date), end);
       }) ?? [];
 
-    if (!transactionPointsUntilEndDate.length) {
+    if (!transactionPointsBeforeEndDate.length) {
       return {
         currentValue: new Big(0),
         grossPerformance: new Big(0),
@@ -191,33 +191,33 @@ export class PortfolioCalculator {
     }
 
     const lastTransactionPoint =
-      transactionPointsUntilEndDate[transactionPointsUntilEndDate.length - 1];
+      transactionPointsBeforeEndDate[transactionPointsBeforeEndDate.length - 1];
 
     let firstTransactionPoint: TransactionPoint = null;
-    let firstIndex = transactionPointsUntilEndDate.length;
+    let firstIndex = transactionPointsBeforeEndDate.length;
     const dates = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
     const currencies: { [symbol: string]: string } = {};
 
     dates.push(resetHours(start));
-    for (const item of transactionPointsUntilEndDate[firstIndex - 1].items) {
+    for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
       dataGatheringItems.push({
         dataSource: item.dataSource,
         symbol: item.symbol
       });
       currencies[item.symbol] = item.currency;
     }
-    for (let i = 0; i < transactionPointsUntilEndDate.length; i++) {
+    for (let i = 0; i < transactionPointsBeforeEndDate.length; i++) {
       if (
-        !isBefore(parseDate(transactionPointsUntilEndDate[i].date), start) &&
+        !isBefore(parseDate(transactionPointsBeforeEndDate[i].date), start) &&
         firstTransactionPoint === null
       ) {
-        firstTransactionPoint = transactionPointsUntilEndDate[i];
+        firstTransactionPoint = transactionPointsBeforeEndDate[i];
         firstIndex = i;
       }
       if (firstTransactionPoint !== null) {
         dates.push(
-          resetHours(parseDate(transactionPointsUntilEndDate[i].date))
+          resetHours(parseDate(transactionPointsBeforeEndDate[i].date))
         );
       }
     }
