@@ -1,6 +1,5 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -13,7 +12,10 @@ import {
   PROPERTY_SYSTEM_MESSAGE,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
-import { encodeDataSource } from '@ghostfolio/common/helper';
+import {
+  encodeDataSource,
+  extractNumberFromString
+} from '@ghostfolio/common/helper';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
@@ -21,6 +23,7 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bent from 'bent';
+import * as cheerio from 'cheerio';
 import { subDays } from 'date-fns';
 
 @Injectable()
@@ -30,7 +33,6 @@ export class InfoService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly dataGatheringService: DataGatheringService,
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -143,17 +145,21 @@ export class InfoService {
   private async countGitHubContributors(): Promise<number> {
     try {
       const get = bent(
-        `https://api.github.com/repos/ghostfolio/ghostfolio/contributors`,
+        'https://github.com/ghostfolio/ghostfolio',
         'GET',
-        'json',
+        'string',
         200,
-        {
-          'User-Agent': 'request'
-        }
+        {}
       );
 
-      const contributors = await get();
-      return contributors?.length;
+      const html = await get();
+      const $ = cheerio.load(html);
+
+      return extractNumberFromString(
+        $(
+          `a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter`
+        ).text()
+      );
     } catch (error) {
       Logger.error(error, 'InfoService');
 
