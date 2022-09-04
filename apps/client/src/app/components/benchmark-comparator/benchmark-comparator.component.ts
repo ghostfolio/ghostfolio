@@ -21,11 +21,9 @@ import {
   parseDate,
   transformTickToAbbreviation
 } from '@ghostfolio/common/helper';
+import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { GroupBy } from '@ghostfolio/common/types';
 import {
-  BarController,
-  BarElement,
   Chart,
   LineController,
   LineElement,
@@ -38,32 +36,31 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 
 @Component({
-  selector: 'gf-investment-chart',
+  selector: 'gf-benchmark-comparator',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './investment-chart.component.html',
-  styleUrls: ['./investment-chart.component.scss']
+  templateUrl: './benchmark-comparator.component.html',
+  styleUrls: ['./benchmark-comparator.component.scss']
 })
-export class InvestmentChartComponent implements OnChanges, OnDestroy {
+export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
+  @Input() benchmarks: UniqueAsset[];
   @Input() currency: string;
   @Input() daysInMarket: number;
-  @Input() groupBy: GroupBy;
   @Input() investments: InvestmentItem[];
   @Input() isInPercent = false;
   @Input() locale: string;
-  @Input() savingsRate = 0;
+  @Input() user: User;
 
   @ViewChild('chartCanvas') chartCanvas;
 
   public chart: Chart;
   public isLoading = true;
+  public value;
 
   private data: InvestmentItem[];
 
   public constructor() {
     Chart.register(
       annotationPlugin,
-      BarController,
-      BarElement,
       LinearScale,
       LineController,
       LineElement,
@@ -82,6 +79,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     }
   }
 
+  public onChangeBenchmark(aBenchmark: any) {
+    console.log(aBenchmark);
+  }
+
   public ngOnDestroy() {
     this.chart?.destroy();
   }
@@ -92,7 +93,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     // Create a clone
     this.data = this.investments.map((a) => Object.assign({}, a));
 
-    if (!this.groupBy && this.data?.length > 0) {
+    if (this.data?.length > 0) {
       // Extend chart by 5% of days in market (before)
       const firstItem = this.data[0];
       this.data.unshift({
@@ -123,7 +124,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderWidth: this.groupBy ? 0 : 2,
+          borderWidth: 2,
           data: this.data.map((position) => {
             return position.investment;
           }),
@@ -137,6 +138,15 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
           },
           stepped: true
+        },
+        {
+          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+          borderWidth: 2,
+          data: this.data.map((position) => {
+            return position.investment * 1.75;
+          }),
+          label: $localize`Benchmark`
         }
       ]
     };
@@ -168,28 +178,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             plugins: <unknown>{
               annotation: {
                 annotations: {
-                  savingsRate: this.savingsRate
-                    ? {
-                        borderColor: `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.75)`,
-                        borderWidth: 1,
-                        label: {
-                          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-                          borderRadius: 2,
-                          color: 'white',
-                          content: 'Savings Rate',
-                          display: true,
-                          font: { size: '10px', weight: 'normal' },
-                          padding: {
-                            x: 4,
-                            y: 2
-                          },
-                          position: 'start'
-                        },
-                        scaleID: 'y',
-                        type: 'line',
-                        value: this.savingsRate
-                      }
-                    : undefined,
                   yAxis: {
                     borderColor: `rgba(${getTextColor()}, 0.1)`,
                     borderWidth: 1,
@@ -213,7 +201,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 display: true,
                 grid: {
                   borderColor: `rgba(${getTextColor()}, 0.1)`,
-                  borderWidth: this.groupBy ? 0 : 1,
+                  borderWidth: 1,
                   color: `rgba(${getTextColor()}, 0.8)`,
                   display: false
                 },
@@ -244,7 +232,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             }
           },
           plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
-          type: this.groupBy ? 'bar' : 'line'
+          type: 'line'
         });
       }
     }

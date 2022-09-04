@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Position, User } from '@ghostfolio/common/interfaces';
+import { Position, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { differenceInDays } from 'date-fns';
@@ -18,6 +18,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  public benchmarks: UniqueAsset[];
   public bottom3: Position[];
   public daysInMarket: number;
   public deviceType: string;
@@ -40,7 +41,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
-  ) {}
+  ) {
+    const { benchmarks } = this.dataService.fetchInfo();
+    this.benchmarks = benchmarks;
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;

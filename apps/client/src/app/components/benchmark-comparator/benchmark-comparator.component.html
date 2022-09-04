@@ -1,0 +1,39 @@
+<div class="align-items-center d-flex mb-4">
+  <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
+    <span i18n>Benchmarks</span>
+    <sup i18n>Beta</sup>
+    <gf-premium-indicator
+      *ngIf="user?.subscription?.type === 'Basic'"
+      class="ml-1"
+    ></gf-premium-indicator>
+  </div>
+  <div>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label i18n>Compare with...</mat-label>
+      <mat-select
+        name="benchmark"
+        [value]="value"
+        (selectionChange)="onChangeBenchmark($event.value)"
+      >
+        <mat-option *ngFor="let benchmark of benchmarks" [value]="benchmark">{{
+          benchmark.symbol
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div class="chart-container">
+  <ngx-skeleton-loader
+    *ngIf="isLoading"
+    animation="pulse"
+    [theme]="{
+      height: '100%',
+      width: '100%'
+    }"
+  ></ngx-skeleton-loader>
+  <canvas
+    #chartCanvas
+    class="h-100"
+    [ngStyle]="{ display: isLoading ? 'none' : 'block' }"
+  ></canvas>
+</div>

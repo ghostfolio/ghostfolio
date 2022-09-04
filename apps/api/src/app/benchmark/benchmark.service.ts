@@ -56,11 +56,11 @@ export class BenchmarkService {
     const allTimeHighs = await Promise.all(promises);
 
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
-      const { marketPrice } = quotes[benchmarkAssets[index].symbol];
+      const { marketPrice } = quotes[benchmarkAssets[index].symbol] ?? {};
 
       let performancePercentFromAllTimeHigh = new Big(0);
 
-      if (allTimeHigh) {
+      if (allTimeHigh && marketPrice) {
         performancePercentFromAllTimeHigh = new Big(marketPrice)
           .div(allTimeHigh)
           .minus(1);
@@ -91,6 +91,24 @@ export class BenchmarkService {
     );
 
     return benchmarks;
+  }
+
+  public async getBenchmarkAssetProfiles(): Promise<UniqueAsset[]> {
+    const benchmarkAssets: UniqueAsset[] =
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as UniqueAsset[]) ?? [];
+
+    const assetProfiles = await this.symbolProfileService.getSymbolProfiles(
+      benchmarkAssets
+    );
+
+    return assetProfiles.map(({ dataSource, symbol }) => {
+      return {
+        dataSource,
+        symbol
+      };
+    });
   }
 
   private getMarketCondition(aPerformanceInPercent: Big) {

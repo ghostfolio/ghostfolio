@@ -1,3 +1,4 @@
+import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
@@ -31,6 +32,7 @@ export class InfoService {
   private static CACHE_KEY_STATISTICS = 'STATISTICS';
 
   public constructor(
+    private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
@@ -108,6 +110,7 @@ export class InfoService {
       platforms,
       systemMessage,
       baseCurrency: this.configurationService.get('BASE_CURRENCY'),
+      benchmarks: await this.benchmarkService.getBenchmarkAssetProfiles(),
       currencies: this.exchangeRateDataService.getCurrencies(),
       demoAuthToken: this.getDemoAuthToken(),
       statistics: await this.getStatistics(),

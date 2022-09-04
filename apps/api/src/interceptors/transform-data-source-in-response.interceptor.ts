@@ -5,6 +5,7 @@ import {
   Injectable,
   NestInterceptor
 } from '@nestjs/common';
+import { isArray } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -33,6 +34,13 @@ export class TransformDataSourceInResponseInterceptor<T>
                 activity.SymbolProfile.dataSource
               );
               return activity;
+            });
+          }
+
+          if (isArray(data.benchmarks)) {
+            data.benchmarks.map((benchmark) => {
+              benchmark.dataSource = encodeDataSource(benchmark.dataSource);
+              return benchmark;
             });
           }
 

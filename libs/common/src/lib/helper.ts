@@ -42,7 +42,11 @@ export function downloadAsFile({
 }
 
 export function encodeDataSource(aDataSource: DataSource) {
-  return Buffer.from(aDataSource, 'utf-8').toString('hex');
+  if (aDataSource) {
+    return Buffer.from(aDataSource, 'utf-8').toString('hex');
+  }
+
+  return undefined;
 }
 
 export function extractNumberFromString(aString: string): number {

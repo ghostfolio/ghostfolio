@@ -14,8 +14,8 @@ import { AdminOverviewComponent } from './admin-overview.component';
   declarations: [AdminOverviewComponent],
   exports: [],
   imports: [
-    FormsModule,
     CommonModule,
+    FormsModule,
     GfValueModule,
     MatButtonModule,
     MatCardModule,
