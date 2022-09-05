@@ -7,6 +7,7 @@ import {
   AdminMarketData,
   AdminMarketDataItem
 } from './admin-market-data.interface';
+import { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
 import { Benchmark } from './benchmark.interface';
 import { Coupon } from './coupon.interface';
 import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
@@ -15,6 +16,7 @@ import { FilterGroup } from './filter-group.interface';
 import { Filter } from './filter.interface';
 import { HistoricalDataItem } from './historical-data-item.interface';
 import { InfoItem } from './info-item.interface';
+import { LineChartItem } from './line-chart-item.interface';
 import { PortfolioChart } from './portfolio-chart.interface';
 import { PortfolioDetails } from './portfolio-details.interface';
 import { PortfolioInvestments } from './portfolio-investments.interface';
@@ -47,6 +49,7 @@ export {
   AdminMarketDataDetails,
   AdminMarketDataItem,
   Benchmark,
+  BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Coupon,
   EnhancedSymbolProfile,
@@ -55,6 +58,7 @@ export {
   FilterGroup,
   HistoricalDataItem,
   InfoItem,
+  LineChartItem,
   OAuthResponse,
   PortfolioChart,
   PortfolioDetails,

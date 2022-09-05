@@ -3,9 +3,11 @@ import 'chartjs-adapter-date-fns';
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   ViewChild
 } from '@angular/core';
 import {
@@ -17,12 +19,13 @@ import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
-  getTextColor,
-  parseDate,
-  transformTickToAbbreviation
+  getTextColor
 } from '@ghostfolio/common/helper';
-import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import {
+  LineChartItem,
+  UniqueAsset,
+  User
+} from '@ghostfolio/common/interfaces';
 import {
   Chart,
   LineController,
@@ -33,7 +36,6 @@ import {
   Tooltip
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { addDays, isAfter, parseISO, subDays } from 'date-fns';
 
 @Component({
   selector: 'gf-benchmark-comparator',
@@ -42,21 +44,20 @@ import { addDays, isAfter, parseISO, subDays } from 'date-fns';
   styleUrls: ['./benchmark-comparator.component.scss']
 })
 export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
+  @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarks: UniqueAsset[];
-  @Input() currency: string;
   @Input() daysInMarket: number;
-  @Input() investments: InvestmentItem[];
-  @Input() isInPercent = false;
   @Input() locale: string;
+  @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
+
+  @Output() benchmarkChanged = new EventEmitter<UniqueAsset>();
 
   @ViewChild('chartCanvas') chartCanvas;
 
+  public benchmark: UniqueAsset;
   public chart: Chart;
   public isLoading = true;
-  public value;
-
-  private data: InvestmentItem[];
 
   public constructor() {
     Chart.register(
@@ -74,13 +75,13 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    if (this.investments) {
+    if (this.performanceDataItems) {
       this.initialize();
     }
   }
 
-  public onChangeBenchmark(aBenchmark: any) {
-    console.log(aBenchmark);
+  public onChangeBenchmark(aBenchmark: UniqueAsset) {
+    this.benchmarkChanged.next(aBenchmark);
   }
 
   public ngOnDestroy() {
@@ -90,61 +91,26 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   private initialize() {
     this.isLoading = true;
 
-    // Create a clone
-    this.data = this.investments.map((a) => Object.assign({}, a));
-
-    if (this.data?.length > 0) {
-      // Extend chart by 5% of days in market (before)
-      const firstItem = this.data[0];
-      this.data.unshift({
-        ...firstItem,
-        date: subDays(
-          parseISO(firstItem.date),
-          this.daysInMarket * 0.05 || 90
-        ).toISOString(),
-        investment: 0
-      });
-
-      // Extend chart by 5% of days in market (after)
-      const lastItem = this.data[this.data.length - 1];
-      this.data.push({
-        ...lastItem,
-        date: addDays(
-          parseDate(lastItem.date),
-          this.daysInMarket * 0.05 || 90
-        ).toISOString()
-      });
-    }
-
     const data = {
-      labels: this.data.map((investmentItem) => {
-        return investmentItem.date;
+      labels: this.performanceDataItems.map(({ date }) => {
+        return date;
       }),
       datasets: [
         {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.data.map((position) => {
-            return position.investment;
+          data: this.performanceDataItems.map(({ value }) => {
+            return value;
           }),
-          label: $localize`Deposit`,
-          segment: {
-            borderColor: (context: unknown) =>
-              this.isInFuture(
-                context,
-                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
-              ),
-            borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
-          },
-          stepped: true
+          label: $localize`Portfolio`
         },
         {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.data.map((position) => {
-            return position.investment * 1.75;
+          data: this.benchmarkDataItems.map(({ value }) => {
+            return value;
           }),
           label: $localize`Benchmark`
         }
@@ -212,7 +178,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 }
               },
               y: {
-                display: !this.isInPercent,
+                display: true,
                 grid: {
                   borderColor: `rgba(${getTextColor()}, 0.1)`,
                   color: `rgba(${getTextColor()}, 0.8)`,
@@ -222,7 +188,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 position: 'right',
                 ticks: {
                   callback: (value: number) => {
-                    return transformTickToAbbreviation(value);
+                    return `${value} %`;
                   },
                   display: true,
                   mirror: true,
@@ -243,19 +209,13 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   private getTooltipPluginConfiguration() {
     return {
       ...getTooltipOptions({
-        locale: this.isInPercent ? undefined : this.locale,
-        unit: this.isInPercent ? undefined : this.currency
+        locale: this.locale,
+        unit: '%'
       }),
       mode: 'index',
       position: <unknown>'top',
       xAlign: 'center',
       yAlign: 'bottom'
     };
-  }
-
-  private isInFuture<T>(aContext: any, aValue: T) {
-    return isAfter(new Date(aContext?.p1?.parsed?.x), new Date())
-      ? aValue
-      : undefined;
   }
 }

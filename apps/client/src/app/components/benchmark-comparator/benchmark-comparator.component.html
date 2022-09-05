@@ -1,4 +1,4 @@
-<div class="align-items-center d-flex mb-4">
+<div class="align-items-center d-flex">
   <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
     <span i18n>Benchmarks</span>
     <sup i18n>Beta</sup>
@@ -12,7 +12,7 @@
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
         name="benchmark"
-        [value]="value"
+        [value]="benchmark"
         (selectionChange)="onChangeBenchmark($event.value)"
       >
         <mat-option *ngFor="let benchmark of benchmarks" [value]="benchmark">{{

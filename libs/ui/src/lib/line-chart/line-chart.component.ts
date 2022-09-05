@@ -25,6 +25,7 @@ import {
   getDateFormatString,
   getTextColor
 } from '@ghostfolio/common/helper';
+import { LineChartItem } from '@ghostfolio/common/interfaces';
 import {
   Chart,
   Filler,
@@ -35,8 +36,6 @@ import {
   TimeScale,
   Tooltip
 } from 'chart.js';
-
-import { LineChartItem } from './interfaces/line-chart.interface';
 
 @Component({
   selector: 'gf-line-chart',

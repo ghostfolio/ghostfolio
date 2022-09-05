@@ -19,6 +19,7 @@ import {
   Accounts,
   AdminData,
   AdminMarketData,
+  BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
   Filter,
@@ -179,6 +180,18 @@ export class DataService {
 
   public fetchAccesses() {
     return this.http.get<Access[]>('/api/v1/access');
+  }
+
+  public fetchBenchmarkBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): Observable<BenchmarkMarketDataDetails> {
+    return this.http.get<BenchmarkMarketDataDetails>(
+      `/api/v1/benchmark/${dataSource}/${symbol}`
+    );
   }
 
   public fetchBenchmarks() {

@@ -1,3 +1,4 @@
+import { BenchmarkModule } from '@ghostfolio/api/app/benchmark/benchmark.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
@@ -9,7 +10,6 @@ import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.mod
 import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { BenchmarkModule } from '@ghostfolio/api/app/benchmark/benchmark.module';
 
 import { InfoController } from './info.controller';
 import { InfoService } from './info.service';
