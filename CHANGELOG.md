@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a benchmark comparator (experimental)
 
+### Fixed
+
+- Improved the asset profile details dialog for assets without a (first) activity in the admin control panel
+
 ## 1.187.0 - 03.09.2022
 
 ### Added

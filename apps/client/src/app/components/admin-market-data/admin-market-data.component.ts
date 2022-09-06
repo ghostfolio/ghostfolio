@@ -92,7 +92,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
         if (
           params['assetProfileDialog'] &&
           params['dataSource'] &&
-          params['dateOfFirstActivity'] &&
           params['symbol']
         ) {
           this.openAssetProfileDialog({
@@ -170,12 +169,16 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     dateOfFirstActivity,
     symbol
   }: UniqueAsset & { dateOfFirstActivity: string }) {
+    try {
+      dateOfFirstActivity = format(parseISO(dateOfFirstActivity), DATE_FORMAT);
+    } catch {}
+
     this.router.navigate([], {
       queryParams: {
+        dateOfFirstActivity,
         dataSource,
         symbol,
-        assetProfileDialog: true,
-        dateOfFirstActivity: format(parseISO(dateOfFirstActivity), DATE_FORMAT)
+        assetProfileDialog: true
       }
     });
   }
