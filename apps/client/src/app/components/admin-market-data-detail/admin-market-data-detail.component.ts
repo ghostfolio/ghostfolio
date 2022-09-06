@@ -14,8 +14,7 @@ import {
   getDateFormatString,
   getLocale
 } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
-import { LineChartItem } from '@ghostfolio/ui/line-chart/interfaces/line-chart.interface';
+import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,

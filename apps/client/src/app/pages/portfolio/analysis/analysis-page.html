@@ -4,13 +4,13 @@
     <div class="col-lg">
       <gf-benchmark-comparator
         class="h-100"
+        [benchmarkDataItems]="benchmarkDataItems"
         [benchmarks]="benchmarks"
-        [currency]="user?.settings?.baseCurrency"
         [daysInMarket]="daysInMarket"
-        [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-        [investments]="investments"
         [locale]="user?.settings?.locale"
+        [performanceDataItems]="performanceDataItems"
         [user]="user"
+        (benchmarkChanged)="onChangeBenchmark($event)"
       ></gf-benchmark-comparator>
     </div>
   </div>

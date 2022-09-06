@@ -4,9 +4,15 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data.service'
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { PROPERTY_BENCHMARKS } from '@ghostfolio/common/config';
-import { BenchmarkResponse, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  BenchmarkMarketDataDetails,
+  BenchmarkResponse,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import Big from 'big.js';
+import { format } from 'date-fns';
 import ms from 'ms';
 
 @Injectable()
@@ -109,6 +115,43 @@ export class BenchmarkService {
         symbol
       };
     });
+  }
+
+  public async getMarketDataBySymbol({
+    dataSource,
+    startDate,
+    symbol
+  }: { startDate: Date } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+    const marketDataItems = await this.marketDataService.marketDataItems({
+      orderBy: {
+        date: 'asc'
+      },
+      where: {
+        dataSource,
+        symbol,
+        date: {
+          gte: startDate
+        }
+      }
+    });
+
+    const marketPriceAtStartDate = new Big(
+      marketDataItems?.[0]?.marketPrice ?? 0
+    );
+
+    return {
+      marketData: marketDataItems.map((marketDataItem) => {
+        return {
+          date: format(marketDataItem.date, DATE_FORMAT),
+          value: marketPriceAtStartDate.eq(0)
+            ? 0
+            : new Big(marketDataItem.marketPrice)
+                .div(marketPriceAtStartDate)
+                .minus(1)
+                .toNumber() * 100
+        };
+      })
+    };
   }
 
   private getMarketCondition(aPerformanceInPercent: Big) {

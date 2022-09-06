@@ -2,7 +2,12 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Position, UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import {
+  HistoricalDataItem,
+  Position,
+  UniqueAsset,
+  User
+} from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { differenceInDays } from 'date-fns';
@@ -18,10 +23,12 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: UniqueAsset[];
   public bottom3: Position[];
   public daysInMarket: number;
   public deviceType: string;
+  public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
   public investmentsByMonth: InvestmentItem[];
@@ -30,6 +37,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Accumulating`, value: undefined }
   ];
+  public performanceDataItems: HistoricalDataItem[];
   public top3: Position[];
   public user: User;
 
@@ -54,6 +62,16 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+      });
+
+    this.dataService
+      .fetchChart({ range: 'max', version: 2 })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ chart }) => {
+        this.firstOrderDate = new Date(chart?.[0]?.date);
+        this.performanceDataItems = chart;
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.dataService
@@ -103,6 +121,26 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
           this.changeDetectorRef.markForCheck();
         }
+      });
+  }
+
+  public onChangeBenchmark({ dataSource, symbol }: UniqueAsset) {
+    this.dataService
+      .fetchBenchmarkBySymbol({
+        dataSource,
+        symbol,
+        startDate: this.firstOrderDate
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ marketData }) => {
+        this.benchmarkDataItems = marketData.map(({ date, value }) => {
+          return {
+            date,
+            value
+          };
+        });
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
