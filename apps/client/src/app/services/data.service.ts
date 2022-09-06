@@ -14,6 +14,7 @@ import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interfac
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
   Accounts,
@@ -32,12 +33,13 @@ import {
   PortfolioPublicDetails,
   PortfolioReport,
   PortfolioSummary,
+  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 import { DataSource, Order as OrderModel } from '@prisma/client';
-import { parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -184,13 +186,16 @@ export class DataService {
 
   public fetchBenchmarkBySymbol({
     dataSource,
+    startDate,
     symbol
   }: {
-    dataSource: DataSource;
-    symbol: string;
-  }): Observable<BenchmarkMarketDataDetails> {
+    startDate: Date;
+  } & UniqueAsset): Observable<BenchmarkMarketDataDetails> {
     return this.http.get<BenchmarkMarketDataDetails>(
-      `/api/v1/benchmark/${dataSource}/${symbol}`
+      `/api/v1/benchmark/${dataSource}/${symbol}/${format(
+        startDate,
+        DATE_FORMAT
+      )}`
     );
   }
 

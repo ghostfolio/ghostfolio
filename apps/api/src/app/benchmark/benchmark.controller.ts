@@ -29,13 +29,20 @@ export class BenchmarkController {
     };
   }
 
-  @Get(':dataSource/:symbol')
+  @Get(':dataSource/:symbol/:startDateString')
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseGuards(AuthGuard('jwt'))
   public async getBenchmarkMarketDataBySymbol(
     @Param('dataSource') dataSource: DataSource,
+    @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string
   ): Promise<BenchmarkMarketDataDetails> {
-    return this.benchmarkService.getMarketDataBySymbol({ dataSource, symbol });
+    const startDate = new Date(startDateString);
+
+    return this.benchmarkService.getMarketDataBySymbol({
+      dataSource,
+      startDate,
+      symbol
+    });
   }
 }

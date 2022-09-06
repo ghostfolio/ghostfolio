@@ -28,6 +28,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public bottom3: Position[];
   public daysInMarket: number;
   public deviceType: string;
+  public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
   public investmentsByMonth: InvestmentItem[];
@@ -67,6 +68,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .fetchChart({ range: 'max', version: 2 })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {
+        this.firstOrderDate = new Date(chart?.[0]?.date);
         this.performanceDataItems = chart;
 
         this.changeDetectorRef.markForCheck();
@@ -122,9 +124,13 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onChangeBenchmark(aBenchmark: UniqueAsset) {
+  public onChangeBenchmark({ dataSource, symbol }: UniqueAsset) {
     this.dataService
-      .fetchBenchmarkBySymbol(aBenchmark)
+      .fetchBenchmarkBySymbol({
+        dataSource,
+        symbol,
+        startDate: this.firstOrderDate
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ marketData }) => {
         this.benchmarkDataItems = marketData.map(({ date, value }) => {

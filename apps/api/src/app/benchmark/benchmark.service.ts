@@ -119,23 +119,36 @@ export class BenchmarkService {
 
   public async getMarketDataBySymbol({
     dataSource,
+    startDate,
     symbol
-  }: UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+  }: { startDate: Date } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
     const marketDataItems = await this.marketDataService.marketDataItems({
       orderBy: {
         date: 'asc'
       },
       where: {
         dataSource,
-        symbol
+        symbol,
+        date: {
+          gte: startDate
+        }
       }
     });
+
+    const marketPriceAtStartDate = new Big(
+      marketDataItems?.[0]?.marketPrice ?? 0
+    );
 
     return {
       marketData: marketDataItems.map((marketDataItem) => {
         return {
           date: format(marketDataItem.date, DATE_FORMAT),
-          value: marketDataItem.marketPrice
+          value: marketPriceAtStartDate.eq(0)
+            ? 0
+            : new Big(marketDataItem.marketPrice)
+                .div(marketPriceAtStartDate)
+                .minus(1)
+                .toNumber() * 100
         };
       })
     };
