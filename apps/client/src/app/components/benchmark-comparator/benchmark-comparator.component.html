@@ -1,14 +1,16 @@
-<div class="align-items-center d-flex">
-  <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
-    <span i18n>Benchmarks</span>
-    <sup i18n>Beta</sup>
-    <gf-premium-indicator
-      *ngIf="user?.subscription?.type === 'Basic'"
-      class="ml-1"
-    ></gf-premium-indicator>
+<div class="row">
+  <div class="col-md-6 col-xs-12 d-flex">
+    <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
+      <span i18n>Benchmarks</span>
+      <sup i18n>Beta</sup>
+      <gf-premium-indicator
+        *ngIf="user?.subscription?.type === 'Basic'"
+        class="ml-1"
+      ></gf-premium-indicator>
+    </div>
   </div>
-  <div>
-    <mat-form-field appearance="outline" class="w-100">
+  <div class="col-md-6 col-xs-12 d-flex justify-content-end">
+    <mat-form-field appearance="outline" class="w-100" color="accent">
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
         name="benchmark"
