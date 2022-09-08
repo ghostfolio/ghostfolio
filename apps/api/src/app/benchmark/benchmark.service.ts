@@ -27,6 +27,10 @@ export class BenchmarkService {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
+  public calculateChangeInPercentage(baseValue: number, currentValue: number) {
+    return new Big(currentValue).div(baseValue).minus(1).toNumber();
+  }
+
   public async getBenchmarks({ useCache = true } = {}): Promise<
     BenchmarkResponse['benchmarks']
   > {
@@ -64,12 +68,13 @@ export class BenchmarkService {
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
       const { marketPrice } = quotes[benchmarkAssets[index].symbol] ?? {};
 
-      let performancePercentFromAllTimeHigh = new Big(0);
+      let performancePercentFromAllTimeHigh = 0;
 
       if (allTimeHigh && marketPrice) {
-        performancePercentFromAllTimeHigh = new Big(marketPrice)
-          .div(allTimeHigh)
-          .minus(1);
+        performancePercentFromAllTimeHigh = this.calculateChangeInPercentage(
+          allTimeHigh,
+          marketPrice
+        );
       }
 
       return {
@@ -84,7 +89,7 @@ export class BenchmarkService {
         })?.name,
         performances: {
           allTimeHigh: {
-            performancePercent: performancePercentFromAllTimeHigh.toNumber()
+            performancePercent: performancePercentFromAllTimeHigh
           }
         }
       };
@@ -135,26 +140,24 @@ export class BenchmarkService {
       }
     });
 
-    const marketPriceAtStartDate = new Big(
-      marketDataItems?.[0]?.marketPrice ?? 0
-    );
-
+    const marketPriceAtStartDate = marketDataItems?.[0]?.marketPrice ?? 0;
     return {
       marketData: marketDataItems.map((marketDataItem) => {
         return {
           date: format(marketDataItem.date, DATE_FORMAT),
-          value: marketPriceAtStartDate.eq(0)
-            ? 0
-            : new Big(marketDataItem.marketPrice)
-                .div(marketPriceAtStartDate)
-                .minus(1)
-                .toNumber() * 100
+          value:
+            marketPriceAtStartDate === 0
+              ? 0
+              : this.calculateChangeInPercentage(
+                  marketPriceAtStartDate,
+                  marketDataItem.marketPrice
+                ) * 100
         };
       })
     };
   }
 
-  private getMarketCondition(aPerformanceInPercent: Big) {
-    return aPerformanceInPercent.lte(-0.2) ? 'BEAR_MARKET' : 'NEUTRAL_MARKET';
+  private getMarketCondition(aPerformanceInPercent: number) {
+    return aPerformanceInPercent <= -0.2 ? 'BEAR_MARKET' : 'NEUTRAL_MARKET';
   }
 }
