@@ -19,7 +19,8 @@ import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
-  getTextColor
+  getTextColor,
+  parseDate
 } from '@ghostfolio/common/helper';
 import {
   LineChartItem,
@@ -56,7 +57,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @ViewChild('chartCanvas') chartCanvas;
 
   public benchmark: UniqueAsset;
-  public chart: Chart;
+  public chart: Chart<any>;
   public isLoading = true;
 
   public constructor() {
@@ -92,16 +93,13 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
     this.isLoading = true;
 
     const data = {
-      labels: this.performanceDataItems.map(({ date }) => {
-        return date;
-      }),
       datasets: [
         {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.performanceDataItems.map(({ value }) => {
-            return value;
+          data: this.performanceDataItems.map(({ date, value }) => {
+            return { x: parseDate(date), y: value };
           }),
           label: $localize`Portfolio`
         },
@@ -109,8 +107,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.benchmarkDataItems.map(({ value }) => {
-            return value;
+          data: this.benchmarkDataItems.map(({ date, value }) => {
+            return { x: parseDate(date), y: value };
           }),
           label: $localize`Benchmark`
         }

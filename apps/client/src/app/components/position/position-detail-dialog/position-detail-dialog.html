@@ -23,13 +23,13 @@
       class="mb-4"
       benchmarkLabel="Average Unit Price"
       [benchmarkDataItems]="benchmarkDataItems"
+      [currency]="SymbolProfile?.currency"
       [historicalDataItems]="historicalDataItems"
       [locale]="data.locale"
       [showGradient]="true"
       [showXAxis]="true"
       [showYAxis]="true"
       [symbol]="data.symbol"
-      [unit]="SymbolProfile?.currency"
     ></gf-line-chart>
 
     <div class="row">

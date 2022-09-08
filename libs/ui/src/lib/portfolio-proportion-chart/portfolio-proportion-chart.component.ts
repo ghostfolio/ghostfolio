@@ -349,7 +349,10 @@ export class PortfolioProportionChartComponent
 
   private getTooltipPluginConfiguration(data: ChartConfiguration['data']) {
     return {
-      ...getTooltipOptions({ locale: this.locale, unit: this.baseCurrency }),
+      ...getTooltipOptions({
+        currency: this.baseCurrency,
+        locale: this.locale
+      }),
       callbacks: {
         label: (context) => {
           const labelIndex =

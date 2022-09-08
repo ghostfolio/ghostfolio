@@ -125,7 +125,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: this.groupBy ? 0 : 2,
           data: this.data.map((position) => {
-            return position.investment;
+            return this.isInPercent
+              ? position.investment * 100
+              : position.investment;
           }),
           label: $localize`Deposit`,
           segment: {
@@ -255,8 +257,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   private getTooltipPluginConfiguration() {
     return {
       ...getTooltipOptions({
+        currency: this.isInPercent ? undefined : this.currency,
         locale: this.isInPercent ? undefined : this.locale,
-        unit: this.isInPercent ? undefined : this.currency
+        unit: this.isInPercent ? '%' : undefined
       }),
       mode: 'index',
       position: <unknown>'top',

@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Distinguished between currency and unit in the chart tooltip
+
+### Fixed
+
+- Fixed the benchmark chart in the benchmark comparator (experimental)
+
 ## 1.188.0 - 06.09.2022
 
 ### Added
