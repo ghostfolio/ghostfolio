@@ -46,6 +46,7 @@ import {
 export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
+  @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() locale: string;
   @Input() showGradient = false;
@@ -258,7 +259,11 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private getTooltipPluginConfiguration() {
     return {
-      ...getTooltipOptions({ locale: this.locale, unit: this.unit }),
+      ...getTooltipOptions({
+        currency: this.currency,
+        locale: this.locale,
+        unit: this.unit
+      }),
       mode: 'index',
       position: <unknown>'top',
       xAlign: 'center',
