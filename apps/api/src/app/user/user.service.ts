@@ -4,7 +4,11 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
-import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
+import {
+  User as IUser,
+  UserSettings,
+  UserWithSettings
+} from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasRole,
@@ -15,7 +19,6 @@ import { Prisma, Role, User, ViewMode } from '@prisma/client';
 import { sortBy } from 'lodash';
 
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
-import { UserSettings } from './interfaces/user-settings.interface';
 
 const crypto = require('crypto');
 
@@ -68,9 +71,13 @@ export class UserService {
       }),
       accounts: Account,
       settings: {
-        ...(<UserSettings>Settings.settings),
+        ...(<UserSettings>(<unknown>Settings.settings)),
         baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
-        locale: (<UserSettings>Settings.settings)?.locale ?? aLocale,
+        dateRange:
+          Settings?.viewMode === 'ZEN'
+            ? 'max'
+            : (<UserSettings>(<unknown>Settings.settings))?.dateRange ?? 'max',
+        locale: (<UserSettings>(<unknown>Settings.settings))?.locale ?? aLocale,
         viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
       }
     };
@@ -89,7 +96,10 @@ export class UserService {
   }
 
   public isRestrictedView(aUser: UserWithSettings) {
-    return (aUser.Settings.settings as UserSettings)?.isRestrictedView ?? false;
+    return (
+      (aUser.Settings.settings as unknown as UserSettings)?.isRestrictedView ??
+      false
+    );
   }
 
   public async user(
@@ -295,7 +305,7 @@ export class UserService {
     userId: string;
     userSettings: UserSettings;
   }) {
-    const settings = userSettings as Prisma.JsonObject;
+    const settings = userSettings as unknown as Prisma.JsonObject;
 
     await this.prismaService.settings.upsert({
       create: {

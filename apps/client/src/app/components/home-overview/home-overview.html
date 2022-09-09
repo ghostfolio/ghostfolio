@@ -46,7 +46,7 @@
       ></gf-portfolio-performance>
       <div *ngIf="showDetails" class="text-center">
         <gf-toggle
-          [defaultValue]="dateRange"
+          [defaultValue]="user?.settings?.dateRange"
           [isLoading]="isLoadingPerformance"
           [options]="dateRangeOptions"
           (change)="onChangeDateRange($event.value)"

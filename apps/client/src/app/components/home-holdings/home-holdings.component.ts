@@ -5,10 +5,6 @@ import { PositionDetailDialog } from '@ghostfolio/client/components/position/pos
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import {
-  RANGE,
-  SettingsStorageService
-} from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Position, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -26,7 +22,6 @@ import { PositionDetailDialogParams } from '../position/position-detail-dialog/i
   templateUrl: './home-holdings.html'
 })
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
-  public dateRange: DateRange;
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -44,7 +39,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private settingsStorageService: SettingsStorageService,
     private userService: UserService
   ) {
     this.route.queryParams
@@ -73,7 +67,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
             permissions.createOrder
           );
 
-          this.changeDetectorRef.markForCheck();
+          this.update();
         }
       });
   }
@@ -88,18 +82,24 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!aId;
       });
 
-    this.dateRange =
-      this.user.settings.viewMode === 'ZEN'
-        ? 'max'
-        : <DateRange>this.settingsStorageService.getSetting(RANGE) ?? 'max';
-
     this.update();
   }
 
-  public onChangeDateRange(aDateRange: DateRange) {
-    this.dateRange = aDateRange;
-    this.settingsStorageService.setSetting(RANGE, this.dateRange);
-    this.update();
+  public onChangeDateRange(dateRange: DateRange) {
+    this.dataService
+      .putUserSetting({ dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 
   public ngOnDestroy() {
@@ -151,7 +151,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.positions = undefined;
 
     this.dataService
-      .fetchPositions({ range: this.dateRange })
+      .fetchPositions({ range: this.user?.settings?.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.positions = response.positions;

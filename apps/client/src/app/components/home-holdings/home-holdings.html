@@ -1,7 +1,7 @@
 <div class="container justify-content-center p-3">
   <div *ngIf="user.settings.viewMode !== 'ZEN'" class="mb-3 text-center">
     <gf-toggle
-      [defaultValue]="dateRange"
+      [defaultValue]="user?.settings?.dateRange"
       [isLoading]="positions === undefined"
       [options]="dateRangeOptions"
       (change)="onChangeDateRange($event.value)"
@@ -17,7 +17,7 @@
             [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
             [locale]="user?.settings?.locale"
             [positions]="positions"
-            [range]="dateRange"
+            [range]="user?.settings?.dateRange"
           ></gf-positions>
         </mat-card-content>
       </mat-card>
