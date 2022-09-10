@@ -1,7 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_IS_READ_ONLY_MODE } from '@ghostfolio/common/config';
-import { User } from '@ghostfolio/common/interfaces';
+import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
@@ -25,7 +25,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { UserItem } from './interfaces/user-item.interface';
 import { UserSettingsParams } from './interfaces/user-settings-params.interface';
-import { UserSettings } from './interfaces/user-settings.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UpdateUserSettingsDto } from './update-user-settings.dto';
 import { UserService } from './user.service';
