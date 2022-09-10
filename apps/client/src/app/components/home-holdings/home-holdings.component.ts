@@ -97,6 +97,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
+
             this.changeDetectorRef.markForCheck();
           });
       });

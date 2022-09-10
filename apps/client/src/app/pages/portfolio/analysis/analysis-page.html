@@ -4,6 +4,7 @@
     <div class="col-lg">
       <gf-benchmark-comparator
         class="h-100"
+        [benchmark]="user?.settings?.benchmark"
         [benchmarkDataItems]="benchmarkDataItems"
         [benchmarks]="benchmarks"
         [daysInMarket]="daysInMarket"
@@ -11,6 +12,7 @@
         [performanceDataItems]="performanceDataItems"
         [user]="user"
         (benchmarkChanged)="onChangeBenchmark($event)"
+        (dateRangeChanged)="onChangeDateRange($event)"
       ></gf-benchmark-comparator>
     </div>
   </div>

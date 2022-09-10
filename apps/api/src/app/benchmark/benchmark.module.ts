@@ -1,4 +1,5 @@
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data.module';
@@ -18,6 +19,7 @@ import { BenchmarkService } from './benchmark.service';
     MarketDataModule,
     PropertyModule,
     RedisCacheModule,
+    SymbolModule,
     SymbolProfileModule
   ],
   providers: [BenchmarkService]

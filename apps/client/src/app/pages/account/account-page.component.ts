@@ -244,7 +244,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         )
         .subscribe(() => {
           this.snackBarRef = this.snackBar.open(
-            '✅' + $localize`Coupon code has been redeemed`,
+            '✅ ' + $localize`Coupon code has been redeemed`,
             $localize`Reload`,
             {
               duration: 3000

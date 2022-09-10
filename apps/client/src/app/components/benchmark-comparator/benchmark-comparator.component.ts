@@ -10,6 +10,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
@@ -27,6 +28,7 @@ import {
   UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 import {
   Chart,
   LineController,
@@ -46,6 +48,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 })
 export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
+  @Input() benchmark: UniqueAsset;
   @Input() benchmarks: UniqueAsset[];
   @Input() daysInMarket: number;
   @Input() locale: string;
@@ -53,11 +56,12 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() user: User;
 
   @Output() benchmarkChanged = new EventEmitter<UniqueAsset>();
+  @Output() dateRangeChanged = new EventEmitter<DateRange>();
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public benchmark: UniqueAsset;
   public chart: Chart<any>;
+  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public isLoading = true;
 
   public constructor() {
@@ -81,8 +85,22 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onChangeBenchmark(aBenchmark: UniqueAsset) {
-    this.benchmarkChanged.next(aBenchmark);
+  public compareUniqueAssets(
+    uniqueAsset1: UniqueAsset,
+    uniqueAsset2: UniqueAsset
+  ) {
+    return (
+      uniqueAsset1?.dataSource === uniqueAsset2?.dataSource &&
+      uniqueAsset1?.symbol === uniqueAsset2?.symbol
+    );
+  }
+
+  public onChangeBenchmark(benchmark: UniqueAsset) {
+    this.benchmarkChanged.next(benchmark);
+  }
+
+  public onChangeDateRange(dateRange: DateRange) {
+    this.dateRangeChanged.next(dateRange);
   }
 
   public ngOnDestroy() {

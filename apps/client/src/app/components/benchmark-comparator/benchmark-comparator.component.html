@@ -14,15 +14,26 @@
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
         name="benchmark"
+        [compareWith]="compareUniqueAssets"
         [value]="benchmark"
         (selectionChange)="onChangeBenchmark($event.value)"
       >
-        <mat-option *ngFor="let benchmark of benchmarks" [value]="benchmark">{{
-          benchmark.symbol
-        }}</mat-option>
+        <mat-option
+          *ngFor="let currentBenchmark of benchmarks"
+          [value]="currentBenchmark"
+          >{{ currentBenchmark.symbol }}</mat-option
+        >
       </mat-select>
     </mat-form-field>
   </div>
+</div>
+<div *ngIf="user.settings.viewMode !== 'ZEN'" class="mb-3 text-center">
+  <gf-toggle
+    [defaultValue]="user?.settings?.dateRange"
+    [isLoading]="isLoading"
+    [options]="dateRangeOptions"
+    (change)="onChangeDateRange($event.value)"
+  ></gf-toggle>
 </div>
 <div class="chart-container">
   <ngx-skeleton-loader
