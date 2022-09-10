@@ -175,29 +175,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onChangeUserSettings(aKey: string, aValue: string) {
-    const settings = { ...this.user.settings, [aKey]: aValue };
-
-    this.dataService
-      .putUserSettings({
-        baseCurrency: settings?.baseCurrency,
-        viewMode: settings?.viewMode
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService.remove();
-
-        this.userService
-          .get()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
   public onCheckout() {
     this.dataService
       .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })

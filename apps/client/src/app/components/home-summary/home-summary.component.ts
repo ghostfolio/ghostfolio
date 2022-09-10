@@ -38,7 +38,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
             permissions.updateUserSettings
           );
 
-          this.changeDetectorRef.markForCheck();
+          this.update();
         }
       });
   }
@@ -59,7 +59,16 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
       .putUserSetting({ emergencyFund })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.update();
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
       });
   }
 

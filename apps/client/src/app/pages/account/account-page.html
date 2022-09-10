@@ -99,7 +99,7 @@
                       name="baseCurrency"
                       [disabled]="!hasPermissionToUpdateUserSettings"
                       [value]="user.settings.baseCurrency"
-                      (selectionChange)="onChangeUserSettings('baseCurrency', $event.value)"
+                      (selectionChange)="onChangeUserSetting('baseCurrency', $event.value)"
                     >
                       <mat-option
                         *ngFor="let currency of currencies"
@@ -166,7 +166,7 @@
                         name="viewMode"
                         [disabled]="!hasPermissionToUpdateViewMode"
                         [value]="user.settings.viewMode"
-                        (selectionChange)="onChangeUserSettings('viewMode', $event.value)"
+                        (selectionChange)="onChangeUserSetting('viewMode', $event.value)"
                       >
                         <mat-option value="DEFAULT">Default</mat-option>
                         <mat-option value="ZEN">Zen</mat-option>

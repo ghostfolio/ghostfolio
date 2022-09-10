@@ -73,7 +73,18 @@ export class FirePageComponent implements OnDestroy, OnInit {
     this.dataService
       .putUserSetting({ savingsRate })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 
   public ngOnDestroy() {

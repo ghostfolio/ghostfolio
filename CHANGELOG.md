@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the mobile layout of the benchmark comparator
+- Migrated the date range setting from the locale storage to the user settings
+- Refactored the `currency` and `view mode` in the user settings
 
 ## 1.189.0 - 08.09.2022
 

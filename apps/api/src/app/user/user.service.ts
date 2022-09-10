@@ -4,18 +4,19 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
-import { User as IUser, UserWithSettings } from '@ghostfolio/common/interfaces';
+import {
+  User as IUser,
+  UserSettings,
+  UserWithSettings
+} from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Role, User, ViewMode } from '@prisma/client';
+import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
-
-import { UserSettingsParams } from './interfaces/user-settings-params.interface';
-import { UserSettings } from './interfaces/user-settings.interface';
 
 const crypto = require('crypto');
 
@@ -68,10 +69,8 @@ export class UserService {
       }),
       accounts: Account,
       settings: {
-        ...(<UserSettings>Settings.settings),
-        baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
-        locale: (<UserSettings>Settings.settings)?.locale ?? aLocale,
-        viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
+        ...(<UserSettings>(<unknown>Settings.settings)),
+        locale: (<UserSettings>(<unknown>Settings.settings))?.locale ?? aLocale
       }
     };
   }
@@ -89,7 +88,10 @@ export class UserService {
   }
 
   public isRestrictedView(aUser: UserWithSettings) {
-    return (aUser.Settings.settings as UserSettings)?.isRestrictedView ?? false;
+    return (
+      (aUser.Settings.settings as unknown as UserSettings)?.isRestrictedView ??
+      false
+    );
   }
 
   public async user(
@@ -126,19 +128,35 @@ export class UserService {
     };
 
     if (user?.Settings) {
-      if (!user.Settings.currency) {
-        // Set default currency if needed
-        user.Settings.currency = UserService.DEFAULT_CURRENCY;
+      if (!user.Settings.settings) {
+        user.Settings.settings = {};
       }
     } else if (user) {
       // Set default settings if needed
       user.Settings = {
-        currency: UserService.DEFAULT_CURRENCY,
-        settings: null,
+        currency: null,
+        settings: {},
         updatedAt: new Date(),
         userId: user?.id,
-        viewMode: ViewMode.DEFAULT
+        viewMode: 'DEFAULT'
       };
+    }
+
+    // Set default value for base currency
+    if (!(user.Settings.settings as UserSettings)?.baseCurrency) {
+      (user.Settings.settings as UserSettings).baseCurrency =
+        UserService.DEFAULT_CURRENCY;
+    }
+
+    // Set default value for date range
+    (user.Settings.settings as UserSettings).dateRange =
+      (user.Settings.settings as UserSettings).viewMode === 'ZEN'
+        ? 'max'
+        : (user.Settings.settings as UserSettings)?.dateRange ?? 'max';
+
+    // Set default value for view mode
+    if (!(user.Settings.settings as UserSettings).viewMode) {
+      (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -295,7 +313,7 @@ export class UserService {
     userId: string;
     userSettings: UserSettings;
   }) {
-    const settings = userSettings as Prisma.JsonObject;
+    const settings = userSettings as unknown as Prisma.JsonObject;
 
     await this.prismaService.settings.upsert({
       create: {
@@ -308,33 +326,6 @@ export class UserService {
       },
       update: {
         settings
-      },
-      where: {
-        userId: userId
-      }
-    });
-
-    return;
-  }
-
-  public async updateUserSettings({
-    currency,
-    userId,
-    viewMode
-  }: UserSettingsParams) {
-    await this.prismaService.settings.upsert({
-      create: {
-        currency,
-        User: {
-          connect: {
-            id: userId
-          }
-        },
-        viewMode
-      },
-      update: {
-        currency,
-        viewMode
       },
       where: {
         userId: userId

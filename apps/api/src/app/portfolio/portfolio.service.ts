@@ -5,7 +5,6 @@ import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.s
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { TimelineSpecification } from '@ghostfolio/api/app/portfolio/interfaces/timeline-specification.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
-import { UserSettings } from '@ghostfolio/api/app/user/interfaces/user-settings.interface';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
@@ -35,7 +34,8 @@ import {
   PortfolioReport,
   PortfolioSummary,
   Position,
-  TimelinePosition
+  TimelinePosition,
+  UserSettings
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import type {
@@ -1045,7 +1045,7 @@ export class PortfolioService {
               accounts
             )
           ],
-          { baseCurrency: currency }
+          <UserSettings>this.request.user.Settings.settings
         ),
         currencyClusterRisk: await this.rulesService.evaluate(
           [
@@ -1066,7 +1066,7 @@ export class PortfolioService {
               currentPositions
             )
           ],
-          { baseCurrency: currency }
+          <UserSettings>this.request.user.Settings.settings
         ),
         fees: await this.rulesService.evaluate(
           [
@@ -1076,7 +1076,7 @@ export class PortfolioService {
               this.getFees(orders).toNumber()
             )
           ],
-          { baseCurrency: currency }
+          <UserSettings>this.request.user.Settings.settings
         )
       }
     };

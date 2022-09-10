@@ -2,10 +2,6 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import {
-  RANGE,
-  SettingsStorageService
-} from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   LineChartItem,
@@ -25,7 +21,6 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-overview.html'
 })
 export class HomeOverviewComponent implements OnDestroy, OnInit {
-  public dateRange: DateRange;
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public errors: UniqueAsset[];
@@ -47,7 +42,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
-    private settingsStorageService: SettingsStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -61,7 +55,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
             permissions.createOrder
           );
 
-          this.changeDetectorRef.markForCheck();
+          this.update();
         }
       });
   }
@@ -78,11 +72,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.dateRange =
-      this.user.settings.viewMode === 'ZEN'
-        ? 'max'
-        : <DateRange>this.settingsStorageService.getSetting(RANGE) ?? 'max';
-
     this.showDetails =
       !this.hasImpersonationId &&
       !this.user.settings.isRestrictedView &&
@@ -91,10 +80,22 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     this.update();
   }
 
-  public onChangeDateRange(aDateRange: DateRange) {
-    this.dateRange = aDateRange;
-    this.settingsStorageService.setSetting(RANGE, this.dateRange);
-    this.update();
+  public onChangeDateRange(dateRange: DateRange) {
+    this.dataService
+      .putUserSetting({ dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 
   public ngOnDestroy() {
@@ -107,7 +108,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchChart({
-        range: this.dateRange,
+        range: this.user?.settings?.dateRange,
         version: this.user?.settings?.isExperimentalFeatures ? 2 : 1
       })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -125,7 +126,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchPortfolioPerformance({ range: this.dateRange })
+      .fetchPortfolioPerformance({ range: this.user?.settings?.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.errors = response.errors;
