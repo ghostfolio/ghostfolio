@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the `currency` and `viewMode` from the `User` database schema
 
+### Fixed
+
+- Allowed the date range change for the demo user
+
 ## 1.190.0 - 10.09.2022
 
 ### Added
