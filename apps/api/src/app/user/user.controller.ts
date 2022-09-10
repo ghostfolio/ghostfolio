@@ -22,6 +22,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { size } from 'lodash';
 
 import { UserItem } from './interfaces/user-item.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
@@ -100,6 +101,12 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   public async updateUserSetting(@Body() data: UpdateUserSettingDto) {
     if (
+      size(data) === 1 &&
+      data.dateRange &&
+      this.request.user.role === 'DEMO'
+    ) {
+      // Allow date range change for demo user
+    } else if (
       !hasPermission(
         this.request.user.permissions,
         permissions.updateUserSettings
