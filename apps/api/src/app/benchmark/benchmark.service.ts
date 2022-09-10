@@ -31,7 +31,11 @@ export class BenchmarkService {
   ) {}
 
   public calculateChangeInPercentage(baseValue: number, currentValue: number) {
-    return new Big(currentValue).div(baseValue).minus(1).toNumber();
+    if (baseValue && currentValue) {
+      return new Big(currentValue).div(baseValue).minus(1).toNumber();
+    }
+
+    return 0;
   }
 
   public async getBenchmarks({ useCache = true } = {}): Promise<
