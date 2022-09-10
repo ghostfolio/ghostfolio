@@ -1,9 +1,16 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { DateRange } from '@ghostfolio/common/types';
+import {
+  IsBoolean,
+  IsIn,
+  IsNumber,
+  IsOptional,
+  IsString
+} from 'class-validator';
 
 export class UpdateUserSettingDto {
+  @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'ytd'])
   @IsOptional()
-  @IsString() // TODO: DateRange
-  dateRange?: string;
+  dateRange?: DateRange;
 
   @IsNumber()
   @IsOptional()
