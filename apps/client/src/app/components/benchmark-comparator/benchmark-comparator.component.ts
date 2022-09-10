@@ -39,6 +39,7 @@ import {
   Tooltip
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { SymbolProfile } from '@prisma/client';
 
 @Component({
   selector: 'gf-benchmark-comparator',
@@ -48,14 +49,14 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 })
 export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
-  @Input() benchmark: UniqueAsset;
-  @Input() benchmarks: UniqueAsset[];
+  @Input() benchmark: string;
+  @Input() benchmarks: Partial<SymbolProfile>[];
   @Input() daysInMarket: number;
   @Input() locale: string;
   @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
 
-  @Output() benchmarkChanged = new EventEmitter<UniqueAsset>();
+  @Output() benchmarkChanged = new EventEmitter<string>();
   @Output() dateRangeChanged = new EventEmitter<DateRange>();
 
   @ViewChild('chartCanvas') chartCanvas;
@@ -85,18 +86,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public compareUniqueAssets(
-    uniqueAsset1: UniqueAsset,
-    uniqueAsset2: UniqueAsset
-  ) {
-    return (
-      uniqueAsset1?.dataSource === uniqueAsset2?.dataSource &&
-      uniqueAsset1?.symbol === uniqueAsset2?.symbol
-    );
-  }
-
-  public onChangeBenchmark(benchmark: UniqueAsset) {
-    this.benchmarkChanged.next(benchmark);
+  public onChangeBenchmark(symbolProfileId: string) {
+    this.benchmarkChanged.next(symbolProfileId);
   }
 
   public onChangeDateRange(dateRange: DateRange) {

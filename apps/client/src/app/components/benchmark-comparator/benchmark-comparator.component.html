@@ -14,14 +14,13 @@
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
         name="benchmark"
-        [compareWith]="compareUniqueAssets"
         [value]="benchmark"
         (selectionChange)="onChangeBenchmark($event.value)"
       >
         <mat-option
-          *ngFor="let currentBenchmark of benchmarks"
-          [value]="currentBenchmark"
-          >{{ currentBenchmark.symbol }}</mat-option
+          *ngFor="let symbolProfile of benchmarks"
+          [value]="symbolProfile.id"
+          >{{ symbolProfile.name }}</mat-option
         >
       </mat-select>
     </mat-form-field>

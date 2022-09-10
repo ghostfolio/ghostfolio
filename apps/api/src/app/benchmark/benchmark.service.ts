@@ -12,6 +12,7 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
+import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format } from 'date-fns';
 import ms from 'ms';
@@ -55,25 +56,25 @@ export class BenchmarkService {
       } catch {}
     }
 
-    const benchmarkAssets: UniqueAsset[] =
-      ((await this.propertyService.getByKey(
-        PROPERTY_BENCHMARKS
-      )) as UniqueAsset[]) ?? [];
+    const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles();
+
     const promises: Promise<number>[] = [];
 
-    const [quotes, assetProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes(benchmarkAssets),
-      this.symbolProfileService.getSymbolProfiles(benchmarkAssets)
-    ]);
+    const quotes = await this.dataProviderService.getQuotes(
+      benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      })
+    );
 
-    for (const benchmarkAsset of benchmarkAssets) {
-      promises.push(this.marketDataService.getMax(benchmarkAsset));
+    for (const { dataSource, symbol } of benchmarkAssetProfiles) {
+      promises.push(this.marketDataService.getMax({ dataSource, symbol }));
     }
 
     const allTimeHighs = await Promise.all(promises);
 
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
-      const { marketPrice } = quotes[benchmarkAssets[index].symbol] ?? {};
+      const { marketPrice } =
+        quotes[benchmarkAssetProfiles[index].symbol] ?? {};
 
       let performancePercentFromAllTimeHigh = 0;
 
@@ -88,12 +89,7 @@ export class BenchmarkService {
         marketCondition: this.getMarketCondition(
           performancePercentFromAllTimeHigh
         ),
-        name: assetProfiles.find(({ dataSource, symbol }) => {
-          return (
-            dataSource === benchmarkAssets[index].dataSource &&
-            symbol === benchmarkAssets[index].symbol
-          );
-        })?.name,
+        name: benchmarkAssetProfiles[index].name,
         performances: {
           allTimeHigh: {
             performancePercent: performancePercentFromAllTimeHigh
@@ -111,19 +107,23 @@ export class BenchmarkService {
     return benchmarks;
   }
 
-  public async getBenchmarkAssetProfiles(): Promise<UniqueAsset[]> {
-    const benchmarkAssets: UniqueAsset[] =
-      ((await this.propertyService.getByKey(
-        PROPERTY_BENCHMARKS
-      )) as UniqueAsset[]) ?? [];
+  public async getBenchmarkAssetProfiles(): Promise<Partial<SymbolProfile>[]> {
+    const symbolProfileIds: string[] = (
+      ((await this.propertyService.getByKey(PROPERTY_BENCHMARKS)) as {
+        symbolProfileId: string;
+      }[]) ?? []
+    ).map(({ symbolProfileId }) => {
+      return symbolProfileId;
+    });
 
-    const assetProfiles = await this.symbolProfileService.getSymbolProfiles(
-      benchmarkAssets
-    );
+    const assetProfiles =
+      await this.symbolProfileService.getSymbolProfilesByIds(symbolProfileIds);
 
-    return assetProfiles.map(({ dataSource, symbol }) => {
+    return assetProfiles.map(({ dataSource, id, name, symbol }) => {
       return {
         dataSource,
+        id,
+        name,
         symbol
       };
     });

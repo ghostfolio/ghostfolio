@@ -1,10 +1,8 @@
 import { DateRange, ViewMode } from '@ghostfolio/common/types';
 
-import { UniqueAsset } from './unique-asset.interface';
-
 export interface UserSettings {
   baseCurrency?: string;
-  benchmark?: UniqueAsset;
+  benchmark?: string;
   dateRange?: DateRange;
   emergencyFund?: number;
   isExperimentalFeatures?: boolean;
