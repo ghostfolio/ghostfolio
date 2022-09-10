@@ -102,10 +102,8 @@ model Property {
 }
 
 model Settings {
-  currency  String? /// @deprecated
   settings  Json?
   updatedAt DateTime  @updatedAt
-  viewMode  ViewMode? /// @deprecated
   userId    String    @id
   User      User      @relation(fields: [userId], references: [id])
 }

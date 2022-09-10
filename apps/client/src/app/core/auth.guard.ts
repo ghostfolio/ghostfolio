@@ -7,7 +7,6 @@ import {
 } from '@angular/router';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { ViewMode } from '@prisma/client';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -80,13 +79,13 @@ export class AuthGuard implements CanActivate {
             return;
           } else if (
             state.url.startsWith('/home') &&
-            user.settings.viewMode === ViewMode.ZEN
+            user.settings.viewMode === 'ZEN'
           ) {
             this.router.navigate(['/zen']);
             resolve(false);
             return;
           } else if (state.url.startsWith('/start')) {
-            if (user.settings.viewMode === ViewMode.ZEN) {
+            if (user.settings.viewMode === 'ZEN') {
               this.router.navigate(['/zen']);
             } else {
               this.router.navigate(['/home']);
@@ -96,7 +95,7 @@ export class AuthGuard implements CanActivate {
             return;
           } else if (
             state.url.startsWith('/zen') &&
-            user.settings.viewMode === ViewMode.DEFAULT
+            user.settings.viewMode === 'DEFAULT'
           ) {
             this.router.navigate(['/home']);
             resolve(false);

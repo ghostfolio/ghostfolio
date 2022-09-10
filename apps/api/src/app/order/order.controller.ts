@@ -103,7 +103,7 @@ export class OrderController {
         impersonationId,
         this.request.user.id
       );
-    const userCurrency = this.request.user.Settings.currency;
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     let activities = await this.orderService.getOrders({
       filters,

@@ -1,5 +1,4 @@
-import { DateRange } from '@ghostfolio/common/types';
-import { ViewMode } from '@prisma/client';
+import { DateRange, ViewMode } from '@ghostfolio/common/types';
 
 import { UniqueAsset } from './unique-asset.interface';
 

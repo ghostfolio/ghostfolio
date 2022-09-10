@@ -1,6 +1,5 @@
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
-import type { DateRange } from '@ghostfolio/common/types';
-import { ViewMode } from '@prisma/client';
+import type { DateRange, ViewMode } from '@ghostfolio/common/types';
 import {
   IsBoolean,
   IsIn,
