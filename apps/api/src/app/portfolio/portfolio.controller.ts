@@ -40,7 +40,6 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { ViewMode } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
@@ -196,7 +195,7 @@ export class PortfolioController {
           return this.exchangeRateDataService.toCurrency(
             portfolioPosition.quantity * portfolioPosition.marketPrice,
             portfolioPosition.currency,
-            this.request.user.Settings.currency
+            this.request.user.Settings.settings.baseCurrency
           );
         })
         .reduce((a, b) => a + b, 0);
@@ -299,7 +298,7 @@ export class PortfolioController {
 
     if (
       impersonationId ||
-      this.request.user.Settings.viewMode === ViewMode.ZEN ||
+      this.request.user.Settings.settings.viewMode === 'ZEN' ||
       this.userService.isRestrictedView(this.request.user)
     ) {
       performanceInformation.performance = nullifyValuesInObject(
@@ -379,7 +378,8 @@ export class PortfolioController {
         return this.exchangeRateDataService.toCurrency(
           portfolioPosition.quantity * portfolioPosition.marketPrice,
           portfolioPosition.currency,
-          this.request.user?.Settings?.currency ?? this.baseCurrency
+          this.request.user?.Settings?.settings.baseCurrency ??
+            this.baseCurrency
         );
       })
       .reduce((a, b) => a + b, 0);

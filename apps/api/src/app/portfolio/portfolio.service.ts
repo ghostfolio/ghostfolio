@@ -124,7 +124,7 @@ export class PortfolioService {
       this.getDetails(aUserId, aUserId, undefined, aFilters)
     ]);
 
-    const userCurrency = this.request.user.Settings.currency;
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     return accounts.map((account) => {
       let transactionCount = 0;
@@ -199,7 +199,7 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.currency,
+      currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -279,7 +279,7 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.currency,
+      currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -368,7 +368,7 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.currency,
+      currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -441,8 +441,8 @@ export class PortfolioService {
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
     const userCurrency =
-      user.Settings?.currency ??
-      this.request.user?.Settings?.currency ??
+      user.Settings?.settings.baseCurrency ??
+      this.request.user?.Settings?.settings.baseCurrency ??
       this.baseCurrency;
 
     const { orders, portfolioOrders, transactionPoints } =
@@ -602,7 +602,7 @@ export class PortfolioService {
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
-    const userCurrency = this.request.user.Settings.currency;
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const orders = (
@@ -855,7 +855,7 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.currency,
+      currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -931,7 +931,7 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.currency,
+      currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -991,7 +991,7 @@ export class PortfolioService {
   }
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
-    const currency = this.request.user.Settings.currency;
+    const currency = this.request.user.Settings.settings.baseCurrency;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { orders, portfolioOrders, transactionPoints } =
@@ -1083,7 +1083,7 @@ export class PortfolioService {
   }
 
   public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
-    const userCurrency = this.request.user.Settings.currency;
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
@@ -1257,7 +1257,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
           order.SymbolProfile.currency,
-          this.request.user.Settings.currency
+          this.request.user.Settings.settings.baseCurrency
         );
       })
       .reduce(
@@ -1276,7 +1276,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           order.fee,
           order.SymbolProfile.currency,
-          this.request.user.Settings.currency
+          this.request.user.Settings.settings.baseCurrency
         );
       })
       .reduce(
@@ -1298,7 +1298,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
           order.SymbolProfile.currency,
-          this.request.user.Settings.currency
+          this.request.user.Settings.settings.baseCurrency
         );
       })
       .reduce(
@@ -1339,7 +1339,7 @@ export class PortfolioService {
     portfolioOrders: PortfolioOrder[];
   }> {
     const userCurrency =
-      this.request.user?.Settings?.currency ?? this.baseCurrency;
+      this.request.user?.Settings?.settings.baseCurrency ?? this.baseCurrency;
 
     const orders = await this.orderService.getOrders({
       filters,

@@ -8,6 +8,7 @@ import { Market } from './market.type';
 import type { OrderWithAccount } from './order-with-account.type';
 import type { RequestWithUser } from './request-with-user.type';
 import { ToggleOption } from './toggle-option.type';
+import type { ViewMode } from './view-mode.type';
 
 export type {
   AccessWithGranteeUser,
@@ -19,5 +20,6 @@ export type {
   MarketState,
   OrderWithAccount,
   RequestWithUser,
-  ToggleOption
+  ToggleOption,
+  ViewMode
 };

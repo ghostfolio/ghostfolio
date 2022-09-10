@@ -69,8 +69,8 @@ export class UserService {
       }),
       accounts: Account,
       settings: {
-        ...(<UserSettings>(<unknown>Settings.settings)),
-        locale: (<UserSettings>(<unknown>Settings.settings))?.locale ?? aLocale
+        ...(<UserSettings>Settings.settings),
+        locale: (<UserSettings>Settings.settings)?.locale ?? aLocale
       }
     };
   }
@@ -88,10 +88,7 @@ export class UserService {
   }
 
   public isRestrictedView(aUser: UserWithSettings) {
-    return (
-      (aUser.Settings.settings as unknown as UserSettings)?.isRestrictedView ??
-      false
-    );
+    return aUser.Settings.settings.isRestrictedView ?? false;
   }
 
   public async user(
@@ -134,11 +131,9 @@ export class UserService {
     } else if (user) {
       // Set default settings if needed
       user.Settings = {
-        currency: null,
         settings: {},
         updatedAt: new Date(),
-        userId: user?.id,
-        viewMode: 'DEFAULT'
+        userId: user?.id
       };
     }
 
@@ -239,7 +234,9 @@ export class UserService {
         },
         Settings: {
           create: {
-            currency: this.baseCurrency
+            settings: {
+              currency: this.baseCurrency
+            }
           }
         }
       }
