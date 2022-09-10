@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `yahoo-finance2` from version `2.3.3` to `2.3.6`
 
+### Fixed
+
+- Improved the error handling in the benchmark calculation
+
 ## 1.191.0 - 10.09.2022
 
 ### Changed
