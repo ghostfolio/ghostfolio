@@ -15,10 +15,8 @@ import {
   permissions
 } from '@ghostfolio/common/permissions';
 import { Injectable } from '@nestjs/common';
-import { Prisma, Role, User, ViewMode } from '@prisma/client';
+import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
-
-import { UserSettingsParams } from './interfaces/user-settings-params.interface';
 
 const crypto = require('crypto');
 
@@ -72,13 +70,7 @@ export class UserService {
       accounts: Account,
       settings: {
         ...(<UserSettings>(<unknown>Settings.settings)),
-        baseCurrency: Settings?.currency ?? UserService.DEFAULT_CURRENCY,
-        dateRange:
-          Settings?.viewMode === 'ZEN'
-            ? 'max'
-            : (<UserSettings>(<unknown>Settings.settings))?.dateRange ?? 'max',
-        locale: (<UserSettings>(<unknown>Settings.settings))?.locale ?? aLocale,
-        viewMode: Settings?.viewMode ?? ViewMode.DEFAULT
+        locale: (<UserSettings>(<unknown>Settings.settings))?.locale ?? aLocale
       }
     };
   }
@@ -136,19 +128,35 @@ export class UserService {
     };
 
     if (user?.Settings) {
-      if (!user.Settings.currency) {
-        // Set default currency if needed
-        user.Settings.currency = UserService.DEFAULT_CURRENCY;
+      if (!user.Settings.settings) {
+        user.Settings.settings = {};
       }
     } else if (user) {
       // Set default settings if needed
       user.Settings = {
-        currency: UserService.DEFAULT_CURRENCY,
-        settings: null,
+        currency: null,
+        settings: {},
         updatedAt: new Date(),
         userId: user?.id,
-        viewMode: ViewMode.DEFAULT
+        viewMode: 'DEFAULT'
       };
+    }
+
+    // Set default value for base currency
+    if (!(user.Settings.settings as UserSettings)?.baseCurrency) {
+      (user.Settings.settings as UserSettings).baseCurrency =
+        UserService.DEFAULT_CURRENCY;
+    }
+
+    // Set default value for date range
+    (user.Settings.settings as UserSettings).dateRange =
+      (user.Settings.settings as UserSettings).viewMode === 'ZEN'
+        ? 'max'
+        : (user.Settings.settings as UserSettings)?.dateRange ?? 'max';
+
+    // Set default value for view mode
+    if (!(user.Settings.settings as UserSettings).viewMode) {
+      (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -318,33 +326,6 @@ export class UserService {
       },
       update: {
         settings
-      },
-      where: {
-        userId: userId
-      }
-    });
-
-    return;
-  }
-
-  public async updateUserSettings({
-    currency,
-    userId,
-    viewMode
-  }: UserSettingsParams) {
-    await this.prismaService.settings.upsert({
-      create: {
-        currency,
-        User: {
-          connect: {
-            id: userId
-          }
-        },
-        viewMode
-      },
-      update: {
-        currency,
-        viewMode
       },
       where: {
         userId: userId

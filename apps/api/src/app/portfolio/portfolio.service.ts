@@ -1045,7 +1045,7 @@ export class PortfolioService {
               accounts
             )
           ],
-          { baseCurrency: currency }
+          <UserSettings>this.request.user.Settings.settings
         ),
         currencyClusterRisk: await this.rulesService.evaluate(
           [
@@ -1066,7 +1066,7 @@ export class PortfolioService {
               currentPositions
             )
           ],
-          { baseCurrency: currency }
+          <UserSettings>this.request.user.Settings.settings
         ),
         fees: await this.rulesService.evaluate(
           [
@@ -1076,7 +1076,7 @@ export class PortfolioService {
               this.getFees(orders).toNumber()
             )
           ],
-          { baseCurrency: currency }
+          <UserSettings>this.request.user.Settings.settings
         )
       }
     };

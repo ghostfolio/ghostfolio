@@ -12,7 +12,6 @@ import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.in
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { UpdateUserSettingsDto } from '@ghostfolio/api/app/user/update-user-settings.dto';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -446,10 +445,6 @@ export class DataService {
 
   public putUserSetting(aData: UpdateUserSettingDto) {
     return this.http.put<User>(`/api/v1/user/setting`, aData);
-  }
-
-  public putUserSettings(aData: UpdateUserSettingsDto) {
-    return this.http.put<User>(`/api/v1/user/settings`, aData);
   }
 
   public redeemCoupon(couponCode: string) {

@@ -1,4 +1,5 @@
-import { DateRange } from '@ghostfolio/common/types';
+import type { DateRange } from '@ghostfolio/common/types';
+import { ViewMode } from '@prisma/client';
 import {
   IsBoolean,
   IsIn,
@@ -8,6 +9,10 @@ import {
 } from 'class-validator';
 
 export class UpdateUserSettingDto {
+  @IsOptional()
+  @IsString()
+  baseCurrency?: string;
+
   @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'ytd'])
   @IsOptional()
   dateRange?: DateRange;
@@ -35,4 +40,8 @@ export class UpdateUserSettingDto {
   @IsNumber()
   @IsOptional()
   savingsRate?: number;
+
+  @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
+  @IsOptional()
+  viewMode?: ViewMode;
 }
