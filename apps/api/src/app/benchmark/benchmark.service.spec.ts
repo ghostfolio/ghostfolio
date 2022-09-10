@@ -4,7 +4,7 @@ describe('BenchmarkService', () => {
   let benchmarkService: BenchmarkService;
 
   beforeAll(async () => {
-    benchmarkService = new BenchmarkService(null, null, null, null, null);
+    benchmarkService = new BenchmarkService(null, null, null, null, null, null);
   });
 
   it('calculateChangeInPercentage', async () => {

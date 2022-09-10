@@ -1,4 +1,5 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -14,6 +15,7 @@ import { Injectable } from '@nestjs/common';
 import Big from 'big.js';
 import { format } from 'date-fns';
 import ms from 'ms';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class BenchmarkService {
@@ -24,7 +26,8 @@ export class BenchmarkService {
     private readonly marketDataService: MarketDataService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly symbolService: SymbolService
   ) {}
 
   public calculateChangeInPercentage(baseValue: number, currentValue: number) {
@@ -127,17 +130,32 @@ export class BenchmarkService {
     startDate,
     symbol
   }: { startDate: Date } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
-    const marketDataItems = await this.marketDataService.marketDataItems({
-      orderBy: {
-        date: 'asc'
-      },
-      where: {
-        dataSource,
-        symbol,
-        date: {
-          gte: startDate
+    const [currentSymbolItem, marketDataItems] = await Promise.all([
+      this.symbolService.get({
+        dataGatheringItem: {
+          dataSource,
+          symbol
         }
-      }
+      }),
+      this.marketDataService.marketDataItems({
+        orderBy: {
+          date: 'asc'
+        },
+        where: {
+          dataSource,
+          symbol,
+          date: {
+            gte: startDate
+          }
+        }
+      })
+    ]);
+
+    marketDataItems.push({
+      ...currentSymbolItem,
+      createdAt: new Date(),
+      date: new Date(),
+      id: uuidv4()
     });
 
     const marketPriceAtStartDate = marketDataItems?.[0]?.marketPrice ?? 0;

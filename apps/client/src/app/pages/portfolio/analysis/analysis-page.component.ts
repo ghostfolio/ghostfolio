@@ -9,7 +9,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
+import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { differenceInDays } from 'date-fns';
 import { sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -64,15 +64,76 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!aId;
       });
 
-    this.dataService
-      .fetchChart({ range: 'max', version: 2 })
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ chart }) => {
-        this.firstOrderDate = new Date(chart?.[0]?.date);
-        this.performanceDataItems = chart;
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
-        this.changeDetectorRef.markForCheck();
+          this.update();
+        }
       });
+  }
+
+  public onChangeBenchmark(benchmark: UniqueAsset) {
+    this.dataService
+      .putUserSetting({ benchmark })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  public onChangeDateRange(dateRange: DateRange) {
+    this.dataService
+      .putUserSetting({ dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  public onChangeGroupBy(aMode: GroupBy) {
+    this.mode = aMode;
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private update() {
+    if (this.user.settings.isExperimentalFeatures) {
+      this.dataService
+        .fetchChart({ range: this.user?.settings?.dateRange, version: 2 })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ chart }) => {
+          this.firstOrderDate = new Date(chart?.[0]?.date ?? new Date());
+          this.performanceDataItems = chart;
+
+          this.updateBenchmarkDataItems();
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
 
     this.dataService
       .fetchInvestments()
@@ -113,43 +174,27 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  private updateBenchmarkDataItems() {
+    if (this.user.settings.benchmark) {
+      this.dataService
+        .fetchBenchmarkBySymbol({
+          ...this.user.settings.benchmark,
+          startDate: this.firstOrderDate
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ marketData }) => {
+          this.benchmarkDataItems = marketData.map(({ date, value }) => {
+            return {
+              date,
+              value
+            };
+          });
 
           this.changeDetectorRef.markForCheck();
-        }
-      });
-  }
-
-  public onChangeBenchmark({ dataSource, symbol }: UniqueAsset) {
-    this.dataService
-      .fetchBenchmarkBySymbol({
-        dataSource,
-        symbol,
-        startDate: this.firstOrderDate
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ marketData }) => {
-        this.benchmarkDataItems = marketData.map(({ date, value }) => {
-          return {
-            date,
-            value
-          };
         });
-
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
-  public onChangeGroupBy(aMode: GroupBy) {
-    this.mode = aMode;
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
+    }
   }
 }

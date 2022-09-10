@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the date range component to the benchmark comparator
+
 ### Changed
 
 - Improved the mobile layout of the benchmark comparator
