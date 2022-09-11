@@ -52,6 +52,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() benchmark: string;
   @Input() benchmarks: Partial<SymbolProfile>[];
   @Input() daysInMarket: number;
+  @Input() isLoading: boolean;
   @Input() locale: string;
   @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
@@ -63,7 +64,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   public chart: Chart<any>;
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
-  public isLoading = true;
 
   public constructor() {
     Chart.register(
@@ -99,8 +99,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    this.isLoading = true;
-
     const data = {
       datasets: [
         {
@@ -209,8 +207,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
         });
       }
     }
-
-    this.isLoading = false;
   }
 
   private getTooltipPluginConfiguration() {

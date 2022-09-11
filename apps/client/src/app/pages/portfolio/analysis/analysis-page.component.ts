@@ -32,6 +32,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
   public investmentsByMonth: InvestmentItem[];
+  public isLoadingBenchmarkComparator: boolean;
   public mode: GroupBy;
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -122,6 +123,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   private update() {
     if (this.user.settings.isExperimentalFeatures) {
+      this.isLoadingBenchmarkComparator = true;
+
       this.dataService
         .fetchChart({ range: this.user?.settings?.dateRange, version: 2 })
         .pipe(takeUntil(this.unsubscribeSubject))
@@ -199,8 +202,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             };
           });
 
+          this.isLoadingBenchmarkComparator = false;
+
           this.changeDetectorRef.markForCheck();
         });
+    } else {
+      this.isLoadingBenchmarkComparator = false;
     }
   }
 }

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Improved the loading indicator of the benchmark comparator
 - Improved the error handling in the benchmark calculation
 
 ## 1.191.0 - 10.09.2022
