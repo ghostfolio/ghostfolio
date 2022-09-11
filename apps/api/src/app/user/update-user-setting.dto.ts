@@ -1,10 +1,8 @@
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import type { DateRange, ViewMode } from '@ghostfolio/common/types';
 import {
   IsBoolean,
   IsIn,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString
 } from 'class-validator';
@@ -14,9 +12,9 @@ export class UpdateUserSettingDto {
   @IsString()
   baseCurrency?: string;
 
-  @IsObject()
+  @IsString()
   @IsOptional()
-  benchmark?: UniqueAsset;
+  benchmark?: string;
 
   @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'ytd'])
   @IsOptional()

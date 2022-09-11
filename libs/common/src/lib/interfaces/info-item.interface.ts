@@ -1,12 +1,11 @@
-import { Tag } from '@prisma/client';
+import { SymbolProfile, Tag } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
 import { Subscription } from './subscription.interface';
-import { UniqueAsset } from './unique-asset.interface';
 
 export interface InfoItem {
   baseCurrency: string;
-  benchmarks: UniqueAsset[];
+  benchmarks: Partial<SymbolProfile>[];
   currencies: string[];
   demoAuthToken: string;
   fearAndGreedDataSource?: string;

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Simplified the configuration of the benchmarks: `symbolProfileId` instead of `dataSource` and `symbol`
 - Upgraded `yahoo-finance2` from version `2.3.3` to `2.3.6`
 
 ### Fixed

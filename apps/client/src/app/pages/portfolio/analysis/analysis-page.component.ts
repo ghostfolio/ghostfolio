@@ -5,11 +5,11 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   HistoricalDataItem,
   Position,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
+import { SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
   public benchmarkDataItems: HistoricalDataItem[] = [];
-  public benchmarks: UniqueAsset[];
+  public benchmarks: Partial<SymbolProfile>[];
   public bottom3: Position[];
   public daysInMarket: number;
   public deviceType: string;
@@ -75,9 +75,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onChangeBenchmark(benchmark: UniqueAsset) {
+  public onChangeBenchmark(symbolProfileId: string) {
     this.dataService
-      .putUserSetting({ benchmark })
+      .putUserSetting({ benchmark: symbolProfileId })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.userService.remove();
@@ -179,9 +179,15 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   private updateBenchmarkDataItems() {
     if (this.user.settings.benchmark) {
+      const { dataSource, symbol } =
+        this.benchmarks.find(({ id }) => {
+          return id === this.user.settings.benchmark;
+        }) ?? {};
+
       this.dataService
         .fetchBenchmarkBySymbol({
-          ...this.user.settings.benchmark,
+          dataSource,
+          symbol,
           startDate: this.firstOrderDate
         })
         .pipe(takeUntil(this.unsubscribeSubject))

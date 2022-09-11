@@ -102,10 +102,10 @@ export class UserController {
   public async updateUserSetting(@Body() data: UpdateUserSettingDto) {
     if (
       size(data) === 1 &&
-      data.dateRange &&
+      (data.benchmark || data.dateRange) &&
       this.request.user.role === 'DEMO'
     ) {
-      // Allow date range change for demo user
+      // Allow benchmark or date range change for demo user
     } else if (
       !hasPermission(
         this.request.user.permissions,
