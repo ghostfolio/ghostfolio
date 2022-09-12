@@ -119,14 +119,16 @@ export class BenchmarkService {
     const assetProfiles =
       await this.symbolProfileService.getSymbolProfilesByIds(symbolProfileIds);
 
-    return assetProfiles.map(({ dataSource, id, name, symbol }) => {
-      return {
-        dataSource,
-        id,
-        name,
-        symbol
-      };
-    });
+    return assetProfiles
+      .map(({ dataSource, id, name, symbol }) => {
+        return {
+          dataSource,
+          id,
+          name,
+          symbol
+        };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 
   public async getMarketDataBySymbol({
