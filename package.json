@@ -37,7 +37,7 @@
     "lint": "nx workspace-lint && ng lint",
     "ng": "nx",
     "nx": "nx",
-    "postinstall": "prisma generate && ngcc --properties es2020 browser module main",
+    "postinstall": "prisma generate && ngcc --properties es2020 browser module main && nx run client:build:production --localize",
     "replace-placeholders-in-build": "node ./replace.build.js",
     "start": "node dist/apps/api/main",
     "start:client": "ng serve client --configuration=development-en --hmr -o",
