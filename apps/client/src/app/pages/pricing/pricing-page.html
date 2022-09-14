@@ -10,6 +10,15 @@
           get started. Due to the time it saves, this will be the best option
           for most people. The revenue is used for covering the hosting costs.
         </p>
+        <p *ngIf="user?.subscription?.type === 'Basic'">
+          If you plan to open an account at <i>DEGIRO</i>, <i>frankly</i>,
+          <i>Interactive Brokers</i>, <i>Swissquote</i>, or <i>VIAC</i>, please
+          <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
+            >contact us</a
+          >
+          to use our referral link and get a Ghostfolio Premium membership for
+          one year.
+        </p>
         <p>
           If you prefer to run Ghostfolio on your own infrastructure, please
           find the source code and further instructions on
