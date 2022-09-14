@@ -183,10 +183,10 @@ export class YahooFinanceService implements DataProviderInterface {
       for (const historicalItem of historicalResult) {
         let marketPrice = historicalItem.close;
 
-        if (symbol === 'USDGBp') {
+        if (symbol === `${this.baseCurrency}GBp`) {
           // Convert GPB to GBp (pence)
           marketPrice = new Big(marketPrice).mul(100).toNumber();
-        } else if (symbol === 'USDILA') {
+        } else if (symbol === `${this.baseCurrency}ILA`) {
           // Convert ILS to ILA
           marketPrice = new Big(marketPrice).mul(100).toNumber();
         }
@@ -246,9 +246,12 @@ export class YahooFinanceService implements DataProviderInterface {
           marketPrice: quote.regularMarketPrice || 0
         };
 
-        if (symbol === 'USDGBP' && yahooFinanceSymbols.includes('USDGBp=X')) {
+        if (
+          symbol === `${this.baseCurrency}GBP` &&
+          yahooFinanceSymbols.includes(`${this.baseCurrency}GBp=X`)
+        ) {
           // Convert GPB to GBp (pence)
-          response['USDGBp'] = {
+          response[`${this.baseCurrency}GBp`] = {
             ...response[symbol],
             currency: 'GBp',
             marketPrice: new Big(response[symbol].marketPrice)
@@ -256,11 +259,11 @@ export class YahooFinanceService implements DataProviderInterface {
               .toNumber()
           };
         } else if (
-          symbol === 'USDILS' &&
-          yahooFinanceSymbols.includes('USDILA=X')
+          symbol === `${this.baseCurrency}ILS` &&
+          yahooFinanceSymbols.includes(`${this.baseCurrency}ILA=X`)
         ) {
           // Convert ILS to ILA
-          response['USDILA'] = {
+          response[`${this.baseCurrency}ILA`] = {
             ...response[symbol],
             currency: 'ILA',
             marketPrice: new Big(response[symbol].marketPrice)
@@ -270,9 +273,9 @@ export class YahooFinanceService implements DataProviderInterface {
         }
       }
 
-      if (yahooFinanceSymbols.includes('USDUSX=X')) {
+      if (yahooFinanceSymbols.includes(`${this.baseCurrency}USX=X`)) {
         // Convert USD to USX (cent)
-        response['USDUSX'] = {
+        response[`${this.baseCurrency}USX`] = {
           currency: 'USX',
           dataSource: this.getName(),
           marketPrice: new Big(1).mul(100).toNumber(),

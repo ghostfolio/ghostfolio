@@ -99,10 +99,12 @@ export class ExchangeRateDataService {
       this.exchangeRates[symbol] = resultExtended[symbol]?.[date]?.marketPrice;
 
       if (!this.exchangeRates[symbol]) {
-        // Not found, calculate indirectly via USD
+        // Not found, calculate indirectly via base currency
         this.exchangeRates[symbol] =
-          resultExtended[`${currency1}${'USD'}`]?.[date]?.marketPrice *
-          resultExtended[`${'USD'}${currency2}`]?.[date]?.marketPrice;
+          resultExtended[`${currency1}${this.baseCurrency}`]?.[date]
+            ?.marketPrice *
+          resultExtended[`${this.baseCurrency}${currency2}`]?.[date]
+            ?.marketPrice;
 
         // Calculate the opposite direction
         this.exchangeRates[`${currency2}${currency1}`] =
@@ -126,9 +128,11 @@ export class ExchangeRateDataService {
       if (this.exchangeRates[`${aFromCurrency}${aToCurrency}`]) {
         factor = this.exchangeRates[`${aFromCurrency}${aToCurrency}`];
       } else {
-        // Calculate indirectly via USD
-        const factor1 = this.exchangeRates[`${aFromCurrency}${'USD'}`];
-        const factor2 = this.exchangeRates[`${'USD'}${aToCurrency}`];
+        // Calculate indirectly via base currency
+        const factor1 =
+          this.exchangeRates[`${aFromCurrency}${this.baseCurrency}`];
+        const factor2 =
+          this.exchangeRates[`${this.baseCurrency}${aToCurrency}`];
 
         factor = factor1 * factor2;
 
