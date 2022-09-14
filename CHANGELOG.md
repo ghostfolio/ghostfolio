@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Sorted the benchmarks by name
 
+### Fixed
+
+- Fixed the missing assets during the local development
+
 ## 1.192.0 - 11.09.2022
 
 ### Changed

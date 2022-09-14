@@ -4,22 +4,36 @@ import * as path from 'path';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class FrontendMiddleware implements NestMiddleware {
-  public indexHtmlDe = fs.readFileSync(
-    this.getPathOfIndexHtmlFile('de'),
-    'utf8'
-  );
-  public indexHtmlEn = fs.readFileSync(
-    this.getPathOfIndexHtmlFile(DEFAULT_LANGUAGE_CODE),
-    'utf8'
-  );
+  public indexHtmlDe = '';
+  public indexHtmlEn = '';
+  public isProduction: boolean;
 
   public constructor(
+    private readonly configService: ConfigService,
     private readonly configurationService: ConfigurationService
-  ) {}
+  ) {
+    const NODE_ENV =
+      this.configService.get<'development' | 'production'>('NODE_ENV') ??
+      'development';
+
+    this.isProduction = NODE_ENV === 'production';
+
+    try {
+      this.indexHtmlDe = fs.readFileSync(
+        this.getPathOfIndexHtmlFile('de'),
+        'utf8'
+      );
+      this.indexHtmlEn = fs.readFileSync(
+        this.getPathOfIndexHtmlFile(DEFAULT_LANGUAGE_CODE),
+        'utf8'
+      );
+    } catch {}
+  }
 
   public use(req: Request, res: Response, next: NextFunction) {
     let featureGraphicPath = 'assets/cover.png';
@@ -31,7 +45,11 @@ export class FrontendMiddleware implements NestMiddleware {
       featureGraphicPath = 'assets/images/blog/500-stars-on-github.jpg';
     }
 
-    if (req.path.startsWith('/api/') || this.isFileRequest(req.url)) {
+    if (
+      req.path.startsWith('/api/') ||
+      this.isFileRequest(req.url) ||
+      !this.isProduction
+    ) {
       // Skip
       next();
     } else if (req.path === '/de' || req.path.startsWith('/de/')) {
