@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Sorted the benchmarks by name
 
+### Fixed
+
+- Fixed the calculations of the exchange rate service by changing `USD` to the base currency
+
 ## 1.192.0 - 11.09.2022
 
 ### Changed
