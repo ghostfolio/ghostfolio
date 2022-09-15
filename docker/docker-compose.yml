@@ -6,6 +6,7 @@ services:
       - ../.env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=prefer
+      NODE_ENV: production
       REDIS_HOST: 'redis'
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
