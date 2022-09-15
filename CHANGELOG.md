@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `NODE_ENV: production` to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 1.193.0 - 14.09.2022
 
 ### Changed
