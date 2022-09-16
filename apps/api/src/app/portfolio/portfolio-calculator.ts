@@ -967,6 +967,10 @@ export class PortfolioCalculator {
         feesAtStartDate = fees;
         grossPerformanceAtStartDate = grossPerformance;
       }
+
+      if (i === indexOfEndOrder) {
+        break;
+      }
     }
 
     timeWeightedGrossPerformancePercentage =
