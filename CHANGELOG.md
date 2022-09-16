@@ -69,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the benchmark chart in the benchmark comparator (experimental)
+- Respected the end date in the performance chart calculation
 
 ## 1.188.0 - 06.09.2022
 
