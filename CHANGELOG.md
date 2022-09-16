@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Respected the end date in the performance chart calculation
+
 ## 1.193.0 - 14.09.2022
 
 ### Changed
@@ -69,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Respected the end date in the performance chart calculation
+- Fixed the benchmark chart in the benchmark comparator (experimental)
 
 ## 1.188.0 - 06.09.2022
 
