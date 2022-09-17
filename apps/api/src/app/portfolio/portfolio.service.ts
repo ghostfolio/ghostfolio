@@ -605,7 +605,7 @@ export class PortfolioService {
       filters: aFilters
     });
 
-    const summary = await this.getSummary(userId);
+    const summary = await this.getSummary(aImpersonationId);
 
     return {
       accounts,
@@ -942,9 +942,11 @@ export class PortfolioService {
   }
 
   public async getPerformance(
-    userId: string,
+    aImpersonationId: string,
     aDateRange: DateRange = 'max'
   ): Promise<PortfolioPerformanceResponse> {
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         userId
@@ -1102,11 +1104,12 @@ export class PortfolioService {
     };
   }
 
-  public async getSummary(userId: string): Promise<PortfolioSummary> {
-    const user = await this.userService.user({ id: userId });
+  public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
 
-    const performanceInformation = await this.getPerformance(userId);
+    const performanceInformation = await this.getPerformance(aImpersonationId);
 
     const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
       userId,
