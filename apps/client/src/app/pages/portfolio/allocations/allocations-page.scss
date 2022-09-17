@@ -28,4 +28,33 @@
       }
     }
   }
+
+  .mat-progress-bar {
+    border-radius: 0.25rem;
+    height: 0.5rem;
+
+    ::ng-deep {
+      .mat-progress-bar-background {
+        fill: rgb(var(--palette-background-unselected-chip));
+      }
+
+      .mat-progress-bar-buffer {
+        background-color: rgb(var(--palette-background-unselected-chip));
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-progress-bar {
+    ::ng-deep {
+      .mat-progress-bar-background {
+        fill: rgb(var(--palette-background-unselected-chip-dark));
+      }
+
+      .mat-progress-bar-buffer {
+        background-color: rgb(var(--palette-background-unselected-chip-dark));
+      }
+    }
+  }
 }

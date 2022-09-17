@@ -168,13 +168,19 @@ export class PortfolioController {
       })
     ];
 
-    const { accounts, holdings, hasErrors } =
-      await this.portfolioService.getDetails(
-        impersonationId,
-        this.request.user.id,
-        range,
-        filters
-      );
+    const {
+      accounts,
+      filteredValueInBaseCurrency,
+      filteredValueInPercentage,
+      hasErrors,
+      holdings,
+      totalValueInBaseCurrency
+    } = await this.portfolioService.getDetails(
+      impersonationId,
+      this.request.user.id,
+      range,
+      filters
+    );
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -234,8 +240,11 @@ export class PortfolioController {
 
     return {
       accounts,
+      filteredValueInBaseCurrency,
+      filteredValueInPercentage,
       hasError,
-      holdings
+      holdings,
+      totalValueInBaseCurrency
     };
   }
 

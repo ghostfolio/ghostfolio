@@ -10,6 +10,22 @@
       ></gf-activities-filter>
     </div>
   </div>
+  <div class="row">
+    <div class="col">
+      <mat-card class="mb-3">
+        <mat-card-header>
+          <mat-card-title i18n>Proportion of Net Worth</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-progress-bar
+            mode="determinate"
+            [title]="(portfolioDetails?.filteredValueInPercentage * 100).toFixed(2) + '%'"
+            [value]="portfolioDetails?.filteredValueInPercentage * 100"
+          ></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
   <div class="proportion-charts row">
     <div class="col-md-4">
       <mat-card class="mb-3">

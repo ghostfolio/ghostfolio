@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added `NODE_ENV: production` to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
+- Visualized the percentage of the active filter on the allocations page
 
 ### Changed
 

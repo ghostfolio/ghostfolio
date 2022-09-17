@@ -474,12 +474,21 @@ export class PortfolioService {
     });
 
     const holdings: PortfolioDetails['holdings'] = {};
-    const totalInvestment = currentPositions.totalInvestment.plus(
+    const totalInvestmentInBaseCurrency = currentPositions.totalInvestment.plus(
       cashDetails.balanceInBaseCurrency
     );
-    const totalValue = currentPositions.currentValue.plus(
-      cashDetails.balanceInBaseCurrency
-    );
+    let filteredValueInBaseCurrency = currentPositions.currentValue;
+
+    if (
+      aFilters?.length === 0 ||
+      (aFilters?.length === 1 &&
+        aFilters[0].type === 'ASSET_CLASS' &&
+        aFilters[0].id === 'CASH')
+    ) {
+      filteredValueInBaseCurrency = filteredValueInBaseCurrency.plus(
+        cashDetails.balanceInBaseCurrency
+      );
+    }
 
     const dataGatheringItems = currentPositions.positions.map((position) => {
       return {
@@ -540,10 +549,12 @@ export class PortfolioService {
 
       holdings[item.symbol] = {
         markets,
-        allocationCurrent: totalValue.eq(0)
+        allocationCurrent: filteredValueInBaseCurrency.eq(0)
           ? 0
-          : value.div(totalValue).toNumber(),
-        allocationInvestment: item.investment.div(totalInvestment).toNumber(),
+          : value.div(filteredValueInBaseCurrency).toNumber(),
+        allocationInvestment: item.investment
+          .div(totalInvestmentInBaseCurrency)
+          .toNumber(),
         assetClass: symbolProfile.assetClass,
         assetSubClass: symbolProfile.assetSubClass,
         countries: symbolProfile.countries,
@@ -577,8 +588,8 @@ export class PortfolioService {
         cashDetails,
         emergencyFund,
         userCurrency,
-        investment: totalInvestment,
-        value: totalValue
+        investment: totalInvestmentInBaseCurrency,
+        value: filteredValueInBaseCurrency
       });
 
       for (const symbol of Object.keys(cashPositions)) {
@@ -594,7 +605,18 @@ export class PortfolioService {
       filters: aFilters
     });
 
-    return { accounts, holdings, hasErrors: currentPositions.hasErrors };
+    const summary = await this.getSummary(aImpersonationId);
+
+    return {
+      accounts,
+      holdings,
+      filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
+      filteredValueInPercentage: summary.netWorth
+        ? filteredValueInBaseCurrency.div(summary.netWorth).toNumber()
+        : 0,
+      hasErrors: currentPositions.hasErrors,
+      totalValueInBaseCurrency: summary.netWorth
+    };
   }
 
   public async getPosition(

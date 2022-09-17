@@ -41,6 +41,14 @@ export class RedactValuesInResponseInterceptor<T>
               return activity;
             });
           }
+
+          if (data.filteredValueInBaseCurrency) {
+            data.filteredValueInBaseCurrency = null;
+          }
+
+          if (data.totalValueInBaseCurrency) {
+            data.totalValueInBaseCurrency = null;
+          }
         }
 
         return data;
