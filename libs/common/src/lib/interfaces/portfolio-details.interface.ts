@@ -10,5 +10,8 @@ export interface PortfolioDetails {
       original: number;
     };
   };
+  filteredValueInBaseCurrency?: number;
+  filteredValueInPercentage: number;
   holdings: { [symbol: string]: PortfolioPosition };
+  totalValueInBaseCurrency?: number;
 }

@@ -10,6 +10,17 @@
       ></gf-activities-filter>
     </div>
   </div>
+  <div class="row mb-4">
+    <div class="col">
+      <div class="px-1">
+        <mat-progress-bar
+          mode="determinate"
+          [title]="(portfolioDetails?.filteredValueInPercentage * 100) + '%'"
+          [value]="portfolioDetails?.filteredValueInPercentage * 100"
+        ></mat-progress-bar>
+      </div>
+    </div>
+  </div>
   <div class="proportion-charts row">
     <div class="col-md-4">
       <mat-card class="mb-3">
