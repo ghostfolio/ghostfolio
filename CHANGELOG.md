@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Todo
 
-Set `NODE_ENV: production` as in [docker-compose.yml](https://github.com/ghostfolio/ghostfolio/blob/main/docker/docker-compose.yml)
+- Set `NODE_ENV: production` as in [docker-compose.yml](https://github.com/ghostfolio/ghostfolio/blob/main/docker/docker-compose.yml)
 
 ## 1.193.0 - 14.09.2022
 
