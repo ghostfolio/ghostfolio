@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Respected the end date in the performance chart calculation
 
+### Todo
+
+Set `NODE_ENV: production` as in [docker-compose.yml](https://github.com/ghostfolio/ghostfolio/blob/main/docker/docker-compose.yml)
+
 ## 1.193.0 - 14.09.2022
 
 ### Changed
