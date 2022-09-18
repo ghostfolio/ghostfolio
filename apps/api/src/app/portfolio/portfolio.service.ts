@@ -57,7 +57,6 @@ import {
 } from '@prisma/client';
 import Big from 'big.js';
 import {
-  addDays,
   differenceInDays,
   endOfToday,
   format,
@@ -72,7 +71,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, last, sortBy, uniq, uniqBy } from 'lodash';
+import { isEmpty, sortBy, uniq, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -391,40 +390,16 @@ export class PortfolioService {
       daysInMarket / Math.min(daysInMarket, PortfolioService.MAX_CHART_ITEMS)
     );
 
-    const items: HistoricalDataItem[] = [];
-
-    let currentEndDate = startDate;
-
-    while (isBefore(currentEndDate, endDate)) {
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
-        startDate,
-        currentEndDate
-      );
-
-      items.push({
-        date: format(currentEndDate, DATE_FORMAT),
-        value: currentPositions.netPerformancePercentage.toNumber() * 100
-      });
-
-      currentEndDate = addDays(currentEndDate, step);
-    }
-
-    const today = new Date();
-
-    if (last(items)?.date !== format(today, DATE_FORMAT)) {
-      // Add today
-      const { netPerformancePercentage } =
-        await portfolioCalculator.getCurrentPositions(startDate, today);
-      items.push({
-        date: format(today, DATE_FORMAT),
-        value: netPerformancePercentage.toNumber() * 100
-      });
-    }
+    const items = await portfolioCalculator.getChartData(
+      startDate,
+      endDate,
+      step
+    );
 
     return {
+      items,
       isAllTimeHigh: false,
-      isAllTimeLow: false,
-      items: items
+      isAllTimeLow: false
     };
   }
 
