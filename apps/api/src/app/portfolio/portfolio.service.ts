@@ -21,6 +21,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   ASSET_SUB_CLASS_EMERGENCY_FUND,
+  MAX_CHART_ITEMS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
@@ -85,7 +86,6 @@ const emergingMarkets = require('../../assets/countries/emerging-markets.json');
 
 @Injectable()
 export class PortfolioService {
-  private static readonly MAX_CHART_ITEMS = 250;
   private baseCurrency: string;
 
   public constructor(
@@ -387,7 +387,7 @@ export class PortfolioService {
 
     const daysInMarket = differenceInDays(new Date(), startDate);
     const step = Math.round(
-      daysInMarket / Math.min(daysInMarket, PortfolioService.MAX_CHART_ITEMS)
+      daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS)
     );
 
     const items = await portfolioCalculator.getChartData(
