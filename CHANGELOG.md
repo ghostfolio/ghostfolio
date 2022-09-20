@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Set up the language localization for Italiano (`it`)
+
 ## 1.194.0 - 17.09.2022
 
 ### Added
@@ -185,7 +191,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up `ng-extract-i18n-merge` to improve the i18n extraction and merge workflow
-- Set up language localization for German (`de`)
+- Set up the language localization for German (`de`)
 - Resolved the feature graphic of the blog post
 
 ### Changed
