@@ -4,7 +4,10 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { PROPERTY_BENCHMARKS } from '@ghostfolio/common/config';
+import {
+  MAX_CHART_ITEMS,
+  PROPERTY_BENCHMARKS
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   BenchmarkMarketDataDetails,
@@ -16,7 +19,6 @@ import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format } from 'date-fns';
 import ms from 'ms';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class BenchmarkService {
@@ -157,27 +159,38 @@ export class BenchmarkService {
       })
     ]);
 
-    marketDataItems.push({
-      ...currentSymbolItem,
-      createdAt: new Date(),
-      date: new Date(),
-      id: uuidv4()
-    });
+    const step = Math.round(
+      marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
+    );
 
     const marketPriceAtStartDate = marketDataItems?.[0]?.marketPrice ?? 0;
     return {
-      marketData: marketDataItems.map((marketDataItem) => {
-        return {
-          date: format(marketDataItem.date, DATE_FORMAT),
+      marketData: [
+        ...marketDataItems
+          .filter((marketDataItem, index) => {
+            return index % step === 0;
+          })
+          .map((marketDataItem) => {
+            return {
+              date: format(marketDataItem.date, DATE_FORMAT),
+              value:
+                marketPriceAtStartDate === 0
+                  ? 0
+                  : this.calculateChangeInPercentage(
+                      marketPriceAtStartDate,
+                      marketDataItem.marketPrice
+                    ) * 100
+            };
+          }),
+        {
+          date: format(new Date(), DATE_FORMAT),
           value:
-            marketPriceAtStartDate === 0
-              ? 0
-              : this.calculateChangeInPercentage(
-                  marketPriceAtStartDate,
-                  marketDataItem.marketPrice
-                ) * 100
-        };
-      })
+            this.calculateChangeInPercentage(
+              marketPriceAtStartDate,
+              currentSymbolItem.marketPrice
+            ) * 100
+        }
+      ]
     };
   }
 

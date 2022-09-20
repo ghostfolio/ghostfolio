@@ -67,6 +67,8 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
   }
 };
 
+export const MAX_CHART_ITEMS = 365;
+
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_COUPONS = 'COUPONS';
 export const PROPERTY_CURRENCIES = 'CURRENCIES';

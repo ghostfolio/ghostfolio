@@ -21,6 +21,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation.ser
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
   ASSET_SUB_CLASS_EMERGENCY_FUND,
+  MAX_CHART_ITEMS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
@@ -57,7 +58,6 @@ import {
 } from '@prisma/client';
 import Big from 'big.js';
 import {
-  addDays,
   differenceInDays,
   endOfToday,
   format,
@@ -72,7 +72,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, last, sortBy, uniq, uniqBy } from 'lodash';
+import { isEmpty, sortBy, uniq, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -86,7 +86,6 @@ const emergingMarkets = require('../../assets/countries/emerging-markets.json');
 
 @Injectable()
 export class PortfolioService {
-  private static readonly MAX_CHART_ITEMS = 250;
   private baseCurrency: string;
 
   public constructor(
@@ -388,43 +387,19 @@ export class PortfolioService {
 
     const daysInMarket = differenceInDays(new Date(), startDate);
     const step = Math.round(
-      daysInMarket / Math.min(daysInMarket, PortfolioService.MAX_CHART_ITEMS)
+      daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS)
     );
 
-    const items: HistoricalDataItem[] = [];
-
-    let currentEndDate = startDate;
-
-    while (isBefore(currentEndDate, endDate)) {
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
-        startDate,
-        currentEndDate
-      );
-
-      items.push({
-        date: format(currentEndDate, DATE_FORMAT),
-        value: currentPositions.netPerformancePercentage.toNumber() * 100
-      });
-
-      currentEndDate = addDays(currentEndDate, step);
-    }
-
-    const today = new Date();
-
-    if (last(items)?.date !== format(today, DATE_FORMAT)) {
-      // Add today
-      const { netPerformancePercentage } =
-        await portfolioCalculator.getCurrentPositions(startDate, today);
-      items.push({
-        date: format(today, DATE_FORMAT),
-        value: netPerformancePercentage.toNumber() * 100
-      });
-    }
+    const items = await portfolioCalculator.getChartData(
+      startDate,
+      endDate,
+      step
+    );
 
     return {
+      items,
       isAllTimeHigh: false,
-      isAllTimeLow: false,
-      items: items
+      isAllTimeLow: false
     };
   }
 
