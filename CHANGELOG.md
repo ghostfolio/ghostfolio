@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the chart tooltip of the benchmark comparator
 
-
 ## 1.194.0 - 17.09.2022
 
 ### Added
