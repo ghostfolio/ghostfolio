@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up the language localization for Italiano (`it`)
 
+## 1.195.0 - 20.09.2022
+
+### Changed
+
+- Improved the algorithm of the performance chart calculation
+
+### Fixed
+
+- Improved the chart tooltip of the benchmark comparator
+
+
 ## 1.194.0 - 17.09.2022
 
 ### Added

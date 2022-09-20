@@ -23,11 +23,7 @@ import {
   getTextColor,
   parseDate
 } from '@ghostfolio/common/helper';
-import {
-  LineChartItem,
-  UniqueAsset,
-  User
-} from '@ghostfolio/common/interfaces';
+import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import {
   Chart,
@@ -215,7 +211,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
         locale: this.locale,
         unit: '%'
       }),
-      mode: 'index',
+      mode: 'x',
       position: <unknown>'top',
       xAlign: 'center',
       yAlign: 'bottom'
