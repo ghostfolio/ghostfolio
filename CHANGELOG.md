@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Set up the language localization for Italiano (`it`)
 - Extended the landing page
 
 ## 1.195.0 - 20.09.2022
@@ -201,7 +202,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up `ng-extract-i18n-merge` to improve the i18n extraction and merge workflow
-- Set up language localization for German (`de`)
+- Set up the language localization for German (`de`)
 - Resolved the feature graphic of the blog post
 
 ### Changed
