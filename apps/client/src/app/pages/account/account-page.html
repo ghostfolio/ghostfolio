@@ -94,7 +94,10 @@
                   <ng-container i18n>Base Currency</ng-container>
                 </div>
                 <div class="pl-1 w-50">
-                  <mat-form-field appearance="outline" class="w-100">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline w-100 without-hint"
+                  >
                     <mat-select
                       name="baseCurrency"
                       [disabled]="!hasPermissionToUpdateUserSettings"
@@ -116,7 +119,10 @@
                   <div class="hint-text text-muted" i18n>Beta</div>
                 </div>
                 <div class="pl-1 w-50">
-                  <mat-form-field appearance="outline" class="w-100">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline w-100 without-hint"
+                  >
                     <mat-select
                       name="language"
                       [disabled]="!hasPermissionToUpdateUserSettings"
@@ -139,7 +145,10 @@
                   </div>
                 </div>
                 <div class="pl-1 w-50">
-                  <mat-form-field appearance="outline" class="w-100">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline w-100 without-hint"
+                  >
                     <mat-select
                       name="locale"
                       [disabled]="!hasPermissionToUpdateUserSettings"
@@ -162,7 +171,10 @@
                 </div>
                 <div class="pl-1 w-50">
                   <div class="align-items-center d-flex overflow-hidden">
-                    <mat-form-field appearance="outline" class="w-100">
+                    <mat-form-field
+                      appearance="outline"
+                      class="compact-with-outline w-100 without-hint"
+                    >
                       <mat-select
                         name="viewMode"
                         [disabled]="!hasPermissionToUpdateViewMode"

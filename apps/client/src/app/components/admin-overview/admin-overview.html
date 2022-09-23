@@ -162,8 +162,11 @@
                 </button>
               </div>
               <div class="mt-2">
-                <form #couponForm="ngForm">
-                  <mat-form-field appearance="outline" class="mr-2">
+                <form #couponForm="ngForm" class="align-items-center d-flex">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline mr-2 without-hint"
+                  >
                     <mat-select
                       name="duration"
                       [value]="couponDuration"
@@ -176,6 +179,7 @@
                     </mat-select>
                   </mat-form-field>
                   <button
+                    class="mt-1"
                     color="primary"
                     mat-flat-button
                     (click)="onAddCoupon()"

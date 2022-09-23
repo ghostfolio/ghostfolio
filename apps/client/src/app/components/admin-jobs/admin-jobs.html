@@ -2,7 +2,10 @@
   <div class="row">
     <div class="col">
       <form class="align-items-center d-flex" [formGroup]="filterForm">
-        <mat-form-field appearance="outline" class="flex-grow-1">
+        <mat-form-field
+          appearance="outline"
+          class="compact-with-outline flex-grow-1 mr-2 without-hint"
+        >
           <mat-select formControlName="status">
             <mat-option></mat-option>
             <mat-option
@@ -13,7 +16,7 @@
           </mat-select>
         </mat-form-field>
         <button
-          class="ml-1"
+          class="mt-1"
           color="warn"
           mat-flat-button
           (click)="onDeleteJobs()"

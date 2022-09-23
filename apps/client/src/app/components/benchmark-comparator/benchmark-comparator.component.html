@@ -10,7 +10,11 @@
     </div>
   </div>
   <div class="col-md-6 col-xs-12 d-flex justify-content-end">
-    <mat-form-field appearance="outline" class="w-100" color="accent">
+    <mat-form-field
+      appearance="outline"
+      class="w-100 without-hint"
+      color="accent"
+    >
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
         name="benchmark"
@@ -26,7 +30,7 @@
     </mat-form-field>
   </div>
 </div>
-<div *ngIf="user.settings.viewMode !== 'ZEN'" class="mb-3 text-center">
+<div *ngIf="user.settings.viewMode !== 'ZEN'" class="my-2 text-center">
   <gf-toggle
     [defaultValue]="user?.settings?.dateRange"
     [isLoading]="isLoading"
