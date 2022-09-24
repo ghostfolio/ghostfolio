@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "SymbolProfile" ADD COLUMN     "currency" "Currency";
+ALTER TABLE "SymbolProfile" ADD COLUMN "currency" "Currency";
