@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the feature overview page by multi-language support (English, German, Italian)
+
 ### Changed
 
 - Improved the style of various selectors (density)
