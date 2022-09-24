@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the value of the active filter in percentage on the allocations page
 - Extended the feature overview page by multi-language support (English, German, Italian)
 
 ### Changed
