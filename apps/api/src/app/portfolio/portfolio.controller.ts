@@ -110,26 +110,6 @@ export class PortfolioController {
     };
   }
 
-  @Get('chart')
-  @UseGuards(AuthGuard('jwt'))
-  @Version('2')
-  public async getChartV2(
-    @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
-  ): Promise<PortfolioChart> {
-    const historicalDataContainer = await this.portfolioService.getChartV2(
-      impersonationId,
-      range
-    );
-
-    return {
-      chart: historicalDataContainer.items,
-      hasError: false,
-      isAllTimeHigh: false,
-      isAllTimeLow: false
-    };
-  }
-
   @Get('details')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(RedactValuesInResponseInterceptor)
@@ -313,6 +293,35 @@ export class PortfolioController {
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
         ['currentGrossPerformance', 'currentValue']
+      );
+    }
+
+    return performanceInformation;
+  }
+
+  @Get('performance')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  @Version('2')
+  public async getPerformanceV2(
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('range') dateRange
+  ): Promise<PortfolioPerformanceResponse> {
+    const performanceInformation = await this.portfolioService.getPerformanceV2(
+      {
+        dateRange,
+        impersonationId
+      }
+    );
+
+    if (
+      impersonationId ||
+      this.request.user.Settings.settings.viewMode === 'ZEN' ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
+      performanceInformation.performance = nullifyValuesInObject(
+        performanceInformation.performance,
+        ['currentGrossPerformance', 'currentNetPerformance', 'currentValue']
       );
     }
 

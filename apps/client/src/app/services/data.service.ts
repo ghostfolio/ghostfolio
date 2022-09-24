@@ -353,12 +353,16 @@ export class DataService {
     });
   }
 
-  public fetchPortfolioPerformance(params: { [param: string]: any }) {
+  public fetchPortfolioPerformance({
+    range,
+    version
+  }: {
+    range: DateRange;
+    version: number;
+  }) {
     return this.http.get<PortfolioPerformanceResponse>(
-      '/api/v1/portfolio/performance',
-      {
-        params
-      }
+      `/api/v${version}/portfolio/performance`,
+      { params: { range } }
     );
   }
 

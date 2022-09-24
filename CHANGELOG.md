@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Combined the performance and chart calculation
 - Improved the style of various selectors (density)
 
 ## 1.196.0 - 22.09.2022

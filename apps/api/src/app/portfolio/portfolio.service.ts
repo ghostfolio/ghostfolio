@@ -355,11 +355,14 @@ export class PortfolioService {
     };
   }
 
-  public async getChartV2(
-    aImpersonationId: string,
-    aDateRange: DateRange = 'max'
-  ): Promise<HistoricalDataContainer> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+  public async getChartV2({
+    dateRange = 'max',
+    impersonationId
+  }: {
+    dateRange?: DateRange;
+    impersonationId: string;
+  }): Promise<HistoricalDataContainer> {
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -383,7 +386,7 @@ export class PortfolioService {
     const endDate = new Date();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(aDateRange, portfolioStart);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
 
     const daysInMarket = differenceInDays(new Date(), startDate);
     const step = Math.round(
@@ -974,6 +977,105 @@ export class PortfolioService {
     }
 
     return {
+      errors: currentPositions.errors,
+      hasErrors: currentPositions.hasErrors || hasErrors,
+      performance: {
+        currentValue,
+        currentGrossPerformance: currentGrossPerformance.toNumber(),
+        currentGrossPerformancePercent:
+          currentGrossPerformancePercent.toNumber(),
+        currentNetPerformance: currentNetPerformance.toNumber(),
+        currentNetPerformancePercent: currentNetPerformancePercent.toNumber()
+      }
+    };
+  }
+
+  public async getPerformanceV2({
+    dateRange = 'max',
+    impersonationId
+  }: {
+    dateRange?: DateRange;
+    impersonationId: string;
+  }): Promise<PortfolioPerformanceResponse> {
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
+
+    const { portfolioOrders, transactionPoints } =
+      await this.getTransactionPoints({
+        userId
+      });
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: this.request.user.Settings.settings.baseCurrency,
+      currentRateService: this.currentRateService,
+      orders: portfolioOrders
+    });
+
+    if (transactionPoints?.length <= 0) {
+      return {
+        chart: [],
+        hasErrors: false,
+        performance: {
+          currentGrossPerformance: 0,
+          currentGrossPerformancePercent: 0,
+          currentNetPerformance: 0,
+          currentNetPerformancePercent: 0,
+          currentValue: 0
+        }
+      };
+    }
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate
+    );
+
+    const hasErrors = currentPositions.hasErrors;
+    const currentValue = currentPositions.currentValue.toNumber();
+    const currentGrossPerformance = currentPositions.grossPerformance;
+    const currentGrossPerformancePercent =
+      currentPositions.grossPerformancePercentage;
+    let currentNetPerformance = currentPositions.netPerformance;
+    let currentNetPerformancePercent =
+      currentPositions.netPerformancePercentage;
+
+    // if (currentGrossPerformance.mul(currentGrossPerformancePercent).lt(0)) {
+    //   // If algebraic sign is different, harmonize it
+    //   currentGrossPerformancePercent = currentGrossPerformancePercent.mul(-1);
+    // }
+
+    // if (currentNetPerformance.mul(currentNetPerformancePercent).lt(0)) {
+    //   // If algebraic sign is different, harmonize it
+    //   currentNetPerformancePercent = currentNetPerformancePercent.mul(-1);
+    // }
+
+    const historicalDataContainer = await this.getChartV2({
+      dateRange,
+      impersonationId
+    });
+
+    const itemOfToday = historicalDataContainer.items.find((item) => {
+      return item.date === format(new Date(), DATE_FORMAT);
+    });
+
+    if (itemOfToday) {
+      currentNetPerformance = new Big(itemOfToday.netPerformance);
+      currentNetPerformancePercent = new Big(
+        itemOfToday.netPerformanceInPercentage
+      ).div(100);
+    }
+
+    return {
+      chart: historicalDataContainer.items.map(
+        ({ date, netPerformanceInPercentage }) => {
+          return {
+            date,
+            value: netPerformanceInPercentage
+          };
+        }
+      ),
       errors: currentPositions.errors,
       hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
