@@ -126,7 +126,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       this.isLoadingBenchmarkComparator = true;
 
       this.dataService
-        .fetchChart({ range: this.user?.settings?.dateRange, version: 2 })
+        .fetchPortfolioPerformance({
+          range: this.user?.settings?.dateRange,
+          version: 2
+        })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(({ chart }) => {
           this.firstOrderDate = new Date(chart?.[0]?.date ?? new Date());

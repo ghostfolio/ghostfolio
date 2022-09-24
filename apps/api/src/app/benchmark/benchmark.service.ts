@@ -164,7 +164,7 @@ export class BenchmarkService {
     );
 
     const marketPriceAtStartDate = marketDataItems?.[0]?.marketPrice ?? 0;
-    return {
+    const response = {
       marketData: [
         ...marketDataItems
           .filter((marketDataItem, index) => {
@@ -181,17 +181,22 @@ export class BenchmarkService {
                       marketDataItem.marketPrice
                     ) * 100
             };
-          }),
-        {
-          date: format(new Date(), DATE_FORMAT),
-          value:
-            this.calculateChangeInPercentage(
-              marketPriceAtStartDate,
-              currentSymbolItem.marketPrice
-            ) * 100
-        }
+          })
       ]
     };
+
+    if (currentSymbolItem?.marketPrice) {
+      response.marketData.push({
+        date: format(new Date(), DATE_FORMAT),
+        value:
+          this.calculateChangeInPercentage(
+            marketPriceAtStartDate,
+            currentSymbolItem.marketPrice
+          ) * 100
+      });
+    }
+
+    return response;
   }
 
   private getMarketCondition(aPerformanceInPercent: number) {

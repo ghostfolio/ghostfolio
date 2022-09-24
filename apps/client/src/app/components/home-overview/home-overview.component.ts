@@ -76,8 +76,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       !this.hasImpersonationId &&
       !this.user.settings.isRestrictedView &&
       this.user.settings.viewMode !== 'ZEN';
-
-    this.update();
   }
 
   public onChangeDateRange(dateRange: DateRange) {
@@ -104,35 +102,50 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   }
 
   private update() {
+    this.historicalDataItems = null;
     this.isLoadingPerformance = true;
 
     this.dataService
-      .fetchChart({
+      .fetchPortfolioPerformance({
         range: this.user?.settings?.dateRange,
         version: this.user?.settings?.isExperimentalFeatures ? 2 : 1
       })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((chartData) => {
-        this.historicalDataItems = chartData.chart.map((chartDataItem) => {
-          return {
-            date: chartDataItem.date,
-            value: chartDataItem.value
-          };
-        });
-        this.isAllTimeHigh = chartData.isAllTimeHigh;
-        this.isAllTimeLow = chartData.isAllTimeLow;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchPortfolioPerformance({ range: this.user?.settings?.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.errors = response.errors;
         this.hasError = response.hasErrors;
         this.performance = response.performance;
         this.isLoadingPerformance = false;
+
+        if (this.user?.settings?.isExperimentalFeatures) {
+          this.historicalDataItems = response.chart.map(({ date, value }) => {
+            return {
+              date,
+              value
+            };
+          });
+        } else {
+          this.dataService
+            .fetchChart({
+              range: this.user?.settings?.dateRange,
+              version: 1
+            })
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe((chartData) => {
+              this.historicalDataItems = chartData.chart.map(
+                ({ date, value }) => {
+                  return {
+                    date,
+                    value
+                  };
+                }
+              );
+              this.isAllTimeHigh = chartData.isAllTimeHigh;
+              this.isAllTimeLow = chartData.isAllTimeLow;
+
+              this.changeDetectorRef.markForCheck();
+            });
+        }
 
         this.changeDetectorRef.markForCheck();
       });
