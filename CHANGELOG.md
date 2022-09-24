@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the value of the active filter in percentage on the allocations page
+
 ### Changed
 
 - Improved the style of various selectors (density)
