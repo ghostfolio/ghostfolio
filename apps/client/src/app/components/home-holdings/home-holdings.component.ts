@@ -6,13 +6,13 @@ import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.com
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Position, User } from '@ghostfolio/common/interfaces';
+import { Filter, Position, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
-import { DataSource } from '@prisma/client';
+import { AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 import { PositionDetailDialogParams } from '../position/position-detail-dialog/interfaces/interfaces';
 
@@ -22,8 +22,12 @@ import { PositionDetailDialogParams } from '../position/position-detail-dialog/i
   templateUrl: './home-holdings.html'
 })
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
+  public activeFilters: Filter[] = [];
+  public allFilters: Filter[];
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
+  public filterPlaceholder = '';
+  public filters$ = new Subject<Filter[]>();
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public positions: Position[];
@@ -67,6 +71,39 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
             permissions.createOrder
           );
 
+          const accountFilters: Filter[] = this.user.accounts
+            .filter(({ accountType }) => {
+              return accountType === 'SECURITIES';
+            })
+            .map(({ id, name }) => {
+              return {
+                id,
+                label: name,
+                type: 'ACCOUNT'
+              };
+            });
+          const assetClassFilters: Filter[] = [];
+          for (const assetClass of Object.keys(AssetClass)) {
+            assetClassFilters.push({
+              id: assetClass,
+              label: assetClass,
+              type: 'ASSET_CLASS'
+            });
+          }
+          const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
+            return {
+              id,
+              label: name,
+              type: 'TAG'
+            };
+          });
+
+          this.allFilters = [
+            ...accountFilters,
+            ...assetClassFilters,
+            ...tagFilters
+          ];
+
           this.update();
         }
       });
@@ -80,6 +117,18 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+      });
+
+    this.filters$
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
+      .subscribe((filters) => {
+        this.activeFilters = filters;
+        this.filterPlaceholder =
+          this.activeFilters.length <= 0
+            ? $localize`Filter by account or tag...`
+            : '';
+        this.update();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.update();
@@ -152,7 +201,10 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.positions = undefined;
 
     this.dataService
-      .fetchPositions({ range: this.user?.settings?.dateRange })
+      .fetchPositions({
+        range: this.user?.settings?.dateRange,
+        filters: this.activeFilters
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.positions = response.positions;

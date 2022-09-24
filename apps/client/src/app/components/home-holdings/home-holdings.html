@@ -1,4 +1,14 @@
 <div class="container justify-content-center p-3">
+  <div class="row">
+    <div class="align-items-center col-xs-12 col-md-8 offset-md-2">
+      <gf-activities-filter
+        [allFilters]="allFilters"
+        [isLoading]="positions === undefined"
+        [placeholder]="filterPlaceholder"
+        (valueChanged)="filters$.next($event)"
+      ></gf-activities-filter>
+    </div>
+  </div>
   <div *ngIf="user.settings.viewMode !== 'ZEN'" class="mb-3 text-center">
     <gf-toggle
       [defaultValue]="user?.settings?.dateRange"

@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { GfPositionDetailDialogModule } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.module';
 import { GfPositionsModule } from '@ghostfolio/client/components/positions/positions.module';
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
+import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
 
 import { HomeHoldingsComponent } from './home-holdings.component';
 
@@ -13,6 +14,7 @@ import { HomeHoldingsComponent } from './home-holdings.component';
   declarations: [HomeHoldingsComponent],
   imports: [
     CommonModule,
+    GfActivitiesFilterModule,
     GfPositionDetailDialogModule,
     GfPositionsModule,
     GfToggleModule,

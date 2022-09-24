@@ -3,6 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
+import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
 import { GfLineChartModule } from '@ghostfolio/ui/line-chart/line-chart.module';
 import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
 
@@ -12,6 +13,7 @@ import { HomeOverviewComponent } from './home-overview.component';
   declarations: [HomeOverviewComponent],
   imports: [
     CommonModule,
+    GfActivitiesFilterModule,
     GfLineChartModule,
     GfNoTransactionsInfoModule,
     GfPortfolioPerformanceModule,

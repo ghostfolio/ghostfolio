@@ -4,6 +4,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  Filter,
   LineChartItem,
   PortfolioPerformance,
   UniqueAsset,
@@ -11,9 +12,10 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
+import { AssetClass } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-home-overview',
@@ -21,9 +23,13 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-overview.html'
 })
 export class HomeOverviewComponent implements OnDestroy, OnInit {
+  public activeFilters: Filter[] = [];
+  public allFilters: Filter[];
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public errors: UniqueAsset[];
+  public filterPlaceholder = '';
+  public filters$ = new Subject<Filter[]>();
   public hasError: boolean;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
@@ -55,6 +61,39 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
             permissions.createOrder
           );
 
+          const accountFilters: Filter[] = this.user.accounts
+            .filter(({ accountType }) => {
+              return accountType === 'SECURITIES';
+            })
+            .map(({ id, name }) => {
+              return {
+                id,
+                label: name,
+                type: 'ACCOUNT'
+              };
+            });
+          const assetClassFilters: Filter[] = [];
+          for (const assetClass of Object.keys(AssetClass)) {
+            assetClassFilters.push({
+              id: assetClass,
+              label: assetClass,
+              type: 'ASSET_CLASS'
+            });
+          }
+          const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
+            return {
+              id,
+              label: name,
+              type: 'TAG'
+            };
+          });
+
+          this.allFilters = [
+            ...accountFilters,
+            ...assetClassFilters,
+            ...tagFilters
+          ];
+
           this.update();
         }
       });
@@ -69,6 +108,18 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
 
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.filters$
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
+      .subscribe((filters) => {
+        this.activeFilters = filters;
+        this.filterPlaceholder =
+          this.activeFilters.length <= 0
+            ? $localize`Filter by account or tag...`
+            : '';
+        this.update();
         this.changeDetectorRef.markForCheck();
       });
 
@@ -108,7 +159,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchPortfolioPerformance({
         range: this.user?.settings?.dateRange,
-        version: this.user?.settings?.isExperimentalFeatures ? 2 : 1
+        version: this.user?.settings?.isExperimentalFeatures ? 2 : 1,
+        filters: this.activeFilters
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
@@ -128,7 +180,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
           this.dataService
             .fetchChart({
               range: this.user?.settings?.dateRange,
-              version: 1
+              version: 1,
+              filters: this.activeFilters
             })
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe((chartData) => {

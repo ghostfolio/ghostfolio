@@ -1,5 +1,15 @@
 <div class="container pb-3 px-3">
   <div class="row">
+    <div class="align-items-center col-xs-12 col-md-8 offset-md-2">
+      <gf-activities-filter
+        [allFilters]="allFilters"
+        [isLoading]="isLoading"
+        [placeholder]="filterPlaceholder"
+        (valueChanged)="filters$.next($event)"
+      ></gf-activities-filter>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-xs-12 col-md-8 offset-md-2">
       <mat-card class="h-100">
         <mat-card-header>

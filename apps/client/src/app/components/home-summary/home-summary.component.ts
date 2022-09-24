@@ -2,10 +2,11 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
+import { Filter, PortfolioSummary, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { AssetClass } from '@prisma/client';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-home-summary',
@@ -13,6 +14,10 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-summary.html'
 })
 export class HomeSummaryComponent implements OnDestroy, OnInit {
+  public activeFilters: Filter[] = [];
+  public allFilters: Filter[];
+  public filterPlaceholder = '';
+  public filters$ = new Subject<Filter[]>();
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = true;
@@ -38,6 +43,39 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
             permissions.updateUserSettings
           );
 
+          const accountFilters: Filter[] = this.user.accounts
+            .filter(({ accountType }) => {
+              return accountType === 'SECURITIES';
+            })
+            .map(({ id, name }) => {
+              return {
+                id,
+                label: name,
+                type: 'ACCOUNT'
+              };
+            });
+          const assetClassFilters: Filter[] = [];
+          for (const assetClass of Object.keys(AssetClass)) {
+            assetClassFilters.push({
+              id: assetClass,
+              label: assetClass,
+              type: 'ASSET_CLASS'
+            });
+          }
+          const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
+            return {
+              id,
+              label: name,
+              type: 'TAG'
+            };
+          });
+
+          this.allFilters = [
+            ...accountFilters,
+            ...assetClassFilters,
+            ...tagFilters
+          ];
+
           this.update();
         }
       });
@@ -49,6 +87,18 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
+      });
+
+    this.filters$
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
+      .subscribe((filters) => {
+        this.activeFilters = filters;
+        this.filterPlaceholder =
+          this.activeFilters.length <= 0
+            ? $localize`Filter by account or tag...`
+            : '';
+        this.update();
+        this.changeDetectorRef.markForCheck();
       });
 
     this.update();
@@ -81,7 +131,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     this.isLoading = true;
 
     this.dataService
-      .fetchPortfolioSummary()
+      .fetchPortfolioSummary(this.activeFilters)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         this.summary = response;

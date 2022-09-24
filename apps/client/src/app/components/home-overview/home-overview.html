@@ -1,3 +1,15 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <gf-activities-filter
+        [allFilters]="allFilters"
+        [isLoading]="isLoadingPerformance"
+        [placeholder]="filterPlaceholder"
+        (valueChanged)="filters$.next($event)"
+      ></gf-activities-filter>
+    </div>
+  </div>
+</div>
 <div
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
