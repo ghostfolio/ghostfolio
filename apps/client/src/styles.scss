@@ -146,13 +146,6 @@ ngx-skeleton-loader {
   @include gf-table;
 }
 
-.mat-fab,
-.mat-flat-button {
-  &.mat-primary {
-    color: rgba(var(--light-primary-text)) !important;
-  }
-}
-
 .mat-card {
   &:not([class*='mat-elevation-z']) {
     border: 1px solid rgba(var(--dark-dividers));
@@ -162,6 +155,49 @@ ngx-skeleton-loader {
 
 .mat-card-header-text {
   margin: 0 !important;
+}
+
+.mat-fab,
+.mat-flat-button {
+  &.mat-primary {
+    color: rgba(var(--light-primary-text)) !important;
+  }
+}
+
+.mat-form-field {
+  &.compact-with-outline {
+    .mat-form-field-wrapper {
+      margin: 0.5rem 0 0.25rem;
+      padding-bottom: 1rem;
+
+      .mat-form-field-infix {
+        border-top-width: 0;
+        padding: 1rem 0 0.75rem;
+
+        .mat-form-field-label {
+          margin-top: 0.1rem;
+        }
+
+        .mat-select-arrow-wrapper {
+          transform: none;
+        }
+      }
+
+      .mat-form-field-prefix {
+        top: 0;
+      }
+
+      .mat-form-field-suffix {
+        top: 0;
+      }
+    }
+  }
+
+  &.without-hint {
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+  }
 }
 
 .no-min-width {
