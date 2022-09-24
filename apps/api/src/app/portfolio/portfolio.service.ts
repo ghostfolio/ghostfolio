@@ -268,13 +268,15 @@ export class PortfolioService {
 
   public async getChart(
     aImpersonationId: string,
-    aDateRange: DateRange = 'max'
+    aDateRange: DateRange = 'max',
+    aFilters?: Filter[]
   ): Promise<HistoricalDataContainer> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
-        userId
+        userId,
+        filters: aFilters
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -845,13 +847,15 @@ export class PortfolioService {
 
   public async getPositions(
     aImpersonationId: string,
-    aDateRange: DateRange = 'max'
+    aDateRange: DateRange = 'max',
+    aFilters?: Filter[]
   ): Promise<{ hasErrors: boolean; positions: Position[] }> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
-        userId
+        userId,
+        filters: aFilters
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -921,12 +925,14 @@ export class PortfolioService {
 
   public async getPerformance(
     aImpersonationId: string,
-    aDateRange: DateRange = 'max'
+    aDateRange: DateRange = 'max',
+    aFilters?: Filter[]
   ): Promise<PortfolioPerformanceResponse> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
+        filters: aFilters,
         userId
       });
 
@@ -1181,20 +1187,29 @@ export class PortfolioService {
     };
   }
 
-  public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
+  public async getSummary(
+    aImpersonationId: string,
+    aFilters?: Filter[]
+  ): Promise<PortfolioSummary> {
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const performanceInformation = await this.getPerformance(aImpersonationId);
+    const performanceInformation = await this.getPerformance(
+      aImpersonationId,
+      undefined,
+      aFilters
+    );
 
     const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
       userId,
-      currency: userCurrency
+      currency: userCurrency,
+      filters: aFilters
     });
     const orders = await this.orderService.getOrders({
       userCurrency,
-      userId
+      userId,
+      filters: aFilters
     });
     const dividend = this.getDividend(orders).toNumber();
     const emergencyFund = new Big(

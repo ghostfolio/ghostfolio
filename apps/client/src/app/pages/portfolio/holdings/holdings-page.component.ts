@@ -87,9 +87,7 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
               ? $localize`Filter by account or tag...`
               : '';
 
-          return this.dataService.fetchPortfolioDetails({
-            filters: this.activeFilters
-          });
+          return this.dataService.fetchPortfolioDetails(this.activeFilters);
         }),
         takeUntil(this.unsubscribeSubject)
       )

@@ -75,60 +75,21 @@ export class DataService {
   }: {
     filters?: Filter[];
   }): Observable<Activities> {
-    let params = new HttpParams();
-
-    if (filters?.length > 0) {
-      const {
-        ACCOUNT: filtersByAccount,
-        ASSET_CLASS: filtersByAssetClass,
-        TAG: filtersByTag
-      } = groupBy(filters, (filter) => {
-        return filter.type;
-      });
-
-      if (filtersByAccount) {
-        params = params.append(
-          'accounts',
-          filtersByAccount
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByAssetClass) {
-        params = params.append(
-          'assetClasses',
-          filtersByAssetClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByTag) {
-        params = params.append(
-          'tags',
-          filtersByTag
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-    }
-
-    return this.http.get<any>('/api/v1/order', { params }).pipe(
-      map(({ activities }) => {
-        for (const activity of activities) {
-          activity.createdAt = parseISO(activity.createdAt);
-          activity.date = parseISO(activity.date);
+    return this.http
+      .get<any>('/api/v1/order', {
+        params: {
+          ...this.buildParamsFilter(filters)
         }
-        return { activities };
       })
-    );
+      .pipe(
+        map(({ activities }) => {
+          for (const activity of activities) {
+            activity.createdAt = parseISO(activity.createdAt);
+            activity.date = parseISO(activity.date);
+          }
+          return { activities };
+        })
+      );
   }
 
   public fetchAdminData() {
@@ -202,9 +163,20 @@ export class DataService {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
   }
 
-  public fetchChart({ range, version }: { range: DateRange; version: number }) {
+  public fetchChart({
+    range,
+    version,
+    filters
+  }: {
+    range: DateRange;
+    version: number;
+    filters?: Filter[];
+  }) {
     return this.http.get<PortfolioChart>(`/api/v${version}/portfolio/chart`, {
-      params: { range }
+      params: {
+        range,
+        ...this.buildParamsFilter(filters)
+      }
     });
   }
 
@@ -283,12 +255,14 @@ export class DataService {
   }
 
   public fetchPositions({
-    range
+    range,
+    filters
   }: {
     range: DateRange;
+    filters?: Filter[];
   }): Observable<PortfolioPositions> {
     return this.http.get<PortfolioPositions>('/api/v1/portfolio/positions', {
-      params: { range }
+      params: { range, ...this.buildParamsFilter(filters) }
     });
   }
 
@@ -302,67 +276,24 @@ export class DataService {
       );
   }
 
-  public fetchPortfolioDetails({ filters }: { filters?: Filter[] }) {
-    let params = new HttpParams();
-
-    if (filters?.length > 0) {
-      const {
-        ACCOUNT: filtersByAccount,
-        ASSET_CLASS: filtersByAssetClass,
-        TAG: filtersByTag
-      } = groupBy(filters, (filter) => {
-        return filter.type;
-      });
-
-      if (filtersByAccount) {
-        params = params.append(
-          'accounts',
-          filtersByAccount
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByAssetClass) {
-        params = params.append(
-          'assetClasses',
-          filtersByAssetClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByTag) {
-        params = params.append(
-          'tags',
-          filtersByTag
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-    }
-
+  public fetchPortfolioDetails(filters?: Filter[]) {
     return this.http.get<PortfolioDetails>('/api/v1/portfolio/details', {
-      params
+      params: { ...this.buildParamsFilter(filters) }
     });
   }
 
   public fetchPortfolioPerformance({
     range,
-    version
+    version,
+    filters
   }: {
     range: DateRange;
     version: number;
+    filters?: Filter[];
   }) {
     return this.http.get<PortfolioPerformanceResponse>(
       `/api/v${version}/portfolio/performance`,
-      { params: { range } }
+      { params: { range, ...this.buildParamsFilter(filters) } }
     );
   }
 
@@ -376,16 +307,22 @@ export class DataService {
     return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
   }
 
-  public fetchPortfolioSummary(): Observable<PortfolioSummary> {
-    return this.http.get<any>('/api/v1/portfolio/summary').pipe(
-      map((summary) => {
-        if (summary.firstOrderDate) {
-          summary.firstOrderDate = parseISO(summary.firstOrderDate);
-        }
-
-        return summary;
+  public fetchPortfolioSummary(
+    filters?: Filter[]
+  ): Observable<PortfolioSummary> {
+    return this.http
+      .get<any>('/api/v1/portfolio/summary', {
+        params: { ...this.buildParamsFilter(filters) }
       })
-    );
+      .pipe(
+        map((summary) => {
+          if (summary.firstOrderDate) {
+            summary.firstOrderDate = parseISO(summary.firstOrderDate);
+          }
+
+          return summary;
+        })
+      );
   }
 
   public fetchPositionDetail({
@@ -455,5 +392,47 @@ export class DataService {
     return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
     });
+  }
+
+  private buildParamsFilter(filters: Filter[]) {
+    const paramsFilter: {
+      accounts?: string;
+      assetClasses?: string;
+      tags?: string;
+    } = {};
+    if (filters?.length > 0) {
+      const {
+        ACCOUNT: filtersByAccount,
+        ASSET_CLASS: filtersByAssetClass,
+        TAG: filtersByTag
+      } = groupBy(filters, (filter) => {
+        return filter.type;
+      });
+
+      if (filtersByAccount) {
+        paramsFilter.accounts = filtersByAccount
+          .map(({ id }) => {
+            return id;
+          })
+          .join(',');
+      }
+
+      if (filtersByAssetClass) {
+        paramsFilter.assetClasses = filtersByAssetClass
+          .map(({ id }) => {
+            return id;
+          })
+          .join(',');
+      }
+
+      if (filtersByTag) {
+        paramsFilter.tags = filtersByTag
+          .map(({ id }) => {
+            return id;
+          })
+          .join(',');
+      }
+    }
+    return paramsFilter;
   }
 }

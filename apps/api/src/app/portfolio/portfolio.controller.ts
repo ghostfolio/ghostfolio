@@ -65,11 +65,19 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'))
   public async getChart(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('range') range?: DateRange,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioChart> {
     const historicalDataContainer = await this.portfolioService.getChart(
       impersonationId,
-      range
+      range,
+      this.buildFiltersFromQueries(
+        filterByAccounts,
+        filterByAssetClasses,
+        filterByTags
+      )
     );
 
     let chartData = historicalDataContainer.items;
@@ -278,11 +286,19 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPerformance(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('range') range?: DateRange,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioPerformanceResponse> {
     const performanceInformation = await this.portfolioService.getPerformance(
       impersonationId,
-      range
+      range,
+      this.buildFiltersFromQueries(
+        filterByAccounts,
+        filterByAssetClasses,
+        filterByTags
+      )
     );
 
     if (
@@ -333,11 +349,19 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('range') range?: DateRange,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioPositions> {
     const result = await this.portfolioService.getPositions(
       impersonationId,
-      range
+      range,
+      this.buildFiltersFromQueries(
+        filterByAccounts,
+        filterByAssetClasses,
+        filterByTags
+      )
     );
 
     if (
@@ -423,7 +447,10 @@ export class PortfolioController {
   @Get('summary')
   @UseGuards(AuthGuard('jwt'))
   public async getSummary(
-    @Headers('impersonation-id') impersonationId
+    @Headers('impersonation-id') impersonationId,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioSummary> {
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
@@ -435,7 +462,15 @@ export class PortfolioController {
       );
     }
 
-    let summary = await this.portfolioService.getSummary(impersonationId);
+    const filters = this.buildFiltersFromQueries(
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    );
+    let summary = await this.portfolioService.getSummary(
+      impersonationId,
+      filters
+    );
 
     if (
       impersonationId ||
@@ -515,5 +550,38 @@ export class PortfolioController {
     }
 
     return await this.portfolioService.getReport(impersonationId);
+  }
+
+  private buildFiltersFromQueries(
+    filterByAccounts?: string,
+    filterByAssetClasses?: string,
+    filterByTags?: string
+  ) {
+    const accountIds = filterByAccounts?.split(',') ?? [];
+    const assetClasses = filterByAssetClasses?.split(',') ?? [];
+    const tagIds = filterByTags?.split(',') ?? [];
+
+    const filters: Filter[] = [
+      ...accountIds.map((accountId) => {
+        return <Filter>{
+          id: accountId,
+          type: 'ACCOUNT'
+        };
+      }),
+      ...assetClasses.map((assetClass) => {
+        return <Filter>{
+          id: assetClass,
+          type: 'ASSET_CLASS'
+        };
+      }),
+      ...tagIds.map((tagId) => {
+        return <Filter>{
+          id: tagId,
+          type: 'TAG'
+        };
+      })
+    ];
+
+    return filters;
   }
 }
