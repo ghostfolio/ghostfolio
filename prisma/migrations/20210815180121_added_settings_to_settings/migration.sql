@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "Settings" ADD COLUMN     "settings" JSONB;
+ALTER TABLE "Settings" ADD COLUMN "settings" JSONB;
