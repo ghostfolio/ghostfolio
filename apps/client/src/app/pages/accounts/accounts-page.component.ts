@@ -59,8 +59,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           this.openCreateAccountDialog();
         } else if (params['editDialog']) {
           if (this.accounts) {
-            const account = this.accounts.find((account) => {
-              return account.id === params['accountId'];
+            const account = this.accounts.find(({ id }) => {
+              return id === params['accountId'];
             });
 
             this.openUpdateAccountDialog(account);
@@ -155,6 +155,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     balance,
     currency,
     id,
+    isExcluded,
     name,
     platformId
   }: AccountModel): void {
@@ -165,6 +166,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           balance,
           currency,
           id,
+          isExcluded,
           name,
           platformId
         }
@@ -231,6 +233,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           accountType: AccountType.SECURITIES,
           balance: 0,
           currency: this.user?.settings?.baseCurrency,
+          isExcluded: false,
           name: null,
           platformId: null
         }

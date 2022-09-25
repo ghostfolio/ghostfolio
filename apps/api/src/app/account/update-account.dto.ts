@@ -1,5 +1,11 @@
 import { AccountType } from '@prisma/client';
-import { IsNumber, IsString, ValidateIf } from 'class-validator';
+import {
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateIf
+} from 'class-validator';
 
 export class UpdateAccountDto {
   @IsString()
@@ -13,6 +19,10 @@ export class UpdateAccountDto {
 
   @IsString()
   id: string;
+
+  @IsBoolean()
+  @IsOptional()
+  isExcluded?: boolean;
 
   @IsString()
   name: string;

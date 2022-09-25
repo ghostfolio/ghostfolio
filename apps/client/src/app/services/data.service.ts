@@ -31,7 +31,6 @@ import {
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
-  PortfolioSummary,
   UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
@@ -302,7 +301,11 @@ export class DataService {
       );
   }
 
-  public fetchPortfolioDetails({ filters }: { filters?: Filter[] }) {
+  public fetchPortfolioDetails({
+    filters
+  }: {
+    filters?: Filter[];
+  }): Observable<PortfolioDetails> {
     let params = new HttpParams();
 
     if (filters?.length > 0) {
@@ -348,9 +351,20 @@ export class DataService {
       }
     }
 
-    return this.http.get<PortfolioDetails>('/api/v1/portfolio/details', {
-      params
-    });
+    return this.http
+      .get<any>('/api/v1/portfolio/details', {
+        params
+      })
+      .pipe(
+        map((response) => {
+          if (response.summary?.firstOrderDate) {
+            response.summary.firstOrderDate = parseISO(
+              response.summary.firstOrderDate
+            );
+          }
+          return response;
+        })
+      );
   }
 
   public fetchPortfolioPerformance({
@@ -374,18 +388,6 @@ export class DataService {
 
   public fetchPortfolioReport() {
     return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
-  }
-
-  public fetchPortfolioSummary(): Observable<PortfolioSummary> {
-    return this.http.get<any>('/api/v1/portfolio/summary').pipe(
-      map((summary) => {
-        if (summary.firstOrderDate) {
-          summary.firstOrderDate = parseISO(summary.firstOrderDate);
-        }
-
-        return summary;
-      })
-    );
   }
 
   public fetchPositionDetail({

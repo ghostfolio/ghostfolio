@@ -1,4 +1,7 @@
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPosition,
+  PortfolioSummary
+} from '@ghostfolio/common/interfaces';
 
 export interface PortfolioDetails {
   accounts: {
@@ -13,5 +16,6 @@ export interface PortfolioDetails {
   filteredValueInBaseCurrency?: number;
   filteredValueInPercentage: number;
   holdings: { [symbol: string]: PortfolioPosition };
+  summary: PortfolioSummary;
   totalValueInBaseCurrency?: number;
 }
