@@ -82,7 +82,7 @@ export class FrontendMiddleware implements NestMiddleware {
       );
     } else if (req.path === '/nl' || req.path.startsWith('/nl/')) {
       res.send(
-        this.interpolate(this.indexHtmlIt, {
+        this.interpolate(this.indexHtmlNl, {
           featureGraphicPath,
           languageCode: 'nl',
           path: req.path,
