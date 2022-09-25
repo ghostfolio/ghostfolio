@@ -205,7 +205,11 @@
             "browserTarget": "client:build",
             "includeContext": true,
             "outputPath": "src/locales",
-            "targetFiles": ["messages.de.xlf", "messages.it.xlf", "messages.nl.xlf"]
+            "targetFiles": [
+              "messages.de.xlf",
+              "messages.it.xlf",
+              "messages.nl.xlf"
+            ]
           }
         },
         "lint": {
@@ -375,8 +379,5 @@
       "tags": [],
       "implicitDependencies": ["ui"]
     }
-  },
-  "cli": {
-    "analytics": false
   }
 }
