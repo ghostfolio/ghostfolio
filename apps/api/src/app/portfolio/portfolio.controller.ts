@@ -148,12 +148,15 @@ export class PortfolioController {
       })
     ];
 
+    let portfolioSummary: PortfolioSummary;
+
     const {
       accounts,
       filteredValueInBaseCurrency,
       filteredValueInPercentage,
       hasErrors,
       holdings,
+      summary,
       totalValueInBaseCurrency
     } = await this.portfolioService.getDetails(
       impersonationId,
@@ -165,6 +168,8 @@ export class PortfolioController {
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
     }
+
+    portfolioSummary = summary;
 
     if (
       impersonationId ||
@@ -199,6 +204,22 @@ export class PortfolioController {
         accounts[name].current = current / totalValue;
         accounts[name].original = original / totalInvestment;
       }
+
+      portfolioSummary = nullifyValuesInObject(summary, [
+        'cash',
+        'committedFunds',
+        'currentGrossPerformance',
+        'currentNetPerformance',
+        'currentValue',
+        'dividend',
+        'emergencyFund',
+        'excludedAccountsAndActivities',
+        'fees',
+        'items',
+        'netWorth',
+        'totalBuy',
+        'totalSell'
+      ]);
     }
 
     let hasDetails = true;
@@ -224,7 +245,8 @@ export class PortfolioController {
       filteredValueInPercentage,
       hasError,
       holdings,
-      totalValueInBaseCurrency
+      totalValueInBaseCurrency,
+      summary: hasDetails ? portfolioSummary : undefined
     };
   }
 
@@ -418,46 +440,6 @@ export class PortfolioController {
     }
 
     return portfolioPublicDetails;
-  }
-
-  @Get('summary')
-  @UseGuards(AuthGuard('jwt'))
-  public async getSummary(
-    @Headers('impersonation-id') impersonationId
-  ): Promise<PortfolioSummary> {
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    let summary = await this.portfolioService.getSummary(impersonationId);
-
-    if (
-      impersonationId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      summary = nullifyValuesInObject(summary, [
-        'cash',
-        'committedFunds',
-        'currentGrossPerformance',
-        'currentNetPerformance',
-        'currentValue',
-        'dividend',
-        'emergencyFund',
-        'fees',
-        'items',
-        'netWorth',
-        'totalBuy',
-        'totalSell'
-      ]);
-    }
-
-    return summary;
   }
 
   @Get('position/:dataSource/:symbol')
