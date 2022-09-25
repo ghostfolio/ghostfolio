@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support to exclude an account from analyis
+- Added support to exclude an account from analysis
 
 ## 1.197.0 - 24.09.2022
 
