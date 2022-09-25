@@ -140,6 +140,10 @@
               "baseHref": "/it/",
               "localize": ["it"]
             },
+            "development-nl": {
+              "baseHref": "/nl/",
+              "localize": ["nl"]
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -187,6 +191,9 @@
             "development-it": {
               "browserTarget": "client:build:development-it"
             },
+            "development-nl": {
+              "browserTarget": "client:build:development-nl"
+            },
             "production": {
               "browserTarget": "client:build:production"
             }
@@ -198,7 +205,11 @@
             "browserTarget": "client:build",
             "includeContext": true,
             "outputPath": "src/locales",
-            "targetFiles": ["messages.de.xlf", "messages.it.xlf"]
+            "targetFiles": [
+              "messages.de.xlf",
+              "messages.it.xlf",
+              "messages.nl.xlf"
+            ]
           }
         },
         "lint": {
@@ -225,6 +236,10 @@
           "it": {
             "baseHref": "/it/",
             "translation": "apps/client/src/locales/messages.it.xlf"
+          },
+          "nl": {
+            "baseHref": "/nl/",
+            "translation": "apps/client/src/locales/messages.nl.xlf"
           }
         },
         "sourceLocale": "en"
