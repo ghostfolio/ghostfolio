@@ -136,6 +136,10 @@
               "baseHref": "/en/",
               "localize": ["en"]
             },
+            "development-es": {
+              "baseHref": "/es/",
+              "localize": ["es"]
+            },
             "development-it": {
               "baseHref": "/it/",
               "localize": ["it"]
@@ -188,6 +192,9 @@
             "development-en": {
               "browserTarget": "client:build:development-en"
             },
+            "development-es": {
+              "browserTarget": "client:build:development-es"
+            },
             "development-it": {
               "browserTarget": "client:build:development-it"
             },
@@ -207,6 +214,7 @@
             "outputPath": "src/locales",
             "targetFiles": [
               "messages.de.xlf",
+              "messages.es.xlf",
               "messages.it.xlf",
               "messages.nl.xlf"
             ]
@@ -232,6 +240,10 @@
           "de": {
             "baseHref": "/de/",
             "translation": "apps/client/src/locales/messages.de.xlf"
+          },
+          "es": {
+            "baseHref": "/es/",
+            "translation": "apps/client/src/locales/messages.es.xlf"
           },
           "it": {
             "baseHref": "/it/",
