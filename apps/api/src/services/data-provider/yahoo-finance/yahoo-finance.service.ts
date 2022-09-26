@@ -90,7 +90,7 @@ export class YahooFinanceService implements DataProviderInterface {
     try {
       const symbol = this.convertToYahooFinanceSymbol(aSymbol);
       const assetProfile = await yahooFinance.quoteSummary(symbol, {
-        modules: ['price', 'summaryProfile']
+        modules: ['price', 'summaryProfile', 'topHoldings']
       });
 
       const { assetClass, assetSubClass } = this.parseAssetClass(
@@ -129,6 +129,19 @@ export class YahooFinanceService implements DataProviderInterface {
           response.sectors = [
             { name: assetProfile.summaryProfile?.sector, weight: 1 }
           ];
+        }
+      }
+
+      if (assetSubClass == 'MUTUALFUND') {
+        response.sectors = [];
+        for (const [id, value] of Object.entries<any>(
+          assetProfile.topHoldings?.sectorWeightings
+        )) {
+          for (const [name, weight] of Object.entries<any>(value))
+            response.sectors.push({
+              name: name,
+              weight: weight
+            });
         }
       }
 
