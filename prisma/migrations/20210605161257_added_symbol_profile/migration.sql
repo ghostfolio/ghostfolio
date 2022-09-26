@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "Order" ADD COLUMN     "symbolProfileId" TEXT;
+ALTER TABLE "Order" ADD COLUMN "symbolProfileId" TEXT;
 
 -- CreateTable
 CREATE TABLE "SymbolProfile" (

@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "SymbolProfile" ADD COLUMN     "url" TEXT;
+ALTER TABLE "SymbolProfile" ADD COLUMN "url" TEXT;

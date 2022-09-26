@@ -109,7 +109,8 @@ export class OrderController {
       filters,
       userCurrency,
       includeDrafts: true,
-      userId: impersonationUserId || this.request.user.id
+      userId: impersonationUserId || this.request.user.id,
+      withExcludedAccounts: true
     });
 
     if (

@@ -1,8 +1,18 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar
+} from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
+import {
+  InfoItem,
+  PortfolioSummary,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,8 +24,11 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeSummaryComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
+  public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public info: InfoItem;
   public isLoading = true;
+  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
   public summary: PortfolioSummary;
   public user: User;
 
@@ -25,8 +38,17 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private impersonationStorageService: ImpersonationStorageService,
+    private router: Router,
+    private snackBar: MatSnackBar,
     private userService: UserService
   ) {
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -50,8 +72,6 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
       });
-
-    this.update();
   }
 
   public onChangeEmergencyFund(emergencyFund: number) {
@@ -81,11 +101,29 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     this.isLoading = true;
 
     this.dataService
-      .fetchPortfolioSummary()
+      .fetchPortfolioDetails({})
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.summary = response;
+      .subscribe(({ summary }) => {
+        this.summary = summary;
         this.isLoading = false;
+
+        if (!this.summary) {
+          this.snackBarRef = this.snackBar.open(
+            $localize`This feature requires a subscription.`,
+            this.hasPermissionForSubscription
+              ? $localize`Upgrade Plan`
+              : undefined,
+            { duration: 6000 }
+          );
+
+          this.snackBarRef.afterDismissed().subscribe(() => {
+            this.snackBarRef = undefined;
+          });
+
+          this.snackBarRef.onAction().subscribe(() => {
+            this.router.navigate(['/pricing']);
+          });
+        }
 
         this.changeDetectorRef.markForCheck();
       });
