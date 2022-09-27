@@ -7,18 +7,17 @@ import {
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
-  Filter,
   PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
-  PortfolioReport,
-  PortfolioSummary
+  PortfolioReport
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import type {
@@ -52,6 +51,7 @@ export class PortfolioController {
 
   public constructor(
     private readonly accessService: AccessService,
+    private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioService: PortfolioService,
@@ -123,32 +123,11 @@ export class PortfolioController {
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasError = false;
 
-    const accountIds = filterByAccounts?.split(',') ?? [];
-    const assetClasses = filterByAssetClasses?.split(',') ?? [];
-    const tagIds = filterByTags?.split(',') ?? [];
-
-    const filters: Filter[] = [
-      ...accountIds.map((accountId) => {
-        return <Filter>{
-          id: accountId,
-          type: 'ACCOUNT'
-        };
-      }),
-      ...assetClasses.map((assetClass) => {
-        return <Filter>{
-          id: assetClass,
-          type: 'ASSET_CLASS'
-        };
-      }),
-      ...tagIds.map((tagId) => {
-        return <Filter>{
-          id: tagId,
-          type: 'TAG'
-        };
-      })
-    ];
-
-    let portfolioSummary: PortfolioSummary;
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    });
 
     const {
       accounts,
@@ -169,7 +148,7 @@ export class PortfolioController {
       hasError = true;
     }
 
-    portfolioSummary = summary;
+    let portfolioSummary = summary;
 
     if (
       impersonationId ||

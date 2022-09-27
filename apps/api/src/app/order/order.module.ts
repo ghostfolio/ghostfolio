@@ -2,6 +2,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
+import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -18,6 +19,7 @@ import { OrderService } from './order.service';
   controllers: [OrderController],
   exports: [OrderService],
   imports: [
+    ApiModule,
     CacheModule,
     ConfigurationModule,
     DataGatheringModule,
