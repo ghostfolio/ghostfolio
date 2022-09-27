@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up the language localization for Español (`es`)
+- Added support for sectors in mutual funds
 
 ## 1.198.0 - 25.09.2022
 
