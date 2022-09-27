@@ -95,11 +95,10 @@ export class AccountController {
       );
 
     let accountsWithAggregations =
-      await this.portfolioService.getAccountsWithAggregations(
-        impersonationUserId || this.request.user.id,
-        undefined,
-        true
-      );
+      await this.portfolioService.getAccountsWithAggregations({
+        userId: impersonationUserId || this.request.user.id,
+        withExcludedAccounts: true
+      });
 
     if (
       impersonationUserId ||
@@ -139,11 +138,11 @@ export class AccountController {
       );
 
     let accountsWithAggregations =
-      await this.portfolioService.getAccountsWithAggregations(
-        impersonationUserId || this.request.user.id,
-        [{ id, type: 'ACCOUNT' }],
-        true
-      );
+      await this.portfolioService.getAccountsWithAggregations({
+        filters: [{ id, type: 'ACCOUNT' }],
+        userId: impersonationUserId || this.request.user.id,
+        withExcludedAccounts: true
+      });
 
     if (
       impersonationUserId ||

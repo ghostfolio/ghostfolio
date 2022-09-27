@@ -158,12 +158,12 @@ export class PortfolioController {
       holdings,
       summary,
       totalValueInBaseCurrency
-    } = await this.portfolioService.getDetails(
+    } = await this.portfolioService.getDetails({
+      filters,
       impersonationId,
-      this.request.user.id,
-      range,
-      filters
-    );
+      dateRange: range,
+      userId: this.request.user.id
+    });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -400,12 +400,12 @@ export class PortfolioController {
       hasDetails = user.subscription.type === 'Premium';
     }
 
-    const { holdings } = await this.portfolioService.getDetails(
-      access.userId,
-      access.userId,
-      'max',
-      [{ id: 'EQUITY', type: 'ASSET_CLASS' }]
-    );
+    const { holdings } = await this.portfolioService.getDetails({
+      dateRange: 'max',
+      filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
+      impersonationId: access.userId,
+      userId: access.userId
+    });
 
     const portfolioPublicDetails: PortfolioPublicDetails = {
       hasDetails,
