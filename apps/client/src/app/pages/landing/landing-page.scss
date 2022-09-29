@@ -3,16 +3,6 @@
 :host {
   display: block;
 
-  .agplv3-logo {
-    background-color: rgba(var(--dark-primary-text));
-    height: 3rem;
-    mask-image: url('/assets/images/AGPLv3-logo.svg');
-    mask-position: center;
-    mask-repeat: no-repeat;
-    mask-size: contain;
-    width: 7.5rem;
-  }
-
   .button-container {
     .mat-stroked-button {
       background-color: var(--light-background);
@@ -31,6 +21,58 @@
 
     @media (max-width: 575.98px) {
       font-size: 10vw;
+    }
+  }
+
+  .logo {
+    height: 3rem;
+    width: 7.5rem;
+
+    &.mask {
+      background-color: rgba(var(--dark-secondary-text));
+      mask-position: center;
+      mask-repeat: no-repeat;
+      mask-size: contain;
+    }
+
+    &.logo-agplv3 {
+      mask-image: url('/assets/images/logo-AGPLv3.svg');
+    }
+
+    &.logo-alternative-to {
+      mask-image: url('/assets/images/logo-alternative-to.svg');
+    }
+
+    &.logo-awesome {
+      background-image: url('/assets/images/logo-awesome.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: grayscale(1);
+    }
+
+    &.logo-openstartup {
+      background-image: url('/assets/images/logo-openstartup.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: grayscale(1);
+    }
+
+    &.logo-privacy-tools {
+      mask-image: url('/assets/images/logo-privacy-tools.svg');
+    }
+
+    &.logo-product-hunt {
+      background-image: url('/assets/images/logo-product-hunt.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: grayscale(1);
+    }
+
+    &.logo-unraid {
+      mask-image: url('/assets/images/logo-unraid.svg');
     }
   }
 
@@ -56,13 +98,18 @@
 }
 
 :host-context(.is-dark-theme) {
-  .agplv3-logo {
-    background-color: rgba(var(--light-primary-text));
-  }
-
   .button-container {
     .mat-stroked-button {
       background-color: var(--dark-background);
+    }
+  }
+
+  .logo {
+    &.logo-agplv3,
+    &.logo-alternative-to,
+    &.logo-privacy-tools,
+    &.logo-unraid {
+      background-color: rgba(var(--light-primary-text));
     }
   }
 
