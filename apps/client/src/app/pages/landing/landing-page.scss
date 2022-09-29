@@ -29,7 +29,7 @@
     width: 7.5rem;
 
     &.mask {
-      background-color: rgba(var(--dark-primary-text));
+      background-color: rgba(var(--dark-secondary-text));
       mask-position: center;
       mask-repeat: no-repeat;
       mask-size: contain;
@@ -43,6 +43,22 @@
       mask-image: url('/assets/images/logo-alternative-to.svg');
     }
 
+    &.logo-awesome {
+      background-image: url('/assets/images/logo-awesome.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: grayscale(1);
+    }
+
+    &.logo-openstartup {
+      background-image: url('/assets/images/logo-openstartup.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      filter: grayscale(1);
+    }
+
     &.logo-privacy-tools {
       mask-image: url('/assets/images/logo-privacy-tools.svg');
     }
@@ -52,6 +68,11 @@
       background-position: center;
       background-repeat: no-repeat;
       background-size: contain;
+      filter: grayscale(1);
+    }
+
+    &.logo-unraid {
+      mask-image: url('/assets/images/logo-unraid.svg');
     }
   }
 
@@ -86,7 +107,8 @@
   .logo {
     &.logo-agplv3,
     &.logo-alternative-to,
-    &.logo-privacy-tools {
+    &.logo-privacy-tools,
+    &.logo-unraid {
       background-color: rgba(var(--light-primary-text));
     }
   }
