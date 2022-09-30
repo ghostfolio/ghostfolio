@@ -160,11 +160,11 @@ export class ImportTransactionsService {
         try {
           date = parse(item[key], 'dd/MM/yyyy', new Date()).toISOString();
         } catch {}
-        
+
         try {
           date = parseISO(item[key]).toISOString();
         } catch {}
-        
+
         if (date) {
           return date;
         }
