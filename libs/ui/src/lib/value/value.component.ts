@@ -16,6 +16,7 @@ import { isNumber } from 'lodash';
 export class ValueComponent implements OnChanges {
   @Input() colorizeSign = false;
   @Input() currency = '';
+  @Input() icon = '';
   @Input() isAbsolute = false;
   @Input() isCurrency = false;
   @Input() isDate = false;

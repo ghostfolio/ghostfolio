@@ -1,4 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { format } from 'date-fns';
 import { Subject } from 'rxjs';
 
@@ -11,6 +14,8 @@ import { Subject } from 'rxjs';
 export class LandingPageComponent implements OnDestroy, OnInit {
   public currentYear = format(new Date(), 'yyyy');
   public demoAuthToken: string;
+  public hasPermissionForStatistics: boolean;
+  public statistics: Statistics;
   public testimonials = [
     {
       author: 'Philipp',
@@ -36,7 +41,16 @@ export class LandingPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
+  public constructor(private dataService: DataService) {
+    const { globalPermissions, statistics } = this.dataService.fetchInfo();
+
+    this.hasPermissionForStatistics = hasPermission(
+      globalPermissions,
+      permissions.enableStatistics
+    );
+
+    this.statistics = statistics;
+  }
 
   public ngOnInit() {}
 
