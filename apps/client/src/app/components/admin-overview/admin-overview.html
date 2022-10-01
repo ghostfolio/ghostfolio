@@ -5,15 +5,26 @@
         <mat-card-content>
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Count</div>
-            <div class="w-50">{{ userCount }}</div>
+            <div class="w-50">
+              <gf-value
+                precision="0"
+                [locale]="user?.settings?.locale"
+                [value]="userCount"
+              ></gf-value>
+            </div>
           </div>
           <div class="d-flex my-3">
             <div class="w-50" i18n>Activity Count</div>
             <div class="w-50">
-              <ng-container *ngIf="transactionCount">
-                {{ transactionCount }} ({{ transactionCount / userCount | number
-                : '1.2-2' }} <span i18n>per User</span>)
-              </ng-container>
+              <gf-value
+                precision="0"
+                [locale]="user?.settings?.locale"
+                [value]="transactionCount"
+              ></gf-value>
+              <div *ngIf="transactionCount && userCount">
+                {{ transactionCount / userCount | number : '1.2-2' }}
+                <span i18n>per User</span>
+              </div>
             </div>
           </div>
           <div class="d-flex my-3">
