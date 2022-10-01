@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post: _Hacktoberfest 2022_
+
 ### Changed
 
 - Improved the usage of the value component in the admin control panel
