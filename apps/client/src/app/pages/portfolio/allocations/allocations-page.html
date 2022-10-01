@@ -13,12 +13,12 @@
   <div class="row">
     <div class="col">
       <mat-card class="mb-3">
-        <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n
+        <mat-card-header class="mb-2 overflow-hidden w-100">
+          <mat-card-title class="m-0 text-truncate" i18n
             >Proportion of Net Worth</mat-card-title
           >
           <gf-value
-            class="align-items-end flex-grow-1 ml-2"
+            class="flex-grow-1 justify-content-end l-2"
             size="medium"
             [isPercent]="true"
             [value]="isLoading ? undefined : portfolioDetails?.filteredValueInPercentage"
