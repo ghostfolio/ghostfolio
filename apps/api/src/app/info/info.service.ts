@@ -145,6 +145,27 @@ export class InfoService {
     });
   }
 
+  private async countDockerHubPulls(): Promise<number> {
+    try {
+      const get = bent(
+        `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
+        'GET',
+        'json',
+        200,
+        {
+          'User-Agent': 'request'
+        }
+      );
+
+      const { pull_count } = await get();
+      return pull_count;
+    } catch (error) {
+      Logger.error(error, 'InfoService');
+
+      return undefined;
+    }
+  }
+
   private async countGitHubContributors(): Promise<number> {
     try {
       const get = bent(
@@ -245,6 +266,8 @@ export class InfoService {
     const activeUsers1d = await this.countActiveUsers(1);
     const activeUsers30d = await this.countActiveUsers(30);
     const newUsers30d = await this.countNewUsers(30);
+
+    const dockerHubPulls = await this.countDockerHubPulls();
     const gitHubContributors = await this.countGitHubContributors();
     const gitHubStargazers = await this.countGitHubStargazers();
     const slackCommunityUsers = await this.countSlackCommunityUsers();
@@ -252,6 +275,7 @@ export class InfoService {
     statistics = {
       activeUsers1d,
       activeUsers30d,
+      dockerHubPulls,
       gitHubContributors,
       gitHubStargazers,
       newUsers30d,
