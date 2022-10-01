@@ -6,70 +6,74 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
     <loc>https://ghostfol.io</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/de/blog/2021/07/hallo-ghostfolio</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/about</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/about/changelog</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog/2021/07/hello-ghostfolio</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog/2022/01/ghostfolio-first-months-in-open-source</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog/2022/07/ghostfolio-meets-internet-identity</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog/2022/07/how-do-i-get-my-finances-in-order</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/blog/2022/08/500-stars-on-github</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
+  </url>
+    <url>
+    <loc>https://ghostfol.io/en/blog/2022/10/hacktoberfest-2022</loc>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/demo</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/faq</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/features</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/markets</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/pricing</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/register</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
   <url>
     <loc>https://ghostfol.io/en/resources</loc>
-    <lastmod>2022-09-01T00:00:00+00:00</lastmod>
+    <lastmod>2022-10-01T00:00:00+00:00</lastmod>
   </url>
 </urlset>

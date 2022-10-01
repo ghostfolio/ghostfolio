@@ -58,6 +58,11 @@ export class FrontendMiddleware implements NestMiddleware {
       req.path === '/en/blog/2022/08/500-stars-on-github/'
     ) {
       featureGraphicPath = 'assets/images/blog/500-stars-on-github.jpg';
+    } else if (
+      req.path === '/en/blog/2022/10/hacktoberfest-2022' ||
+      req.path === '/en/blog/2022/10/hacktoberfest-2022/'
+    ) {
+      featureGraphicPath = 'assets/images/blog/hacktoberfest-2022.png';
     }
 
     if (
