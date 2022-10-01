@@ -968,7 +968,7 @@
       </trans-unit>
       <trans-unit id="e5c369abfbe1bd70f577aa03b2679797e38d7590" datatype="html">
         <source> Fees for <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </source>
-        <target state="translated">Comisiones por <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} otras {transactions}}"/> </target>
+        <target state="translated">Comisiones por <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transacción} otras {transacciones}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">77,80</context>
@@ -976,7 +976,7 @@
       </trans-unit>
       <trans-unit id="272c7fd98af55bfa5b9d579176f1cfa25cd5489f" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {transaction} other {transactions}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {transaction} otras {transactions}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {transacción} otras {transacciones}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">78,79</context>
@@ -1460,7 +1460,7 @@
       </trans-unit>
       <trans-unit id="220a4641dcde60d1d86ceec62886b1878f1578d3" datatype="html">
         <source>Update account</source>
-        <target state="translated">Mejorar cuenta</target>
+        <target state="translated">Editar cuenta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">2</context>
