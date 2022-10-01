@@ -7,9 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the usage of the value component in the admin control panel
+
+### Fixed
+
+- Fixed the usage of the value component on the allocations page
+
+## 1.200.0 - 01.10.2022
+
 ### Added
 
+- Added a mini statistics section to the landing page including pulls on _Docker Hub_
 - Added an _As seen in_ section to the landing page
+- Added support for an icon in the value component
+
+### Changed
+
+- Upgraded `prisma` from version `4.1.1` to `4.4.0`
 
 ## 1.199.1 - 27.09.2022
 

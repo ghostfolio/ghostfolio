@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { ValueComponent } from './value.component';
@@ -8,6 +8,6 @@ import { ValueComponent } from './value.component';
   declarations: [ValueComponent],
   exports: [ValueComponent],
   imports: [CommonModule, NgxSkeletonLoaderModule],
-  providers: []
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfValueModule {}

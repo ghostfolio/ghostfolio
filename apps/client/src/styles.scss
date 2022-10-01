@@ -18,6 +18,7 @@ $mat-css-light-theme-selector: '.is-light-theme';
 
 :root {
   --dark-background: rgb(39, 39, 39);
+  --font-family-sans-serif: Roboto, 'Helvetica Neue', sans-serif;
   --light-background: rgb(255, 255, 255);
 }
 
@@ -144,6 +145,10 @@ ngx-skeleton-loader {
 
 .gf-table {
   @include gf-table;
+}
+
+.lead {
+  font-weight: unset;
 }
 
 .mat-card {
