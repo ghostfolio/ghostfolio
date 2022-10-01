@@ -42,7 +42,52 @@
     </div>
   </div>
 
-  <div class="row my-3">
+  <div *ngIf="hasPermissionForStatistics" class="row mb-5">
+    <div class="col-md-4 d-flex my-1">
+      <a
+        class="d-block"
+        title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
+        [routerLink]="['/about']"
+      >
+        <gf-value
+          icon="people-outline"
+          size="large"
+          [value]="statistics?.activeUsers30d ?? '-'"
+          >Monthly Active Users</gf-value
+        >
+      </a>
+    </div>
+    <div class="col-md-4 d-flex my-1">
+      <a
+        class="d-block"
+        title="Ghostfolio in Numbers: Stars on GitHub"
+        [routerLink]="['/about']"
+      >
+        <gf-value
+          icon="star-outline"
+          size="large"
+          [value]="statistics?.gitHubStargazers ?? '-'"
+          >Stars on GitHub</gf-value
+        >
+      </a>
+    </div>
+    <div class="col-md-4 d-flex my-1">
+      <a
+        class="d-block"
+        title="Ghostfolio in Numbers: Pulls on Docker Hub"
+        [routerLink]="['/about']"
+      >
+        <gf-value
+          icon="cloud-download-outline"
+          size="large"
+          [value]="statistics?.dockerHubPulls ?? '-'"
+          >Pulls on Docker Hub</gf-value
+        >
+      </a>
+    </div>
+  </div>
+
+  <div class="row mb-5">
     <div class="col-12 text-center text-muted"><small>As seen in</small></div>
     <div class="col-md-2 d-flex justify-content-center my-1">
       <a
@@ -110,20 +155,20 @@
   <div class="row my-3">
     <div class="col-md-4 my-2">
       <mat-card>
-        <mat-card-title class="text-center">360° View</mat-card-title>
+        <mat-card-title>360° View</mat-card-title>
         Get the full picture of your personal finances across multiple
         platforms.
       </mat-card>
     </div>
     <div class="col-md-4 my-2">
       <mat-card>
-        <mat-card-title class="text-center">Web3 Ready</mat-card-title>
+        <mat-card-title>Web3 Ready</mat-card-title>
         Use Ghostfolio anonymously and own your financial data.
       </mat-card>
     </div>
     <div class="col-md-4 my-2">
       <mat-card>
-        <mat-card-title class="text-center">Open Source</mat-card-title>
+        <mat-card-title>Open Source</mat-card-title>
         Benefit from continuous improvements through a strong community.
       </mat-card>
     </div>

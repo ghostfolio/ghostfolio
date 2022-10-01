@@ -1,67 +1,73 @@
-<ng-template #label><ng-content></ng-content></ng-template>
-<ng-container *ngIf="value || value === 0 || value === null">
-  <div
-    class="d-flex"
-    [ngClass]="position === 'end' ? 'justify-content-end' : ''"
-  >
-    <ng-container *ngIf="isNumber || value === null">
-      <ng-container *ngIf="colorizeSign && !useAbsoluteValue">
-        <div *ngIf="value > 0" class="mr-1 text-success">+</div>
-        <div *ngIf="value < 0" class="mr-1 text-danger">-</div>
+<div *ngIf="icon" class="align-self-center mr-3">
+  <ion-icon class="h3 m-0" [name]="icon"></ion-icon>
+</div>
+<div>
+  <ng-template #label><ng-content></ng-content></ng-template>
+  <ng-container *ngIf="value || value === 0 || value === null">
+    <div
+      class="d-flex"
+      [ngClass]="position === 'end' ? 'justify-content-end' : ''"
+    >
+      <ng-container *ngIf="isNumber || value === null">
+        <ng-container *ngIf="colorizeSign && !useAbsoluteValue">
+          <div *ngIf="value > 0" class="mr-1 text-success">+</div>
+          <div *ngIf="value < 0" class="mr-1 text-danger">-</div>
+        </ng-container>
+        <div
+          *ngIf="isPercent"
+          class="mb-0 value"
+          [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+        >
+          {{ formattedValue }}%
+        </div>
+        <div
+          *ngIf="!isPercent"
+          class="mb-0 value"
+          [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+        >
+          <ng-container *ngIf="value === null">
+            <span class="text-monospace text-muted">***</span>
+          </ng-container>
+          <ng-container *ngIf="value !== null">
+            {{ formattedValue }}
+          </ng-container>
+        </div>
+        <small *ngIf="currency && size === 'medium'" class="ml-1">
+          {{ currency }}
+        </small>
+        <div *ngIf="currency && size !== 'medium'" class="ml-1">
+          {{ currency }}
+        </div>
       </ng-container>
-      <div
-        *ngIf="isPercent"
-        class="mb-0 value"
-        [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
-      >
-        {{ formattedValue }}%
-      </div>
-      <div
-        *ngIf="!isPercent"
-        class="mb-0 value"
-        [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
-      >
-        <ng-container *ngIf="value === null">
-          <span class="text-monospace text-muted">***</span>
-        </ng-container>
-        <ng-container *ngIf="value !== null">
-          {{ formattedValue }}
-        </ng-container>
-      </div>
-      <small *ngIf="currency && size === 'medium'" class="ml-1">
-        {{ currency }}
-      </small>
-      <div *ngIf="currency && size !== 'medium'" class="ml-1">
-        {{ currency }}
-      </div>
-    </ng-container>
-    <ng-container *ngIf="isString">
-      <div
-        class="mb-0 text-truncate value"
-        [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
-      >
-        {{ formattedValue | titlecase }}
-      </div>
-    </ng-container>
-  </div>
-  <ng-container>
-    <div *ngIf="size === 'large'">
-      <span class="h6"
-        ><ng-container *ngTemplateOutlet="label"></ng-container
-      ></span>
-      <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
+      <ng-container *ngIf="isString">
+        <div
+          class="mb-0 text-truncate value"
+          [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+        >
+          {{ formattedValue | titlecase }}
+        </div>
+      </ng-container>
     </div>
-    <small *ngIf="size !== 'large'">
-      <ng-container *ngTemplateOutlet="label"></ng-container>
-    </small>
+    <ng-container>
+      <div *ngIf="size === 'large'">
+        <span class="h6"
+          ><ng-container *ngTemplateOutlet="label"></ng-container
+        ></span>
+        <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
+      </div>
+      <small *ngIf="size !== 'large'">
+        <ng-container *ngTemplateOutlet="label"></ng-container>
+      </small>
+    </ng-container>
   </ng-container>
-</ng-container>
 
-<ngx-skeleton-loader
-  *ngIf="value === undefined"
-  animation="pulse"
-  [theme]="{
-    height: size === 'large' ? '2.5rem' : size === 'medium' ? '2rem' : '1.5rem',
-    width: '5rem'
-  }"
-></ngx-skeleton-loader>
+  <ngx-skeleton-loader
+    *ngIf="value === undefined"
+    animation="pulse"
+    [theme]="{
+      height:
+        size === 'large' ? '2.5rem' : size === 'medium' ? '2rem' : '1.5rem',
+      width: '5rem'
+    }"
+  ></ngx-skeleton-loader>
+</div>

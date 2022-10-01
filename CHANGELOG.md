@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a mini statistics section to the landing page including pulls on _Docker Hub_
 - Added an _As seen in_ section to the landing page
+- Added support for an icon in the value component
 
 ### Changed
 
