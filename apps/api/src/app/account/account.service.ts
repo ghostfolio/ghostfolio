@@ -107,15 +107,23 @@ export class AccountService {
   public async getCashDetails({
     currency,
     filters = [],
-    userId
+    userId,
+    withExcludedAccounts = false
   }: {
     currency: string;
     filters?: Filter[];
     userId: string;
+    withExcludedAccounts?: boolean;
   }): Promise<CashDetails> {
     let totalCashBalanceInBaseCurrency = new Big(0);
 
-    const where: Prisma.AccountWhereInput = { userId };
+    const where: Prisma.AccountWhereInput = {
+      userId
+    };
+
+    if (withExcludedAccounts === false) {
+      where.isExcluded = false;
+    }
 
     const {
       ACCOUNT: filtersByAccount,

@@ -50,6 +50,14 @@
         </mat-select>
       </mat-form-field>
     </div>
+    <div class="mb-3 px-2">
+      <mat-checkbox
+        color="primary"
+        name="isExcluded"
+        [(ngModel)]="data.account.isExcluded"
+        >Exclude from Analysis</mat-checkbox
+      >
+    </div>
     <div *ngIf="data.account.id">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account ID</mat-label>

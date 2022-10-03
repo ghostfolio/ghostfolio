@@ -6,6 +6,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -90,7 +91,7 @@ export class YahooFinanceService implements DataProviderInterface {
     try {
       const symbol = this.convertToYahooFinanceSymbol(aSymbol);
       const assetProfile = await yahooFinance.quoteSummary(symbol, {
-        modules: ['price', 'summaryProfile']
+        modules: ['price', 'summaryProfile', 'topHoldings']
       });
 
       const { assetClass, assetSubClass } = this.parseAssetClass(
@@ -109,7 +110,16 @@ export class YahooFinanceService implements DataProviderInterface {
       });
       response.symbol = aSymbol;
 
-      if (
+      if (assetSubClass === AssetSubClass.MUTUALFUND) {
+        response.sectors = [];
+
+        for (const sectorWeighting of assetProfile.topHoldings
+          ?.sectorWeightings ?? []) {
+          for (const [sector, weight] of Object.entries(sectorWeighting)) {
+            response.sectors.push({ weight, name: this.parseSector(sector) });
+          }
+        }
+      } else if (
         assetSubClass === AssetSubClass.STOCK &&
         assetProfile.summaryProfile?.country
       ) {
@@ -436,5 +446,47 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return { assetClass, assetSubClass };
+  }
+
+  private parseSector(aString: string): string {
+    let sector = UNKNOWN_KEY;
+
+    switch (aString) {
+      case 'basic_materials':
+        sector = 'Basic Materials';
+        break;
+      case 'communication_services':
+        sector = 'Communication Services';
+        break;
+      case 'consumer_cyclical':
+        sector = 'Consumer Cyclical';
+        break;
+      case 'consumer_defensive':
+        sector = 'Consumer Staples';
+        break;
+      case 'energy':
+        sector = 'Energy';
+        break;
+      case 'financial_services':
+        sector = 'Financial Services';
+        break;
+      case 'healthcare':
+        sector = 'Healthcare';
+        break;
+      case 'industrials':
+        sector = 'Industrials';
+        break;
+      case 'realestate':
+        sector = 'Real Estate';
+        break;
+      case 'technology':
+        sector = 'Technology';
+        break;
+      case 'utilities':
+        sector = 'Utilities';
+        break;
+    }
+
+    return sector;
   }
 }

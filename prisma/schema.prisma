@@ -27,6 +27,7 @@ model Account {
   currency    String?
   id          String      @default(uuid())
   isDefault   Boolean     @default(false)
+  isExcluded  Boolean     @default(false)
   name        String?
   platformId  String?
   updatedAt   DateTime    @updatedAt

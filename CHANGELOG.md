@@ -5,6 +5,66 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.201.0 - 01.10.2022
+
+### Added
+
+- Added a blog post: _Hacktoberfest 2022_
+
+### Changed
+
+- Improved the usage of the value component in the admin control panel
+- Improved the language localization for Español (`es`)
+
+### Fixed
+
+- Fixed the usage of the value component on the allocations page
+
+## 1.200.0 - 01.10.2022
+
+### Added
+
+- Added a mini statistics section to the landing page including pulls on _Docker Hub_
+- Added an _As seen in_ section to the landing page
+- Added support for an icon in the value component
+
+### Changed
+
+- Upgraded `prisma` from version `4.1.1` to `4.4.0`
+
+## 1.199.1 - 27.09.2022
+
+### Added
+
+- Set up the language localization for Español (`es`)
+- Added support for sectors in mutual funds
+
+## 1.198.0 - 25.09.2022
+
+### Added
+
+- Added support to exclude an account from analysis
+- Set up the language localization for Nederlands (`nl`)
+
+## 1.197.0 - 24.09.2022
+
+### Added
+
+- Added the value of the active filter in percentage on the allocations page
+- Extended the feature overview page by multi-language support (English, German, Italian)
+
+### Changed
+
+- Combined the performance and chart calculation
+- Improved the style of various selectors (density)
+
+## 1.196.0 - 22.09.2022
+
+### Added
+
+- Set up the language localization for Italiano (`it`)
+- Extended the landing page
+
 ## 1.195.0 - 20.09.2022
 
 ### Changed
@@ -195,7 +255,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up `ng-extract-i18n-merge` to improve the i18n extraction and merge workflow
-- Set up language localization for German (`de`)
+- Set up the language localization for German (`de`)
 - Resolved the feature graphic of the blog post
 
 ### Changed

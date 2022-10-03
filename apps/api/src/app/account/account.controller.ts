@@ -96,7 +96,9 @@ export class AccountController {
 
     let accountsWithAggregations =
       await this.portfolioService.getAccountsWithAggregations(
-        impersonationUserId || this.request.user.id
+        impersonationUserId || this.request.user.id,
+        undefined,
+        true
       );
 
     if (
@@ -139,7 +141,8 @@ export class AccountController {
     let accountsWithAggregations =
       await this.portfolioService.getAccountsWithAggregations(
         impersonationUserId || this.request.user.id,
-        [{ id, type: 'ACCOUNT' }]
+        [{ id, type: 'ACCOUNT' }],
+        true
       );
 
     if (

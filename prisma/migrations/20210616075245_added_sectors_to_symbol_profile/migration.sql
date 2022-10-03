@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "SymbolProfile" ADD COLUMN     "sectors" JSONB;
+ALTER TABLE "SymbolProfile" ADD COLUMN "sectors" JSONB;

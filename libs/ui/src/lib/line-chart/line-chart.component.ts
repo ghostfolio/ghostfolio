@@ -93,7 +93,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    if (this.historicalDataItems) {
+    if (this.historicalDataItems || this.historicalDataItems === null) {
       setTimeout(() => {
         // Wait for the chartCanvas
         this.initialize();

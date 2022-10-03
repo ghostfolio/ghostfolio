@@ -189,13 +189,15 @@ export class OrderService {
     includeDrafts = false,
     types,
     userCurrency,
-    userId
+    userId,
+    withExcludedAccounts = false
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
+    withExcludedAccounts?: boolean;
   }): Promise<Activity[]> {
     const where: Prisma.OrderWhereInput = { userId };
 
@@ -284,24 +286,28 @@ export class OrderService {
         },
         orderBy: { date: 'asc' }
       })
-    ).map((order) => {
-      const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
+    )
+      .filter((order) => {
+        return withExcludedAccounts || order.Account?.isExcluded === false;
+      })
+      .map((order) => {
+        const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
-      return {
-        ...order,
-        value,
-        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.SymbolProfile.currency,
-          userCurrency
-        ),
-        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+        return {
+          ...order,
           value,
-          order.SymbolProfile.currency,
-          userCurrency
-        )
-      };
-    });
+          feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            order.fee,
+            order.SymbolProfile.currency,
+            userCurrency
+          ),
+          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            value,
+            order.SymbolProfile.currency,
+            userCurrency
+          )
+        };
+      });
   }
 
   public async updateOrder({

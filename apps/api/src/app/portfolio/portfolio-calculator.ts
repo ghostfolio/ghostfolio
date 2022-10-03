@@ -272,23 +272,20 @@ export class PortfolioCalculator {
       }
     }
 
-    const isInPercentage = true;
-
     return Object.keys(totalNetPerformanceValues).map((date) => {
-      return isInPercentage
-        ? {
-            date,
-            value: totalInvestmentValues[date].eq(0)
-              ? 0
-              : totalNetPerformanceValues[date]
-                  .div(totalInvestmentValues[date])
-                  .mul(100)
-                  .toNumber()
-          }
-        : {
-            date,
-            value: totalNetPerformanceValues[date].toNumber()
-          };
+      const netPerformanceInPercentage = totalInvestmentValues[date].eq(0)
+        ? 0
+        : totalNetPerformanceValues[date]
+            .div(totalInvestmentValues[date])
+            .mul(100)
+            .toNumber();
+
+      return {
+        date,
+        netPerformanceInPercentage,
+        netPerformance: totalNetPerformanceValues[date].toNumber(),
+        value: netPerformanceInPercentage
+      };
     });
   }
 

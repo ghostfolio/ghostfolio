@@ -50,8 +50,11 @@ import type {
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
+  Account,
   AssetClass,
   DataSource,
+  Order,
+  Platform,
   Prisma,
   Tag,
   Type as TypeOfOrder
@@ -106,7 +109,8 @@ export class PortfolioService {
 
   public async getAccounts(
     aUserId: string,
-    aFilters?: Filter[]
+    aFilters?: Filter[],
+    withExcludedAccounts = false
   ): Promise<AccountWithValue[]> {
     const where: Prisma.AccountWhereInput = { userId: aUserId };
 
@@ -120,7 +124,13 @@ export class PortfolioService {
         include: { Order: true, Platform: true },
         orderBy: { name: 'asc' }
       }),
-      this.getDetails(aUserId, aUserId, undefined, aFilters)
+      this.getDetails(
+        aUserId,
+        aUserId,
+        undefined,
+        aFilters,
+        withExcludedAccounts
+      )
     ]);
 
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
@@ -160,9 +170,14 @@ export class PortfolioService {
 
   public async getAccountsWithAggregations(
     aUserId: string,
-    aFilters?: Filter[]
+    aFilters?: Filter[],
+    withExcludedAccounts = false
   ): Promise<Accounts> {
-    const accounts = await this.getAccounts(aUserId, aFilters);
+    const accounts = await this.getAccounts(
+      aUserId,
+      aFilters,
+      withExcludedAccounts
+    );
     let totalBalanceInBaseCurrency = new Big(0);
     let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
@@ -355,11 +370,14 @@ export class PortfolioService {
     };
   }
 
-  public async getChartV2(
-    aImpersonationId: string,
-    aDateRange: DateRange = 'max'
-  ): Promise<HistoricalDataContainer> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+  public async getChartV2({
+    dateRange = 'max',
+    impersonationId
+  }: {
+    dateRange?: DateRange;
+    impersonationId: string;
+  }): Promise<HistoricalDataContainer> {
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -383,7 +401,7 @@ export class PortfolioService {
     const endDate = new Date();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(aDateRange, portfolioStart);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
 
     const daysInMarket = differenceInDays(new Date(), startDate);
     const step = Math.round(
@@ -407,7 +425,8 @@ export class PortfolioService {
     aImpersonationId: string,
     aUserId: string,
     aDateRange: DateRange = 'max',
-    aFilters?: Filter[]
+    aFilters?: Filter[],
+    withExcludedAccounts = false
   ): Promise<PortfolioDetails & { hasErrors: boolean }> {
     const userId = await this.getUserId(aImpersonationId, aUserId);
     const user = await this.userService.user({ id: userId });
@@ -423,6 +442,7 @@ export class PortfolioService {
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         userId,
+        withExcludedAccounts,
         filters: aFilters
       });
 
@@ -577,6 +597,7 @@ export class PortfolioService {
       portfolioItemsNow,
       userCurrency,
       userId,
+      withExcludedAccounts,
       filters: aFilters
     });
 
@@ -585,6 +606,7 @@ export class PortfolioService {
     return {
       accounts,
       holdings,
+      summary,
       filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
       filteredValueInPercentage: summary.netWorth
         ? filteredValueInBaseCurrency.div(summary.netWorth).toNumber()
@@ -603,7 +625,11 @@ export class PortfolioService {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
 
     const orders = (
-      await this.orderService.getOrders({ userCurrency, userId })
+      await this.orderService.getOrders({
+        userCurrency,
+        userId,
+        withExcludedAccounts: true
+      })
     ).filter(({ SymbolProfile }) => {
       return (
         SymbolProfile.dataSource === aDataSource &&
@@ -987,6 +1013,105 @@ export class PortfolioService {
     };
   }
 
+  public async getPerformanceV2({
+    dateRange = 'max',
+    impersonationId
+  }: {
+    dateRange?: DateRange;
+    impersonationId: string;
+  }): Promise<PortfolioPerformanceResponse> {
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
+
+    const { portfolioOrders, transactionPoints } =
+      await this.getTransactionPoints({
+        userId
+      });
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: this.request.user.Settings.settings.baseCurrency,
+      currentRateService: this.currentRateService,
+      orders: portfolioOrders
+    });
+
+    if (transactionPoints?.length <= 0) {
+      return {
+        chart: [],
+        hasErrors: false,
+        performance: {
+          currentGrossPerformance: 0,
+          currentGrossPerformancePercent: 0,
+          currentNetPerformance: 0,
+          currentNetPerformancePercent: 0,
+          currentValue: 0
+        }
+      };
+    }
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate
+    );
+
+    const hasErrors = currentPositions.hasErrors;
+    const currentValue = currentPositions.currentValue.toNumber();
+    const currentGrossPerformance = currentPositions.grossPerformance;
+    const currentGrossPerformancePercent =
+      currentPositions.grossPerformancePercentage;
+    let currentNetPerformance = currentPositions.netPerformance;
+    let currentNetPerformancePercent =
+      currentPositions.netPerformancePercentage;
+
+    // if (currentGrossPerformance.mul(currentGrossPerformancePercent).lt(0)) {
+    //   // If algebraic sign is different, harmonize it
+    //   currentGrossPerformancePercent = currentGrossPerformancePercent.mul(-1);
+    // }
+
+    // if (currentNetPerformance.mul(currentNetPerformancePercent).lt(0)) {
+    //   // If algebraic sign is different, harmonize it
+    //   currentNetPerformancePercent = currentNetPerformancePercent.mul(-1);
+    // }
+
+    const historicalDataContainer = await this.getChartV2({
+      dateRange,
+      impersonationId
+    });
+
+    const itemOfToday = historicalDataContainer.items.find((item) => {
+      return item.date === format(new Date(), DATE_FORMAT);
+    });
+
+    if (itemOfToday) {
+      currentNetPerformance = new Big(itemOfToday.netPerformance);
+      currentNetPerformancePercent = new Big(
+        itemOfToday.netPerformanceInPercentage
+      ).div(100);
+    }
+
+    return {
+      chart: historicalDataContainer.items.map(
+        ({ date, netPerformanceInPercentage }) => {
+          return {
+            date,
+            value: netPerformanceInPercentage
+          };
+        }
+      ),
+      errors: currentPositions.errors,
+      hasErrors: currentPositions.hasErrors || hasErrors,
+      performance: {
+        currentValue,
+        currentGrossPerformance: currentGrossPerformance.toNumber(),
+        currentGrossPerformancePercent:
+          currentGrossPerformancePercent.toNumber(),
+        currentNetPerformance: currentNetPerformance.toNumber(),
+        currentNetPerformancePercent: currentNetPerformancePercent.toNumber()
+      }
+    };
+  }
+
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const currency = this.request.user.Settings.settings.baseCurrency;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
@@ -1076,74 +1201,6 @@ export class PortfolioService {
           <UserSettings>this.request.user.Settings.settings
         )
       }
-    };
-  }
-
-  public async getSummary(aImpersonationId: string): Promise<PortfolioSummary> {
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
-    const user = await this.userService.user({ id: userId });
-
-    const performanceInformation = await this.getPerformance(aImpersonationId);
-
-    const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
-      userId,
-      currency: userCurrency
-    });
-    const orders = await this.orderService.getOrders({
-      userCurrency,
-      userId
-    });
-    const dividend = this.getDividend(orders).toNumber();
-    const emergencyFund = new Big(
-      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
-    );
-    const fees = this.getFees(orders).toNumber();
-    const firstOrderDate = orders[0]?.date;
-    const items = this.getItems(orders).toNumber();
-
-    const totalBuy = this.getTotalByType(orders, userCurrency, 'BUY');
-    const totalSell = this.getTotalByType(orders, userCurrency, 'SELL');
-
-    const cash = new Big(balanceInBaseCurrency).minus(emergencyFund).toNumber();
-    const committedFunds = new Big(totalBuy).minus(totalSell);
-
-    const netWorth = new Big(balanceInBaseCurrency)
-      .plus(performanceInformation.performance.currentValue)
-      .plus(items)
-      .toNumber();
-
-    const daysInMarket = differenceInDays(new Date(), firstOrderDate);
-
-    const annualizedPerformancePercent = new PortfolioCalculator({
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      orders: []
-    })
-      .getAnnualizedPerformancePercent({
-        daysInMarket,
-        netPerformancePercent: new Big(
-          performanceInformation.performance.currentNetPerformancePercent
-        )
-      })
-      ?.toNumber();
-
-    return {
-      ...performanceInformation.performance,
-      annualizedPerformancePercent,
-      cash,
-      dividend,
-      fees,
-      firstOrderDate,
-      items,
-      netWorth,
-      totalBuy,
-      totalSell,
-      committedFunds: committedFunds.toNumber(),
-      emergencyFund: emergencyFund.toNumber(),
-      ordersCount: orders.filter((order) => {
-        return order.type === 'BUY' || order.type === 'SELL';
-      }).length
     };
   }
 
@@ -1322,14 +1379,117 @@ export class PortfolioService {
     return portfolioStart;
   }
 
+  private async getSummary(
+    aImpersonationId: string
+  ): Promise<PortfolioSummary> {
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
+
+    const performanceInformation = await this.getPerformance(aImpersonationId);
+
+    const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
+      userId,
+      currency: userCurrency
+    });
+    const orders = await this.orderService.getOrders({
+      userCurrency,
+      userId
+    });
+
+    const excludedActivities = (
+      await this.orderService.getOrders({
+        userCurrency,
+        userId,
+        withExcludedAccounts: true
+      })
+    ).filter(({ Account: account }) => {
+      return account?.isExcluded ?? false;
+    });
+
+    const dividend = this.getDividend(orders).toNumber();
+    const emergencyFund = new Big(
+      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
+    );
+    const fees = this.getFees(orders).toNumber();
+    const firstOrderDate = orders[0]?.date;
+    const items = this.getItems(orders).toNumber();
+
+    const totalBuy = this.getTotalByType(orders, userCurrency, 'BUY');
+    const totalSell = this.getTotalByType(orders, userCurrency, 'SELL');
+
+    const cash = new Big(balanceInBaseCurrency).minus(emergencyFund).toNumber();
+    const committedFunds = new Big(totalBuy).minus(totalSell);
+    const totalOfExcludedActivities = new Big(
+      this.getTotalByType(excludedActivities, userCurrency, 'BUY')
+    ).minus(this.getTotalByType(excludedActivities, userCurrency, 'SELL'));
+
+    const cashDetailsWithExcludedAccounts =
+      await this.accountService.getCashDetails({
+        userId,
+        currency: userCurrency,
+        withExcludedAccounts: true
+      });
+
+    const excludedBalanceInBaseCurrency = new Big(
+      cashDetailsWithExcludedAccounts.balanceInBaseCurrency
+    ).minus(balanceInBaseCurrency);
+
+    const excludedAccountsAndActivities = excludedBalanceInBaseCurrency
+      .plus(totalOfExcludedActivities)
+      .toNumber();
+
+    const netWorth = new Big(balanceInBaseCurrency)
+      .plus(performanceInformation.performance.currentValue)
+      .plus(items)
+      .plus(excludedAccountsAndActivities)
+      .toNumber();
+
+    const daysInMarket = differenceInDays(new Date(), firstOrderDate);
+
+    const annualizedPerformancePercent = new PortfolioCalculator({
+      currency: userCurrency,
+      currentRateService: this.currentRateService,
+      orders: []
+    })
+      .getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercent: new Big(
+          performanceInformation.performance.currentNetPerformancePercent
+        )
+      })
+      ?.toNumber();
+
+    return {
+      ...performanceInformation.performance,
+      annualizedPerformancePercent,
+      cash,
+      dividend,
+      excludedAccountsAndActivities,
+      fees,
+      firstOrderDate,
+      items,
+      netWorth,
+      totalBuy,
+      totalSell,
+      committedFunds: committedFunds.toNumber(),
+      emergencyFund: emergencyFund.toNumber(),
+      ordersCount: orders.filter((order) => {
+        return order.type === 'BUY' || order.type === 'SELL';
+      }).length
+    };
+  }
+
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
-    userId
+    userId,
+    withExcludedAccounts
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
     userId: string;
+    withExcludedAccounts?: boolean;
   }): Promise<{
     transactionPoints: TransactionPoint[];
     orders: OrderWithAccount[];
@@ -1343,6 +1503,7 @@ export class PortfolioService {
       includeDrafts,
       userCurrency,
       userId,
+      withExcludedAccounts,
       types: ['BUY', 'SELL']
     });
 
@@ -1394,17 +1555,22 @@ export class PortfolioService {
     orders,
     portfolioItemsNow,
     userCurrency,
-    userId
+    userId,
+    withExcludedAccounts
   }: {
     filters?: Filter[];
     orders: OrderWithAccount[];
     portfolioItemsNow: { [p: string]: TimelinePosition };
     userCurrency: string;
     userId: string;
+    withExcludedAccounts?: boolean;
   }) {
     const accounts: PortfolioDetails['accounts'] = {};
 
-    let currentAccounts = [];
+    let currentAccounts: (Account & {
+      Order?: Order[];
+      Platform?: Platform;
+    })[] = [];
 
     if (filters.length === 0) {
       currentAccounts = await this.accountService.getAccounts(userId);
@@ -1423,6 +1589,10 @@ export class PortfolioService {
         where: { id: { in: accountIds } }
       });
     }
+
+    currentAccounts = currentAccounts.filter((account) => {
+      return withExcludedAccounts || account.isExcluded === false;
+    });
 
     for (const account of currentAccounts) {
       const ordersByAccount = orders.filter(({ accountId }) => {

@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "User" ADD COLUMN     "authChallenge" TEXT;
+ALTER TABLE "User" ADD COLUMN "authChallenge" TEXT;
 
 -- CreateTable
 CREATE TABLE "AuthDevice" (

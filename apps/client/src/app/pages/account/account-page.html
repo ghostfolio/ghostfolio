@@ -94,7 +94,10 @@
                   <ng-container i18n>Base Currency</ng-container>
                 </div>
                 <div class="pl-1 w-50">
-                  <mat-form-field appearance="outline" class="w-100">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline w-100 without-hint"
+                  >
                     <mat-select
                       name="baseCurrency"
                       [disabled]="!hasPermissionToUpdateUserSettings"
@@ -116,7 +119,10 @@
                   <div class="hint-text text-muted" i18n>Beta</div>
                 </div>
                 <div class="pl-1 w-50">
-                  <mat-form-field appearance="outline" class="w-100">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline w-100 without-hint"
+                  >
                     <mat-select
                       name="language"
                       [disabled]="!hasPermissionToUpdateUserSettings"
@@ -126,6 +132,9 @@
                       <mat-option [value]="null"></mat-option>
                       <mat-option value="de">Deutsch</mat-option>
                       <mat-option value="en">English</mat-option>
+                      <mat-option value="es">Español</mat-option>
+                      <mat-option value="it">Italiano</mat-option>
+                      <mat-option value="nl">Nederlands</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -138,7 +147,10 @@
                   </div>
                 </div>
                 <div class="pl-1 w-50">
-                  <mat-form-field appearance="outline" class="w-100">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline w-100 without-hint"
+                  >
                     <mat-select
                       name="locale"
                       [disabled]="!hasPermissionToUpdateUserSettings"
@@ -161,7 +173,10 @@
                 </div>
                 <div class="pl-1 w-50">
                   <div class="align-items-center d-flex overflow-hidden">
-                    <mat-form-field appearance="outline" class="w-100">
+                    <mat-form-field
+                      appearance="outline"
+                      class="compact-with-outline w-100 without-hint"
+                    >
                       <mat-select
                         name="viewMode"
                         [disabled]="!hasPermissionToUpdateViewMode"

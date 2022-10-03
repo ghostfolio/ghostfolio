@@ -11,6 +11,9 @@ import { NextFunction, Request, Response } from 'express';
 export class FrontendMiddleware implements NestMiddleware {
   public indexHtmlDe = '';
   public indexHtmlEn = '';
+  public indexHtmlEs = '';
+  public indexHtmlIt = '';
+  public indexHtmlNl = '';
   public isProduction: boolean;
 
   public constructor(
@@ -32,6 +35,18 @@ export class FrontendMiddleware implements NestMiddleware {
         this.getPathOfIndexHtmlFile(DEFAULT_LANGUAGE_CODE),
         'utf8'
       );
+      this.indexHtmlEs = fs.readFileSync(
+        this.getPathOfIndexHtmlFile('es'),
+        'utf8'
+      );
+      this.indexHtmlIt = fs.readFileSync(
+        this.getPathOfIndexHtmlFile('it'),
+        'utf8'
+      );
+      this.indexHtmlNl = fs.readFileSync(
+        this.getPathOfIndexHtmlFile('nl'),
+        'utf8'
+      );
     } catch {}
   }
 
@@ -43,6 +58,11 @@ export class FrontendMiddleware implements NestMiddleware {
       req.path === '/en/blog/2022/08/500-stars-on-github/'
     ) {
       featureGraphicPath = 'assets/images/blog/500-stars-on-github.jpg';
+    } else if (
+      req.path === '/en/blog/2022/10/hacktoberfest-2022' ||
+      req.path === '/en/blog/2022/10/hacktoberfest-2022/'
+    ) {
+      featureGraphicPath = 'assets/images/blog/hacktoberfest-2022.png';
     }
 
     if (
@@ -57,6 +77,33 @@ export class FrontendMiddleware implements NestMiddleware {
         this.interpolate(this.indexHtmlDe, {
           featureGraphicPath,
           languageCode: 'de',
+          path: req.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
+    } else if (req.path === '/es' || req.path.startsWith('/es/')) {
+      res.send(
+        this.interpolate(this.indexHtmlEs, {
+          featureGraphicPath,
+          languageCode: 'es',
+          path: req.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
+    } else if (req.path === '/it' || req.path.startsWith('/it/')) {
+      res.send(
+        this.interpolate(this.indexHtmlIt, {
+          featureGraphicPath,
+          languageCode: 'it',
+          path: req.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
+    } else if (req.path === '/nl' || req.path.startsWith('/nl/')) {
+      res.send(
+        this.interpolate(this.indexHtmlNl, {
+          featureGraphicPath,
+          languageCode: 'nl',
           path: req.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })

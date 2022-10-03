@@ -61,7 +61,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .subscribe(({ accountType, name, Platform, valueInBaseCurrency }) => {
         this.accountType = accountType;
         this.name = name;
-        this.platformName = Platform?.name;
+        this.platformName = Platform?.name ?? '-';
         this.valueInBaseCurrency = valueInBaseCurrency;
 
         this.changeDetectorRef.markForCheck();
