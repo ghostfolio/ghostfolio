@@ -73,6 +73,7 @@ export class BenchmarkService {
     }
 
     const allTimeHighs = await Promise.all(promises);
+    let storeInCache = true;
 
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
       const { marketPrice } =
@@ -85,6 +86,8 @@ export class BenchmarkService {
           allTimeHigh,
           marketPrice
         );
+      } else {
+        storeInCache = false;
       }
 
       return {
@@ -100,11 +103,13 @@ export class BenchmarkService {
       };
     });
 
-    await this.redisCacheService.set(
-      this.CACHE_KEY_BENCHMARKS,
-      JSON.stringify(benchmarks),
-      ms('4 hours') / 1000
-    );
+    if (storeInCache) {
+      await this.redisCacheService.set(
+        this.CACHE_KEY_BENCHMARKS,
+        JSON.stringify(benchmarks),
+        ms('4 hours') / 1000
+      );
+    }
 
     return benchmarks;
   }
