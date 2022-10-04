@@ -76,7 +76,7 @@
       </trans-unit>
       <trans-unit id="8264698726451826067" datatype="html">
         <source>Do you really want to revoke this granted access?</source>
-        <target state="translated">Vuoi davvero revocare l&apos;accesso concesso?</target>
+        <target state="translated">Vuoi davvero revocare l'accesso concesso?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
           <context context-type="linenumber">49</context>
@@ -640,7 +640,7 @@
       </trans-unit>
       <trans-unit id="68ca4a6d3699c0b1141421f8ca995cb1ed736128" datatype="html">
         <source>Current Market Mood</source>
-        <target state="translated">Stato d&apos;animo attuale del mercato</target>
+        <target state="translated">Stato d'animo attuale del mercato</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/fear-and-greed-index/fear-and-greed-index.component.html</context>
           <context context-type="linenumber">12</context>
@@ -968,7 +968,7 @@
       </trans-unit>
       <trans-unit id="e5c369abfbe1bd70f577aa03b2679797e38d7590" datatype="html">
         <source> Fees for <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </source>
-        <target state="translated">Commissioni per <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </target>
+        <target state="translated">Commissioni per <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transazione} other {transazioni}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">77,80</context>
@@ -976,7 +976,7 @@
       </trans-unit>
       <trans-unit id="272c7fd98af55bfa5b9d579176f1cfa25cd5489f" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {transaction} other {transactions}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {transaction} altre {transactions}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {transazione} altre {transazioni}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">78,79</context>
@@ -1024,7 +1024,7 @@
       </trans-unit>
       <trans-unit id="8cce9d03787606e0052d19c2ae7e7fa5ff785e94" datatype="html">
         <source>Buying Power</source>
-        <target state="translated">Potere d&apos;acquisto</target>
+        <target state="translated">Potere d'acquisto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">165</context>
@@ -1056,7 +1056,7 @@
       </trans-unit>
       <trans-unit id="6785405835169448749" datatype="html">
         <source>Please enter the amount of your emergency fund:</source>
-        <target state="translated">Inserisci l&apos;importo del tuo fondo di emergenza:</target>
+        <target state="translated">Inserisci l'importo del tuo fondo di emergenza:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
           <context context-type="linenumber">52</context>
@@ -1096,7 +1096,7 @@
       </trans-unit>
       <trans-unit id="43d544c2e88959f6c59cc4db419528fb0776bd6c" datatype="html">
         <source>Report Data Glitch</source>
-        <target state="translated">Segnala un&apos;anomalia dei dati</target>
+        <target state="translated">Segnala un'anomalia dei dati</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/position/position-detail-dialog/position-detail-dialog.html</context>
           <context context-type="linenumber">249</context>
@@ -1244,7 +1244,7 @@
       </trans-unit>
       <trans-unit id="15bdfa7e753e80e9f158a0d23194cb33eb63088f" datatype="html">
         <source>License</source>
-        <target state="translated">Licenza d&apos;uso</target>
+        <target state="translated">Licenza d'uso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/changelog/changelog-page.html</context>
           <context context-type="linenumber">15</context>
@@ -1436,7 +1436,7 @@
       </trans-unit>
       <trans-unit id="5e41f1b4c46ad9e0a9bc83fa36445483aa5cc324" datatype="html">
         <source>Grant access</source>
-        <target state="translated">Concedi l&apos;accesso</target>
+        <target state="translated">Concedi l'accesso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">2</context>
@@ -1564,7 +1564,7 @@
       </trans-unit>
       <trans-unit id="7407412980480383749" datatype="html">
         <source>As you are already logged in, you cannot access the demo account.</source>
-        <target state="translated">Poiché hai già effettuato l’accesso, non puoi accedere all&apos;account demo.</target>
+        <target state="translated">Poiché hai già effettuato l’accesso, non puoi accedere all'account demo.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/demo/demo-page.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -1864,7 +1864,7 @@
       </trans-unit>
       <trans-unit id="ec6301d6468572fa466f56eb3243c6c58e9cf189" datatype="html">
         <source> Ghostfolio X-ray uses static analysis to identify potential issues and risks in your portfolio. </source>
-        <target state="translated">Ghostfolio X-ray utilizza l&apos;analisi statica per identificare potenziali problemi e rischi nel tuo portafoglio. </target>
+        <target state="translated">Ghostfolio X-ray utilizza l'analisi statica per identificare potenziali problemi e rischi nel tuo portafoglio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
           <context context-type="linenumber">100,103</context>
@@ -1896,7 +1896,7 @@
       </trans-unit>
       <trans-unit id="72ba3bcdd8350cb8bf462e217a28ec7f7a48bb44" datatype="html">
         <source>Update activity</source>
-        <target state="translated">Aggiorna l&apos;attività</target>
+        <target state="translated">Aggiorna l'attività</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">7,8</context>
@@ -1904,7 +1904,7 @@
       </trans-unit>
       <trans-unit id="49af37bcd0c34e88ab989641e52ef92f3fb56e06" datatype="html">
         <source>Add activity</source>
-        <target state="translated">Aggiungi un&apos;attività</target>
+        <target state="translated">Aggiungi un'attività</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/create-or-update-transaction-dialog/create-or-update-transaction-dialog.html</context>
           <context context-type="linenumber">8,11</context>
@@ -2032,7 +2032,7 @@
       </trans-unit>
       <trans-unit id="7500216440144530775" datatype="html">
         <source>Import has been completed</source>
-        <target state="translated">L&apos;importazione è stata completata</target>
+        <target state="translated">L'importazione è stata completata</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/transactions/transactions-page.component.ts</context>
           <context context-type="linenumber">337</context>
@@ -2140,7 +2140,7 @@
       </trans-unit>
       <trans-unit id="495a0574bd9a3d619a8b16dd5b893c6f617beded" datatype="html">
         <source>Oops, authentication has failed.</source>
-        <target state="translated">Ops, l&apos;autenticazione non è riuscita.</target>
+        <target state="translated">Ops, l'autenticazione non è riuscita.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/webauthn/webauthn-page.html</context>
           <context context-type="linenumber">18</context>
@@ -2660,7 +2660,7 @@
       </trans-unit>
       <trans-unit id="98fc3013bfcbf452b9f37bbfcdb77b9b882866e3" datatype="html">
         <source>Excluded from Analysis</source>
-        <target state="new">Escluso dall&apos;analisi</target>
+        <target state="new">Escluso dall'analisi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">176</context>
