@@ -968,7 +968,7 @@
       </trans-unit>
       <trans-unit id="e5c369abfbe1bd70f577aa03b2679797e38d7590" datatype="html">
         <source> Fees for <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </source>
-        <target state="translated">Commissioni per <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transaction} other {transactions}}"/> </target>
+        <target state="translated">Commissioni per <x id="INTERPOLATION" equiv-text="{{ summary?.ordersCount }}"/> <x id="ICU" equiv-text="{summary?.ordersCount, plural, =1 {transazione} other {transazioni}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">77,80</context>
@@ -976,7 +976,7 @@
       </trans-unit>
       <trans-unit id="272c7fd98af55bfa5b9d579176f1cfa25cd5489f" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {transaction} other {transactions}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {transaction} altre {transactions}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {transazione} other {transazioni}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">78,79</context>
@@ -2658,20 +2658,20 @@
           <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ac598d664f86ba5783915d65f2664a7f38a9d23a" datatype="html">
-        <source>Account Type</source>
-        <target state="new">Account Type</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="98fc3013bfcbf452b9f37bbfcdb77b9b882866e3" datatype="html">
         <source>Excluded from Analysis</source>
-        <target state="new">Excluded from Analysis</target>
+        <target state="translated">Escluso dall&apos;analisi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ac598d664f86ba5783915d65f2664a7f38a9d23a" datatype="html">
+        <source>Account Type</source>
+        <target state="translated">Tipo di account</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
     </body>
