@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the caching of the benchmarks in the markets overview (only cache if fetching was successful)
 
+### Fixed
+
+- Fixed the support for cryptocurrencies having a symbol with less than 3 characters (e.g. `SC-USD`)
+
 ## 1.201.0 - 01.10.2022
 
 ### Added
