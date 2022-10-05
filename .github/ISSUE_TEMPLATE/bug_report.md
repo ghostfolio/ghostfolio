@@ -9,15 +9,14 @@ assignees: ''
 
 The Issue tracker is **ONLY** used for reporting bugs. New features should be discussed on our [Slack channel](https://ghostfolio.slack.com) or in [Discussions](https://github.com/ghostfolio/ghostfolio/discussions).
 
-**Describe the bug**
+**Bug Description**
 <!-- A clear and concise description of what the bug is. -->
 
 **To Reproduce**
-Steps to reproduce the behavior:
+<!-- Steps to reproduce the behavior -->
 1.
 2.
 3.
-4.
 
 **Expected behavior**
 <!-- A clear and concise description of what you expected to happen. -->
@@ -28,9 +27,10 @@ Steps to reproduce the behavior:
 **Logs**
 <!-- If applicable, add logs to help explain your problem. -->
 
-**Environment (please complete the following information):**
- - Ghostfolio Version [e.g. 1.194.0]
- - Browser [e.g. chrome]
+**Environment**
+<!-- Please complete the following information -->
+ - Ghostfolio Version X.Y.Z
+ - Browser
  - OS
 
 **Additional context**
