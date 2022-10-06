@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the caching of the benchmarks in the markets overview (only cache if fetching was successful)
+- Improved the wording in the twitter bot service
 
 ### Fixed
 
