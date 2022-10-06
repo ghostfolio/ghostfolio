@@ -58,8 +58,15 @@ export class YahooFinanceService implements DataProviderInterface {
    *                  DOGEUSD -> DOGE-USD
    */
   public convertToYahooFinanceSymbol(aSymbol: string) {
-    if (aSymbol.includes(this.baseCurrency) && aSymbol.length >= 6) {
-      if (isCurrency(aSymbol.substring(0, aSymbol.length - 3))) {
+    if (
+      aSymbol.includes(this.baseCurrency) &&
+      aSymbol.length > this.baseCurrency.length
+    ) {
+      if (
+        isCurrency(
+          aSymbol.substring(0, aSymbol.length - this.baseCurrency.length)
+        )
+      ) {
         return `${aSymbol}=X`;
       } else if (
         this.cryptocurrencyService.isCryptocurrency(
