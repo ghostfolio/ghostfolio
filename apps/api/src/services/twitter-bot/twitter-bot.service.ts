@@ -53,13 +53,15 @@ export class TwitterBotService {
           symbolItem.marketPrice
         );
 
-        let status = `Current Market Mood: ${emoji} ${text} (${symbolItem.marketPrice}/100)`;
+        let status = `Current market mood is ${emoji} ${text.toLowerCase()} (${
+          symbolItem.marketPrice
+        }/100)`;
 
         const benchmarkListing = await this.getBenchmarkListing(3);
 
         if (benchmarkListing?.length > 1) {
           status += '\n\n';
-          status += '±% from ATH\n';
+          status += '± from ATH in %\n';
           status += benchmarkListing;
         }
 
