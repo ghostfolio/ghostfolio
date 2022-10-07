@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="ccb2a809018b32a96c813ae69126ce05976109ce" datatype="html">
         <source>The risk of loss in trading can be substantial. It is not advisable to invest money you may need in the short term.</source>
-        <target state="translated">Das Ausfallrisiko beim Börsenhandel kann erheblich sein. Es ist nicht ratsam, Geld zu investieren, welches Sie kurzfristig benötigen.</target>
+        <target state="translated">Das Ausfallrisiko beim Börsenhandel kann erheblich sein. Es ist nicht ratsam, Geld zu investieren, welches du kurzfristig benötigst.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
           <context context-type="linenumber">55,56</context>
@@ -418,7 +418,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5eebcc824c2d34b17abba8c9ef718c5ce118a5c8" datatype="html">
@@ -490,7 +490,7 @@
         <target state="translated">pro Benutzer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5067ede95804e0e0e2b078747848367a7373cc9b" datatype="html">
@@ -498,7 +498,7 @@
         <target state="translated">Letzte Daten einholen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="27e27f3f7338baefacfd5668bad03ece9c5955df" datatype="html">
@@ -506,7 +506,7 @@
         <target state="translated">Alle Daten einholen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cc65b67b46b69cf06ff1f16a909e61612c9d57b8" datatype="html">
@@ -518,7 +518,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="37ff0697aa81b2777250c483d2ce1ebdaa5ab042" datatype="html">
@@ -526,7 +526,7 @@
         <target state="translated">Wechselkurse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4567a660a7f67e254bbf13219906843e34d9f807" datatype="html">
@@ -534,7 +534,7 @@
         <target state="translated">Währung hinzufügen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="860e5f056b59410ec8db65cb53955505c6931752" datatype="html">
@@ -542,7 +542,7 @@
         <target state="translated">Systemmeldung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="657028d5fc9c3da8f2d667b6b15cd0df8b9a3729" datatype="html">
@@ -550,7 +550,7 @@
         <target state="translated">Systemmeldung setzen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7fd64c34428887e4cd56d05534b89c100b8544ad" datatype="html">
@@ -558,7 +558,7 @@
         <target state="translated">Lese-Modus</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">150</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e698b03c34b459b1b006d7f0473a49b9fcf5dfc1" datatype="html">
@@ -566,7 +566,7 @@
         <target state="translated">Gutscheincodes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">152</context>
+          <context context-type="linenumber">163</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
@@ -574,7 +574,7 @@
         <target state="translated">Hinzufügen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">198</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e799e6b926557f0098f41888cdf8df868eff3d47" datatype="html">
@@ -582,7 +582,7 @@
         <target state="translated">Verwaltung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c7ac907e52a7ce2ac70b1786eb5f403ce306ce1f" datatype="html">
@@ -590,7 +590,7 @@
         <target state="translated">Cache leeren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">209</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2817099043823177227" datatype="html">
@@ -2314,7 +2314,7 @@
         <target state="translated">Datenverwaltung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3ccabfc3dc288eaa2355ba43298c739f85951ec3" datatype="html">
@@ -2659,7 +2659,7 @@
       </trans-unit>
       <trans-unit id="ac598d664f86ba5783915d65f2664a7f38a9d23a" datatype="html">
         <source>Account Type</source>
-        <target state="new">Account Type</target>
+        <target state="translated">Kontotyp</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">25</context>
@@ -2667,10 +2667,18 @@
       </trans-unit>
       <trans-unit id="98fc3013bfcbf452b9f37bbfcdb77b9b882866e3" datatype="html">
         <source>Excluded from Analysis</source>
-        <target state="new">Excluded from Analysis</target>
+        <target state="translated">Von der Analyse ausgenommen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="458363f8e413759aa9e3235a53fd0f64cc916395" datatype="html">
+        <source> If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/>, based on your total assets of <x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;fireWealth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> and a withdrawal rate of 4%. </source>
+        <target state="translated"> Wenn du heute in den Ruhestand gehen würdest, könnest du <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> pro Jahr<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/> oder <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> pro Monat<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/> entnehmen, bezogen auf dein Gesamtanlagevermögen von <x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;fireWealth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> und einer Entnahmerate von 4%. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
+          <context context-type="linenumber">38,66</context>
         </context-group>
       </trans-unit>
     </body>
