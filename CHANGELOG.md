@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added support for a translated 4% rule in the _FIRE_ section
+
 ### Changed
 
 - Improved the caching of the benchmarks in the markets overview (only cache if fetching was successful)
