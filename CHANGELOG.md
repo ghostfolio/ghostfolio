@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.202.0 - 07.10.2022
 
+### Added
+
 - Added support for a translated 4% rule in the _FIRE_ section
 
 ### Changed
