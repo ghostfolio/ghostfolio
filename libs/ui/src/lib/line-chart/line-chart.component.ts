@@ -48,6 +48,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkLabel = '';
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
+  @Input() isAnimated = true;
   @Input() locale: string;
   @Input() showGradient = false;
   @Input() showLegend = false;
@@ -174,7 +175,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
-            animation: false,
+            animation: this.isAnimated && {
+              duration: 1000,
+              easing: 'easeOutCubic'
+            },
             aspectRatio: 16 / 9,
             elements: {
               point: {
