@@ -2,6 +2,7 @@ import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
+import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -22,6 +23,7 @@ import { RulesService } from './rules.service';
   exports: [PortfolioService],
   imports: [
     AccessModule,
+    ApiModule,
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,
