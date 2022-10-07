@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the support for cryptocurrencies having a symbol with less than 3 characters (e.g. `SC-USD`)
+- Fixed the text truncation in the value component
 
 ## 1.201.0 - 01.10.2022
 
