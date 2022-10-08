@@ -119,10 +119,20 @@
               </div>
             </div>
           </div>
+          <div class="align-items-start d-flex my-3">
+            <div class="w-50" i18n>Benchmarks</div>
+            <div class="w-50">
+              <table>
+                <tr *ngFor="let benchmark of info?.benchmarks">
+                  <td class="pl-1">{{ benchmark.symbol }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
           <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">
             <div class="w-50" i18n>System Message</div>
             <div class="w-50">
-              <div *ngIf="info.systemMessage">
+              <div *ngIf="info?.systemMessage">
                 <span>{{ info.systemMessage }}</span>
                 <button
                   class="mini-icon mx-1 no-min-width px-2"
@@ -133,7 +143,7 @@
                 </button>
               </div>
               <button
-                *ngIf="!info.systemMessage"
+                *ngIf="!info?.systemMessage"
                 color="accent"
                 mat-flat-button
                 (click)="onSetSystemMessage()"
