@@ -14,9 +14,9 @@ import {
   format,
   isAfter,
   isBefore,
+  isSameDay,
   isSameMonth,
   isSameYear,
-  isToday,
   max,
   min,
   set
@@ -188,7 +188,7 @@ export class PortfolioCalculator {
       day = addDays(day, step);
     }
 
-    if (!isToday(last(dates))) {
+    if (!isSameDay(last(dates), end)) {
       dates.push(resetHours(end));
     }
 
