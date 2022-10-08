@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Supported a progressive line animation in the line chart component
+
 ### Changed
 
 - Moved the benchmark comparator from experimental to general availability
