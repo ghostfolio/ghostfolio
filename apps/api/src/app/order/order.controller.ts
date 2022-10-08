@@ -3,8 +3,8 @@ import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { Filter } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
@@ -36,6 +36,7 @@ import { UpdateOrderDto } from './update-order.dto';
 @Controller('order')
 export class OrderController {
   public constructor(
+    private readonly apiService: ApiService,
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
@@ -73,30 +74,11 @@ export class OrderController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('tags') filterByTags?: string
   ): Promise<Activities> {
-    const accountIds = filterByAccounts?.split(',') ?? [];
-    const assetClasses = filterByAssetClasses?.split(',') ?? [];
-    const tagIds = filterByTags?.split(',') ?? [];
-
-    const filters: Filter[] = [
-      ...accountIds.map((accountId) => {
-        return <Filter>{
-          id: accountId,
-          type: 'ACCOUNT'
-        };
-      }),
-      ...assetClasses.map((assetClass) => {
-        return <Filter>{
-          id: assetClass,
-          type: 'ASSET_CLASS'
-        };
-      }),
-      ...tagIds.map((tagId) => {
-        return <Filter>{
-          id: tagId,
-          type: 'TAG'
-        };
-      })
-    ];
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    });
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(

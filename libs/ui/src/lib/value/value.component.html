@@ -1,7 +1,7 @@
 <div *ngIf="icon" class="align-self-center mr-3">
   <ion-icon class="h3 m-0" [name]="icon"></ion-icon>
 </div>
-<div>
+<div class="w-100">
   <ng-template #label><ng-content></ng-content></ng-template>
   <ng-container *ngIf="value || value === 0 || value === null">
     <div

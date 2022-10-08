@@ -74,60 +74,19 @@ export class DataService {
   }: {
     filters?: Filter[];
   }): Observable<Activities> {
-    let params = new HttpParams();
-
-    if (filters?.length > 0) {
-      const {
-        ACCOUNT: filtersByAccount,
-        ASSET_CLASS: filtersByAssetClass,
-        TAG: filtersByTag
-      } = groupBy(filters, (filter) => {
-        return filter.type;
-      });
-
-      if (filtersByAccount) {
-        params = params.append(
-          'accounts',
-          filtersByAccount
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByAssetClass) {
-        params = params.append(
-          'assetClasses',
-          filtersByAssetClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByTag) {
-        params = params.append(
-          'tags',
-          filtersByTag
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-    }
-
-    return this.http.get<any>('/api/v1/order', { params }).pipe(
-      map(({ activities }) => {
-        for (const activity of activities) {
-          activity.createdAt = parseISO(activity.createdAt);
-          activity.date = parseISO(activity.date);
-        }
-        return { activities };
+    return this.http
+      .get<any>('/api/v1/order', {
+        params: this.buildFiltersAsQueryParams({ filters })
       })
-    );
+      .pipe(
+        map(({ activities }) => {
+          for (const activity of activities) {
+            activity.createdAt = parseISO(activity.createdAt);
+            activity.date = parseISO(activity.date);
+          }
+          return { activities };
+        })
+      );
   }
 
   public fetchAdminData() {
@@ -135,30 +94,8 @@ export class DataService {
   }
 
   public fetchAdminMarketData({ filters }: { filters?: Filter[] }) {
-    let params = new HttpParams();
-
-    if (filters?.length > 0) {
-      const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
-        filters,
-        (filter) => {
-          return filter.type;
-        }
-      );
-
-      if (filtersByAssetSubClass) {
-        params = params.append(
-          'assetSubClasses',
-          filtersByAssetSubClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-    }
-
     return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
-      params
+      params: this.buildFiltersAsQueryParams({ filters })
     });
   }
 
@@ -306,54 +243,9 @@ export class DataService {
   }: {
     filters?: Filter[];
   }): Observable<PortfolioDetails> {
-    let params = new HttpParams();
-
-    if (filters?.length > 0) {
-      const {
-        ACCOUNT: filtersByAccount,
-        ASSET_CLASS: filtersByAssetClass,
-        TAG: filtersByTag
-      } = groupBy(filters, (filter) => {
-        return filter.type;
-      });
-
-      if (filtersByAccount) {
-        params = params.append(
-          'accounts',
-          filtersByAccount
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByAssetClass) {
-        params = params.append(
-          'assetClasses',
-          filtersByAssetClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByTag) {
-        params = params.append(
-          'tags',
-          filtersByTag
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-    }
-
     return this.http
       .get<any>('/api/v1/portfolio/details', {
-        params
+        params: this.buildFiltersAsQueryParams({ filters })
       })
       .pipe(
         map((response) => {
@@ -457,5 +349,54 @@ export class DataService {
     return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
     });
+  }
+
+  private buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
+    let params = new HttpParams();
+
+    if (filters?.length > 0) {
+      const {
+        ACCOUNT: filtersByAccount,
+        ASSET_CLASS: filtersByAssetClass,
+        TAG: filtersByTag
+      } = groupBy(filters, (filter) => {
+        return filter.type;
+      });
+
+      if (filtersByAccount) {
+        params = params.append(
+          'accounts',
+          filtersByAccount
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetClass) {
+        params = params.append(
+          'assetClasses',
+          filtersByAssetClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByTag) {
+        params = params.append(
+          'tags',
+          filtersByTag
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+    }
+
+    return params;
   }
 }

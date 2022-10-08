@@ -107,15 +107,19 @@ export class PortfolioService {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
-  public async getAccounts(
-    aUserId: string,
-    aFilters?: Filter[],
+  public async getAccounts({
+    filters,
+    userId,
     withExcludedAccounts = false
-  ): Promise<AccountWithValue[]> {
-    const where: Prisma.AccountWhereInput = { userId: aUserId };
+  }: {
+    filters?: Filter[];
+    userId: string;
+    withExcludedAccounts?: boolean;
+  }): Promise<AccountWithValue[]> {
+    const where: Prisma.AccountWhereInput = { userId: userId };
 
-    if (aFilters?.[0].id && aFilters?.[0].type === 'ACCOUNT') {
-      where.id = aFilters[0].id;
+    if (filters?.[0].id && filters?.[0].type === 'ACCOUNT') {
+      where.id = filters[0].id;
     }
 
     const [accounts, details] = await Promise.all([
@@ -124,13 +128,12 @@ export class PortfolioService {
         include: { Order: true, Platform: true },
         orderBy: { name: 'asc' }
       }),
-      this.getDetails(
-        aUserId,
-        aUserId,
-        undefined,
-        aFilters,
-        withExcludedAccounts
-      )
+      this.getDetails({
+        filters,
+        userId,
+        withExcludedAccounts,
+        impersonationId: userId
+      })
     ]);
 
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
@@ -168,16 +171,20 @@ export class PortfolioService {
     });
   }
 
-  public async getAccountsWithAggregations(
-    aUserId: string,
-    aFilters?: Filter[],
+  public async getAccountsWithAggregations({
+    filters,
+    userId,
     withExcludedAccounts = false
-  ): Promise<Accounts> {
-    const accounts = await this.getAccounts(
-      aUserId,
-      aFilters,
+  }: {
+    filters?: Filter[];
+    userId: string;
+    withExcludedAccounts?: boolean;
+  }): Promise<Accounts> {
+    const accounts = await this.getAccounts({
+      filters,
+      userId,
       withExcludedAccounts
-    );
+    });
     let totalBalanceInBaseCurrency = new Big(0);
     let totalValueInBaseCurrency = new Big(0);
     let transactionCount = 0;
@@ -421,14 +428,21 @@ export class PortfolioService {
     };
   }
 
-  public async getDetails(
-    aImpersonationId: string,
-    aUserId: string,
-    aDateRange: DateRange = 'max',
-    aFilters?: Filter[],
+  public async getDetails({
+    impersonationId,
+    userId,
+    dateRange = 'max',
+    filters,
     withExcludedAccounts = false
-  ): Promise<PortfolioDetails & { hasErrors: boolean }> {
-    const userId = await this.getUserId(aImpersonationId, aUserId);
+  }: {
+    impersonationId: string;
+    userId: string;
+    dateRange?: DateRange;
+    filters?: Filter[];
+    withExcludedAccounts?: boolean;
+  }): Promise<PortfolioDetails & { hasErrors: boolean }> {
+    // TODO:
+    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
     const emergencyFund = new Big(
@@ -441,9 +455,9 @@ export class PortfolioService {
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
+        filters,
         userId,
-        withExcludedAccounts,
-        filters: aFilters
+        withExcludedAccounts
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -457,15 +471,15 @@ export class PortfolioService {
     const portfolioStart = parseDate(
       transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
     );
-    const startDate = this.getStartDate(aDateRange, portfolioStart);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
     const currentPositions = await portfolioCalculator.getCurrentPositions(
       startDate
     );
 
     const cashDetails = await this.accountService.getCashDetails({
+      filters,
       userId,
-      currency: userCurrency,
-      filters: aFilters
+      currency: userCurrency
     });
 
     const holdings: PortfolioDetails['holdings'] = {};
@@ -475,10 +489,10 @@ export class PortfolioService {
     let filteredValueInBaseCurrency = currentPositions.currentValue;
 
     if (
-      aFilters?.length === 0 ||
-      (aFilters?.length === 1 &&
-        aFilters[0].type === 'ASSET_CLASS' &&
-        aFilters[0].id === 'CASH')
+      filters?.length === 0 ||
+      (filters?.length === 1 &&
+        filters[0].type === 'ASSET_CLASS' &&
+        filters[0].id === 'CASH')
     ) {
       filteredValueInBaseCurrency = filteredValueInBaseCurrency.plus(
         cashDetails.balanceInBaseCurrency
@@ -574,10 +588,10 @@ export class PortfolioService {
     }
 
     if (
-      aFilters?.length === 0 ||
-      (aFilters?.length === 1 &&
-        aFilters[0].type === 'ASSET_CLASS' &&
-        aFilters[0].id === 'CASH')
+      filters?.length === 0 ||
+      (filters?.length === 1 &&
+        filters[0].type === 'ASSET_CLASS' &&
+        filters[0].id === 'CASH')
     ) {
       const cashPositions = await this.getCashPositions({
         cashDetails,
@@ -593,15 +607,15 @@ export class PortfolioService {
     }
 
     const accounts = await this.getValueOfAccounts({
+      filters,
       orders,
       portfolioItemsNow,
       userCurrency,
       userId,
-      withExcludedAccounts,
-      filters: aFilters
+      withExcludedAccounts
     });
 
-    const summary = await this.getSummary(aImpersonationId);
+    const summary = await this.getSummary(impersonationId);
 
     return {
       accounts,
