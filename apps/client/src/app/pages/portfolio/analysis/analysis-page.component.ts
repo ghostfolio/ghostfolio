@@ -122,24 +122,21 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   private update() {
-    if (this.user.settings.isExperimentalFeatures) {
-      this.isLoadingBenchmarkComparator = true;
+    this.isLoadingBenchmarkComparator = true;
 
-      this.dataService
-        .fetchPortfolioPerformance({
-          range: this.user?.settings?.dateRange,
-          version: 2
-        })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ chart }) => {
-          this.firstOrderDate = new Date(chart?.[0]?.date ?? new Date());
-          this.performanceDataItems = chart;
+    this.dataService
+      .fetchPortfolioPerformance({
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ chart }) => {
+        this.firstOrderDate = new Date(chart?.[0]?.date ?? new Date());
+        this.performanceDataItems = chart;
 
-          this.updateBenchmarkDataItems();
+        this.updateBenchmarkDataItems();
 
-          this.changeDetectorRef.markForCheck();
-        });
-    }
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.dataService
       .fetchInvestments()
