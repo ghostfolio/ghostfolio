@@ -48,6 +48,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkLabel = '';
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
+  @Input() isAnimated = true;
   @Input() locale: string;
   @Input() showGradient = false;
   @Input() showLegend = false;
@@ -163,18 +164,51 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       ]
     };
 
+    const animationDuration = 1000;
+
+    const delayBetweenPoints = animationDuration / labels.length;
+    const animation = {
+      x: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: NaN,
+        delay(ctx) {
+          if (ctx.type !== 'data' || ctx.xStarted) {
+            return 0;
+          }
+          ctx.xStarted = true;
+          return ctx.index * delayBetweenPoints;
+        }
+      },
+      y: {
+        type: 'number',
+        easing: 'linear',
+        duration: delayBetweenPoints,
+        from: 0,
+        delay(ctx) {
+          if (ctx.type !== 'data' || ctx.yStarted) {
+            return 0;
+          }
+          ctx.yStarted = true;
+          return ctx.index * delayBetweenPoints;
+        }
+      }
+    };
+
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
         this.chart.options.plugins.tooltip = <unknown>(
           this.getTooltipPluginConfiguration()
         );
+        this.chart.options.animation = this.isAnimated && <unknown>animation;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
-            animation: false,
+            animation: this.isAnimated && <unknown>animation,
             aspectRatio: 16 / 9,
             elements: {
               point: {
