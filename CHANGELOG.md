@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the user interface of the benchmark comparator
 
+### Fixed
+
+- Fixed the alignment of the value component in the admin control panel
+
 ## 1.202.0 - 07.10.2022
 
 ### Added
