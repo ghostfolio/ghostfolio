@@ -181,10 +181,10 @@ export class AdminService {
   public async putSetting(key: string, value: string) {
     let response: Property;
 
-    if (value === '') {
-      response = await this.propertyService.delete({ key });
-    } else {
+    if (value) {
       response = await this.propertyService.put({ key, value });
+    } else {
+      response = await this.propertyService.delete({ key });
     }
 
     if (key === PROPERTY_CURRENCIES) {

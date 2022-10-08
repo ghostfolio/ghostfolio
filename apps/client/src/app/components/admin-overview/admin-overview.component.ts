@@ -99,7 +99,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       ...this.coupons,
       { code: this.generateCouponCode(16), duration: this.couponDuration }
     ];
-    this.putCoupons(coupons);
+    this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
   }
 
   public onAddCurrency() {
@@ -107,7 +107,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
 
     if (currency) {
       const currencies = uniq([...this.customCurrencies, currency]);
-      this.putCurrencies(currencies);
+      this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
     }
   }
 
@@ -124,7 +124,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       const coupons = this.coupons.filter((coupon) => {
         return coupon.code !== aCouponCode;
       });
-      this.putCoupons(coupons);
+      this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
     }
   }
 
@@ -137,12 +137,12 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       const currencies = this.customCurrencies.filter((currency) => {
         return currency !== aCurrency;
       });
-      this.putCurrencies(currencies);
+      this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
     }
   }
 
   public onDeleteSystemMessage() {
-    this.putSystemMessage('');
+    this.putAdminSetting({ key: PROPERTY_SYSTEM_MESSAGE, value: undefined });
   }
 
   public onFlushCache() {
@@ -192,14 +192,20 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
-    this.setReadOnlyMode(aEvent.checked);
+    this.putAdminSetting({
+      key: PROPERTY_IS_READ_ONLY_MODE,
+      value: aEvent.checked ? true : undefined
+    });
   }
 
   public onSetSystemMessage() {
     const systemMessage = prompt($localize`Please set your system message:`);
 
     if (systemMessage) {
-      this.putSystemMessage(systemMessage);
+      this.putAdminSetting({
+        key: PROPERTY_SYSTEM_MESSAGE,
+        value: systemMessage
+      });
     }
   }
 
@@ -236,49 +242,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     return couponCode;
   }
 
-  private putCoupons(aCoupons: Coupon[]) {
+  private putAdminSetting({ key, value }: { key: string; value: any }) {
     this.dataService
-      .putAdminSetting(PROPERTY_COUPONS, {
-        value: JSON.stringify(aCoupons)
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
-  private putCurrencies(aCurrencies: string[]) {
-    this.dataService
-      .putAdminSetting(PROPERTY_CURRENCIES, {
-        value: JSON.stringify(aCurrencies)
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
-  private putSystemMessage(aSystemMessage: string) {
-    this.dataService
-      .putAdminSetting(PROPERTY_SYSTEM_MESSAGE, {
-        value: aSystemMessage
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
-  private setReadOnlyMode(aValue: boolean) {
-    this.dataService
-      .putAdminSetting(PROPERTY_IS_READ_ONLY_MODE, {
-        value: aValue ? 'true' : ''
+      .putAdminSetting(key, {
+        value: value ? JSON.stringify(value) : undefined
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
