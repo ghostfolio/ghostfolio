@@ -615,7 +615,7 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    const summary = await this.getSummary(impersonationId);
+    const summary = await this.getSummary({ impersonationId });
 
     return {
       accounts,
@@ -953,77 +953,6 @@ export class PortfolioService {
           quantity: new Big(position.quantity).toNumber()
         };
       })
-    };
-  }
-
-  public async getPerformance(
-    aImpersonationId: string,
-    aDateRange: DateRange = 'max'
-  ): Promise<PortfolioPerformanceResponse> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
-
-    const { portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        userId
-      });
-
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      orders: portfolioOrders
-    });
-
-    if (transactionPoints?.length <= 0) {
-      return {
-        hasErrors: false,
-        performance: {
-          currentGrossPerformance: 0,
-          currentGrossPerformancePercent: 0,
-          currentNetPerformance: 0,
-          currentNetPerformancePercent: 0,
-          currentValue: 0
-        }
-      };
-    }
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
-
-    const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(aDateRange, portfolioStart);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      startDate
-    );
-
-    const hasErrors = currentPositions.hasErrors;
-    const currentValue = currentPositions.currentValue.toNumber();
-    const currentGrossPerformance = currentPositions.grossPerformance;
-    let currentGrossPerformancePercent =
-      currentPositions.grossPerformancePercentage;
-    const currentNetPerformance = currentPositions.netPerformance;
-    let currentNetPerformancePercent =
-      currentPositions.netPerformancePercentage;
-
-    if (currentGrossPerformance.mul(currentGrossPerformancePercent).lt(0)) {
-      // If algebraic sign is different, harmonize it
-      currentGrossPerformancePercent = currentGrossPerformancePercent.mul(-1);
-    }
-
-    if (currentNetPerformance.mul(currentNetPerformancePercent).lt(0)) {
-      // If algebraic sign is different, harmonize it
-      currentNetPerformancePercent = currentNetPerformancePercent.mul(-1);
-    }
-
-    return {
-      errors: currentPositions.errors,
-      hasErrors: currentPositions.hasErrors || hasErrors,
-      performance: {
-        currentValue,
-        currentGrossPerformance: currentGrossPerformance.toNumber(),
-        currentGrossPerformancePercent:
-          currentGrossPerformancePercent.toNumber(),
-        currentNetPerformance: currentNetPerformance.toNumber(),
-        currentNetPerformancePercent: currentNetPerformancePercent.toNumber()
-      }
     };
   }
 
@@ -1393,14 +1322,18 @@ export class PortfolioService {
     return portfolioStart;
   }
 
-  private async getSummary(
-    aImpersonationId: string
-  ): Promise<PortfolioSummary> {
+  private async getSummary({
+    impersonationId
+  }: {
+    impersonationId: string;
+  }): Promise<PortfolioSummary> {
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const performanceInformation = await this.getPerformance(aImpersonationId);
+    const performanceInformation = await this.getPerformanceV2({
+      impersonationId
+    });
 
     const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
       userId,

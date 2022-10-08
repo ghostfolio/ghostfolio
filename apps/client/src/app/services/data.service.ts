@@ -25,7 +25,6 @@ import {
   Filter,
   InfoItem,
   OAuthResponse,
-  PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
@@ -136,12 +135,6 @@ export class DataService {
 
   public fetchBenchmarks() {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
-  }
-
-  public fetchChart({ range, version }: { range: DateRange; version: number }) {
-    return this.http.get<PortfolioChart>(`/api/v${version}/portfolio/chart`, {
-      params: { range }
-    });
   }
 
   public fetchExport(activityIds?: string[]) {
@@ -259,15 +252,9 @@ export class DataService {
       );
   }
 
-  public fetchPortfolioPerformance({
-    range,
-    version
-  }: {
-    range: DateRange;
-    version: number;
-  }) {
+  public fetchPortfolioPerformance({ range }: { range: DateRange }) {
     return this.http.get<PortfolioPerformanceResponse>(
-      `/api/v${version}/portfolio/performance`,
+      `/api/v2/portfolio/performance`,
       { params: { range } }
     );
   }

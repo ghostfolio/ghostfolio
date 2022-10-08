@@ -107,8 +107,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
-        range: this.user?.settings?.dateRange,
-        version: this.user?.settings?.isExperimentalFeatures ? 2 : 1
+        range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
@@ -117,35 +116,12 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         this.performance = response.performance;
         this.isLoadingPerformance = false;
 
-        if (this.user?.settings?.isExperimentalFeatures) {
-          this.historicalDataItems = response.chart.map(({ date, value }) => {
-            return {
-              date,
-              value
-            };
-          });
-        } else {
-          this.dataService
-            .fetchChart({
-              range: this.user?.settings?.dateRange,
-              version: 1
-            })
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe((chartData) => {
-              this.historicalDataItems = chartData.chart.map(
-                ({ date, value }) => {
-                  return {
-                    date,
-                    value
-                  };
-                }
-              );
-              this.isAllTimeHigh = chartData.isAllTimeHigh;
-              this.isAllTimeLow = chartData.isAllTimeLow;
-
-              this.changeDetectorRef.markForCheck();
-            });
-        }
+        this.historicalDataItems = response.chart.map(({ date, value }) => {
+          return {
+            date,
+            value
+          };
+        });
 
         this.changeDetectorRef.markForCheck();
       });
