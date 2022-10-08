@@ -12,7 +12,6 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
-  PortfolioChart,
   PortfolioDetails,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
@@ -59,55 +58,6 @@ export class PortfolioController {
     private readonly userService: UserService
   ) {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
-  }
-
-  @Get('chart')
-  @UseGuards(AuthGuard('jwt'))
-  public async getChart(
-    @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
-  ): Promise<PortfolioChart> {
-    const historicalDataContainer = await this.portfolioService.getChart(
-      impersonationId,
-      range
-    );
-
-    let chartData = historicalDataContainer.items;
-
-    let hasError = false;
-
-    chartData.forEach((chartDataItem) => {
-      if (hasNotDefinedValuesInObject(chartDataItem)) {
-        hasError = true;
-      }
-    });
-
-    if (
-      impersonationId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      let maxValue = 0;
-
-      chartData.forEach((portfolioItem) => {
-        if (portfolioItem.value > maxValue) {
-          maxValue = portfolioItem.value;
-        }
-      });
-
-      chartData = chartData.map((historicalDataItem) => {
-        return {
-          ...historicalDataItem,
-          marketPrice: Number((historicalDataItem.value / maxValue).toFixed(2))
-        };
-      });
-    }
-
-    return {
-      hasError,
-      chart: chartData,
-      isAllTimeHigh: historicalDataContainer.isAllTimeHigh,
-      isAllTimeLow: historicalDataContainer.isAllTimeLow
-    };
   }
 
   @Get('details')
@@ -272,32 +222,6 @@ export class PortfolioController {
     }
 
     return { firstOrderDate: parseDate(investments[0]?.date), investments };
-  }
-
-  @Get('performance')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getPerformance(
-    @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
-  ): Promise<PortfolioPerformanceResponse> {
-    const performanceInformation = await this.portfolioService.getPerformance(
-      impersonationId,
-      range
-    );
-
-    if (
-      impersonationId ||
-      this.request.user.Settings.settings.viewMode === 'ZEN' ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      performanceInformation.performance = nullifyValuesInObject(
-        performanceInformation.performance,
-        ['currentGrossPerformance', 'currentValue']
-      );
-    }
-
-    return performanceInformation;
   }
 
   @Get('performance')
