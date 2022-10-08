@@ -14,6 +14,7 @@ import {
   format,
   isAfter,
   isBefore,
+  isSameDay,
   isSameMonth,
   isSameYear,
   max,
@@ -187,7 +188,9 @@ export class PortfolioCalculator {
       day = addDays(day, step);
     }
 
-    dates.push(resetHours(end));
+    if (!isSameDay(last(dates), end)) {
+      dates.push(resetHours(end));
+    }
 
     for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
       dataGatheringItems.push({

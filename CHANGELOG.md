@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the performance and chart calculation of today
 - Fixed the alignment of the value component in the admin control panel
 
 ## 1.202.0 - 07.10.2022
