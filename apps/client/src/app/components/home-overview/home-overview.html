@@ -18,6 +18,7 @@
           unit="%"
           [historicalDataItems]="historicalDataItems"
           [hidden]="historicalDataItems?.length === 0"
+          [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
           [locale]="user?.settings?.locale"
           [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
           [showGradient]="true"

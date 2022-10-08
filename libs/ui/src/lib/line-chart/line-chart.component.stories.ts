@@ -230,5 +230,6 @@ Simple.args = {
       date: '2021-03-18',
       value: 86666.03082624623
     }
-  ]
+  ],
+  isAnimated: true
 };

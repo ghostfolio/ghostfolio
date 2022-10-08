@@ -48,7 +48,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkLabel = '';
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
-  @Input() isAnimated = true;
+  @Input() isAnimated = false;
   @Input() locale: string;
   @Input() showGradient = false;
   @Input() showLegend = false;
@@ -66,6 +66,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   public chart: Chart;
   public isLoading = true;
+
+  private readonly ANIMATION_DURATION = 1200;
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {
     Chart.register(
@@ -115,7 +117,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private initialize() {
     this.isLoading = true;
     const benchmarkPrices = [];
-    const labels = [];
+    const labels: string[] = [];
     const marketPrices = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
@@ -164,51 +166,29 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
       ]
     };
 
-    const animationDuration = 1000;
-
-    const delayBetweenPoints = animationDuration / labels.length;
-    const animation = {
-      x: {
-        type: 'number',
-        easing: 'linear',
-        duration: delayBetweenPoints,
-        from: NaN,
-        delay(ctx) {
-          if (ctx.type !== 'data' || ctx.xStarted) {
-            return 0;
-          }
-          ctx.xStarted = true;
-          return ctx.index * delayBetweenPoints;
-        }
-      },
-      y: {
-        type: 'number',
-        easing: 'linear',
-        duration: delayBetweenPoints,
-        from: 0,
-        delay(ctx) {
-          if (ctx.type !== 'data' || ctx.yStarted) {
-            return 0;
-          }
-          ctx.yStarted = true;
-          return ctx.index * delayBetweenPoints;
-        }
-      }
-    };
-
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
         this.chart.options.plugins.tooltip = <unknown>(
           this.getTooltipPluginConfiguration()
         );
-        this.chart.options.animation = this.isAnimated && <unknown>animation;
+        this.chart.options.animation =
+          this.isAnimated &&
+          <unknown>{
+            x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
+            y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
+          };
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
           options: {
-            animation: this.isAnimated && <unknown>animation,
+            animation:
+              this.isAnimated &&
+              <unknown>{
+                x: this.getAnimationConfigurationForAxis({ labels, axis: 'x' }),
+                y: this.getAnimationConfigurationForAxis({ labels, axis: 'y' })
+              },
             aspectRatio: 16 / 9,
             elements: {
               point: {
@@ -289,6 +269,31 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     this.isLoading = false;
+  }
+
+  private getAnimationConfigurationForAxis({
+    axis,
+    labels
+  }: {
+    axis: 'x' | 'y';
+    labels: string[];
+  }) {
+    const delayBetweenPoints = this.ANIMATION_DURATION / labels.length;
+
+    return {
+      delay(context) {
+        if (context.type !== 'data' || context[`${axis}Started`]) {
+          return 0;
+        }
+
+        context[`${axis}Started`] = true;
+        return context.index * delayBetweenPoints;
+      },
+      duration: delayBetweenPoints,
+      easing: 'linear',
+      from: NaN,
+      type: 'number'
+    };
   }
 
   private getTooltipPluginConfiguration() {
