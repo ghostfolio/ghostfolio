@@ -16,6 +16,7 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
+  isToday,
   max,
   min,
   set
@@ -187,7 +188,9 @@ export class PortfolioCalculator {
       day = addDays(day, step);
     }
 
-    dates.push(resetHours(end));
+    if (!isToday(last(dates))) {
+      dates.push(resetHours(end));
+    }
 
     for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
       dataGatheringItems.push({
