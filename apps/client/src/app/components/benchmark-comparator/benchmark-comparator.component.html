@@ -1,8 +1,7 @@
 <div class="row">
   <div class="col-md-6 col-xs-12 d-flex">
     <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
-      <span i18n>Benchmarks</span>
-      <sup i18n>Beta</sup>
+      <span i18n>Performance</span>
       <gf-premium-indicator
         *ngIf="user?.subscription?.type === 'Basic'"
         class="ml-1"
@@ -14,6 +13,7 @@
       appearance="outline"
       class="w-100 without-hint"
       color="accent"
+      [hidden]="benchmarks?.length === 0"
     >
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
@@ -21,6 +21,7 @@
         [value]="benchmark"
         (selectionChange)="onChangeBenchmark($event.value)"
       >
+        <mat-option [value]="null"></mat-option>
         <mat-option
           *ngFor="let symbolProfile of benchmarks"
           [value]="symbolProfile.id"

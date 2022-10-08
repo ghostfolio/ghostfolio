@@ -210,6 +210,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         });
     } else {
+      this.benchmarkDataItems = [];
+
       this.isLoadingBenchmarkComparator = false;
     }
   }
