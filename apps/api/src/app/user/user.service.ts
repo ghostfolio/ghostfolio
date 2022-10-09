@@ -154,6 +154,11 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
+    // Set default appearance value to AUTO
+    if (!(user.Settings.settings as UserSettings).appearance) {
+      (user.Settings.settings as UserSettings).appearance = 'AUTO';
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);

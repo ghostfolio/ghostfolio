@@ -215,6 +215,12 @@ enum ViewMode {
   ZEN
 }
 
+enum Appearance {
+  AUTO
+  LIGHT
+  DARK
+}
+
 enum Provider {
   ANONYMOUS
   GOOGLE
