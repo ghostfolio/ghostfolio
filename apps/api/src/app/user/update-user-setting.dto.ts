@@ -51,4 +51,8 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
+
+  @IsIn(<Appearance[]>['AUTO', 'DARK', 'LIGHT'])
+  @IsOptional()
+  appearance?: Appearance;
 }

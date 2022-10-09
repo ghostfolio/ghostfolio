@@ -23,5 +23,6 @@ export type {
   OrderWithAccount,
   RequestWithUser,
   ToggleOption,
-  ViewMode
+  ViewMode,
+  Appearance
 };
