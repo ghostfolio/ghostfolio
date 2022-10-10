@@ -1,6 +1,7 @@
 import { DateRange, ViewMode, Appearance } from '@ghostfolio/common/types';
 
 export interface UserSettings {
+  appearance?: Appearance;
   baseCurrency?: string;
   benchmark?: string;
   dateRange?: DateRange;
@@ -10,5 +11,4 @@ export interface UserSettings {
   language?: string;
   locale?: string;
   viewMode?: ViewMode;
-  appearance?: Appearance;
 }
