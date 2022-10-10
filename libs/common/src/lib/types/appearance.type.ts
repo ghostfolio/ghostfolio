@@ -1,1 +1,1 @@
-export type Appearance = 'AUTO' | 'LIGHT' | 'DARK';
+export type Appearance = 'LIGHT' | 'DARK';

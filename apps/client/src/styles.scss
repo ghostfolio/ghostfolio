@@ -97,6 +97,12 @@ body {
         color: rgba(var(--light-primary-text));
       }
     }
+
+    .with-placeholder-as-option {
+      .mat-select-placeholder {
+        color: rgba(var(--light-primary-text));
+      }
+    }
   }
 }
 
@@ -227,4 +233,10 @@ ngx-skeleton-loader {
 
 .with-info-message {
   height: calc(100vh - 5rem - 3.5rem) !important;
+}
+
+.with-placeholder-as-option {
+  .mat-select-placeholder {
+    color: rgba(var(--dark-primary-text));
+  }
 }

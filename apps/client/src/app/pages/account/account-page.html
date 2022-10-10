@@ -204,8 +204,10 @@
                       [disabled]="!hasPermissionToUpdateUserSettings"
                       [value]="user.settings.appearance"
                       (selectionChange)="onChangeUserSetting('appearance', $event.value)"
+                      placeholder="AUTO"
+                      class="with-placeholder-as-option"
                     >
-                      <mat-option value="AUTO">AUTO</mat-option>
+                      <mat-option [value]="null">AUTO</mat-option>
                       <mat-option value="LIGHT">LIGHT</mat-option>
                       <mat-option value="DARK">DARK</mat-option>
                     </mat-select>
