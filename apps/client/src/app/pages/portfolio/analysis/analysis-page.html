@@ -10,7 +10,7 @@
         [daysInMarket]="daysInMarket"
         [isLoading]="isLoadingBenchmarkComparator"
         [locale]="user?.settings?.locale"
-        [performanceDataItems]="performanceDataItems"
+        [performanceDataItems]="performanceDataItemsInPercentage"
         [user]="user"
         (benchmarkChanged)="onChangeBenchmark($event)"
         (dateRangeChanged)="onChangeDateRange($event)"
@@ -119,12 +119,14 @@
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
+          [benchmarkDataItems]="performanceDataItems"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [investments]="investments"
           [locale]="user?.settings?.locale"
           [ngClass]="{ 'd-none': mode }"
+          [range]="user?.settings?.dateRange"
         ></gf-investment-chart>
         <gf-investment-chart
           class="h-100"
@@ -135,6 +137,7 @@
           [investments]="investmentsByMonth"
           [locale]="user?.settings?.locale"
           [ngClass]="{ 'd-none': !mode }"
+          [range]="user?.settings?.dateRange"
           [savingsRate]="(hasImpersonationId || user.settings.isRestrictedView) ? undefined : user?.settings?.savingsRate"
         ></gf-investment-chart>
       </div>

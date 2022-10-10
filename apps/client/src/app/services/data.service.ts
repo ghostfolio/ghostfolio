@@ -163,23 +163,15 @@ export class DataService {
     return info;
   }
 
-  public fetchInvestments(): Observable<PortfolioInvestments> {
-    return this.http.get<any>('/api/v1/portfolio/investments').pipe(
-      map((response) => {
-        if (response.firstOrderDate) {
-          response.firstOrderDate = parseISO(response.firstOrderDate);
-        }
-
-        return response;
-      })
-    );
-  }
-
-  public fetchInvestmentsByMonth(): Observable<PortfolioInvestments> {
+  public fetchInvestments({
+    groupBy,
+    range
+  }: {
+    groupBy?: 'month';
+    range: DateRange;
+  }): Observable<PortfolioInvestments> {
     return this.http
-      .get<any>('/api/v1/portfolio/investments', {
-        params: { groupBy: 'month' }
-      })
+      .get<any>('/api/v1/portfolio/investments', { params: { groupBy, range } })
       .pipe(
         map((response) => {
           if (response.firstOrderDate) {

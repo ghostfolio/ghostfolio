@@ -68,7 +68,7 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('range') range?: DateRange,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasError = false;
@@ -88,9 +88,9 @@ export class PortfolioController {
       summary,
       totalValueInBaseCurrency
     } = await this.portfolioService.getDetails({
+      dateRange,
       filters,
       impersonationId,
-      dateRange: range,
       userId: this.request.user.id
     });
 
@@ -183,6 +183,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'))
   public async getInvestments(
     @Headers('impersonation-id') impersonationId: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('groupBy') groupBy?: GroupBy
   ): Promise<PortfolioInvestments> {
     if (
@@ -198,12 +199,16 @@ export class PortfolioController {
     let investments: InvestmentItem[];
 
     if (groupBy === 'month') {
-      investments = await this.portfolioService.getInvestments(
+      investments = await this.portfolioService.getInvestments({
+        dateRange,
         impersonationId,
-        'month'
-      );
+        groupBy: 'month'
+      });
     } else {
-      investments = await this.portfolioService.getInvestments(impersonationId);
+      investments = await this.portfolioService.getInvestments({
+        dateRange,
+        impersonationId
+      });
     }
 
     if (
@@ -230,7 +235,7 @@ export class PortfolioController {
   @Version('2')
   public async getPerformanceV2(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') dateRange
+    @Query('range') dateRange: DateRange = 'max'
   ): Promise<PortfolioPerformanceResponse> {
     const performanceInformation = await this.portfolioService.getPerformanceV2(
       {
@@ -258,11 +263,11 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
+    @Query('range') dateRange: DateRange = 'max'
   ): Promise<PortfolioPositions> {
     const result = await this.portfolioService.getPositions(
       impersonationId,
-      range
+      dateRange
     );
 
     if (

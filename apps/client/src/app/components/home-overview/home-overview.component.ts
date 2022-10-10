@@ -116,12 +116,14 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         this.performance = response.performance;
         this.isLoadingPerformance = false;
 
-        this.historicalDataItems = response.chart.map(({ date, value }) => {
-          return {
-            date,
-            value
-          };
-        });
+        this.historicalDataItems = response.chart.map(
+          ({ date, netPerformanceInPercentage }) => {
+            return {
+              date,
+              value: netPerformanceInPercentage
+            };
+          }
+        );
 
         this.changeDetectorRef.markForCheck();
       });

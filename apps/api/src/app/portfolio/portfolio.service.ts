@@ -207,11 +207,16 @@ export class PortfolioService {
     };
   }
 
-  public async getInvestments(
-    aImpersonationId: string,
-    groupBy?: GroupBy
-  ): Promise<InvestmentItem[]> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+  public async getInvestments({
+    dateRange,
+    impersonationId,
+    groupBy
+  }: {
+    dateRange: DateRange;
+    impersonationId: string;
+    groupBy?: GroupBy;
+  }): Promise<InvestmentItem[]> {
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -283,98 +288,18 @@ export class PortfolioService {
       }
     }
 
-    return sortBy(investments, (investment) => {
+    investments = sortBy(investments, (investment) => {
       return investment.date;
     });
-  }
 
-  public async getChart(
-    aImpersonationId: string,
-    aDateRange: DateRange = 'max'
-  ): Promise<HistoricalDataContainer> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+    const startDate = this.getStartDate(
+      dateRange,
+      parseDate(investments[0]?.date)
+    );
 
-    const { portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        userId
-      });
-
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      orders: portfolioOrders
+    return investments.filter(({ date }) => {
+      return !isBefore(parseDate(date), startDate);
     });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
-    if (transactionPoints.length === 0) {
-      return {
-        isAllTimeHigh: false,
-        isAllTimeLow: false,
-        items: []
-      };
-    }
-    let portfolioStart = parse(
-      transactionPoints[0].date,
-      DATE_FORMAT,
-      new Date()
-    );
-
-    // Get start date for the full portfolio because of because of the
-    // min and max calculation
-    portfolioStart = this.getStartDate('max', portfolioStart);
-
-    const timelineSpecification: TimelineSpecification[] = [
-      {
-        start: format(portfolioStart, DATE_FORMAT),
-        accuracy: 'day'
-      }
-    ];
-
-    const timelineInfo = await portfolioCalculator.calculateTimeline(
-      timelineSpecification,
-      format(new Date(), DATE_FORMAT)
-    );
-
-    const timeline = timelineInfo.timelinePeriods;
-
-    const items = timeline
-      .filter((timelineItem) => timelineItem !== null)
-      .map((timelineItem) => ({
-        date: timelineItem.date,
-        value: timelineItem.netPerformance.toNumber()
-      }));
-
-    let lastItem = null;
-    if (timeline.length > 0) {
-      lastItem = timeline[timeline.length - 1];
-    }
-
-    let isAllTimeHigh = timelineInfo.maxNetPerformance?.eq(
-      lastItem?.netPerformance ?? 0
-    );
-    let isAllTimeLow = timelineInfo.minNetPerformance?.eq(
-      lastItem?.netPerformance ?? 0
-    );
-    if (isAllTimeHigh && isAllTimeLow) {
-      isAllTimeHigh = false;
-      isAllTimeLow = false;
-    }
-
-    portfolioStart = startOfDay(
-      this.getStartDate(
-        aDateRange,
-        parse(transactionPoints[0].date, DATE_FORMAT, new Date())
-      )
-    );
-
-    return {
-      isAllTimeHigh,
-      isAllTimeLow,
-      items: items.filter((item) => {
-        // Filter items of date range
-        return !isAfter(portfolioStart, parseDate(item.date));
-      })
-    };
   }
 
   public async getChartV2({
@@ -441,7 +366,7 @@ export class PortfolioService {
     filters?: Filter[];
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
-    // TODO:
+    // TODO
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
@@ -1035,10 +960,11 @@ export class PortfolioService {
 
     return {
       chart: historicalDataContainer.items.map(
-        ({ date, netPerformanceInPercentage }) => {
+        ({ date, netPerformance, netPerformanceInPercentage }) => {
           return {
             date,
-            value: netPerformanceInPercentage
+            netPerformance,
+            netPerformanceInPercentage
           };
         }
       ),

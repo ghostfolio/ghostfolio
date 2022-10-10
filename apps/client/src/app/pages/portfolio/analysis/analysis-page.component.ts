@@ -39,6 +39,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     { label: $localize`Accumulating`, value: undefined }
   ];
   public performanceDataItems: HistoricalDataItem[];
+  public performanceDataItemsInPercentage: HistoricalDataItem[];
   public top3: Position[];
   public user: User;
 
@@ -131,7 +132,24 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {
         this.firstOrderDate = new Date(chart?.[0]?.date ?? new Date());
-        this.performanceDataItems = chart;
+
+        this.performanceDataItems = [];
+        this.performanceDataItemsInPercentage = [];
+
+        for (const {
+          date,
+          netPerformance,
+          netPerformanceInPercentage
+        } of chart) {
+          this.performanceDataItems.push({
+            date,
+            value: netPerformance
+          });
+          this.performanceDataItemsInPercentage.push({
+            date,
+            value: netPerformanceInPercentage
+          });
+        }
 
         this.updateBenchmarkDataItems();
 
@@ -139,7 +157,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchInvestments()
+      .fetchInvestments({ range: this.user?.settings?.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ firstOrderDate, investments }) => {
         this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
@@ -149,7 +167,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchInvestmentsByMonth()
+      .fetchInvestments({
+        groupBy: 'month',
+        range: this.user?.settings?.dateRange
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ investments }) => {
         this.investmentsByMonth = investments;
