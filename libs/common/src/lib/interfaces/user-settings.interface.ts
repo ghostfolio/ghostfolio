@@ -11,5 +11,4 @@ export interface UserSettings {
   language?: string;
   locale?: string;
   viewMode?: ViewMode;
-  appearance?: Appearance;
 }

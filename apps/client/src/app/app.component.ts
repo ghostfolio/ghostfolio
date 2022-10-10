@@ -101,12 +101,12 @@ export class AppComponent implements OnDestroy, OnInit {
   }
 
   private initializeTheme(userPreferredAppearance: Appearance = 'AUTO') {
-    const setDarkTheme =
+    const isDarkTheme =
       userPreferredAppearance === 'DARK' ||
       (userPreferredAppearance === 'AUTO' &&
         window.matchMedia('(prefers-color-scheme: dark)').matches);
 
-    this.materialCssVarsService.setDarkTheme(setDarkTheme);
+    this.materialCssVarsService.setDarkTheme(isDarkTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       if (!this.user?.settings.appearance) {
