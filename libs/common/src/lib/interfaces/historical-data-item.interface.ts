@@ -4,5 +4,6 @@ export interface HistoricalDataItem {
   grossPerformancePercent?: number;
   netPerformance?: number;
   netPerformanceInPercentage?: number;
+  totalInvestment?: number;
   value?: number;
 }

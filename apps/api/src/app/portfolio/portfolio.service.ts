@@ -904,6 +904,7 @@ export class PortfolioService {
     if (transactionPoints?.length <= 0) {
       return {
         chart: [],
+        firstOrderDate: undefined,
         hasErrors: false,
         performance: {
           currentGrossPerformance: 0,
@@ -960,15 +961,24 @@ export class PortfolioService {
 
     return {
       chart: historicalDataContainer.items.map(
-        ({ date, netPerformance, netPerformanceInPercentage }) => {
+        ({
+          date,
+          netPerformance,
+          netPerformanceInPercentage,
+          totalInvestment,
+          value
+        }) => {
           return {
             date,
             netPerformance,
-            netPerformanceInPercentage
+            netPerformanceInPercentage,
+            totalInvestment,
+            value
           };
         }
       ),
       errors: currentPositions.errors,
+      firstOrderDate: parseDate(historicalDataContainer.items[0]?.date),
       hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
         currentValue,

@@ -22,6 +22,7 @@ import {
   parseDate,
   transformTickToAbbreviation
 } from '@ghostfolio/common/helper';
+import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { DateRange, GroupBy } from '@ghostfolio/common/types';
 import {
@@ -36,15 +37,7 @@ import {
   Tooltip
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import {
-  addDays,
-  format,
-  isAfter,
-  isBefore,
-  parseISO,
-  subDays
-} from 'date-fns';
-import { LineChartItem } from '@ghostfolio/common/interfaces';
+import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -128,26 +121,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       });
     }
 
-    let currentIndex = 0;
-    const totalAmountDataItems: { x: Date; y: number }[] = [];
-
-    for (const { date, value } of this.benchmarkDataItems) {
-      // TODO: Improve total amount calculation
-      if (
-        isBefore(parseDate(this.data?.[currentIndex]?.date), parseDate(date))
-      ) {
-        currentIndex += 1;
-      }
-
-      totalAmountDataItems.push({
-        x: parseDate(date),
-        y: this.data?.[currentIndex]?.investment + value
-      });
-    }
-
     const data = {
       labels: this.benchmarkDataItems.map(({ date }) => {
-        return date;
+        return parseDate(date);
       }),
       datasets: [
         {
@@ -174,7 +150,12 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         {
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 1,
-          data: totalAmountDataItems,
+          data: this.benchmarkDataItems.map(({ date, value }) => {
+            return {
+              x: parseDate(date),
+              y: value
+            };
+          }),
           fill: false,
           label: $localize`Total Amount`,
           pointRadius: 0

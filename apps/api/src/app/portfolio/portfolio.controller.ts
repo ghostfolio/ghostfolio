@@ -226,7 +226,7 @@ export class PortfolioController {
       }));
     }
 
-    return { firstOrderDate: parseDate(investments[0]?.date), investments };
+    return { investments };
   }
 
   @Get('performance')

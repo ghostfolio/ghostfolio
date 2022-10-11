@@ -130,20 +130,24 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ chart }) => {
-        this.firstOrderDate = new Date(chart?.[0]?.date ?? new Date());
+      .subscribe(({ chart, firstOrderDate }) => {
+        this.firstOrderDate = firstOrderDate ?? new Date();
+        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
+        this.investments = [];
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
 
         for (const {
           date,
-          netPerformance,
-          netPerformanceInPercentage
+          netPerformanceInPercentage,
+          totalInvestment,
+          value
         } of chart) {
+          this.investments.push({ date, investment: totalInvestment });
           this.performanceDataItems.push({
             date,
-            value: netPerformance
+            value
           });
           this.performanceDataItemsInPercentage.push({
             date,
@@ -152,16 +156,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         }
 
         this.updateBenchmarkDataItems();
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchInvestments({ range: this.user?.settings?.dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ firstOrderDate, investments }) => {
-        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
-        this.investments = investments;
 
         this.changeDetectorRef.markForCheck();
       });

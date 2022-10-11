@@ -169,18 +169,11 @@ export class DataService {
   }: {
     groupBy?: 'month';
     range: DateRange;
-  }): Observable<PortfolioInvestments> {
-    return this.http
-      .get<any>('/api/v1/portfolio/investments', { params: { groupBy, range } })
-      .pipe(
-        map((response) => {
-          if (response.firstOrderDate) {
-            response.firstOrderDate = parseISO(response.firstOrderDate);
-          }
-
-          return response;
-        })
-      );
+  }) {
+    return this.http.get<PortfolioInvestments>(
+      '/api/v1/portfolio/investments',
+      { params: { groupBy, range } }
+    );
   }
 
   public fetchSymbolItem({
@@ -244,11 +237,22 @@ export class DataService {
       );
   }
 
-  public fetchPortfolioPerformance({ range }: { range: DateRange }) {
-    return this.http.get<PortfolioPerformanceResponse>(
-      `/api/v2/portfolio/performance`,
-      { params: { range } }
-    );
+  public fetchPortfolioPerformance({
+    range
+  }: {
+    range: DateRange;
+  }): Observable<PortfolioPerformanceResponse> {
+    return this.http
+      .get<any>(`/api/v2/portfolio/performance`, { params: { range } })
+      .pipe(
+        map((response) => {
+          if (response.firstOrderDate) {
+            response.firstOrderDate = parseISO(response.firstOrderDate);
+          }
+
+          return response;
+        })
+      );
   }
 
   public fetchPortfolioPublic(aId: string) {
