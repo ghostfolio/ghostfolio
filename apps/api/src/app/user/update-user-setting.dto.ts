@@ -1,4 +1,4 @@
-import type { DateRange, ViewMode } from '@ghostfolio/common/types';
+import type { Appearance, DateRange, ViewMode } from '@ghostfolio/common/types';
 import {
   IsBoolean,
   IsIn,
@@ -47,4 +47,8 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
+
+  @IsIn(<Appearance[]>['DARK', 'LIGHT'])
+  @IsOptional()
+  appearance?: Appearance;
 }

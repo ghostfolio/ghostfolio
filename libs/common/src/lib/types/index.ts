@@ -9,6 +9,7 @@ import type { OrderWithAccount } from './order-with-account.type';
 import type { RequestWithUser } from './request-with-user.type';
 import { ToggleOption } from './toggle-option.type';
 import type { ViewMode } from './view-mode.type';
+import type { Appearance } from './appearance.type';
 
 export type {
   AccessWithGranteeUser,
@@ -21,5 +22,6 @@ export type {
   OrderWithAccount,
   RequestWithUser,
   ToggleOption,
-  ViewMode
+  ViewMode,
+  Appearance
 };

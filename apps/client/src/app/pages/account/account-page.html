@@ -167,7 +167,7 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="d-flex">
+              <div class="d-flex mb-2">
                 <div class="align-items-center d-flex pr-1 pt-1 w-50">
                   <ng-container i18n>View Mode</ng-container>
                 </div>
@@ -188,6 +188,30 @@
                       </mat-select>
                     </mat-form-field>
                   </div>
+                </div>
+              </div>
+              <div class="d-flex">
+                <div class="align-items-center d-flex pr-1 pt-1 w-50">
+                  <ng-container i18n>Appearance</ng-container>
+                </div>
+                <div class="pl-1 w-50">
+                  <mat-form-field
+                    appearance="outline"
+                    class="compact-with-outline w-100 without-hint"
+                  >
+                    <mat-select
+                      name="appearance"
+                      [disabled]="!hasPermissionToUpdateUserSettings"
+                      [value]="user.settings.appearance"
+                      (selectionChange)="onChangeUserSetting('appearance', $event.value)"
+                      placeholder="AUTO"
+                      class="with-placeholder-as-option"
+                    >
+                      <mat-option [value]="null">AUTO</mat-option>
+                      <mat-option value="LIGHT">LIGHT</mat-option>
+                      <mat-option value="DARK">DARK</mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
               </div>
             </form>

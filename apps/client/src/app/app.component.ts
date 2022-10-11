@@ -13,6 +13,7 @@ import {
 } from '@ghostfolio/common/config';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { Appearance } from '@ghostfolio/common/types';
 import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -77,6 +78,8 @@ export class AppComponent implements OnDestroy, OnInit {
           permissions.createUserAccount
         );
 
+        this.initializeTheme(this.user?.settings.appearance);
+
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -97,10 +100,12 @@ export class AppComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private initializeTheme() {
-    this.materialCssVarsService.setDarkTheme(
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    );
+  private initializeTheme(userPreferredAppearance?: Appearance) {
+    const isDarkTheme = userPreferredAppearance
+      ? userPreferredAppearance === 'DARK'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    this.materialCssVarsService.setDarkTheme(isDarkTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       this.materialCssVarsService.setDarkTheme(event.matches);
