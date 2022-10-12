@@ -201,15 +201,15 @@
                   >
                     <mat-select
                       name="appearance"
+                      class="with-placeholder-as-option"
                       [disabled]="!hasPermissionToUpdateUserSettings"
+                      [placeholder]="appearancePlaceholder"
                       [value]="user.settings.appearance"
                       (selectionChange)="onChangeUserSetting('appearance', $event.value)"
-                      placeholder="AUTO"
-                      class="with-placeholder-as-option"
                     >
-                      <mat-option [value]="null">AUTO</mat-option>
-                      <mat-option value="LIGHT">LIGHT</mat-option>
-                      <mat-option value="DARK">DARK</mat-option>
+                      <mat-option i18n [value]="null">Auto</mat-option>
+                      <mat-option i18n value="LIGHT">Light</mat-option>
+                      <mat-option i18n value="DARK">Dark</mat-option>
                     </mat-select>
                   </mat-form-field>
                 </div>

@@ -108,7 +108,9 @@ export class AppComponent implements OnDestroy, OnInit {
     this.materialCssVarsService.setDarkTheme(isDarkTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
-      this.materialCssVarsService.setDarkTheme(event.matches);
+      if (!this.user?.settings.appearance) {
+        this.materialCssVarsService.setDarkTheme(event.matches);
+      }
     });
 
     this.materialCssVarsService.setPrimaryColor(primaryColorHex);

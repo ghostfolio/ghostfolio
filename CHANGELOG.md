@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to change the appearance (dark mode) in user settings
+
 ### Changed
 
 - Simplified the settings management in the admin control panel

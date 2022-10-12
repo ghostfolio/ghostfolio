@@ -8,6 +8,10 @@ import {
 } from 'class-validator';
 
 export class UpdateUserSettingDto {
+  @IsIn(<Appearance[]>['DARK', 'LIGHT'])
+  @IsOptional()
+  appearance?: Appearance;
+
   @IsOptional()
   @IsString()
   baseCurrency?: string;
@@ -47,8 +51,4 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
-
-  @IsIn(<Appearance[]>['DARK', 'LIGHT'])
-  @IsOptional()
-  appearance?: Appearance;
 }
