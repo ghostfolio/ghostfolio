@@ -181,6 +181,7 @@
     "jest-preset-angular": "12.2.2",
     "nx": "14.6.4",
     "prettier": "2.7.1",
+    "prettier-plugin-organize-attributes": "0.0.5",
     "replace-in-file": "6.2.0",
     "rimraf": "3.0.2",
     "ts-jest": "28.0.8",
