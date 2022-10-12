@@ -42,6 +42,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   signInWithFingerprintElement: MatSlideToggle;
 
   public accesses: Access[];
+  public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;

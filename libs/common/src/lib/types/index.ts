@@ -12,6 +12,7 @@ import type { ViewMode } from './view-mode.type';
 import type { Appearance } from './appearance.type';
 
 export type {
+  Appearance,
   AccessWithGranteeUser,
   AccountWithValue,
   DateRange,
@@ -22,6 +23,5 @@ export type {
   OrderWithAccount,
   RequestWithUser,
   ToggleOption,
-  ViewMode,
-  Appearance
+  ViewMode
 };
