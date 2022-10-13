@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simplified the settings management in the admin control panel
 
+### Fixed
+
+- Fixed some links in the blog posts
+
 ## 1.203.0 - 08.10.2022
 
 ### Added
