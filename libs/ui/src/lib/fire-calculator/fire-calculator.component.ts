@@ -25,6 +25,7 @@ import {
   Tooltip
 } from 'chart.js';
 import * as Color from 'color';
+import { getMonth } from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -49,6 +50,8 @@ export class FireCalculatorComponent
   @Output() savingsRateChanged = new EventEmitter<number>();
 
   @ViewChild('chartCanvas') chartCanvas;
+
+  private readonly CONTRIBUTION_PERIOD = 12;
 
   public calculatorForm = this.formBuilder.group({
     annualInterestRate: new FormControl<number>(undefined),
@@ -296,11 +299,15 @@ export class FireCalculatorComponent
       label: $localize`Savings`
     };
 
+    const monthsPassedInCurrentYear = getMonth(new Date());
+
     for (let period = 1; period <= t; period++) {
+      const periodInMonths =
+        period * this.CONTRIBUTION_PERIOD - monthsPassedInCurrentYear;
       const { interest, principal, totalAmount } =
         this.fireCalculatorService.calculateCompoundInterest({
           P,
-          period,
+          periodInMonths,
           PMT,
           r
         });
