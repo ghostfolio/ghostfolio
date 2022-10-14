@@ -26,7 +26,7 @@ export interface Environment extends CleanedEnvAccessors {
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_ITEM_IN_CACHE: number;
   PORT: number;
-  RAKUTEN_RAPID_API_KEY: string;
+  RAPID_API_API_KEY: string;
   REDIS_HOST: string;
   REDIS_PASSWORD: string;
   REDIS_PORT: number;

@@ -5,7 +5,7 @@ import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider
 import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
-import { RakutenRapidApiService } from '@ghostfolio/api/services/data-provider/rakuten-rapid-api/rakuten-rapid-api.service';
+import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
@@ -27,7 +27,7 @@ import { DataProviderService } from './data-provider.service';
     GhostfolioScraperApiService,
     GoogleSheetsService,
     ManualService,
-    RakutenRapidApiService,
+    RapidApiService,
     YahooFinanceService,
     {
       inject: [
@@ -36,7 +36,7 @@ import { DataProviderService } from './data-provider.service';
         GhostfolioScraperApiService,
         GoogleSheetsService,
         ManualService,
-        RakutenRapidApiService,
+        RapidApiService,
         YahooFinanceService
       ],
       provide: 'DataProviderInterfaces',
@@ -46,7 +46,7 @@ import { DataProviderService } from './data-provider.service';
         ghostfolioScraperApiService,
         googleSheetsService,
         manualService,
-        rakutenRapidApiService,
+        rapidApiService,
         yahooFinanceService
       ) => [
         alphaVantageService,
@@ -54,7 +54,7 @@ import { DataProviderService } from './data-provider.service';
         ghostfolioScraperApiService,
         googleSheetsService,
         manualService,
-        rakutenRapidApiService,
+        rapidApiService,
         yahooFinanceService
       ]
     }

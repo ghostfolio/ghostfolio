@@ -207,6 +207,7 @@ enum DataSource {
   GOOGLE_SHEETS
   MANUAL
   RAKUTEN
+  RAPID_API
   YAHOO
 }
 
