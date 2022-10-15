@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed some links in the blog posts
+- Fixed the alignment of the value component on the allocations page
 
 ### Todo
 
