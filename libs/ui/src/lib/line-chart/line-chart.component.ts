@@ -231,8 +231,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
                 },
                 max: this.yMax,
                 min: this.yMin,
+                position: 'right',
                 ticks: {
-                  display: this.showYAxis,
                   callback: (tickValue, index, ticks) => {
                     if (index === 0 || index === ticks.length - 1) {
                       // Only print last and first legend entry
@@ -254,6 +254,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
                     return '';
                   },
+                  display: this.showYAxis,
                   mirror: true,
                   z: 1
                 },
