@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Respected the current date in the _FIRE_ calculator
 - Simplified the settings management in the admin control panel
 - Renamed the data source type `RAKUTEN` to `RAPID_API`
 
