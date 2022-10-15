@@ -287,7 +287,10 @@ export class PortfolioCalculator {
         date,
         netPerformanceInPercentage,
         netPerformance: totalNetPerformanceValues[date].toNumber(),
-        value: netPerformanceInPercentage
+        totalInvestment: totalInvestmentValues[date].toNumber(),
+        value: totalInvestmentValues[date]
+          .plus(totalNetPerformanceValues[date])
+          .toNumber()
       };
     });
   }

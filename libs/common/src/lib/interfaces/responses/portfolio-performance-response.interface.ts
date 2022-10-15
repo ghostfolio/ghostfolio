@@ -4,5 +4,6 @@ import { ResponseError } from './errors.interface';
 
 export interface PortfolioPerformanceResponse extends ResponseError {
   chart?: HistoricalDataItem[];
+  firstOrderDate: Date;
   performance: PortfolioPerformance;
 }

@@ -5,4 +5,5 @@ export interface PortfolioPerformance {
   currentNetPerformance: number;
   currentNetPerformancePercent: number;
   currentValue: number;
+  totalInvestment: number;
 }

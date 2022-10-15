@@ -38,6 +38,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import Big from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
@@ -68,7 +69,7 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('range') range?: DateRange,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasError = false;
@@ -88,9 +89,9 @@ export class PortfolioController {
       summary,
       totalValueInBaseCurrency
     } = await this.portfolioService.getDetails({
+      dateRange,
       filters,
       impersonationId,
-      dateRange: range,
       userId: this.request.user.id
     });
 
@@ -183,6 +184,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'))
   public async getInvestments(
     @Headers('impersonation-id') impersonationId: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('groupBy') groupBy?: GroupBy
   ): Promise<PortfolioInvestments> {
     if (
@@ -198,12 +200,16 @@ export class PortfolioController {
     let investments: InvestmentItem[];
 
     if (groupBy === 'month') {
-      investments = await this.portfolioService.getInvestments(
+      investments = await this.portfolioService.getInvestments({
+        dateRange,
         impersonationId,
-        'month'
-      );
+        groupBy: 'month'
+      });
     } else {
-      investments = await this.portfolioService.getInvestments(impersonationId);
+      investments = await this.portfolioService.getInvestments({
+        dateRange,
+        impersonationId
+      });
     }
 
     if (
@@ -221,7 +227,7 @@ export class PortfolioController {
       }));
     }
 
-    return { firstOrderDate: parseDate(investments[0]?.date), investments };
+    return { investments };
   }
 
   @Get('performance')
@@ -230,7 +236,7 @@ export class PortfolioController {
   @Version('2')
   public async getPerformanceV2(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') dateRange
+    @Query('range') dateRange: DateRange = 'max'
   ): Promise<PortfolioPerformanceResponse> {
     const performanceInformation = await this.portfolioService.getPerformanceV2(
       {
@@ -244,9 +250,29 @@ export class PortfolioController {
       this.request.user.Settings.settings.viewMode === 'ZEN' ||
       this.userService.isRestrictedView(this.request.user)
     ) {
+      performanceInformation.chart = performanceInformation.chart.map(
+        ({ date, netPerformanceInPercentage, totalInvestment, value }) => {
+          return {
+            date,
+            netPerformanceInPercentage,
+            totalInvestment: new Big(totalInvestment)
+              .div(performanceInformation.performance.totalInvestment)
+              .toNumber(),
+            value: new Big(value)
+              .div(performanceInformation.performance.currentValue)
+              .toNumber()
+          };
+        }
+      );
+
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
-        ['currentGrossPerformance', 'currentNetPerformance', 'currentValue']
+        [
+          'currentGrossPerformance',
+          'currentNetPerformance',
+          'currentValue',
+          'totalInvestment'
+        ]
       );
     }
 
@@ -258,11 +284,11 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') range
+    @Query('range') dateRange: DateRange = 'max'
   ): Promise<PortfolioPositions> {
     const result = await this.portfolioService.getPositions(
       impersonationId,
-      range
+      dateRange
     );
 
     if (

@@ -24,7 +24,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
   public fearLabel = $localize`Fear`;
   public greedLabel = $localize`Greed`;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public historicalData: HistoricalDataItem[];
+  public historicalDataItems: HistoricalDataItem[];
   public info: InfoItem;
   public isLoading = true;
   public readonly numberOfDays = 180;
@@ -67,7 +67,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(({ historicalData, marketPrice }) => {
           this.fearAndGreedIndex = marketPrice;
-          this.historicalData = [
+          this.historicalDataItems = [
             ...historicalData,
             {
               date: resetHours(new Date()).toISOString(),

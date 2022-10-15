@@ -1,5 +1,13 @@
 <div class="container">
-  <h3 class="d-flex justify-content-center mb-3" i18n>Analysis</h3>
+  <h3 class="d-flex justify-content-center" i18n>Analysis</h3>
+  <div *ngIf="user?.settings?.viewMode !== 'ZEN'" class="my-4 text-center">
+    <gf-toggle
+      [defaultValue]="user?.settings?.dateRange"
+      [isLoading]="isLoadingBenchmarkComparator"
+      [options]="dateRangeOptions"
+      (change)="onChangeDateRange($event.value)"
+    ></gf-toggle>
+  </div>
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator
@@ -10,10 +18,9 @@
         [daysInMarket]="daysInMarket"
         [isLoading]="isLoadingBenchmarkComparator"
         [locale]="user?.settings?.locale"
-        [performanceDataItems]="performanceDataItems"
+        [performanceDataItems]="performanceDataItemsInPercentage"
         [user]="user"
         (benchmarkChanged)="onChangeBenchmark($event)"
-        (dateRangeChanged)="onChangeDateRange($event)"
       ></gf-benchmark-comparator>
     </div>
   </div>
@@ -96,6 +103,34 @@
     </div>
   </div>
 
+  <div class="mb-5 row">
+    <div class="col-lg">
+      <div class="align-items-center d-flex mb-4">
+        <div
+          class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
+        >
+          <span i18n>Portfolio Evolution</span>
+          <gf-premium-indicator
+            *ngIf="user?.subscription?.type === 'Basic'"
+            class="ml-1"
+          ></gf-premium-indicator>
+        </div>
+      </div>
+      <div class="chart-container">
+        <gf-investment-chart
+          class="h-100"
+          [benchmarkDataItems]="performanceDataItems"
+          [currency]="user?.settings?.baseCurrency"
+          [daysInMarket]="daysInMarket"
+          [investments]="investments"
+          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [locale]="user?.settings?.locale"
+          [range]="user?.settings?.dateRange"
+        ></gf-investment-chart>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-lg">
       <div class="align-items-center d-flex mb-4">
@@ -119,22 +154,13 @@
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
-          [currency]="user?.settings?.baseCurrency"
-          [daysInMarket]="daysInMarket"
-          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-          [investments]="investments"
-          [locale]="user?.settings?.locale"
-          [ngClass]="{ 'd-none': mode }"
-        ></gf-investment-chart>
-        <gf-investment-chart
-          class="h-100"
           groupBy="month"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
-          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [investments]="investmentsByMonth"
+          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
-          [ngClass]="{ 'd-none': !mode }"
+          [range]="user?.settings?.dateRange"
           [savingsRate]="(hasImpersonationId || user.settings.isRestrictedView) ? undefined : user?.settings?.savingsRate"
         ></gf-investment-chart>
       </div>
