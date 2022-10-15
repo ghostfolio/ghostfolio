@@ -51,8 +51,6 @@ export class FireCalculatorComponent
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  private readonly CONTRIBUTION_PERIOD = 12;
-
   public calculatorForm = this.formBuilder.group({
     annualInterestRate: new FormControl<number>(undefined),
     paymentPerPeriod: new FormControl<number>(undefined),
@@ -63,6 +61,7 @@ export class FireCalculatorComponent
   public isLoading = true;
   public projectedTotalAmount: number;
 
+  private readonly CONTRIBUTION_PERIOD = 12;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -235,6 +234,7 @@ export class FireCalculatorComponent
                 grid: {
                   display: false
                 },
+                position: 'right',
                 stacked: true,
                 ticks: {
                   callback: (value: number) => {
