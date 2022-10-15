@@ -1,4 +1,13 @@
 {
+  "attributeGroups": [
+    "$ANGULAR_ELEMENT_REF",
+    "$ANGULAR_STRUCTURAL_DIRECTIVE",
+    "$DEFAULT",
+    "$ANGULAR_INPUT",
+    "$ANGULAR_TWO_WAY_BINDING",
+    "$ANGULAR_OUTPUT"
+  ],
+  "attributeSort": "ASC",
   "endOfLine": "auto",
   "printWidth": 80,
   "singleQuote": true,

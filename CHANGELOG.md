@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support to change the appearance (dark mode) in user settings
+- Setup the `prettier` plugin `prettier-plugin-organize-attributes`
 
 ### Changed
 
