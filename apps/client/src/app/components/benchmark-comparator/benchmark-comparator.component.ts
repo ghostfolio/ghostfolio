@@ -10,7 +10,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
@@ -24,7 +23,6 @@ import {
   parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
 import {
   Chart,
   LineController,
@@ -54,12 +52,10 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() user: User;
 
   @Output() benchmarkChanged = new EventEmitter<string>();
-  @Output() dateRangeChanged = new EventEmitter<DateRange>();
 
   @ViewChild('chartCanvas') chartCanvas;
 
   public chart: Chart<any>;
-  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
 
   public constructor() {
     Chart.register(
@@ -84,10 +80,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   public onChangeBenchmark(symbolProfileId: string) {
     this.benchmarkChanged.next(symbolProfileId);
-  }
-
-  public onChangeDateRange(dateRange: DateRange) {
-    this.dateRangeChanged.next(dateRange);
   }
 
   public ngOnDestroy() {

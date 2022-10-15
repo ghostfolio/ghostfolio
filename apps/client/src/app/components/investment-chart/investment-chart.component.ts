@@ -153,7 +153,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           data: this.benchmarkDataItems.map(({ date, value }) => {
             return {
               x: parseDate(date),
-              y: value
+              y: this.isInPercent ? value * 100 : value
             };
           }),
           fill: false,

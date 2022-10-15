@@ -911,7 +911,8 @@ export class PortfolioService {
           currentGrossPerformancePercent: 0,
           currentNetPerformance: 0,
           currentNetPerformancePercent: 0,
-          currentValue: 0
+          currentValue: 0,
+          totalInvestment: 0
         }
       };
     }
@@ -932,6 +933,7 @@ export class PortfolioService {
     let currentNetPerformance = currentPositions.netPerformance;
     let currentNetPerformancePercent =
       currentPositions.netPerformancePercentage;
+    const totalInvestment = currentPositions.totalInvestment;
 
     // if (currentGrossPerformance.mul(currentGrossPerformancePercent).lt(0)) {
     //   // If algebraic sign is different, harmonize it
@@ -986,7 +988,8 @@ export class PortfolioService {
         currentGrossPerformancePercent:
           currentGrossPerformancePercent.toNumber(),
         currentNetPerformance: currentNetPerformance.toNumber(),
-        currentNetPerformancePercent: currentNetPerformancePercent.toNumber()
+        currentNetPerformancePercent: currentNetPerformancePercent.toNumber(),
+        totalInvestment: totalInvestment.toNumber()
       }
     };
   }

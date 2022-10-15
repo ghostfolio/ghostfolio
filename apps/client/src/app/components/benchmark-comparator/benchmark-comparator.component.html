@@ -1,4 +1,4 @@
-<div class="row">
+<div class="mb-2 row">
   <div class="col-md-6 col-xs-12 d-flex">
     <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
       <span i18n>Performance</span>
@@ -30,14 +30,6 @@
       </mat-select>
     </mat-form-field>
   </div>
-</div>
-<div *ngIf="user.settings.viewMode !== 'ZEN'" class="my-2 text-center">
-  <gf-toggle
-    [defaultValue]="user?.settings?.dateRange"
-    [isLoading]="isLoading"
-    [options]="dateRangeOptions"
-    (change)="onChangeDateRange($event.value)"
-  ></gf-toggle>
 </div>
 <div class="chart-container">
   <ngx-skeleton-loader
