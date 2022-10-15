@@ -280,7 +280,7 @@ export class DataGatheringService {
         return (
           dataSource !== DataSource.GHOSTFOLIO &&
           dataSource !== DataSource.MANUAL &&
-          dataSource !== DataSource.RAKUTEN
+          dataSource !== DataSource.RAPID_API
         );
       })
       .map(({ dataSource, symbol }) => {

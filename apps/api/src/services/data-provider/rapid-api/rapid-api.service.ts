@@ -15,14 +15,14 @@ import bent from 'bent';
 import { format, subMonths, subWeeks, subYears } from 'date-fns';
 
 @Injectable()
-export class RakutenRapidApiService implements DataProviderInterface {
+export class RapidApiService implements DataProviderInterface {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService
   ) {}
 
   public canHandle(symbol: string) {
-    return !!this.configurationService.get('RAKUTEN_RAPID_API_KEY');
+    return !!this.configurationService.get('RAPID_API_API_KEY');
   }
 
   public async getAssetProfile(
@@ -103,7 +103,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
   }
 
   public getName(): DataSource {
-    return DataSource.RAKUTEN;
+    return DataSource.RAPID_API;
   }
 
   public async getQuotes(
@@ -129,7 +129,7 @@ export class RakutenRapidApiService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      Logger.error(error, 'RakutenRapidApiService');
+      Logger.error(error, 'RapidApiService');
     }
 
     return {};
@@ -155,16 +155,14 @@ export class RakutenRapidApiService implements DataProviderInterface {
         {
           useQueryString: true,
           'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
-          'x-rapidapi-key': this.configurationService.get(
-            'RAKUTEN_RAPID_API_KEY'
-          )
+          'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
         }
       );
 
       const { fgi } = await get();
       return fgi;
     } catch (error) {
-      Logger.error(error, 'RakutenRapidApiService');
+      Logger.error(error, 'RapidApiService');
 
       return undefined;
     }

@@ -15,10 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Simplified the settings management in the admin control panel
+- Renamed the data source type `RAKUTEN` to `RAPID_API`
 
 ### Fixed
 
 - Fixed some links in the blog posts
+
+### Todo
+
+- Rename the environment variable from `RAKUTEN_RAPID_API_KEY` to `RAPID_API_API_KEY`
 
 ## 1.203.0 - 08.10.2022
 
