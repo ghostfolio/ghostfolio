@@ -86,7 +86,7 @@ export class AuthGuard implements CanActivate {
                 }, 300);
               });
 
-            resolve(false);
+            resolve(true);
             return;
           } else if (
             state.url.startsWith('/home') &&
