@@ -46,11 +46,11 @@ import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
   styleUrls: ['./investment-chart.component.scss']
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
-  @Input() benchmarkDataItems: LineChartItem[] = [];
+  @Input() benchmarkDataItems: InvestmentItem[] = [];
   @Input() currency: string;
   @Input() daysInMarket: number;
   @Input() groupBy: GroupBy;
-  @Input() investments: InvestmentItem[];
+  @Input() historicalDataItems: LineChartItem[] = [];
   @Input() isInPercent = false;
   @Input() locale: string;
   @Input() range: DateRange = 'max';
@@ -81,7 +81,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    if (this.benchmarkDataItems && this.investments) {
+    if (this.benchmarkDataItems && this.historicalDataItems) {
       this.initialize();
     }
   }
@@ -94,7 +94,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     this.isLoading = true;
 
     // Create a clone
-    this.data = this.investments.map((a) => Object.assign({}, a));
+    this.data = this.benchmarkDataItems.map((item) => Object.assign({}, item));
 
     if (!this.groupBy && this.data?.length > 0) {
       if (this.range === 'max') {
@@ -122,14 +122,14 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     }
 
     const data = {
-      labels: this.benchmarkDataItems.map(({ date }) => {
+      labels: this.historicalDataItems.map(({ date }) => {
         return parseDate(date);
       }),
       datasets: [
         {
-          backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderWidth: this.groupBy ? 0 : 2,
+          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+          borderWidth: this.groupBy ? 0 : 1,
           data: this.data.map(({ date, investment }) => {
             return {
               x: parseDate(date),
@@ -141,16 +141,16 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             borderColor: (context: unknown) =>
               this.isInFuture(
                 context,
-                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
+                `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.67)`
               ),
             borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
           },
           stepped: true
         },
         {
-          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
-          borderWidth: 1,
-          data: this.benchmarkDataItems.map(({ date, value }) => {
+          borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
+          borderWidth: 2,
+          data: this.historicalDataItems.map(({ date, value }) => {
             return {
               x: parseDate(date),
               y: this.isInPercent ? value * 100 : value
@@ -192,13 +192,13 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 annotations: {
                   savingsRate: this.savingsRate
                     ? {
-                        borderColor: `rgba(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b}, 0.75)`,
+                        borderColor: `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.75)`,
                         borderWidth: 1,
                         label: {
-                          backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+                          backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
                           borderRadius: 2,
                           color: 'white',
-                          content: 'Savings Rate',
+                          content: $localize`Savings Rate`,
                           display: true,
                           font: { size: '10px', weight: 'normal' },
                           padding: {

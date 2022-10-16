@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Persisted the language on url change
+- Improved the portfolio evolution chart
 - Removed the data source type `RAKUTEN`
 
 ## 1.204.1 - 15.10.2022
