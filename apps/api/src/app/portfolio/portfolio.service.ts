@@ -302,7 +302,7 @@ export class PortfolioService {
     });
   }
 
-  public async getChartV2({
+  public async getChart({
     dateRange = 'max',
     impersonationId
   }: {
@@ -881,7 +881,7 @@ export class PortfolioService {
     };
   }
 
-  public async getPerformanceV2({
+  public async getPerformance({
     dateRange = 'max',
     impersonationId
   }: {
@@ -945,7 +945,7 @@ export class PortfolioService {
     //   currentNetPerformancePercent = currentNetPerformancePercent.mul(-1);
     // }
 
-    const historicalDataContainer = await this.getChartV2({
+    const historicalDataContainer = await this.getChart({
       dateRange,
       impersonationId
     });
@@ -1270,7 +1270,7 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const performanceInformation = await this.getPerformanceV2({
+    const performanceInformation = await this.getPerformance({
       impersonationId
     });
 
