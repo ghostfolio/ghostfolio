@@ -238,12 +238,10 @@ export class PortfolioController {
     @Headers('impersonation-id') impersonationId: string,
     @Query('range') dateRange: DateRange = 'max'
   ): Promise<PortfolioPerformanceResponse> {
-    const performanceInformation = await this.portfolioService.getPerformanceV2(
-      {
-        dateRange,
-        impersonationId
-      }
-    );
+    const performanceInformation = await this.portfolioService.getPerformance({
+      dateRange,
+      impersonationId
+    });
 
     if (
       impersonationId ||
