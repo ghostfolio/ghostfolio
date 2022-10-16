@@ -1,10 +1,15 @@
 <div class="container">
   <div class="row">
     <div class="col text-center">
-      <h1 class="font-weight-bold intro my-5">
+      <h1 class="font-weight-bold intro mt-5">
         Manage your wealth like a boss
       </h1>
-      <div>
+      <p class="lead mb-4">
+        Ghostfolio is a privacy-first, open source dashboard to manage your
+        personal finances. Break down your asset allocation, know your net worth
+        and make solid, data-driven investment decisions.
+      </p>
+      <div class="mb-4">
         <a
           href="https://www.youtube.com/watch?v=yY6ObSQVJZk"
           target="_blank"
@@ -23,9 +28,9 @@
 </div>
 
 <div class="container">
-  <div class="button-container row">
+  <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
-      <div class="py-5 text-center">
+      <div class="text-center">
         <a
           class="d-inline-block"
           color="primary"
@@ -43,7 +48,10 @@
   </div>
 
   <div *ngIf="hasPermissionForStatistics" class="row mb-5">
-    <div class="col-md-4 d-flex my-1">
+    <div
+      class="col-md-4 d-flex my-1"
+      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+    >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
@@ -57,7 +65,10 @@
         >
       </a>
     </div>
-    <div class="col-md-4 d-flex my-1">
+    <div
+      class="col-md-4 d-flex my-1"
+      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+    >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Stars on GitHub"
@@ -71,7 +82,10 @@
         >
       </a>
     </div>
-    <div class="col-md-4 d-flex my-1">
+    <div
+      class="col-md-4 d-flex my-1"
+      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+    >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Pulls on Docker Hub"
@@ -139,15 +153,15 @@
     </div>
   </div>
 
-  <div class="row my-5">
+  <div class="pt-3 row">
     <div class="col text-center">
       <h2 class="h4 mb-1 text-center">
         Protect your <strong>assets</strong>. Refine your
         <strong>personal investment strategy</strong>.
       </h2>
-      <p class="lead">
+      <p class="lead m-0">
         Ghostfolio empowers busy people to keep track of stocks, ETFs or
-        cryptocurrencies and make solid, data-driven investment decisions.
+        cryptocurrencies without being tracked.
       </p>
     </div>
   </div>
@@ -220,7 +234,7 @@
         </li>
       </ul>
       <div class="mt-4 text-center">
-        <a [routerLink]="['/about']" mat-stroked-button
+        <a mat-stroked-button [routerLink]="['/about']"
           >Learn more about Ghostfolio</a
         >
       </div>

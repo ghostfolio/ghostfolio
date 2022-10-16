@@ -3,6 +3,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { format } from 'date-fns';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -14,6 +15,7 @@ import { Subject } from 'rxjs';
 export class LandingPageComponent implements OnDestroy, OnInit {
   public currentYear = format(new Date(), 'yyyy');
   public demoAuthToken: string;
+  public deviceType: string;
   public hasPermissionForStatistics: boolean;
   public statistics: Statistics;
   public testimonials = [
@@ -41,7 +43,10 @@ export class LandingPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private dataService: DataService) {
+  public constructor(
+    private dataService: DataService,
+    private deviceService: DeviceDetectorService
+  ) {
     const { globalPermissions, statistics } = this.dataService.fetchInfo();
 
     this.hasPermissionForStatistics = hasPermission(
@@ -52,7 +57,9 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     this.statistics = statistics;
   }
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

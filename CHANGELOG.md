@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the portfolio evolution chart
 - Removed the data source type `RAKUTEN`
 - Refactored the appearance (dark mode) in user settings (from `appearance` to `colorScheme`)
+- Improved the wording on the landing page
 
 ## 1.204.1 - 15.10.2022
 
