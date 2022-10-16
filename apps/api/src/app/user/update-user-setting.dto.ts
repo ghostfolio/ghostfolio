@@ -1,4 +1,8 @@
-import type { Appearance, DateRange, ViewMode } from '@ghostfolio/common/types';
+import type {
+  ColorScheme,
+  DateRange,
+  ViewMode
+} from '@ghostfolio/common/types';
 import {
   IsBoolean,
   IsIn,
@@ -8,10 +12,6 @@ import {
 } from 'class-validator';
 
 export class UpdateUserSettingDto {
-  @IsIn(<Appearance[]>['DARK', 'LIGHT'])
-  @IsOptional()
-  appearance?: Appearance;
-
   @IsOptional()
   @IsString()
   baseCurrency?: string;
@@ -19,6 +19,10 @@ export class UpdateUserSettingDto {
   @IsString()
   @IsOptional()
   benchmark?: string;
+
+  @IsIn(<ColorScheme[]>['DARK', 'LIGHT'])
+  @IsOptional()
+  colorScheme?: ColorScheme;
 
   @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'ytd'])
   @IsOptional()

@@ -26,6 +26,7 @@ import {
   getTextColor
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
+import { ColorScheme } from '@ghostfolio/common/types';
 import {
   Chart,
   Filler,
@@ -46,6 +47,7 @@ import {
 export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
+  @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
@@ -140,7 +142,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
         0,
         `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.01)`
       );
-      gradient.addColorStop(1, getBackgroundColor());
+      gradient.addColorStop(1, getBackgroundColor(this.colorScheme));
     }
 
     const data = {
@@ -192,7 +194,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             aspectRatio: 16 / 9,
             elements: {
               point: {
-                hoverBackgroundColor: getBackgroundColor(),
+                hoverBackgroundColor: getBackgroundColor(this.colorScheme),
                 hoverRadius: 2
               }
             },
@@ -205,15 +207,15 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
-                color: `rgba(${getTextColor()}, 0.1)`
+                color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
             },
             scales: {
               x: {
                 display: this.showXAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.1)`,
-                  color: `rgba(${getTextColor()}, 0.8)`,
+                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 time: {
@@ -225,8 +227,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               y: {
                 display: this.showYAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.1)`,
-                  color: `rgba(${getTextColor()}, 0.8)`,
+                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 max: this.yMax,
@@ -263,7 +265,9 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             },
             spanGaps: true
           },
-          plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
+          plugins: [
+            getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
+          ],
           type: 'line'
         });
       }
@@ -300,6 +304,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   private getTooltipPluginConfiguration() {
     return {
       ...getTooltipOptions({
+        colorScheme: this.colorScheme,
         currency: this.currency,
         locale: this.locale,
         unit: this.unit

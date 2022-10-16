@@ -5,6 +5,7 @@ import { de, es, it, nl } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark } from './interfaces';
+import { ColorScheme } from './types';
 
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
@@ -58,9 +59,10 @@ export function extractNumberFromString(aString: string): number {
   }
 }
 
-export function getBackgroundColor() {
+export function getBackgroundColor(aColorScheme: ColorScheme) {
   return getCssVariable(
-    window.matchMedia('(prefers-color-scheme: dark)').matches
+    aColorScheme === 'DARK' ||
+      window.matchMedia('(prefers-color-scheme: dark)').matches
       ? '--dark-background'
       : '--light-background'
   );
@@ -133,9 +135,10 @@ export function getNumberFormatGroup(aLocale?: string) {
   }).value;
 }
 
-export function getTextColor() {
+export function getTextColor(aColorScheme: ColorScheme) {
   const cssVariable = getCssVariable(
-    window.matchMedia('(prefers-color-scheme: dark)').matches
+    aColorScheme === 'DARK' ||
+      window.matchMedia('(prefers-color-scheme: dark)').matches
       ? '--light-primary-text'
       : '--dark-primary-text'
   );

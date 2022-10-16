@@ -20,9 +20,10 @@
     </div>
 
     <gf-line-chart
-      class="mb-4"
       benchmarkLabel="Average Unit Price"
+      class="mb-4"
       [benchmarkDataItems]="benchmarkDataItems"
+      [colorScheme]="data.colorScheme"
       [currency]="SymbolProfile?.currency"
       [historicalDataItems]="historicalDataItems"
       [isAnimated]="true"
@@ -188,6 +189,7 @@
             <div class="h5" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
               [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="data.colorScheme"
               [isInPercent]="true"
               [keys]="['name']"
               [locale]="user?.settings?.locale"
@@ -199,6 +201,7 @@
             <div class="h5" i18n>Countries</div>
             <gf-portfolio-proportion-chart
               [baseCurrency]="user?.settings?.baseCurrency"
+              [colorScheme]="data.colorScheme"
               [isInPercent]="true"
               [keys]="['name']"
               [locale]="user?.settings?.locale"

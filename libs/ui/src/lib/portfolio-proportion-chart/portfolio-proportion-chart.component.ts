@@ -14,6 +14,7 @@ import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { ColorScheme } from '@ghostfolio/common/types';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import { ChartConfiguration, Tooltip } from 'chart.js';
@@ -34,6 +35,7 @@ export class PortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   @Input() baseCurrency: string;
+  @Input() colorScheme: ColorScheme;
   @Input() cursor: string;
   @Input() isInPercent = false;
   @Input() keys: string[] = [];
@@ -59,10 +61,7 @@ export class PortfolioProportionChartComponent
 
   private colorMap: {
     [symbol: string]: string;
-  } = {
-    [this.OTHER_KEY]: `rgba(${getTextColor()}, 0.24)`,
-    [UNKNOWN_KEY]: `rgba(${getTextColor()}, 0.12)`
-  };
+  } = {};
 
   public constructor() {
     Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
@@ -94,6 +93,10 @@ export class PortfolioProportionChartComponent
         value: Big;
       };
     } = {};
+    this.colorMap = {
+      [this.OTHER_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.24)`,
+      [UNKNOWN_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.12)`
+    };
 
     Object.keys(this.positions).forEach((symbol) => {
       if (this.positions[symbol][this.keys[0]]) {
@@ -350,6 +353,7 @@ export class PortfolioProportionChartComponent
   private getTooltipPluginConfiguration(data: ChartConfiguration['data']) {
     return {
       ...getTooltipOptions({
+        colorScheme: this.colorScheme,
         currency: this.baseCurrency,
         locale: this.locale
       }),

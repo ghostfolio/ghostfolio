@@ -24,7 +24,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { DateRange, GroupBy } from '@ghostfolio/common/types';
+import { ColorScheme, DateRange, GroupBy } from '@ghostfolio/common/types';
 import {
   BarController,
   BarElement,
@@ -47,6 +47,7 @@ import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];
+  @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() daysInMarket: number;
   @Input() groupBy: GroupBy;
@@ -180,7 +181,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 tension: 0
               },
               point: {
-                hoverBackgroundColor: getBackgroundColor(),
+                hoverBackgroundColor: getBackgroundColor(this.colorScheme),
                 hoverRadius: 2,
                 radius: 0
               }
@@ -213,7 +214,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                       }
                     : undefined,
                   yAxis: {
-                    borderColor: `rgba(${getTextColor()}, 0.1)`,
+                    borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                     borderWidth: 1,
                     scaleID: 'y',
                     type: 'line',
@@ -226,7 +227,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
-                color: `rgba(${getTextColor()}, 0.1)`
+                color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
             },
             responsive: true,
@@ -234,9 +235,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               x: {
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.1)`,
+                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                   borderWidth: this.groupBy ? 0 : 1,
-                  color: `rgba(${getTextColor()}, 0.8)`,
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 type: 'time',
@@ -248,8 +249,8 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               y: {
                 display: !this.isInPercent,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.1)`,
-                  color: `rgba(${getTextColor()}, 0.8)`,
+                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false,
                   drawBorder: false
                 },
@@ -265,7 +266,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               }
             }
           },
-          plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
+          plugins: [
+            getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
+          ],
           type: this.groupBy ? 'bar' : 'line'
         });
       }
@@ -277,6 +280,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   private getTooltipPluginConfiguration() {
     return {
       ...getTooltipOptions({
+        colorScheme: this.colorScheme,
         currency: this.isInPercent ? undefined : this.currency,
         locale: this.isInPercent ? undefined : this.locale,
         unit: this.isInPercent ? '%' : undefined

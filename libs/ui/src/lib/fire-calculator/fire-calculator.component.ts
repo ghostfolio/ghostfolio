@@ -16,6 +16,7 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { transformTickToAbbreviation } from '@ghostfolio/common/helper';
+import { ColorScheme } from '@ghostfolio/common/types';
 import {
   BarController,
   BarElement,
@@ -40,6 +41,7 @@ import { FireCalculatorService } from './fire-calculator.service';
 export class FireCalculatorComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
+  @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() deviceType: string;
   @Input() fireWealth: number;
@@ -182,7 +184,7 @@ export class FireCalculatorComponent
           options: {
             plugins: {
               tooltip: {
-                ...getTooltipOptions(),
+                ...getTooltipOptions({ colorScheme: this.colorScheme }),
                 mode: 'index',
                 callbacks: {
                   footer: (items) => {

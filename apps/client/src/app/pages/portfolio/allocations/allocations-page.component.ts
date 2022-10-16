@@ -450,6 +450,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
+            colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
             hasPermissionToReportDataGlitch: hasPermission(

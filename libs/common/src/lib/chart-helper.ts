@@ -1,21 +1,24 @@
 import { Chart, TooltipPosition } from 'chart.js';
 
 import { getBackgroundColor, getTextColor } from './helper';
+import { ColorScheme } from './types';
 
 export function getTooltipOptions({
+  colorScheme,
   currency = '',
   locale = '',
   unit = ''
 }: {
+  colorScheme?: ColorScheme;
   currency?: string;
   locale?: string;
   unit?: string;
 } = {}) {
   return {
-    backgroundColor: getBackgroundColor(),
-    bodyColor: `rgb(${getTextColor()})`,
+    backgroundColor: getBackgroundColor(colorScheme),
+    bodyColor: `rgb(${getTextColor(colorScheme)})`,
     borderWidth: 1,
-    borderColor: `rgba(${getTextColor()}, 0.1)`,
+    borderColor: `rgba(${getTextColor(colorScheme)}, 0.1)`,
     callbacks: {
       label: (context) => {
         let label = context.dataset.label || '';
@@ -39,12 +42,12 @@ export function getTooltipOptions({
     },
     caretSize: 0,
     cornerRadius: 2,
-    footerColor: `rgb(${getTextColor()})`,
+    footerColor: `rgb(${getTextColor(colorScheme)})`,
     itemSort: (a, b) => {
       // Reverse order
       return b.datasetIndex - a.datasetIndex;
     },
-    titleColor: `rgb(${getTextColor()})`,
+    titleColor: `rgb(${getTextColor(colorScheme)})`,
     usePointStyle: true
   };
 }
@@ -62,7 +65,10 @@ export function getTooltipPositionerMapTop(
   };
 }
 
-export function getVerticalHoverLinePlugin(chartCanvas) {
+export function getVerticalHoverLinePlugin(
+  chartCanvas,
+  colorScheme?: ColorScheme
+) {
   return {
     afterDatasetsDraw: (chart, x, options) => {
       const active = chart.getActiveElements();
@@ -71,7 +77,7 @@ export function getVerticalHoverLinePlugin(chartCanvas) {
         return;
       }
 
-      const color = options.color || `rgb(${getTextColor()})`;
+      const color = options.color || `rgb(${getTextColor(colorScheme)})`;
       const width = options.width || 1;
 
       const {
