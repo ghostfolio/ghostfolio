@@ -200,12 +200,12 @@
                     class="compact-with-outline w-100 without-hint"
                   >
                     <mat-select
-                      name="appearance"
                       class="with-placeholder-as-option"
+                      name="colorScheme"
                       [disabled]="!hasPermissionToUpdateUserSettings"
                       [placeholder]="appearancePlaceholder"
-                      [value]="user.settings.appearance"
-                      (selectionChange)="onChangeUserSetting('appearance', $event.value)"
+                      [value]="user?.settings?.colorScheme"
+                      (selectionChange)="onChangeUserSetting('colorScheme', $event.value)"
                     >
                       <mat-option i18n [value]="null">Auto</mat-option>
                       <mat-option i18n value="LIGHT">Light</mat-option>
@@ -267,8 +267,8 @@
       class="align-items-center d-flex justify-content-center"
       color="primary"
       mat-fab
-      [routerLink]="[]"
       [queryParams]="{ createDialog: true }"
+      [routerLink]="[]"
     >
       <ion-icon name="add-outline" size="large"></ion-icon>
     </a>

@@ -50,6 +50,7 @@
           <gf-portfolio-proportion-chart
             cursor="pointer"
             [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['id']"
             [locale]="user?.settings?.locale"
@@ -79,6 +80,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['currency']"
             [locale]="user?.settings?.locale"
@@ -107,6 +109,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['assetClass', 'assetSubClass']"
             [locale]="user?.settings?.locale"
@@ -133,6 +136,7 @@
             class="mx-auto"
             cursor="pointer"
             [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['symbol']"
             [locale]="user?.settings?.locale"
@@ -163,6 +167,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
@@ -192,6 +197,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['name']"
             [locale]="user?.settings?.locale"
@@ -220,6 +226,7 @@
         <mat-card-content>
           <gf-portfolio-proportion-chart
             [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['name']"
             [locale]="user?.settings?.locale"

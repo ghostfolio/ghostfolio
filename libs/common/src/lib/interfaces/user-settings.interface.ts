@@ -1,9 +1,9 @@
-import { DateRange, ViewMode, Appearance } from '@ghostfolio/common/types';
+import { ColorScheme, DateRange, ViewMode } from '@ghostfolio/common/types';
 
 export interface UserSettings {
-  appearance?: Appearance;
   baseCurrency?: string;
   benchmark?: string;
+  colorScheme?: ColorScheme;
   dateRange?: DateRange;
   emergencyFund?: number;
   isExperimentalFeatures?: boolean;

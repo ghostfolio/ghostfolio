@@ -23,6 +23,8 @@ import {
   parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { ColorScheme } from '@ghostfolio/common/types';
+import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
   LineController,
@@ -33,7 +35,6 @@ import {
   Tooltip
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { SymbolProfile } from '@prisma/client';
 
 @Component({
   selector: 'gf-benchmark-comparator',
@@ -45,6 +46,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmark: string;
   @Input() benchmarks: Partial<SymbolProfile>[];
+  @Input() colorScheme: ColorScheme;
   @Input() daysInMarket: number;
   @Input() isLoading: boolean;
   @Input() locale: string;
@@ -127,7 +129,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 tension: 0
               },
               point: {
-                hoverBackgroundColor: getBackgroundColor(),
+                hoverBackgroundColor: getBackgroundColor(this.colorScheme),
                 hoverRadius: 2,
                 radius: 0
               }
@@ -138,7 +140,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               annotation: {
                 annotations: {
                   yAxis: {
-                    borderColor: `rgba(${getTextColor()}, 0.1)`,
+                    borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                     borderWidth: 1,
                     scaleID: 'y',
                     type: 'line',
@@ -151,7 +153,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               },
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
-                color: `rgba(${getTextColor()}, 0.1)`
+                color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
             },
             responsive: true,
@@ -159,9 +161,9 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               x: {
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.1)`,
+                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                   borderWidth: 1,
-                  color: `rgba(${getTextColor()}, 0.8)`,
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 type: 'time',
@@ -173,8 +175,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               y: {
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor()}, 0.1)`,
-                  color: `rgba(${getTextColor()}, 0.8)`,
+                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false,
                   drawBorder: false
                 },
@@ -190,7 +192,9 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               }
             }
           },
-          plugins: [getVerticalHoverLinePlugin(this.chartCanvas)],
+          plugins: [
+            getVerticalHoverLinePlugin(this.chartCanvas, this.colorScheme)
+          ],
           type: 'line'
         });
       }
@@ -200,6 +204,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   private getTooltipPluginConfiguration() {
     return {
       ...getTooltipOptions({
+        colorScheme: this.colorScheme,
         locale: this.locale,
         unit: '%'
       }),
