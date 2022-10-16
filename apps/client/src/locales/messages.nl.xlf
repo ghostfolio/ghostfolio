@@ -2729,6 +2729,14 @@
           <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="8192718423057883427" datatype="html">
+        <source>Savings Rate</source>
+        <target state="translated">Spaarquote</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
