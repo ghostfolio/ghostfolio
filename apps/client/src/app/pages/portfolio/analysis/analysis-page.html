@@ -119,10 +119,10 @@
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
-          [benchmarkDataItems]="performanceDataItems"
+          [benchmarkDataItems]="investments"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
-          [investments]="investments"
+          [historicalDataItems]="performanceDataItems"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
@@ -155,9 +155,9 @@
         <gf-investment-chart
           class="h-100"
           groupBy="month"
+          [benchmarkDataItems]="investmentsByMonth"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
-          [investments]="investmentsByMonth"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
