@@ -77,9 +77,13 @@ export class AuthGuard implements CanActivate {
 
           if (userLanguage && document.documentElement.lang !== userLanguage) {
             this.dataService
-              .putUserSetting({ language: userLanguage })
+              .putUserSetting({ language: document.documentElement.lang })
               .subscribe(() => {
                 this.userService.remove();
+
+                setTimeout(() => {
+                  window.location.reload();
+                }, 300);
               });
 
             resolve(false);
