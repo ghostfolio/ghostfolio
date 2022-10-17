@@ -8,12 +8,12 @@
   <div class="align-items-center d-flex flex-column">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label i18n>Security Token</mat-label>
-      <textarea
+      <input
         cdkTextareaAutosize
         matInput
-        type="text"
+        type="password"
         [(ngModel)]="data.accessToken"
-      ></textarea>
+      />
     </mat-form-field>
     <ng-container *ngIf="data.hasPermissionToUseSocialLogin">
       <div class="my-3 text-center text-muted" i18n>or</div>
