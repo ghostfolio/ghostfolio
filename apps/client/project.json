@@ -1,0 +1,201 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "sourceRoot": "apps/client/src",
+  "prefix": "gf",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "dist/apps/client",
+        "index": "apps/client/src/index.html",
+        "main": "apps/client/src/main.ts",
+        "polyfills": "apps/client/src/polyfills.ts",
+        "tsConfig": "apps/client/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "assetlinks.json",
+            "input": "apps/client/src/assets",
+            "output": "./../.well-known"
+          },
+          {
+            "glob": "CHANGELOG.md",
+            "input": "",
+            "output": "./../assets"
+          },
+          {
+            "glob": "LICENSE",
+            "input": "",
+            "output": "./../assets"
+          },
+          {
+            "glob": "robots.txt",
+            "input": "apps/client/src/assets",
+            "output": "./../"
+          },
+          {
+            "glob": "sitemap.xml",
+            "input": "apps/client/src/assets",
+            "output": "./../"
+          },
+          {
+            "glob": "**/*",
+            "input": "node_modules/ionicons/dist/ionicons",
+            "output": "./../ionicons"
+          },
+          {
+            "glob": "**/*.js",
+            "input": "node_modules/ionicons/dist/",
+            "output": "./../"
+          },
+          {
+            "glob": "**/*",
+            "input": "apps/client/src/assets",
+            "output": "./../assets/"
+          }
+        ],
+        "styles": ["apps/client/src/styles.scss"],
+        "scripts": ["node_modules/marked/marked.min.js"],
+        "vendorChunk": true,
+        "extractLicenses": false,
+        "buildOptimizer": false,
+        "sourceMap": true,
+        "optimization": false,
+        "namedChunks": true
+      },
+      "configurations": {
+        "development-de": {
+          "baseHref": "/de/",
+          "localize": ["de"]
+        },
+        "development-en": {
+          "baseHref": "/en/",
+          "localize": ["en"]
+        },
+        "development-es": {
+          "baseHref": "/es/",
+          "localize": ["es"]
+        },
+        "development-it": {
+          "baseHref": "/it/",
+          "localize": ["it"]
+        },
+        "development-nl": {
+          "baseHref": "/nl/",
+          "localize": ["nl"]
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/client/src/environments/environment.ts",
+              "with": "apps/client/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb",
+              "maximumError": "10kb"
+            }
+          ]
+        }
+      },
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": ""
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "browserTarget": "client:build",
+        "proxyConfig": "apps/client/proxy.conf.json"
+      },
+      "configurations": {
+        "development-de": {
+          "browserTarget": "client:build:development-de"
+        },
+        "development-en": {
+          "browserTarget": "client:build:development-en"
+        },
+        "development-es": {
+          "browserTarget": "client:build:development-es"
+        },
+        "development-it": {
+          "browserTarget": "client:build:development-it"
+        },
+        "development-nl": {
+          "browserTarget": "client:build:development-nl"
+        },
+        "production": {
+          "browserTarget": "client:build:production"
+        }
+      }
+    },
+    "extract-i18n": {
+      "executor": "ng-extract-i18n-merge:ng-extract-i18n-merge",
+      "options": {
+        "browserTarget": "client:build",
+        "includeContext": true,
+        "outputPath": "src/locales",
+        "targetFiles": [
+          "messages.de.xlf",
+          "messages.es.xlf",
+          "messages.it.xlf",
+          "messages.nl.xlf"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/client/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "apps/client/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "outputs": ["coverage/apps/client"]
+    }
+  },
+  "i18n": {
+    "locales": {
+      "de": {
+        "baseHref": "/de/",
+        "translation": "apps/client/src/locales/messages.de.xlf"
+      },
+      "es": {
+        "baseHref": "/es/",
+        "translation": "apps/client/src/locales/messages.es.xlf"
+      },
+      "it": {
+        "baseHref": "/it/",
+        "translation": "apps/client/src/locales/messages.it.xlf"
+      },
+      "nl": {
+        "baseHref": "/nl/",
+        "translation": "apps/client/src/locales/messages.nl.xlf"
+      }
+    },
+    "sourceLocale": "en"
+  },
+  "tags": []
+}

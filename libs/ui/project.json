@@ -1,0 +1,57 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "generators": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "sourceRoot": "libs/ui/src",
+  "prefix": "gf",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/ui"],
+      "options": {
+        "jestConfig": "libs/ui/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/ui/src/**/*.ts", "libs/ui/src/**/*.html"]
+      }
+    },
+    "storybook": {
+      "executor": "@storybook/angular:start-storybook",
+      "options": {
+        "port": 4400,
+        "configDir": "libs/ui/.storybook",
+        "browserTarget": "ui:build-storybook",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@storybook/angular:build-storybook",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputDir": "dist/storybook/ui",
+        "configDir": "libs/ui/.storybook",
+        "browserTarget": "ui:build-storybook",
+        "compodoc": false
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    }
+  },
+  "tags": []
+}
