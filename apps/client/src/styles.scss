@@ -103,11 +103,13 @@ body {
         color: rgba(var(--light-primary-text));
       }
 
-      &.mat-select-disabled .mat-select-placeholder {
-        color: rgba(
-          var(--palette-foreground-disabled-text-dark),
-          var(--palette-foreground-disabled-text-dark-alpha)
-        );
+      &.mat-select-disabled {
+        .mat-select-placeholder {
+          color: rgba(
+            var(--palette-foreground-disabled-text-dark),
+            var(--palette-foreground-disabled-text-dark-alpha)
+          );
+        }
       }
     }
   }
@@ -247,10 +249,12 @@ ngx-skeleton-loader {
     color: rgba(var(--dark-primary-text));
   }
 
-  &.mat-select-disabled .mat-select-placeholder {
-    color: rgba(
-      var(--palette-foreground-disabled-text),
-      var(--palette-foreground-disabled-text-alpha)
-    );
+  &.mat-select-disabled {
+    .mat-select-placeholder {
+      color: rgba(
+        var(--palette-foreground-disabled-text),
+        var(--palette-foreground-disabled-text-alpha)
+      );
+    }
   }
 }
