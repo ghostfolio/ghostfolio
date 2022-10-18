@@ -900,12 +900,12 @@ export class PortfolioCalculator {
     let investmentAtStartDate: Big;
     const investmentValues: { [date: string]: Big } = {};
     let lastAveragePrice = new Big(0);
-    let lastTransactionInvestment = new Big(0);
-    let lastValueOfInvestmentBeforeTransaction = new Big(0);
+    // let lastTransactionInvestment = new Big(0);
+    // let lastValueOfInvestmentBeforeTransaction = new Big(0);
     let maxTotalInvestment = new Big(0);
     const netPerformanceValues: { [date: string]: Big } = {};
-    let timeWeightedGrossPerformancePercentage = new Big(1);
-    let timeWeightedNetPerformancePercentage = new Big(1);
+    // let timeWeightedGrossPerformancePercentage = new Big(1);
+    // let timeWeightedNetPerformancePercentage = new Big(1);
     let totalInvestment = new Big(0);
     let totalInvestmentWithGrossPerformanceFromSell = new Big(0);
     let totalUnits = new Big(0);
@@ -1082,54 +1082,54 @@ export class PortfolioCalculator {
         .minus(totalInvestmentWithGrossPerformanceFromSell)
         .plus(grossPerformanceFromSells);
 
-      if (
-        i > indexOfStartOrder &&
-        !lastValueOfInvestmentBeforeTransaction
-          .plus(lastTransactionInvestment)
-          .eq(0)
-      ) {
-        const grossHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-          .minus(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          )
-          .div(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          );
+      // if (
+      //   i > indexOfStartOrder &&
+      //   !lastValueOfInvestmentBeforeTransaction
+      //     .plus(lastTransactionInvestment)
+      //     .eq(0)
+      // ) {
+      // const grossHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
+      //   .minus(
+      //     lastValueOfInvestmentBeforeTransaction.plus(
+      //       lastTransactionInvestment
+      //     )
+      //   )
+      //   .div(
+      //     lastValueOfInvestmentBeforeTransaction.plus(
+      //       lastTransactionInvestment
+      //     )
+      //   );
 
-        timeWeightedGrossPerformancePercentage =
-          timeWeightedGrossPerformancePercentage.mul(
-            new Big(1).plus(grossHoldingPeriodReturn)
-          );
+      // timeWeightedGrossPerformancePercentage =
+      //   timeWeightedGrossPerformancePercentage.mul(
+      //     new Big(1).plus(grossHoldingPeriodReturn)
+      //   );
 
-        const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-          .minus(fees.minus(feesAtStartDate))
-          .minus(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          )
-          .div(
-            lastValueOfInvestmentBeforeTransaction.plus(
-              lastTransactionInvestment
-            )
-          );
+      // const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
+      //   .minus(fees.minus(feesAtStartDate))
+      //   .minus(
+      //     lastValueOfInvestmentBeforeTransaction.plus(
+      //       lastTransactionInvestment
+      //     )
+      //   )
+      //   .div(
+      //     lastValueOfInvestmentBeforeTransaction.plus(
+      //       lastTransactionInvestment
+      //     )
+      //   );
 
-        timeWeightedNetPerformancePercentage =
-          timeWeightedNetPerformancePercentage.mul(
-            new Big(1).plus(netHoldingPeriodReturn)
-          );
-      }
+      // timeWeightedNetPerformancePercentage =
+      //   timeWeightedNetPerformancePercentage.mul(
+      //     new Big(1).plus(netHoldingPeriodReturn)
+      //   );
+      // }
 
       grossPerformance = newGrossPerformance;
 
-      lastTransactionInvestment = transactionInvestment;
+      // lastTransactionInvestment = transactionInvestment;
 
-      lastValueOfInvestmentBeforeTransaction =
-        valueOfInvestmentBeforeTransaction;
+      // lastValueOfInvestmentBeforeTransaction =
+      //   valueOfInvestmentBeforeTransaction;
 
       if (order.itemType === 'start') {
         feesAtStartDate = fees;
@@ -1149,11 +1149,11 @@ export class PortfolioCalculator {
       }
     }
 
-    timeWeightedGrossPerformancePercentage =
-      timeWeightedGrossPerformancePercentage.minus(1);
+    // timeWeightedGrossPerformancePercentage =
+    //   timeWeightedGrossPerformancePercentage.minus(1);
 
-    timeWeightedNetPerformancePercentage =
-      timeWeightedNetPerformancePercentage.minus(1);
+    // timeWeightedNetPerformancePercentage =
+    //   timeWeightedNetPerformancePercentage.minus(1);
 
     const totalGrossPerformance = grossPerformance.minus(
       grossPerformanceAtStartDate
