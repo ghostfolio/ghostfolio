@@ -1027,9 +1027,12 @@ export class PortfolioCalculator {
         valueAtStartDate = valueOfInvestmentBeforeTransaction;
       }
 
-      const transactionInvestment = order.quantity
-        .mul(order.unitPrice)
-        .mul(this.getFactor(order.type));
+      const transactionInvestment =
+        order.type === 'BUY'
+          ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
+          : order.quantity
+              .mul(totalInvestment.div(totalUnits))
+              .mul(this.getFactor(order.type));
 
       totalInvestment = totalInvestment.plus(transactionInvestment);
 
