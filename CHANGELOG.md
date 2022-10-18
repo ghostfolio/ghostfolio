@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated the `angular.json` to `project.json` files in the `Nx` workspace
+- Upgraded `Nx` from version `14.6.4` to `15.0.0`
 
 ## 1.205.2 - 16.10.2022
 

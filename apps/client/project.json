@@ -173,7 +173,7 @@
         "jestConfig": "apps/client/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/apps/client"]
+      "outputs": ["{workspaceRoot}/coverage/apps/client"]
     }
   },
   "i18n": {

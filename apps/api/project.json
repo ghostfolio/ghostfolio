@@ -6,12 +6,14 @@
   "generators": {},
   "targets": {
     "build": {
-      "executor": "@nrwl/node:webpack",
+      "executor": "@nrwl/webpack:webpack",
       "options": {
         "outputPath": "dist/apps/api",
         "main": "apps/api/src/main.ts",
         "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"]
+        "assets": ["apps/api/src/assets"],
+        "target": "node",
+        "compiler": "tsc"
       },
       "configurations": {
         "production": {
@@ -47,7 +49,7 @@
         "jestConfig": "apps/api/jest.config.ts",
         "passWithNoTests": true
       },
-      "outputs": ["coverage/apps/api"]
+      "outputs": ["{workspaceRoot}/coverage/apps/api"]
     }
   },
   "tags": []
