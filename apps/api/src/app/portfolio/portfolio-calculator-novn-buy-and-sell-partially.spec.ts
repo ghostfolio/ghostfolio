@@ -22,7 +22,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with BALN.SW buy and sell', async () => {
+    it.only('with NOVN.SW buy and sell partially', async () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         currency: 'CHF',
