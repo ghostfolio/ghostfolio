@@ -1,10 +1,6 @@
 :host {
   display: block;
 
-  textarea.mat-input-element.cdk-textarea-autosize {
-    box-sizing: content-box;
-  }
-
   .mat-checkbox {
     ::ng-deep {
       label {
