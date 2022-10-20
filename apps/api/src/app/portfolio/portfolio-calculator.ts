@@ -1000,6 +1000,12 @@ export class PortfolioCalculator {
     for (let i = 0; i < orders.length; i += 1) {
       const order = orders[i];
 
+      if (PortfolioCalculator.ENABLE_LOGGING) {
+        console.log();
+        console.log();
+        console.log(i + 1, order.type, order.itemType);
+      }
+
       if (order.itemType === 'start') {
         // Take the unit price of the order as the market price if there are no
         // orders of this symbol before the start date
@@ -1027,9 +1033,19 @@ export class PortfolioCalculator {
         valueAtStartDate = valueOfInvestmentBeforeTransaction;
       }
 
-      const transactionInvestment = order.quantity
-        .mul(order.unitPrice)
-        .mul(this.getFactor(order.type));
+      const transactionInvestment =
+        order.type === 'BUY'
+          ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
+          : totalInvestment
+              .div(totalUnits)
+              .mul(order.quantity)
+              .mul(this.getFactor(order.type));
+
+      if (PortfolioCalculator.ENABLE_LOGGING) {
+        console.log('totalInvestment', totalInvestment.toNumber());
+        console.log('order.quantity', order.quantity.toNumber());
+        console.log('transactionInvestment', transactionInvestment.toNumber());
+      }
 
       totalInvestment = totalInvestment.plus(transactionInvestment);
 
@@ -1078,8 +1094,19 @@ export class PortfolioCalculator {
         ? new Big(0)
         : totalInvestmentWithGrossPerformanceFromSell.div(totalUnits);
 
+      if (PortfolioCalculator.ENABLE_LOGGING) {
+        console.log(
+          'totalInvestmentWithGrossPerformanceFromSell',
+          totalInvestmentWithGrossPerformanceFromSell.toNumber()
+        );
+        console.log(
+          'grossPerformanceFromSells',
+          grossPerformanceFromSells.toNumber()
+        );
+      }
+
       const newGrossPerformance = valueOfInvestment
-        .minus(totalInvestmentWithGrossPerformanceFromSell)
+        .minus(totalInvestment)
         .plus(grossPerformanceFromSells);
 
       // if (
@@ -1141,7 +1168,15 @@ export class PortfolioCalculator {
           .minus(grossPerformanceAtStartDate)
           .minus(fees.minus(feesAtStartDate));
 
-        investmentValues[order.date] = totalInvestment;
+        investmentValues[order.date] = maxTotalInvestment;
+      }
+
+      if (PortfolioCalculator.ENABLE_LOGGING) {
+        console.log('totalInvestment', totalInvestment.toNumber());
+        console.log(
+          'totalGrossPerformance',
+          grossPerformance.minus(grossPerformanceAtStartDate).toNumber()
+        );
       }
 
       if (i === indexOfEndOrder) {
