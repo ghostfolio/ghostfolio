@@ -72,10 +72,10 @@ describe('PortfolioCalculator', () => {
         currentValue: new Big('13657.2'),
         errors: [],
         grossPerformance: new Big('27172.74'),
-        grossPerformancePercentage: new Big('0'), // ?
+        grossPerformancePercentage: new Big('42.40043067128546016291'),
         hasErrors: false,
         netPerformance: new Big('27172.74'),
-        netPerformancePercentage: new Big('0'), // ?
+        netPerformancePercentage: new Big('42.40043067128546016291'),
         positions: [
           {
             averagePrice: new Big('320.43'),
@@ -83,10 +83,10 @@ describe('PortfolioCalculator', () => {
             dataSource: 'YAHOO',
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74'),
-            grossPerformancePercentage: new Big('0'), // ?
+            grossPerformancePercentage: new Big('42.40043067128546016291'),
             investment: new Big('320.43'),
             netPerformance: new Big('27172.74'),
-            netPerformancePercentage: new Big('0'), // ?
+            netPerformancePercentage: new Big('42.40043067128546016291'),
             marketPrice: 13657.2,
             quantity: new Big('1'),
             symbol: 'BTCUSD',
@@ -97,13 +97,13 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(investments).toEqual([
-        { date: '2022-03-07', investment: new Big('151.6') },
-        { date: '2022-04-08', investment: new Big('75.8') }
+        { date: '2015-01-01', investment: new Big('640.86') },
+        { date: '2017-12-31', investment: new Big('320.43') }
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2022-03-01', investment: new Big('151.6') },
-        { date: '2022-04-01', investment: new Big('-85.73') }
+        { date: '2015-01-01', investment: new Big('640.86') },
+        { date: '2017-12-01', investment: new Big('-14156.4') }
       ]);
     });
   });
