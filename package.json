@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "1.206.1",
+  "version": "1.206.2",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "scripts": {
@@ -200,5 +200,8 @@
   },
   "prisma": {
     "seed": "node prisma/seed.js"
+  },
+  "resolutions": {
+    "rxjs": "7.5.6"
   }
 }
