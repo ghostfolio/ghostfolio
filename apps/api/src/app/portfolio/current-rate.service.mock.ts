@@ -21,6 +21,17 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
 
+    case 'BTCUSD':
+      if (isSameDay(parseDate('2015-01-01'), date)) {
+        return { marketPrice: 314.25 };
+      } else if (isSameDay(parseDate('2017-12-31'), date)) {
+        return { marketPrice: 14156.4 };
+      } else if (isSameDay(parseDate('2018-01-01'), date)) {
+        return { marketPrice: 13657.2 };
+      }
+
+      return { marketPrice: 0 };
+
     case 'NOVN.SW':
       if (isSameDay(parseDate('2022-04-11'), date)) {
         return { marketPrice: 87.8 };
