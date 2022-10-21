@@ -35,6 +35,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public investments: InvestmentItem[];
   public investmentsByMonth: InvestmentItem[];
   public isLoadingBenchmarkComparator: boolean;
+  public isLoadingInvestmentChart: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' }
@@ -125,6 +126,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   private update() {
     this.isLoadingBenchmarkComparator = true;
+    this.isLoadingInvestmentChart = true;
 
     this.dataService
       .fetchPortfolioPerformance({
@@ -155,6 +157,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             value: netPerformanceInPercentage
           });
         }
+
+        this.isLoadingInvestmentChart = false;
 
         this.updateBenchmarkDataItems();
 

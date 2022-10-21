@@ -53,6 +53,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() groupBy: GroupBy;
   @Input() historicalDataItems: LineChartItem[] = [];
   @Input() isInPercent = false;
+  @Input() isLoading = false;
   @Input() locale: string;
   @Input() range: DateRange = 'max';
   @Input() savingsRate = 0;
@@ -60,8 +61,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @ViewChild('chartCanvas') chartCanvas;
 
   public chart: Chart<any>;
-  public isLoading = true;
-
   private data: InvestmentItem[];
 
   public constructor() {
@@ -92,8 +91,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    this.isLoading = true;
-
     // Create a clone
     this.data = this.benchmarkDataItems.map((item) => Object.assign({}, item));
 
@@ -273,8 +270,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         });
       }
     }
-
-    this.isLoading = false;
   }
 
   private getTooltipPluginConfiguration() {

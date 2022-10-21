@@ -125,6 +125,7 @@
           [daysInMarket]="daysInMarket"
           [historicalDataItems]="performanceDataItems"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [isLoading]="isLoadingBenchmarkComparator"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
         ></gf-investment-chart>
