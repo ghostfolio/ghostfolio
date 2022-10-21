@@ -17,6 +17,7 @@ import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { translate } from '@ghostfolio/ui/i18n';
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -136,7 +137,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
 
     for (const type of Object.keys(filterGroupsMap)) {
       filterGroups.push({
-        name: <Filter['type']>type,
+        name: <Filter['type']>translate(type),
         filters: filterGroupsMap[type]
       });
     }

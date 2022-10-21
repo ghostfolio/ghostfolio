@@ -156,8 +156,8 @@
           <mat-option [value]="null"></mat-option>
           <mat-option
             *ngFor="let assetClass of assetClasses"
-            [value]="assetClass"
-            >{{ assetClass }}</mat-option
+            [value]="assetClass.id"
+            >{{ assetClass.label }}</mat-option
           >
         </mat-select>
       </mat-form-field>
@@ -171,8 +171,8 @@
           <mat-option [value]="null"></mat-option>
           <mat-option
             *ngFor="let assetSubClass of assetSubClasses"
-            [value]="assetSubClass"
-            >{{ assetSubClass }}</mat-option
+            [value]="assetSubClass.id"
+            >{{ assetSubClass.label }}</mat-option
           >
         </mat-select>
       </mat-form-field>

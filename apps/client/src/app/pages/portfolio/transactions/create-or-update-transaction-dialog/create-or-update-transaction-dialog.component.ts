@@ -14,6 +14,7 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { isString } from 'lodash';
@@ -40,8 +41,12 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
   @ViewChild('autocomplete') autocomplete;
 
   public activityForm: FormGroup;
-  public assetClasses = Object.keys(AssetClass);
-  public assetSubClasses = Object.keys(AssetSubClass);
+  public assetClasses = Object.keys(AssetClass).map((assetClass) => {
+    return { id: assetClass, label: translate(assetClass) };
+  });
+  public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
+    return { id: assetSubClass, label: translate(assetSubClass) };
+  });
   public currencies: string[] = [];
   public currentMarketPrice = null;
   public filteredLookupItems: LookupItem[];

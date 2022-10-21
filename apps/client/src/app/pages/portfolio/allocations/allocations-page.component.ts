@@ -17,6 +17,7 @@ import {
   UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, ToggleOption } from '@ghostfolio/common/types';
 import { Account, AssetClass, DataSource } from '@prisma/client';
@@ -174,7 +175,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           for (const assetClass of Object.keys(AssetClass)) {
             assetClassFilters.push({
               id: assetClass,
-              label: assetClass,
+              label: translate(assetClass),
               type: 'ASSET_CLASS'
             });
           }
