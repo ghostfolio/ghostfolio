@@ -4,17 +4,17 @@
   (keyup.enter)="activityForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  <h1 *ngIf="data.activity.id" mat-dialog-title i18n>Update activity</h1>
-  <h1 *ngIf="!data.activity.id" mat-dialog-title i18n>Add activity</h1>
+  <h1 *ngIf="data.activity.id" i18n mat-dialog-title>Update activity</h1>
+  <h1 *ngIf="!data.activity.id" i18n mat-dialog-title>Add activity</h1>
   <div class="flex-grow-1" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
-          <mat-option value="BUY" i18n>BUY</mat-option>
-          <mat-option value="DIVIDEND" i18n>DIVIDEND</mat-option>
-          <mat-option value="ITEM" i18n>ITEM</mat-option>
-          <mat-option value="SELL" i18n>SELL</mat-option>
+          <mat-option i18n value="BUY">BUY</mat-option>
+          <mat-option i18n value="DIVIDEND">DIVIDEND</mat-option>
+          <mat-option i18n value="ITEM">ITEM</mat-option>
+          <mat-option i18n value="SELL">SELL</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -156,8 +156,8 @@
           <mat-option [value]="null"></mat-option>
           <mat-option
             *ngFor="let assetClass of assetClasses"
-            [value]="assetClass"
-            >{{ assetClass }}</mat-option
+            [value]="assetClass.id"
+            >{{ assetClass.label }}</mat-option
           >
         </mat-select>
       </mat-form-field>
@@ -171,8 +171,8 @@
           <mat-option [value]="null"></mat-option>
           <mat-option
             *ngFor="let assetSubClass of assetSubClasses"
-            [value]="assetSubClass"
-            >{{ assetSubClass }}</mat-option
+            [value]="assetSubClass.id"
+            >{{ assetSubClass.label }}</mat-option
           >
         </mat-select>
       </mat-form-field>

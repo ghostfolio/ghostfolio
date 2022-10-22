@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for translated labels of asset and asset sub class
+
 ### Fixed
 
 - Improved the loading indicator of the portfolio evolution chart
