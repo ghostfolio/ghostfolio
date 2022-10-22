@@ -35,7 +35,13 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
-import { DataSource, Order as OrderModel } from '@prisma/client';
+import { translate } from '@ghostfolio/ui/i18n';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Order as OrderModel
+} from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy } from 'lodash';
 import { Observable } from 'rxjs';
@@ -232,6 +238,19 @@ export class DataService {
               response.summary.firstOrderDate
             );
           }
+
+          if (response.holdings) {
+            for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetClass = translate(
+                response.holdings[symbol].assetClass
+              );
+
+              response.holdings[symbol].assetSubClass = translate(
+                response.holdings[symbol].assetSubClass
+              );
+            }
+          }
+
           return response;
         })
       );
@@ -282,6 +301,20 @@ export class DataService {
             for (const order of data.orders) {
               order.createdAt = parseISO(<string>(<unknown>order.createdAt));
               order.date = parseISO(<string>(<unknown>order.date));
+            }
+          }
+
+          if (data.SymbolProfile) {
+            if (data.SymbolProfile.assetClass) {
+              data.SymbolProfile.assetClass = <AssetClass>(
+                translate(data.SymbolProfile.assetClass)
+              );
+            }
+
+            if (data.SymbolProfile.assetSubClass) {
+              data.SymbolProfile.assetSubClass = <AssetSubClass>(
+                translate(data.SymbolProfile.assetSubClass)
+              );
             }
           }
 

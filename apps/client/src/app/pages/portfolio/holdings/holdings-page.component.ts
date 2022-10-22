@@ -12,8 +12,8 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';

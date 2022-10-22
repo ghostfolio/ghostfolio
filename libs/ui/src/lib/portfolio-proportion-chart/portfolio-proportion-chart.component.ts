@@ -365,9 +365,9 @@ export class PortfolioProportionChartComponent
           let symbol = context.chart.data.labels?.[labelIndex] ?? '';
 
           if (symbol === this.OTHER_KEY) {
-            symbol = 'Other';
+            symbol = $localize`Other`;
           } else if (symbol === UNKNOWN_KEY) {
-            symbol = 'No data available';
+            symbol = $localize`No data available`;
           }
 
           const name = this.positions[<string>symbol]?.name;
@@ -380,7 +380,7 @@ export class PortfolioProportionChartComponent
           const percentage = (context.parsed * 100) / sum;
 
           if (<number>context.raw === Number.MAX_SAFE_INTEGER) {
-            return 'No data available';
+            return $localize`No data available`;
           } else if (this.isInPercent) {
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {

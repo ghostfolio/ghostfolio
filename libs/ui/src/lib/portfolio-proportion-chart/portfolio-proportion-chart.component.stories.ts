@@ -1,3 +1,5 @@
+import '@angular/localize/init';
+
 import { CommonModule } from '@angular/common';
 import { Meta, Story, moduleMetadata } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
