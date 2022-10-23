@@ -22,7 +22,15 @@ const locales = {
   MUTUALFUND: $localize`Mutual Fund`,
   PRECIOUS_METAL: $localize`Precious Metal`,
   PRIVATE_EQUITY: $localize`Private Equity`,
-  STOCK: $localize`Stock`
+  STOCK: $localize`Stock`,
+
+  // Continents
+  Africa: $localize`Africa`,
+  Asia: $localize`Asia`,
+  Europe: $localize`Europe`,
+  'North America': $localize`North America`,
+  Oceania: $localize`Oceania`,
+  'South America': $localize`South America`
 };
 
 export function translate(aKey: string) {

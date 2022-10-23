@@ -15,6 +15,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import { ChartConfiguration, Tooltip } from 'chart.js';
@@ -370,7 +371,7 @@ export class PortfolioProportionChartComponent
             symbol = $localize`No data available`;
           }
 
-          const name = this.positions[<string>symbol]?.name;
+          const name = translate(this.positions[<string>symbol]?.name);
 
           let sum = 0;
           for (const item of context.dataset.data) {
