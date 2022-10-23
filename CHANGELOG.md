@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for translated labels of asset and asset sub class
 
+### Changed
+
+- Darkened the background color of the dark mode
+
 ### Fixed
 
 - Improved the loading indicator of the portfolio evolution chart
