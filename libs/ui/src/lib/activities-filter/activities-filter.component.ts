@@ -17,8 +17,8 @@ import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { translate } from '@ghostfolio/ui/i18n';
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

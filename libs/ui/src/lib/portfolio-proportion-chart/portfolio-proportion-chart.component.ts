@@ -15,6 +15,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import { ChartConfiguration, Tooltip } from 'chart.js';
@@ -365,12 +366,12 @@ export class PortfolioProportionChartComponent
           let symbol = context.chart.data.labels?.[labelIndex] ?? '';
 
           if (symbol === this.OTHER_KEY) {
-            symbol = 'Other';
+            symbol = $localize`Other`;
           } else if (symbol === UNKNOWN_KEY) {
-            symbol = 'No data available';
+            symbol = $localize`No data available`;
           }
 
-          const name = this.positions[<string>symbol]?.name;
+          const name = translate(this.positions[<string>symbol]?.name);
 
           let sum = 0;
           for (const item of context.dataset.data) {
@@ -380,7 +381,7 @@ export class PortfolioProportionChartComponent
           const percentage = (context.parsed * 100) / sum;
 
           if (<number>context.raw === Number.MAX_SAFE_INTEGER) {
-            return 'No data available';
+            return $localize`No data available`;
           } else if (this.isInPercent) {
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {
