@@ -1036,10 +1036,12 @@ export class PortfolioCalculator {
       const transactionInvestment =
         order.type === 'BUY'
           ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
-          : totalInvestment
+          : totalUnits.gt(0)
+          ? totalInvestment
               .div(totalUnits)
               .mul(order.quantity)
-              .mul(this.getFactor(order.type));
+              .mul(this.getFactor(order.type))
+          : new Big(0);
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log('totalInvestment', totalInvestment.toNumber());
