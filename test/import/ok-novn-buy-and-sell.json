@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "date": "2022-07-21T21:28:05.857Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "fee": 0,
+      "quantity": 2,
+      "type": "SELL",
+      "unitPrice": 85.73,
+      "currency": "CHF",
+      "dataSource": "YAHOO",
+      "date": "2022-04-07T22:00:00.000Z",
+      "symbol": "NOVN.SW"
+    },
+    {
+      "fee": 0,
+      "quantity": 2,
+      "type": "BUY",
+      "unitPrice": 75.8,
+      "currency": "CHF",
+      "dataSource": "YAHOO",
+      "date": "2022-03-06T23:00:00.000Z",
+      "symbol": "NOVN.SW"
+    }
+  ]
+}
