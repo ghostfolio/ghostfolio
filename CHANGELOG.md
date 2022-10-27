@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for translated labels of asset and asset sub class
+- Added support for dates in _ISO 8601_ date format (`YYYY-MM-DD`) in the activities import
 
 ### Fixed
 
