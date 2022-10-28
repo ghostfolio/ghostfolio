@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Account, DataSource, Type } from '@prisma/client';
-import { parse } from 'date-fns';
+import { isMatch, parse, parseISO } from 'date-fns';
 import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
@@ -153,13 +153,15 @@ export class ImportTransactionsService {
 
     for (const key of ImportTransactionsService.DATE_KEYS) {
       if (item[key]) {
-        try {
+        if (isMatch(item[key], 'dd-MM-yyyy')) {
           date = parse(item[key], 'dd-MM-yyyy', new Date()).toISOString();
-        } catch {}
-
-        try {
+        } else if (isMatch(item[key], 'dd/MM/yyyy')) {
           date = parse(item[key], 'dd/MM/yyyy', new Date()).toISOString();
-        } catch {}
+        } else {
+          try {
+            date = parseISO(item[key]).toISOString();
+          } catch {}
+        }
 
         if (date) {
           return date;
