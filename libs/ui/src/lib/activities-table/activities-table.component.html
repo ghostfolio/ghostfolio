@@ -27,7 +27,11 @@
         class="d-none d-lg-table-cell px-1 text-right"
         mat-cell
       >
-        {{ dataSource.data.length - i }}
+        {{
+          pageSize > dataSource.data.length
+            ? dataSource.data.length - i
+            : dataSource.data.length - pageSize * pageIndex - i
+        }}
       </td>
       <td
         *matFooterCellDef
@@ -420,6 +424,7 @@
   }"
   [pageSize]="pageSize"
   showFirstLastButtons="true"
+  (page)="pageChanged($event)"
 ></mat-paginator>
 
 <ngx-skeleton-loader

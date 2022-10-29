@@ -8,7 +8,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -62,6 +62,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public isAfter = isAfter;
   public isLoading = true;
   public isUUID = isUUID;
+  public pageIndex = 0;
   public placeholder = '';
   public routeQueryParams: Subscription;
   public searchKeywords: string[] = [];
@@ -77,6 +78,10 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       .subscribe((filters) => {
         this.updateFilters(filters);
       });
+  }
+
+  public pageChanged(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
   }
 
   public ngOnChanges() {
