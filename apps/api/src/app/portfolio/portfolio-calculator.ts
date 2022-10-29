@@ -63,7 +63,7 @@ export class PortfolioCalculator {
     this.orders.sort((a, b) => a.date?.localeCompare(b.date));
   }
 
-  public computeTransactionPoints() {
+  public computeTransactionPoints(types: TypeOfOrder[] = ['BUY', 'SELL']) {
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
 
@@ -85,16 +85,20 @@ export class PortfolioCalculator {
         let investment = new Big(0);
 
         if (newQuantity.gt(0)) {
-          if (order.type === 'BUY') {
+          if (order.type === 'BUY' && types.includes('BUY')) {
             investment = oldAccumulatedSymbol.investment.plus(
               order.quantity.mul(unitPrice)
             );
-          } else if (order.type === 'SELL') {
+          } else if (order.type === 'SELL' && types.includes('SELL')) {
             const averagePrice = oldAccumulatedSymbol.investment.div(
               oldAccumulatedSymbol.quantity
             );
             investment = oldAccumulatedSymbol.investment.minus(
               order.quantity.mul(averagePrice)
+            );
+          } else if (order.type === 'DIVIDEND' && types.includes('DIVIDEND')) {
+            investment = oldAccumulatedSymbol.investment.plus(
+              order.quantity.mul(unitPrice)
             );
           }
         }
@@ -492,9 +496,10 @@ export class PortfolioCalculator {
         }
 
         currentDate = parseDate(order.date);
+
         investmentByMonth = order.quantity
-          .mul(order.unitPrice)
-          .mul(this.getFactor(order.type));
+        .mul(order.unitPrice)
+        .mul(this.getFactor(order.type));
       }
 
       if (index === this.orders.length - 1) {
@@ -815,6 +820,9 @@ export class PortfolioCalculator {
         break;
       case 'SELL':
         factor = -1;
+        break;
+      case 'DIVIDEND':
+        factor = 1;
         break;
       default:
         factor = 0;

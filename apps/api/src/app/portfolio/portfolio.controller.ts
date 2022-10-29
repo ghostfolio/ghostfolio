@@ -14,6 +14,7 @@ import { parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
   PortfolioInvestments,
+  PortfolioDividends,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport
@@ -228,6 +229,58 @@ export class PortfolioController {
     }
 
     return { investments };
+  }
+
+  @Get('dividends')
+  @UseGuards(AuthGuard('jwt'))
+  public async getDividends(
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('range') dateRange: DateRange = 'max',
+    @Query('groupBy') groupBy?: GroupBy
+  ): Promise<PortfolioDividends> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    let dividends: InvestmentItem[];
+
+    if (groupBy === 'month') {
+      dividends = await this.portfolioService.getInvestments({
+        dateRange,
+        impersonationId,
+        groupBy: 'month',
+        orderTypes: ['DIVIDEND']
+      });
+    } else {
+      dividends = await this.portfolioService.getInvestments({
+        dateRange,
+        impersonationId,
+        orderTypes: ['DIVIDEND']
+      });
+    }
+
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
+      const maxInvestment = dividends.reduce(
+        (investment, item) => Math.max(investment, item.investment),
+        1
+      );
+
+      dividends = dividends.map((item) => ({
+        date: item.date,
+        investment: item.investment / maxInvestment
+      }));
+    }
+
+    return { dividends };
   }
 
   @Get('performance')

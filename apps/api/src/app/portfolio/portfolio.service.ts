@@ -210,18 +210,21 @@ export class PortfolioService {
   public async getInvestments({
     dateRange,
     impersonationId,
-    groupBy
+    groupBy,
+    orderTypes = ['BUY', 'SELL']
   }: {
     dateRange: DateRange;
     impersonationId: string;
     groupBy?: GroupBy;
+    orderTypes?: TypeOfOrder[]
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         userId,
-        includeDrafts: true
+        includeDrafts: true,
+        orderTypes: orderTypes
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1370,12 +1373,14 @@ export class PortfolioService {
     filters,
     includeDrafts = false,
     userId,
-    withExcludedAccounts
+    withExcludedAccounts,
+    orderTypes = ['BUY', 'SELL']
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
     userId: string;
     withExcludedAccounts?: boolean;
+    orderTypes?: TypeOfOrder[]
   }): Promise<{
     transactionPoints: TransactionPoint[];
     orders: OrderWithAccount[];
@@ -1390,7 +1395,7 @@ export class PortfolioService {
       userCurrency,
       userId,
       withExcludedAccounts,
-      types: ['BUY', 'SELL']
+      types: orderTypes
     });
 
     if (orders.length <= 0) {

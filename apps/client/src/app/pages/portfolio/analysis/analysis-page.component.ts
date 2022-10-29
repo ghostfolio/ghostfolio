@@ -34,6 +34,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
   public investmentsByMonth: InvestmentItem[];
+  public dividendsByMonth: InvestmentItem[];
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingInvestmentChart: boolean;
   public mode: GroupBy = 'month';
@@ -165,7 +166,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.dataService
+      this.dataService
       .fetchInvestments({
         groupBy: 'month',
         range: this.user?.settings?.dateRange
@@ -177,7 +178,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.dataService
+      this.dataService
       .fetchPositions({ range: this.user?.settings?.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ positions }) => {
@@ -193,6 +194,18 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         } else {
           this.bottom3 = [];
         }
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+      this.dataService
+      .fetchDividends({
+        groupBy: 'month',
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ dividends }) => {
+        this.dividendsByMonth = dividends;
 
         this.changeDetectorRef.markForCheck();
       });

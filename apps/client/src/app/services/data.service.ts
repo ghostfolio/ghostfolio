@@ -26,6 +26,7 @@ import {
   InfoItem,
   OAuthResponse,
   PortfolioDetails,
+  PortfolioDividends,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -178,6 +179,19 @@ export class DataService {
   }) {
     return this.http.get<PortfolioInvestments>(
       '/api/v1/portfolio/investments',
+      { params: { groupBy, range } }
+    );
+  }
+
+  public fetchDividends({
+    groupBy,
+    range
+  }: {
+    groupBy?: 'month';
+    range: DateRange;
+  }) {
+    return this.http.get<PortfolioDividends>(
+      '/api/v1/portfolio/dividends',
       { params: { groupBy, range } }
     );
   }
