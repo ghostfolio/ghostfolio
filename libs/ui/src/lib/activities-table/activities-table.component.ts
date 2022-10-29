@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -37,6 +38,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
+  @Input() pageSize = Number.MAX_SAFE_INTEGER;
   @Input() showActions: boolean;
   @Input() showSymbolColumn = true;
 
@@ -47,6 +49,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   public allFilters: Filter[];
@@ -119,6 +122,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
         }
         return contains;
       };
+      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
       this.updateFilters();

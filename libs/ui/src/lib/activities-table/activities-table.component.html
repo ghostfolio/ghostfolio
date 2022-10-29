@@ -411,6 +411,17 @@
   </table>
 </div>
 
+<mat-paginator
+  [ngClass]="{
+    'd-none':
+      isLoading ||
+      dataSource.data.length === 0 ||
+      pageSize > dataSource.data.length
+  }"
+  [pageSize]="pageSize"
+  showFirstLastButtons="true"
+></mat-paginator>
+
 <ngx-skeleton-loader
   *ngIf="isLoading"
   animation="pulse"
