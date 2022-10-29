@@ -3,6 +3,7 @@
     <div class="col">
       <h3 class="d-flex justify-content-center mb-3" i18n>Activities</h3>
       <gf-activities-table
+        pageSize="50"
         [activities]="activities"
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
@@ -17,7 +18,6 @@
         (export)="onExport($event)"
         (exportDrafts)="onExportDrafts($event)"
         (import)="onImport()"
-        pageSize="50"
       ></gf-activities-table>
     </div>
   </div>
