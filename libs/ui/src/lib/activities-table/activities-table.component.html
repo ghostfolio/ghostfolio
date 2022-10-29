@@ -28,9 +28,9 @@
         mat-cell
       >
         {{
-          pageSize > dataSource.data.length
-            ? dataSource.data.length - i
-            : dataSource.data.length - pageSize * pageIndex - i
+          dataSource.data.length > pageSize
+            ? dataSource.data.length - pageSize * pageIndex - i
+            : dataSource.data.length - i
         }}
       </td>
       <td
@@ -421,7 +421,7 @@
     'd-none':
       isLoading ||
       dataSource.data.length === 0 ||
-      pageSize > dataSource.data.length
+      dataSource.data.length <= pageSize
   }"
   [pageSize]="pageSize"
   (page)="pageChanged($event)"
