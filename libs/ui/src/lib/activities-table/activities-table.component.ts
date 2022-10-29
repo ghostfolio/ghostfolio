@@ -80,10 +80,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       });
   }
 
-  public pageChanged(page: PageEvent) {
-    this.pageIndex = page.pageIndex;
-  }
-
   public ngOnChanges() {
     this.displayedColumns = [
       'count',
@@ -240,6 +236,21 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     return Object.values(fieldValueMap);
   }
 
+  private getPaginatedData() {
+    if (this.dataSource.data.length > this.pageSize) {
+      const sortedData = this.dataSource.sortData(
+        this.dataSource.filteredData,
+        this.dataSource.sort
+      );
+
+      return sortedData.slice(
+        this.pageIndex * this.pageSize,
+        (this.pageIndex + 1) * this.pageSize
+      );
+    }
+    return this.dataSource.filteredData;
+  }
+
   private getSearchableFieldValues(activities: OrderWithAccount[]): Filter[] {
     const fieldValueMap: { [id: string]: Filter } = {};
 
@@ -252,8 +263,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   private getTotalFees() {
     let totalFees = new Big(0);
-
-    for (const activity of this.dataSource.filteredData) {
+    const paginatedData = this.getPaginatedData();
+    for (const activity of paginatedData) {
       if (isNumber(activity.feeInBaseCurrency)) {
         totalFees = totalFees.plus(activity.feeInBaseCurrency);
       } else {
@@ -266,8 +277,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   private getTotalValue() {
     let totalValue = new Big(0);
-
-    for (const activity of this.dataSource.filteredData) {
+    const paginatedData = this.getPaginatedData();
+    for (const activity of paginatedData) {
       if (isNumber(activity.valueInBaseCurrency)) {
         if (activity.type === 'BUY' || activity.type === 'ITEM') {
           totalValue = totalValue.plus(activity.valueInBaseCurrency);
@@ -280,6 +291,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
 
     return totalValue.toNumber();
+  }
+
+  public pageChanged(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+
+    this.totalFees = this.getTotalFees();
+    this.totalValue = this.getTotalValue();
   }
 
   private updateFilters(filters: Filter[] = []) {
