@@ -190,7 +190,7 @@ Run `yarn test`
 
 ## Public API
 
-#### Authorization: Bearer Token
+### Authorization: Bearer Token
 
 Set the header for each request as follows:
 
@@ -198,7 +198,7 @@ Set the header for each request as follows:
 "Authorization": "Bearer eyJh..."
 ```
 
-You can get the _Bearer Token_ via `curl -s http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>`
+You can get the _Bearer Token_ via `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>` or `curl -s http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>`.
 
 ### Import Activities
 
