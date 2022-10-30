@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for translated labels of asset and asset sub class
 - Added support for dates in _ISO 8601_ date format (`YYYY-MM-DD`) in the activities import
 
+### Changed
+
+- Darkened the background color of the dark mode
+
 ### Fixed
 
 - Improved the loading indicator of the portfolio evolution chart
