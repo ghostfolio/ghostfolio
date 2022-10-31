@@ -10,7 +10,6 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { parseDate } from '@ghostfolio/common/helper';
 import {
   PortfolioDetails,
   PortfolioInvestments,
@@ -240,7 +239,8 @@ export class PortfolioController {
   ): Promise<PortfolioPerformanceResponse> {
     const performanceInformation = await this.portfolioService.getPerformance({
       dateRange,
-      impersonationId
+      impersonationId,
+      userId: this.request.user.id
     });
 
     if (
@@ -331,7 +331,7 @@ export class PortfolioController {
       dateRange: 'max',
       filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
       impersonationId: access.userId,
-      userId: access.userId
+      userId: user.id
     });
 
     const portfolioPublicDetails: PortfolioPublicDetails = {

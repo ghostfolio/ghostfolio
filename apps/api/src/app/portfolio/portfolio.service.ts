@@ -3,7 +3,6 @@ import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
-import { TimelineSpecification } from '@ghostfolio/api/app/portfolio/interfaces/timeline-specification.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
@@ -36,7 +35,8 @@ import {
   PortfolioSummary,
   Position,
   TimelinePosition,
-  UserSettings
+  UserSettings,
+  UserWithSettings
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import type {
@@ -67,11 +67,9 @@ import {
   isAfter,
   isBefore,
   max,
-  parse,
   parseISO,
   set,
   setDayOfYear,
-  startOfDay,
   subDays,
   subYears
 } from 'date-fns';
@@ -130,9 +128,9 @@ export class PortfolioService {
       }),
       this.getDetails({
         filters,
-        userId,
         withExcludedAccounts,
-        impersonationId: userId
+        impersonationId: userId,
+        userId: this.request.user.id
       })
     ]);
 
@@ -304,12 +302,16 @@ export class PortfolioService {
 
   public async getChart({
     dateRange = 'max',
-    impersonationId
+    impersonationId,
+    userCurrency,
+    userId
   }: {
     dateRange?: DateRange;
     impersonationId: string;
+    userCurrency: string;
+    userId: string;
   }): Promise<HistoricalDataContainer> {
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
+    userId = await this.getUserId(impersonationId, userId);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -317,7 +319,7 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.settings.baseCurrency,
+      currency: userCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -355,28 +357,24 @@ export class PortfolioService {
 
   public async getDetails({
     impersonationId,
-    userId,
     dateRange = 'max',
     filters,
+    userId,
     withExcludedAccounts = false
   }: {
     impersonationId: string;
-    userId: string;
     dateRange?: DateRange;
     filters?: Filter[];
+    userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
-    // TODO
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const emergencyFund = new Big(
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
-    const userCurrency =
-      user.Settings?.settings.baseCurrency ??
-      this.request.user?.Settings?.settings.baseCurrency ??
-      this.baseCurrency;
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -540,7 +538,11 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    const summary = await this.getSummary({ impersonationId });
+    const summary = await this.getSummary({
+      impersonationId,
+      userCurrency,
+      userId
+    });
 
     return {
       accounts,
@@ -560,8 +562,9 @@ export class PortfolioService {
     aImpersonationId: string,
     aSymbol: string
   ): Promise<PortfolioPositionDetail> {
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const orders = (
       await this.orderService.getOrders({
@@ -883,12 +886,16 @@ export class PortfolioService {
 
   public async getPerformance({
     dateRange = 'max',
-    impersonationId
+    impersonationId,
+    userId
   }: {
     dateRange?: DateRange;
     impersonationId: string;
+    userId: string;
   }): Promise<PortfolioPerformanceResponse> {
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
+    userId = await this.getUserId(impersonationId, userId);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -896,7 +903,7 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.settings.baseCurrency,
+      currency: userCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -947,7 +954,9 @@ export class PortfolioService {
 
     const historicalDataContainer = await this.getChart({
       dateRange,
-      impersonationId
+      impersonationId,
+      userCurrency,
+      userId
     });
 
     const itemOfToday = historicalDataContainer.items.find((item) => {
@@ -995,8 +1004,9 @@ export class PortfolioService {
   }
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
-    const currency = this.request.user.Settings.settings.baseCurrency;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -1010,7 +1020,7 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = new PortfolioCalculator({
-      currency,
+      currency: userCurrency,
       currentRateService: this.currentRateService,
       orders: portfolioOrders
     });
@@ -1030,7 +1040,7 @@ export class PortfolioService {
       orders,
       portfolioItemsNow,
       userId,
-      userCurrency: currency
+      userCurrency
     });
     return {
       rules: {
@@ -1077,7 +1087,7 @@ export class PortfolioService {
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
               currentPositions.totalInvestment.toNumber(),
-              this.getFees(orders).toNumber()
+              this.getFees({ orders, userCurrency }).toNumber()
             )
           ],
           <UserSettings>this.request.user.Settings.settings
@@ -1180,7 +1190,15 @@ export class PortfolioService {
     return cashPositions;
   }
 
-  private getDividend(orders: OrderWithAccount[], date = new Date(0)) {
+  private getDividend({
+    date = new Date(0),
+    orders,
+    userCurrency
+  }: {
+    date?: Date;
+    orders: OrderWithAccount[];
+    userCurrency: string;
+  }) {
     return orders
       .filter((order) => {
         // Filter out all orders before given date and type dividend
@@ -1193,7 +1211,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           new Big(order.quantity).mul(order.unitPrice).toNumber(),
           order.SymbolProfile.currency,
-          this.request.user.Settings.settings.baseCurrency
+          userCurrency
         );
       })
       .reduce(
@@ -1202,7 +1220,15 @@ export class PortfolioService {
       );
   }
 
-  private getFees(orders: OrderWithAccount[], date = new Date(0)) {
+  private getFees({
+    date = new Date(0),
+    orders,
+    userCurrency
+  }: {
+    date?: Date;
+    orders: OrderWithAccount[];
+    userCurrency: string;
+  }) {
     return orders
       .filter((order) => {
         // Filter out all orders before given date
@@ -1212,7 +1238,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           order.fee,
           order.SymbolProfile.currency,
-          this.request.user.Settings.settings.baseCurrency
+          userCurrency
         );
       })
       .reduce(
@@ -1262,16 +1288,20 @@ export class PortfolioService {
   }
 
   private async getSummary({
-    impersonationId
+    impersonationId,
+    userCurrency,
+    userId
   }: {
     impersonationId: string;
+    userCurrency: string;
+    userId: string;
   }): Promise<PortfolioSummary> {
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
+    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
     const performanceInformation = await this.getPerformance({
-      impersonationId
+      impersonationId,
+      userId
     });
 
     const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
@@ -1293,11 +1323,11 @@ export class PortfolioService {
       return account?.isExcluded ?? false;
     });
 
-    const dividend = this.getDividend(orders).toNumber();
+    const dividend = this.getDividend({ orders, userCurrency }).toNumber();
     const emergencyFund = new Big(
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
-    const fees = this.getFees(orders).toNumber();
+    const fees = this.getFees({ orders, userCurrency }).toNumber();
     const firstOrderDate = orders[0]?.date;
     const items = this.getItems(orders).toNumber();
 
@@ -1564,5 +1594,13 @@ export class PortfolioService {
         );
       })
       .reduce((previous, current) => previous + current, 0);
+  }
+
+  private getUserCurrency(aUser: UserWithSettings) {
+    return (
+      aUser.Settings?.settings.baseCurrency ??
+      this.request.user?.Settings?.settings.baseCurrency ??
+      this.baseCurrency
+    );
   }
 }
