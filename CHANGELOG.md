@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the public page
 - Improved the loading indicator of the portfolio evolution chart
 
 ## 1.206.2 - 20.10.2022
