@@ -4,7 +4,7 @@
       <form class="align-items-center d-flex" [formGroup]="filterForm">
         <mat-form-field
           appearance="outline"
-          class="compact-with-outline flex-grow-1 mr-2 without-hint"
+          class="compact-with-outline without-hint w-100"
         >
           <mat-select formControlName="status">
             <mat-option></mat-option>
@@ -15,14 +15,6 @@
             >
           </mat-select>
         </mat-form-field>
-        <button
-          class="mt-1"
-          color="warn"
-          mat-flat-button
-          (click)="onDeleteJobs()"
-        >
-          <span i18n>Delete Jobs</span>
-        </button>
       </form>
       <table class="gf-table w-100">
         <thead>
@@ -35,7 +27,21 @@
             <th class="mat-header-cell px-1 py-2" i18n>Created</th>
             <th class="mat-header-cell px-1 py-2" i18n>Finished</th>
             <th class="mat-header-cell px-1 py-2" i18n>Status</th>
-            <th class="mat-header-cell px-1 py-2"></th>
+            <th class="mat-header-cell px-1 py-2">
+              <button
+                class="mx-1 no-min-width px-2"
+                mat-button
+                [matMenuTriggerFor]="jobsActionsMenu"
+                (click)="$event.stopPropagation()"
+              >
+                <ion-icon name="ellipsis-vertical"></ion-icon>
+              </button>
+              <mat-menu #jobsActionsMenu="matMenu" xPosition="before">
+                <button mat-menu-item (click)="onDeleteJobs()">
+                  <ng-container i18n>Delete Jobs</ng-container>
+                </button>
+              </mat-menu>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -102,12 +108,12 @@
                 <button
                   class="mx-1 no-min-width px-2"
                   mat-button
-                  [matMenuTriggerFor]="accountMenu"
+                  [matMenuTriggerFor]="jobActionsMenu"
                   (click)="$event.stopPropagation()"
                 >
                   <ion-icon name="ellipsis-vertical"></ion-icon>
                 </button>
-                <mat-menu #accountMenu="matMenu" xPosition="before">
+                <mat-menu #jobActionsMenu="matMenu" xPosition="before">
                   <button mat-menu-item (click)="onViewData(job.data)">
                     <ng-container i18n>View Data</ng-container>
                   </button>

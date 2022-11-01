@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -43,7 +42,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminService: AdminService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -160,35 +158,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           }, 300);
         });
     }
-  }
-
-  public onGather7Days() {
-    this.adminService
-      .gather7Days()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
-  public onGatherMax() {
-    this.adminService
-      .gatherMax()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
-  public onGatherProfileData() {
-    this.adminService
-      .gatherProfileData()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
   }
 
   public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {

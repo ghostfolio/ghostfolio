@@ -128,7 +128,7 @@ docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 Open http://localhost:3333 in your browser and accomplish these steps:
 
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+1. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
 
 #### Upgrade Version
@@ -158,7 +158,7 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
 1. Start the server and the client (see [_Development_](#Development))
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+1. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
 1. Click _Sign out_ and check out the _Live Demo_
 
 ### Start Server

@@ -150,6 +150,35 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
+  public onGather7Days() {
+    this.adminService
+      .gather7Days()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
+  }
+
+  public onGatherMax() {
+    this.adminService
+      .gatherMax()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
+  }
+
+  public onGatherProfileData() {
+    this.adminService
+      .gatherProfileData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
   public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
