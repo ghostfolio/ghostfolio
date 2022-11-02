@@ -40,7 +40,7 @@ export class PortfolioCalculator {
   private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
     true;
 
-  private static readonly ENABLE_LOGGING = false;
+  private static readonly ENABLE_LOGGING = true;
 
   private currency: string;
   private currentRateService: CurrentRateService;
@@ -287,7 +287,9 @@ export class PortfolioCalculator {
         date,
         netPerformanceInPercentage,
         netPerformance: totalNetPerformanceValues[date].toNumber(),
+        // TODO
         totalInvestment: totalInvestmentValues[date].toNumber(),
+        // TODO
         value: totalInvestmentValues[date]
           .plus(totalNetPerformanceValues[date])
           .toNumber()
@@ -1262,7 +1264,9 @@ export class PortfolioCalculator {
         Fees per unit: ${feesPerUnit.toFixed(2)}
         Net performance: ${totalNetPerformance.toFixed(
           2
-        )} / ${netPerformancePercentage.mul(100).toFixed(2)}%`
+        )} / ${netPerformancePercentage.mul(100).toFixed(2)}%
+        Investment at end date: ${totalInvestment}
+        `
       );
     }
 
