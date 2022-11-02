@@ -13,10 +13,10 @@
     <div class="col">
       <table
         class="gf-table w-100"
+        mat-table
         matSort
         matSortActive="symbol"
         matSortDirection="asc"
-        mat-table
         [dataSource]="dataSource"
       >
         <ng-container matColumnDef="symbol">
@@ -101,17 +101,37 @@
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
-          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+          <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
             <button
               class="mx-1 no-min-width px-2"
               mat-button
-              [matMenuTriggerFor]="accountMenu"
+              [matMenuTriggerFor]="assetProfilesActionsMenu"
               (click)="$event.stopPropagation()"
             >
               <ion-icon name="ellipsis-vertical"></ion-icon>
             </button>
-            <mat-menu #accountMenu="matMenu" xPosition="before">
+            <mat-menu #assetProfilesActionsMenu="matMenu" xPosition="before">
+              <button mat-menu-item (click)="onGather7Days()">
+                <ng-container i18n>Gather Recent Data</ng-container>
+              </button>
+              <button mat-menu-item (click)="onGatherMax()">
+                <ng-container i18n>Gather All Data</ng-container>
+              </button>
+              <button mat-menu-item (click)="onGatherProfileData()">
+                <ng-container i18n>Gather Profile Data</ng-container>
+              </button>
+            </mat-menu>
+          </th>
+          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+            <button
+              class="mx-1 no-min-width px-2"
+              mat-button
+              [matMenuTriggerFor]="assetProfileActionsMenu"
+              (click)="$event.stopPropagation()"
+            >
+              <ion-icon name="ellipsis-vertical"></ion-icon>
+            </button>
+            <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
               <button
                 mat-menu-item
                 (click)="onGatherSymbol({dataSource: element.dataSource, symbol: element.symbol})"
