@@ -9,10 +9,10 @@
 <div class="activities">
   <table
     class="gf-table w-100"
+    mat-table
     matSort
     matSortActive="date"
     matSortDirection="desc"
-    mat-table
     [dataSource]="dataSource"
   >
     <ng-container matColumnDef="count">
@@ -27,7 +27,11 @@
         class="d-none d-lg-table-cell px-1 text-right"
         mat-cell
       >
-        {{ dataSource.data.length - i }}
+        {{
+          dataSource.data.length > pageSize
+            ? dataSource.data.length - pageSize * pageIndex - i
+            : dataSource.data.length - i
+        }}
       </td>
       <td
         *matFooterCellDef
@@ -51,7 +55,7 @@
       <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
         <ng-container i18n>Type</ng-container>
       </th>
-      <td *matCellDef="let element" mat-cell class="px-1">
+      <td *matCellDef="let element" class="px-1" mat-cell>
         <div
           class="d-inline-flex p-1 type-badge"
           [ngClass]="{
@@ -389,6 +393,10 @@
     <tr
       *matRowDef="let row; columns: displayedColumns"
       mat-row
+      [ngClass]="{
+        'cursor-pointer':
+          hasPermissionToOpenDetails && !row.isDraft && row.type !== 'ITEM'
+      }"
       (click)="
         hasPermissionToOpenDetails &&
           !row.isDraft &&
@@ -398,10 +406,6 @@
             symbol: row.SymbolProfile.symbol
           })
       "
-      [ngClass]="{
-        'cursor-pointer':
-          hasPermissionToOpenDetails && !row.isDraft && row.type !== 'ITEM'
-      }"
     ></tr>
     <tr
       *matFooterRowDef="displayedColumns"
@@ -410,6 +414,18 @@
     ></tr>
   </table>
 </div>
+
+<mat-paginator
+  showFirstLastButtons="true"
+  [ngClass]="{
+    'd-none':
+      isLoading ||
+      dataSource.data.length === 0 ||
+      dataSource.data.length <= pageSize
+  }"
+  [pageSize]="pageSize"
+  (page)="onChangePage($event)"
+></mat-paginator>
 
 <ngx-skeleton-loader
   *ngIf="isLoading"

@@ -8,10 +8,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
@@ -37,6 +39,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
+  @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions: boolean;
   @Input() showSymbolColumn = true;
 
@@ -47,6 +50,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   public allFilters: Filter[];
@@ -59,6 +63,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public isAfter = isAfter;
   public isLoading = true;
   public isUUID = isUUID;
+  public pageIndex = 0;
   public placeholder = '';
   public routeQueryParams: Subscription;
   public searchKeywords: string[] = [];
@@ -119,10 +124,18 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
         }
         return contains;
       };
+      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
       this.updateFilters();
     }
+  }
+
+  public onChangePage(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+
+    this.totalFees = this.getTotalFees();
+    this.totalValue = this.getTotalValue();
   }
 
   public onCloneActivity(aActivity: OrderWithAccount) {
@@ -231,6 +244,21 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     return Object.values(fieldValueMap);
   }
 
+  private getPaginatedData() {
+    if (this.dataSource.data.length > this.pageSize) {
+      const sortedData = this.dataSource.sortData(
+        this.dataSource.filteredData,
+        this.dataSource.sort
+      );
+
+      return sortedData.slice(
+        this.pageIndex * this.pageSize,
+        (this.pageIndex + 1) * this.pageSize
+      );
+    }
+    return this.dataSource.filteredData;
+  }
+
   private getSearchableFieldValues(activities: OrderWithAccount[]): Filter[] {
     const fieldValueMap: { [id: string]: Filter } = {};
 
@@ -243,8 +271,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   private getTotalFees() {
     let totalFees = new Big(0);
-
-    for (const activity of this.dataSource.filteredData) {
+    const paginatedData = this.getPaginatedData();
+    for (const activity of paginatedData) {
       if (isNumber(activity.feeInBaseCurrency)) {
         totalFees = totalFees.plus(activity.feeInBaseCurrency);
       } else {
@@ -257,8 +285,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   private getTotalValue() {
     let totalValue = new Big(0);
-
-    for (const activity of this.dataSource.filteredData) {
+    const paginatedData = this.getPaginatedData();
+    for (const activity of paginatedData) {
       if (isNumber(activity.valueInBaseCurrency)) {
         if (activity.type === 'BUY' || activity.type === 'ITEM') {
           totalValue = totalValue.plus(activity.valueInBaseCurrency);

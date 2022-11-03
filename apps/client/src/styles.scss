@@ -90,6 +90,10 @@ body {
       }
     }
 
+    .mat-paginator {
+      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+    }
+
     .svgMap-tooltip {
       background: var(--dark-background);
 
@@ -217,6 +221,14 @@ ngx-skeleton-loader {
     .mat-form-field-wrapper {
       padding-bottom: 0;
     }
+  }
+}
+
+.mat-paginator {
+  background-color: rgba(var(--palette-foreground-base-light), 0.02);
+
+  .mat-paginator-page-size {
+    display: none;
   }
 }
 
