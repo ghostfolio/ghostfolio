@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Restructured the actions in the admin control panel
 
+### Fixed
+
+- Fixed the calculation in the portfolio evolution chart
+
 ## 1.207.0 - 31.10.2022
 
 ### Added
