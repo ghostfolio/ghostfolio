@@ -38,6 +38,7 @@ import {
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
+import { last } from 'lodash';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -61,7 +62,8 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @ViewChild('chartCanvas') chartCanvas;
 
   public chart: Chart<any>;
-  private data: InvestmentItem[];
+  private investments: InvestmentItem[];
+  private values: LineChartItem[];
 
   public constructor() {
     Chart.register(
@@ -92,31 +94,48 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
   private initialize() {
     // Create a clone
-    this.data = this.benchmarkDataItems.map((item) => Object.assign({}, item));
+    this.investments = this.benchmarkDataItems.map((item) =>
+      Object.assign({}, item)
+    );
+    this.values = this.historicalDataItems.map((item) =>
+      Object.assign({}, item)
+    );
 
-    if (!this.groupBy && this.data?.length > 0) {
+    if (!this.groupBy && this.investments?.length > 0) {
+      let date: string;
+
       if (this.range === 'max') {
         // Extend chart by 5% of days in market (before)
-        const firstItem = this.data[0];
-        this.data.unshift({
-          ...firstItem,
-          date: format(
-            subDays(parseISO(firstItem.date), this.daysInMarket * 0.05 || 90),
-            DATE_FORMAT
+        date = format(
+          subDays(
+            parseISO(this.investments[0].date),
+            this.daysInMarket * 0.05 || 90
           ),
+          DATE_FORMAT
+        );
+        this.investments.unshift({
+          date,
           investment: 0
+        });
+        this.values.unshift({
+          date,
+          value: 0
         });
       }
 
       // Extend chart by 5% of days in market (after)
-      const lastItem = this.data[this.data.length - 1];
-      this.data.push({
-        ...lastItem,
-        date: format(
-          addDays(parseDate(lastItem.date), this.daysInMarket * 0.05 || 90),
-          DATE_FORMAT
-        )
+      date = format(
+        addDays(
+          parseDate(last(this.investments).date),
+          this.daysInMarket * 0.05 || 90
+        ),
+        DATE_FORMAT
+      );
+      this.investments.push({
+        date,
+        investment: last(this.investments).investment
       });
+      this.values.push({ date, value: last(this.values).value });
     }
 
     const data = {
@@ -128,7 +147,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: this.groupBy ? 0 : 1,
-          data: this.data.map(({ date, investment }) => {
+          data: this.investments.map(({ date, investment }) => {
             return {
               x: parseDate(date),
               y: this.isInPercent ? investment * 100 : investment
@@ -148,7 +167,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         {
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.historicalDataItems.map(({ date, value }) => {
+          data: this.values.map(({ date, value }) => {
             return {
               x: parseDate(date),
               y: this.isInPercent ? value * 100 : value
@@ -156,7 +175,15 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           }),
           fill: false,
           label: $localize`Total Amount`,
-          pointRadius: 0
+          pointRadius: 0,
+          segment: {
+            borderColor: (context: unknown) =>
+              this.isInFuture(
+                context,
+                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
+              ),
+            borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
+          }
         }
       ]
     };
