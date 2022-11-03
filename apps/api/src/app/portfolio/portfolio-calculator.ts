@@ -1273,6 +1273,7 @@ export class PortfolioCalculator {
         Average price: ${averagePriceAtStartDate.toFixed(
           2
         )} -> ${averagePriceAtEndDate.toFixed(2)}
+        Total investment: ${totalInvestment.toFixed(2)}
         Max. total investment: ${maxTotalInvestment.toFixed(2)}
         Gross performance: ${totalGrossPerformance.toFixed(
           2
@@ -1280,9 +1281,7 @@ export class PortfolioCalculator {
         Fees per unit: ${feesPerUnit.toFixed(2)}
         Net performance: ${totalNetPerformance.toFixed(
           2
-        )} / ${netPerformancePercentage.mul(100).toFixed(2)}%
-        Investment at end date: ${totalInvestment}
-        `
+        )} / ${netPerformancePercentage.mul(100).toFixed(2)}%`
       );
     }
 
