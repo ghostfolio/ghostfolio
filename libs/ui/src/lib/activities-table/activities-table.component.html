@@ -424,7 +424,7 @@
       dataSource.data.length <= pageSize
   }"
   [pageSize]="pageSize"
-  (page)="pageChanged($event)"
+  (page)="onChangePage($event)"
 ></mat-paginator>
 
 <ngx-skeleton-loader

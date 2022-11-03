@@ -13,6 +13,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
@@ -38,7 +39,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
-  @Input() pageSize = Number.MAX_SAFE_INTEGER;
+  @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions: boolean;
   @Input() showSymbolColumn = true;
 
@@ -128,6 +129,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
       this.updateFilters();
     }
+  }
+
+  public onChangePage(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+
+    this.totalFees = this.getTotalFees();
+    this.totalValue = this.getTotalValue();
   }
 
   public onCloneActivity(aActivity: OrderWithAccount) {
@@ -291,13 +299,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
 
     return totalValue.toNumber();
-  }
-
-  public pageChanged(page: PageEvent) {
-    this.pageIndex = page.pageIndex;
-
-    this.totalFees = this.getTotalFees();
-    this.totalValue = this.getTotalValue();
   }
 
   private updateFilters(filters: Filter[] = []) {
