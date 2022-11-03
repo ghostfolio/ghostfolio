@@ -94,8 +94,8 @@ describe('PortfolioCalculator', () => {
         grossPerformance: new Big('19.86'),
         grossPerformancePercentage: new Big('0.13100263852242744063'),
         hasErrors: false,
-        netPerformance: new Big('15.61'),
-        netPerformancePercentage: new Big('0.1029683377308707124'),
+        netPerformance: new Big('19.86'),
+        netPerformancePercentage: new Big('0.13100263852242744063'),
         positions: [
           {
             averagePrice: new Big('0'),
@@ -105,8 +105,8 @@ describe('PortfolioCalculator', () => {
             grossPerformance: new Big('19.86'),
             grossPerformancePercentage: new Big('0.13100263852242744063'),
             investment: new Big('0'),
-            netPerformance: new Big('15.61'),
-            netPerformancePercentage: new Big('0.1029683377308707124'),
+            netPerformance: new Big('19.86'),
+            netPerformancePercentage: new Big('0.13100263852242744063'),
             marketPrice: 87.8,
             quantity: new Big('0'),
             symbol: 'NOVN.SW',
