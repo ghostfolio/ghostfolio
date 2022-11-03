@@ -234,21 +234,28 @@ export class PortfolioCalculator {
       [symbol: string]: { [date: string]: Big };
     } = {};
 
+    const maxInvestmentValuesBySymbol: {
+      [symbol: string]: { [date: string]: Big };
+    } = {};
+
     const totalNetPerformanceValues: { [date: string]: Big } = {};
     const totalInvestmentValues: { [date: string]: Big } = {};
+    const maxTotalInvestmentValues: { [date: string]: Big } = {};
 
     for (const symbol of Object.keys(symbols)) {
-      const { netPerformanceValues, investmentValues } = this.getSymbolMetrics({
-        end,
-        marketSymbolMap,
-        start,
-        step,
-        symbol,
-        isChartMode: true
-      });
+      const { investmentValues, maxInvestmentValues, netPerformanceValues } =
+        this.getSymbolMetrics({
+          end,
+          marketSymbolMap,
+          start,
+          step,
+          symbol,
+          isChartMode: true
+        });
 
       netPerformanceValuesBySymbol[symbol] = netPerformanceValues;
       investmentValuesBySymbol[symbol] = investmentValues;
+      maxInvestmentValuesBySymbol[symbol] = maxInvestmentValues;
     }
 
     for (const currentDate of dates) {
@@ -267,19 +274,28 @@ export class PortfolioCalculator {
         totalInvestmentValues[dateString] =
           totalInvestmentValues[dateString] ?? new Big(0);
 
+        maxTotalInvestmentValues[dateString] =
+          maxTotalInvestmentValues[dateString] ?? new Big(0);
+
         if (investmentValuesBySymbol[symbol]?.[dateString]) {
           totalInvestmentValues[dateString] = totalInvestmentValues[
             dateString
           ].add(investmentValuesBySymbol[symbol][dateString]);
         }
+
+        if (maxInvestmentValuesBySymbol[symbol]?.[dateString]) {
+          maxTotalInvestmentValues[dateString] = maxTotalInvestmentValues[
+            dateString
+          ].add(maxInvestmentValuesBySymbol[symbol][dateString]);
+        }
       }
     }
 
     return Object.keys(totalNetPerformanceValues).map((date) => {
-      const netPerformanceInPercentage = totalInvestmentValues[date].eq(0)
+      const netPerformanceInPercentage = maxTotalInvestmentValues[date].eq(0)
         ? 0
         : totalNetPerformanceValues[date]
-            .div(totalInvestmentValues[date])
+            .div(maxTotalInvestmentValues[date])
             .mul(100)
             .toNumber();
 
@@ -899,6 +915,7 @@ export class PortfolioCalculator {
     let initialValue: Big;
     let investmentAtStartDate: Big;
     const investmentValues: { [date: string]: Big } = {};
+    const maxInvestmentValues: { [date: string]: Big } = {};
     let lastAveragePrice = new Big(0);
     // let lastTransactionInvestment = new Big(0);
     // let lastValueOfInvestmentBeforeTransaction = new Big(0);
@@ -1170,7 +1187,8 @@ export class PortfolioCalculator {
           .minus(grossPerformanceAtStartDate)
           .minus(fees.minus(feesAtStartDate));
 
-        investmentValues[order.date] = maxTotalInvestment;
+        investmentValues[order.date] = totalInvestment;
+        maxInvestmentValues[order.date] = maxTotalInvestment;
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -1255,6 +1273,7 @@ export class PortfolioCalculator {
         Average price: ${averagePriceAtStartDate.toFixed(
           2
         )} -> ${averagePriceAtEndDate.toFixed(2)}
+        Total investment: ${totalInvestment.toFixed(2)}
         Max. total investment: ${maxTotalInvestment.toFixed(2)}
         Gross performance: ${totalGrossPerformance.toFixed(
           2
@@ -1270,6 +1289,7 @@ export class PortfolioCalculator {
       initialValue,
       grossPerformancePercentage,
       investmentValues,
+      maxInvestmentValues,
       netPerformancePercentage,
       netPerformanceValues,
       hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),

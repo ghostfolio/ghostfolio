@@ -5,11 +5,11 @@
       "name": "Debug Jest File",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/node_modules/@angular/cli/bin/ng",
+      "program": "${workspaceFolder}/node_modules/@nrwl/cli/bin/nx",
       "args": [
         "test",
         "--codeCoverage=false",
-        "--testFile=${workspaceFolder}/apps/api/src/models/portfolio.spec.ts"
+        "--testFile=${workspaceFolder}/apps/api/src/app/portfolio/portfolio-calculator-novn-buy-and-sell.spec.ts"
       ],
       "cwd": "${workspaceFolder}",
       "console": "internalConsole"

@@ -45,7 +45,7 @@
     "start:server": "nx run api:serve --watch",
     "start:storybook": "nx run ui:storybook",
     "test": "nx test",
-    "test:single": "nx test --test-file portfolio-calculator-novn-buy-and-sell-partially.spec.ts",
+    "test:single": "nx test --test-file portfolio-calculator-novn-buy-and-sell.spec.ts",
     "ts-node": "ts-node",
     "update": "nx migrate latest",
     "watch:server": "nx run api:build --watch",
