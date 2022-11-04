@@ -18,6 +18,7 @@
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
         name="benchmark"
+        [disabled]="user?.subscription?.type === 'Basic'"
         [value]="benchmark"
         (selectionChange)="onChangeBenchmark($event.value)"
       >

@@ -3,7 +3,13 @@
     <div class="col-lg">
       <h3 class="d-flex justify-content-center mb-3" i18n>FIRE</h3>
       <div>
-        <h4 class="mb-3" i18n>Calculator</h4>
+        <h4 class="align-items-center d-flex mb-3">
+          <span i18n>Calculator</span
+          ><gf-premium-indicator
+            *ngIf="user?.subscription?.type === 'Basic'"
+            class="ml-1"
+          ></gf-premium-indicator>
+        </h4>
         <gf-fire-calculator
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
@@ -18,7 +24,13 @@
     </div>
   </div>
   <div>
-    <h4 i18n>4% Rule</h4>
+    <h4 class="align-items-center d-flex">
+      <span i18n>4% Rule</span
+      ><gf-premium-indicator
+        *ngIf="user?.subscription?.type === 'Basic'"
+        class="ml-1"
+      ></gf-premium-indicator>
+    </h4>
     <div *ngIf="isLoading">
       <ngx-skeleton-loader
         animation="pulse"
