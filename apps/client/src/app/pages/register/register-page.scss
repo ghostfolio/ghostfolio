@@ -32,8 +32,6 @@
   }
 
   .intro-container {
-    .intro {
-      background-image: url('/assets/intro-dark.jpg') !important;
-    }
+    display: none;
   }
 }
