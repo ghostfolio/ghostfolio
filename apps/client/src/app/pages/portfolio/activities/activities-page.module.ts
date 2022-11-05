@@ -3,11 +3,11 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
-import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
+import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 
 import { GfCreateOrUpdateActivityDialogModule } from './create-or-update-activity-dialog/create-or-update-activity-dialog.module';
-import { GfImportTransactionDialogModule } from './import-transaction-dialog/import-transaction-dialog.module';
+import { GfImportActivitiesDialogModule } from './import-activities-dialog/import-activities-dialog.module';
 import { ActivitiesPageRoutingModule } from './activities-page-routing.module';
 import { ActivitiesPageComponent } from './activities-page.component';
 
@@ -18,12 +18,12 @@ import { ActivitiesPageComponent } from './activities-page.component';
     CommonModule,
     GfActivitiesTableModule,
     GfCreateOrUpdateActivityDialogModule,
-    GfImportTransactionDialogModule,
+    GfImportActivitiesDialogModule,
     MatButtonModule,
     MatSnackBarModule,
     RouterModule
   ],
-  providers: [ImportTransactionsService],
+  providers: [ImportActivitiesService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ActivitiesPageModule {}

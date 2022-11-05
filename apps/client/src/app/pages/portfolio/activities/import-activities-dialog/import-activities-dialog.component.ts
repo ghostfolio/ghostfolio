@@ -7,22 +7,22 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
-import { ImportTransactionDialogParams } from './interfaces/interfaces';
+import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'gf-import-transaction-dialog',
-  styleUrls: ['./import-transaction-dialog.scss'],
-  templateUrl: 'import-transaction-dialog.html'
+  selector: 'gf-import-activities-dialog',
+  styleUrls: ['./import-activities-dialog.scss'],
+  templateUrl: 'import-activities-dialog.html'
 })
-export class ImportTransactionDialog implements OnDestroy {
+export class ImportActivitiesDialog implements OnDestroy {
   public details: any[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ImportTransactionDialogParams,
-    public dialogRef: MatDialogRef<ImportTransactionDialog>
+    @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
+    public dialogRef: MatDialogRef<ImportActivitiesDialog>
   ) {}
 
   public ngOnInit() {

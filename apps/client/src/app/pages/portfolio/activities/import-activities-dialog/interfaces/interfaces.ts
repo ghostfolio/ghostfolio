@@ -1,4 +1,4 @@
-export interface ImportTransactionDialogParams {
+export interface ImportActivitiesDialogParams {
   activities: any[];
   deviceType: string;
   messages: string[];

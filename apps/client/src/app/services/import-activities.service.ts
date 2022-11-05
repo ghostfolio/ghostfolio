@@ -11,7 +11,7 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ImportTransactionsService {
+export class ImportActivitiesService {
   private static ACCOUNT_KEYS = ['account', 'accountid'];
   private static CURRENCY_KEYS = ['ccy', 'currency'];
   private static DATA_SOURCE_KEYS = ['datasource'];
@@ -90,7 +90,7 @@ export class ImportTransactionsService {
   }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.ACCOUNT_KEYS) {
+    for (const key of ImportActivitiesService.ACCOUNT_KEYS) {
       if (item[key]) {
         return userAccounts.find((account) => {
           return (
@@ -115,7 +115,7 @@ export class ImportTransactionsService {
   }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.CURRENCY_KEYS) {
+    for (const key of ImportActivitiesService.CURRENCY_KEYS) {
       if (item[key]) {
         return item[key];
       }
@@ -130,7 +130,7 @@ export class ImportTransactionsService {
   private parseDataSource({ item }: { item: any }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.DATA_SOURCE_KEYS) {
+    for (const key of ImportActivitiesService.DATA_SOURCE_KEYS) {
       if (item[key]) {
         return DataSource[item[key].toUpperCase()];
       }
@@ -151,7 +151,7 @@ export class ImportTransactionsService {
     item = this.lowercaseKeys(item);
     let date: string;
 
-    for (const key of ImportTransactionsService.DATE_KEYS) {
+    for (const key of ImportActivitiesService.DATE_KEYS) {
       if (item[key]) {
         if (isMatch(item[key], 'dd-MM-yyyy')) {
           date = parse(item[key], 'dd-MM-yyyy', new Date()).toISOString();
@@ -186,7 +186,7 @@ export class ImportTransactionsService {
   }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.FEE_KEYS) {
+    for (const key of ImportActivitiesService.FEE_KEYS) {
       if (isFinite(item[key])) {
         return item[key];
       }
@@ -209,7 +209,7 @@ export class ImportTransactionsService {
   }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.QUANTITY_KEYS) {
+    for (const key of ImportActivitiesService.QUANTITY_KEYS) {
       if (isFinite(item[key])) {
         return item[key];
       }
@@ -232,7 +232,7 @@ export class ImportTransactionsService {
   }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.SYMBOL_KEYS) {
+    for (const key of ImportActivitiesService.SYMBOL_KEYS) {
       if (item[key]) {
         return item[key];
       }
@@ -255,7 +255,7 @@ export class ImportTransactionsService {
   }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.TYPE_KEYS) {
+    for (const key of ImportActivitiesService.TYPE_KEYS) {
       if (item[key]) {
         switch (item[key].toLowerCase()) {
           case 'buy':
@@ -289,7 +289,7 @@ export class ImportTransactionsService {
   }) {
     item = this.lowercaseKeys(item);
 
-    for (const key of ImportTransactionsService.UNIT_PRICE_KEYS) {
+    for (const key of ImportActivitiesService.UNIT_PRICE_KEYS) {
       if (isFinite(item[key])) {
         return item[key];
       }

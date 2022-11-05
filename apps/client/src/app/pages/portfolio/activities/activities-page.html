@@ -6,14 +6,14 @@
         [activities]="activities"
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
-        [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
+        [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
-        [hasPermissionToImportActivities]="hasPermissionToImportOrders"
+        [hasPermissionToImportActivities]="hasPermissionToImportActivities"
         [locale]="user?.settings?.locale"
-        [showActions]="!hasImpersonationId && hasPermissionToDeleteOrder && !user.settings.isRestrictedView"
-        (activityDeleted)="onDeleteTransaction($event)"
-        (activityToClone)="onCloneTransaction($event)"
-        (activityToUpdate)="onUpdateTransaction($event)"
+        [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
+        (activityDeleted)="onDeleteActivity($event)"
+        (activityToClone)="onCloneActivity($event)"
+        (activityToUpdate)="onUpdateActivity($event)"
         (export)="onExport($event)"
         (exportDrafts)="onExportDrafts($event)"
         (import)="onImport()"
@@ -22,7 +22,7 @@
   </div>
 
   <div
-    *ngIf="!hasImpersonationId && hasPermissionToCreateOrder && !user.settings.isRestrictedView"
+    *ngIf="!hasImpersonationId && hasPermissionToCreateActivity && !user.settings.isRestrictedView"
     class="fab-container"
   >
     <a
