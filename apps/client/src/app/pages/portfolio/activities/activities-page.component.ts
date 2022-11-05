@@ -17,13 +17,13 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
-import { isArray } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { ImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
+import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
   host: { class: 'page' },
@@ -51,10 +51,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private icsService: IcsService,
     private impersonationStorageService: ImpersonationStorageService,
-    private importActivitiesService: ImportActivitiesService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar,
     private userService: UserService
   ) {
     this.routeQueryParams = route.queryParams
@@ -186,88 +184,20 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onImport() {
-    const input = document.createElement('input');
-    input.accept = 'application/JSON, .csv';
-    input.type = 'file';
+    const dialogRef = this.dialog.open(ImportActivitiesDialog, {
+      data: <ImportActivitiesDialogParams>{
+        deviceType: this.deviceType,
+        user: this.user
+      },
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
 
-    input.onchange = (event) => {
-      this.snackBar.open('⏳ ' + $localize`Importing data...`);
-
-      // Getting the file reference
-      const file = (event.target as HTMLInputElement).files[0];
-
-      // Setting up the reader
-      const reader = new FileReader();
-      reader.readAsText(file, 'UTF-8');
-
-      reader.onload = async (readerEvent) => {
-        const fileContent = readerEvent.target.result as string;
-
-        try {
-          if (file.name.endsWith('.json')) {
-            const content = JSON.parse(fileContent);
-
-            if (!isArray(content.activities)) {
-              if (isArray(content.orders)) {
-                this.handleImportError({
-                  activities: [],
-                  error: {
-                    error: {
-                      message: [`orders needs to be renamed to activities`]
-                    }
-                  }
-                });
-                return;
-              } else {
-                throw new Error();
-              }
-            }
-
-            try {
-              await this.importActivitiesService.importJson({
-                content: content.activities
-              });
-
-              this.handleImportSuccess();
-            } catch (error) {
-              console.error(error);
-              this.handleImportError({ error, activities: content.activities });
-            }
-
-            return;
-          } else if (file.name.endsWith('.csv')) {
-            try {
-              await this.importActivitiesService.importCsv({
-                fileContent,
-                userAccounts: this.user.accounts
-              });
-
-              this.handleImportSuccess();
-            } catch (error) {
-              console.error(error);
-              this.handleImportError({
-                activities: error?.activities ?? [],
-                error: {
-                  error: { message: error?.error?.message ?? [error?.message] }
-                }
-              });
-            }
-
-            return;
-          }
-
-          throw new Error();
-        } catch (error) {
-          console.error(error);
-          this.handleImportError({
-            activities: [],
-            error: { error: { message: ['Unexpected format'] } }
-          });
-        }
-      };
-    };
-
-    input.click();
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchActivities();
+      });
   }
 
   public onUpdateActivity(aActivity: OrderModel) {
@@ -313,37 +243,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  private handleImportError({
-    activities,
-    error
-  }: {
-    activities: any[];
-    error: any;
-  }) {
-    this.snackBar.dismiss();
-
-    this.dialog.open(ImportActivitiesDialog, {
-      data: {
-        activities,
-        deviceType: this.deviceType,
-        messages: error?.error?.message
-      },
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
-  }
-
-  private handleImportSuccess() {
-    this.fetchActivities();
-
-    this.snackBar.open(
-      '✅ ' + $localize`Import has been completed`,
-      undefined,
-      {
-        duration: 3000
-      }
-    );
   }
 
   private openCreateActivityDialog(aActivity?: Activity): void {
