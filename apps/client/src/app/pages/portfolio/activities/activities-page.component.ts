@@ -22,7 +22,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.component';
+import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { ImportTransactionDialog } from './import-transaction-dialog/import-transaction-dialog.component';
 
 @Component({
@@ -274,7 +274,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public openUpdateTransactionDialog(activity: Activity): void {
-    const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
+    const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {
         activity,
         accounts: this.user?.accounts?.filter((account) => {
@@ -350,7 +350,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.updateUser(user);
 
-        const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
+        const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
           data: {
             accounts: this.user?.accounts?.filter((account) => {
               return account.accountType === 'SECURITIES';

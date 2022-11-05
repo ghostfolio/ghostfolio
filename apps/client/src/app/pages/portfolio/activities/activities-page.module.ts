@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 
-import { GfCreateOrUpdateTransactionDialogModule } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.module';
+import { GfCreateOrUpdateActivityDialogModule } from './create-or-update-activity-dialog/create-or-update-activity-dialog.module';
 import { GfImportTransactionDialogModule } from './import-transaction-dialog/import-transaction-dialog.module';
 import { ActivitiesPageRoutingModule } from './activities-page-routing.module';
 import { ActivitiesPageComponent } from './activities-page.component';
@@ -17,7 +17,7 @@ import { ActivitiesPageComponent } from './activities-page.component';
     ActivitiesPageRoutingModule,
     CommonModule,
     GfActivitiesTableModule,
-    GfCreateOrUpdateTransactionDialogModule,
+    GfCreateOrUpdateActivityDialogModule,
     GfImportTransactionDialogModule,
     MatButtonModule,
     MatSnackBarModule,

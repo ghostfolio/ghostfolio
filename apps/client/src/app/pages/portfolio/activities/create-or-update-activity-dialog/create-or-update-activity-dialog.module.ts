@@ -13,10 +13,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
-import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog.component';
+import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog.component';
 
 @NgModule({
-  declarations: [CreateOrUpdateTransactionDialog],
+  declarations: [CreateOrUpdateActivityDialog],
   imports: [
     CommonModule,
     GfSymbolModule,
@@ -35,4 +35,4 @@ import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfCreateOrUpdateTransactionDialogModule {}
+export class GfCreateOrUpdateActivityDialogModule {}
