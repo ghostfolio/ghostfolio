@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Buy me a coffee_ button to the about page
+
 ### Changed
 
 - Improved the usage of the premium indicator component
