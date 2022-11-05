@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usage of the premium indicator component
 - Removed the intro image in dark mode
 
 ## 1.208.0 - 03.11.2022

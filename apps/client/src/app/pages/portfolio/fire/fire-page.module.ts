@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { GfFireCalculatorModule } from '@ghostfolio/ui/fire-calculator';
+import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -13,6 +14,7 @@ import { FirePageComponent } from './fire-page.component';
     CommonModule,
     FirePageRoutingModule,
     GfFireCalculatorModule,
+    GfPremiumIndicatorModule,
     GfValueModule,
     NgxSkeletonLoaderModule
   ],

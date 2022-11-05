@@ -71,7 +71,12 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDetails & { hasError: boolean }> {
+    let hasDetails = true;
     let hasError = false;
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      hasDetails = this.request.user.subscription.type === 'Premium';
+    }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
@@ -133,7 +138,13 @@ export class PortfolioController {
         accounts[name].current = current / totalValue;
         accounts[name].original = original / totalInvestment;
       }
+    }
 
+    if (
+      hasDetails === false ||
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
@@ -149,11 +160,6 @@ export class PortfolioController {
         'totalBuy',
         'totalSell'
       ]);
-    }
-
-    let hasDetails = true;
-    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      hasDetails = this.request.user.subscription.type === 'Premium';
     }
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
@@ -175,7 +181,7 @@ export class PortfolioController {
       hasError,
       holdings,
       totalValueInBaseCurrency,
-      summary: hasDetails ? portfolioSummary : undefined
+      summary: portfolioSummary
     };
   }
 
@@ -186,16 +192,6 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('groupBy') groupBy?: GroupBy
   ): Promise<PortfolioInvestments> {
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      this.request.user.subscription.type === 'Basic'
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     let investments: InvestmentItem[];
 
     if (groupBy === 'month') {
@@ -224,6 +220,15 @@ export class PortfolioController {
         date: item.date,
         investment: item.investment / maxInvestment
       }));
+    }
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      investments = investments.map((item) => {
+        return nullifyValuesInObject(item, ['investment']);
+      });
     }
 
     return { investments };
@@ -271,6 +276,17 @@ export class PortfolioController {
           'currentValue',
           'totalInvestment'
         ]
+      );
+    }
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      performanceInformation.chart = performanceInformation.chart.map(
+        (item) => {
+          return nullifyValuesInObject(item, ['totalInvestment', 'value']);
+        }
       );
     }
 

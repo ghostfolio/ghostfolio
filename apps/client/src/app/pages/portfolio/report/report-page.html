@@ -14,21 +14,39 @@
         >
       </p>
       <div class="mb-4">
-        <h4 class="m-0">Currency Cluster Risks</h4>
+        <h4 class="align-items-center d-flex m-0">
+          <span>Currency Cluster Risks</span
+          ><gf-premium-indicator
+            *ngIf="user?.subscription?.type === 'Basic'"
+            class="ml-1"
+          ></gf-premium-indicator>
+        </h4>
         <gf-rules
           [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
           [rules]="currencyClusterRiskRules"
         ></gf-rules>
       </div>
       <div class="mb-4">
-        <h4 class="m-0">Account Cluster Risks</h4>
+        <h4 class="align-items-center d-flex m-0">
+          <span>Account Cluster Risks</span
+          ><gf-premium-indicator
+            *ngIf="user?.subscription?.type === 'Basic'"
+            class="ml-1"
+          ></gf-premium-indicator>
+        </h4>
         <gf-rules
           [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
           [rules]="accountClusterRiskRules"
         ></gf-rules>
       </div>
       <div>
-        <h4 class="m-0">Fees</h4>
+        <h4 class="align-items-center d-flex m-0">
+          <span>Fees</span
+          ><gf-premium-indicator
+            *ngIf="user?.subscription?.type === 'Basic'"
+            class="ml-1"
+          ></gf-premium-indicator>
+        </h4>
         <gf-rules
           [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
           [rules]="feeRules"
