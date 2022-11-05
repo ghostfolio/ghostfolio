@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the activities import
 - Improved the usage of the premium indicator component
 - Removed the intro image in dark mode
 - Refactored the `TransactionsPageComponent` to `ActivitiesPageComponent`
