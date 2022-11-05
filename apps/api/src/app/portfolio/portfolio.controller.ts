@@ -227,7 +227,7 @@ export class PortfolioController {
       this.request.user.subscription.type === 'Basic'
     ) {
       investments = investments.map((item) => {
-        return { ...item, investment: null };
+        return nullifyValuesInObject(item, ['investment']);
       });
     }
 
@@ -285,7 +285,7 @@ export class PortfolioController {
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         (item) => {
-          return { ...item, totalInvestment: null, value: null };
+          return nullifyValuesInObject(item, ['totalInvestment', 'value']);
         }
       );
     }
