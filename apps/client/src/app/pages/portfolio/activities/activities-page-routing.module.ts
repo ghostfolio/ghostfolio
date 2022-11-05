@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
-import { TransactionsPageComponent } from './transactions-page.component';
+import { ActivitiesPageComponent } from './activities-page.component';
 
 const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: TransactionsPageComponent,
+    component: ActivitiesPageComponent,
     path: '',
     title: $localize`Activities`
   }
@@ -17,4 +17,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TransactionsPageRoutingModule {}
+export class ActivitiesPageRoutingModule {}

@@ -27,11 +27,11 @@ import { ImportTransactionDialog } from './import-transaction-dialog/import-tran
 
 @Component({
   host: { class: 'page' },
-  selector: 'gf-transactions-page',
-  styleUrls: ['./transactions-page.scss'],
-  templateUrl: './transactions-page.html'
+  selector: 'gf-activities-page',
+  styleUrls: ['./activities-page.scss'],
+  templateUrl: './activities-page.html'
 })
-export class TransactionsPageComponent implements OnDestroy, OnInit {
+export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public activities: Activity[];
   public defaultAccountId: string;
   public deviceType: string;

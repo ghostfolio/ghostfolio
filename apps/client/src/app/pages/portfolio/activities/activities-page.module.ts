@@ -8,23 +8,22 @@ import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activit
 
 import { GfCreateOrUpdateTransactionDialogModule } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.module';
 import { GfImportTransactionDialogModule } from './import-transaction-dialog/import-transaction-dialog.module';
-import { TransactionsPageRoutingModule } from './transactions-page-routing.module';
-import { TransactionsPageComponent } from './transactions-page.component';
+import { ActivitiesPageRoutingModule } from './activities-page-routing.module';
+import { ActivitiesPageComponent } from './activities-page.component';
 
 @NgModule({
-  declarations: [TransactionsPageComponent],
-  exports: [],
+  declarations: [ActivitiesPageComponent],
   imports: [
+    ActivitiesPageRoutingModule,
     CommonModule,
     GfActivitiesTableModule,
     GfCreateOrUpdateTransactionDialogModule,
     GfImportTransactionDialogModule,
     MatButtonModule,
     MatSnackBarModule,
-    RouterModule,
-    TransactionsPageRoutingModule
+    RouterModule
   ],
   providers: [ImportTransactionsService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class TransactionsPageModule {}
+export class ActivitiesPageModule {}
