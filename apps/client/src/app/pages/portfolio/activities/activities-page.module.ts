@@ -6,10 +6,10 @@ import { RouterModule } from '@angular/router';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 
-import { GfCreateOrUpdateActivityDialogModule } from './create-or-update-activity-dialog/create-or-update-activity-dialog.module';
-import { GfImportActivitiesDialogModule } from './import-activities-dialog/import-activities-dialog.module';
 import { ActivitiesPageRoutingModule } from './activities-page-routing.module';
 import { ActivitiesPageComponent } from './activities-page.component';
+import { GfCreateOrUpdateActivityDialogModule } from './create-or-update-activity-dialog/create-or-update-activity-dialog.module';
+import { GfImportActivitiesDialogModule } from './import-activities-dialog/import-activities-dialog.module';
 
 @NgModule({
   declarations: [ActivitiesPageComponent],
