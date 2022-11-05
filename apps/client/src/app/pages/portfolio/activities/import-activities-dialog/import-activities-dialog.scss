@@ -1,6 +1,10 @@
 :host {
   display: block;
 
+  a {
+    color: rgba(var(--palette-primary-500), 1);
+  }
+
   .mat-expansion-panel {
     background: none;
     box-shadow: none;

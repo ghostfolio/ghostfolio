@@ -1,5 +1,6 @@
+import { User } from '@ghostfolio/common/interfaces';
+
 export interface ImportActivitiesDialogParams {
-  activities: any[];
   deviceType: string;
-  messages: string[];
+  user: User;
 }

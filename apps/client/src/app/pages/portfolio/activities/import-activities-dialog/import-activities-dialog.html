@@ -1,32 +1,67 @@
 <gf-dialog-header
   mat-dialog-title
-  title="Import Activities Error"
   [deviceType]="data.deviceType"
+  [title]="errorMessages.length === 0 ?  'Import Activities' : 'Import Activities Error'"
   (closeButtonClicked)="onCancel()"
 ></gf-dialog-header>
 
 <div class="flex-grow-1" mat-dialog-content>
-  <mat-accordion displayMode="flat">
-    <mat-expansion-panel
-      *ngFor="let message of data.messages; let i = index"
-      [disabled]="!details[i]"
-    >
-      <mat-expansion-panel-header class="pl-1">
-        <mat-panel-title>
-          <div class="d-flex">
-            <div class="align-items-center d-flex mr-2">
-              <ion-icon name="warning-outline"></ion-icon>
+  <ng-container *ngIf="errorMessages.length === 0">
+    <div class="d-flex justify-content-center flex-column">
+      <button
+        class="py-3"
+        color="primary"
+        mat-stroked-button
+        (click)="onImport()"
+      >
+        <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+        <span i18n>Upload File</span>
+      </button>
+      <p class="mb-0 mt-4 text-center">
+        <span class="mr-1" i18n>The following file formats are expected:</span>
+        <a
+          href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
+          target="_blank"
+          >CSV</a
+        >
+        <span class="mx-1" i18n>or</span>
+        <a
+          href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
+          target="_blank"
+          >JSON</a
+        >
+      </p>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="errorMessages.length > 0">
+    <mat-accordion displayMode="flat">
+      <mat-expansion-panel
+        *ngFor="let message of errorMessages; let i = index"
+        [disabled]="!details[i]"
+      >
+        <mat-expansion-panel-header class="pl-1">
+          <mat-panel-title>
+            <div class="d-flex">
+              <div class="align-items-center d-flex mr-2">
+                <ion-icon name="warning-outline"></ion-icon>
+              </div>
+              <div>{{ message }}</div>
             </div>
-            <div>{{ message }}</div>
-          </div>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <pre
-        *ngIf="details[i]"
-        class="m-0"
-      ><code>{{ details[i] | json }}</code></pre>
-    </mat-expansion-panel>
-  </mat-accordion>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <pre
+          *ngIf="details[i]"
+          class="m-0"
+        ><code>{{ details[i] | json }}</code></pre>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <div class="mt-2">
+      <button mat-button (click)="onReset()">
+        <ion-icon class="mr-2" name="arrow-back-outline"></ion-icon>
+        <span i18n>Back</span>
+      </button>
+    </div>
+  </ng-container>
 </div>
 
 <gf-dialog-footer
