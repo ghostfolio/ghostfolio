@@ -148,8 +148,8 @@ const routes: Routes = [
   {
     path: 'portfolio/activities',
     loadChildren: () =>
-      import('./pages/portfolio/transactions/transactions-page.module').then(
-        (m) => m.TransactionsPageModule
+      import('./pages/portfolio/activities/activities-page.module').then(
+        (m) => m.ActivitiesPageModule
       )
   },
   {

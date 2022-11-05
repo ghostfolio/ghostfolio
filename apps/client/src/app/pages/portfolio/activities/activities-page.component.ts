@@ -10,7 +10,7 @@ import { PositionDetailDialog } from '@ghostfolio/client/components/position/pos
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { ImportTransactionsService } from '@ghostfolio/client/services/import-transactions.service';
+import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
@@ -22,23 +22,23 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { CreateOrUpdateTransactionDialog } from './create-or-update-transaction-dialog/create-or-update-transaction-dialog.component';
-import { ImportTransactionDialog } from './import-transaction-dialog/import-transaction-dialog.component';
+import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
+import { ImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
 
 @Component({
   host: { class: 'page' },
-  selector: 'gf-transactions-page',
-  styleUrls: ['./transactions-page.scss'],
-  templateUrl: './transactions-page.html'
+  selector: 'gf-activities-page',
+  styleUrls: ['./activities-page.scss'],
+  templateUrl: './activities-page.html'
 })
-export class TransactionsPageComponent implements OnDestroy, OnInit {
+export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public activities: Activity[];
   public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
-  public hasPermissionToCreateOrder: boolean;
-  public hasPermissionToDeleteOrder: boolean;
-  public hasPermissionToImportOrders: boolean;
+  public hasPermissionToCreateActivity: boolean;
+  public hasPermissionToDeleteActivity: boolean;
+  public hasPermissionToImportActivities: boolean;
   public routeQueryParams: Subscription;
   public user: User;
 
@@ -51,7 +51,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private icsService: IcsService,
     private impersonationStorageService: ImpersonationStorageService,
-    private importTransactionsService: ImportTransactionsService,
+    private importActivitiesService: ImportActivitiesService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
@@ -61,14 +61,14 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['createDialog']) {
-          this.openCreateTransactionDialog();
+          this.openCreateActivityDialog();
         } else if (params['editDialog']) {
           if (this.activities) {
-            const transaction = this.activities.find(({ id }) => {
-              return id === params['transactionId'];
+            const activity = this.activities.find(({ id }) => {
+              return id === params['activityId'];
             });
 
-            this.openUpdateTransactionDialog(transaction);
+            this.openUpdateActivityDialog(activity);
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -96,7 +96,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
 
-        this.hasPermissionToImportOrders =
+        this.hasPermissionToImportActivities =
           hasPermission(globalPermissions, permissions.enableImport) &&
           !this.hasImpersonationId;
       });
@@ -121,7 +121,10 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       .subscribe(({ activities }) => {
         this.activities = activities;
 
-        if (this.hasPermissionToCreateOrder && this.activities?.length <= 0) {
+        if (
+          this.hasPermissionToCreateActivity &&
+          this.activities?.length <= 0
+        ) {
           this.router.navigate([], { queryParams: { createDialog: true } });
         }
 
@@ -129,11 +132,11 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCloneTransaction(aActivity: Activity) {
-    this.openCreateTransactionDialog(aActivity);
+  public onCloneActivity(aActivity: Activity) {
+    this.openCreateActivityDialog(aActivity);
   }
 
-  public onDeleteTransaction(aId: string) {
+  public onDeleteActivity(aId: string) {
     this.dataService
       .deleteOrder(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -221,7 +224,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             }
 
             try {
-              await this.importTransactionsService.importJson({
+              await this.importActivitiesService.importJson({
                 content: content.activities
               });
 
@@ -234,7 +237,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
             return;
           } else if (file.name.endsWith('.csv')) {
             try {
-              await this.importTransactionsService.importCsv({
+              await this.importActivitiesService.importCsv({
                 fileContent,
                 userAccounts: this.user.accounts
               });
@@ -267,14 +270,14 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     input.click();
   }
 
-  public onUpdateTransaction(aTransaction: OrderModel) {
+  public onUpdateActivity(aActivity: OrderModel) {
     this.router.navigate([], {
-      queryParams: { editDialog: true, transactionId: aTransaction.id }
+      queryParams: { activityId: aActivity.id, editDialog: true }
     });
   }
 
-  public openUpdateTransactionDialog(activity: Activity): void {
-    const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
+  public openUpdateActivityDialog(activity: Activity): void {
+    const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {
         activity,
         accounts: this.user?.accounts?.filter((account) => {
@@ -321,7 +324,7 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
   }) {
     this.snackBar.dismiss();
 
-    this.dialog.open(ImportTransactionDialog, {
+    this.dialog.open(ImportActivitiesDialog, {
       data: {
         activities,
         deviceType: this.deviceType,
@@ -343,14 +346,14 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
     );
   }
 
-  private openCreateTransactionDialog(aActivity?: Activity): void {
+  private openCreateActivityDialog(aActivity?: Activity): void {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((user) => {
         this.updateUser(user);
 
-        const dialogRef = this.dialog.open(CreateOrUpdateTransactionDialog, {
+        const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
           data: {
             accounts: this.user?.accounts?.filter((account) => {
               return account.accountType === 'SECURITIES';
@@ -438,11 +441,11 @@ export class TransactionsPageComponent implements OnDestroy, OnInit {
       return account.isDefault;
     })?.id;
 
-    this.hasPermissionToCreateOrder = hasPermission(
+    this.hasPermissionToCreateActivity = hasPermission(
       this.user.permissions,
       permissions.createOrder
     );
-    this.hasPermissionToDeleteOrder = hasPermission(
+    this.hasPermissionToDeleteActivity = hasPermission(
       this.user.permissions,
       permissions.deleteOrder
     );

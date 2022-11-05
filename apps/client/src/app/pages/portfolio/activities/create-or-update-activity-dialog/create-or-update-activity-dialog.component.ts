@@ -28,16 +28,16 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-import { CreateOrUpdateTransactionDialogParams } from './interfaces/interfaces';
+import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'h-100' },
-  selector: 'gf-create-or-update-transaction-dialog',
+  selector: 'gf-create-or-update-activity-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./create-or-update-transaction-dialog.scss'],
-  templateUrl: 'create-or-update-transaction-dialog.html'
+  styleUrls: ['./create-or-update-activity-dialog.scss'],
+  templateUrl: 'create-or-update-activity-dialog.html'
 })
-export class CreateOrUpdateTransactionDialog implements OnDestroy {
+export class CreateOrUpdateActivityDialog implements OnDestroy {
   @ViewChild('autocomplete') autocomplete;
 
   public activityForm: FormGroup;
@@ -60,10 +60,10 @@ export class CreateOrUpdateTransactionDialog implements OnDestroy {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTransactionDialogParams,
+    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
     private dateAdapter: DateAdapter<any>,
-    public dialogRef: MatDialogRef<CreateOrUpdateTransactionDialog>,
+    public dialogRef: MatDialogRef<CreateOrUpdateActivityDialog>,
     private formBuilder: FormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string
   ) {}

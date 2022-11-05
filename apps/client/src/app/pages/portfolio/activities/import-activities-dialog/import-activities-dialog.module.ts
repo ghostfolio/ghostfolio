@@ -6,10 +6,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 
-import { ImportTransactionDialog } from './import-transaction-dialog.component';
+import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
 @NgModule({
-  declarations: [ImportTransactionDialog],
+  declarations: [ImportActivitiesDialog],
   imports: [
     CommonModule,
     GfDialogFooterModule,
@@ -20,4 +20,4 @@ import { ImportTransactionDialog } from './import-transaction-dialog.component';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfImportTransactionDialogModule {}
+export class GfImportActivitiesDialogModule {}
