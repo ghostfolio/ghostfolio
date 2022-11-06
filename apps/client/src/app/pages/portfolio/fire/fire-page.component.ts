@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { PortfolioReportRule, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import Big from 'big.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -15,8 +15,12 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './fire-page.html'
 })
 export class FirePageComponent implements OnDestroy, OnInit {
+  public accountClusterRiskRules: PortfolioReportRule[];
+  public currencyClusterRiskRules: PortfolioReportRule[];
   public deviceType: string;
+  public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
+  public hasPermissionToCreateOrder: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
   public user: User;
@@ -53,11 +57,29 @@ export class FirePageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
+    this.dataService
+      .fetchPortfolioReport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((portfolioReport) => {
+        this.accountClusterRiskRules =
+          portfolioReport.rules['accountClusterRisk'] || null;
+        this.currencyClusterRiskRules =
+          portfolioReport.rules['currencyClusterRisk'] || null;
+        this.feeRules = portfolioReport.rules['fees'] || null;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateOrder = hasPermission(
+            this.user.permissions,
+            permissions.createOrder
+          );
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
