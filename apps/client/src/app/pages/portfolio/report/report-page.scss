@@ -1,8 +1,0 @@
-:host {
-  color: rgb(var(--dark-primary-text));
-  display: block;
-}
-
-:host-context(.is-dark-theme) {
-  color: rgb(var(--light-primary-text));
-}

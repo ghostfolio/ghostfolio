@@ -146,48 +146,6 @@ const routes: Routes = [
       )
   },
   {
-    path: 'portfolio/activities',
-    loadChildren: () =>
-      import('./pages/portfolio/activities/activities-page.module').then(
-        (m) => m.ActivitiesPageModule
-      )
-  },
-  {
-    path: 'portfolio/allocations',
-    loadChildren: () =>
-      import('./pages/portfolio/allocations/allocations-page.module').then(
-        (m) => m.AllocationsPageModule
-      )
-  },
-  {
-    path: 'portfolio/analysis',
-    loadChildren: () =>
-      import('./pages/portfolio/analysis/analysis-page.module').then(
-        (m) => m.AnalysisPageModule
-      )
-  },
-  {
-    path: 'portfolio/fire',
-    loadChildren: () =>
-      import('./pages/portfolio/fire/fire-page.module').then(
-        (m) => m.FirePageModule
-      )
-  },
-  {
-    path: 'portfolio/holdings',
-    loadChildren: () =>
-      import('./pages/portfolio/holdings/holdings-page.module').then(
-        (m) => m.HoldingsPageModule
-      )
-  },
-  {
-    path: 'portfolio/report',
-    loadChildren: () =>
-      import('./pages/portfolio/report/report-page.module').then(
-        (m) => m.ReportPageModule
-      )
-  },
-  {
     path: 'pricing',
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(

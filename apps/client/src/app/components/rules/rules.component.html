@@ -10,7 +10,7 @@
         ></gf-no-transactions-info-indicator>
       </mat-card>
 
-      <gf-rule *ngIf="rules === undefined" [isLoading]="true"></gf-rule>
+      <gf-rule *ngIf="rules?.length === 0" [isLoading]="true"></gf-rule>
       <ng-container *ngIf="rules !== null && rules !== undefined">
         <gf-rule *ngFor="let rule of rules" [rule]="rule"></gf-rule>
       </ng-container>

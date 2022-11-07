@@ -7,9 +7,45 @@ import { PortfolioPageComponent } from './portfolio-page.component';
 const routes: Routes = [
   {
     canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'analysis', pathMatch: 'full' },
+      {
+        path: 'analysis',
+        loadChildren: () =>
+          import('./analysis/analysis-page.module').then(
+            (m) => m.AnalysisPageModule
+          )
+      },
+      {
+        path: 'holdings',
+        loadChildren: () =>
+          import('./holdings/holdings-page.module').then(
+            (m) => m.HoldingsPageModule
+          )
+      },
+      {
+        path: 'activities',
+        loadChildren: () =>
+          import('./activities/activities-page.module').then(
+            (m) => m.ActivitiesPageModule
+          )
+      },
+      {
+        path: 'allocations',
+        loadChildren: () =>
+          import('./allocations/allocations-page.module').then(
+            (m) => m.AllocationsPageModule
+          )
+      },
+      {
+        path: 'fire',
+        loadChildren: () =>
+          import('./fire/fire-page.module').then((m) => m.FirePageModule)
+      }
+    ],
     component: PortfolioPageComponent,
     path: '',
-    title: 'Portfolio'
+    title: $localize`Portfolio`
   }
 ];
 

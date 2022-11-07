@@ -429,16 +429,19 @@ export class PortfolioController {
   public async getReport(
     @Headers('impersonation-id') impersonationId: string
   ): Promise<PortfolioReport> {
+    const report = await this.portfolioService.getReport(impersonationId);
+
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
       this.request.user.subscription.type === 'Basic'
     ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
+      for (const rule in report.rules) {
+        if (report.rules[rule]) {
+          report.rules[rule] = [];
+        }
+      }
     }
 
-    return await this.portfolioService.getReport(impersonationId);
+    return report;
   }
 }

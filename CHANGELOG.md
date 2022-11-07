@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added tabs to the portfolio page
+
 ### Changed
 
+- Merged the _FIRE_ calculator and the _X-ray_ section to a single page
 - Tightened the validation rule of the base currency environment variable (`BASE_CURRENCY`)
 
 ## 1.209.0 - 05.11.2022
