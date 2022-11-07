@@ -104,10 +104,6 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/activities-page.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="cff1428d10d59d14e45edec3c735a27b5482db59" datatype="html">
         <source>Name</source>
@@ -667,10 +663,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">167</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4fe84c1d0eef5726c017f64c691145db7a61f879" datatype="html">
@@ -1628,10 +1620,6 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="7f91b999bb17e8c3eab04fd5b3471cceeecb2f5c" datatype="html">
         <source>By Account</source>
@@ -1716,10 +1704,6 @@
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="658bfe96ba9d3a3a2ada478c8c855286b841f92a" datatype="html">
         <source>Investment Timeline</source>
@@ -1793,108 +1777,8 @@
           <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="888f6842631dc20550ad7e9a9c45ef55bf45852b" datatype="html">
-        <source> Get an overview of your current holdings. </source>
-        <target state="new"/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">7,9</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="a8065541641cbf2bb052485e697863f339126033" datatype="html">
-        <source>Open Holdings</source>
-        <target state="translated">Positionen öffnen</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dc8cbec78eb5fc1277d098e82e0527f382082a45" datatype="html">
-        <source> Manage your activities: stocks, ETFs, cryptocurrencies, dividend, and valuables. </source>
-        <target state="new"/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">25,28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8a01583005051b301525894e02769cd4ab428f63" datatype="html">
-        <source>Open Activities</source>
-        <target state="translated">Aktivitäten öffnen</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="aec3e2ac0493fcd83edf9a2aa4e30b08a6996ea0" datatype="html">
-        <source> Check the allocations of your portfolio by account, asset class, currency, sector and region. </source>
-        <target state="new"/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">44,47</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dd45e23e0a96165660570fbec5b66b4f7ed004ab" datatype="html">
-        <source>Open Allocations</source>
-        <target state="translated">Allokationen öffnen</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="a19e731e43585dec410d069553c890df10d16c61" datatype="html">
-        <source> Ghostfolio Analysis visualizes your portfolio and shows your top and bottom performers. </source>
-        <target state="new"/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">63,66</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="098d51e3d4710ca16b14ae8f018153e71efe525f" datatype="html">
-        <source>Open Analysis</source>
-        <target state="translated">Analyse öffnen</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ec6301d6468572fa466f56eb3243c6c58e9cf189" datatype="html">
-        <source> Ghostfolio X-ray uses static analysis to identify potential issues and risks in your portfolio. </source>
-        <target state="new"/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">82,85</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6a3556e0f41f3a1c5963150235ca2ff044af7610" datatype="html">
-        <source>Open X-ray</source>
-        <target state="translated">X-ray öffnen</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">88</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="42d1dac8551ea460544604bef619b089e0a3c53c" datatype="html">
-        <source> Ghostfolio FIRE calculates metrics for the <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Financial Independence, Retire Early<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> lifestyle. </source>
-        <target state="new"/>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">97,100</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4177fd2ac777abecd08d740f6cefa4661d2e25f8" datatype="html">
-        <source>Open FIRE</source>
-        <target state="translated">FIRE öffnen</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page.html</context>
-          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="72ba3bcdd8350cb8bf462e217a28ec7f7a48bb44" datatype="html">
@@ -2055,6 +1939,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.ts</context>
           <context context-type="linenumber">101</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/portfolio-page-routing.module.ts</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page-routing.module.ts</context>
