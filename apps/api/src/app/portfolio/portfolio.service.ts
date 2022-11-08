@@ -31,6 +31,7 @@ import {
   HistoricalDataItem,
   PortfolioDetails,
   PortfolioPerformanceResponse,
+  PortfolioPosition,
   PortfolioReport,
   PortfolioSummary,
   Position,
@@ -1109,7 +1110,12 @@ export class PortfolioService {
     value: Big;
     userCurrency: string;
   }) {
-    const cashPositions: PortfolioDetails['holdings'] = {};
+    const cashPositions: PortfolioDetails['holdings'] = {
+      [userCurrency]: this.getInitialCashPosition({
+        balance: 0,
+        currency: userCurrency
+      })
+    };
 
     for (const account of cashDetails.accounts) {
       const convertedBalance = this.exchangeRateDataService.toCurrency(
@@ -1126,28 +1132,10 @@ export class PortfolioService {
         cashPositions[account.currency].investment += convertedBalance;
         cashPositions[account.currency].value += convertedBalance;
       } else {
-        cashPositions[account.currency] = {
-          allocationCurrent: 0,
-          allocationInvestment: 0,
-          assetClass: AssetClass.CASH,
-          assetSubClass: AssetClass.CASH,
-          countries: [],
-          currency: account.currency,
-          dataSource: undefined,
-          grossPerformance: 0,
-          grossPerformancePercent: 0,
-          investment: convertedBalance,
-          marketPrice: 0,
-          marketState: 'open',
-          name: account.currency,
-          netPerformance: 0,
-          netPerformancePercent: 0,
-          quantity: 0,
-          sectors: [],
-          symbol: account.currency,
-          transactionCount: 0,
-          value: convertedBalance
-        };
+        cashPositions[account.currency] = this.getInitialCashPosition({
+          balance: convertedBalance,
+          currency: account.currency
+        });
       }
     }
 
@@ -1245,6 +1233,37 @@ export class PortfolioService {
         (previous, current) => new Big(previous).plus(current),
         new Big(0)
       );
+  }
+
+  private getInitialCashPosition({
+    balance,
+    currency
+  }: {
+    balance: number;
+    currency: string;
+  }): PortfolioPosition {
+    return {
+      currency,
+      allocationCurrent: 0,
+      allocationInvestment: 0,
+      assetClass: AssetClass.CASH,
+      assetSubClass: AssetClass.CASH,
+      countries: [],
+      dataSource: undefined,
+      grossPerformance: 0,
+      grossPerformancePercent: 0,
+      investment: balance,
+      marketPrice: 0,
+      marketState: 'open',
+      name: currency,
+      netPerformance: 0,
+      netPerformancePercent: 0,
+      quantity: 0,
+      sectors: [],
+      symbol: currency,
+      transactionCount: 0,
+      value: balance
+    };
   }
 
   private getItems(orders: OrderWithAccount[], date = new Date(0)) {
