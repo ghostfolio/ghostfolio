@@ -26,6 +26,7 @@ import { GfHeaderModule } from './components/header/header.module';
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';
 import { LanguageService } from './core/language.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 export function NgxStripeFactory(): string {
   return environment.stripePublicKey;
@@ -50,7 +51,11 @@ export function NgxStripeFactory(): string {
     MatNativeDateModule,
     MatSnackBarModule,
     NgxSkeletonLoaderModule,
-    NgxStripeModule.forRoot(environment.stripePublicKey)
+    NgxStripeModule.forRoot(environment.stripePublicKey),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerImmediately'
+    })
   ],
   providers: [
     authInterceptorProviders,
