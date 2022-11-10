@@ -380,9 +380,9 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/pwa@^14.2.9":
+"@angular/pwa@14.2.9":
   version "14.2.9"
-  resolved "https://registry.npmjs.org/@angular/pwa/-/pwa-14.2.9.tgz"
+  resolved "https://registry.yarnpkg.com/@angular/pwa/-/pwa-14.2.9.tgz#89ba65d0a51b348e7b91254603f4b2d9406f88d0"
   integrity sha512-hbpwW0zfyKSZu9dYAiZi/vS2tYHDAjdVIzCDgaegrb6oRhRekgwuDPlJkwfT4OkEAvhFQxk7DjzybS25wTa5YA==
   dependencies:
     "@angular-devkit/schematics" "14.2.9"
