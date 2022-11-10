@@ -45,6 +45,11 @@
             "output": "./../"
           },
           {
+            "glob": "site.webmanifest",
+            "input": "apps/client/src/assets",
+            "output": "./../"
+          },
+          {
             "glob": "**/*",
             "input": "node_modules/ionicons/dist/ionicons",
             "output": "./../ionicons"
@@ -58,11 +63,6 @@
             "glob": "**/*",
             "input": "apps/client/src/assets",
             "output": "./../assets/"
-          },
-          {
-            "glob": "site.webmanifest",
-            "input": "apps/client/src/assets",
-            "output": "./../"
           }
         ],
         "styles": ["apps/client/src/styles.scss"],
