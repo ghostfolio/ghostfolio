@@ -1,5 +1,5 @@
 {
-  "background_color": "transparent",
+  "background_color": "#FFFFFF",
   "categories": ["finance", "utilities"],
   "description": "Open Source Wealth Management Software",
   "display": "standalone",
