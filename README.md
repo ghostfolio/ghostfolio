@@ -81,6 +81,16 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 
 We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64` and `linux/arm64`.
 
+<div align="center">
+  <a href="https://www.buymeacoffee.com/ghostfolio">
+    <img
+      alt="Buy me a coffee button"
+      src="./apps/client/src/assets/images/button-buy-me-a-coffee.png"
+      width="150"
+    />
+  </a>
+</div>
+
 ### Supported Environment Variables
 
 | Name                | Default Value | Description                                                                                                                                                                                                                                      |
