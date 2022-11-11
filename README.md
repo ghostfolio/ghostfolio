@@ -266,6 +266,10 @@ You can get the _Bearer Token_ via `GET http://localhost:3333/api/v1/auth/anonym
 }
 ```
 
+## Community Projects
+
+- [ghostfolio-cli](https://github.com/DerAndereJohannes/ghostfolio-cli): Command-line interface to access your portfolio
+
 ## Contributing
 
 Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public - including you.
