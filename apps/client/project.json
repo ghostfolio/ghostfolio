@@ -1,4 +1,5 @@
 {
+  "name": "client",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "generators": {
@@ -44,6 +45,11 @@
             "output": "./../"
           },
           {
+            "glob": "site.webmanifest",
+            "input": "apps/client/src/assets",
+            "output": "./../"
+          },
+          {
             "glob": "**/*",
             "input": "node_modules/ionicons/dist/ionicons",
             "output": "./../ionicons"
@@ -66,7 +72,9 @@
         "buildOptimizer": false,
         "sourceMap": true,
         "optimization": false,
-        "namedChunks": true
+        "namedChunks": true,
+        "serviceWorker": true,
+        "ngswConfigPath": "apps/client/ngsw-config.json"
       },
       "configurations": {
         "development-de": {
