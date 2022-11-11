@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the view mode selector to a slide toggle
 - Upgraded `Nx` from version `15.0.0` to `15.0.13`
 
 ## 1.211.0 - 11.11.2022
