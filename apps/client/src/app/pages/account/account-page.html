@@ -167,29 +167,6 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="d-flex mb-2">
-                <div class="align-items-center d-flex pr-1 pt-1 w-50">
-                  <ng-container i18n>View Mode</ng-container>
-                </div>
-                <div class="pl-1 w-50">
-                  <div class="align-items-center d-flex overflow-hidden">
-                    <mat-form-field
-                      appearance="outline"
-                      class="compact-with-outline w-100 without-hint"
-                    >
-                      <mat-select
-                        name="viewMode"
-                        [disabled]="!hasPermissionToUpdateViewMode"
-                        [value]="user.settings.viewMode"
-                        (selectionChange)="onChangeUserSetting('viewMode', $event.value)"
-                      >
-                        <mat-option value="DEFAULT">Default</mat-option>
-                        <mat-option value="ZEN">Zen</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
               <div class="d-flex">
                 <div class="align-items-center d-flex pr-1 pt-1 w-50">
                   <ng-container i18n>Appearance</ng-container>
@@ -215,6 +192,19 @@
                 </div>
               </div>
             </form>
+          </div>
+          <div class="d-flex mt-4 py-1">
+            <div class="align-items-center d-flex pr-1 pt-1 w-50">
+              <ng-container i18n>Zen Mode</ng-container>
+            </div>
+            <div class="pl-1 w-50">
+              <mat-slide-toggle
+                color="primary"
+                [checked]="user.settings.viewMode === 'ZEN'"
+                [disabled]="!hasPermissionToUpdateViewMode"
+                (change)="onViewModeChange($event)"
+              ></mat-slide-toggle>
+            </div>
           </div>
           <div class="align-items-center d-flex mt-4 py-1">
             <div class="pr-1 w-50" i18n>Sign in with fingerprint</div>
