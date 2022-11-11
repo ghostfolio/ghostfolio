@@ -165,6 +165,10 @@ ngx-skeleton-loader {
   @include gf-table;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 .lead {
   font-weight: unset;
 }

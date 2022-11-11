@@ -12,6 +12,7 @@
   }
 
   .mat-card {
+    &:hover,
     &.active {
       border-color: rgba(var(--palette-primary-500), 1);
       box-shadow: 0 0 0 1px rgba(var(--palette-primary-500), 1);
