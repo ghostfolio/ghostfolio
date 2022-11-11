@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Removed bottom margin tag from the body element
+- Removed the bottom margin from the body element
+- Improved the pricing page
 
 ## 1.210.0 - 08.11.2022
 
