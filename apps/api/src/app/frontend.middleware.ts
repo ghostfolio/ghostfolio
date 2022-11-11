@@ -16,6 +16,7 @@ export class FrontendMiddleware implements NestMiddleware {
   public indexHtmlEs = '';
   public indexHtmlIt = '';
   public indexHtmlNl = '';
+  public indexHtmlPt = '';
   public isProduction: boolean;
 
   public constructor(
@@ -47,6 +48,10 @@ export class FrontendMiddleware implements NestMiddleware {
       );
       this.indexHtmlNl = fs.readFileSync(
         this.getPathOfIndexHtmlFile('nl'),
+        'utf8'
+      );
+      this.indexHtmlPt = fs.readFileSync(
+        this.getPathOfIndexHtmlFile('pt'),
         'utf8'
       );
     } catch {}
@@ -123,6 +128,15 @@ export class FrontendMiddleware implements NestMiddleware {
           title,
           languageCode: 'nl',
           path: request.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
+    } else if (req.path === '/pt' || req.path.startsWith('/pt/')) {
+      res.send(
+        this.interpolate(this.indexHtmlPt, {
+          featureGraphicPath,
+          languageCode: 'pt',
+          path: req.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
