@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a student discount to the pricing page
 - Added a prefix to the codes of the coupon system
 
+### Added
+
+- Set up the language localization for Português (`pt`)
+
 ### Changed
 
 - Optimized the page titles in the header for mobile
