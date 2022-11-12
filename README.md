@@ -227,7 +227,7 @@ You can get the _Bearer Token_ via `GET http://localhost:3333/api/v1/auth/anonym
       "date": "2021-09-15T00:00:00.000Z",
       "fee": 19,
       "quantity": 5,
-      "symbol": "MSFT"
+      "symbol": "MSFT",
       "type": "BUY",
       "unitPrice": 298.58
     }
