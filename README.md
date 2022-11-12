@@ -59,7 +59,7 @@ Ghostfolio is for you if you are...
 - ✅ Import and export transactions
 - ✅ Dark Mode
 - ✅ Zen Mode
-- ✅ Mobile-first design
+- ✅ Progressive Web App (PWA) with a mobile-first design
 
 <div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
   <img src="./apps/client/src/assets/images/screenshot.png" width="300">
