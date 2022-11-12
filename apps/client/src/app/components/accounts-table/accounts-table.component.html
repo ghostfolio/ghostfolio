@@ -1,4 +1,22 @@
 <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+  <ng-container matColumnDef="status">
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell px-1"
+      mat-header-cell
+    ></th>
+    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
+      <div class="d-flex justify-content-center">
+        <ion-icon *ngIf="element.isExcluded" name="eye-off-outline"></ion-icon>
+      </div>
+    </td>
+    <td
+      *matFooterCellDef
+      class="d-none d-lg-table-cell px-1"
+      mat-footer-cell
+    ></td>
+  </ng-container>
+
   <ng-container matColumnDef="account">
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Name</th>
     <td *matCellDef="let element" class="px-1" mat-cell>
@@ -15,7 +33,7 @@
         >(Default)</span
       >
     </td>
-    <td *matFooterCellDef class="px-1" mat-footer-cell i18n>Total</td>
+    <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
   </ng-container>
 
   <ng-container matColumnDef="currency">

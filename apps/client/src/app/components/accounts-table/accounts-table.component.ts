@@ -46,6 +46,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   public ngOnChanges() {
     this.displayedColumns = [
+      'status',
       'account',
       'platform',
       'transactions',
