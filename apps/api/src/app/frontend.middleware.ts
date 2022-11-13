@@ -53,16 +53,12 @@ export class FrontendMiddleware implements NestMiddleware {
   public use(req: Request, res: Response, next: NextFunction) {
     let featureGraphicPath = 'assets/cover.png';
 
-    if (
-      req.path === '/en/blog/2022/08/500-stars-on-github' ||
-      req.path === '/en/blog/2022/08/500-stars-on-github/'
-    ) {
+    if (req.path.startsWith('/en/blog/2022/08/500-stars-on-github')) {
       featureGraphicPath = 'assets/images/blog/500-stars-on-github.jpg';
-    } else if (
-      req.path === '/en/blog/2022/10/hacktoberfest-2022' ||
-      req.path === '/en/blog/2022/10/hacktoberfest-2022/'
-    ) {
+    } else if (req.path.startsWith('/en/blog/2022/10/hacktoberfest-2022')) {
       featureGraphicPath = 'assets/images/blog/hacktoberfest-2022.png';
+    } else if (req.path.startsWith('/en/blog/2022/11/black-friday-2022')) {
+      featureGraphicPath = 'assets/images/blog/black-friday-2022.jpg';
     }
 
     if (
