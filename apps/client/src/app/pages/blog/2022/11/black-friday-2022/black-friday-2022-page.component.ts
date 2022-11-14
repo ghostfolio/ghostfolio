@@ -13,8 +13,8 @@ export class BlackFriday2022PageComponent {
   public constructor(private dataService: DataService) {
     const { subscriptions } = this.dataService.fetchInfo();
 
-    const coupon = subscriptions?.[0]?.coupon;
-    const price = subscriptions?.[0]?.price;
+    const coupon = subscriptions?.[0]?.coupon ?? 0;
+    const price = subscriptions?.[0]?.price ?? 1;
 
     this.discount = Math.floor((coupon / price) * 100) / 100;
   }
