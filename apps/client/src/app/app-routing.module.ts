@@ -103,6 +103,13 @@ const routes: Routes = [
       ).then((m) => m.Hacktoberfest2022PageModule)
   },
   {
+    path: 'blog/2022/11/black-friday-2022',
+    loadChildren: () =>
+      import(
+        './pages/blog/2022/11/black-friday-2022/black-friday-2022-page.module'
+      ).then((m) => m.BlackFriday2022PageModule)
+  },
+  {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)

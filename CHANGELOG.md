@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added an indicator for excluded accounts in the accounts table
+- Added a blog post: _Black Friday 2022_
 
 ## 1.212.0 - 11.11.2022
 

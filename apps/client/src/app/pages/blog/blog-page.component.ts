@@ -1,4 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -8,9 +10,18 @@ import { Subject } from 'rxjs';
   templateUrl: './blog-page.html'
 })
 export class BlogPageComponent implements OnDestroy {
+  public hasPermissionForSubscription: boolean;
+
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
+  public constructor(private dataService: DataService) {
+    const info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      info?.globalPermissions,
+      permissions.enableSubscription
+    );
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

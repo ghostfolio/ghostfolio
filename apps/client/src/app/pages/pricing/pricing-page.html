@@ -1,3 +1,16 @@
+<div
+  *ngIf="!user || user?.subscription?.type === 'Basic'"
+  class="intro mb-5 py-5"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1 class="font-weight-bold m-0 text-center">Black Friday Deal</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <div class="row">
     <div class="col">
