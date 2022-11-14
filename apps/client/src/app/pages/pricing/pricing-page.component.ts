@@ -28,7 +28,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     const { baseCurrency, subscriptions } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
-    this.coupon = this.price = subscriptions?.[0]?.coupon;
+    this.coupon = subscriptions?.[0]?.coupon;
     this.price = subscriptions?.[0]?.price;
   }
 

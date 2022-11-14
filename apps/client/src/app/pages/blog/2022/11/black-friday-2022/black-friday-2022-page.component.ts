@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataService } from '@ghostfolio/client/services/data.service';
 
 @Component({
   host: { class: 'page' },
@@ -6,4 +7,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./black-friday-2022-page.scss'],
   templateUrl: './black-friday-2022-page.html'
 })
-export class BlackFriday2022PageComponent {}
+export class BlackFriday2022PageComponent {
+  public discount: number;
+
+  public constructor(private dataService: DataService) {
+    const { subscriptions } = this.dataService.fetchInfo();
+
+    const coupon = subscriptions?.[0]?.coupon;
+    const price = subscriptions?.[0]?.price;
+
+    this.discount = Math.floor((coupon / price) * 100) / 100;
+  }
+}
