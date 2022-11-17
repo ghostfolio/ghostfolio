@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for sorting in the accounts table
+
 ### Changed
 
 - Upgraded `yahoo-finance2` from version `2.3.6` to `2.3.10`
