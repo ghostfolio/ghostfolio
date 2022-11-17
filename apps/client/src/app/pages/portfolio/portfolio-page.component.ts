@@ -43,7 +43,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
           this.tabs = [
             { iconName: 'analytics-outline', path: 'analysis' },
             { iconName: 'wallet-outline', path: 'holdings' },
-            { iconName: 'swap-horizontal-outline', path: 'activities' },
+            { iconName: 'swap-vertical-outline', path: 'activities' },
             { iconName: 'pie-chart-outline', path: 'allocations' },
             { iconName: 'calculator-outline', path: 'fire' }
           ];
