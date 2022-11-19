@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `prisma` from version `4.4.0` to `4.6.1`
 - Upgraded `yahoo-finance2` from version `2.3.6` to `2.3.10`
 
+### Fixed
+
+- Fixed the activities sorting in the position detail dialog
+
 ## 1.213.0 - 14.11.2022
 
 ### Added
