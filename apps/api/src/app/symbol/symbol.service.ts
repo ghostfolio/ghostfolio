@@ -32,7 +32,7 @@ export class SymbolService {
     ]);
     const { currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {};
 
-    if (dataGatheringItem.dataSource && marketPrice) {
+    if (dataGatheringItem.dataSource && marketPrice >= 0) {
       let historicalData: HistoricalDataItem[] = [];
 
       if (includeHistoricalData > 0) {
