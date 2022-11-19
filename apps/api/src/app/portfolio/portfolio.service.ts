@@ -1163,16 +1163,12 @@ export class PortfolioService {
 
     for (const symbol of Object.keys(cashPositions)) {
       // Calculate allocations for each currency
-      cashPositions[symbol].allocationCurrent = new Big(
-        cashPositions[symbol].value
-      )
-        .div(value)
-        .toNumber();
-      cashPositions[symbol].allocationInvestment = new Big(
-        cashPositions[symbol].investment
-      )
-        .div(investment)
-        .toNumber();
+      cashPositions[symbol].allocationCurrent = value.gt(0)
+        ? new Big(cashPositions[symbol].value).div(value).toNumber()
+        : 0;
+      cashPositions[symbol].allocationInvestment = investment.gt(0)
+        ? new Big(cashPositions[symbol].investment).div(investment).toNumber()
+        : 0;
     }
 
     return cashPositions;
