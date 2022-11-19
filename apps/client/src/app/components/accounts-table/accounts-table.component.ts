@@ -6,8 +6,10 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
@@ -31,6 +33,8 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   @Output() accountDeleted = new EventEmitter<string>();
   @Output() accountToUpdate = new EventEmitter<AccountModel>();
+
+  @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<AccountModel> =
     new MatTableDataSource();
@@ -64,6 +68,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
     if (this.accounts) {
       this.dataSource = new MatTableDataSource(this.accounts);
+      this.dataSource.sort = this.sort;
 
       this.isLoading = false;
     }

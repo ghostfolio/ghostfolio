@@ -1,4 +1,4 @@
-<table class="gf-table w-100" mat-table [dataSource]="dataSource">
+<table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="status">
     <th
       *matHeaderCellDef
@@ -37,7 +37,12 @@
   </ng-container>
 
   <ng-container matColumnDef="currency">
-    <th *matHeaderCellDef class="d-none d-lg-table-cell px-1" mat-header-cell>
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell px-1"
+      mat-header-cell
+      mat-sort-header
+    >
       <ng-container i18n>Currency</ng-container>
     </th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
@@ -88,8 +93,9 @@
   <ng-container matColumnDef="balance">
     <th
       *matHeaderCellDef
-      class="d-none d-lg-table-cell px-1 text-right"
+      class="d-none d-lg-table-cell justify-content-end px-1"
       mat-header-cell
+      mat-sort-header
     >
       <ng-container i18n>Cash Balance</ng-container>
     </th>
@@ -122,8 +128,9 @@
   <ng-container matColumnDef="value">
     <th
       *matHeaderCellDef
-      class="d-none d-lg-table-cell px-1 text-right"
+      class="d-none d-lg-table-cell justify-content-end px-1"
       mat-header-cell
+      mat-sort-header
     >
       <ng-container i18n>Value</ng-container>
     </th>
@@ -158,6 +165,7 @@
       *matHeaderCellDef
       class="d-lg-none d-xl-none px-1 text-right"
       mat-header-cell
+      mat-sort-header
     >
       <ng-container i18n>Value</ng-container>
     </th>

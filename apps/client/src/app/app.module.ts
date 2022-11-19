@@ -10,6 +10,7 @@ import {
   MatNativeDateModule
 } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialCssVarsModule } from 'angular-material-css-vars';
@@ -50,6 +51,7 @@ export function NgxStripeFactory(): string {
     }),
     MatNativeDateModule,
     MatSnackBarModule,
+    MatTooltipModule,
     NgxSkeletonLoaderModule,
     NgxStripeModule.forRoot(environment.stripePublicKey),
     ServiceWorkerModule.register('ngsw-worker.js', {

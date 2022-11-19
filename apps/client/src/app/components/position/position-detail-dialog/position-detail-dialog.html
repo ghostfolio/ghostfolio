@@ -213,7 +213,7 @@
       </ng-container>
     </div>
 
-    <div *ngIf="orders?.length > 0" class="row">
+    <div class="row" [ngClass]="{ 'd-none': !orders?.length }">
       <div class="col mb-3">
         <div class="h5 mb-0" i18n>Activities</div>
         <gf-activities-table
@@ -221,7 +221,7 @@
           [baseCurrency]="data.baseCurrency"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!hasImpersonationId"
+          [hasPermissionToExportActivities]="true"
           [hasPermissionToFilter]="false"
           [hasPermissionToImportActivities]="false"
           [hasPermissionToOpenDetails]="false"
