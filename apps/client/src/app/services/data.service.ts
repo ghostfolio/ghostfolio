@@ -304,20 +304,6 @@ export class DataService {
             }
           }
 
-          if (data.SymbolProfile) {
-            if (data.SymbolProfile.assetClass) {
-              data.SymbolProfile.assetClass = <AssetClass>(
-                translate(data.SymbolProfile.assetClass)
-              );
-            }
-
-            if (data.SymbolProfile.assetSubClass) {
-              data.SymbolProfile.assetSubClass = <AssetSubClass>(
-                translate(data.SymbolProfile.assetSubClass)
-              );
-            }
-          }
-
           return data;
         })
       );

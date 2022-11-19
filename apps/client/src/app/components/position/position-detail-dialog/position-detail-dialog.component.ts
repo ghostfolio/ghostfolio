@@ -14,6 +14,7 @@ import {
   LineChartItem
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
@@ -29,6 +30,8 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./position-detail-dialog.component.scss']
 })
 export class PositionDetailDialog implements OnDestroy, OnInit {
+  public assetClass: string;
+  public assetSubClass: string;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
   public countries: {
@@ -125,6 +128,14 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.tags = tags;
           this.transactionCount = transactionCount;
           this.value = value;
+
+          if (SymbolProfile?.assetClass) {
+            this.assetClass = translate(SymbolProfile?.assetClass);
+          }
+
+          if (SymbolProfile?.assetSubClass) {
+            this.assetSubClass = translate(SymbolProfile?.assetSubClass);
+          }
 
           if (SymbolProfile?.countries?.length > 0) {
             for (const country of SymbolProfile.countries) {
