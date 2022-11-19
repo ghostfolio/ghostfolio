@@ -139,11 +139,7 @@
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [hidden]="!SymbolProfile?.assetClass"
-          [value]="SymbolProfile?.assetClass"
+        <gf-value i18n size="medium" [hidden]="!assetClass" [value]="assetClass"
           >Asset Class</gf-value
         >
       </div>
@@ -151,8 +147,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!SymbolProfile?.assetSubClass"
-          [value]="SymbolProfile?.assetSubClass"
+          [hidden]="!assetSubClass"
+          [value]="assetSubClass"
           >Asset Sub Class</gf-value
         >
       </div>
