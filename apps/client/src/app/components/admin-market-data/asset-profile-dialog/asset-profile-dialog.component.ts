@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  EnhancedSymbolProfile,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { MarketData } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,7 +26,14 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   styleUrls: ['./asset-profile-dialog.component.scss']
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
+  public assetProfile: EnhancedSymbolProfile;
+  public countries: {
+    [code: string]: { name: string; value: number };
+  };
   public marketDataDetails: MarketData[] = [];
+  public sectors: {
+    [name: string]: { name: string; value: number };
+  };
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -57,8 +67,29 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .fetchAdminMarketDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ marketData }) => {
+      .subscribe(({ assetProfile, marketData }) => {
+        this.assetProfile = assetProfile;
+        this.countries = {};
         this.marketDataDetails = marketData;
+        this.sectors = {};
+
+        if (assetProfile?.countries?.length > 0) {
+          for (const country of assetProfile.countries) {
+            this.countries[country.code] = {
+              name: country.name,
+              value: country.weight
+            };
+          }
+        }
+
+        if (assetProfile?.sectors?.length > 0) {
+          for (const sector of assetProfile.sectors) {
+            this.sectors[sector.name] = {
+              name: sector.name,
+              value: sector.weight
+            };
+          }
+        }
 
         this.changeDetectorRef.markForCheck();
       });

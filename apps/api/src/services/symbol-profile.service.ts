@@ -43,7 +43,12 @@ export class SymbolProfileService {
   ): Promise<EnhancedSymbolProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
-        include: { SymbolProfileOverrides: true },
+        include: {
+          _count: {
+            select: { Order: true }
+          },
+          SymbolProfileOverrides: true
+        },
         where: {
           AND: [
             {
@@ -69,7 +74,12 @@ export class SymbolProfileService {
   ): Promise<EnhancedSymbolProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
-        include: { SymbolProfileOverrides: true },
+        include: {
+          _count: {
+            select: { Order: true }
+          },
+          SymbolProfileOverrides: true
+        },
         where: {
           id: {
             in: symbolProfileIds.map((symbolProfileId) => {
@@ -89,7 +99,12 @@ export class SymbolProfileService {
   ): Promise<EnhancedSymbolProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
-        include: { SymbolProfileOverrides: true },
+        include: {
+          _count: {
+            select: { Order: true }
+          },
+          SymbolProfileOverrides: true
+        },
         where: {
           symbol: {
             in: symbols
@@ -101,12 +116,14 @@ export class SymbolProfileService {
 
   private getSymbols(
     symbolProfiles: (SymbolProfile & {
+      _count: { Order: number };
       SymbolProfileOverrides: SymbolProfileOverrides;
     })[]
   ): EnhancedSymbolProfile[] {
     return symbolProfiles.map((symbolProfile) => {
       const item = {
         ...symbolProfile,
+        activitiesCount: 0,
         countries: this.getCountries(
           symbolProfile?.countries as unknown as Prisma.JsonArray
         ),
@@ -114,6 +131,9 @@ export class SymbolProfileService {
         sectors: this.getSectors(symbolProfile),
         symbolMapping: this.getSymbolMapping(symbolProfile)
       };
+
+      item.activitiesCount = symbolProfile._count.Order;
+      delete item._count;
 
       if (item.SymbolProfileOverrides) {
         item.assetClass =

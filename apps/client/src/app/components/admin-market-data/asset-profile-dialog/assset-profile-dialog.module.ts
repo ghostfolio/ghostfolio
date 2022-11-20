@@ -5,6 +5,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { GfAdminMarketDataDetailModule } from '@ghostfolio/client/components/admin-market-data-detail/admin-market-data-detail.module';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.module';
+import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { AssetProfileDialog } from './asset-profile-dialog.component';
 
@@ -15,6 +17,8 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     GfAdminMarketDataDetailModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
+    GfPortfolioProportionChartModule,
+    GfValueModule,
     MatButtonModule,
     MatDialogModule
   ],
