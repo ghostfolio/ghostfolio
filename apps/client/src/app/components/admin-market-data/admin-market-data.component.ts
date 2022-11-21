@@ -63,10 +63,10 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     'assetClass',
     'assetSubClass',
     'date',
-    'activityCount',
+    'activitiesCount',
     'marketDataItemCount',
-    'countriesCount',
     'sectorsCount',
+    'countriesCount',
     'actions'
   ];
   public filters$ = new Subject<Filter[]>();

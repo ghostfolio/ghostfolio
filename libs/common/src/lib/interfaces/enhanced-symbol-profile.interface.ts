@@ -5,6 +5,7 @@ import { ScraperConfiguration } from './scraper-configuration.interface';
 import { Sector } from './sector.interface';
 
 export interface EnhancedSymbolProfile {
+  activitiesCount: number;
   assetClass: AssetClass;
   assetSubClass: AssetSubClass;
   countries: Country[];

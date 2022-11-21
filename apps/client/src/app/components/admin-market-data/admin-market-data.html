@@ -64,12 +64,12 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="activityCount">
+        <ng-container matColumnDef="activitiesCount">
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Activity Count</ng-container>
+            <ng-container i18n>Activities Count</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.activityCount }}
+            {{ element.activitiesCount }}
           </td>
         </ng-container>
 
@@ -82,21 +82,21 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="countriesCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Countries Count</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.countriesCount }}
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="sectorsCount">
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Sectors Count</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
             {{ element.sectorsCount }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="countriesCount">
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+            <ng-container i18n>Countries Count</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            {{ element.countriesCount }}
           </td>
         </ng-container>
 
@@ -146,7 +146,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="element.activityCount !== 0"
+                [disabled]="element.activitiesCount !== 0"
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >
                 <ng-container i18n>Delete</ng-container>

@@ -2,12 +2,13 @@
   mat-dialog-title
   position="center"
   [deviceType]="data.deviceType"
-  [title]="data.symbol"
+  [title]="assetProfile?.name ?? data.symbol"
   (closeButtonClicked)="onClose()"
 ></gf-dialog-header>
 
 <div class="flex-grow-1" mat-dialog-content>
   <gf-admin-market-data-detail
+    class="mb-3"
     [dataSource]="data.dataSource"
     [dateOfFirstActivity]="data.dateOfFirstActivity"
     [locale]="data.locale"
@@ -15,6 +16,93 @@
     [symbol]="data.symbol"
     (marketDataChanged)="onMarketDataChanged($event)"
   ></gf-admin-market-data-detail>
+  <div class="row">
+    <div class="col-6 mb-3">
+      <gf-value
+        i18n
+        size="medium"
+        [isDate]="data.dateOfFirstActivity ? true : false"
+        [locale]="data.locale"
+        [value]="data.dateOfFirstActivity ?? '-'"
+        >First Buy Date</gf-value
+      >
+    </div>
+    <div class="col-6 mb-3">
+      <gf-value
+        i18n
+        size="medium"
+        [locale]="data.locale"
+        [value]="assetProfile?.activitiesCount ?? 0"
+        >Transactions</gf-value
+      >
+    </div>
+    <div class="col-6 mb-3">
+      <gf-value
+        i18n
+        size="medium"
+        [hidden]="!assetProfile?.assetClass"
+        [value]="assetProfile?.assetClass"
+        >Asset Class</gf-value
+      >
+    </div>
+    <div class="col-6 mb-3">
+      <gf-value
+        i18n
+        size="medium"
+        [hidden]="!assetProfile?.assetSubClass"
+        [value]="assetProfile?.assetSubClass"
+        >Asset Sub Class</gf-value
+      >
+    </div>
+    <ng-container
+      *ngIf="assetProfile?.countries?.length > 0 || assetProfile?.sectors?.length > 0"
+    >
+      <ng-container
+        *ngIf="assetProfile?.countries?.length === 1 && assetProfile?.sectors?.length === 1; else charts"
+      >
+        <div *ngIf="assetProfile?.sectors?.length === 1" class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [locale]="data.locale"
+            [value]="assetProfile?.sectors[0].name"
+            >Sector</gf-value
+          >
+        </div>
+        <div *ngIf="assetProfile?.countries?.length === 1" class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [locale]="data.locale"
+            [value]="assetProfile?.countries[0].name"
+            >Country</gf-value
+          >
+        </div>
+      </ng-container>
+      <ng-template #charts>
+        <div class="col-md-6 mb-3">
+          <div class="h5" i18n>Sectors</div>
+          <gf-portfolio-proportion-chart
+            [colorScheme]="data.colorScheme"
+            [isInPercent]="true"
+            [keys]="['name']"
+            [maxItems]="10"
+            [positions]="sectors"
+          ></gf-portfolio-proportion-chart>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="h5" i18n>Countries</div>
+          <gf-portfolio-proportion-chart
+            [colorScheme]="data.colorScheme"
+            [isInPercent]="true"
+            [keys]="['name']"
+            [maxItems]="10"
+            [positions]="countries"
+          ></gf-portfolio-proportion-chart>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
 </div>
 
 <gf-dialog-footer

@@ -147,7 +147,7 @@ export class AdminService {
         countriesCount,
         marketDataItemCount,
         sectorsCount,
-        activityCount: symbolProfile._count.Order,
+        activitiesCount: symbolProfile._count.Order,
         assetClass: symbolProfile.assetClass,
         assetSubClass: symbolProfile.assetSubClass,
         dataSource: symbolProfile.dataSource,
@@ -165,8 +165,14 @@ export class AdminService {
     dataSource,
     symbol
   }: UniqueAsset): Promise<AdminMarketDataDetails> {
-    return {
-      marketData: await this.marketDataService.marketDataItems({
+    const [[assetProfile], marketData] = await Promise.all([
+      this.symbolProfileService.getSymbolProfiles([
+        {
+          dataSource,
+          symbol
+        }
+      ]),
+      this.marketDataService.marketDataItems({
         orderBy: {
           date: 'asc'
         },
@@ -175,6 +181,11 @@ export class AdminService {
           symbol
         }
       })
+    ]);
+
+    return {
+      assetProfile,
+      marketData
     };
   }
 
