@@ -116,7 +116,6 @@
               <div class="align-items-center d-flex mb-2">
                 <div class="pr-1 w-50">
                   <div i18n>Language</div>
-                  <div class="hint-text text-muted" i18n>Beta</div>
                 </div>
                 <div class="pl-1 w-50">
                   <mat-form-field
@@ -132,9 +131,18 @@
                       <mat-option [value]="null"></mat-option>
                       <mat-option value="de">Deutsch</mat-option>
                       <mat-option value="en">English</mat-option>
-                      <mat-option value="es">Español</mat-option>
-                      <mat-option value="it">Italiano</mat-option>
-                      <mat-option value="nl">Nederlands</mat-option>
+                      <mat-option value="es"
+                        >Español (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
+                      <mat-option value="it"
+                        >Italiano (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
+                      <mat-option value="nl"
+                        >Nederlands (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
                     </mat-select>
                   </mat-form-field>
                 </div>

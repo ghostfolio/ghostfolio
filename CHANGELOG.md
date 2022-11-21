@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language selector on the account page
 - Extended the asset profile details dialog in the admin control panel
 
 ## 1.214.0 - 19.11.2022
