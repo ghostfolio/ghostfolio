@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added an indicator for excluded accounts in the accounts table
 - Added a blog post: _Black Friday 2022_
 
+### Fixed
+
+- Fixed an issue with the currency inconsistency in the _Yahoo Finance_ service (convert from `ZAc` to `ZAR`)
+
 ## 1.212.0 - 11.11.2022
 
 ### Changed
