@@ -6,12 +6,10 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
-import {
-  EnhancedSymbolProfile,
-  UniqueAsset
-} from '@ghostfolio/common/interfaces';
+import { EnhancedSymbolProfile } from '@ghostfolio/common/interfaces';
 import { MarketData } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,6 +25,9 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfile: EnhancedSymbolProfile;
+  public assetProfileForm = this.formBuilder.group({
+    symbolMapping: ''
+  });
   public countries: {
     [code: string]: { name: string; value: number };
   };
@@ -41,7 +42,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams
+    @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
+    private formBuilder: FormBuilder
   ) {}
 
   public ngOnInit(): void {
@@ -58,14 +60,25 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
   }
 
+  public onSubmit() {
+    const assetProfile = {
+      symbolMapping: this.assetProfileForm.controls['symbolMapping'].value
+    };
+
+    console.log(assetProfile);
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
 
-  private fetchAdminMarketDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  private initialize() {
     this.adminService
-      .fetchAdminMarketDataBySymbol({ dataSource, symbol })
+      .fetchAdminMarketDataBySymbol({
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
@@ -91,14 +104,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           }
         }
 
+        this.assetProfileForm.setValue({
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping)
+        });
+
         this.changeDetectorRef.markForCheck();
       });
-  }
-
-  private initialize() {
-    this.fetchAdminMarketDataBySymbol({
-      dataSource: this.data.dataSource,
-      symbol: this.data.symbol
-    });
   }
 }

@@ -19,9 +19,9 @@ import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog
   declarations: [CreateOrUpdateActivityDialog],
   imports: [
     CommonModule,
+    FormsModule,
     GfSymbolModule,
     GfValueModule,
-    FormsModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatChipsModule,
