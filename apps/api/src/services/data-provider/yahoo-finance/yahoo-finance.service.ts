@@ -203,11 +203,11 @@ export class YahooFinanceService implements DataProviderInterface {
         if (symbol === `${this.baseCurrency}GBp`) {
           // Convert GPB to GBp (pence)
           marketPrice = new Big(marketPrice).mul(100).toNumber();
-        } else if (symbol === `${this.baseCurrency}ZAc`) {
-          // Convert ZAR to ZAc (cents)
-          marketPrice = new Big(marketPrice).mul(100).toNumber();
         } else if (symbol === `${this.baseCurrency}ILA`) {
           // Convert ILS to ILA
+          marketPrice = new Big(marketPrice).mul(100).toNumber();
+        } else if (symbol === `${this.baseCurrency}ZAc`) {
+          // Convert ZAR to ZAc (cents)
           marketPrice = new Big(marketPrice).mul(100).toNumber();
         }
 
@@ -279,18 +279,6 @@ export class YahooFinanceService implements DataProviderInterface {
               .toNumber()
           };
         } else if (
-          symbol === `${this.baseCurrency}ZAR` &&
-          yahooFinanceSymbols.includes(`${this.baseCurrency}ZAc=X`)
-        ) {
-          // Convert ZAR to ZAc (cents)
-          response[`${this.baseCurrency}ZAc`] = {
-            ...response[symbol],
-            currency: 'ZAc',
-            marketPrice: new Big(response[symbol].marketPrice)
-              .mul(100)
-              .toNumber()
-          };
-        } else if (
           symbol === `${this.baseCurrency}ILS` &&
           yahooFinanceSymbols.includes(`${this.baseCurrency}ILA=X`)
         ) {
@@ -298,6 +286,18 @@ export class YahooFinanceService implements DataProviderInterface {
           response[`${this.baseCurrency}ILA`] = {
             ...response[symbol],
             currency: 'ILA',
+            marketPrice: new Big(response[symbol].marketPrice)
+              .mul(100)
+              .toNumber()
+          };
+        } else if (
+          symbol === `${this.baseCurrency}ZAR` &&
+          yahooFinanceSymbols.includes(`${this.baseCurrency}ZAc=X`)
+        ) {
+          // Convert ZAR to ZAc (cents)
+          response[`${this.baseCurrency}ZAc`] = {
+            ...response[symbol],
+            currency: 'ZAc',
             marketPrice: new Big(response[symbol].marketPrice)
               .mul(100)
               .toNumber()
