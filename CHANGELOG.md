@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language selector on the account page
 - Extended the asset profile details dialog in the admin control panel
+- Upgraded `uuid` from version `8.3.2` to `9.0.0`
 
 ## 1.214.0 - 19.11.2022
 
