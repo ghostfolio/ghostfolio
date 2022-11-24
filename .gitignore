@@ -5,6 +5,7 @@
 /tmp
 
 # dependencies
+/.yarn
 /node_modules
 
 # IDEs and editors
