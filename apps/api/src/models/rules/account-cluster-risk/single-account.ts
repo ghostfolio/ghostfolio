@@ -19,13 +19,13 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
 
     if (accounts.length === 1) {
       return {
-        evaluation: `All your investment is managed by a single account`,
+        evaluation: `Your net worth is managed by a single account`,
         value: false
       };
     }
 
     return {
-      evaluation: `Your investment is managed by ${accounts.length} accounts`,
+      evaluation: `Your net worth is managed by ${accounts.length} accounts`,
       value: true
     };
   }
