@@ -5,6 +5,7 @@
 /tmp
 
 # dependencies
+/.yarn
 /node_modules
 
 # IDEs and editors
@@ -38,6 +39,3 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# Ignore local Yarn cache
-.yarn/
