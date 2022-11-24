@@ -3764,10 +3764,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@stencil/core@^2.5.0":
-  version "2.16.1"
-  resolved "https://registry.npmjs.org/@stencil/core/-/core-2.16.1.tgz"
-  integrity sha512-s/UJp9qxExL3DyQPT70kiuWeb3AdjbUZM+5lEIXn30I2DLcLYPOPXfsoWJODieQywq+3vPiLZeIdkoqjf6jcSw==
+"@stencil/core@^2.18.0":
+  version "2.19.3"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-2.19.3.tgz#34a35d11982070801300d984ab8cbf9353fac698"
+  integrity sha512-rb6pBWTfD5xDg5M/uEJUeclatE/tqBE3zCCNrEB47AtdkNCzC9fOikdzCYbpdAEpU6GvC60REFr0bd8QFUjn3Q==
 
 "@storybook/addon-actions@6.5.9":
   version "6.5.9"
@@ -12031,12 +12031,12 @@ invert-kv@^2.0.0:
   resolved "https://registry.npmjs.org/invert-kv/-/invert-kv-2.0.0.tgz"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ionicons@5.5.1:
-  version "5.5.1"
-  resolved "https://registry.npmjs.org/ionicons/-/ionicons-5.5.1.tgz"
-  integrity sha512-1auVisfaXmkmxINer8Q3kJGHP1vSxk86hf7By95eJ+Av9+oBcNuAEBfSe3jaMaGRVxVw8U/2j23MFq7R3c0HPg==
+ionicons@6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-6.0.4.tgz#ab7aa439b7f17f29e0ef0a28568b4920c3167bfd"
+  integrity sha512-uDNOkBo0OVYV+kIhb51g9mb7r3Z0b+78GPZQBsjXuaetNmrB/mNTqN/uFtO+vxL/rQySKjzk8qeKJI5NWL9Ueg==
   dependencies:
-    "@stencil/core" "^2.5.0"
+    "@stencil/core" "^2.18.0"
 
 ioredis@^4.28.5:
   version "4.28.5"
