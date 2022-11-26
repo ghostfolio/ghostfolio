@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { EnhancedSymbolProfile } from '@ghostfolio/common/interfaces';
 import { MarketData } from '@prisma/client';
@@ -61,11 +62,27 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onSubmit() {
-    const assetProfile = {
-      symbolMapping: this.assetProfileForm.controls['symbolMapping'].value
+    let symbolMapping = {};
+
+    try {
+      symbolMapping = JSON.parse(
+        this.assetProfileForm.controls['symbolMapping'].value
+      );
+    } catch {}
+
+    const assetProfileData: UpdateAssetProfileDto = {
+      symbolMapping
     };
 
-    console.log(assetProfile);
+    this.adminService
+      .patchAssetProfile({
+        ...assetProfileData,
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
+      .subscribe(() => {
+        this.initialize();
+      });
   }
 
   public ngOnDestroy() {

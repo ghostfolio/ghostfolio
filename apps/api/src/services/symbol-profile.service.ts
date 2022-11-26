@@ -8,25 +8,14 @@ import {
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
-import {
-  DataSource,
-  Prisma,
-  SymbolProfile,
-  SymbolProfileOverrides
-} from '@prisma/client';
+import { Prisma, SymbolProfile, SymbolProfileOverrides } from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
 @Injectable()
 export class SymbolProfileService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async delete({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
+  public async delete({ dataSource, symbol }: UniqueAsset) {
     return this.prismaService.symbolProfile.delete({
       where: { dataSource_symbol: { dataSource, symbol } }
     });
@@ -112,6 +101,17 @@ export class SymbolProfileService {
         }
       })
       .then((symbolProfiles) => this.getSymbols(symbolProfiles));
+  }
+
+  public updateSymbolProfile({
+    dataSource,
+    symbol,
+    symbolMapping
+  }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
+    return this.prismaService.symbolProfile.update({
+      data: { symbolMapping },
+      where: { dataSource_symbol: { dataSource, symbol } }
+    });
   }
 
   private getSymbols(

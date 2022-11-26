@@ -1,11 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminJobs,
   AdminMarketDataDetails,
+  EnhancedSymbolProfile,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
@@ -122,6 +124,17 @@ export class AdminService {
     )}`;
 
     return this.http.get<IDataProviderHistoricalResponse>(url);
+  }
+
+  public patchAssetProfile({
+    dataSource,
+    symbol,
+    symbolMapping
+  }: UniqueAsset & UpdateAssetProfileDto) {
+    return this.http.patch<EnhancedSymbolProfile>(
+      `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
+      { symbolMapping }
+    );
   }
 
   public putMarketData({
