@@ -337,7 +337,7 @@ export class AdminController {
 
   @Patch('profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
-  public async patchProfileData(
+  public async patchAssetProfileData(
     @Body() assetProfileData: UpdateAssetProfileDto,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
@@ -354,7 +354,7 @@ export class AdminController {
       );
     }
 
-    return this.adminService.patchProfileData({
+    return this.adminService.patchAssetProfileData({
       ...assetProfileData,
       dataSource,
       symbol

@@ -189,7 +189,7 @@ export class AdminService {
     };
   }
 
-  public async patchProfileData({
+  public async patchAssetProfileData({
     dataSource,
     symbol,
     symbolMapping
