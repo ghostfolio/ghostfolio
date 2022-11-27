@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language selector on the account page
 - Improved the wording in the _X-ray_ section (net worth instead of investment)
 - Extended the asset profile details dialog in the admin control panel
+- Updated the browserslist database
 - Upgraded `ionicons` from version `5.5.1` to `6.0.4`
 - Upgraded `uuid` from version `8.3.2` to `9.0.0`
 
