@@ -11,20 +11,6 @@
     }
   }
 
-  .intro {
-    background-color: rgb(var(--dark-primary-text));
-    color: rgba(var(--palette-primary-500), 1);
-
-    h1 {
-      font-size: 4vw;
-      line-height: 1;
-
-      @media (max-width: 575.98px) {
-        font-size: 10vw;
-      }
-    }
-  }
-
   .mat-card {
     &:hover,
     &.active {
@@ -36,8 +22,4 @@
 
 :host-context(.is-dark-theme) {
   color: rgb(var(--light-primary-text));
-
-  .intro {
-    background-color: rgba(var(--light-dividers));
-  }
 }
