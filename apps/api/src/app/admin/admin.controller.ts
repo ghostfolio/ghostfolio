@@ -9,6 +9,7 @@ import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
+  EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -21,6 +22,7 @@ import {
   HttpException,
   Inject,
   Param,
+  Patch,
   Post,
   Put,
   Query,
@@ -33,6 +35,7 @@ import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
+import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
@@ -330,6 +333,32 @@ export class AdminController {
     }
 
     return this.adminService.deleteProfileData({ dataSource, symbol });
+  }
+
+  @Patch('profile-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async patchAssetProfileData(
+    @Body() assetProfileData: UpdateAssetProfileDto,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<EnhancedSymbolProfile> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.patchAssetProfileData({
+      ...assetProfileData,
+      dataSource,
+      symbol
+    });
   }
 
   @Put('settings/:key')

@@ -189,6 +189,27 @@ export class AdminService {
     };
   }
 
+  public async patchAssetProfileData({
+    dataSource,
+    symbol,
+    symbolMapping
+  }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
+    await this.symbolProfileService.updateSymbolProfile({
+      dataSource,
+      symbol,
+      symbolMapping
+    });
+
+    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource,
+        symbol
+      }
+    ]);
+
+    return symbolProfile;
+  }
+
   public async putSetting(key: string, value: string) {
     let response: Property;
 

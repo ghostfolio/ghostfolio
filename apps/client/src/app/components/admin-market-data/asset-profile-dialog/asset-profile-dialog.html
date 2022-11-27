@@ -1,112 +1,164 @@
-<gf-dialog-header
-  mat-dialog-title
-  position="center"
-  [deviceType]="data.deviceType"
-  [title]="assetProfile?.name ?? data.symbol"
-  (closeButtonClicked)="onClose()"
-></gf-dialog-header>
-
-<div class="flex-grow-1" mat-dialog-content>
-  <gf-admin-market-data-detail
-    class="mb-3"
-    [dataSource]="data.dataSource"
-    [dateOfFirstActivity]="data.dateOfFirstActivity"
-    [locale]="data.locale"
-    [marketData]="marketDataDetails"
-    [symbol]="data.symbol"
-    (marketDataChanged)="onMarketDataChanged($event)"
-  ></gf-admin-market-data-detail>
-  <div class="row">
-    <div class="col-6 mb-3">
-      <gf-value
-        i18n
-        size="medium"
-        [isDate]="data.dateOfFirstActivity ? true : false"
-        [locale]="data.locale"
-        [value]="data.dateOfFirstActivity ?? '-'"
-        >First Buy Date</gf-value
-      >
-    </div>
-    <div class="col-6 mb-3">
-      <gf-value
-        i18n
-        size="medium"
-        [locale]="data.locale"
-        [value]="assetProfile?.activitiesCount ?? 0"
-        >Transactions</gf-value
-      >
-    </div>
-    <div class="col-6 mb-3">
-      <gf-value
-        i18n
-        size="medium"
-        [hidden]="!assetProfile?.assetClass"
-        [value]="assetProfile?.assetClass"
-        >Asset Class</gf-value
-      >
-    </div>
-    <div class="col-6 mb-3">
-      <gf-value
-        i18n
-        size="medium"
-        [hidden]="!assetProfile?.assetSubClass"
-        [value]="assetProfile?.assetSubClass"
-        >Asset Sub Class</gf-value
-      >
-    </div>
-    <ng-container
-      *ngIf="assetProfile?.countries?.length > 0 || assetProfile?.sectors?.length > 0"
+<form
+  class="d-flex flex-column h-100"
+  [formGroup]="assetProfileForm"
+  (keyup.enter)="assetProfileForm.valid && onSubmit()"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="d-flex mb-3">
+    <h1 class="flex-grow-1 m-0" mat-dialog-title>
+      {{ assetProfile?.name ?? data.symbol }}
+    </h1>
+    <button
+      class="mx-1 no-min-width px-2"
+      mat-button
+      type="button"
+      [matMenuTriggerFor]="assetProfileActionsMenu"
+      (click)="$event.stopPropagation()"
     >
-      <ng-container
-        *ngIf="assetProfile?.countries?.length === 1 && assetProfile?.sectors?.length === 1; else charts"
+      <ion-icon name="ellipsis-vertical"></ion-icon>
+    </button>
+    <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
+      <button mat-menu-item type="button" (click)="initialize()">
+        <ng-container i18n>Refresh</ng-container>
+      </button>
+      <button
+        mat-menu-item
+        type="button"
+        [disabled]="assetProfileForm.dirty"
+        (click)="onGatherSymbol({dataSource: data.dataSource, symbol: data.symbol})"
       >
-        <div *ngIf="assetProfile?.sectors?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="assetProfile?.sectors[0].name"
-            >Sector</gf-value
-          >
-        </div>
-        <div *ngIf="assetProfile?.countries?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="assetProfile?.countries[0].name"
-            >Country</gf-value
-          >
-        </div>
-      </ng-container>
-      <ng-template #charts>
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Sectors</div>
-          <gf-portfolio-proportion-chart
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [maxItems]="10"
-            [positions]="sectors"
-          ></gf-portfolio-proportion-chart>
-        </div>
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Countries</div>
-          <gf-portfolio-proportion-chart
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [maxItems]="10"
-            [positions]="countries"
-          ></gf-portfolio-proportion-chart>
-        </div>
-      </ng-template>
-    </ng-container>
+        <ng-container i18n>Gather Data</ng-container>
+      </button>
+      <button
+        mat-menu-item
+        type="button"
+        [disabled]="assetProfileForm.dirty"
+        (click)="onGatherProfileDataBySymbol({dataSource: data.dataSource, symbol: data.symbol})"
+      >
+        <ng-container i18n>Gather Profile Data</ng-container>
+      </button>
+    </mat-menu>
   </div>
-</div>
 
-<gf-dialog-footer
-  mat-dialog-actions
-  [deviceType]="data.deviceType"
-  (closeButtonClicked)="onClose()"
-></gf-dialog-footer>
+  <div class="flex-grow-1" mat-dialog-content>
+    <gf-admin-market-data-detail
+      class="mb-3"
+      [dataSource]="data.dataSource"
+      [dateOfFirstActivity]="data.dateOfFirstActivity"
+      [locale]="data.locale"
+      [marketData]="marketDataDetails"
+      [symbol]="data.symbol"
+      (marketDataChanged)="onMarketDataChanged($event)"
+    ></gf-admin-market-data-detail>
+    <div class="row">
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isDate]="data.dateOfFirstActivity ? true : false"
+          [locale]="data.locale"
+          [value]="data.dateOfFirstActivity ?? '-'"
+          >First Buy Date</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [locale]="data.locale"
+          [value]="assetProfile?.activitiesCount ?? 0"
+          >Transactions</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [hidden]="!assetProfile?.assetClass"
+          [value]="assetProfile?.assetClass"
+          >Asset Class</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [hidden]="!assetProfile?.assetSubClass"
+          [value]="assetProfile?.assetSubClass"
+          >Asset Sub Class</gf-value
+        >
+      </div>
+      <ng-container
+        *ngIf="assetProfile?.countries?.length > 0 || assetProfile?.sectors?.length > 0"
+      >
+        <ng-container
+          *ngIf="assetProfile?.countries?.length === 1 && assetProfile?.sectors?.length === 1; else charts"
+        >
+          <div *ngIf="assetProfile?.sectors?.length === 1" class="col-6 mb-3">
+            <gf-value
+              i18n
+              size="medium"
+              [locale]="data.locale"
+              [value]="assetProfile?.sectors[0].name"
+              >Sector</gf-value
+            >
+          </div>
+          <div *ngIf="assetProfile?.countries?.length === 1" class="col-6 mb-3">
+            <gf-value
+              i18n
+              size="medium"
+              [locale]="data.locale"
+              [value]="assetProfile?.countries[0].name"
+              >Country</gf-value
+            >
+          </div>
+        </ng-container>
+        <ng-template #charts>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Sectors</div>
+            <gf-portfolio-proportion-chart
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [maxItems]="10"
+              [positions]="sectors"
+            ></gf-portfolio-proportion-chart>
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [maxItems]="10"
+              [positions]="countries"
+            ></gf-portfolio-proportion-chart>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+    <div class="mt-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Symbol Mapping</mat-label>
+        <textarea
+          cdkTextareaAutosize
+          formControlName="symbolMapping"
+          matInput
+          type="text"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end" mat-dialog-actions>
+    <button i18n mat-button type="button" (click)="onClose()">Cancel</button>
+    <button
+      color="primary"
+      mat-flat-button
+      type="submit"
+      [disabled]="!(assetProfileForm.dirty && assetProfileForm.valid)"
+    >
+      <ng-container i18n>Save</ng-container>
+    </button>
+  </div>
+</form>

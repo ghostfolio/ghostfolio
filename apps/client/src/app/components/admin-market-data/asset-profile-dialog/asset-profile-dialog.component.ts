@@ -6,7 +6,9 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import {
   EnhancedSymbolProfile,
@@ -27,6 +29,9 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfile: EnhancedSymbolProfile;
+  public assetProfileForm = this.formBuilder.group({
+    symbolMapping: ''
+  });
   public countries: {
     [code: string]: { name: string; value: number };
   };
@@ -40,32 +45,21 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams
+    private formBuilder: FormBuilder
   ) {}
 
   public ngOnInit(): void {
     this.initialize();
   }
 
-  public onClose(): void {
-    this.dialogRef.close();
-  }
-
-  public onMarketDataChanged(withRefresh: boolean = false) {
-    if (withRefresh) {
-      this.initialize();
-    }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
-  private fetchAdminMarketDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public initialize() {
     this.adminService
-      .fetchAdminMarketDataBySymbol({ dataSource, symbol })
+      .fetchAdminMarketDataBySymbol({
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
@@ -91,14 +85,66 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           }
         }
 
+        this.assetProfileForm.setValue({
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping)
+        });
+
+        this.assetProfileForm.markAsPristine();
+
         this.changeDetectorRef.markForCheck();
       });
   }
 
-  private initialize() {
-    this.fetchAdminMarketDataBySymbol({
-      dataSource: this.data.dataSource,
-      symbol: this.data.symbol
-    });
+  public onClose(): void {
+    this.dialogRef.close();
+  }
+
+  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+    this.adminService
+      .gatherProfileDataBySymbol({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
+  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
+    this.adminService
+      .gatherSymbol({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
+  public onMarketDataChanged(withRefresh: boolean = false) {
+    if (withRefresh) {
+      this.initialize();
+    }
+  }
+
+  public onSubmit() {
+    let symbolMapping = {};
+
+    try {
+      symbolMapping = JSON.parse(
+        this.assetProfileForm.controls['symbolMapping'].value
+      );
+    } catch {}
+
+    const assetProfileData: UpdateAssetProfileDto = {
+      symbolMapping
+    };
+
+    this.adminService
+      .patchAssetProfile({
+        ...assetProfileData,
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
+      .subscribe(() => {
+        this.initialize();
+      });
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }
