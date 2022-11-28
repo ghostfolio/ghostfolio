@@ -299,6 +299,35 @@
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
+    <ng-container matColumnDef="comment">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell px-1"
+        mat-header-cell
+        mat-sort-header
+      ></th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <button
+          *ngIf="element.comment"
+          class="mx-1 no-min-width px-2"
+          mat-button
+          title="Note"
+          (click)="onOpenComment(element.comment); $event.stopPropagation()"
+        >
+          <ion-icon name="document-text-outline"></ion-icon>
+        </button>
+      </td>
+      <td
+        *matFooterCellDef
+        class="d-none d-lg-table-cell px-1"
+        mat-footer-cell
+      ></td>
+    </ng-container>
+
     <ng-container matColumnDef="actions">
       <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
         <button
@@ -345,15 +374,6 @@
         </mat-menu>
       </th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        <button
-          *ngIf="element.comment && !this.showActions"
-          class="mx-1 no-min-width px-2"
-          mat-button
-          title="Note"
-          (click)="onOpenComment(element.comment)"
-        >
-          <ion-icon name="document-text-outline"></ion-icon>
-        </button>
         <button
           *ngIf="this.showActions"
           class="mx-1 no-min-width px-2"

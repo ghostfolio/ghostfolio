@@ -116,6 +116,7 @@ export class AdminService {
           },
           assetClass: true,
           assetSubClass: true,
+          comment: true,
           countries: true,
           dataSource: true,
           Order: {
@@ -150,6 +151,7 @@ export class AdminService {
         activitiesCount: symbolProfile._count.Order,
         assetClass: symbolProfile.assetClass,
         assetSubClass: symbolProfile.assetSubClass,
+        comment: symbolProfile.comment,
         dataSource: symbolProfile.dataSource,
         date: symbolProfile.Order?.[0]?.date,
         symbol: symbolProfile.symbol
@@ -190,11 +192,13 @@ export class AdminService {
   }
 
   public async patchAssetProfileData({
+    comment,
     dataSource,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     await this.symbolProfileService.updateSymbolProfile({
+      comment,
       dataSource,
       symbol,
       symbolMapping

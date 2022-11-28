@@ -360,6 +360,7 @@ export class DataService {
       const {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
+        ASSET_SUB_CLASS: filtersByAssetSubClass,
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
@@ -380,6 +381,17 @@ export class DataService {
         params = params.append(
           'assetClasses',
           filtersByAssetClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetSubClass) {
+        params = params.append(
+          'assetSubClasses',
+          filtersByAssetSubClass
             .map(({ id }) => {
               return id;
             })

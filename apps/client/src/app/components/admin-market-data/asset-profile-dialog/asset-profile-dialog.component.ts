@@ -30,6 +30,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
 export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfile: EnhancedSymbolProfile;
   public assetProfileForm = this.formBuilder.group({
+    comment: '',
     symbolMapping: ''
   });
   public countries: {
@@ -86,6 +87,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
 
         this.assetProfileForm.setValue({
+          comment: this.assetProfile?.comment,
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping)
         });
 
@@ -129,7 +131,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     const assetProfileData: UpdateAssetProfileDto = {
-      symbolMapping
+      symbolMapping,
+      comment: this.assetProfileForm.controls['comment'].value ?? null
     };
 
     this.adminService

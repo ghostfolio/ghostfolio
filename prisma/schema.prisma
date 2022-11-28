@@ -112,6 +112,7 @@ model Settings {
 model SymbolProfile {
   assetClass             AssetClass?
   assetSubClass          AssetSubClass?
+  comment                String?
   countries              Json?
   createdAt              DateTime                @default(now())
   currency               String

@@ -148,6 +148,18 @@
         ></textarea>
       </mat-form-field>
     </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Note</mat-label>
+        <textarea
+          cdkAutosizeMinRows="2"
+          cdkTextareaAutosize
+          formControlName="comment"
+          matInput
+          (keyup.enter)="$event.stopPropagation()"
+        ></textarea>
+      </mat-form-field>
+    </div>
   </div>
 
   <div class="d-flex justify-content-end" mat-dialog-actions>
