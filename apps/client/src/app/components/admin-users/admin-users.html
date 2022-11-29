@@ -37,6 +37,7 @@
                   <gf-premium-indicator
                     *ngIf="userItem?.subscription?.type === 'Premium'"
                     class="ml-1"
+                    [enableLink]="false"
                   ></gf-premium-indicator>
                 </div>
               </td>
