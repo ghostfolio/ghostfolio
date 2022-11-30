@@ -127,13 +127,14 @@ export class AdminService {
   }
 
   public patchAssetProfile({
+    comment,
     dataSource,
     symbol,
     symbolMapping
   }: UniqueAsset & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
-      { symbolMapping }
+      { comment, symbolMapping }
     );
   }
 

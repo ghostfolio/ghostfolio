@@ -104,12 +104,13 @@ export class SymbolProfileService {
   }
 
   public updateSymbolProfile({
+    comment,
     dataSource,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     return this.prismaService.symbolProfile.update({
-      data: { symbolMapping },
+      data: { comment, symbolMapping },
       where: { dataSource_symbol: { dataSource, symbol } }
     });
   }

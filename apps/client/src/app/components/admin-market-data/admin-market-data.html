@@ -100,6 +100,22 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="comment">
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header
+          ></th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            <ion-icon
+              *ngIf="element.comment"
+              class="d-block"
+              name="document-text-outline"
+            ></ion-icon>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
             <button

@@ -16,6 +16,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
+import { translate } from '@ghostfolio/ui/i18n';
 import { AssetSubClass, DataSource } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -44,10 +45,10 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     AssetSubClass.PRECIOUS_METAL,
     AssetSubClass.PRIVATE_EQUITY,
     AssetSubClass.STOCK
-  ].map((id) => {
+  ].map((assetSubClass) => {
     return {
-      id,
-      label: id,
+      id: assetSubClass,
+      label: translate(assetSubClass),
       type: 'ASSET_SUB_CLASS'
     };
   });
@@ -67,6 +68,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     'marketDataItemCount',
     'sectorsCount',
     'countriesCount',
+    'comment',
     'actions'
   ];
   public filters$ = new Subject<Filter[]>();
