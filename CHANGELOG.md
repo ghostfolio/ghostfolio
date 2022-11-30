@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported a note for asset profiles
 
+### Changed
+
+- Upgraded `big.js` from version `6.1.1` to `6.2.1`
+
 ### Fixed
 
 - Fixed the filter by asset sub class for the asset profiles in the admin control
