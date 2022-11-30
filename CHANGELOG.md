@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported a note for asset profiles
 
+### Changed
+
+- Upgraded `date-fns` from version `2.28.0` to `2.29.3`
+
 ### Fixed
 
 - Fixed the filter by asset sub class for the asset profiles in the admin control
