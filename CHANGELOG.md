@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported a note for asset profiles
 
+### Changed
+
+- Upgraded `replace-in-file` from version `6.2.0` to `6.3.5`
+
 ### Fixed
 
 - Fixed the filter by asset sub class for the asset profiles in the admin control
