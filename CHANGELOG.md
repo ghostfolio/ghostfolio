@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `big.js` from version `6.1.1` to `6.2.1`
 - Upgraded `date-fns` from version `2.28.0` to `2.29.3`
 
 ### Fixed
