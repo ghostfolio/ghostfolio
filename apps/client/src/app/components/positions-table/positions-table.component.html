@@ -1,9 +1,9 @@
 <table
   class="gf-table w-100"
+  mat-table
   matSort
   matSortActive="allocationCurrent"
   matSortDirection="desc"
-  mat-table
   [dataSource]="dataSource"
 >
   <ng-container matColumnDef="icon">
@@ -51,7 +51,7 @@
     >
       <ng-container i18n>Value</ng-container>
     </th>
-    <td class="d-none d-lg-table-cell px-1" mat-cell *matCellDef="let element">
+    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       <div class="d-flex justify-content-end">
         <gf-value
           [isCurrency]="true"
@@ -87,6 +87,7 @@
       *matHeaderCellDef
       class="d-none d-lg-table-cell px-1 text-right"
       mat-header-cell
+      mat-sort-header="netPerformancePercent"
     >
       <ng-container i18n>Performance</ng-container>
     </th>
