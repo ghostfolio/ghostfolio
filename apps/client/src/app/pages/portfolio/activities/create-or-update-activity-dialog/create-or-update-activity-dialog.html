@@ -129,6 +129,23 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
+        <input formControlName="feeInCustomCurrency" matInput type="number" />
+        <div
+          class="ml-2"
+          matSuffix
+          [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
+        >
+          <mat-select formControlName="currencyOfFee">
+            <mat-option *ngFor="let currency of currencies" [value]="currency">
+              {{ currency }}
+            </mat-option>
+          </mat-select>
+        </div>
+      </mat-form-field>
+    </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Fee</mat-label>
         <input formControlName="fee" matInput type="number" />
         <span class="ml-2" matSuffix
           >{{ activityForm.controls['currency'].value }}</span

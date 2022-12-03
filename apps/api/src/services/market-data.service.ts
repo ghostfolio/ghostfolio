@@ -5,6 +5,7 @@ import { resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { DataSource, MarketData, Prisma } from '@prisma/client';
+import { IDataGatheringItem } from './interfaces/interfaces';
 
 @Injectable()
 export class MarketDataService {
@@ -20,14 +21,13 @@ export class MarketDataService {
   }
 
   public async get({
-    date,
+    dataSource,
+    date = new Date(),
     symbol
-  }: {
-    date: Date;
-    symbol: string;
-  }): Promise<MarketData> {
+  }: IDataGatheringItem): Promise<MarketData> {
     return await this.prismaService.marketData.findFirst({
       where: {
+        dataSource,
         symbol,
         date: resetHours(date)
       }

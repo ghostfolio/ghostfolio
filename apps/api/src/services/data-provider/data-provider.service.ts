@@ -114,9 +114,13 @@ export class DataProviderService {
       }
     }
 
-    const allData = await Promise.all(promises);
-    for (const { data, symbol } of allData) {
-      result[symbol] = data;
+    try {
+      const allData = await Promise.all(promises);
+      for (const { data, symbol } of allData) {
+        result[symbol] = data;
+      }
+    } catch (error) {
+      Logger.error(error, 'DataProviderService');
     }
 
     return result;
@@ -209,7 +213,9 @@ export class DataProviderService {
             }
 
             Logger.debug(
-              `Fetched ${symbolsChunk.length} quotes from ${dataSource} in ${(
+              `Fetched ${symbolsChunk.length} quote${
+                symbolsChunk.length > 1 ? 's' : ''
+              } from ${dataSource} in ${(
                 (performance.now() - startTimeDataSource) /
                 1000
               ).toFixed(3)} seconds`
@@ -223,7 +229,7 @@ export class DataProviderService {
 
     Logger.debug('------------------------------------------------');
     Logger.debug(
-      `Fetched ${items.length} quotes in ${(
+      `Fetched ${items.length} quote${items.length > 1 ? 's' : ''} in ${(
         (performance.now() - startTimeTotal) /
         1000
       ).toFixed(3)} seconds`

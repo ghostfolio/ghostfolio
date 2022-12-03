@@ -13,12 +13,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { isString } from 'lodash';
-import { EMPTY, Observable, Subject } from 'rxjs';
+import { EMPTY, lastValueFrom, Observable, Subject } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -59,6 +60,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
@@ -86,12 +88,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
       ],
+      currencyOfFee: [
+        this.data.activity?.SymbolProfile?.currency,
+        Validators.required
+      ],
       dataSource: [
         this.data.activity?.SymbolProfile?.dataSource,
         Validators.required
       ],
       date: [this.data.activity?.date, Validators.required],
       fee: [this.data.activity?.fee, Validators.required],
+      feeInCustomCurrency: [this.data.activity?.fee, Validators.required],
       name: [this.data.activity?.SymbolProfile?.name, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
       searchSymbol: [
@@ -108,7 +115,38 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     this.activityForm.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
+      .subscribe(async () => {
+        let exchangeRate = 1;
+
+        const currency = this.activityForm.controls['currency'].value;
+        const currencyOfFee = this.activityForm.controls['currencyOfFee'].value;
+        const date = this.activityForm.controls['date'].value;
+
+        if (currency && currencyOfFee && currency !== currencyOfFee && date) {
+          try {
+            const { marketPrice } = await lastValueFrom(
+              // TODO: Create endpoint for exchange rate conversion
+              this.adminService
+                .fetchSymbolForDate({
+                  date,
+                  dataSource: 'YAHOO',
+                  symbol: `${currencyOfFee}${currency}`
+                })
+                .pipe(takeUntil(this.unsubscribeSubject))
+            );
+
+            exchangeRate = marketPrice;
+          } catch {}
+        }
+
+        const feeInCustomCurrency =
+          this.activityForm.controls['feeInCustomCurrency'].value *
+          exchangeRate;
+
+        this.activityForm.controls['fee'].setValue(feeInCustomCurrency, {
+          emitEvent: false
+        });
+
         if (
           this.activityForm.controls['type'].value === 'BUY' ||
           this.activityForm.controls['type'].value === 'ITEM'
@@ -123,6 +161,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
               this.activityForm.controls['unitPrice'].value -
               this.activityForm.controls['fee'].value ?? 0;
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.filteredLookupItemsObservable = this.activityForm.controls[
@@ -160,6 +200,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['currency'].setValue(
             this.data.user.settings.baseCurrency
           );
+          this.activityForm.controls['currencyOfFee'].setValue(
+            this.data.user.settings.baseCurrency
+          );
           this.activityForm.controls['dataSource'].removeValidators(
             Validators.required
           );
@@ -189,6 +232,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           );
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.activityForm.controls['type'].setValue(this.data.activity?.type);
@@ -313,6 +358,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       )
       .subscribe(({ currency, dataSource, marketPrice }) => {
         this.activityForm.controls['currency'].setValue(currency);
+        this.activityForm.controls['currencyOfFee'].setValue(currency);
         this.activityForm.controls['dataSource'].setValue(dataSource);
 
         this.currentMarketPrice = marketPrice;
