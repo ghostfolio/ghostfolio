@@ -22,6 +22,7 @@ import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
+import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
 import { FrontendMiddleware } from './frontend.middleware';
 import { ImportModule } from './import/import.module';
@@ -52,6 +53,7 @@ import { UserModule } from './user/user.module';
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,
+    ExchangeRateModule,
     ExchangeRateDataModule,
     ExportModule,
     ImportModule,

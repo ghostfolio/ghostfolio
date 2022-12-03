@@ -1,12 +1,13 @@
 import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
-import { format } from 'date-fns';
+import { format, isToday } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
 
 import { ConfigurationService } from './configuration.service';
 import { DataProviderService } from './data-provider/data-provider.service';
 import { IDataGatheringItem } from './interfaces/interfaces';
+import { MarketDataService } from './market-data.service';
 import { PrismaService } from './prisma.service';
 import { PropertyService } from './property/property.service';
 
@@ -20,6 +21,7 @@ export class ExchangeRateDataService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {}
@@ -137,6 +139,53 @@ export class ExchangeRateDataService {
         factor = factor1 * factor2;
 
         this.exchangeRates[`${aFromCurrency}${aToCurrency}`] = factor;
+      }
+    }
+
+    if (isNumber(factor) && !isNaN(factor)) {
+      return factor * aValue;
+    }
+
+    // Fallback with error, if currencies are not available
+    Logger.error(
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
+      'ExchangeRateDataService'
+    );
+    return aValue;
+  }
+
+  public async toCurrencyAtDate(
+    aValue: number,
+    aFromCurrency: string,
+    aToCurrency: string,
+    aDate: Date
+  ) {
+    if (aValue === 0) {
+      return 0;
+    }
+
+    if (isToday(aDate)) {
+      return this.toCurrency(aValue, aFromCurrency, aToCurrency);
+    }
+
+    let factor = 1;
+
+    if (aFromCurrency !== aToCurrency) {
+      const dataSource = this.dataProviderService.getPrimaryDataSource();
+      const symbol = `${aFromCurrency}${aToCurrency}`;
+
+      const marketData = await this.marketDataService.get({
+        dataSource,
+        symbol,
+        date: aDate
+      });
+
+      if (marketData?.marketPrice) {
+        factor = marketData?.marketPrice;
+      } else {
+        // TODO: Get from data provider service or calculate indirectly via base currency
+        // and market data
+        return this.toCurrency(aValue, aFromCurrency, aToCurrency);
       }
     }
 

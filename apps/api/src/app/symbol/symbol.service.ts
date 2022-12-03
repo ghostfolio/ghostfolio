@@ -7,7 +7,6 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data.service'
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { format, subDays } from 'date-fns';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
@@ -65,13 +64,9 @@ export class SymbolService {
 
   public async getForDate({
     dataSource,
-    date,
+    date = new Date(),
     symbol
-  }: {
-    dataSource: DataSource;
-    date: Date;
-    symbol: string;
-  }): Promise<IDataProviderHistoricalResponse> {
+  }: IDataGatheringItem): Promise<IDataProviderHistoricalResponse> {
     const historicalData = await this.dataProviderService.getHistoricalRaw(
       [{ dataSource, symbol }],
       date,

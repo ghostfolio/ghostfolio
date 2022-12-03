@@ -91,10 +91,19 @@ export class SymbolController {
       );
     }
 
-    return this.symbolService.getForDate({
+    const result = await this.symbolService.getForDate({
       dataSource,
       date,
       symbol
     });
+
+    if (!result || isEmpty(result)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return result;
   }
 }

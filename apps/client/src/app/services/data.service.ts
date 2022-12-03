@@ -12,6 +12,7 @@ import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.in
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -36,12 +37,7 @@ import {
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import {
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  Order as OrderModel
-} from '@prisma/client';
+import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy } from 'lodash';
 import { Observable } from 'rxjs';
@@ -102,6 +98,18 @@ export class DataService {
     return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
       params: this.buildFiltersAsQueryParams({ filters })
     });
+  }
+
+  public fetchExchangeRateForDate({
+    date,
+    symbol
+  }: {
+    date: Date;
+    symbol: string;
+  }) {
+    return this.http.get<IDataProviderHistoricalResponse>(
+      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT)}`
+    );
   }
 
   public deleteAccess(aId: string) {

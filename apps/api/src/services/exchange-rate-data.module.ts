@@ -4,16 +4,18 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { Module } from '@nestjs/common';
 
+import { MarketDataModule } from './market-data.module';
 import { PrismaModule } from './prisma.module';
 
 @Module({
+  exports: [ExchangeRateDataService],
   imports: [
     ConfigurationModule,
     DataProviderModule,
+    MarketDataModule,
     PrismaModule,
     PropertyModule
   ],
-  providers: [ExchangeRateDataService],
-  exports: [ExchangeRateDataService]
+  providers: [ExchangeRateDataService]
 })
 export class ExchangeRateDataModule {}
