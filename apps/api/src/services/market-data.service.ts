@@ -5,6 +5,7 @@ import { resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { DataSource, MarketData, Prisma } from '@prisma/client';
+
 import { IDataGatheringItem } from './interfaces/interfaces';
 
 @Injectable()

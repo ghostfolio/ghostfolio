@@ -18,7 +18,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { isString } from 'lodash';
-import { EMPTY, lastValueFrom, Observable, Subject } from 'rxjs';
+import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
   debounceTime,
