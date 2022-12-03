@@ -184,7 +184,7 @@
     "nx": "15.0.13",
     "prettier": "2.7.1",
     "prettier-plugin-organize-attributes": "0.0.5",
-    "replace-in-file": "6.2.0",
+    "replace-in-file": "6.3.5",
     "rimraf": "3.0.2",
     "ts-jest": "28.0.8",
     "ts-node": "10.9.1",
