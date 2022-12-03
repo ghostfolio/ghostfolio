@@ -171,16 +171,20 @@ export class ExchangeRateDataService {
     let factor = 1;
 
     if (aFromCurrency !== aToCurrency) {
+      const dataSource = this.dataProviderService.getPrimaryDataSource();
+      const symbol = `${aFromCurrency}${aToCurrency}`;
+
       const marketData = await this.marketDataService.get({
-        dataSource: this.dataProviderService.getPrimaryDataSource(),
-        date: aDate,
-        symbol: `${aFromCurrency}${aToCurrency}`
+        dataSource,
+        symbol,
+        date: aDate
       });
 
       if (marketData?.marketPrice) {
         factor = marketData?.marketPrice;
       } else {
-        // TODO: Calculate indirectly via base currency
+        // TODO: Get from data provider service or calculate indirectly via base currency
+        // and market data
         return this.toCurrency(aValue, aFromCurrency, aToCurrency);
       }
     }
