@@ -84,7 +84,12 @@
     </ng-container>
 
     <ng-container matColumnDef="symbol">
-      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+      <th
+        *matHeaderCellDef
+        class="px-1"
+        mat-header-cell
+        mat-sort-header="SymbolProfile.symbol"
+      >
         <ng-container i18n>Symbol</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
@@ -282,7 +287,12 @@
     </ng-container>
 
     <ng-container matColumnDef="account">
-      <th *matHeaderCellDef class="px-1" mat-header-cell>
+      <th
+        *matHeaderCellDef
+        class="px-1"
+        mat-header-cell
+        mat-sort-header="Account.name"
+      >
         <span class="d-none d-lg-block" i18n>Account</span>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>

@@ -18,7 +18,15 @@
   </ng-container>
 
   <ng-container matColumnDef="account">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Name</th>
+    <th
+      *matHeaderCellDef
+      class="px-1"
+      i18n
+      mat-header-cell
+      mat-sort-header="name"
+    >
+      Name
+    </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <gf-symbol-icon
         *ngIf="element.Platform?.url"
@@ -54,7 +62,12 @@
   </ng-container>
 
   <ng-container matColumnDef="platform">
-    <th *matHeaderCellDef class="d-none d-lg-table-cell px-1" mat-header-cell>
+    <th
+      *matHeaderCellDef
+      class="d-none d-lg-table-cell px-1"
+      mat-header-cell
+      mat-sort-header="Platform.name"
+    >
       <ng-container i18n>Platform</ng-container>
     </th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
@@ -76,7 +89,12 @@
   </ng-container>
 
   <ng-container matColumnDef="transactions">
-    <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
+    <th
+      *matHeaderCellDef
+      class="px-1 text-right"
+      mat-header-cell
+      mat-sort-header="transactionCount"
+    >
       <span class="d-block d-sm-none">#</span>
       <span class="d-none d-sm-block" i18n>Activities</span>
     </th>

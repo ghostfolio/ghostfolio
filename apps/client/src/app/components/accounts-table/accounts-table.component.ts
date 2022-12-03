@@ -13,6 +13,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
+import { get } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -69,6 +70,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     if (this.accounts) {
       this.dataSource = new MatTableDataSource(this.accounts);
       this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = get;
 
       this.isLoading = false;
     }

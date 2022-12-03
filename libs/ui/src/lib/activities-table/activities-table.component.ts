@@ -20,7 +20,7 @@ import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, format, isAfter } from 'date-fns';
-import { isNumber } from 'lodash';
+import { get, isNumber } from 'lodash';
 import { Subject, Subscription, distinctUntilChanged, takeUntil } from 'rxjs';
 
 @Component({
@@ -127,6 +127,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       };
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = get;
 
       this.updateFilters();
     }
