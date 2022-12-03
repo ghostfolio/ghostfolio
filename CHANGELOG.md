@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported a note for asset profiles
 - Supported a manual currency for the activity fee
+- Extended the support for column sorting in the accounts table (name, platform, transactions)
+- Extended the support for column sorting in the activities table (name, symbol)
+- Extended the support for column sorting in the positions table (performance)
 
 ### Changed
 
