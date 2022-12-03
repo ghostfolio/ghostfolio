@@ -13,7 +13,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Type } from '@prisma/client';
@@ -60,7 +59,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateActivityDialogParams,
     private dataService: DataService,
@@ -125,12 +123,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         if (currency && currencyOfFee && currency !== currencyOfFee && date) {
           try {
             const { marketPrice } = await lastValueFrom(
-              // TODO: Create endpoint for exchange rate conversion
-              this.adminService
-                .fetchSymbolForDate({
+              this.dataService
+                .fetchExchangeRateForDate({
                   date,
-                  dataSource: 'YAHOO',
-                  symbol: `${currencyOfFee}${currency}`
+                  symbol: `${currencyOfFee}-${currency}`
                 })
                 .pipe(takeUntil(this.unsubscribeSubject))
             );

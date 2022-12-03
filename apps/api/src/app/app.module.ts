@@ -20,6 +20,7 @@ import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
+import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
 import { ExportModule } from './export/export.module';
@@ -52,6 +53,7 @@ import { UserModule } from './user/user.module';
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,
+    ExchangeRateModule,
     ExchangeRateDataModule,
     ExportModule,
     ImportModule,
