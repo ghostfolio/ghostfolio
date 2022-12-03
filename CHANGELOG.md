@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Supported a note for asset profiles
+- Supported a manual currency for the activity fee
 
 ### Changed
 
