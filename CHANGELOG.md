@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prisma` from version `4.6.1` to `4.7.1`
 
+### Fixed
+
+- Fixed the activities sorting in the account detail dialog
+
 ## 1.216.0 - 2022-12-03
 
 ### Added
