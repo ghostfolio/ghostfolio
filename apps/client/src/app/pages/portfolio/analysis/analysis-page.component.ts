@@ -30,6 +30,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public daysInMarket: number;
   public deviceType: string;
+  public dividendsByMonth: InvestmentItem[];
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
@@ -161,6 +162,18 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.isLoadingInvestmentChart = false;
 
         this.updateBenchmarkDataItems();
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
+      .fetchDividends({
+        groupBy: 'month',
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ dividends }) => {
+        this.dividendsByMonth = dividends;
 
         this.changeDetectorRef.markForCheck();
       });

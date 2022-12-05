@@ -27,6 +27,7 @@ import {
   InfoItem,
   OAuthResponse,
   PortfolioDetails,
+  PortfolioDividends,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -97,6 +98,18 @@ export class DataService {
   public fetchAdminMarketData({ filters }: { filters?: Filter[] }) {
     return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
       params: this.buildFiltersAsQueryParams({ filters })
+    });
+  }
+
+  public fetchDividends({
+    groupBy,
+    range
+  }: {
+    groupBy?: 'month';
+    range: DateRange;
+  }) {
+    return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
+      params: { groupBy, range }
     });
   }
 
