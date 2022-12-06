@@ -39,6 +39,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
+  @Input() multiselect = false;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions: boolean;
   @Input() showSymbolColumn = true;
@@ -49,6 +50,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() export = new EventEmitter<string[]>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
+  @Output() selectedActivities = new EventEmitter<Activity[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
