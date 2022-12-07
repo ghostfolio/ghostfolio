@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the value redaction interceptor (including `comment`)
 - Improved the language localization for Español (`es`)
 - Upgraded `prisma` from version `4.6.1` to `4.7.1`
 

@@ -1,5 +1,3 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { nullifyValuesInObjects } from '@ghostfolio/api/helper/object.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
@@ -39,8 +37,7 @@ export class OrderController {
     private readonly apiService: ApiService,
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Delete(':id')
@@ -87,27 +84,13 @@ export class OrderController {
       );
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    let activities = await this.orderService.getOrders({
+    const activities = await this.orderService.getOrders({
       filters,
       userCurrency,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccounts: true
     });
-
-    if (
-      impersonationUserId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      activities = nullifyValuesInObjects(activities, [
-        'fee',
-        'feeInBaseCurrency',
-        'quantity',
-        'unitPrice',
-        'value',
-        'valueInBaseCurrency'
-      ]);
-    }
 
     return { activities };
   }
