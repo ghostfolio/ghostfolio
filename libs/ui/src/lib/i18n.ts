@@ -3,6 +3,7 @@ import '@angular/localize/init';
 const locales = {
   ACCOUNT: $localize`Account`,
   ASSET_CLASS: $localize`Asset Class`,
+  ASSET_SUB_CLASS: $localize`Asset Sub Class`,
   EMERGENCY_FUND: $localize`Emergency Fund`,
   OTHER: $localize`Other`,
   SYMBOL: $localize`Symbol`,
