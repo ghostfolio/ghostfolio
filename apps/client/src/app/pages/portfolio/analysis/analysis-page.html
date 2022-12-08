@@ -121,6 +121,7 @@
         <gf-investment-chart
           class="h-100"
           [benchmarkDataItems]="investments"
+          [benchmarkDataLabel]="portfolioEvolutionDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
           [historicalDataItems]="performanceDataItems"
@@ -158,6 +159,7 @@
           class="h-100"
           groupBy="month"
           [benchmarkDataItems]="investmentsByMonth"
+          [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
@@ -194,6 +196,7 @@
           class="h-100"
           groupBy="month"
           [benchmarkDataItems]="dividendsByMonth"
+          [benchmarkDataLabel]="dividendTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"

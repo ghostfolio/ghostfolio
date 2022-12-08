@@ -31,9 +31,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public daysInMarket: number;
   public deviceType: string;
   public dividendsByMonth: InvestmentItem[];
+  public dividendTimelineDataLabel = $localize`Dividend`;
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
+  public investmentTimelineDataLabel = $localize`Deposit`;
   public investmentsByMonth: InvestmentItem[];
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingInvestmentChart: boolean;
@@ -43,6 +45,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   ];
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
+  public portfolioEvolutionDataLabel = $localize`Deposit`;
   public top3: Position[];
   public user: User;
 
