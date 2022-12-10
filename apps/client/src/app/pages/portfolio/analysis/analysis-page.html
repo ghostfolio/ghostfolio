@@ -121,6 +121,7 @@
         <gf-investment-chart
           class="h-100"
           [benchmarkDataItems]="investments"
+          [benchmarkDataLabel]="portfolioEvolutionDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
           [historicalDataItems]="performanceDataItems"
@@ -133,7 +134,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="mb-5 row">
     <div class="col-lg">
       <div class="align-items-center d-flex mb-4">
         <div
@@ -158,12 +159,49 @@
           class="h-100"
           groupBy="month"
           [benchmarkDataItems]="investmentsByMonth"
+          [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
           [savingsRate]="(hasImpersonationId || user.settings.isRestrictedView) ? undefined : user?.settings?.savingsRate"
+        ></gf-investment-chart>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="align-items-center d-flex mb-4">
+        <div
+          class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
+        >
+          <span i18n>Dividend Timeline</span>
+          <gf-premium-indicator
+            *ngIf="user?.subscription?.type === 'Basic'"
+            class="ml-1"
+          ></gf-premium-indicator>
+        </div>
+        <gf-toggle
+          class="d-none d-lg-block"
+          [defaultValue]="mode"
+          [isLoading]="false"
+          [options]="modeOptions"
+          (change)="onChangeGroupBy($event.value)"
+        ></gf-toggle>
+      </div>
+      <div class="chart-container">
+        <gf-investment-chart
+          class="h-100"
+          groupBy="month"
+          [benchmarkDataItems]="dividendsByMonth"
+          [benchmarkDataLabel]="dividendTimelineDataLabel"
+          [currency]="user?.settings?.baseCurrency"
+          [daysInMarket]="daysInMarket"
+          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [locale]="user?.settings?.locale"
+          [range]="user?.settings?.dateRange"
         ></gf-investment-chart>
       </div>
     </div>

@@ -67,6 +67,8 @@ import {
   format,
   isAfter,
   isBefore,
+  isSameMonth,
+  isSameYear,
   max,
   parseISO,
   set,
@@ -204,6 +206,44 @@ export class PortfolioService {
       totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
       totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
     };
+  }
+
+  public async getDividends({
+    dateRange,
+    impersonationId,
+    groupBy
+  }: {
+    dateRange: DateRange;
+    impersonationId: string;
+    groupBy?: GroupBy;
+  }): Promise<InvestmentItem[]> {
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
+
+    const activities = await this.orderService.getOrders({
+      userId,
+      types: ['DIVIDEND'],
+      userCurrency: this.request.user.Settings.settings.baseCurrency
+    });
+
+    let dividends = activities.map((dividend) => {
+      return {
+        date: format(dividend.date, DATE_FORMAT),
+        investment: dividend.valueInBaseCurrency
+      };
+    });
+
+    if (groupBy === 'month') {
+      dividends = this.getDividendsByMonth(dividends);
+    }
+
+    const startDate = this.getStartDate(
+      dateRange,
+      parseDate(dividends[0]?.date)
+    );
+
+    return dividends.filter(({ date }) => {
+      return !isBefore(parseDate(date), startDate);
+    });
   }
 
   public async getInvestments({
@@ -1202,6 +1242,49 @@ export class PortfolioService {
         (previous, current) => new Big(previous).plus(current),
         new Big(0)
       );
+  }
+
+  private getDividendsByMonth(aDividends: InvestmentItem[]): InvestmentItem[] {
+    if (aDividends.length === 0) {
+      return [];
+    }
+
+    const dividends = [];
+    let currentDate: Date;
+    let investmentByMonth = new Big(0);
+
+    for (const [index, dividend] of aDividends.entries()) {
+      if (
+        isSameMonth(parseDate(dividend.date), currentDate) &&
+        isSameYear(parseDate(dividend.date), currentDate)
+      ) {
+        // Same month: Add up divididends
+
+        investmentByMonth = investmentByMonth.plus(dividend.investment);
+      } else {
+        // New month: Store previous month and reset
+
+        if (currentDate) {
+          dividends.push({
+            date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
+            investment: investmentByMonth
+          });
+        }
+
+        currentDate = parseDate(dividend.date);
+        investmentByMonth = new Big(dividend.investment);
+      }
+
+      if (index === aDividends.length - 1) {
+        // Store current month (latest order)
+        dividends.push({
+          date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
+          investment: investmentByMonth
+        });
+      }
+    }
+
+    return dividends;
   }
 
   private getFees({

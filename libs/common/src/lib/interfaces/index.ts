@@ -19,6 +19,7 @@ import { InfoItem } from './info-item.interface';
 import { LineChartItem } from './line-chart-item.interface';
 import { PortfolioChart } from './portfolio-chart.interface';
 import { PortfolioDetails } from './portfolio-details.interface';
+import { PortfolioDividends } from './portfolio-dividends.interface';
 import { PortfolioInvestments } from './portfolio-investments.interface';
 import { PortfolioItem } from './portfolio-item.interface';
 import { PortfolioOverview } from './portfolio-overview.interface';
@@ -62,6 +63,7 @@ export {
   OAuthResponse,
   PortfolioChart,
   PortfolioDetails,
+  PortfolioDividends,
   PortfolioInvestments,
   PortfolioItem,
   PortfolioOverview,

@@ -12,6 +12,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import {
   PortfolioDetails,
+  PortfolioDividends,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -185,6 +186,55 @@ export class PortfolioController {
     };
   }
 
+  @Get('dividends')
+  @UseGuards(AuthGuard('jwt'))
+  public async getDividends(
+    @Headers('impersonation-id') impersonationId: string,
+    @Query('range') dateRange: DateRange = 'max',
+    @Query('groupBy') groupBy?: GroupBy
+  ): Promise<PortfolioDividends> {
+    let dividends: InvestmentItem[];
+
+    if (groupBy === 'month') {
+      dividends = await this.portfolioService.getDividends({
+        dateRange,
+        groupBy,
+        impersonationId
+      });
+    } else {
+      dividends = await this.portfolioService.getDividends({
+        dateRange,
+        impersonationId
+      });
+    }
+
+    if (
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
+      const maxDividend = dividends.reduce(
+        (investment, item) => Math.max(investment, item.investment),
+        1
+      );
+
+      dividends = dividends.map((item) => ({
+        date: item.date,
+        investment: item.investment / maxDividend
+      }));
+    }
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      dividends = dividends.map((item) => {
+        return nullifyValuesInObject(item, ['investment']);
+      });
+    }
+
+    return { dividends };
+  }
+
   @Get('investments')
   @UseGuards(AuthGuard('jwt'))
   public async getInvestments(
@@ -197,8 +247,8 @@ export class PortfolioController {
     if (groupBy === 'month') {
       investments = await this.portfolioService.getInvestments({
         dateRange,
-        impersonationId,
-        groupBy: 'month'
+        groupBy,
+        impersonationId
       });
     } else {
       investments = await this.portfolioService.getInvestments({

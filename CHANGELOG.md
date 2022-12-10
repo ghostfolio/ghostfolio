@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the dividend timeline grouped by month
+
 ### Changed
 
 - Improved the value redaction interceptor (including `comment`)

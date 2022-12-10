@@ -27,6 +27,7 @@ import {
   InfoItem,
   OAuthResponse,
   PortfolioDetails,
+  PortfolioDividends,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -35,7 +36,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
@@ -97,6 +98,18 @@ export class DataService {
   public fetchAdminMarketData({ filters }: { filters?: Filter[] }) {
     return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
       params: this.buildFiltersAsQueryParams({ filters })
+    });
+  }
+
+  public fetchDividends({
+    groupBy = 'month',
+    range
+  }: {
+    groupBy?: GroupBy;
+    range: DateRange;
+  }) {
+    return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
+      params: { groupBy, range }
     });
   }
 
@@ -178,10 +191,10 @@ export class DataService {
   }
 
   public fetchInvestments({
-    groupBy,
+    groupBy = 'month',
     range
   }: {
-    groupBy?: 'month';
+    groupBy?: GroupBy;
     range: DateRange;
   }) {
     return this.http.get<PortfolioInvestments>(
