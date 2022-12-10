@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the value redaction interceptor (including `comment`)
 - Improved the language localization for Español (`es`)
+- Upgraded `cheerio` from version `1.0.0-rc.6` to `1.0.0-rc.12`
 - Upgraded `prisma` from version `4.6.1` to `4.7.1`
 
 ### Fixed
