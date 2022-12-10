@@ -261,10 +261,12 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             responsive: true,
             scales: {
               x: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  width: this.groupBy ? 0 : 1
+                },
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  borderWidth: this.groupBy ? 0 : 1,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
@@ -279,12 +281,14 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 }
               },
               y: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  display: false
+                },
                 display: !this.isInPercent,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false,
-                  drawBorder: false
+                  display: false
                 },
                 position: 'right',
                 ticks: {
