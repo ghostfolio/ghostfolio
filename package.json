@@ -98,7 +98,7 @@
     "chartjs-adapter-date-fns": "2.0.0",
     "chartjs-plugin-annotation": "2.0.0",
     "chartjs-plugin-datalabels": "2.0.0",
-    "cheerio": "1.0.0-rc.6",
+    "cheerio": "1.0.0-rc.12",
     "class-transformer": "0.3.2",
     "class-validator": "0.13.1",
     "color": "4.0.1",
