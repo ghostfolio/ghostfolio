@@ -36,7 +36,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
+import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
@@ -102,10 +102,10 @@ export class DataService {
   }
 
   public fetchDividends({
-    groupBy,
+    groupBy = 'month',
     range
   }: {
-    groupBy?: 'month';
+    groupBy?: GroupBy;
     range: DateRange;
   }) {
     return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
@@ -191,10 +191,10 @@ export class DataService {
   }
 
   public fetchInvestments({
-    groupBy,
+    groupBy = 'month',
     range
   }: {
-    groupBy?: 'month';
+    groupBy?: GroupBy;
     range: DateRange;
   }) {
     return this.http.get<PortfolioInvestments>(

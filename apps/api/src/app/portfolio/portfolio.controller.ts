@@ -198,8 +198,8 @@ export class PortfolioController {
     if (groupBy === 'month') {
       dividends = await this.portfolioService.getDividends({
         dateRange,
-        impersonationId,
-        groupBy: 'month'
+        groupBy,
+        impersonationId
       });
     } else {
       dividends = await this.portfolioService.getDividends({
@@ -247,8 +247,8 @@ export class PortfolioController {
     if (groupBy === 'month') {
       investments = await this.portfolioService.getInvestments({
         dateRange,
-        impersonationId,
-        groupBy: 'month'
+        groupBy,
+        impersonationId
       });
     } else {
       investments = await this.portfolioService.getInvestments({
