@@ -20,11 +20,14 @@ import {
   addDays,
   format,
   isBefore,
+  isDate,
   isSameDay,
+  isToday,
   isValid,
   parse,
   parseISO
 } from 'date-fns';
+import { last } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -106,9 +109,15 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
       }
     }
 
+    const marketDataItems = [...missingMarketData, ...this.marketData];
+
+    if (!isToday(last(marketDataItems)?.date)) {
+      marketDataItems.push({ date: new Date() });
+    }
+
     this.marketDataByMonth = {};
 
-    for (const marketDataItem of [...missingMarketData, ...this.marketData]) {
+    for (const marketDataItem of marketDataItems) {
       const currentDay = parseInt(format(marketDataItem.date, 'd'), 10);
       const key = format(marketDataItem.date, 'yyyy-MM');
 

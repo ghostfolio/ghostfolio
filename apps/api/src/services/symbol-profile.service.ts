@@ -36,6 +36,13 @@ export class SymbolProfileService {
           _count: {
             select: { Order: true }
           },
+          Order: {
+            orderBy: {
+              date: 'asc'
+            },
+            select: { date: true },
+            take: 1
+          },
           SymbolProfileOverrides: true
         },
         where: {
@@ -118,6 +125,9 @@ export class SymbolProfileService {
   private getSymbols(
     symbolProfiles: (SymbolProfile & {
       _count: { Order: number };
+      Order?: {
+        date: Date;
+      }[];
       SymbolProfileOverrides: SymbolProfileOverrides;
     })[]
   ): EnhancedSymbolProfile[] {
@@ -128,6 +138,7 @@ export class SymbolProfileService {
         countries: this.getCountries(
           symbolProfile?.countries as unknown as Prisma.JsonArray
         ),
+        dateOfFirstActivity: <Date>undefined,
         scraperConfiguration: this.getScraperConfiguration(symbolProfile),
         sectors: this.getSectors(symbolProfile),
         symbolMapping: this.getSymbolMapping(symbolProfile)
@@ -135,6 +146,9 @@ export class SymbolProfileService {
 
       item.activitiesCount = symbolProfile._count.Order;
       delete item._count;
+
+      item.dateOfFirstActivity = symbolProfile.Order?.[0]?.date;
+      delete item.Order;
 
       if (item.SymbolProfileOverrides) {
         item.assetClass =

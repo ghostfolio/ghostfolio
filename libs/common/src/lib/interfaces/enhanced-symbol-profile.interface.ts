@@ -13,6 +13,7 @@ export interface EnhancedSymbolProfile {
   createdAt: Date;
   currency: string | null;
   dataSource: DataSource;
+  dateOfFirstActivity?: Date;
   id: string;
   name: string | null;
   scraperConfiguration?: ScraperConfiguration | null;
