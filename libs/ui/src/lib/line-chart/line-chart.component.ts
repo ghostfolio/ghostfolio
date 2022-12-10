@@ -212,9 +212,11 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             },
             scales: {
               x: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                },
                 display: this.showXAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
@@ -225,9 +227,11 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
                 type: 'time'
               },
               y: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                },
                 display: this.showYAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },

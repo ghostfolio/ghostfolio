@@ -159,10 +159,12 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
             responsive: true,
             scales: {
               x: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  width: 1
+                },
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  borderWidth: 1,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
@@ -173,12 +175,14 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 }
               },
               y: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  display: false
+                },
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false,
-                  drawBorder: false
+                  display: false
                 },
                 position: 'right',
                 ticks: {
