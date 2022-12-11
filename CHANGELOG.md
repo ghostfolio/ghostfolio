@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the date of the first activity to the positions table
+- Added an endpoint to fetch the logo of an asset or a platform
 
 ### Changed
 
