@@ -87,8 +87,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
 
         this.assetProfileForm.setValue({
-          comment: this.assetProfile?.comment,
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping)
+          comment: this.assetProfile?.comment ?? '',
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
         });
 
         this.assetProfileForm.markAsPristine();

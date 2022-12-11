@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the asset profile details dialog in the admin control panel
 - Upgraded `chart.js` from version `3.8.0` to `4.0.1`
 
 ## 1.217.0 - 2022-12-10
