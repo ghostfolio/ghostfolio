@@ -15,6 +15,24 @@
     matSortDirection="desc"
     [dataSource]="dataSource"
   >
+    <ng-container matColumnDef="select">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <mat-checkbox
+          [checked]="selectedRows.hasValue() && areAllRowsSelected()"
+          [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
+          (change)="$event ? toggleAll() : null"
+        ></mat-checkbox>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <mat-checkbox
+          [checked]="selectedRows.isSelected(element)"
+          (change)="$event ? selectedRows.toggle(element) : null"
+          (click)="$event.stopPropagation()"
+        ></mat-checkbox>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
+
     <ng-container matColumnDef="count">
       <th
         *matHeaderCellDef
@@ -122,7 +140,7 @@
         class="d-none d-lg-table-cell px-1"
         mat-cell
       >
-        {{ element.SymbolProfile.currency }}
+        {{ baseCurrency }}
       </td>
       <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
         {{ baseCurrency }}
@@ -238,7 +256,9 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.value"
+            [value]="
+              isLoading ? undefined : element.unitPrice * element.quantity
+            "
           ></gf-value>
         </div>
       </td>

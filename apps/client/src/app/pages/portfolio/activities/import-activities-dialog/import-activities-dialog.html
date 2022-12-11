@@ -6,7 +6,22 @@
 ></gf-dialog-header>
 
 <div class="flex-grow-1" mat-dialog-content>
-  <ng-container *ngIf="errorMessages.length === 0">
+  <ng-container *ngIf="importComplete">
+    <gf-activities-table
+      [activities]="activities"
+      [baseCurrency]="data?.user?.settings?.baseCurrency"
+      [deviceType]="data.deviceType"
+      [hasPermissionToCreateActivity]="false"
+      [hasPermissionToExportActivities]="true"
+      [hasPermissionToFilter]="false"
+      [hasPermissionToImportActivities]="false"
+      [hasPermissionToOpenDetails]="false"
+      [locale]="data?.user?.settings?.locale"
+      [showActions]="false"
+      [showSymbolColumn]="false"
+    ></gf-activities-table>
+  </ng-container>
+  <ng-container *ngIf="errorMessages.length === 0 && !importComplete">
     <div class="d-flex justify-content-center flex-column">
       <button
         class="py-3"

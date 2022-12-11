@@ -7,9 +7,14 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  Activities,
+  Activity
+} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { isArray } from 'lodash';
 import { Subject } from 'rxjs';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
@@ -20,8 +25,10 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class ImportActivitiesDialog implements OnDestroy {
+  public activities: Activity[] | CreateOrderDto[] = [];
   public details: any[] = [];
   public errorMessages: string[] = [];
+  public importComplete = false;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -93,7 +100,7 @@ export class ImportActivitiesDialog implements OnDestroy {
             return;
           } else if (file.name.endsWith('.csv')) {
             try {
-              await this.importActivitiesService.importCsv({
+              this.activities = await this.importActivitiesService.importCsv({
                 fileContent,
                 userAccounts: this.data.user.accounts
               });
@@ -163,14 +170,18 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   private handleImportSuccess() {
-    this.snackBar.open(
-      '✅ ' + $localize`Import has been completed`,
-      undefined,
-      {
-        duration: 3000
-      }
-    );
+    this.importComplete = true;
 
-    this.dialogRef.close();
+    //Needed to trigger onPush change detection strategy
+    this.changeDetectorRef.markForCheck();
+    // this.snackBar.open(
+    //   '✅ ' + $localize`Import has been completed`,
+    //   undefined,
+    //   {
+    //     duration: 3000
+    //   }
+    // );
+
+    // this.dialogRef.close();
   }
 }

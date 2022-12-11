@@ -52,7 +52,9 @@ export class ImportActivitiesService {
       });
     }
 
-    await this.importJson({ content: activities });
+    return activities;
+
+    // await this.importJson({ content: activities });
   }
 
   public importJson({ content }: { content: CreateOrderDto[] }): Promise<void> {

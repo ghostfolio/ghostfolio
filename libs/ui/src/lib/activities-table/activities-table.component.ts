@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -57,6 +58,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   public allFilters: Filter[];
   public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
+  public selectedRows = new SelectionModel<Activity>(true, []);
   public defaultDateFormat: string;
   public displayedColumns = [];
   public endOfToday = endOfToday();
@@ -83,8 +85,24 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       });
   }
 
+  public areAllRowsSelected() {
+    const numSelectedRows = this.selectedRows.selected.length;
+    const numTotalRows = this.dataSource.data.length;
+    return numSelectedRows === numTotalRows;
+  }
+
+  public toggleAll() {
+    this.areAllRowsSelected()
+      ? this.selectedRows.clear()
+      : this.dataSource.data.forEach((row) => this.selectedRows.select(row));
+
+    this.selectedActivities.emit(this.selectedRows.selected);
+  }
+
   public ngOnChanges() {
+    console.log('INSIDE LIIB', this.activities);
     this.displayedColumns = [
+      'select',
       'count',
       'date',
       'type',
@@ -219,13 +237,18 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       };
     }
 
-    fieldValueMap[activity.SymbolProfile.currency] = {
-      id: activity.SymbolProfile.currency,
-      label: activity.SymbolProfile.currency,
-      type: 'TAG'
-    };
+    if (activity.SymbolProfile?.currency) {
+      fieldValueMap[activity.SymbolProfile.currency] = {
+        id: activity.SymbolProfile.currency,
+        label: activity.SymbolProfile.currency,
+        type: 'TAG'
+      };
+    }
 
-    if (!isUUID(activity.SymbolProfile.symbol)) {
+    if (
+      activity.SymbolProfile?.symbol &&
+      !isUUID(activity.SymbolProfile.symbol)
+    ) {
       fieldValueMap[activity.SymbolProfile.symbol] = {
         id: activity.SymbolProfile.symbol,
         label: activity.SymbolProfile.symbol,
@@ -233,17 +256,21 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       };
     }
 
-    fieldValueMap[activity.type] = {
-      id: activity.type,
-      label: activity.type,
-      type: 'TAG'
-    };
+    if (activity?.type) {
+      fieldValueMap[activity.type] = {
+        id: activity.type,
+        label: activity.type,
+        type: 'TAG'
+      };
+    }
 
-    fieldValueMap[format(activity.date, 'yyyy')] = {
-      id: format(activity.date, 'yyyy'),
-      label: format(activity.date, 'yyyy'),
-      type: 'TAG'
-    };
+    // if (typeof activity?.date) {
+    //   fieldValueMap[format(activity.date, 'yyyy')] = {
+    //     id: format(activity.date, 'yyyy'),
+    //     label: format(activity.date, 'yyyy'),
+    //     type: 'TAG'
+    //   };
+    // }
 
     return Object.values(fieldValueMap);
   }
