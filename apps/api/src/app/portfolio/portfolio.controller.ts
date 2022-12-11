@@ -422,6 +422,7 @@ export class PortfolioController {
         allocationCurrent: portfolioPosition.value / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
+        dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
         name: portfolioPosition.name,
         netPerformancePercent: portfolioPosition.netPerformancePercent,

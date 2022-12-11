@@ -12,6 +12,7 @@ export interface PortfolioPosition {
   countries: Country[];
   currency: string;
   dataSource: DataSource;
+  dateOfFirstActivity: Date;
   exchange?: string;
   grossPerformance: number;
   grossPerformancePercent: number;

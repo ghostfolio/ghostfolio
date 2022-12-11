@@ -269,6 +269,12 @@ export class DataService {
               response.holdings[symbol].assetSubClass = translate(
                 response.holdings[symbol].assetSubClass
               );
+
+              response.holdings[symbol].dateOfFirstActivity = response.holdings[
+                symbol
+              ].dateOfFirstActivity
+                ? parseISO(response.holdings[symbol].dateOfFirstActivity)
+                : undefined;
             }
           }
 

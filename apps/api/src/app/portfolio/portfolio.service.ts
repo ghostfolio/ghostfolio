@@ -533,6 +533,7 @@ export class PortfolioService {
         countries: symbolProfile.countries,
         currency: item.currency,
         dataSource: symbolProfile.dataSource,
+        dateOfFirstActivity: parseDate(item.firstBuyDate),
         grossPerformance: item.grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent:
           item.grossPerformancePercentage?.toNumber() ?? 0,
@@ -1329,6 +1330,7 @@ export class PortfolioService {
       assetSubClass: AssetClass.CASH,
       countries: [],
       dataSource: undefined,
+      dateOfFirstActivity: undefined,
       grossPerformance: 0,
       grossPerformancePercent: 0,
       investment: balance,
