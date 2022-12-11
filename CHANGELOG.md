@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the date of the first activity to the positions table
+
 ### Changed
 
 - Improved the asset profile details dialog in the admin control panel

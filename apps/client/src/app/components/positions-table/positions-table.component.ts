@@ -56,7 +56,7 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = ['icon', 'symbol', 'name'];
+    this.displayedColumns = ['icon', 'symbol', 'name', 'dateOfFirstActivity'];
 
     if (this.hasPermissionToShowValues) {
       this.displayedColumns.push('value');
