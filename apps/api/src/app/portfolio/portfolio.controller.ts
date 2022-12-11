@@ -373,6 +373,7 @@ export class PortfolioController {
   }
 
   @Get('public/:accessId')
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPublic(
     @Param('accessId') accessId
   ): Promise<PortfolioPublicDetails> {
@@ -422,6 +423,7 @@ export class PortfolioController {
         allocationCurrent: portfolioPosition.value / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
+        dataSource: portfolioPosition.dataSource,
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
         name: portfolioPosition.name,

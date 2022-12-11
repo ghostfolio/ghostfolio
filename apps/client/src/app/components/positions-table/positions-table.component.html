@@ -10,9 +10,9 @@
     <th *matHeaderCellDef class="px-1" mat-header-cell></th>
     <td *matCellDef="let element" class="px-1 text-center" mat-cell>
       <gf-symbol-icon
-        *ngIf="element.url"
+        [dataSource]="element.dataSource"
+        [symbol]="element.symbol"
         [tooltip]="element.name"
-        [url]="element.url"
       ></gf-symbol-icon>
     </td>
   </ng-container>
