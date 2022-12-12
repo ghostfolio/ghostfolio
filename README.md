@@ -15,8 +15,10 @@
     <a href="https://ghostfol.io"><strong>Ghostfol.io</strong></a> | <a href="https://ghostfol.io/en/demo"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/en/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/en/faq"><strong>FAQ</strong></a> | <a href="https://ghostfol.io/en/blog"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
   </p>
   <p>
+    <a href="https://www.buymeacoffee.com/ghostfolio">
+      <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-Support-yellow?logo=buymeacoffee"/></a>
     <a href="#contributing">
-      <img src="https://img.shields.io/badge/contributions-welcome-orange.svg"/></a>
+      <img src="https://img.shields.io/badge/Contributions-Welcome-orange.svg"/></a>
     <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
       <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"/></a>
   </p>
