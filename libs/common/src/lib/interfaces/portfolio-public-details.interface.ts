@@ -9,6 +9,7 @@ export interface PortfolioPublicDetails {
       | 'allocationCurrent'
       | 'countries'
       | 'currency'
+      | 'dataSource'
       | 'dateOfFirstActivity'
       | 'markets'
       | 'name'

@@ -27,6 +27,7 @@ import { ExportModule } from './export/export.module';
 import { FrontendMiddleware } from './frontend.middleware';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
+import { LogoModule } from './logo/logo.module';
 import { OrderModule } from './order/order.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { SubscriptionModule } from './subscription/subscription.module';
@@ -58,6 +59,7 @@ import { UserModule } from './user/user.module';
     ExportModule,
     ImportModule,
     InfoModule,
+    LogoModule,
     OrderModule,
     PortfolioModule,
     PrismaModule,
