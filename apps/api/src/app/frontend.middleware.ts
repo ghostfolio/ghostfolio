@@ -50,66 +50,66 @@ export class FrontendMiddleware implements NestMiddleware {
     } catch {}
   }
 
-  public use(req: Request, res: Response, next: NextFunction) {
+  public use(request: Request, response: Response, next: NextFunction) {
     let featureGraphicPath = 'assets/cover.png';
 
-    if (req.path.startsWith('/en/blog/2022/08/500-stars-on-github')) {
+    if (request.path.startsWith('/en/blog/2022/08/500-stars-on-github')) {
       featureGraphicPath = 'assets/images/blog/500-stars-on-github.jpg';
-    } else if (req.path.startsWith('/en/blog/2022/10/hacktoberfest-2022')) {
+    } else if (request.path.startsWith('/en/blog/2022/10/hacktoberfest-2022')) {
       featureGraphicPath = 'assets/images/blog/hacktoberfest-2022.png';
-    } else if (req.path.startsWith('/en/blog/2022/11/black-friday-2022')) {
+    } else if (request.path.startsWith('/en/blog/2022/11/black-friday-2022')) {
       featureGraphicPath = 'assets/images/blog/black-friday-2022.jpg';
     }
 
     if (
-      req.path.startsWith('/api/') ||
-      this.isFileRequest(req.url) ||
+      request.path.startsWith('/api/') ||
+      this.isFileRequest(request.url) ||
       !this.isProduction
     ) {
       // Skip
       next();
-    } else if (req.path === '/de' || req.path.startsWith('/de/')) {
-      res.send(
+    } else if (request.path === '/de' || request.path.startsWith('/de/')) {
+      response.send(
         this.interpolate(this.indexHtmlDe, {
           featureGraphicPath,
           languageCode: 'de',
-          path: req.path,
+          path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
-    } else if (req.path === '/es' || req.path.startsWith('/es/')) {
-      res.send(
+    } else if (request.path === '/es' || request.path.startsWith('/es/')) {
+      response.send(
         this.interpolate(this.indexHtmlEs, {
           featureGraphicPath,
           languageCode: 'es',
-          path: req.path,
+          path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
-    } else if (req.path === '/it' || req.path.startsWith('/it/')) {
-      res.send(
+    } else if (request.path === '/it' || request.path.startsWith('/it/')) {
+      response.send(
         this.interpolate(this.indexHtmlIt, {
           featureGraphicPath,
           languageCode: 'it',
-          path: req.path,
+          path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
-    } else if (req.path === '/nl' || req.path.startsWith('/nl/')) {
-      res.send(
+    } else if (request.path === '/nl' || request.path.startsWith('/nl/')) {
+      response.send(
         this.interpolate(this.indexHtmlNl, {
           featureGraphicPath,
           languageCode: 'nl',
-          path: req.path,
+          path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
     } else {
-      res.send(
+      response.send(
         this.interpolate(this.indexHtmlEn, {
           featureGraphicPath,
           languageCode: DEFAULT_LANGUAGE_CODE,
-          path: req.path,
+          path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
