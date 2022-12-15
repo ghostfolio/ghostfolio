@@ -1,6 +1,9 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_IS_READ_ONLY_MODE } from '@ghostfolio/common/config';
+import {
+  PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_DISABLE_USER_SIGNUP
+} from '@ghostfolio/common/config';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -75,6 +78,19 @@ export class UserController {
       )) as boolean;
 
       if (isReadOnlyMode) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.FORBIDDEN),
+          StatusCodes.FORBIDDEN
+        );
+      }
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_USER_SIGNUP_CONTROL')) {
+      const isUserSignupDisabled = (await this.propertyService.getByKey(
+        PROPERTY_DISABLE_USER_SIGNUP
+      )) as boolean;
+
+      if (isUserSignupDisabled) {
         throw new HttpException(
           getReasonPhrase(StatusCodes.FORBIDDEN),
           StatusCodes.FORBIDDEN

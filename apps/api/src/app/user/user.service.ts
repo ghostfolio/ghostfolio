@@ -185,6 +185,12 @@ export class UserService {
       }
     }
 
+    if (this.configurationService.get('ENABLE_FEATURE_USER_SIGNUP_CONTROL')) {
+      if (hasRole(user, Role.ADMIN)) {
+        currentPermissions.push(permissions.toggleUserSignupMode);
+      }
+    }
+
     user.Account = sortBy(user.Account, (account) => {
       return account.name;
     });

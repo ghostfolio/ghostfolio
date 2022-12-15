@@ -119,6 +119,17 @@
               ></mat-slide-toggle>
             </div>
           </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n> Disable User Signup </div>
+            <div class="w-50">
+              <mat-slide-toggle
+                color="primary"
+                [disabled]="!hasPermissionToToggleUserSignupMode"
+                [checked]="!info.globalPermissions.includes('createUserAccount')"
+                (change)="onEnableUserSignupModeChange($event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
           <div
             *ngIf="hasPermissionForSubscription"
             class="d-flex my-3 subscription"

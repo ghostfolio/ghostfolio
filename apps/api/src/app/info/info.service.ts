@@ -11,6 +11,7 @@ import {
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE,
+  PROPERTY_DISABLE_USER_SIGNUP,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -101,6 +102,18 @@ export class InfoService {
       systemMessage = (await this.propertyService.getByKey(
         PROPERTY_SYSTEM_MESSAGE
       )) as string;
+    }
+
+    if (this.configurationService.get('ENABLE_FEATURE_USER_SIGNUP_CONTROL')) {
+      const isUserSignupDisabled = (await this.propertyService.getByKey(
+        PROPERTY_DISABLE_USER_SIGNUP
+      )) as boolean;
+
+      if (!isUserSignupDisabled) {
+        globalPermissions.push(permissions.createUserAccount);
+      }
+    } else { // By default enabled
+        globalPermissions.push(permissions.createUserAccount);
     }
 
     return {

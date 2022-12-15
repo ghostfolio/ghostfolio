@@ -7,7 +7,8 @@ import {
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
-  PROPERTY_SYSTEM_MESSAGE
+  PROPERTY_SYSTEM_MESSAGE,
+  PROPERTY_DISABLE_USER_SIGNUP
 } from '@ghostfolio/common/config';
 import { Coupon, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -34,6 +35,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
+  public hasPermissionToToggleUserSignupMode: boolean;
   public info: InfoItem;
   public transactionCount: number;
   public userCount: number;
@@ -68,6 +70,11 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.hasPermissionToToggleReadOnlyMode = hasPermission(
             this.user.permissions,
             permissions.toggleReadOnlyMode
+          );
+
+          this.hasPermissionToToggleUserSignupMode = hasPermission(
+            this.user.permissions,
+            permissions.toggleUserSignupMode
           );
         }
       });
@@ -163,6 +170,13 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
     this.putAdminSetting({
       key: PROPERTY_IS_READ_ONLY_MODE,
+      value: aEvent.checked ? true : undefined
+    });
+  }
+
+  public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
+    this.putAdminSetting({
+      key: PROPERTY_DISABLE_USER_SIGNUP,
       value: aEvent.checked ? true : undefined
     });
   }

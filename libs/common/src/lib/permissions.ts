@@ -26,7 +26,8 @@ export const permissions = {
   updateAuthDevice: 'updateAuthDevice',
   updateOrder: 'updateOrder',
   updateUserSettings: 'updateUserSettings',
-  updateViewMode: 'updateViewMode'
+  updateViewMode: 'updateViewMode',
+  toggleUserSignupMode: 'toggleUserSignupMode'
 };
 
 export function getPermissions(aRole: Role): string[] {
