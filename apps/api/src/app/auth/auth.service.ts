@@ -1,5 +1,6 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Provider } from '@prisma/client';
@@ -11,6 +12,7 @@ export class AuthService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
+    private readonly propertyService: PropertyService,
     private readonly userService: UserService
   ) {}
 
@@ -50,6 +52,13 @@ export class AuthService {
       });
 
       if (!user) {
+        const isUserSignupEnabled =
+          await this.propertyService.isUserSignupEnabled();
+
+        if (!isUserSignupEnabled) {
+          throw new Error('Sign up forbidden');
+        }
+
         // Create new user if not found
         user = await this.userService.createUser({
           provider,
@@ -78,6 +87,13 @@ export class AuthService {
       });
 
       if (!user) {
+        const isUserSignupEnabled =
+          await this.propertyService.isUserSignupEnabled();
+
+        if (!isUserSignupEnabled) {
+          throw new Error('Sign up forbidden');
+        }
+
         // Create new user if not found
         user = await this.userService.createUser({
           provider,

@@ -1,5 +1,8 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import {
+  PROPERTY_CURRENCIES,
+  PROPERTY_IS_USER_SIGNUP_ENABLED
+} from '@ghostfolio/common/config';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -37,6 +40,13 @@ export class PropertyService {
   public async getByKey(aKey: string) {
     const properties = await this.get();
     return properties?.[aKey];
+  }
+
+  public async isUserSignupEnabled() {
+    return (
+      ((await this.getByKey(PROPERTY_IS_USER_SIGNUP_ENABLED)) as boolean) ??
+      true
+    );
   }
 
   public async put({ key, value }: { key: string; value: string }) {
