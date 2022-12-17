@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { GfPositionsTableModule } from '@ghostfolio/client/components/positions-table/positions-table.module';
+import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-table.module';
 import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
 
 import { HoldingsPageRoutingModule } from './holdings-page-routing.module';
@@ -12,7 +12,7 @@ import { HoldingsPageComponent } from './holdings-page.component';
   imports: [
     CommonModule,
     GfActivitiesFilterModule,
-    GfPositionsTableModule,
+    GfHoldingsTableModule,
     HoldingsPageRoutingModule,
     MatButtonModule
   ],

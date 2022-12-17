@@ -19,12 +19,12 @@ import { AssetClass, Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'gf-positions-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './positions-table.component.html',
-  styleUrls: ['./positions-table.component.scss']
+  selector: 'gf-holdings-table',
+  styleUrls: ['./holdings-table.component.scss'],
+  templateUrl: './holdings-table.component.html'
 })
-export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
+export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
@@ -56,7 +56,7 @@ export class PositionsTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.displayedColumns = ['icon', 'symbol', 'name', 'dateOfFirstActivity'];
+    this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
 
     if (this.hasPermissionToShowValues) {
       this.displayedColumns.push('value');
