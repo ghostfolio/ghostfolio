@@ -4,6 +4,7 @@ import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscriptio
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -21,6 +22,7 @@ import { JwtStrategy } from './jwt.strategy';
       signOptions: { expiresIn: '180 days' }
     }),
     PrismaModule,
+    PropertyModule,
     SubscriptionModule,
     UserModule
   ],

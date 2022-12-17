@@ -70,9 +70,7 @@ export class UserController {
   @Post()
   public async signupUser(): Promise<UserItem> {
     const isUserSignupEnabled =
-      ((await this.propertyService.getByKey(
-        PROPERTY_IS_USER_SIGNUP_ENABLED
-      )) as boolean) ?? true;
+      await this.propertyService.isUserSignupEnabled();
 
     if (!isUserSignupEnabled) {
       throw new HttpException(
