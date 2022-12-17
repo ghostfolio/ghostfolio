@@ -14,6 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -151,6 +152,12 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
       this.updateFilters();
     }
+  }
+
+  ngOnInit() {
+    this.selectedRows.changed.subscribe((selectedRows) => {
+      this.selectedActivities.emit(selectedRows.source.selected);
+    });
   }
 
   public onChangePage(page: PageEvent) {

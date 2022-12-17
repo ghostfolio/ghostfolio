@@ -19,6 +19,7 @@
       [locale]="data?.user?.settings?.locale"
       [showActions]="false"
       [showSymbolColumn]="false"
+      (selectedActivities)="importActivities($event)"
     ></gf-activities-table>
   </ng-container>
   <ng-container *ngIf="errorMessages.length === 0 && !importComplete">
@@ -77,6 +78,13 @@
       </button>
     </div>
   </ng-container>
+</div>
+
+<div *ngIf="importComplete" class="justify-content-end" mat-dialog-actions>
+  <button i18n mat-button (click)="onCancel()">Cancel</button>
+  <button color="primary" mat-flat-button (click)="finalImport()">
+    <ng-container i18n>Import</ng-container>
+  </button>
 </div>
 
 <gf-dialog-footer

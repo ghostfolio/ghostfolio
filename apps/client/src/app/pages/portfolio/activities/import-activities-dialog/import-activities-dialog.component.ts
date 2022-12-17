@@ -29,6 +29,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public details: any[] = [];
   public errorMessages: string[] = [];
   public importComplete = false;
+  public selectedActivities: CreateOrderDto[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -105,6 +106,7 @@ export class ImportActivitiesDialog implements OnDestroy {
                 userAccounts: this.data.user.accounts
               });
 
+              this.snackBar.dismiss();
               this.handleImportSuccess();
             } catch (error) {
               console.error(error);
@@ -131,6 +133,26 @@ export class ImportActivitiesDialog implements OnDestroy {
     };
 
     input.click();
+  }
+
+  public importActivities(data) {
+    this.selectedActivities = data;
+  }
+
+  public async finalImport() {
+    // this.importJson({ content: activities })
+    await this.importActivitiesService.importJson({
+      content: this.selectedActivities
+    });
+    this.snackBar.open(
+      '✅ ' + $localize`Import has been completed`,
+      undefined,
+      {
+        duration: 3000
+      }
+    );
+
+    this.dialogRef.close();
   }
 
   public onReset() {
