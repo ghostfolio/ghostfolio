@@ -45,7 +45,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { demoAuthToken, globalPermissions, isReadOnlyMode } =
+    const { demoAuthToken, globalPermissions } =
       this.dataService.fetchInfo();
 
     this.demoAuthToken = demoAuthToken;
@@ -54,9 +54,10 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
       globalPermissions,
       permissions.enableSocialLogin
     );
-    this.hasPermissionToCreateUser =
-      !isReadOnlyMode &&
-      hasPermission(globalPermissions, permissions.createUserAccount);
+    this.hasPermissionToCreateUser = hasPermission(
+      globalPermissions,
+      permissions.createUserAccount
+    );
   }
 
   public async createAccount() {

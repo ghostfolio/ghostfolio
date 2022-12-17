@@ -48,7 +48,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService
   ) {
-    const { globalPermissions, isReadOnlyMode, statistics } =
+    const { globalPermissions, statistics } =
       this.dataService.fetchInfo();
 
     this.hasPermissionForStatistics = hasPermission(
@@ -56,9 +56,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
       permissions.enableStatistics
     );
 
-    this.hasPermissionToCreateUser =
-      !isReadOnlyMode &&
-      hasPermission(globalPermissions, permissions.createUserAccount);
+    this.hasPermissionToCreateUser = hasPermission(globalPermissions, permissions.createUserAccount);
 
     this.statistics = statistics;
   }

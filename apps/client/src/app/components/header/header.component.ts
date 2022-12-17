@@ -81,12 +81,10 @@ export class HeaderComponent implements OnChanges {
       permissions.enableFearAndGreedIndex
     );
 
-    this.hasPermissionToCreateUser =
-      !this.info?.isReadOnlyMode &&
-      hasPermission(
-        this.info?.globalPermissions,
-        permissions.createUserAccount
-      );
+    this.hasPermissionToCreateUser = hasPermission(
+      this.info?.globalPermissions,
+      permissions.createUserAccount
+    );
   }
 
   public impersonateAccount(aId: string) {
