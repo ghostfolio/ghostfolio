@@ -7,6 +7,7 @@ import {
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_IS_USER_SIGNUP_ENABLED,
   PROPERTY_SYSTEM_MESSAGE
 } from '@ghostfolio/common/config';
 import { Coupon, InfoItem, User } from '@ghostfolio/common/interfaces';
@@ -35,6 +36,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
+  public permissions = permissions;
   public transactionCount: number;
   public userCount: number;
   public user: User;
@@ -167,6 +169,13 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     });
   }
 
+  public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
+    this.putAdminSetting({
+      key: PROPERTY_IS_USER_SIGNUP_ENABLED,
+      value: aEvent.checked ? undefined : false
+    });
+  }
+
   public onSetSystemMessage() {
     const systemMessage = prompt($localize`Please set your system message:`);
 
@@ -214,7 +223,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   private putAdminSetting({ key, value }: { key: string; value: any }) {
     this.dataService
       .putAdminSetting(key, {
-        value: value ? JSON.stringify(value) : undefined
+        value: value || value === false ? JSON.stringify(value) : undefined
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {

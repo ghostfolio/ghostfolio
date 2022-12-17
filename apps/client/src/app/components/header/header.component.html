@@ -1,9 +1,9 @@
 <mat-toolbar class="px-2">
   <ng-container *ngIf="user">
     <a
-      [routerLink]="['/']"
       class="align-items-center d-flex h-100 no-min-width px-2 rounded-0"
       mat-button
+      [routerLink]="['/']"
     >
       <gf-logo></gf-logo>
     </a>
@@ -289,7 +289,7 @@
       <ng-container i18n>Sign in</ng-container>
     </button>
     <a
-      *ngIf="currentRoute !== 'register' && !info?.isReadOnlyMode"
+      *ngIf="currentRoute !== 'register' && hasPermissionToCreateUser"
       class="d-none d-sm-block"
       color="primary"
       mat-flat-button

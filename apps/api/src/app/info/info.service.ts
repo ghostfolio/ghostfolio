@@ -8,6 +8,7 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_IS_USER_SIGNUP_ENABLED,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE,
@@ -101,6 +102,15 @@ export class InfoService {
       systemMessage = (await this.propertyService.getByKey(
         PROPERTY_SYSTEM_MESSAGE
       )) as string;
+    }
+
+    const isUserSignupEnabled =
+      ((await this.propertyService.getByKey(
+        PROPERTY_IS_USER_SIGNUP_ENABLED
+      )) as boolean) ?? true;
+
+    if (isUserSignupEnabled) {
+      globalPermissions.push(permissions.createUserAccount);
     }
 
     return {
