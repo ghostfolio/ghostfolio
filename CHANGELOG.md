@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to disable user sign up in the admin control panel
 - Extended the glossary of the resources page by _Deflation_, _Inflation_ and _Stagflation_
 
+### Changed
+
+- Combined the name and symbol column in the holdings table (former positions table)
+
 ## 1.218.0 - 2022-12-12
 
 ### Added
