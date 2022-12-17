@@ -170,8 +170,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
-    console.log(aEvent);
-
     this.putAdminSetting({
       key: PROPERTY_IS_USER_SIGNUP_ENABLED,
       value: aEvent.checked ? undefined : false
