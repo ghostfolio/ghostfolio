@@ -83,26 +83,31 @@
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
-    <ng-container matColumnDef="symbol">
+    <ng-container matColumnDef="nameWithSymbol">
       <th
         *matHeaderCellDef
         class="px-1"
         mat-header-cell
         mat-sort-header="SymbolProfile.symbol"
       >
-        <ng-container i18n>Symbol</ng-container>
+        <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex align-items-center">
-          <span *ngIf="isUUID(element.SymbolProfile.symbol); else symbol">
-            {{ element.SymbolProfile.name }}
-          </span>
-          <ng-template #symbol>
-            {{ element.SymbolProfile.symbol | gfSymbol }}
-          </ng-template>
-          <span *ngIf="element.isDraft" class="badge badge-secondary ml-1" i18n
-            >Draft</span
-          >
+          <div>
+            <span class="text-truncate">{{ element.SymbolProfile.name }}</span>
+            <span
+              *ngIf="element.isDraft"
+              class="badge badge-secondary ml-1"
+              i18n
+              >Draft</span
+            >
+          </div>
+        </div>
+        <div *ngIf="!isUUID(element.SymbolProfile.symbol)">
+          <small class="text-muted">{{
+            element.SymbolProfile.symbol | gfSymbol
+          }}</small>
         </div>
       </td>
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
