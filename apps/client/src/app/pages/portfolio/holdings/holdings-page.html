@@ -12,13 +12,13 @@
   </div>
   <div class="row">
     <div class="col-lg">
-      <gf-positions-table
+      <gf-holdings-table
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
         [locale]="user?.settings?.locale"
         [positions]="positionsArray"
-      ></gf-positions-table>
+      ></gf-holdings-table>
       <div
         *ngIf="hasPermissionToCreateOrder && positionsArray?.length > 0"
         class="text-center"
