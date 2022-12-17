@@ -16,7 +16,6 @@ export interface Environment extends CleanedEnvAccessors {
   ENABLE_FEATURE_STATISTICS: boolean;
   ENABLE_FEATURE_SUBSCRIPTION: boolean;
   ENABLE_FEATURE_SYSTEM_MESSAGE: boolean;
-  ENABLE_FEATURE_USER_SIGNUP_CONTROL: boolean;
   EOD_HISTORICAL_DATA_API_KEY: string;
   GOOGLE_CLIENT_ID: string;
   GOOGLE_SECRET: string;

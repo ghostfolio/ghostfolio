@@ -25,6 +25,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   public demoAuthToken: string;
   public deviceType: string;
   public hasPermissionForSocialLogin: boolean;
+  public hasPermissionToCreateUser: boolean;
   public historicalDataItems: LineChartItem[];
   public info: InfoItem;
 
@@ -44,7 +45,8 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { demoAuthToken, globalPermissions } = this.dataService.fetchInfo();
+    const { demoAuthToken, globalPermissions, isReadOnlyMode } =
+      this.dataService.fetchInfo();
 
     this.demoAuthToken = demoAuthToken;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
@@ -52,6 +54,9 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
       globalPermissions,
       permissions.enableSocialLogin
     );
+    this.hasPermissionToCreateUser =
+      !isReadOnlyMode &&
+      hasPermission(globalPermissions, permissions.createUserAccount);
   }
 
   public async createAccount() {

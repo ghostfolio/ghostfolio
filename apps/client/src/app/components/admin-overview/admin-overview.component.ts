@@ -7,8 +7,8 @@ import {
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
-  PROPERTY_SYSTEM_MESSAGE,
-  PROPERTY_DISABLE_USER_SIGNUP
+  PROPERTY_IS_USER_SIGNUP_ENABLED,
+  PROPERTY_SYSTEM_MESSAGE
 } from '@ghostfolio/common/config';
 import { Coupon, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -35,8 +35,8 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
-  public hasPermissionToToggleUserSignupMode: boolean;
   public info: InfoItem;
+  public permissions = permissions;
   public transactionCount: number;
   public userCount: number;
   public user: User;
@@ -70,11 +70,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.hasPermissionToToggleReadOnlyMode = hasPermission(
             this.user.permissions,
             permissions.toggleReadOnlyMode
-          );
-
-          this.hasPermissionToToggleUserSignupMode = hasPermission(
-            this.user.permissions,
-            permissions.toggleUserSignupMode
           );
         }
       });
@@ -175,9 +170,11 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
+    console.log(aEvent);
+
     this.putAdminSetting({
-      key: PROPERTY_DISABLE_USER_SIGNUP,
-      value: aEvent.checked ? true : undefined
+      key: PROPERTY_IS_USER_SIGNUP_ENABLED,
+      value: aEvent.checked ? undefined : false
     });
   }
 
@@ -228,7 +225,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   private putAdminSetting({ key, value }: { key: string; value: any }) {
     this.dataService
       .putAdminSetting(key, {
-        value: value ? JSON.stringify(value) : undefined
+        value: value || value === false ? JSON.stringify(value) : undefined
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {

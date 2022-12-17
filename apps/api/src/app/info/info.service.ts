@@ -8,10 +8,10 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_IS_USER_SIGNUP_ENABLED,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE,
-  PROPERTY_DISABLE_USER_SIGNUP,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -104,16 +104,13 @@ export class InfoService {
       )) as string;
     }
 
-    if (this.configurationService.get('ENABLE_FEATURE_USER_SIGNUP_CONTROL')) {
-      const isUserSignupDisabled = (await this.propertyService.getByKey(
-        PROPERTY_DISABLE_USER_SIGNUP
-      )) as boolean;
+    const isUserSignupEnabled =
+      ((await this.propertyService.getByKey(
+        PROPERTY_IS_USER_SIGNUP_ENABLED
+      )) as boolean) ?? true;
 
-      if (!isUserSignupDisabled) {
-        globalPermissions.push(permissions.createUserAccount);
-      }
-    } else { // By default enabled
-        globalPermissions.push(permissions.createUserAccount);
+    if (isUserSignupEnabled) {
+      globalPermissions.push(permissions.createUserAccount);
     }
 
     return {

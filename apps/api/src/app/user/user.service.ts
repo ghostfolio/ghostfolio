@@ -165,12 +165,6 @@ export class UserService {
       currentPermissions.push(permissions.reportDataGlitch);
     }
 
-    if (this.configurationService.get('ENABLE_FEATURE_USER_SIGNUP_CONTROL')) {
-      if (hasRole(user, Role.ADMIN)) {
-        currentPermissions.push(permissions.toggleUserSignupMode);
-      }
-    }
-
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
       if (hasRole(user, Role.ADMIN)) {
         currentPermissions.push(permissions.toggleReadOnlyMode);
@@ -224,7 +218,6 @@ export class UserService {
   }
 
   public async createUser(data: Prisma.UserCreateInput): Promise<User> {
-
     if (!data?.provider) {
       data.provider = 'ANONYMOUS';
     }

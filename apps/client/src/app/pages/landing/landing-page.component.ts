@@ -17,7 +17,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public demoAuthToken: string;
   public deviceType: string;
   public hasPermissionForStatistics: boolean;
-  public hasPermissionForUserSignup: boolean;
+  public hasPermissionToCreateUser: boolean;
   public statistics: Statistics;
   public testimonials = [
     {
@@ -48,17 +48,17 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService
   ) {
-    const { globalPermissions, statistics } = this.dataService.fetchInfo();
+    const { globalPermissions, isReadOnlyMode, statistics } =
+      this.dataService.fetchInfo();
 
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
       permissions.enableStatistics
     );
 
-    this.hasPermissionForUserSignup = hasPermission(
-      globalPermissions,
-      permissions.createUserAccount
-    );
+    this.hasPermissionToCreateUser =
+      !isReadOnlyMode &&
+      hasPermission(globalPermissions, permissions.createUserAccount);
 
     this.statistics = statistics;
   }

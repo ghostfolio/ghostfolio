@@ -38,6 +38,7 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
+  public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
   public isMenuOpen: boolean;
 
@@ -79,6 +80,13 @@ export class HeaderComponent implements OnChanges {
       this.info?.globalPermissions,
       permissions.enableFearAndGreedIndex
     );
+
+    this.hasPermissionToCreateUser =
+      !this.info?.isReadOnlyMode &&
+      hasPermission(
+        this.info?.globalPermissions,
+        permissions.createUserAccount
+      );
   }
 
   public impersonateAccount(aId: string) {
