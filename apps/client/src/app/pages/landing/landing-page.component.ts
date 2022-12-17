@@ -48,15 +48,17 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService
   ) {
-    const { globalPermissions, statistics } =
-      this.dataService.fetchInfo();
+    const { globalPermissions, statistics } = this.dataService.fetchInfo();
 
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
       permissions.enableStatistics
     );
 
-    this.hasPermissionToCreateUser = hasPermission(globalPermissions, permissions.createUserAccount);
+    this.hasPermissionToCreateUser = hasPermission(
+      globalPermissions,
+      permissions.createUserAccount
+    );
 
     this.statistics = statistics;
   }
