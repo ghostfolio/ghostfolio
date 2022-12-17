@@ -95,7 +95,7 @@
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex align-items-center">
           <div>
-            <span>{{ element.SymbolProfile.name }}</span>
+            <span class="text-truncate">{{ element.SymbolProfile.name }}</span>
             <span
               *ngIf="element.isDraft"
               class="badge badge-secondary ml-1"
