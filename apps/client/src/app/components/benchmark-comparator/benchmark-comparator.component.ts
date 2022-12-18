@@ -187,7 +187,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 position: 'right',
                 ticks: {
                   callback: (value: number) => {
-                    return `${value} %`;
+                    return `${value.toFixed(2)} %`;
                   },
                   display: true,
                   mirror: true,
