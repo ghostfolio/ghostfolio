@@ -22,7 +22,7 @@ import { Market, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -71,7 +71,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       | 'value'
     >;
   };
-  public routeQueryParams: Subscription;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -98,7 +97,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    this.routeQueryParams = route.queryParams
+    route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['accountId'] && params['accountDetailDialog']) {

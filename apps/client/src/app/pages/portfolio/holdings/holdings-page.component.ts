@@ -16,7 +16,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -36,7 +36,6 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   public placeholder = '';
   public portfolioDetails: PortfolioDetails;
   public positionsArray: PortfolioPosition[];
-  public routeQueryParams: Subscription;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -51,7 +50,7 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    this.routeQueryParams = route.queryParams
+    route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (
