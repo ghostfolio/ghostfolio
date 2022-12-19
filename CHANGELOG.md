@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the position detail dialog to the _Top 3_ and _Bottom 3_ performers of the analysis page
 
+### Changed
+
+- Upgraded `prettier` from version `2.7.1` to `2.8.1`
+
 ## 1.219.0 - 2022-12-17
 
 ### Added
