@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the position detail dialog to the _Top 3_ and _Bottom 3_ performers of the analysis page
+
+### Changed
+
+- Upgraded `color` from version `4.0.1` to `4.2.3`
+
 ### Fixed
 
 - Fixed the rounding of the y-axis ticks in the benchmark comparator
