@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `color` from version `4.0.1` to `4.2.3`
 
+### Fixed
+
+- Fixed the rounding of the y-axis ticks in the benchmark comparator
+
 ## 1.219.0 - 2022-12-17
 
 ### Added
