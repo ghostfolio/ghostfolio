@@ -1,30 +1,38 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { isSameDay, parseISO } from 'date-fns';
+import Big from 'big.js';
+import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ImportService {
   public constructor(
     private readonly accountService: AccountService,
-    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly orderService: OrderService
   ) {}
 
   public async import({
-    activities,
+    activitiesDto,
+    isDryRun = false,
     maxActivitiesToImport,
+    userCurrency,
     userId
   }: {
-    activities: Partial<CreateOrderDto>[];
+    activitiesDto: Partial<CreateOrderDto>[];
+    isDryRun?: boolean;
     maxActivitiesToImport: number;
+    userCurrency: string;
     userId: string;
-  }): Promise<void> {
-    for (const activity of activities) {
+  }): Promise<Activity[]> {
+    for (const activity of activitiesDto) {
       if (!activity.dataSource) {
         if (activity.type === 'ITEM') {
           activity.dataSource = 'MANUAL';
@@ -35,7 +43,7 @@ export class ImportService {
     }
 
     await this.validateActivities({
-      activities,
+      activitiesDto,
       maxActivitiesToImport,
       userId
     });
@@ -46,57 +54,121 @@ export class ImportService {
       }
     );
 
+    const activities: Activity[] = [];
+
     for (const {
       accountId,
       comment,
       currency,
       dataSource,
-      date,
+      date: dateString,
       fee,
       quantity,
       symbol,
       type,
       unitPrice
-    } of activities) {
-      await this.orderService.createOrder({
-        comment,
-        fee,
-        quantity,
-        type,
-        unitPrice,
-        userId,
-        accountId: accountIds.includes(accountId) ? accountId : undefined,
-        date: parseISO(<string>(<unknown>date)),
-        SymbolProfile: {
-          connectOrCreate: {
-            create: {
-              currency,
-              dataSource,
-              symbol
-            },
-            where: {
-              dataSource_symbol: {
+    } of activitiesDto) {
+      const date = parseISO(<string>(<unknown>dateString));
+      const validatedAccountId = accountIds.includes(accountId)
+        ? accountId
+        : undefined;
+
+      let order: OrderWithAccount;
+
+      if (isDryRun) {
+        order = {
+          comment,
+          date,
+          fee,
+          quantity,
+          type,
+          unitPrice,
+          userId,
+          accountId: validatedAccountId,
+          accountUserId: undefined,
+          createdAt: new Date(),
+          id: uuidv4(),
+          isDraft: isAfter(date, endOfToday()),
+          SymbolProfile: {
+            currency,
+            dataSource,
+            symbol,
+            assetClass: null,
+            assetSubClass: null,
+            comment: null,
+            countries: null,
+            createdAt: undefined,
+            id: undefined,
+            name: null,
+            scraperConfiguration: null,
+            sectors: null,
+            symbolMapping: null,
+            updatedAt: undefined,
+            url: null
+          },
+          symbolProfileId: undefined,
+          updatedAt: new Date()
+        };
+      } else {
+        order = await this.orderService.createOrder({
+          comment,
+          date,
+          fee,
+          quantity,
+          type,
+          unitPrice,
+          userId,
+          accountId: validatedAccountId,
+          SymbolProfile: {
+            connectOrCreate: {
+              create: {
+                currency,
                 dataSource,
                 symbol
+              },
+              where: {
+                dataSource_symbol: {
+                  dataSource,
+                  symbol
+                }
               }
             }
-          }
-        },
-        User: { connect: { id: userId } }
+          },
+          User: { connect: { id: userId } }
+        });
+      }
+
+      const value = new Big(quantity).mul(unitPrice).toNumber();
+
+      activities.push({
+        ...order,
+        value,
+        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          fee,
+          currency,
+          userCurrency
+        ),
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          value,
+          currency,
+          userCurrency
+        )
       });
     }
+
+    return activities;
   }
 
   private async validateActivities({
-    activities,
+    activitiesDto,
     maxActivitiesToImport,
     userId
   }: {
-    activities: Partial<CreateOrderDto>[];
+    activitiesDto: Partial<CreateOrderDto>[];
     maxActivitiesToImport: number;
     userId: string;
   }) {
-    if (activities?.length > maxActivitiesToImport) {
+    if (activitiesDto?.length > maxActivitiesToImport) {
       throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
     }
 
@@ -109,7 +181,7 @@ export class ImportService {
     for (const [
       index,
       { currency, dataSource, date, fee, quantity, symbol, type, unitPrice }
-    ] of activities.entries()) {
+    ] of activitiesDto.entries()) {
       const duplicateActivity = existingActivities.find((activity) => {
         return (
           activity.SymbolProfile.currency === currency &&

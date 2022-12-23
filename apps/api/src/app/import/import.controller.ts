@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { ImportResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -7,6 +8,7 @@ import {
   Inject,
   Logger,
   Post,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -26,7 +28,10 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  public async import(@Body() importData: ImportDataDto): Promise<void> {
+  public async import(
+    @Body() importData: ImportDataDto,
+    @Query('dryRun') isDryRun?: boolean
+  ): Promise<ImportResponse> {
     if (!this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -45,12 +50,18 @@ export class ImportController {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }
 
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
     try {
-      return await this.importService.import({
+      const activities = await this.importService.import({
         maxActivitiesToImport,
-        activities: importData.activities,
+        isDryRun,
+        userCurrency,
+        activitiesDto: importData.activities,
         userId: this.request.user.id
       });
+
+      return { activities };
     } catch (error) {
       Logger.error(error, ImportController);
 
