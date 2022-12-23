@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the position detail dialog to the _Top 3_ and _Bottom 3_ performers of the analysis page
+
 ### Changed
 
 - Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 365 days
+- Upgraded `color` from version `4.0.1` to `4.2.3`
+
+### Fixed
+
+- Fixed the rounding of the y-axis ticks in the benchmark comparator
 
 ## 1.219.0 - 2022-12-17
 
