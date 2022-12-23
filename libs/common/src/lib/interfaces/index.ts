@@ -32,6 +32,7 @@ import { PortfolioSummary } from './portfolio-summary.interface';
 import { Position } from './position.interface';
 import { BenchmarkResponse } from './responses/benchmark-response.interface';
 import { ResponseError } from './responses/errors.interface';
+import { ImportResponse } from './responses/import-response.interface';
 import { OAuthResponse } from './responses/oauth-response.interface';
 import { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import { ScraperConfiguration } from './scraper-configuration.interface';
@@ -58,6 +59,7 @@ export {
   Filter,
   FilterGroup,
   HistoricalDataItem,
+  ImportResponse,
   InfoItem,
   LineChartItem,
   OAuthResponse,
