@@ -44,7 +44,7 @@
     <gf-admin-market-data-detail
       class="mb-3"
       [dataSource]="data.dataSource"
-      [dateOfFirstActivity]="data.dateOfFirstActivity"
+      [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
       [locale]="data.locale"
       [marketData]="marketDataDetails"
       [symbol]="data.symbol"
@@ -55,10 +55,10 @@
         <gf-value
           i18n
           size="medium"
-          [isDate]="data.dateOfFirstActivity ? true : false"
+          [isDate]="assetProfile?.dateOfFirstActivity ? true : false"
           [locale]="data.locale"
-          [value]="data.dateOfFirstActivity ?? '-'"
-          >First Buy Date</gf-value
+          [value]="assetProfile?.dateOfFirstActivity ?? '-'"
+          >First Activity</gf-value
         >
       </div>
       <div class="col-6 mb-3">
@@ -67,7 +67,7 @@
           size="medium"
           [locale]="data.locale"
           [value]="assetProfile?.activitiesCount ?? 0"
-          >Transactions</gf-value
+          >Activities</gf-value
         >
       </div>
       <div class="col-6 mb-3">

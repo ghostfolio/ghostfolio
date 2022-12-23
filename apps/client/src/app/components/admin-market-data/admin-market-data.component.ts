@@ -13,12 +13,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DATE_FORMAT, getDateFormatString } from '@ghostfolio/common/helper';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetSubClass, DataSource } from '@prisma/client';
-import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -98,7 +97,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
         ) {
           this.openAssetProfileDialog({
             dataSource: params['dataSource'],
-            dateOfFirstActivity: params['dateOfFirstActivity'],
             symbol: params['symbol']
           });
         }
@@ -195,18 +193,9 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
-  public onOpenAssetProfileDialog({
-    dataSource,
-    dateOfFirstActivity,
-    symbol
-  }: UniqueAsset & { dateOfFirstActivity: string }) {
-    try {
-      dateOfFirstActivity = format(parseISO(dateOfFirstActivity), DATE_FORMAT);
-    } catch {}
-
+  public onOpenAssetProfileDialog({ dataSource, symbol }: UniqueAsset) {
     this.router.navigate([], {
       queryParams: {
-        dateOfFirstActivity,
         dataSource,
         symbol,
         assetProfileDialog: true
@@ -221,11 +210,9 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
 
   private openAssetProfileDialog({
     dataSource,
-    dateOfFirstActivity,
     symbol
   }: {
     dataSource: DataSource;
-    dateOfFirstActivity: string;
     symbol: string;
   }) {
     this.userService
@@ -238,7 +225,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
           autoFocus: false,
           data: <AssetProfileDialogParams>{
             dataSource,
-            dateOfFirstActivity,
             symbol,
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale

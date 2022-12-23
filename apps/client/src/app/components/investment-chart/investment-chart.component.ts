@@ -48,6 +48,7 @@ import { last } from 'lodash';
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];
+  @Input() benchmarkDataLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() daysInMarket: number;
@@ -153,7 +154,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               y: this.isInPercent ? investment * 100 : investment
             };
           }),
-          label: $localize`Deposit`,
+          label: this.benchmarkDataLabel,
           segment: {
             borderColor: (context: unknown) =>
               this.isInFuture(
@@ -194,6 +195,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         this.chart.options.plugins.tooltip = <unknown>(
           this.getTooltipPluginConfiguration()
         );
+        this.chart.options.scales.x.min = this.daysInMarket
+          ? subDays(new Date(), this.daysInMarket).toISOString()
+          : undefined;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -257,13 +261,19 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             responsive: true,
             scales: {
               x: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  width: this.groupBy ? 0 : 1
+                },
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  borderWidth: this.groupBy ? 0 : 1,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
+                min: this.daysInMarket
+                  ? subDays(new Date(), this.daysInMarket).toISOString()
+                  : undefined,
+                suggestedMax: new Date().toISOString(),
                 type: 'time',
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
@@ -271,12 +281,14 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 }
               },
               y: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  display: false
+                },
                 display: !this.isInPercent,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
                   color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false,
-                  drawBorder: false
+                  display: false
                 },
                 position: 'right',
                 ticks: {

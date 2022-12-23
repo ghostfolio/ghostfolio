@@ -44,7 +44,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() multiselect = false;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions: boolean;
-  @Input() showSymbolColumn = true;
+  @Input() showNameColumn = true;
 
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
@@ -107,7 +107,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       'count',
       'date',
       'type',
-      'symbol',
+      'nameWithSymbol',
       'quantity',
       'unitPrice',
       'fee',
@@ -119,9 +119,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       'actions'
     ];
 
-    if (!this.showSymbolColumn) {
+    if (!this.showNameColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
-        return column !== 'symbol';
+        return column !== 'nameWithSymbol';
       });
     }
 

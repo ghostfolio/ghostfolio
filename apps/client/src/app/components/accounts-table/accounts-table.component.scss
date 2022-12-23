@@ -3,12 +3,6 @@
 :host {
   display: block;
 
-  ::ng-deep {
-    .mat-form-field-infix {
-      border-top: 0 solid transparent !important;
-    }
-  }
-
   .mat-table {
     td {
       &.mat-footer-cell {

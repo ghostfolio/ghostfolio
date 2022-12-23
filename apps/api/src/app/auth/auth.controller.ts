@@ -16,6 +16,7 @@ import {
   Version
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
@@ -58,18 +59,21 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   @Version(VERSION_NEUTRAL)
-  public googleLoginCallback(@Req() req, @Res() res) {
+  public googleLoginCallback(
+    @Req() request: Request,
+    @Res() response: Response
+  ) {
     // Handles the Google OAuth2 callback
-    const jwt: string = req.user.jwt;
+    const jwt: string = (<any>request.user).jwt;
 
     if (jwt) {
-      res.redirect(
+      response.redirect(
         `${this.configurationService.get(
           'ROOT_URL'
         )}/${DEFAULT_LANGUAGE_CODE}/auth/${jwt}`
       );
     } else {
-      res.redirect(
+      response.redirect(
         `${this.configurationService.get(
           'ROOT_URL'
         )}/${DEFAULT_LANGUAGE_CODE}/auth`

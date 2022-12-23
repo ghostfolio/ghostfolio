@@ -5,11 +5,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 1.220.0 - 2022-12-23
+
+### Added
+
+- Added the position detail dialog to the _Top 3_ and _Bottom 3_ performers of the analysis page
+- Added the `dryRun` option to the import activities endpoint
 
 ### Changed
 
+- Increased the historical data chart of the _Fear & Greed Index_ (market mood) to 365 days
+- Upgraded `color` from version `4.0.1` to `4.2.3`
+- Upgraded `prettier` from version `2.7.1` to `2.8.1`
+
+### Fixed
+
+- Fixed the rounding of the y-axis ticks in the benchmark comparator
+
+## 1.219.0 - 2022-12-17
+
+### Added
+
+- Added support to disable user sign up in the admin control panel
+- Extended the glossary of the resources page by _Deflation_, _Inflation_ and _Stagflation_
+
+### Changed
+
+- Added the name to the symbol column in the activities table
+- Combined the name and symbol column in the holdings table (former positions table)
+
+## 1.218.0 - 2022-12-12
+
+### Added
+
+- Added the date of the first activity to the positions table
+- Added an endpoint to fetch the logo of an asset or a platform
+
+### Changed
+
+- Improved the asset profile details dialog in the admin control panel
+- Upgraded `chart.js` from version `3.8.0` to `4.0.1`
+
+## 1.217.0 - 2022-12-10
+
+### Added
+
+- Added the dividend timeline grouped by month
+
+### Changed
+
+- Improved the value redaction interceptor (including `comment`)
 - Improved the language localization for Español (`es`)
+- Upgraded `cheerio` from version `1.0.0-rc.6` to `1.0.0-rc.12`
 - Upgraded `prisma` from version `4.6.1` to `4.7.1`
 
 ### Fixed

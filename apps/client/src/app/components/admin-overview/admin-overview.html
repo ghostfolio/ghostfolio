@@ -82,6 +82,26 @@
               </table>
             </div>
           </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>User Signup</div>
+            <div class="w-50">
+              <mat-slide-toggle
+                color="primary"
+                [checked]="info.globalPermissions.includes(permissions.createUserAccount)"
+                (change)="onEnableUserSignupModeChange($event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
+          <div *ngIf="hasPermissionToToggleReadOnlyMode" class="d-flex my-3">
+            <div class="w-50" i18n>Read-only Mode</div>
+            <div class="w-50">
+              <mat-slide-toggle
+                color="primary"
+                [checked]="info?.isReadOnlyMode"
+                (change)="onReadOnlyModeChange($event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
           <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">
             <div class="w-50" i18n>System Message</div>
             <div class="w-50">
@@ -107,16 +127,6 @@
                 ></ion-icon>
                 <span i18n>Set Message</span>
               </button>
-            </div>
-          </div>
-          <div *ngIf="hasPermissionToToggleReadOnlyMode" class="d-flex my-3">
-            <div class="w-50" i18n>Read-only Mode</div>
-            <div class="w-50">
-              <mat-slide-toggle
-                color="primary"
-                [checked]="info?.isReadOnlyMode"
-                (change)="onReadOnlyModeChange($event)"
-              ></mat-slide-toggle>
             </div>
           </div>
           <div

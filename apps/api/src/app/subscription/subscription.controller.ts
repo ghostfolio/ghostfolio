@@ -21,6 +21,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { SubscriptionService } from './subscription.service';
@@ -86,9 +87,12 @@ export class SubscriptionController {
   }
 
   @Get('stripe/callback')
-  public async stripeCallback(@Req() req, @Res() res) {
+  public async stripeCallback(
+    @Req() request: Request,
+    @Res() response: Response
+  ) {
     const userId = await this.subscriptionService.createSubscriptionViaStripe(
-      req.query.checkoutSessionId
+      <string>request.query.checkoutSessionId
     );
 
     Logger.log(
@@ -96,7 +100,7 @@ export class SubscriptionController {
       'SubscriptionController'
     );
 
-    res.redirect(
+    response.redirect(
       `${this.configurationService.get(
         'ROOT_URL'
       )}/${DEFAULT_LANGUAGE_CODE}/account`

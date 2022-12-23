@@ -18,14 +18,8 @@
   </ng-container>
 
   <ng-container matColumnDef="account">
-    <th
-      *matHeaderCellDef
-      class="px-1"
-      i18n
-      mat-header-cell
-      mat-sort-header="name"
-    >
-      Name
+    <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
+      <ng-container i18n>Name</ng-container>
     </th>
     <td *matCellDef="let element" class="px-1" mat-cell>
       <gf-symbol-icon

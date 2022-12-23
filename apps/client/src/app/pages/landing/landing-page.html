@@ -31,15 +31,18 @@
   <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
       <div class="text-center">
-        <a
-          class="d-inline-block"
-          color="primary"
-          mat-flat-button
-          [routerLink]="['/register']"
+        <ng-container *ngIf="hasPermissionToCreateUser">
+          <a
+            class="d-inline-block"
+            color="primary"
+            mat-flat-button
+            [routerLink]="['/register']"
+          >
+            Get Started
+          </a>
+          <div class="d-inline-block mx-3 text-muted">or</div></ng-container
         >
-          Get Started
-        </a>
-        <div class="d-inline-block mx-3 text-muted">or</div>
+
         <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
           Live Demo
         </a>
@@ -306,7 +309,7 @@
     </div>
   </div>
 
-  <div class="row my-5">
+  <div *ngIf="hasPermissionToCreateUser" class="row my-5">
     <div class="col">
       <h2 class="h4 mb-1 text-center">Are <strong>you</strong> ready?</h2>
       <p class="lead mb-3 text-center">
