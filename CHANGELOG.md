@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `color` from version `4.0.1` to `4.2.3`
+- Upgraded `prettier` from version `2.7.1` to `2.8.1`
 
 ### Fixed
 
