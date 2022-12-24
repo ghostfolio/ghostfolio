@@ -84,12 +84,10 @@ export class ImportActivitiesDialog implements OnDestroy {
             }
 
             try {
-              await this.importActivitiesService.importJson({
+              this.activities = await this.importActivitiesService.importJson({
                 content: content.activities,
                 dryRun: true
               });
-
-              this.handleImportSuccess();
             } catch (error) {
               console.error(error);
               this.handleImportError({ error, activities: content.activities });
@@ -197,10 +195,5 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
 
     this.changeDetectorRef.markForCheck();
-  }
-
-  private handleImportSuccess() {
-    // this.isFileSelected = true;
-    // this.changeDetectorRef.markForCheck();
   }
 }
