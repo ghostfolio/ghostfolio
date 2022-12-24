@@ -234,6 +234,21 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     });
   }
 
+  public onClickActivity(activity: Activity) {
+    if (this.showCheckbox) {
+      this.selectedRows.toggle(activity);
+    } else if (
+      this.hasPermissionToOpenDetails &&
+      !activity.isDraft &&
+      activity.type !== 'ITEM'
+    ) {
+      this.onOpenPositionDialog({
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
+      });
+    }
+  }
+
   public onUpdateActivity(aActivity: OrderWithAccount) {
     this.activityToUpdate.emit(aActivity);
   }

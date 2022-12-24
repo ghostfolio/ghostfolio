@@ -450,15 +450,7 @@
         'cursor-pointer':
           hasPermissionToOpenDetails && !row.isDraft && row.type !== 'ITEM'
       }"
-      (click)="
-        hasPermissionToOpenDetails &&
-          !row.isDraft &&
-          row.type !== 'ITEM' &&
-          onOpenPositionDialog({
-            dataSource: row.SymbolProfile.dataSource,
-            symbol: row.SymbolProfile.symbol
-          })
-      "
+      (click)="onClickActivity(row)"
     ></tr>
     <tr
       *matFooterRowDef="displayedColumns"
