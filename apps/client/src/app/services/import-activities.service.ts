@@ -79,8 +79,8 @@ export class ImportActivitiesService {
           })
         )
         .subscribe({
-          next: (importedActivities) => {
-            resolve(importedActivities.activities);
+          next: (data) => {
+            resolve(data.activities);
           }
         });
     });
