@@ -12,7 +12,7 @@
         class="py-3"
         color="primary"
         mat-stroked-button
-        (click)="onImport()"
+        (click)="onSelectFile()"
       >
         <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
         <span i18n>Choose File</span>
@@ -89,7 +89,7 @@
     color="primary"
     mat-flat-button
     [disabled]="!selectedActivities?.length"
-    (click)="importActivities()"
+    (click)="onImportActivities()"
   >
     <ng-container i18n>Import</ng-container>
   </button>

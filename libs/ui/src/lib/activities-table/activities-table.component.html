@@ -20,7 +20,7 @@
         <mat-checkbox
           [checked]="selectedRows.hasValue() && areAllRowsSelected()"
           [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
-          (change)="$event ? toggleAll() : null"
+          (change)="$event ? toggleAllRows() : null"
         ></mat-checkbox>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>

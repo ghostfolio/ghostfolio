@@ -14,7 +14,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -59,7 +58,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   public allFilters: Filter[];
   public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
-  public selectedRows = new SelectionModel<Activity>(true, []);
   public defaultDateFormat: string;
   public displayedColumns = [];
   public endOfToday = endOfToday();
@@ -72,6 +70,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public placeholder = '';
   public routeQueryParams: Subscription;
   public searchKeywords: string[] = [];
+  public selectedRows = new SelectionModel<Activity>(true, []);
   public totalFees: number;
   public totalValue: number;
 
@@ -90,14 +89,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     const numSelectedRows = this.selectedRows.selected.length;
     const numTotalRows = this.dataSource.data.length;
     return numSelectedRows === numTotalRows;
-  }
-
-  public toggleAll() {
-    this.areAllRowsSelected()
-      ? this.selectedRows.clear()
-      : this.dataSource.data.forEach((row) => this.selectedRows.select(row));
-
-    this.selectedActivities.emit(this.selectedRows.selected);
   }
 
   public ngOnChanges() {
@@ -178,6 +169,21 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.totalValue = this.getTotalValue();
   }
 
+  public onClickActivity(activity: Activity) {
+    if (this.showCheckbox) {
+      this.selectedRows.toggle(activity);
+    } else if (
+      this.hasPermissionToOpenDetails &&
+      !activity.isDraft &&
+      activity.type !== 'ITEM'
+    ) {
+      this.onOpenPositionDialog({
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
+      });
+    }
+  }
+
   public onCloneActivity(aActivity: OrderWithAccount) {
     this.activityToClone.emit(aActivity);
   }
@@ -234,23 +240,16 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     });
   }
 
-  public onClickActivity(activity: Activity) {
-    if (this.showCheckbox) {
-      this.selectedRows.toggle(activity);
-    } else if (
-      this.hasPermissionToOpenDetails &&
-      !activity.isDraft &&
-      activity.type !== 'ITEM'
-    ) {
-      this.onOpenPositionDialog({
-        dataSource: activity.SymbolProfile.dataSource,
-        symbol: activity.SymbolProfile.symbol
-      });
-    }
-  }
-
   public onUpdateActivity(aActivity: OrderWithAccount) {
     this.activityToUpdate.emit(aActivity);
+  }
+
+  public toggleAllRows() {
+    this.areAllRowsSelected()
+      ? this.selectedRows.clear()
+      : this.dataSource.data.forEach((row) => this.selectedRows.select(row));
+
+    this.selectedActivities.emit(this.selectedRows.selected);
   }
 
   public ngOnDestroy() {

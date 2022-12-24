@@ -43,7 +43,39 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
-  public onImport() {
+  public async onImportActivities() {
+    try {
+      await this.importActivitiesService.importSelectedActivities(
+        this.selectedActivities
+      );
+
+      this.snackBar.open(
+        '✅ ' + $localize`Import has been completed`,
+        undefined,
+        {
+          duration: 3000
+        }
+      );
+    } catch (error) {
+      this.snackBar.open(
+        $localize`Oops! Something went wrong.` +
+          ' ' +
+          $localize`Please try again later.`,
+        $localize`Okay`,
+        { duration: 3000 }
+      );
+    } finally {
+      this.dialogRef.close();
+    }
+  }
+
+  public onReset() {
+    this.details = [];
+    this.errorMessages = [];
+    this.isFileSelected = false;
+  }
+
+  public onSelectFile() {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
@@ -134,38 +166,6 @@ export class ImportActivitiesDialog implements OnDestroy {
 
   public updateSelection(data: Activity[]) {
     this.selectedActivities = data;
-  }
-
-  public async importActivities() {
-    try {
-      await this.importActivitiesService.importSelectedActivities(
-        this.selectedActivities
-      );
-
-      this.snackBar.open(
-        '✅ ' + $localize`Import has been completed`,
-        undefined,
-        {
-          duration: 3000
-        }
-      );
-    } catch (error) {
-      this.snackBar.open(
-        $localize`Oops! Something went wrong.` +
-          ' ' +
-          $localize`Please try again later.`,
-        $localize`Okay`,
-        { duration: 3000 }
-      );
-    } finally {
-      this.dialogRef.close();
-    }
-  }
-
-  public onReset() {
-    this.details = [];
-    this.errorMessages = [];
-    this.isFileSelected = false;
   }
 
   public ngOnDestroy() {
