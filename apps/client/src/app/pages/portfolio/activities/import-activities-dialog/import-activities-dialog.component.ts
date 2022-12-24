@@ -7,14 +7,10 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {
-  Activities,
-  Activity
-} from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { isArray } from 'lodash';
 import { Subject } from 'rxjs';
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
@@ -28,7 +24,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public activities: Activity[] = [];
   public details: any[] = [];
   public errorMessages: string[] = [];
-  public importComplete = false;
+  public isFileSelected = false;
   public selectedActivities: Activity[] = [];
 
   private unsubscribeSubject = new Subject<void>();
@@ -174,6 +170,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     activities: any[];
     error: any;
   }) {
+    this.isFileSelected = true;
     this.snackBar.dismiss();
 
     this.errorMessages = error?.error?.message;
@@ -194,7 +191,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   private handleImportSuccess() {
-    this.importComplete = true;
+    this.isFileSelected = true;
     this.changeDetectorRef.markForCheck();
   }
 }
