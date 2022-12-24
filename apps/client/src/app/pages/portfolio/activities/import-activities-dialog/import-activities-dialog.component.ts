@@ -167,6 +167,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public onReset() {
     this.details = [];
     this.errorMessages = [];
+    this.isFileSelected = false;
   }
 
   public ngOnDestroy() {
