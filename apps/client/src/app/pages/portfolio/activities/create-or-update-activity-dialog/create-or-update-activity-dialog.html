@@ -41,11 +41,11 @@
           autocorrect="off"
           formControlName="searchSymbol"
           matInput
-          [matAutocomplete]="autocomplete"
+          [matAutocomplete]="symbolAutocomplete"
           (blur)="onBlurSymbol()"
         />
         <mat-autocomplete
-          #autocomplete="matAutocomplete"
+          #symbolAutocomplete="matAutocomplete"
           [displayWith]="displayFn"
           (optionSelected)="onUpdateSymbol($event)"
         >

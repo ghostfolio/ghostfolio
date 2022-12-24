@@ -38,7 +38,7 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class CreateOrUpdateActivityDialog implements OnDestroy {
-  @ViewChild('autocomplete') autocomplete;
+  @ViewChild('symbolAutocomplete') symbolAutocomplete;
 
   public activityForm: FormGroup;
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
