@@ -155,11 +155,14 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   }
 
   ngOnInit() {
-    this.selectedRows.changed
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((selectedRows) => {
-        this.selectedActivities.emit(selectedRows.source.selected);
-      });
+    if (this.showCheckbox) {
+      this.toggleAllRows();
+      this.selectedRows.changed
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((selectedRows) => {
+          this.selectedActivities.emit(selectedRows.source.selected);
+        });
+    }
   }
 
   public onChangePage(page: PageEvent) {
