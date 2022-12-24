@@ -41,9 +41,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
-  @Input() multiselect = false;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions: boolean;
+  @Input() showCheckbox = false;
   @Input() showNameColumn = true;
 
   @Output() activityDeleted = new EventEmitter<string>();
@@ -117,6 +117,16 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       'comment',
       'actions'
     ];
+
+    if (this.showCheckbox) {
+      this.displayedColumns = this.displayedColumns.filter((column) => {
+        return column !== 'count';
+      });
+    } else {
+      this.displayedColumns = this.displayedColumns.filter((column) => {
+        return column !== 'select';
+      });
+    }
 
     if (!this.showNameColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
