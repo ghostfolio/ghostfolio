@@ -101,7 +101,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    console.log('INSIDE LIIB', this.activities);
     this.displayedColumns = [
       'select',
       'count',
@@ -244,18 +243,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       };
     }
 
-    if (activity.SymbolProfile?.currency) {
-      fieldValueMap[activity.SymbolProfile.currency] = {
-        id: activity.SymbolProfile.currency,
-        label: activity.SymbolProfile.currency,
-        type: 'TAG'
-      };
-    }
+    fieldValueMap[activity.SymbolProfile.currency] = {
+      id: activity.SymbolProfile.currency,
+      label: activity.SymbolProfile.currency,
+      type: 'TAG'
+    };
 
-    if (
-      activity.SymbolProfile?.symbol &&
-      !isUUID(activity.SymbolProfile.symbol)
-    ) {
+    if (!isUUID(activity.SymbolProfile.symbol)) {
       fieldValueMap[activity.SymbolProfile.symbol] = {
         id: activity.SymbolProfile.symbol,
         label: activity.SymbolProfile.symbol,
@@ -263,21 +257,17 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       };
     }
 
-    if (activity?.type) {
-      fieldValueMap[activity.type] = {
-        id: activity.type,
-        label: activity.type,
-        type: 'TAG'
-      };
-    }
+    fieldValueMap[activity.type] = {
+      id: activity.type,
+      label: activity.type,
+      type: 'TAG'
+    };
 
-    // if (typeof activity?.date) {
-    //   fieldValueMap[format(activity.date, 'yyyy')] = {
-    //     id: format(activity.date, 'yyyy'),
-    //     label: format(activity.date, 'yyyy'),
-    //     type: 'TAG'
-    //   };
-    // }
+    fieldValueMap[format(new Date(activity.date), 'yyyy')] = {
+      id: format(new Date(activity.date), 'yyyy'),
+      label: format(new Date(activity.date), 'yyyy'),
+      type: 'TAG'
+    };
 
     return Object.values(fieldValueMap);
   }

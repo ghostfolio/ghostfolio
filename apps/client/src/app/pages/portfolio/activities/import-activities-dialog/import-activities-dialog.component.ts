@@ -195,17 +195,6 @@ export class ImportActivitiesDialog implements OnDestroy {
 
   private handleImportSuccess() {
     this.importComplete = true;
-
-    //Needed to trigger onPush change detection strategy
     this.changeDetectorRef.markForCheck();
-    // this.snackBar.open(
-    //   '✅ ' + $localize`Import has been completed`,
-    //   undefined,
-    //   {
-    //     duration: 3000
-    //   }
-    // );
-
-    // this.dialogRef.close();
   }
 }
