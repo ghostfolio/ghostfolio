@@ -25,11 +25,11 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class ImportActivitiesDialog implements OnDestroy {
-  public activities: Activity[] | CreateOrderDto[] = [];
+  public activities: Activity[] = [];
   public details: any[] = [];
   public errorMessages: string[] = [];
   public importComplete = false;
-  public selectedActivities: CreateOrderDto[] = [];
+  public selectedActivities: Activity[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -89,7 +89,8 @@ export class ImportActivitiesDialog implements OnDestroy {
 
             try {
               await this.importActivitiesService.importJson({
-                content: content.activities
+                content: content.activities,
+                dryRun: true
               });
 
               this.handleImportSuccess();
@@ -103,7 +104,8 @@ export class ImportActivitiesDialog implements OnDestroy {
             try {
               this.activities = await this.importActivitiesService.importCsv({
                 fileContent,
-                userAccounts: this.data.user.accounts
+                userAccounts: this.data.user.accounts,
+                dryRun: true
               });
 
               this.snackBar.dismiss();
@@ -140,10 +142,10 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   public async finalImport() {
-    // this.importJson({ content: activities })
-    await this.importActivitiesService.importJson({
-      content: this.selectedActivities
-    });
+    await this.importActivitiesService.importSelectedActivities(
+      this.selectedActivities
+    );
+
     this.snackBar.open(
       '✅ ' + $localize`Import has been completed`,
       undefined,

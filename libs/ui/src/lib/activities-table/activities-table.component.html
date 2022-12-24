@@ -145,7 +145,7 @@
         class="d-none d-lg-table-cell px-1"
         mat-cell
       >
-        {{ baseCurrency }}
+        {{ element.SymbolProfile.currency }}
       </td>
       <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
         {{ baseCurrency }}
@@ -261,9 +261,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="
-              isLoading ? undefined : element.unitPrice * element.quantity
-            "
+            [value]="isLoading ? undefined : element.value"
           ></gf-value>
         </div>
       </td>

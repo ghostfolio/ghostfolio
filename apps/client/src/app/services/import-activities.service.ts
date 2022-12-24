@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { Account, DataSource, Type } from '@prisma/client';
 import { isMatch, parse, parseISO } from 'date-fns';
 import { isFinite } from 'lodash';
@@ -26,11 +27,13 @@ export class ImportActivitiesService {
 
   public async importCsv({
     fileContent,
-    userAccounts
+    userAccounts,
+    dryRun = false
   }: {
     fileContent: string;
     userAccounts: Account[];
-  }) {
+    dryRun?: boolean;
+  }): Promise<Activity[]> {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
@@ -52,16 +55,23 @@ export class ImportActivitiesService {
       });
     }
 
-    return activities;
-
-    // await this.importJson({ content: activities });
+    return await this.importJson({ content: activities, dryRun });
   }
 
-  public importJson({ content }: { content: CreateOrderDto[] }): Promise<void> {
+  public importJson({
+    content,
+    dryRun = false
+  }: {
+    content: CreateOrderDto[];
+    dryRun?: boolean;
+  }): Promise<Activity[]> {
     return new Promise((resolve, reject) => {
-      this.postImport({
-        activities: content
-      })
+      this.postImport(
+        {
+          activities: content
+        },
+        dryRun
+      )
         .pipe(
           catchError((error) => {
             reject(error);
@@ -69,11 +79,30 @@ export class ImportActivitiesService {
           })
         )
         .subscribe({
-          next: () => {
-            resolve();
+          next: (importedActivities) => {
+            resolve(importedActivities.activities);
           }
         });
     });
+  }
+
+  public importSelectedActivities(
+    selectedActivities: Activity[]
+  ): Promise<Activity[]> {
+    const importData: CreateOrderDto[] = [];
+    for (const activity of selectedActivities) {
+      importData.push({
+        currency: activity.SymbolProfile.currency,
+        date: activity.date.toString(),
+        fee: activity.fee,
+        quantity: activity.quantity,
+        symbol: activity.SymbolProfile.symbol,
+        type: activity.type,
+        unitPrice: activity.unitPrice
+      });
+    }
+
+    return this.importJson({ content: importData });
   }
 
   private lowercaseKeys(aObject: any) {
@@ -303,7 +332,13 @@ export class ImportActivitiesService {
     };
   }
 
-  private postImport(aImportData: { activities: CreateOrderDto[] }) {
-    return this.http.post<void>('/api/v1/import', aImportData);
+  private postImport(
+    aImportData: { activities: CreateOrderDto[] },
+    dryRun = false
+  ) {
+    return this.http.post<{ activities: Activity[] }>(
+      `/api/v1/import?dryRun=${dryRun}`,
+      aImportData
+    );
   }
 }
