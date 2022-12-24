@@ -103,9 +103,6 @@ export class ImportActivitiesDialog implements OnDestroy {
                 userAccounts: this.data.user.accounts,
                 dryRun: true
               });
-
-              this.snackBar.dismiss();
-              this.handleImportSuccess();
             } catch (error) {
               console.error(error);
               this.handleImportError({
@@ -126,6 +123,10 @@ export class ImportActivitiesDialog implements OnDestroy {
             activities: [],
             error: { error: { message: ['Unexpected format'] } }
           });
+        } finally {
+          this.isFileSelected = true;
+          this.snackBar.dismiss();
+          this.changeDetectorRef.markForCheck();
         }
       };
     };
@@ -133,24 +134,34 @@ export class ImportActivitiesDialog implements OnDestroy {
     input.click();
   }
 
-  public importActivities(data) {
+  public updateSelection(data: Activity[]) {
     this.selectedActivities = data;
   }
 
-  public async finalImport() {
-    await this.importActivitiesService.importSelectedActivities(
-      this.selectedActivities
-    );
+  public async importActivities() {
+    try {
+      await this.importActivitiesService.importSelectedActivities(
+        this.selectedActivities
+      );
 
-    this.snackBar.open(
-      '✅ ' + $localize`Import has been completed`,
-      undefined,
-      {
-        duration: 3000
-      }
-    );
-
-    this.dialogRef.close();
+      this.snackBar.open(
+        '✅ ' + $localize`Import has been completed`,
+        undefined,
+        {
+          duration: 3000
+        }
+      );
+    } catch (error) {
+      this.snackBar.open(
+        $localize`Oops! Something went wrong.` +
+          ' ' +
+          $localize`Please try again later.`,
+        $localize`Okay`,
+        { duration: 3000 }
+      );
+    } finally {
+      this.dialogRef.close();
+    }
   }
 
   public onReset() {
@@ -170,9 +181,6 @@ export class ImportActivitiesDialog implements OnDestroy {
     activities: any[];
     error: any;
   }) {
-    this.isFileSelected = true;
-    this.snackBar.dismiss();
-
     this.errorMessages = error?.error?.message;
 
     for (const message of this.errorMessages) {
@@ -191,7 +199,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   private handleImportSuccess() {
-    this.isFileSelected = true;
-    this.changeDetectorRef.markForCheck();
+    // this.isFileSelected = true;
+    // this.changeDetectorRef.markForCheck();
   }
 }

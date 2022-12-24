@@ -48,7 +48,7 @@
         [showActions]="false"
         [showCheckbox]="true"
         [showSymbolColumn]="false"
-        (selectedActivities)="importActivities($event)"
+        (selectedActivities)="updateSelection($event)"
       ></gf-activities-table>
     </ng-container>
     <ng-template #errorMessage>
@@ -89,7 +89,7 @@
     color="primary"
     mat-flat-button
     [disabled]="!selectedActivities?.length"
-    (click)="finalImport()"
+    (click)="importActivities()"
   >
     <ng-container i18n>Import</ng-container>
   </button>
