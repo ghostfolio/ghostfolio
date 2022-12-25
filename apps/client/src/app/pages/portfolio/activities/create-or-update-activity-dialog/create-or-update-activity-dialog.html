@@ -194,16 +194,38 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div
-      [ngClass]="{ 'd-none': activityForm.controls['tags']?.value?.length <= 0 }"
-    >
+    <div [ngClass]="{ 'd-none': tags?.length <= 0 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Tags</mat-label>
-        <mat-chip-list>
-          <mat-chip *ngFor="let tag of activityForm.controls['tags']?.value">
+        <mat-chip-list #tagsChipList>
+          <mat-chip
+            *ngFor="let tag of activityForm.controls['tags']?.value"
+            matChipRemove
+            [removable]="true"
+            (removed)="onRemoveTag(tag)"
+          >
             {{ tag.name }}
+            <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
           </mat-chip>
+          <input
+            #tagInput
+            name="close-outline"
+            [matAutocomplete]="autocompleteTags"
+            [matChipInputFor]="tagsChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          />
         </mat-chip-list>
+        <mat-autocomplete
+          #autocompleteTags="matAutocomplete"
+          (optionSelected)="onAddTag($event)"
+        >
+          <mat-option
+            *ngFor="let tag of filteredTagsObservable | async"
+            [value]="tag.id"
+          >
+            {{ tag.name }}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </div>
   </div>

@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support to manage the tags in the create or edit activity dialog
 - Added the tags to the admin control panel
+
+### Changed
+
+- Removed the data source type `RAKUTEN`
 
 ## 1.220.0 - 2022-12-23
 

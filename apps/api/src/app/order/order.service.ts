@@ -362,6 +362,12 @@ export class OrderService {
     delete data.symbol;
     delete data.tags;
 
+    // Remove existing tags
+    await this.prismaService.order.update({
+      data: { tags: { set: [] } },
+      where
+    });
+
     return this.prismaService.order.update({
       data: {
         ...data,
