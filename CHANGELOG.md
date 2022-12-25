@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the labels based on the type in the create or edit activity dialog
 - Removed the data source type `RAKUTEN`
 
 ### Fixed

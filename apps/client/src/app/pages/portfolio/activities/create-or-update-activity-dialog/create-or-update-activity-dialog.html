@@ -11,10 +11,10 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
-          <mat-option i18n value="BUY">BUY</mat-option>
-          <mat-option i18n value="DIVIDEND">DIVIDEND</mat-option>
-          <mat-option i18n value="ITEM">ITEM</mat-option>
-          <mat-option i18n value="SELL">SELL</mat-option>
+          <mat-option i18n value="BUY">Buy</mat-option>
+          <mat-option i18n value="DIVIDEND">Dividend</mat-option>
+          <mat-option i18n value="ITEM">Item</mat-option>
+          <mat-option i18n value="SELL">Sell</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -109,7 +109,15 @@
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Unit Price</mat-label>
+        <mat-label
+          ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
+            <ng-container *ngSwitchCase="'DIVIDEND'" i18n
+              >Dividend</ng-container
+            >
+            <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
+            <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
+          </ng-container>
+        </mat-label>
         <input formControlName="unitPrice" matInput type="number" />
         <span class="ml-2" matSuffix
           >{{ activityForm.controls['currency'].value }}</span
