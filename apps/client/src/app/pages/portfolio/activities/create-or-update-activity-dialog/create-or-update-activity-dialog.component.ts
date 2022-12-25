@@ -1,7 +1,9 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Inject,
   OnDestroy,
   ViewChild
@@ -15,7 +17,7 @@ import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetClass, AssetSubClass, Type } from '@prisma/client';
+import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { isString } from 'lodash';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
@@ -23,6 +25,7 @@ import {
   catchError,
   debounceTime,
   distinctUntilChanged,
+  map,
   startWith,
   switchMap,
   takeUntil
@@ -39,6 +42,7 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdateActivityDialog implements OnDestroy {
   @ViewChild('autocomplete') autocomplete;
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
   public activityForm: FormGroup;
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
@@ -51,8 +55,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public currentMarketPrice = null;
   public filteredLookupItems: LookupItem[];
   public filteredLookupItemsObservable: Observable<LookupItem[]>;
+  public filteredTagsObservable: Observable<Tag[]>;
   public isLoading = false;
   public platforms: { id: string; name: string }[];
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public tags: Tag[] = [];
   public total = 0;
   public Validators = Validators;
 
@@ -72,10 +79,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.locale = this.data.user?.settings?.locale;
     this.dateAdapter.setLocale(this.locale);
 
-    const { currencies, platforms } = this.dataService.fetchInfo();
+    const { currencies, platforms, tags } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
     this.platforms = platforms;
+    this.tags = tags;
 
     this.activityForm = this.formBuilder.group({
       accountId: [this.data.activity?.accountId, Validators.required],
@@ -185,6 +193,15 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       })
     );
 
+    this.filteredTagsObservable = this.activityForm.controls[
+      'tags'
+    ].valueChanges.pipe(
+      startWith(this.activityForm.controls['tags'].value),
+      map((aTags: Tag[] | null) => {
+        return aTags ? this.filterTags(aTags) : this.tags.slice();
+      })
+    );
+
     this.activityForm.controls['type'].valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((type: Type) => {
@@ -264,6 +281,16 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     return aLookupItem?.symbol ?? '';
   }
 
+  public onAddTag(event: MatAutocompleteSelectedEvent) {
+    this.activityForm.controls['tags'].setValue([
+      ...(this.activityForm.controls['tags'].value ?? []),
+      this.tags.find(({ id }) => {
+        return id === event.option.value;
+      })
+    ]);
+    this.tagInput.nativeElement.value = '';
+  }
+
   public onBlurSymbol() {
     const currentLookupItem = this.filteredLookupItems.find((lookupItem) => {
       return (
@@ -283,8 +310,16 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.changeDetectorRef.markForCheck();
   }
 
-  public onCancel(): void {
+  public onCancel() {
     this.dialogRef.close();
+  }
+
+  public onRemoveTag(aTag: Tag) {
+    this.activityForm.controls['tags'].setValue(
+      this.activityForm.controls['tags'].value.filter(({ id }) => {
+        return id !== aTag.id;
+      })
+    );
   }
 
   public onSubmit() {
@@ -325,6 +360,16 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private filterTags(aTags: Tag[]) {
+    const tagIds = aTags.map((tag) => {
+      return tag.id;
+    });
+
+    return this.tags.filter((tag) => {
+      return !tagIds.includes(tag.id);
+    });
   }
 
   private updateSymbol(symbol: string) {
