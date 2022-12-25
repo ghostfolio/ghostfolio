@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the tags to the admin control panel
+
+### Changed
+
+- Removed the data source type `RAKUTEN`
+
 ### Fixed
 
 - Fixed the date conversion for years with only two digits
