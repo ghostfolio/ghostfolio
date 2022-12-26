@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { isArray } from 'lodash';
 import { Subject } from 'rxjs';
@@ -20,8 +21,11 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class ImportActivitiesDialog implements OnDestroy {
+  public activities: Activity[] = [];
   public details: any[] = [];
   public errorMessages: string[] = [];
+  public isFileSelected = false;
+  public selectedActivities: Activity[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -39,13 +43,47 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
-  public onImport() {
+  public async onImportActivities() {
+    try {
+      this.snackBar.open('⏳ ' + $localize`Importing data...`);
+
+      await this.importActivitiesService.importSelectedActivities(
+        this.selectedActivities
+      );
+
+      this.snackBar.open(
+        '✅ ' + $localize`Import has been completed`,
+        undefined,
+        {
+          duration: 3000
+        }
+      );
+    } catch (error) {
+      this.snackBar.open(
+        $localize`Oops! Something went wrong.` +
+          ' ' +
+          $localize`Please try again later.`,
+        $localize`Okay`,
+        { duration: 3000 }
+      );
+    } finally {
+      this.dialogRef.close();
+    }
+  }
+
+  public onReset() {
+    this.details = [];
+    this.errorMessages = [];
+    this.isFileSelected = false;
+  }
+
+  public onSelectFile() {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
 
     input.onchange = (event) => {
-      this.snackBar.open('⏳ ' + $localize`Importing data...`);
+      this.snackBar.open('⏳ ' + $localize`Validating data...`);
 
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files[0];
@@ -80,11 +118,10 @@ export class ImportActivitiesDialog implements OnDestroy {
             }
 
             try {
-              await this.importActivitiesService.importJson({
-                content: content.activities
+              this.activities = await this.importActivitiesService.importJson({
+                content: content.activities,
+                dryRun: true
               });
-
-              this.handleImportSuccess();
             } catch (error) {
               console.error(error);
               this.handleImportError({ error, activities: content.activities });
@@ -93,12 +130,11 @@ export class ImportActivitiesDialog implements OnDestroy {
             return;
           } else if (file.name.endsWith('.csv')) {
             try {
-              await this.importActivitiesService.importCsv({
+              this.activities = await this.importActivitiesService.importCsv({
+                dryRun: true,
                 fileContent,
                 userAccounts: this.data.user.accounts
               });
-
-              this.handleImportSuccess();
             } catch (error) {
               console.error(error);
               this.handleImportError({
@@ -119,6 +155,10 @@ export class ImportActivitiesDialog implements OnDestroy {
             activities: [],
             error: { error: { message: ['Unexpected format'] } }
           });
+        } finally {
+          this.isFileSelected = true;
+          this.snackBar.dismiss();
+          this.changeDetectorRef.markForCheck();
         }
       };
     };
@@ -126,9 +166,8 @@ export class ImportActivitiesDialog implements OnDestroy {
     input.click();
   }
 
-  public onReset() {
-    this.details = [];
-    this.errorMessages = [];
+  public updateSelection(data: Activity[]) {
+    this.selectedActivities = data;
   }
 
   public ngOnDestroy() {
@@ -143,8 +182,6 @@ export class ImportActivitiesDialog implements OnDestroy {
     activities: any[];
     error: any;
   }) {
-    this.snackBar.dismiss();
-
     this.errorMessages = error?.error?.message;
 
     for (const message of this.errorMessages) {
@@ -160,17 +197,5 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
 
     this.changeDetectorRef.markForCheck();
-  }
-
-  private handleImportSuccess() {
-    this.snackBar.open(
-      '✅ ' + $localize`Import has been completed`,
-      undefined,
-      {
-        duration: 3000
-      }
-    );
-
-    this.dialogRef.close();
   }
 }

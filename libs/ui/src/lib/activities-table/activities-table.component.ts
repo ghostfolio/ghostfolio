@@ -8,6 +8,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -41,6 +42,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() locale: string;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions: boolean;
+  @Input() showCheckbox = false;
   @Input() showNameColumn = true;
 
   @Output() activityDeleted = new EventEmitter<string>();
@@ -49,6 +51,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() export = new EventEmitter<string[]>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
+  @Output() selectedActivities = new EventEmitter<Activity[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -67,6 +70,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   public placeholder = '';
   public routeQueryParams: Subscription;
   public searchKeywords: string[] = [];
+  public selectedRows = new SelectionModel<Activity>(true, []);
   public totalFees: number;
   public totalValue: number;
 
@@ -81,8 +85,15 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       });
   }
 
+  public areAllRowsSelected() {
+    const numSelectedRows = this.selectedRows.selected.length;
+    const numTotalRows = this.dataSource.data.length;
+    return numSelectedRows === numTotalRows;
+  }
+
   public ngOnChanges() {
     this.displayedColumns = [
+      'select',
       'count',
       'date',
       'type',
@@ -97,6 +108,16 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       'comment',
       'actions'
     ];
+
+    if (this.showCheckbox) {
+      this.displayedColumns = this.displayedColumns.filter((column) => {
+        return column !== 'count';
+      });
+    } else {
+      this.displayedColumns = this.displayedColumns.filter((column) => {
+        return column !== 'select';
+      });
+    }
 
     if (!this.showNameColumn) {
       this.displayedColumns = this.displayedColumns.filter((column) => {
@@ -133,11 +154,37 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     }
   }
 
+  ngOnInit() {
+    if (this.showCheckbox) {
+      this.toggleAllRows();
+      this.selectedRows.changed
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((selectedRows) => {
+          this.selectedActivities.emit(selectedRows.source.selected);
+        });
+    }
+  }
+
   public onChangePage(page: PageEvent) {
     this.pageIndex = page.pageIndex;
 
     this.totalFees = this.getTotalFees();
     this.totalValue = this.getTotalValue();
+  }
+
+  public onClickActivity(activity: Activity) {
+    if (this.showCheckbox) {
+      this.selectedRows.toggle(activity);
+    } else if (
+      this.hasPermissionToOpenDetails &&
+      !activity.isDraft &&
+      activity.type !== 'ITEM'
+    ) {
+      this.onOpenPositionDialog({
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
+      });
+    }
   }
 
   public onCloneActivity(aActivity: OrderWithAccount) {
@@ -200,6 +247,14 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.activityToUpdate.emit(aActivity);
   }
 
+  public toggleAllRows() {
+    this.areAllRowsSelected()
+      ? this.selectedRows.clear()
+      : this.dataSource.data.forEach((row) => this.selectedRows.select(row));
+
+    this.selectedActivities.emit(this.selectedRows.selected);
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -237,9 +292,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       type: 'TAG'
     };
 
-    fieldValueMap[format(activity.date, 'yyyy')] = {
-      id: format(activity.date, 'yyyy'),
-      label: format(activity.date, 'yyyy'),
+    fieldValueMap[format(new Date(activity.date), 'yyyy')] = {
+      id: format(new Date(activity.date), 'yyyy'),
+      label: format(new Date(activity.date), 'yyyy'),
       type: 'TAG'
     };
 

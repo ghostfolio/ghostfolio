@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { Account, DataSource, Type } from '@prisma/client';
 import { isMatch, parse, parseISO } from 'date-fns';
 import { isFinite } from 'lodash';
@@ -25,12 +26,14 @@ export class ImportActivitiesService {
   public constructor(private http: HttpClient) {}
 
   public async importCsv({
+    dryRun = false,
     fileContent,
     userAccounts
   }: {
+    dryRun?: boolean;
     fileContent: string;
     userAccounts: Account[];
-  }) {
+  }): Promise<Activity[]> {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
@@ -52,14 +55,23 @@ export class ImportActivitiesService {
       });
     }
 
-    await this.importJson({ content: activities });
+    return await this.importJson({ content: activities, dryRun });
   }
 
-  public importJson({ content }: { content: CreateOrderDto[] }): Promise<void> {
+  public importJson({
+    content,
+    dryRun = false
+  }: {
+    content: CreateOrderDto[];
+    dryRun?: boolean;
+  }): Promise<Activity[]> {
     return new Promise((resolve, reject) => {
-      this.postImport({
-        activities: content
-      })
+      this.postImport(
+        {
+          activities: content
+        },
+        dryRun
+      )
         .pipe(
           catchError((error) => {
             reject(error);
@@ -67,11 +79,33 @@ export class ImportActivitiesService {
           })
         )
         .subscribe({
-          next: () => {
-            resolve();
+          next: (data) => {
+            resolve(data.activities);
           }
         });
     });
+  }
+
+  public importSelectedActivities(
+    selectedActivities: Activity[]
+  ): Promise<Activity[]> {
+    const importData: CreateOrderDto[] = [];
+    for (const activity of selectedActivities) {
+      importData.push(this.convertToCreateOrderDto(activity));
+    }
+    return this.importJson({ content: importData });
+  }
+
+  private convertToCreateOrderDto(aActivity: Activity): CreateOrderDto {
+    return {
+      currency: aActivity.SymbolProfile.currency,
+      date: aActivity.date.toString(),
+      fee: aActivity.fee,
+      quantity: aActivity.quantity,
+      symbol: aActivity.SymbolProfile.symbol,
+      type: aActivity.type,
+      unitPrice: aActivity.unitPrice
+    };
   }
 
   private lowercaseKeys(aObject: any) {
@@ -301,7 +335,13 @@ export class ImportActivitiesService {
     };
   }
 
-  private postImport(aImportData: { activities: CreateOrderDto[] }) {
-    return this.http.post<void>('/api/v1/import', aImportData);
+  private postImport(
+    aImportData: { activities: CreateOrderDto[] },
+    dryRun = false
+  ) {
+    return this.http.post<{ activities: Activity[] }>(
+      `/api/v1/import?dryRun=${dryRun}`,
+      aImportData
+    );
   }
 }

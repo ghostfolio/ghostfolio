@@ -15,6 +15,26 @@
     matSortDirection="desc"
     [dataSource]="dataSource"
   >
+    <ng-container matColumnDef="select">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <mat-checkbox
+          class="mt-2"
+          [checked]="selectedRows.hasValue() && areAllRowsSelected()"
+          [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
+          (change)="$event ? toggleAllRows() : null"
+        ></mat-checkbox>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <mat-checkbox
+          class="mt-2"
+          [checked]="selectedRows.isSelected(element)"
+          (change)="$event ? selectedRows.toggle(element) : null"
+          (click)="$event.stopPropagation()"
+        ></mat-checkbox>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
+
     <ng-container matColumnDef="count">
       <th
         *matHeaderCellDef
@@ -45,7 +65,7 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          {{ element.date | date: defaultDateFormat }}
+          {{ element.date | date : defaultDateFormat }}
         </div>
       </td>
       <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
@@ -432,15 +452,7 @@
         'cursor-pointer':
           hasPermissionToOpenDetails && !row.isDraft && row.type !== 'ITEM'
       }"
-      (click)="
-        hasPermissionToOpenDetails &&
-          !row.isDraft &&
-          row.type !== 'ITEM' &&
-          onOpenPositionDialog({
-            dataSource: row.SymbolProfile.dataSource,
-            symbol: row.SymbolProfile.symbol
-          })
-      "
+      (click)="onClickActivity(row)"
     ></tr>
     <tr
       *matFooterRowDef="displayedColumns"

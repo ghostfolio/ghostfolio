@@ -6,13 +6,13 @@
 ></gf-dialog-header>
 
 <div class="flex-grow-1" mat-dialog-content>
-  <ng-container *ngIf="errorMessages.length === 0">
+  <ng-container *ngIf="!isFileSelected">
     <div class="d-flex justify-content-center flex-column">
       <button
         class="py-3"
         color="primary"
         mat-stroked-button
-        (click)="onImport()"
+        (click)="onSelectFile()"
       >
         <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
         <span i18n>Choose File</span>
@@ -33,35 +33,66 @@
       </p>
     </div>
   </ng-container>
-  <ng-container *ngIf="errorMessages.length > 0">
-    <mat-accordion displayMode="flat">
-      <mat-expansion-panel
-        *ngFor="let message of errorMessages; let i = index"
-        [disabled]="!details[i]"
-      >
-        <mat-expansion-panel-header class="pl-1">
-          <mat-panel-title>
-            <div class="d-flex">
-              <div class="align-items-center d-flex mr-2">
-                <ion-icon name="warning-outline"></ion-icon>
+  <ng-container *ngIf="isFileSelected">
+    <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
+      <gf-activities-table
+        [activities]="activities"
+        [baseCurrency]="data?.user?.settings?.baseCurrency"
+        [deviceType]="data?.deviceType"
+        [hasPermissionToCreateActivity]="false"
+        [hasPermissionToExportActivities]="false"
+        [hasPermissionToFilter]="false"
+        [hasPermissionToImportActivities]="false"
+        [hasPermissionToOpenDetails]="false"
+        [locale]="data?.user?.settings?.locale"
+        [showActions]="false"
+        [showCheckbox]="true"
+        [showSymbolColumn]="false"
+        (selectedActivities)="updateSelection($event)"
+      ></gf-activities-table>
+    </ng-container>
+    <ng-template #errorMessage>
+      <mat-accordion displayMode="flat">
+        <mat-expansion-panel
+          *ngFor="let message of errorMessages; let i = index"
+          [disabled]="!details[i]"
+        >
+          <mat-expansion-panel-header class="pl-1">
+            <mat-panel-title>
+              <div class="d-flex">
+                <div class="align-items-center d-flex mr-2">
+                  <ion-icon name="warning-outline"></ion-icon>
+                </div>
+                <div>{{ message }}</div>
               </div>
-              <div>{{ message }}</div>
-            </div>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <pre
-          *ngIf="details[i]"
-          class="m-0"
-        ><code>{{ details[i] | json }}</code></pre>
-      </mat-expansion-panel>
-    </mat-accordion>
-    <div class="mt-2">
-      <button mat-button (click)="onReset()">
-        <ion-icon class="mr-2" name="arrow-back-outline"></ion-icon>
-        <span i18n>Back</span>
-      </button>
-    </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <pre
+            *ngIf="details[i]"
+            class="m-0"
+          ><code>{{ details[i] | json }}</code></pre>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <div class="mt-2">
+        <button mat-button (click)="onReset()">
+          <ion-icon class="mr-2" name="arrow-back-outline"></ion-icon>
+          <span i18n>Back</span>
+        </button>
+      </div>
+    </ng-template>
   </ng-container>
+</div>
+
+<div *ngIf="isFileSelected" class="justify-content-end" mat-dialog-actions>
+  <button i18n mat-button (click)="onCancel()">Cancel</button>
+  <button
+    color="primary"
+    mat-flat-button
+    [disabled]="!selectedActivities?.length"
+    (click)="onImportActivities()"
+  >
+    <ng-container i18n>Import</ng-container>
+  </button>
 </div>
 
 <gf-dialog-footer
