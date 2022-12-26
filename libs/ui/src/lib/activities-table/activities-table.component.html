@@ -19,6 +19,7 @@
       <th *matHeaderCellDef class="px-1" mat-header-cell>
         <mat-checkbox
           class="mt-2"
+          color="primary"
           [checked]="selectedRows.hasValue() && areAllRowsSelected()"
           [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
           (change)="$event ? toggleAllRows() : null"
@@ -27,6 +28,7 @@
       <td *matCellDef="let element" class="px-1" mat-cell>
         <mat-checkbox
           class="mt-2"
+          color="primary"
           [checked]="selectedRows.isSelected(element)"
           (change)="$event ? selectedRows.toggle(element) : null"
           (click)="$event.stopPropagation()"
@@ -65,7 +67,7 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          {{ element.date | date: defaultDateFormat }}
+          {{ element.date | date : defaultDateFormat }}
         </div>
       </td>
       <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
