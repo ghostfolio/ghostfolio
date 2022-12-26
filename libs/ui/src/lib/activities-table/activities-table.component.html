@@ -18,6 +18,7 @@
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef class="px-1" mat-header-cell>
         <mat-checkbox
+          class="mt-2"
           [checked]="selectedRows.hasValue() && areAllRowsSelected()"
           [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
           (change)="$event ? toggleAllRows() : null"
@@ -25,6 +26,7 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <mat-checkbox
+          class="mt-2"
           [checked]="selectedRows.isSelected(element)"
           (change)="$event ? selectedRows.toggle(element) : null"
           (click)="$event.stopPropagation()"

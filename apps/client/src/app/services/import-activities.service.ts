@@ -26,13 +26,13 @@ export class ImportActivitiesService {
   public constructor(private http: HttpClient) {}
 
   public async importCsv({
+    dryRun = false,
     fileContent,
-    userAccounts,
-    dryRun = false
+    userAccounts
   }: {
+    dryRun?: boolean;
     fileContent: string;
     userAccounts: Account[];
-    dryRun?: boolean;
   }): Promise<Activity[]> {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
@@ -91,18 +91,21 @@ export class ImportActivitiesService {
   ): Promise<Activity[]> {
     const importData: CreateOrderDto[] = [];
     for (const activity of selectedActivities) {
-      importData.push({
-        currency: activity.SymbolProfile.currency,
-        date: activity.date.toString(),
-        fee: activity.fee,
-        quantity: activity.quantity,
-        symbol: activity.SymbolProfile.symbol,
-        type: activity.type,
-        unitPrice: activity.unitPrice
-      });
+      importData.push(this.convertToCreateOrderDto(activity));
     }
-
     return this.importJson({ content: importData });
+  }
+
+  private convertToCreateOrderDto(aActivity: Activity): CreateOrderDto {
+    return {
+      currency: aActivity.SymbolProfile.currency,
+      date: aActivity.date.toString(),
+      fee: aActivity.fee,
+      quantity: aActivity.quantity,
+      symbol: aActivity.SymbolProfile.symbol,
+      type: aActivity.type,
+      unitPrice: aActivity.unitPrice
+    };
   }
 
   private lowercaseKeys(aObject: any) {

@@ -45,6 +45,8 @@ export class ImportActivitiesDialog implements OnDestroy {
 
   public async onImportActivities() {
     try {
+      this.snackBar.open('⏳ ' + $localize`Importing data...`);
+
       await this.importActivitiesService.importSelectedActivities(
         this.selectedActivities
       );
@@ -81,7 +83,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     input.type = 'file';
 
     input.onchange = (event) => {
-      this.snackBar.open('⏳ ' + $localize`Importing data...`);
+      this.snackBar.open('⏳ ' + $localize`Validating data...`);
 
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files[0];
@@ -129,9 +131,9 @@ export class ImportActivitiesDialog implements OnDestroy {
           } else if (file.name.endsWith('.csv')) {
             try {
               this.activities = await this.importActivitiesService.importCsv({
+                dryRun: true,
                 fileContent,
-                userAccounts: this.data.user.accounts,
-                dryRun: true
+                userAccounts: this.data.user.accounts
               });
             } catch (error) {
               console.error(error);
