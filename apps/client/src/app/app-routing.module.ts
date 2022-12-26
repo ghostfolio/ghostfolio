@@ -110,6 +110,13 @@ const routes: Routes = [
       ).then((m) => m.BlackFriday2022PageModule)
   },
   {
+    path: 'blog/2022/12/the-importance-of-tracking-your-personal-finances',
+    loadChildren: () =>
+      import(
+        './pages/blog/2022/12/the-importance-of-tracking-your-personal-finances/the-importance-of-tracking-your-personal-finances-page.module'
+      ).then((m) => m.TheImportanceOfTrackingYourPersonalFinancesPageModule)
+  },
+  {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)

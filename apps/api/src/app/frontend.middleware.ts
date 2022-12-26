@@ -59,6 +59,12 @@ export class FrontendMiddleware implements NestMiddleware {
       featureGraphicPath = 'assets/images/blog/hacktoberfest-2022.png';
     } else if (request.path.startsWith('/en/blog/2022/11/black-friday-2022')) {
       featureGraphicPath = 'assets/images/blog/black-friday-2022.jpg';
+    } else if (
+      request.path.startsWith(
+        '/en/blog/2022/12/the-importance-of-tracking-your-personal-finances'
+      )
+    ) {
+      featureGraphicPath = 'assets/images/blog/20221226.jpg';
     }
 
     if (
