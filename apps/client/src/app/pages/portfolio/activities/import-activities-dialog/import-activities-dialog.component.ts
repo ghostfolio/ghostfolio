@@ -120,7 +120,7 @@ export class ImportActivitiesDialog implements OnDestroy {
             try {
               this.activities = await this.importActivitiesService.importJson({
                 content: content.activities,
-                dryRun: true
+                isDryRun: true
               });
             } catch (error) {
               console.error(error);
@@ -131,8 +131,8 @@ export class ImportActivitiesDialog implements OnDestroy {
           } else if (file.name.endsWith('.csv')) {
             try {
               this.activities = await this.importActivitiesService.importCsv({
-                dryRun: true,
                 fileContent,
+                isDryRun: true,
                 userAccounts: this.data.user.accounts
               });
             } catch (error) {

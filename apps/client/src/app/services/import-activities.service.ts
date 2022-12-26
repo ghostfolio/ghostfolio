@@ -26,12 +26,12 @@ export class ImportActivitiesService {
   public constructor(private http: HttpClient) {}
 
   public async importCsv({
-    dryRun = false,
     fileContent,
+    isDryRun = false,
     userAccounts
   }: {
-    dryRun?: boolean;
     fileContent: string;
+    isDryRun?: boolean;
     userAccounts: Account[];
   }): Promise<Activity[]> {
     const content = csvToJson(fileContent, {
@@ -55,22 +55,22 @@ export class ImportActivitiesService {
       });
     }
 
-    return await this.importJson({ content: activities, dryRun });
+    return await this.importJson({ isDryRun, content: activities });
   }
 
   public importJson({
     content,
-    dryRun = false
+    isDryRun = false
   }: {
     content: CreateOrderDto[];
-    dryRun?: boolean;
+    isDryRun?: boolean;
   }): Promise<Activity[]> {
     return new Promise((resolve, reject) => {
       this.postImport(
         {
           activities: content
         },
-        dryRun
+        isDryRun
       )
         .pipe(
           catchError((error) => {
@@ -96,15 +96,22 @@ export class ImportActivitiesService {
     return this.importJson({ content: importData });
   }
 
-  private convertToCreateOrderDto(aActivity: Activity): CreateOrderDto {
+  private convertToCreateOrderDto({
+    date,
+    fee,
+    quantity,
+    SymbolProfile,
+    type,
+    unitPrice
+  }: Activity): CreateOrderDto {
     return {
-      currency: aActivity.SymbolProfile.currency,
-      date: aActivity.date.toString(),
-      fee: aActivity.fee,
-      quantity: aActivity.quantity,
-      symbol: aActivity.SymbolProfile.symbol,
-      type: aActivity.type,
-      unitPrice: aActivity.unitPrice
+      fee,
+      quantity,
+      type,
+      unitPrice,
+      currency: SymbolProfile.currency,
+      date: date.toString(),
+      symbol: SymbolProfile.symbol
     };
   }
 
@@ -337,10 +344,10 @@ export class ImportActivitiesService {
 
   private postImport(
     aImportData: { activities: CreateOrderDto[] },
-    dryRun = false
+    aIsDryRun = false
   ) {
     return this.http.post<{ activities: Activity[] }>(
-      `/api/v1/import?dryRun=${dryRun}`,
+      `/api/v1/import?dryRun=${aIsDryRun}`,
       aImportData
     );
   }
