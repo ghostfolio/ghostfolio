@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to manage the tags in the create or edit activity dialog
 - Added the tags to the admin control panel
 - Added a blog post: _The importance of tracking your personal finances_
+- Resolved the title of the blog post
 
 ### Changed
 
