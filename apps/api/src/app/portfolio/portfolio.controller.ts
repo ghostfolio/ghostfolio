@@ -18,7 +18,6 @@ import {
   PortfolioPublicDetails,
   PortfolioReport
 } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import type {
   DateRange,
   GroupBy,
@@ -193,20 +192,11 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('groupBy') groupBy?: GroupBy
   ): Promise<PortfolioDividends> {
-    let dividends: InvestmentItem[];
-
-    if (groupBy === 'month') {
-      dividends = await this.portfolioService.getDividends({
-        dateRange,
-        groupBy,
-        impersonationId
-      });
-    } else {
-      dividends = await this.portfolioService.getDividends({
-        dateRange,
-        impersonationId
-      });
-    }
+    let dividends = await this.portfolioService.getDividends({
+      dateRange,
+      groupBy,
+      impersonationId
+    });
 
     if (
       impersonationId ||
@@ -242,20 +232,11 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('groupBy') groupBy?: GroupBy
   ): Promise<PortfolioInvestments> {
-    let investments: InvestmentItem[];
-
-    if (groupBy === 'month') {
-      investments = await this.portfolioService.getInvestments({
-        dateRange,
-        groupBy,
-        impersonationId
-      });
-    } else {
-      investments = await this.portfolioService.getInvestments({
-        dateRange,
-        impersonationId
-      });
-    }
+    let investments = await this.portfolioService.getInvestments({
+      dateRange,
+      groupBy,
+      impersonationId
+    });
 
     if (
       impersonationId ||
