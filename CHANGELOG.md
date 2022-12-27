@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the price to the `Subscription` database schema
+
 ### Changed
 
 - Upgraded `bull` from version `4.8.5` to `4.10.2`
