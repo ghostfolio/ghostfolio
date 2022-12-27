@@ -210,12 +210,12 @@ export class PortfolioService {
 
   public async getDividends({
     dateRange,
-    impersonationId,
-    groupBy
+    groupBy,
+    impersonationId
   }: {
     dateRange: DateRange;
-    impersonationId: string;
     groupBy?: GroupBy;
+    impersonationId: string;
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
@@ -248,12 +248,12 @@ export class PortfolioService {
 
   public async getInvestments({
     dateRange,
-    impersonationId,
-    groupBy
+    groupBy,
+    impersonationId
   }: {
     dateRange: DateRange;
-    impersonationId: string;
     groupBy?: GroupBy;
+    impersonationId: string;
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
