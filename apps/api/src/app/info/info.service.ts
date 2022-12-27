@@ -8,7 +8,6 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
-  PROPERTY_IS_USER_SIGNUP_ENABLED,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE,
@@ -303,14 +302,14 @@ export class InfoService {
       return undefined;
     }
 
-    const stripeConfig = await this.prismaService.property.findUnique({
+    let subscriptions: Subscription[] = [];
+
+    const stripeConfig = (await this.prismaService.property.findUnique({
       where: { key: PROPERTY_STRIPE_CONFIG }
-    });
+    })) ?? { value: '{}' };
 
-    if (stripeConfig) {
-      return [JSON.parse(stripeConfig.value)];
-    }
+    subscriptions = [JSON.parse(stripeConfig.value)];
 
-    return [];
+    return subscriptions;
   }
 }

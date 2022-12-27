@@ -147,6 +147,7 @@ model Subscription {
   createdAt DateTime @default(now())
   expiresAt DateTime
   id        String   @id @default(uuid())
+  price     Float?
   updatedAt DateTime @updatedAt
   userId    String
   User      User     @relation(fields: [userId], references: [id])
