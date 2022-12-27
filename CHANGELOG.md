@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `@codewithdan/observable-store` from version `2.2.11` to `2.2.15`
 - Upgraded `bull` from version `4.8.5` to `4.10.2`
 
 ## 1.221.0 - 2022-12-26
