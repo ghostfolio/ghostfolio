@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `bull` from version `4.8.5` to `4.10.2`
+- Upgraded `countup.js` from version `2.0.7` to `2.3.2`
 
 ## 1.221.0 - 2022-12-26
 
