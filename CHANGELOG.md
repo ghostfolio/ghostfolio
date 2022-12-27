@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `bull` from version `4.8.5` to `4.10.2`
+- Upgraded the _Internet Identity_ dependencies from version `0.12.1` to `0.15.1`
 
 ## 1.221.0 - 2022-12-26
 
