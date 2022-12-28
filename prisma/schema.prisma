@@ -104,9 +104,9 @@ model Property {
 
 model Settings {
   settings  Json?
-  updatedAt DateTime  @updatedAt
-  userId    String    @id
-  User      User      @relation(fields: [userId], references: [id])
+  updatedAt DateTime @updatedAt
+  userId    String   @id
+  User      User     @relation(fields: [userId], references: [id])
 }
 
 model SymbolProfile {
@@ -147,6 +147,7 @@ model Subscription {
   createdAt DateTime @default(now())
   expiresAt DateTime
   id        String   @id @default(uuid())
+  price     Float?
   updatedAt DateTime @updatedAt
   userId    String
   User      User     @relation(fields: [userId], references: [id])

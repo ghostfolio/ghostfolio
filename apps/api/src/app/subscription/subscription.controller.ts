@@ -63,6 +63,7 @@ export class SubscriptionController {
 
     await this.subscriptionService.createSubscription({
       duration: coupon.duration,
+      price: 0,
       userId: this.request.user.id
     });
 
