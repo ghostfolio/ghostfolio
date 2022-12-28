@@ -12,7 +12,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { AccountType } from '@prisma/client';
+import { translate } from '@ghostfolio/ui/i18n';
 import { format, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +27,7 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./account-detail-dialog.component.scss']
 })
 export class AccountDetailDialog implements OnDestroy, OnInit {
-  public accountType: AccountType;
+  public accountType: string;
   public name: string;
   public orders: OrderWithAccount[];
   public platformName: string;
@@ -59,7 +59,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ accountType, name, Platform, valueInBaseCurrency }) => {
-        this.accountType = accountType;
+        this.accountType = translate(accountType);
         this.name = name;
         this.platformName = Platform?.name ?? '-';
         this.valueInBaseCurrency = valueInBaseCurrency;

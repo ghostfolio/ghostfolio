@@ -6,6 +6,7 @@ const locales = {
   ASSET_SUB_CLASS: $localize`Asset Sub Class`,
   EMERGENCY_FUND: $localize`Emergency Fund`,
   OTHER: $localize`Other`,
+  SECURITIES: $localize`Securities`,
   SYMBOL: $localize`Symbol`,
   TAG: $localize`Tag`,
 
@@ -34,6 +35,6 @@ const locales = {
   'South America': $localize`South America`
 };
 
-export function translate(aKey: string) {
+export function translate(aKey: string): string {
   return locales[aKey] ?? aKey;
 }
