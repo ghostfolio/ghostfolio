@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `countup.js` from version `2.0.7` to `2.3.2`
 - Upgraded `prisma` from version `4.7.1` to `4.8.0`
 
+### Fixed
+
+- Fixed the language localization of the account type
+
 ## 1.221.0 - 2022-12-26
 
 ### Added
