@@ -104,9 +104,9 @@ model Property {
 
 model Settings {
   settings  Json?
-  updatedAt DateTime  @updatedAt
-  userId    String    @id
-  User      User      @relation(fields: [userId], references: [id])
+  updatedAt DateTime @updatedAt
+  userId    String   @id
+  User      User     @relation(fields: [userId], references: [id])
 }
 
 model SymbolProfile {

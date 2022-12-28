@@ -11,6 +11,8 @@ import { TwitterBotService } from './twitter-bot/twitter-bot.service';
 
 @Injectable()
 export class CronService {
+  private static readonly EVERY_SUNDAY_AT_LUNCH_TIME = '0 12 * * 0';
+
   public constructor(
     private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -28,12 +30,12 @@ export class CronService {
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_5PM)
-  public async runEveryDayAtFivePM() {
+  public async runEveryDayAtFivePm() {
     this.twitterBotService.tweetFearAndGreedIndex();
   }
 
-  @Cron(CronExpression.EVERY_WEEKEND)
-  public async runEveryWeekend() {
+  @Cron(CronService.EVERY_SUNDAY_AT_LUNCH_TIME)
+  public async runEverySundayAtTwelvePm() {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
