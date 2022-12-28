@@ -29,7 +29,7 @@
         <ng-container *ngIf="hasPermissionForSocialLogin">
           <div class="my-3 text-muted" i18n>or</div>
           <button
-            class="d-block mb-2"
+            class="d-block mb-2 px-4 rounded-pill"
             mat-stroked-button
             (click)="onLoginWithInternetIdentity()"
           >
@@ -40,7 +40,10 @@
             />
             <span i18n>Continue with Internet Identity</span>
           </button>
-          <a class="d-block" href="../api/v1/auth/google" mat-stroked-button
+          <a
+            class="d-block px-4 rounded-pill"
+            href="../api/v1/auth/google"
+            mat-stroked-button
             ><img
               class="mr-2"
               src="../assets/icons/google.svg"

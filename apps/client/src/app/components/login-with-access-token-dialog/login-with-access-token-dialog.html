@@ -19,7 +19,7 @@
       <div class="my-3 text-center text-muted" i18n>or</div>
       <div class="d-flex flex-column">
         <button
-          class="mb-2"
+          class="mb-2 px-4 rounded-pill"
           mat-stroked-button
           (click)="onLoginWithInternetIdentity()"
         >
@@ -29,7 +29,10 @@
             style="height: 0.75rem"
           /><span i18n>Sign in with Internet Identity</span>
         </button>
-        <a href="../api/v1/auth/google" mat-stroked-button
+        <a
+          class="px-4 rounded-pill"
+          href="../api/v1/auth/google"
+          mat-stroked-button
           ><img
             class="mr-2"
             src="../assets/icons/google.svg"

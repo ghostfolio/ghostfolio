@@ -2582,47 +2582,53 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@dfinity/agent@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@dfinity/agent/-/agent-0.12.1.tgz"
-  integrity sha512-/KSKh248k4pjzvqCzIgYNNi3pTv+DBZ40+QiTBQeFzp6VEg3gfSv5bK2UwC0Plq9xwk7TeeeGLiTv6DI3RjCOQ==
+"@dfinity/agent@0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/agent/-/agent-0.15.1.tgz#59d193d1f0e5c7c6661c7df412b110ec19e36193"
+  integrity sha512-Lu/TXdDj3XJgMNZYVdrECyo+zqlOxDR1I1mA7OuO6lsIciildJNbqDnsMQAit7605S4B8QLnvbnK/Okd8c2K1g==
   dependencies:
     base64-arraybuffer "^0.2.0"
     bignumber.js "^9.0.0"
     borc "^2.1.1"
     js-sha256 "0.9.0"
     simple-cbor "^0.4.1"
+    ts-node "^10.8.2"
 
-"@dfinity/auth-client@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@dfinity/auth-client/-/auth-client-0.12.1.tgz"
-  integrity sha512-iZKSVjk9K+35jp+AY3QfGAv0jBfn5LZTwpSXgBKVqZCez3GRniGJirJVTvk7t9yOj4BXN8tuvjIKxTsezPpgLQ==
-
-"@dfinity/authentication@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@dfinity/authentication/-/authentication-0.12.1.tgz"
-  integrity sha512-krHR48HNqTOp2NwHoKHirTUXHDfHttWZfSmwBCsQa0xwWkrrLSGb3u+9e1oQjDK1G1eK2TP7T1W2duZmmmrZkg==
-
-"@dfinity/candid@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@dfinity/candid/-/candid-0.12.1.tgz"
-  integrity sha512-YX8jfyy/8Qmz4f1mbjqXUqOmtYcGru1gfYWxlRhKFSkeLH0VeZkfPEmD6EQ25k+18ATPk83MQiZnu0b6AWxBUw==
-
-"@dfinity/identity@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@dfinity/identity/-/identity-0.12.1.tgz"
-  integrity sha512-FNrjV4/gG9PjQfGLIoH1DycqSAMaoTZCxB+cSVJRFCvGQKc3F3kn5tj6rIv9LV+NNV1f1qfmTXE8rYsMCmEecg==
+"@dfinity/auth-client@0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/auth-client/-/auth-client-0.15.1.tgz#91f1bd890acfe759b94a65c2a38079d1d0333357"
+  integrity sha512-trsqf1gQv9P4R+jgFlLQigIGRm2wKQk0Us5BMnle0+hIOqvgv0P0yBhSfHBVoklXvbCNlCNZ+wsHqOzE5Zw1bg==
   dependencies:
-    "@types/webappsec-credential-management" "^0.6.2"
+    "@types/jest" "^28.1.4"
+    idb "^7.0.2"
+    jest "^28.1.2"
+    stream "^0.0.2"
+    ts-jest "^28.0.5"
+    ts-node "^10.8.2"
+
+"@dfinity/candid@0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/candid/-/candid-0.15.1.tgz#e0506c1625f72bbcefee821924e8ca8d2006a17e"
+  integrity sha512-vmMjyfXfMO16X9c4ivKoGS/fNYue2+t55LTmCL0Tv5Nn81LC9Bn2IuPdXcguoRQSXISJzTS59epL3E20ELL+dA==
+  dependencies:
+    ts-node "^10.8.2"
+
+"@dfinity/identity@0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/identity/-/identity-0.15.1.tgz#feef54db7a0c2bfb39a0558432221058a5b05b30"
+  integrity sha512-26+hS4u0oHOP6mR6MgquSF2is1aRACccGUPOzYkf8M593N1slG83cxTVXBrzxql9FcUT5O4XIGSNMja0v+BMiA==
+  dependencies:
     borc "^2.1.1"
     js-sha256 "^0.9.0"
-    secp256k1 "^4.0.2"
     tweetnacl "^1.0.1"
 
-"@dfinity/principal@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.npmjs.org/@dfinity/principal/-/principal-0.12.1.tgz"
-  integrity sha512-aL5y0mpzRex6LRSc4LUZyhn2GTFfHyxkakkOZxEM7+ecz8HsKKK+mSo78gL1TCso2QkCL4BqZzxnoIxxKqM1cw==
+"@dfinity/principal@0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/principal/-/principal-0.15.1.tgz#566037683c5842478de25527890d96d1c6e1e3c4"
+  integrity sha512-IYODveUhLx6CikhpT+KPuzwNi/czypOlgFj+Jtp+yHb6odUxfg0V/qVwZ4UbQPictNJ1gl7WwGjJeF5ybf+e6w==
+  dependencies:
+    js-sha256 "^0.9.0"
+    ts-node "^10.8.2"
 
 "@dinero.js/currencies@2.0.0-alpha.8":
   version "2.0.0-alpha.8"
@@ -4876,9 +4882,9 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-"@types/jest@28.1.8":
+"@types/jest@28.1.8", "@types/jest@^28.1.4":
   version "28.1.8"
-  resolved "https://registry.npmjs.org/@types/jest/-/jest-28.1.8.tgz"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-28.1.8.tgz#6936409f3c9724ea431efd412ea0238a0f03b09b"
   integrity sha512-8TJkV++s7B6XqnDrzR1m/TT0A0h948Pnl/097veySPN67VRAgQ4gZ7n2KfJo2rVq6njQjdxU3GCCyDvAeuHoiw==
   dependencies:
     expect "^28.0.0"
@@ -5182,11 +5188,6 @@
   version "13.7.3"
   resolved "https://registry.npmjs.org/@types/validator/-/validator-13.7.3.tgz"
   integrity sha512-DNviAE5OUcZ5s+XEQHRhERLg8fOp8gSgvyJ4aaFASx5wwaObm+PBwTIMXiOFm1QrSee5oYwEAYb7LMzX2O88gA==
-
-"@types/webappsec-credential-management@^0.6.2":
-  version "0.6.2"
-  resolved "https://registry.npmjs.org/@types/webappsec-credential-management/-/webappsec-credential-management-0.6.2.tgz"
-  integrity sha512-/6w8wmKQOFh+1CL99fcFhH7lli1/ExBdAawXsVPXFC5MBOS6ww/4cmK4crpCw51RaG6sTr477N17Y84l0G69IA==
 
 "@types/webpack-env@^1.16.0":
   version "1.17.0"
@@ -9423,6 +9424,11 @@ elliptic@^6.5.3, elliptic@^6.5.4:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
+emitter-component@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/emitter-component/-/emitter-component-1.1.1.tgz#065e2dbed6959bf470679edabeaf7981d1003ab6"
+  integrity sha512-G+mpdiAySMuB7kesVRLuyvYRqDmshB7ReKEVuyBPkzQlmiDiLrt7hHHIy4Aff552bgknVN7B2/d3lzhGO5dvpQ==
+
 emittery@^0.10.2:
   version "0.10.2"
   resolved "https://registry.npmjs.org/emittery/-/emittery-0.10.2.tgz"
@@ -11786,6 +11792,11 @@ icss-utils@^5.0.0, icss-utils@^5.1.0:
   resolved "https://registry.npmjs.org/icss-utils/-/icss-utils-5.1.0.tgz"
   integrity sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==
 
+idb@^7.0.2:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/idb/-/idb-7.1.1.tgz#d910ded866d32c7ced9befc5bfdf36f572ced72b"
+  integrity sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==
+
 identity-obj-proxy@3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/identity-obj-proxy/-/identity-obj-proxy-3.0.0.tgz"
@@ -13171,9 +13182,9 @@ jest-worker@^28.1.1, jest-worker@^28.1.3:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jest@28.1.3:
+jest@28.1.3, jest@^28.1.2:
   version "28.1.3"
-  resolved "https://registry.npmjs.org/jest/-/jest-28.1.3.tgz"
+  resolved "https://registry.yarnpkg.com/jest/-/jest-28.1.3.tgz#e9c6a7eecdebe3548ca2b18894a50f45b36dfc6b"
   integrity sha512-N4GT5on8UkZgH0O5LUavMRV1EDEhNTL0KEfRmDIeZHSV7p2XgLoY9t9VDUgL6o+yfdgYHVxuz81G8oB9VG5uyA==
   dependencies:
     "@jest/core" "^28.1.3"
@@ -14626,11 +14637,6 @@ node-abort-controller@^3.0.1:
   resolved "https://registry.npmjs.org/node-abort-controller/-/node-abort-controller-3.0.1.tgz"
   integrity sha512-/ujIVxthRs+7q6hsdjHMaj8hRG9NuWmwrz+JdRwZ14jdFoKSkm+vDsCbF9PLpnSqjaWQJuTmVtcWHNLr+vrOFw==
 
-node-addon-api@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-2.0.2.tgz"
-  integrity sha512-Ntyt4AIXyaLIuMHF6IOoTakB3K+RWxwtsHNRxllEoA6vPwP9o4866g6YWDLUdnucilZhmkxiHwHr11gAENw+QA==
-
 node-addon-api@^3.0.0, node-addon-api@^3.2.1:
   version "3.2.1"
   resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-3.2.1.tgz"
@@ -14652,11 +14658,6 @@ node-gyp-build-optional-packages@5.0.2:
   version "5.0.2"
   resolved "https://registry.npmjs.org/node-gyp-build-optional-packages/-/node-gyp-build-optional-packages-5.0.2.tgz"
   integrity sha512-PiN4NWmlQPqvbEFcH/omQsswWQbe5Z9YK/zdB23irp5j2XibaA2IrGvpSWmVVG4qMZdmPdwPctSy4a86rOMn6g==
-
-node-gyp-build@^4.2.0:
-  version "4.5.0"
-  resolved "https://registry.npmjs.org/node-gyp-build/-/node-gyp-build-4.5.0.tgz"
-  integrity sha512-2iGbaQBV+ITgCz76ZEjmhUKAKVf7xfY1sRl4UiKQspfZMH2h06SyhNsnSVy50cwkFQDGLyif6m/6uFXHkOZ6rg==
 
 node-gyp-build@^4.2.2, node-gyp-build@^4.3.0:
   version "4.4.0"
@@ -17465,15 +17466,6 @@ schema-utils@^4.0.0:
     ajv-formats "^2.1.1"
     ajv-keywords "^5.0.0"
 
-secp256k1@^4.0.2:
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/secp256k1/-/secp256k1-4.0.3.tgz"
-  integrity sha512-NLZVf+ROMxwtEj3Xa562qgv2BK5e2WNmXPiOdVIPLgs6lyTzMvBq0aWTYMI5XCP9jZMVKOcqZLw/Wc4vDkuxhA==
-  dependencies:
-    elliptic "^6.5.4"
-    node-addon-api "^2.0.0"
-    node-gyp-build "^4.2.0"
-
 secure-compare@3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/secure-compare/-/secure-compare-3.0.1.tgz"
@@ -18080,6 +18072,13 @@ stream-shift@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/stream-shift/-/stream-shift-1.0.1.tgz"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
+
+stream@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/stream/-/stream-0.0.2.tgz#7f5363f057f6592c5595f00bc80a27f5cec1f0ef"
+  integrity sha512-gCq3NDI2P35B2n6t76YJuOp7d6cN/C7Rt0577l91wllh0sY9ZBuw9KaSGqH/b0hzn3CWWJbpbW0W0WvQ1H/Q7g==
+  dependencies:
+    emitter-component "^1.1.1"
 
 streamsearch@^1.1.0:
   version "1.1.0"
@@ -18769,9 +18768,9 @@ ts-dedent@^2.0.0:
   resolved "https://registry.npmjs.org/ts-dedent/-/ts-dedent-2.2.0.tgz"
   integrity sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==
 
-ts-jest@28.0.8, ts-jest@^28.0.0:
+ts-jest@28.0.8, ts-jest@^28.0.0, ts-jest@^28.0.5:
   version "28.0.8"
-  resolved "https://registry.npmjs.org/ts-jest/-/ts-jest-28.0.8.tgz"
+  resolved "https://registry.yarnpkg.com/ts-jest/-/ts-jest-28.0.8.tgz#cd204b8e7a2f78da32cf6c95c9a6165c5b99cc73"
   integrity sha512-5FaG0lXmRPzApix8oFG8RKjAz4ehtm8yMKOTy5HX3fY6W8kmvOrmcY0hKDElW52FJov+clhUbrKAqofnj4mXTg==
   dependencies:
     bs-logger "0.x"
@@ -18804,9 +18803,9 @@ ts-loader@^9.3.1:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-ts-node@10.9.1:
+ts-node@10.9.1, ts-node@^10.8.2:
   version "10.9.1"
-  resolved "https://registry.npmjs.org/ts-node/-/ts-node-10.9.1.tgz"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-10.9.1.tgz#e73de9102958af9e1f0b168a6ff320e25adcff4b"
   integrity sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==
   dependencies:
     "@cspotcode/source-map-support" "^0.8.0"
