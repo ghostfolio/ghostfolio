@@ -2398,10 +2398,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@codewithdan/observable-store@2.2.11":
-  version "2.2.11"
-  resolved "https://registry.npmjs.org/@codewithdan/observable-store/-/observable-store-2.2.11.tgz"
-  integrity sha512-6CfqLJUqV0SwS4yE+9vciqxHUJ6CqIptSXXzFw80MonCDoVJvCJ/xhKfs7VZqJ4jDtEu/7ILvovFtZdLg9fiAg==
+"@codewithdan/observable-store@2.2.15":
+  version "2.2.15"
+  resolved "https://registry.yarnpkg.com/@codewithdan/observable-store/-/observable-store-2.2.15.tgz#6d27e0988e182853def59a714b712f4389e558d2"
+  integrity sha512-LVCSMZzTCvoDo5n7YDmtIIEhTmvJ8O21k36Vwu/A4kumdXQ1YVs4sKoSK3vlINZPL4AYY2MRsBVtvre4QIETFw==
 
 "@colors/colors@1.5.0":
   version "1.5.0"
