@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the execution time of the asset profile data gathering to every Sunday at lunch time
 - Upgraded `bull` from version `4.8.5` to `4.10.2`
+- Upgraded `prisma` from version `4.7.1` to `4.8.0`
 
 ## 1.221.0 - 2022-12-26
 
