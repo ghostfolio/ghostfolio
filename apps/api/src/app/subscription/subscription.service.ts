@@ -1,6 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  PROPERTY_STRIPE_CONFIG
+} from '@ghostfolio/common/config';
+import { Subscription as SubscriptionInterface } from '@ghostfolio/common/interfaces/subscription.interface';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
@@ -70,13 +74,16 @@ export class SubscriptionService {
 
   public async createSubscription({
     duration = '1 year',
+    price,
     userId
   }: {
     duration?: StringValue;
+    price: number;
     userId: string;
   }) {
     await this.prismaService.subscription.create({
       data: {
+        price,
         expiresAt: addMilliseconds(new Date(), ms(duration)),
         User: {
           connect: {
@@ -93,7 +100,21 @@ export class SubscriptionService {
         aCheckoutSessionId
       );
 
-      await this.createSubscription({ userId: session.client_reference_id });
+      let subscriptions: SubscriptionInterface[] = [];
+
+      const stripeConfig = (await this.prismaService.property.findUnique({
+        where: { key: PROPERTY_STRIPE_CONFIG }
+      })) ?? { value: '{}' };
+
+      subscriptions = [JSON.parse(stripeConfig.value)];
+
+      const coupon = subscriptions[0]?.coupon ?? 0;
+      const price = subscriptions[0]?.price ?? 0;
+
+      await this.createSubscription({
+        price: price - coupon,
+        userId: session.client_reference_id
+      });
 
       await this.stripe.customers.update(session.customer as string, {
         description: session.client_reference_id

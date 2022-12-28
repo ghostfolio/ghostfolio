@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the price to the `Subscription` database schema
+
 ### Changed
 
 - Changed the execution time of the asset profile data gathering to every Sunday at lunch time
