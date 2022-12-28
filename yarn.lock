@@ -7984,10 +7984,10 @@ countries-list@2.6.1:
   resolved "https://registry.npmjs.org/countries-list/-/countries-list-2.6.1.tgz"
   integrity sha512-jXM1Nv3U56dPQ1DsUSsEaGmLHburo4fnB7m+1yhWDUVvx5gXCd1ok/y3gXCjXzhqyawG+igcPYcAl4qjkvopaQ==
 
-countup.js@2.0.7:
-  version "2.0.7"
-  resolved "https://registry.npmjs.org/countup.js/-/countup.js-2.0.7.tgz"
-  integrity sha512-FO0nQdvG1iQwHp28wdvkErxnNUSbdkzztqZ6YNHKLHydngD2tdiKEW8dFrqpahF3tj+Ma70h0vyYrCBzxlVWdg==
+countup.js@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/countup.js/-/countup.js-2.3.2.tgz#9a91d95780be1c908d1e6feb548625f353f57988"
+  integrity sha512-dQ7F/CmKGjaO6cDfhtEXwsKVlXIpJ89dFs8PvkaZH9jBVJ2Z8GU4iwG/qP7MgY8qwr+1skbwR6qecWWQLUzB8Q==
 
 cp-file@^7.0.0:
   version "7.0.0"
