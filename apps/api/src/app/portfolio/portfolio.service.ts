@@ -210,16 +210,19 @@ export class PortfolioService {
 
   public async getDividends({
     dateRange,
+    filters,
     groupBy,
     impersonationId
   }: {
     dateRange: DateRange;
+    filters?: Filter[];
     groupBy?: GroupBy;
     impersonationId: string;
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const activities = await this.orderService.getOrders({
+      filters,
       userId,
       types: ['DIVIDEND'],
       userCurrency: this.request.user.Settings.settings.baseCurrency
@@ -248,10 +251,12 @@ export class PortfolioService {
 
   public async getInvestments({
     dateRange,
+    filters,
     groupBy,
     impersonationId
   }: {
     dateRange: DateRange;
+    filters?: Filter[];
     groupBy?: GroupBy;
     impersonationId: string;
   }): Promise<InvestmentItem[]> {
@@ -259,6 +264,7 @@ export class PortfolioService {
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
+        filters,
         userId,
         includeDrafts: true
       });
@@ -343,11 +349,13 @@ export class PortfolioService {
 
   public async getChart({
     dateRange = 'max',
+    filters,
     impersonationId,
     userCurrency,
     userId
   }: {
     dateRange?: DateRange;
+    filters?: Filter[];
     impersonationId: string;
     userCurrency: string;
     userId: string;
@@ -356,6 +364,7 @@ export class PortfolioService {
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
+        filters,
         userId
       });
 
@@ -397,15 +406,15 @@ export class PortfolioService {
   }
 
   public async getDetails({
-    impersonationId,
     dateRange = 'max',
     filters,
+    impersonationId,
     userId,
     withExcludedAccounts = false
   }: {
-    impersonationId: string;
     dateRange?: DateRange;
     filters?: Filter[];
+    impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
@@ -850,14 +859,20 @@ export class PortfolioService {
     }
   }
 
-  public async getPositions(
-    aImpersonationId: string,
-    aDateRange: DateRange = 'max'
-  ): Promise<{ hasErrors: boolean; positions: Position[] }> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+  public async getPositions({
+    dateRange = 'max',
+    filters,
+    impersonationId
+  }: {
+    dateRange?: DateRange;
+    filters?: Filter[];
+    impersonationId: string;
+  }): Promise<{ hasErrors: boolean; positions: Position[] }> {
+    const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
+        filters,
         userId
       });
 
@@ -877,7 +892,7 @@ export class PortfolioService {
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(aDateRange, portfolioStart);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
     const currentPositions = await portfolioCalculator.getCurrentPositions(
       startDate
     );
@@ -928,10 +943,12 @@ export class PortfolioService {
 
   public async getPerformance({
     dateRange = 'max',
+    filters,
     impersonationId,
     userId
   }: {
     dateRange?: DateRange;
+    filters?: Filter[];
     impersonationId: string;
     userId: string;
   }): Promise<PortfolioPerformanceResponse> {
@@ -941,6 +958,7 @@ export class PortfolioService {
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
+        filters,
         userId
       });
 
@@ -996,6 +1014,7 @@ export class PortfolioService {
 
     const historicalDataContainer = await this.getChart({
       dateRange,
+      filters,
       impersonationId,
       userCurrency,
       userId

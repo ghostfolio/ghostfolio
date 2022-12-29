@@ -189,11 +189,21 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'))
   public async getDividends(
     @Headers('impersonation-id') impersonationId: string,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('groupBy') groupBy?: GroupBy,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('groupBy') groupBy?: GroupBy
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioDividends> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    });
+
     let dividends = await this.portfolioService.getDividends({
       dateRange,
+      filters,
       groupBy,
       impersonationId
     });
@@ -229,11 +239,21 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'))
   public async getInvestments(
     @Headers('impersonation-id') impersonationId: string,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('groupBy') groupBy?: GroupBy,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('groupBy') groupBy?: GroupBy
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioInvestments> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    });
+
     let investments = await this.portfolioService.getInvestments({
       dateRange,
+      filters,
       groupBy,
       impersonationId
     });
@@ -271,10 +291,20 @@ export class PortfolioController {
   @Version('2')
   public async getPerformanceV2(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') dateRange: DateRange = 'max'
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('range') dateRange: DateRange = 'max',
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioPerformanceResponse> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    });
+
     const performanceInformation = await this.portfolioService.getPerformance({
       dateRange,
+      filters,
       impersonationId,
       userId: this.request.user.id
     });
@@ -329,12 +359,22 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
     @Headers('impersonation-id') impersonationId: string,
-    @Query('range') dateRange: DateRange = 'max'
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('range') dateRange: DateRange = 'max',
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioPositions> {
-    const result = await this.portfolioService.getPositions(
-      impersonationId,
-      dateRange
-    );
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    });
+
+    const result = await this.portfolioService.getPositions({
+      dateRange,
+      filters,
+      impersonationId
+    });
 
     if (
       impersonationId ||

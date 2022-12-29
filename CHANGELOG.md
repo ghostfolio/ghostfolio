@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for filtering on the analysis page
 - Added the price to the `Subscription` database schema
 
 ### Changed

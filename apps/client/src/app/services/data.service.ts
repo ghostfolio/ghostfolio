@@ -102,14 +102,20 @@ export class DataService {
   }
 
   public fetchDividends({
+    filters,
     groupBy = 'month',
     range
   }: {
+    filters?: Filter[];
     groupBy?: GroupBy;
     range: DateRange;
   }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('groupBy', groupBy);
+    params = params.append('range', range);
+
     return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
-      params: { groupBy, range }
+      params
     });
   }
 
@@ -191,15 +197,21 @@ export class DataService {
   }
 
   public fetchInvestments({
+    filters,
     groupBy = 'month',
     range
   }: {
+    filters?: Filter[];
     groupBy?: GroupBy;
     range: DateRange;
   }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('groupBy', groupBy);
+    params = params.append('range', range);
+
     return this.http.get<PortfolioInvestments>(
       '/api/v1/portfolio/investments',
-      { params: { groupBy, range } }
+      { params }
     );
   }
 
@@ -224,12 +236,17 @@ export class DataService {
   }
 
   public fetchPositions({
+    filters,
     range
   }: {
+    filters?: Filter[];
     range: DateRange;
   }): Observable<PortfolioPositions> {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('range', range);
+
     return this.http.get<PortfolioPositions>('/api/v1/portfolio/positions', {
-      params: { range }
+      params
     });
   }
 
@@ -284,12 +301,19 @@ export class DataService {
   }
 
   public fetchPortfolioPerformance({
+    filters,
     range
   }: {
+    filters?: Filter[];
     range: DateRange;
   }): Observable<PortfolioPerformanceResponse> {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('range', range);
+
     return this.http
-      .get<any>(`/api/v2/portfolio/performance`, { params: { range } })
+      .get<any>(`/api/v2/portfolio/performance`, {
+        params
+      })
       .pipe(
         map((response) => {
           if (response.firstOrderDate) {
