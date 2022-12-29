@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded the _Internet Identity_ dependencies from version `0.12.1` to `0.15.1`
 - Upgraded `prisma` from version `4.7.1` to `4.8.0`
 
+### Fixed
+
+- Fixed the language localization of the account type
+
 ## 1.221.0 - 2022-12-26
 
 ### Added
