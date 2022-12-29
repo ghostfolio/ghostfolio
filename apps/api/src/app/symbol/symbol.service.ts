@@ -1,13 +1,17 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import {
+  HistoricalDataItem,
+  ImportResponse
+} from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
-import { format, subDays } from 'date-fns';
+import { format, subDays, subYears } from 'date-fns';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
@@ -16,7 +20,8 @@ import { SymbolItem } from './interfaces/symbol-item.interface';
 export class SymbolService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService
+    private readonly marketDataService: MarketDataService,
+    private readonly yahooFinanceService: YahooFinanceService
   ) {}
 
   public async get({
@@ -60,6 +65,47 @@ export class SymbolService {
     }
 
     return undefined;
+  }
+
+  public async getDividends({
+    dataSource,
+    symbol
+  }: IDataGatheringItem): Promise<ImportResponse> {
+    const date = new Date();
+
+    // TODO: Use DataProviderService
+    const historicalData = await this.yahooFinanceService.getDividends(
+      symbol,
+      'day',
+      subYears(date, 5),
+      date
+    );
+
+    return {
+      activities: Object.entries(historicalData[symbol]).map(
+        ([dateString, historicalDataItem]) => {
+          return {
+            accountId: undefined,
+            accountUserId: undefined,
+            comment: undefined,
+            createdAt: undefined,
+            date: parseDate(dateString),
+            fee: 0,
+            feeInBaseCurrency: 0,
+            id: undefined,
+            isDraft: false,
+            quantity: 0,
+            symbolProfileId: undefined,
+            type: 'DIVIDEND',
+            unitPrice: historicalDataItem.marketPrice,
+            updatedAt: undefined,
+            userId: undefined,
+            value: 0,
+            valueInBaseCurrency: 0
+          };
+        }
+      )
+    };
   }
 
   public async getForDate({

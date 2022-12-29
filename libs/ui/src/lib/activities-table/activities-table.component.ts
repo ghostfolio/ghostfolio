@@ -51,6 +51,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() export = new EventEmitter<string[]>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
+  @Output() importDividends = new EventEmitter<UniqueAsset>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -231,6 +232,10 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
   public onImport() {
     this.import.emit();
+  }
+
+  public onImportDividends({ dataSource, symbol }: UniqueAsset) {
+    this.importDividends.emit({ dataSource, symbol });
   }
 
   public onOpenComment(aComment: string) {

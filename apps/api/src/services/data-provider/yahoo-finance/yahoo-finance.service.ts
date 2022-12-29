@@ -160,6 +160,72 @@ export class YahooFinanceService implements DataProviderInterface {
     return response;
   }
 
+  public async getDividends(
+    aSymbol: string,
+    aGranularity: Granularity = 'day',
+    from: Date,
+    to: Date
+  ): Promise<{
+    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+  }> {
+    // TODO: Call getHistorical()
+
+    if (isSameDay(from, to)) {
+      to = addDays(to, 1);
+    }
+
+    const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(aSymbol);
+
+    try {
+      const historicalResult = await yahooFinance.historical(
+        yahooFinanceSymbol,
+        {
+          events: 'dividends',
+          interval: '1d',
+          period1: format(from, DATE_FORMAT),
+          period2: format(to, DATE_FORMAT)
+        }
+      );
+
+      const response: {
+        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      } = {};
+
+      // Convert symbol back
+      const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
+
+      response[symbol] = {};
+
+      for (const historicalItem of historicalResult) {
+        let marketPrice = historicalItem.dividends;
+
+        if (symbol === `${this.baseCurrency}GBp`) {
+          // Convert GPB to GBp (pence)
+          marketPrice = new Big(marketPrice).mul(100).toNumber();
+        } else if (symbol === `${this.baseCurrency}ILA`) {
+          // Convert ILS to ILA
+          marketPrice = new Big(marketPrice).mul(100).toNumber();
+        } else if (symbol === `${this.baseCurrency}ZAc`) {
+          // Convert ZAR to ZAc (cents)
+          marketPrice = new Big(marketPrice).mul(100).toNumber();
+        }
+
+        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
+          marketPrice
+        };
+      }
+
+      return response;
+    } catch (error) {
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
+    }
+  }
+
   public async getHistorical(
     aSymbol: string,
     aGranularity: Granularity = 'day',

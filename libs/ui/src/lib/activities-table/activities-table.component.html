@@ -437,6 +437,18 @@
             <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
             <span i18n>Export Draft as ICS</span>
           </button>
+          <button
+            mat-menu-item
+            (click)="
+              onImportDividends({
+                dataSource: element.SymbolProfile.dataSource,
+                symbol: element.SymbolProfile.symbol
+              })
+            "
+          >
+            <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+            <span i18n>Import Dividend</span>
+          </button>
           <button mat-menu-item (click)="onDeleteActivity(element.id)">
             <ion-icon class="mr-2" name="trash-outline"></ion-icon>
             <span i18n>Delete</span>

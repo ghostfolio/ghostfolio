@@ -1,6 +1,7 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { ImportResponse } from '@ghostfolio/common/interfaces';
 import {
   Controller,
   Get,
@@ -63,6 +64,27 @@ export class SymbolController {
     const result = await this.symbolService.get({
       includeHistoricalData,
       dataGatheringItem: { dataSource, symbol }
+    });
+
+    if (!result || isEmpty(result)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return result;
+  }
+
+  @Get(':dataSource/:symbol/dividends')
+  @UseGuards(AuthGuard('jwt'))
+  public async gatherDividends(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<ImportResponse> {
+    const result = await this.symbolService.getDividends({
+      dataSource,
+      symbol
     });
 
     if (!result || isEmpty(result)) {
