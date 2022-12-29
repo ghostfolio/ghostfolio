@@ -8,6 +8,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  Filter,
   HistoricalDataItem,
   Position,
   User
@@ -15,12 +16,13 @@ import {
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
-import { DataSource, SymbolProfile } from '@prisma/client';
+import { translate } from '@ghostfolio/ui/i18n';
+import { AssetClass, DataSource, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -29,6 +31,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  public activeFilters: Filter[] = [];
+  public allFilters: Filter[];
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: Position[];
@@ -37,6 +41,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public dividendsByMonth: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
+  public filters$ = new Subject<Filter[]>();
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
@@ -50,6 +55,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   ];
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
+  public placeholder = '';
   public portfolioEvolutionDataLabel = $localize`Deposit`;
   public top3: Position[];
   public user: User;
@@ -95,11 +101,62 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!aId;
       });
 
+    this.filters$
+      .pipe(
+        distinctUntilChanged(),
+        map((filters) => {
+          this.activeFilters = filters;
+          this.placeholder =
+            this.activeFilters.length <= 0
+              ? $localize`Filter by account or tag...`
+              : '';
+
+          this.update();
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(() => {});
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          const accountFilters: Filter[] = this.user.accounts
+            .filter(({ accountType }) => {
+              return accountType === 'SECURITIES';
+            })
+            .map(({ id, name }) => {
+              return {
+                id,
+                label: name,
+                type: 'ACCOUNT'
+              };
+            });
+
+          const assetClassFilters: Filter[] = [];
+          for (const assetClass of Object.keys(AssetClass)) {
+            assetClassFilters.push({
+              id: assetClass,
+              label: translate(assetClass),
+              type: 'ASSET_CLASS'
+            });
+          }
+
+          const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
+            return {
+              id,
+              label: name,
+              type: 'TAG'
+            };
+          });
+
+          this.allFilters = [
+            ...accountFilters,
+            ...assetClassFilters,
+            ...tagFilters
+          ];
 
           this.update();
         }
@@ -198,6 +255,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
+        filters: this.activeFilters,
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -235,6 +293,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchDividends({
+        filters: this.activeFilters,
         groupBy: 'month',
         range: this.user?.settings?.dateRange
       })
@@ -247,6 +306,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchInvestments({
+        filters: this.activeFilters,
         groupBy: 'month',
         range: this.user?.settings?.dateRange
       })
@@ -258,7 +318,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchPositions({ range: this.user?.settings?.dateRange })
+      .fetchPositions({
+        filters: this.activeFilters,
+        range: this.user?.settings?.dateRange
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ positions }) => {
         const positionsSorted = sortBy(

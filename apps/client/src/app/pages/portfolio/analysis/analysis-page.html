@@ -8,6 +8,12 @@
       (change)="onChangeDateRange($event.value)"
     ></gf-toggle>
   </div>
+  <gf-activities-filter
+    [allFilters]="allFilters"
+    [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
+    [placeholder]="placeholder"
+    (valueChanged)="filters$.next($event)"
+  ></gf-activities-filter>
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator
