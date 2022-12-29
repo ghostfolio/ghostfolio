@@ -6,6 +6,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
+import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -42,7 +43,7 @@ export class ImportService {
       }
     }
 
-    await this.validateActivities({
+    const assetProfiles = await this.validateActivities({
       activitiesDto,
       maxActivitiesToImport,
       userId
@@ -104,7 +105,8 @@ export class ImportService {
             sectors: null,
             symbolMapping: null,
             updatedAt: undefined,
-            url: null
+            url: null,
+            ...assetProfiles[symbol]
           },
           symbolProfileId: undefined,
           updatedAt: new Date()
@@ -172,6 +174,9 @@ export class ImportService {
       throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
     }
 
+    const assetProfiles: {
+      [symbol: string]: Partial<SymbolProfile>;
+    } = {};
     const existingActivities = await this.orderService.orders({
       include: { SymbolProfile: true },
       orderBy: { date: 'desc' },
@@ -200,22 +205,28 @@ export class ImportService {
       }
 
       if (dataSource !== 'MANUAL') {
-        const quotes = await this.dataProviderService.getQuotes([
-          { dataSource, symbol }
-        ]);
+        const assetProfile = (
+          await this.dataProviderService.getAssetProfiles([
+            { dataSource, symbol }
+          ])
+        )?.[symbol];
 
-        if (quotes[symbol] === undefined) {
+        if (assetProfile === undefined) {
           throw new Error(
             `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
         }
 
-        if (quotes[symbol].currency !== currency) {
+        if (assetProfile.currency !== currency) {
           throw new Error(
-            `activities.${index}.currency ("${currency}") does not match with "${quotes[symbol].currency}"`
+            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}"`
           );
         }
+
+        assetProfiles[symbol] = assetProfile;
       }
     }
+
+    return assetProfiles;
   }
 }

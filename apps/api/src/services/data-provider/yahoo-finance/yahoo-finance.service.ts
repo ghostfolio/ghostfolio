@@ -154,11 +154,7 @@ export class YahooFinanceService implements DataProviderInterface {
         response.url = url;
       }
     } catch (error) {
-      throw new Error(
-        `Could not get asset profile for ${aSymbol} (${this.getName()}): [${
-          error.name
-        }] ${error.message}`
-      );
+      Logger.error(error, 'YahooFinanceService');
     }
 
     return response;
