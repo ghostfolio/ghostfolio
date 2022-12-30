@@ -51,7 +51,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public isLoadingInvestmentChart: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
-    { label: $localize`Monthly`, value: 'month' }
+    { label: $localize`Monthly`, value: 'month' },
+    { label: $localize`Yearly`, value: 'year' }
   ];
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
