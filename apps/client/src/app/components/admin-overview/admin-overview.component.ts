@@ -97,7 +97,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public onAddCoupon() {
     const coupons = [
       ...this.coupons,
-      { code: this.generateCouponCode(16), duration: this.couponDuration }
+      {
+        code: `GF${this.generateCouponCode(14)}`,
+        duration: this.couponDuration
+      }
     ];
     this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
   }
