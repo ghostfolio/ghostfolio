@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a prefix to the codes of the coupon system
 
+### Changed
+
+- Optimized the page titles in the header for mobile
+
 ## 1.222.0 - 2022-12-29
 
 ### Added
