@@ -4,6 +4,7 @@ import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
+  ghostfolioPrefix,
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
@@ -98,7 +99,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     const coupons = [
       ...this.coupons,
       {
-        code: `GF${this.generateCouponCode(14)}`,
+        code: `${ghostfolioPrefix}${this.generateCouponCode(14)}`,
         duration: this.couponDuration
       }
     ];
