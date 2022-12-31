@@ -30,6 +30,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
 export class HeaderComponent implements OnChanges {
   @Input() currentRoute: string;
   @Input() info: InfoItem;
+  @Input() pageTitle: string;
   @Input() user: User;
 
   @Output() signOut = new EventEmitter<void>();

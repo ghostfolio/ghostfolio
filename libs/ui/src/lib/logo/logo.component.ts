@@ -15,6 +15,7 @@ import {
 export class LogoComponent implements OnInit {
   @HostBinding('class') @Input() size: 'large' | 'medium' = 'medium';
   @Input() hideName = false;
+  @Input() name: string;
 
   public constructor() {}
 
