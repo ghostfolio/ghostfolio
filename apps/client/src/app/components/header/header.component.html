@@ -5,7 +5,7 @@
       mat-button
       [routerLink]="['/']"
     >
-      <gf-logo></gf-logo>
+      <gf-logo [label]="pageTitle"></gf-logo>
     </a>
     <span class="spacer"></span>
     <a
@@ -231,7 +231,10 @@
       mat-button
       [routerLink]="['/']"
     >
-      <gf-logo [hideName]="currentRoute === 'register'"></gf-logo>
+      <gf-logo
+        [label]="pageTitle"
+        [showLabel]="currentRoute !== 'register'"
+      ></gf-logo>
     </a>
     <span class="spacer"></span>
     <a

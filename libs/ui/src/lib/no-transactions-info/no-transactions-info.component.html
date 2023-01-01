@@ -1,13 +1,13 @@
 <div class="p-3">
   <div class="d-flex justify-content-center mb-1">
-    <gf-logo size="large" [hideName]="true"></gf-logo>
+    <gf-logo size="large" [showLabel]="false"></gf-logo>
   </div>
   <a
     class="align-items-center justify-content-center"
     color="primary"
-    [routerLink]="['/portfolio', 'activities']"
-    [queryParams]="{ createDialog: true }"
     mat-button
+    [queryParams]="{ createDialog: true }"
+    [routerLink]="['/portfolio', 'activities']"
   >
     <span i18n>Time to add your first activity.</span>
   </a>

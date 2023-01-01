@@ -2,8 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
-  Input,
-  OnInit
+  Input
 } from '@angular/core';
 
 @Component({
@@ -12,13 +11,10 @@ import {
   templateUrl: './logo.component.html',
   styleUrls: ['./logo.component.scss']
 })
-export class LogoComponent implements OnInit {
+export class LogoComponent {
   @HostBinding('class') @Input() size: 'large' | 'medium' = 'medium';
-  @Input() hideName = false;
+  @Input() label: string;
+  @Input() showLabel = true;
 
   public constructor() {}
-
-  public ngOnInit() {
-    this.hideName = this.hideName ?? false;
-  }
 }

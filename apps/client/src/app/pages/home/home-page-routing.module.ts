@@ -13,14 +13,28 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: HomeOverviewComponent },
-      { path: 'holdings', component: HomeHoldingsComponent },
-      { path: 'summary', component: HomeSummaryComponent },
-      { path: 'market', component: HomeMarketComponent }
+      {
+        path: 'overview',
+        component: HomeOverviewComponent
+      },
+      {
+        path: 'holdings',
+        component: HomeHoldingsComponent,
+        title: $localize`Holdings`
+      },
+      {
+        path: 'summary',
+        component: HomeSummaryComponent,
+        title: $localize`Summary`
+      },
+      {
+        path: 'market',
+        component: HomeMarketComponent,
+        title: $localize`Markets`
+      }
     ],
     component: HomePageComponent,
-    path: '',
-    title: $localize`Overview`
+    path: ''
   }
 ];
 

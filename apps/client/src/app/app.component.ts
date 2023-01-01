@@ -5,7 +5,13 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  PRIMARY_OUTLET,
+  Router
+} from '@angular/router';
 import {
   primaryColorHex,
   secondaryColorHex,
@@ -36,6 +42,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public currentYear = new Date().getFullYear();
   public deviceType: string;
   public info: InfoItem;
+  public pageTitle: string;
   public user: User;
   public version = environment.version;
 
@@ -47,6 +54,7 @@ export class AppComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private materialCssVarsService: MaterialCssVarsService,
     private router: Router,
+    private title: Title,
     private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
@@ -66,6 +74,19 @@ export class AppComponent implements OnDestroy, OnInit {
         this.currentRoute = urlSegments[0].path;
 
         this.info = this.dataService.fetchInfo();
+
+        if (this.deviceType === 'mobile') {
+          setTimeout(() => {
+            const index = this.title.getTitle().indexOf('–');
+            const title =
+              index === -1
+                ? ''
+                : this.title.getTitle().substring(0, index).trim();
+            this.pageTitle = title.length <= 15 ? title : 'Ghostfolio';
+
+            this.changeDetectorRef.markForCheck();
+          });
+        }
       });
 
     this.userService.stateChanged
