@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a student discount to the pricing page
 - Added a prefix to the codes of the coupon system
 
 ## 1.222.0 - 2022-12-29
