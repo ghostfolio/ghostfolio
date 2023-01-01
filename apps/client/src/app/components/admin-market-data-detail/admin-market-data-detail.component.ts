@@ -20,7 +20,6 @@ import {
   addDays,
   format,
   isBefore,
-  isDate,
   isSameDay,
   isToday,
   isValid,
@@ -31,6 +30,7 @@ import { last } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
+import { MarketDataDetailDialogParams } from './market-data-detail-dialog/interfaces/interfaces';
 import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-detail-dialog.component';
 
 @Component({
@@ -40,6 +40,7 @@ import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-
   templateUrl: './admin-market-data-detail.component.html'
 })
 export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
+  @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
   @Input() locale = getLocale();
@@ -161,9 +162,10 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     }
 
     const dialogRef = this.dialog.open(MarketDataDetailDialog, {
-      data: {
+      data: <MarketDataDetailDialogParams>{
         date,
         marketPrice,
+        currency: this.currency,
         dataSource: this.dataSource,
         symbol: this.symbol,
         user: this.user

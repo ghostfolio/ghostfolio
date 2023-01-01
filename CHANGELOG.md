@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Optimized the page titles in the header for mobile
+- Extended the asset profile details dialog in the admin control panel
 
 ## 1.222.0 - 2022-12-29
 
