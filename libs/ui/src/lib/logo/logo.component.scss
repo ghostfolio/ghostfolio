@@ -1,11 +1,11 @@
 :host {
+  .label {
+    font-weight: 600;
+  }
+
   .logo {
     background-color: rgba(var(--dark-primary-text));
     mask: url('/assets/ghost.svg') no-repeat center;
-  }
-
-  .name {
-    font-weight: 600;
   }
 }
 
@@ -16,23 +16,23 @@
 }
 
 :host-context(.large) {
+  .label {
+    font-size: 3rem;
+  }
+
   .logo {
     height: 2.5rem;
     width: 2.5rem;
   }
-
-  .name {
-    font-size: 3rem;
-  }
 }
 
 :host-context(.medium) {
+  .label {
+    font-size: 1.5rem;
+  }
+
   .logo {
     height: 1.5rem;
     width: 1.5rem;
-  }
-
-  .name {
-    font-size: 1.5rem;
   }
 }
