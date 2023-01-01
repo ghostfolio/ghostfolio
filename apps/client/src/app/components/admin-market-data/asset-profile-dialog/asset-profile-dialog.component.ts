@@ -14,6 +14,7 @@ import {
   EnhancedSymbolProfile,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 import { MarketData } from '@prisma/client';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -28,11 +29,13 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   styleUrls: ['./asset-profile-dialog.component.scss']
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
+  public assetClass: string;
   public assetProfile: EnhancedSymbolProfile;
   public assetProfileForm = this.formBuilder.group({
     comment: '',
     symbolMapping: ''
   });
+  public assetSubClass: string;
   public countries: {
     [code: string]: { name: string; value: number };
   };
@@ -64,6 +67,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
+
+        this.assetClass = translate(this.assetProfile?.assetClass);
+        this.assetSubClass = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
         this.marketDataDetails = marketData;
         this.sectors = {};
