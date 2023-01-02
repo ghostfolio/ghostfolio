@@ -66,7 +66,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public chart: Chart;
+  public chart: Chart<'line'>;
   public isLoading = true;
 
   private readonly ANIMATION_DURATION = 1200;

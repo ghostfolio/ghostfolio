@@ -57,7 +57,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public chart: Chart<any>;
+  public chart: Chart<'line'>;
 
   public constructor() {
     Chart.register(
