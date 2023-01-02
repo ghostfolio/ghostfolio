@@ -202,6 +202,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
+    this.update();
   }
 
   public ngOnDestroy() {
@@ -308,7 +309,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchInvestments({
         filters: this.activeFilters,
-        groupBy: 'month',
+        groupBy: this.mode,
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))

@@ -282,26 +282,31 @@ export class PortfolioService {
 
     let investments: InvestmentItem[];
 
-    if (groupBy === 'month') {
-      investments = portfolioCalculator.getInvestmentsByMonth().map((item) => {
-        return {
-          date: item.date,
-          investment: item.investment.toNumber()
-        };
-      });
+    if (groupBy) {
+      investments = portfolioCalculator
+        .getInvestmentsByGroup(groupBy)
+        .map((item) => {
+          return {
+            date: item.date,
+            investment: item.investment.toNumber()
+          };
+        });
 
-      // Add investment of current month
-      const dateOfCurrentMonth = format(
-        set(new Date(), { date: 1 }),
+      // Add investment of current group
+      const dateOfCurrentGroup = format(
+        set(
+          new Date(),
+          groupBy === 'month' ? { date: 1 } : { date: 1, month: 1 }
+        ),
         DATE_FORMAT
       );
-      const investmentOfCurrentMonth = investments.filter(({ date }) => {
-        return date === dateOfCurrentMonth;
+      const investmentOfCurrentGroup = investments.filter(({ date }) => {
+        return date === dateOfCurrentGroup;
       });
 
-      if (investmentOfCurrentMonth.length <= 0) {
+      if (investmentOfCurrentGroup.length <= 0) {
         investments.push({
-          date: dateOfCurrentMonth,
+          date: dateOfCurrentGroup,
           investment: 0
         });
       }

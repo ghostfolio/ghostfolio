@@ -1,1 +1,1 @@
-export type GroupBy = 'month';
+export type GroupBy = 'month' | 'year';
