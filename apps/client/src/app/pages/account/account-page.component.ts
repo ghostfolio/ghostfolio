@@ -55,7 +55,17 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public language = document.documentElement.lang;
-  public locales = ['de', 'de-CH', 'en-GB', 'en-US', 'es', 'it', 'nl', 'pt'];
+  public locales = [
+    'de',
+    'de-CH',
+    'en-GB',
+    'en-US',
+    'es',
+    'fr',
+    'it',
+    'nl',
+    'pt'
+  ];
   public price: number;
   public priceId: string;
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
