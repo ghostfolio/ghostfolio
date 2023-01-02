@@ -202,12 +202,40 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
-    this.update();
+    this.fetchDividendsAndInvestments();
   }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchDividendsAndInvestments() {
+    this.dataService
+      .fetchDividends({
+        filters: this.activeFilters,
+        groupBy: this.mode,
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ dividends }) => {
+        this.dividendsByMonth = dividends;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
+      .fetchInvestments({
+        filters: this.activeFilters,
+        groupBy: this.mode,
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ investments }) => {
+        this.investmentsByMonth = investments;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private openPositionDialog({
@@ -294,32 +322,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchDividends({
-        filters: this.activeFilters,
-        groupBy: this.mode,
-        range: this.user?.settings?.dateRange
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ dividends }) => {
-        this.dividendsByMonth = dividends;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchInvestments({
-        filters: this.activeFilters,
-        groupBy: this.mode,
-        range: this.user?.settings?.dateRange
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ investments }) => {
-        this.investmentsByMonth = investments;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
       .fetchPositions({
         filters: this.activeFilters,
         range: this.user?.settings?.dateRange
@@ -342,6 +344,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
+    this.fetchDividendsAndInvestments();
     this.changeDetectorRef.markForCheck();
   }
 
