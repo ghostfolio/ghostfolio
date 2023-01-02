@@ -294,10 +294,10 @@ export class PortfolioService {
 
       // Add investment of current group
       const dateOfCurrentGroup = format(
-        set(
-          new Date(),
-          groupBy === 'month' ? { date: 1 } : { date: 1, month: 1 }
-        ),
+        set(new Date(), {
+          date: 1,
+          month: groupBy === 'year' ? 0 : new Date().getMonth()
+        }),
         DATE_FORMAT
       );
       const investmentOfCurrentGroup = investments.filter(({ date }) => {
@@ -1296,10 +1296,10 @@ export class PortfolioService {
         if (currentDate) {
           dividends.push({
             date: format(
-              set(
-                currentDate,
-                groupBy === 'month' ? { date: 1 } : { date: 1, month: 1 }
-              ),
+              set(currentDate, {
+                date: 1,
+                month: groupBy === 'year' ? 0 : currentDate.getMonth()
+              }),
               DATE_FORMAT
             ),
             investment: investmentByGroup
@@ -1314,10 +1314,10 @@ export class PortfolioService {
         // Store current month (latest order)
         dividends.push({
           date: format(
-            set(
-              currentDate,
-              groupBy === 'month' ? { date: 1 } : { date: 1, month: 1 }
-            ),
+            set(currentDate, {
+              date: 1,
+              month: groupBy === 'year' ? 0 : currentDate.getMonth()
+            }),
             DATE_FORMAT
           ),
           investment: investmentByGroup

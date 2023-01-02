@@ -505,7 +505,13 @@ export class PortfolioCalculator {
 
         if (currentDate) {
           investments.push({
-            date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
+            date: format(
+              set(currentDate, {
+                date: 1,
+                month: groupBy === 'year' ? 0 : currentDate.getMonth()
+              }),
+              DATE_FORMAT
+            ),
             investment: investmentByGroup
           });
         }
@@ -520,10 +526,10 @@ export class PortfolioCalculator {
         // Store current group (latest order)
         investments.push({
           date: format(
-            set(
-              currentDate,
-              groupBy === 'month' ? { date: 1 } : { date: 1, month: 1 }
-            ),
+            set(currentDate, {
+              date: 1,
+              month: groupBy === 'year' ? 0 : currentDate.getMonth()
+            }),
             DATE_FORMAT
           ),
           investment: investmentByGroup
