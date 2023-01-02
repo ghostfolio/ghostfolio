@@ -217,6 +217,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
+      // TODO: Log error and return empty response
       throw new Error(
         `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
           from,

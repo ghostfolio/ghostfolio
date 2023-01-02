@@ -234,8 +234,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.import.emit();
   }
 
-  public onImportDividends({ dataSource, symbol }: UniqueAsset) {
-    this.importDividends.emit({ dataSource, symbol });
+  public onImportDividends() {
+    this.importDividends.emit();
   }
 
   public onOpenComment(aComment: string) {
@@ -277,13 +277,18 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       };
     }
 
-    fieldValueMap[activity.SymbolProfile.currency] = {
-      id: activity.SymbolProfile.currency,
-      label: activity.SymbolProfile.currency,
-      type: 'TAG'
-    };
+    if (activity.SymbolProfile?.currency) {
+      fieldValueMap[activity.SymbolProfile.currency] = {
+        id: activity.SymbolProfile.currency,
+        label: activity.SymbolProfile.currency,
+        type: 'TAG'
+      };
+    }
 
-    if (!isUUID(activity.SymbolProfile.symbol)) {
+    if (
+      activity.SymbolProfile?.symbol &&
+      !isUUID(activity.SymbolProfile.symbol)
+    ) {
       fieldValueMap[activity.SymbolProfile.symbol] = {
         id: activity.SymbolProfile.symbol,
         label: activity.SymbolProfile.symbol,

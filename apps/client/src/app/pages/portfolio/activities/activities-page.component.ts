@@ -198,12 +198,21 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onImportDividends({ dataSource, symbol }: UniqueAsset) {
-    this.dataService
-      .fetchDividendsImport({ dataSource, symbol })
+  public onImportDividends() {
+    const dialogRef = this.dialog.open(ImportActivitiesDialog, {
+      data: <ImportActivitiesDialogParams>{
+        activityTypes: ['DIVIDEND'],
+        deviceType: this.deviceType,
+        user: this.user
+      },
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ activities }) => {
-        console.log(activities);
+      .subscribe(() => {
+        this.fetchActivities();
       });
   }
 

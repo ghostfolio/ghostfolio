@@ -2,6 +2,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration.modu
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { SymbolController } from './symbol.controller';
@@ -14,7 +15,8 @@ import { SymbolService } from './symbol.service';
     ConfigurationModule,
     DataProviderModule,
     MarketDataModule,
-    PrismaModule
+    PrismaModule,
+    SymbolProfileModule
   ],
   providers: [SymbolService]
 })

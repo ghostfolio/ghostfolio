@@ -78,6 +78,8 @@ export class SymbolController {
 
   @Get(':dataSource/:symbol/dividends')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async gatherDividends(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string

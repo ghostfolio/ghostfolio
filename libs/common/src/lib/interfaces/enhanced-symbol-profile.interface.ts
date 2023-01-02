@@ -8,7 +8,7 @@ export interface EnhancedSymbolProfile {
   activitiesCount: number;
   assetClass: AssetClass;
   assetSubClass: AssetSubClass;
-  comment?: string;
+  comment: string | null;
   countries: Country[];
   createdAt: Date;
   currency: string | null;

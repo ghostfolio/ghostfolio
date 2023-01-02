@@ -5,12 +5,14 @@ import {
   IDataProviderHistoricalResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   HistoricalDataItem,
   ImportResponse
 } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
+import { SymbolProfile } from '@prisma/client';
 import { format, subDays, subYears } from 'date-fns';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
@@ -21,6 +23,7 @@ export class SymbolService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
+    private readonly symbolProfileService: SymbolProfileService,
     private readonly yahooFinanceService: YahooFinanceService
   ) {}
 
@@ -71,41 +74,54 @@ export class SymbolService {
     dataSource,
     symbol
   }: IDataGatheringItem): Promise<ImportResponse> {
-    const date = new Date();
+    try {
+      const date = new Date();
 
-    // TODO: Use DataProviderService
-    const historicalData = await this.yahooFinanceService.getDividends(
-      symbol,
-      'day',
-      subYears(date, 5),
-      date
-    );
+      const [[assetProfile], historicalData] = await Promise.all([
+        this.symbolProfileService.getSymbolProfiles([
+          {
+            dataSource,
+            symbol
+          }
+        ]),
+        // TODO: Use DataProviderService
+        this.yahooFinanceService.getDividends(
+          symbol,
+          'day',
+          subYears(date, 5),
+          date
+        )
+      ]);
 
-    return {
-      activities: Object.entries(historicalData[symbol]).map(
-        ([dateString, historicalDataItem]) => {
-          return {
-            accountId: undefined,
-            accountUserId: undefined,
-            comment: undefined,
-            createdAt: undefined,
-            date: parseDate(dateString),
-            fee: 0,
-            feeInBaseCurrency: 0,
-            id: undefined,
-            isDraft: false,
-            quantity: 0,
-            symbolProfileId: undefined,
-            type: 'DIVIDEND',
-            unitPrice: historicalDataItem.marketPrice,
-            updatedAt: undefined,
-            userId: undefined,
-            value: 0,
-            valueInBaseCurrency: 0
-          };
-        }
-      )
-    };
+      return {
+        activities: Object.entries(historicalData[symbol]).map(
+          ([dateString, historicalDataItem]) => {
+            return {
+              accountId: undefined,
+              accountUserId: undefined,
+              comment: undefined,
+              createdAt: undefined,
+              date: parseDate(dateString),
+              fee: 0,
+              feeInBaseCurrency: 0,
+              id: assetProfile.id,
+              isDraft: false,
+              quantity: 0,
+              SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
+              symbolProfileId: undefined,
+              type: 'DIVIDEND',
+              unitPrice: historicalDataItem.marketPrice,
+              updatedAt: undefined,
+              userId: undefined,
+              value: 0,
+              valueInBaseCurrency: 0
+            };
+          }
+        )
+      };
+    } catch {
+      return { activities: [] };
+    }
   }
 
   public async getForDate({
