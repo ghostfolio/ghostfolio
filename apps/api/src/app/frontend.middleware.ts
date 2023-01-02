@@ -131,12 +131,12 @@ export class FrontendMiddleware implements NestMiddleware {
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
-    } else if (req.path === '/pt' || req.path.startsWith('/pt/')) {
-      res.send(
+    } else if (request.path === '/pt' || request.path.startsWith('/pt/')) {
+      response.send(
         this.interpolate(this.indexHtmlPt, {
           featureGraphicPath,
           languageCode: 'pt',
-          path: req.path,
+          path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
