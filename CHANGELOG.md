@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up the language localization for Français (`fr`)
 - Set up the language localization for Português (`pt`)
 
+### Changed
+
+- Improved the language localization for Dutch (`nl`)
+
 ## 1.223.0 - 2023-01-01
 
 ### Added
