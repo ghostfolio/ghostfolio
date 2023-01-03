@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="8280212421112607879" datatype="html">
         <source>Do you really want to delete this account?</source>
-        <target state="translated">Wilt u deze account echt verwijderen?</target>
+        <target state="translated">Wilt u dit account echt verwijderen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.ts</context>
           <context context-type="linenumber">81</context>
@@ -1871,7 +1871,7 @@
       </trans-unit>
       <trans-unit id="9bca420227979312de74f0a932a003437410b1ab" datatype="html">
         <source>Item</source>
-        <target state="new">ITEM</target>
+        <target state="translated">Item</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">16,18</context>
@@ -2607,7 +2607,7 @@
       </trans-unit>
       <trans-unit id="ac598d664f86ba5783915d65f2664a7f38a9d23a" datatype="html">
         <source>Account Type</source>
-        <target state="new">Account Type</target>
+        <target state="translated">Accounttype</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">25</context>
@@ -2615,7 +2615,7 @@
       </trans-unit>
       <trans-unit id="98fc3013bfcbf452b9f37bbfcdb77b9b882866e3" datatype="html">
         <source>Excluded from Analysis</source>
-        <target state="new">Excluded from Analysis</target>
+        <target state="translated">Uitgesloten van analyse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">173</context>
@@ -2623,7 +2623,7 @@
       </trans-unit>
       <trans-unit id="458363f8e413759aa9e3235a53fd0f64cc916395" datatype="html">
         <source> If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/>, based on your total assets of <x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;fireWealth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> and a withdrawal rate of 4%. </source>
-        <target state="new"> If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/>, based on your total assets of <x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;fireWealth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> and a withdrawal rate of 4%. </target>
+        <target state="translated"> Mocht u vandaag met pension gaan, kunt u <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per jaar<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/> of <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> per maand<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span &gt;"/> opnemen, gebaseerd op al uw activa <x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [currency]=&quot;user?.settings?.baseCurrency&quot; [locale]=&quot;user?.settings?.locale&quot; [value]=&quot;fireWealth?.toNumber()&quot; &gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;/gf-value&gt;"/> en een opnamepercentage van 4%. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">51,79</context>
@@ -2631,7 +2631,7 @@
       </trans-unit>
       <trans-unit id="616064537937996961" datatype="html">
         <source>Auto</source>
-        <target state="new">Auto</target>
+        <target state="translated">Auto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.component.ts</context>
           <context context-type="linenumber">45</context>
@@ -2639,7 +2639,7 @@
       </trans-unit>
       <trans-unit id="bbe41ac2ea4a6c00ea941a41b33105048f8e9f13" datatype="html">
         <source>Appearance</source>
-        <target state="new">Appearance</target>
+        <target state="translated">Weergave</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">188</context>
@@ -2647,7 +2647,7 @@
       </trans-unit>
       <trans-unit id="5fb13fb4a8447e59cdf05dc196ade39c02a6f8aa" datatype="html">
         <source>Auto</source>
-        <target state="new">Auto</target>
+        <target state="translated">Automatisch</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">203</context>
@@ -2655,7 +2655,7 @@
       </trans-unit>
       <trans-unit id="693d14f486a25e86bc515dfcfc4462d5201217ef" datatype="html">
         <source>Light</source>
-        <target state="new">Light</target>
+        <target state="translated">Licht</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">204</context>
@@ -2663,7 +2663,7 @@
       </trans-unit>
       <trans-unit id="adb4562d2dbd3584370e44496969d58c511ecb63" datatype="html">
         <source>Dark</source>
-        <target state="new">Dark</target>
+        <target state="translated">Donker</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">205</context>
@@ -2671,7 +2671,7 @@
       </trans-unit>
       <trans-unit id="112783260724635106" datatype="html">
         <source>Total Amount</source>
-        <target state="new">Total Amount</target>
+        <target state="translated">Totaalbedrag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
           <context context-type="linenumber">178</context>
@@ -2679,7 +2679,7 @@
       </trans-unit>
       <trans-unit id="f1a355a1af2e818050a3af693ac8b521fa7edc5f" datatype="html">
         <source>Portfolio Evolution</source>
-        <target state="new">Portfolio Evolution</target>
+        <target state="translated">Ontwikkeling van portefeuille</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">136</context>
@@ -2695,7 +2695,7 @@
       </trans-unit>
       <trans-unit id="4086606389696938932" datatype="html">
         <source>Account</source>
-        <target state="new">Account</target>
+        <target state="translated">Account</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">4</context>
@@ -2703,7 +2703,7 @@
       </trans-unit>
       <trans-unit id="4574987680940794089" datatype="html">
         <source>Asset Class</source>
-        <target state="new">Asset Class</target>
+        <target state="translated">Activaklasse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">5</context>
@@ -2711,7 +2711,7 @@
       </trans-unit>
       <trans-unit id="8106025670158480144" datatype="html">
         <source>Symbol</source>
-        <target state="new">Symbol</target>
+        <target state="translated">Symbool</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">10</context>
@@ -2719,7 +2719,7 @@
       </trans-unit>
       <trans-unit id="1825829511397926879" datatype="html">
         <source>Tag</source>
-        <target state="new">Tag</target>
+        <target state="translated">Label</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">11</context>
@@ -2727,7 +2727,7 @@
       </trans-unit>
       <trans-unit id="787798817533231355" datatype="html">
         <source>Cash</source>
-        <target state="new">Cash</target>
+        <target state="translated">Contant geld</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">14</context>
@@ -2735,7 +2735,7 @@
       </trans-unit>
       <trans-unit id="8431989971855844965" datatype="html">
         <source>Commodity</source>
-        <target state="new">Commodity</target>
+        <target state="translated">Commodity</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">15</context>
@@ -2743,7 +2743,7 @@
       </trans-unit>
       <trans-unit id="1983771552391474467" datatype="html">
         <source>Equity</source>
-        <target state="new">Equity</target>
+        <target state="translated">Equity</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">16</context>
@@ -2751,7 +2751,7 @@
       </trans-unit>
       <trans-unit id="6124744839836623630" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">Vast inkomen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">17</context>
@@ -2759,7 +2759,7 @@
       </trans-unit>
       <trans-unit id="8432027249343784512" datatype="html">
         <source>Real Estate</source>
-        <target state="new">Real Estate</target>
+        <target state="translated">Vastgoed</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">18</context>
@@ -2767,7 +2767,7 @@
       </trans-unit>
       <trans-unit id="8977365084844053365" datatype="html">
         <source>Bond</source>
-        <target state="new">Bond</target>
+        <target state="translated">Obligatie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">21</context>
@@ -2775,7 +2775,7 @@
       </trans-unit>
       <trans-unit id="2893204435511484886" datatype="html">
         <source>Cryptocurrency</source>
-        <target state="new">Cryptocurrency</target>
+        <target state="translated">Cryptovaluta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">22</context>
@@ -2783,7 +2783,7 @@
       </trans-unit>
       <trans-unit id="9071695492820527473" datatype="html">
         <source>ETF</source>
-        <target state="new">ETF</target>
+        <target state="translated">ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">23</context>
@@ -2791,7 +2791,7 @@
       </trans-unit>
       <trans-unit id="5734784563242233466" datatype="html">
         <source>Mutual Fund</source>
-        <target state="new">Mutual Fund</target>
+        <target state="translated">Beleggingsfonds</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">24</context>
@@ -2799,7 +2799,7 @@
       </trans-unit>
       <trans-unit id="1270654249046226808" datatype="html">
         <source>Precious Metal</source>
-        <target state="new">Precious Metal</target>
+        <target state="translated">Edel metaal</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">25</context>
@@ -2807,7 +2807,7 @@
       </trans-unit>
       <trans-unit id="1346519036036997811" datatype="html">
         <source>Private Equity</source>
-        <target state="new">Private Equity</target>
+        <target state="translated">Private equity</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">26</context>
@@ -2815,7 +2815,7 @@
       </trans-unit>
       <trans-unit id="4613338085351943838" datatype="html">
         <source>Stock</source>
-        <target state="new">Stock</target>
+        <target state="translated">Aandeel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">27</context>
@@ -2823,7 +2823,7 @@
       </trans-unit>
       <trans-unit id="6268646680388419543" datatype="html">
         <source>Emergency Fund</source>
-        <target state="new">Emergency Fund</target>
+        <target state="translated">Noodfonds</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">7</context>
@@ -2831,7 +2831,7 @@
       </trans-unit>
       <trans-unit id="8693603235657020323" datatype="html">
         <source>Other</source>
-        <target state="new">Other</target>
+        <target state="translated">Anders</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">8</context>
@@ -2843,7 +2843,7 @@
       </trans-unit>
       <trans-unit id="4893616715766810081" datatype="html">
         <source>No data available</source>
-        <target state="new">No data available</target>
+        <target state="translated">Geen gegevens beschikbaar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
           <context context-type="linenumber">371</context>
@@ -2855,7 +2855,7 @@
       </trans-unit>
       <trans-unit id="1228771048078164312" datatype="html">
         <source>North America</source>
-        <target state="new">North America</target>
+        <target state="translated">Noord Amerika</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">33</context>
@@ -2863,7 +2863,7 @@
       </trans-unit>
       <trans-unit id="1413778527796351850" datatype="html">
         <source>Africa</source>
-        <target state="new">Africa</target>
+        <target state="translated">Afrika</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">30</context>
@@ -2871,7 +2871,7 @@
       </trans-unit>
       <trans-unit id="3345512471687795386" datatype="html">
         <source>Asia</source>
-        <target state="new">Asia</target>
+        <target state="translated">Azië</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">31</context>
@@ -2879,7 +2879,7 @@
       </trans-unit>
       <trans-unit id="8350109327144196614" datatype="html">
         <source>Europe</source>
-        <target state="new">Europe</target>
+        <target state="translated">Europa</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">32</context>
@@ -2887,7 +2887,7 @@
       </trans-unit>
       <trans-unit id="3228811828827738441" datatype="html">
         <source>Oceania</source>
-        <target state="new">Oceania</target>
+        <target state="translated">Oceanië</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">34</context>
@@ -2895,7 +2895,7 @@
       </trans-unit>
       <trans-unit id="5957846001261659229" datatype="html">
         <source>South America</source>
-        <target state="new">South America</target>
+        <target state="translated">Zuid Amerika</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">35</context>
@@ -2903,7 +2903,7 @@
       </trans-unit>
       <trans-unit id="73f8489a3ae4d805787b8350d3d91e03e830115b" datatype="html">
         <source>Choose File</source>
-        <target state="new">Choose File</target>
+        <target state="translated">Kies bestand</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">18,21</context>
@@ -2911,7 +2911,7 @@
       </trans-unit>
       <trans-unit id="6f9fd3da06dc9000eef0d4dcbb37747b303048e9" datatype="html">
         <source>The following file formats are supported:</source>
-        <target state="new">The following file formats are supported:</target>
+        <target state="translated">The volgende bestandsformaten worden ondersteund:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">21,23</context>
@@ -2919,7 +2919,7 @@
       </trans-unit>
       <trans-unit id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c" datatype="html">
         <source>Back</source>
-        <target state="new">Back</target>
+        <target state="translated">Terug</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">79,83</context>
@@ -2927,7 +2927,7 @@
       </trans-unit>
       <trans-unit id="ec2d3a89b366d1ca80be056e9e71f0165ae75c7b" datatype="html">
         <source>Community</source>
-        <target state="new">Community</target>
+        <target state="translated">Gemeenschap</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">135</context>
@@ -2943,7 +2943,7 @@
       </trans-unit>
       <trans-unit id="064d88bead9e71bd849ecaefd8b38cca8f195a88" datatype="html">
         <source>Activities Count</source>
-        <target state="new">Activities Count</target>
+        <target state="translated">Aantal activiteiten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">69</context>
@@ -2951,7 +2951,7 @@
       </trans-unit>
       <trans-unit id="c8d1785038d461ec66b5799db21864182b35900a" datatype="html">
         <source>Refresh</source>
-        <target state="new">Refresh</target>
+        <target state="translated">Vernieuwen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">22</context>
@@ -2959,7 +2959,7 @@
       </trans-unit>
       <trans-unit id="638bbddabc5883a7a4087f45592944ce6558409c" datatype="html">
         <source>Symbol Mapping</source>
-        <target state="new">Symbol Mapping</target>
+        <target state="translated">Symbool toewijzen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">149</context>
@@ -2967,7 +2967,7 @@
       </trans-unit>
       <trans-unit id="7765499580020598783" datatype="html">
         <source>Dividend</source>
-        <target state="new">Dividend</target>
+        <target state="translated">Dividend</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
           <context context-type="linenumber">43</context>
@@ -2975,7 +2975,7 @@
       </trans-unit>
       <trans-unit id="6410cffb96159fcff46d91effc26df0e240bc0e3" datatype="html">
         <source>Dividend Timeline</source>
-        <target state="new">Dividend Timeline</target>
+        <target state="translated">Dividend tijdlijn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">203</context>
@@ -2991,7 +2991,7 @@
       </trans-unit>
       <trans-unit id="62f17fd50522539fd4c85854828db9d2e1c5330f" datatype="html">
         <source>User Signup</source>
-        <target state="new">User Signup</target>
+        <target state="translated">Account aanmaken</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">102</context>
@@ -2999,7 +2999,7 @@
       </trans-unit>
       <trans-unit id="8763985977445247551" datatype="html">
         <source>Validating data...</source>
-        <target state="new">Validating data...</target>
+        <target state="translated">Gegevens valideren...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">86</context>
@@ -3007,7 +3007,7 @@
       </trans-unit>
       <trans-unit id="a059709f71aa4c0ac219e160e78a738682ca6a36" datatype="html">
         <source>Import</source>
-        <target state="new">Import</target>
+        <target state="translated">Importeren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">94,99</context>
@@ -3015,7 +3015,7 @@
       </trans-unit>
       <trans-unit id="1803867056160333091" datatype="html">
         <source>Securities</source>
-        <target state="new">Securities</target>
+        <target state="translated">Effecten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">9</context>
@@ -3023,7 +3023,7 @@
       </trans-unit>
       <trans-unit id="3229595422546554334" datatype="html">
         <source>Jobs</source>
-        <target state="new">Jobs</target>
+        <target state="translated">Taken</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">16</context>
@@ -3031,7 +3031,7 @@
       </trans-unit>
       <trans-unit id="4798457301875181136" datatype="html">
         <source>Market Data</source>
-        <target state="new">Market Data</target>
+        <target state="translated">Marktgegevens</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">20</context>
@@ -3039,7 +3039,7 @@
       </trans-unit>
       <trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source>
-        <target state="new">Users</target>
+        <target state="translated">Gebruikers</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">27</context>
@@ -3047,7 +3047,7 @@
       </trans-unit>
       <trans-unit id="4739818603756173797" datatype="html">
         <source>Summary</source>
-        <target state="new">Summary</target>
+        <target state="translated">Samenvatting</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/home/home-page-routing.module.ts</context>
           <context context-type="linenumber">28</context>
