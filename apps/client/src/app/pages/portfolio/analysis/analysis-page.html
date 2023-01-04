@@ -217,11 +217,11 @@
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
-          groupBy="month"
           [benchmarkDataItems]="dividendsByGroup"
           [benchmarkDataLabel]="dividendTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
+          [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
