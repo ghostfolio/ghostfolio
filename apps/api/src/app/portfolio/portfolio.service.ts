@@ -236,7 +236,7 @@ export class PortfolioService {
     });
 
     if (groupBy) {
-      dividends = this.getDividendsByGroup(dividends, groupBy);
+      dividends = this.getDividendsByGroup({ aDividends: dividends, groupBy });
     }
 
     const startDate = this.getStartDate(
@@ -1269,10 +1269,13 @@ export class PortfolioService {
       );
   }
 
-  private getDividendsByGroup(
-    aDividends: InvestmentItem[],
-    groupBy: GroupBy
-  ): InvestmentItem[] {
+  private getDividendsByGroup({
+    aDividends,
+    groupBy
+  }: {
+    aDividends: InvestmentItem[];
+    groupBy: GroupBy;
+  }): InvestmentItem[] {
     if (aDividends.length === 0) {
       return [];
     }

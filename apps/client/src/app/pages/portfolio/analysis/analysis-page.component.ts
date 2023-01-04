@@ -39,14 +39,14 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public daysInMarket: number;
   public deviceType: string;
-  public dividendsByMonth: InvestmentItem[];
+  public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
   public filters$ = new Subject<Filter[]>();
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Deposit`;
-  public investmentsByMonth: InvestmentItem[];
+  public investmentsByGroup: InvestmentItem[];
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingInvestmentChart: boolean;
   public mode: GroupBy = 'month';
@@ -219,7 +219,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ dividends }) => {
-        this.dividendsByMonth = dividends;
+        this.dividendsByGroup = dividends;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -232,7 +232,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ investments }) => {
-        this.investmentsByMonth = investments;
+        this.investmentsByGroup = investments;
 
         this.changeDetectorRef.markForCheck();
       });
