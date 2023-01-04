@@ -89,6 +89,10 @@
           "baseHref": "/es/",
           "localize": ["es"]
         },
+        "development-fr": {
+          "baseHref": "/fr/",
+          "localize": ["fr"]
+        },
         "development-it": {
           "baseHref": "/it/",
           "localize": ["it"]
@@ -96,6 +100,10 @@
         "development-nl": {
           "baseHref": "/nl/",
           "localize": ["nl"]
+        },
+        "development-pt": {
+          "baseHref": "/pt/",
+          "localize": ["pt"]
         },
         "production": {
           "fileReplacements": [
@@ -144,11 +152,17 @@
         "development-es": {
           "browserTarget": "client:build:development-es"
         },
+        "development-fr": {
+          "browserTarget": "client:build:development-fr"
+        },
         "development-it": {
           "browserTarget": "client:build:development-it"
         },
         "development-nl": {
           "browserTarget": "client:build:development-nl"
+        },
+        "development-pt": {
+          "browserTarget": "client:build:development-pt"
         },
         "production": {
           "browserTarget": "client:build:production"
@@ -164,8 +178,10 @@
         "targetFiles": [
           "messages.de.xlf",
           "messages.es.xlf",
+          "messages.fr.xlf",
           "messages.it.xlf",
-          "messages.nl.xlf"
+          "messages.nl.xlf",
+          "messages.pt.xlf"
         ]
       }
     },
@@ -194,6 +210,10 @@
         "baseHref": "/es/",
         "translation": "apps/client/src/locales/messages.es.xlf"
       },
+      "fr": {
+        "baseHref": "/fr/",
+        "translation": "apps/client/src/locales/messages.fr.xlf"
+      },
       "it": {
         "baseHref": "/it/",
         "translation": "apps/client/src/locales/messages.it.xlf"
@@ -201,6 +221,10 @@
       "nl": {
         "baseHref": "/nl/",
         "translation": "apps/client/src/locales/messages.nl.xlf"
+      },
+      "pt": {
+        "baseHref": "/pt/",
+        "translation": "apps/client/src/locales/messages.pt.xlf"
       }
     },
     "sourceLocale": "en"

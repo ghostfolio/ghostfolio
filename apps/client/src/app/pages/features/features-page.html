@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3 text-center">Features</h3>
+      <h3 class="d-none d-sm-block mb-3 text-center">Features</h3>
       <div class="mb-4">
         <p>
           Check out the numerous features of <strong>Ghostfolio</strong> to
@@ -197,8 +197,12 @@
             <div class="flex-grow-1">
               <h4>Multi-Language</h4>
               <p class="m-0">
-                Use Ghostfolio in multiple languages: English, Dutch, German,
-                Italian and Spanish are currently supported.
+                Use Ghostfolio in multiple languages: English,
+                Dutch<ng-container *ngIf="false">, Français</ng-container>,
+                German, Italian<ng-container *ngIf="false"
+                  >, Portuguese</ng-container
+                >
+                and Spanish are currently supported.
               </p>
             </div>
           </mat-card>

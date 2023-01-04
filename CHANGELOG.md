@@ -11,6 +11,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for the dividend timeline grouped by year
 - Added support for the investment timeline grouped by year
+- Set up the language localization for Français (`fr`)
+- Set up the language localization for Português (`pt`)
+
+### Changed
+
+- Improved the language localization for Dutch (`nl`)
+
+## 1.223.0 - 2023-01-01
+
+### Added
+
+- Added a student discount to the pricing page
+- Added a prefix to the codes of the coupon system
+
+### Changed
+
+- Optimized the page titles in the header for mobile
+- Extended the asset profile details dialog in the admin control panel
 
 ## 1.222.0 - 2022-12-29
 

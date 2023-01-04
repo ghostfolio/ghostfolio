@@ -1,5 +1,5 @@
 <form class="d-flex flex-column h-100">
-  <h1 mat-dialog-title i18n>Details for {{ data.symbol }}</h1>
+  <h1 i18n mat-dialog-title>Details for {{ data.symbol }}</h1>
   <div class="flex-grow-1" mat-dialog-content>
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
@@ -30,6 +30,7 @@
           type="number"
           [(ngModel)]="data.marketPrice"
         />
+        <span class="ml-2" matSuffix>{{ data.currency }}</span>
         <button
           mat-icon-button
           matSuffix

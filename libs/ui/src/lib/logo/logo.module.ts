@@ -7,7 +7,6 @@ import { LogoComponent } from './logo.component';
   declarations: [LogoComponent],
   exports: [LogoComponent],
   imports: [CommonModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfLogoModule {}

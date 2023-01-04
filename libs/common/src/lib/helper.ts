@@ -1,7 +1,7 @@
 import * as currencies from '@dinero.js/currencies';
 import { DataSource } from '@prisma/client';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
-import { de, es, it, nl } from 'date-fns/locale';
+import { de, es, fr, it, nl, pt } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark } from './interfaces';
@@ -79,10 +79,14 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return de;
   } else if (aLanguageCode === 'es') {
     return es;
+  } else if (aLanguageCode === 'fr') {
+    return fr;
   } else if (aLanguageCode === 'it') {
     return it;
   } else if (aLanguageCode === 'nl') {
     return nl;
+  } else if (aLanguageCode === 'pt') {
+    return pt;
   }
 
   return undefined;

@@ -14,8 +14,10 @@ export class FrontendMiddleware implements NestMiddleware {
   public indexHtmlDe = '';
   public indexHtmlEn = '';
   public indexHtmlEs = '';
+  public indexHtmlFr = '';
   public indexHtmlIt = '';
   public indexHtmlNl = '';
+  public indexHtmlPt = '';
   public isProduction: boolean;
 
   public constructor(
@@ -41,12 +43,20 @@ export class FrontendMiddleware implements NestMiddleware {
         this.getPathOfIndexHtmlFile('es'),
         'utf8'
       );
+      this.indexHtmlFr = fs.readFileSync(
+        this.getPathOfIndexHtmlFile('fr'),
+        'utf8'
+      );
       this.indexHtmlIt = fs.readFileSync(
         this.getPathOfIndexHtmlFile('it'),
         'utf8'
       );
       this.indexHtmlNl = fs.readFileSync(
         this.getPathOfIndexHtmlFile('nl'),
+        'utf8'
+      );
+      this.indexHtmlPt = fs.readFileSync(
+        this.getPathOfIndexHtmlFile('pt'),
         'utf8'
       );
     } catch {}
@@ -104,6 +114,15 @@ export class FrontendMiddleware implements NestMiddleware {
           rootUrl: this.configurationService.get('ROOT_URL')
         })
       );
+    } else if (request.path === '/fr' || request.path.startsWith('/fr/')) {
+      response.send(
+        this.interpolate(this.indexHtmlFr, {
+          featureGraphicPath,
+          languageCode: 'fr',
+          path: request.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
     } else if (request.path === '/it' || request.path.startsWith('/it/')) {
       response.send(
         this.interpolate(this.indexHtmlIt, {
@@ -122,6 +141,15 @@ export class FrontendMiddleware implements NestMiddleware {
           featureGraphicPath,
           title,
           languageCode: 'nl',
+          path: request.path,
+          rootUrl: this.configurationService.get('ROOT_URL')
+        })
+      );
+    } else if (request.path === '/pt' || request.path.startsWith('/pt/')) {
+      response.send(
+        this.interpolate(this.indexHtmlPt, {
+          featureGraphicPath,
+          languageCode: 'pt',
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
         })

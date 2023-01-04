@@ -43,6 +43,7 @@
   <div class="flex-grow-1" mat-dialog-content>
     <gf-admin-market-data-detail
       class="mb-3"
+      [currency]="assetProfile?.currency"
       [dataSource]="data.dataSource"
       [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
       [locale]="data.locale"
@@ -51,6 +52,16 @@
       (marketDataChanged)="onMarketDataChanged($event)"
     ></gf-admin-market-data-detail>
     <div class="row">
+      <div class="col-6 mb-3">
+        <gf-value i18n size="medium" [value]="assetProfile?.symbol"
+          >Symbol</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value i18n size="medium" [value]="assetProfile?.currency"
+          >Currency</gf-value
+        >
+      </div>
       <div class="col-6 mb-3">
         <gf-value
           i18n
@@ -71,11 +82,7 @@
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [hidden]="!assetProfile?.assetClass"
-          [value]="assetProfile?.assetClass"
+        <gf-value i18n size="medium" [hidden]="!assetClass" [value]="assetClass"
           >Asset Class</gf-value
         >
       </div>
@@ -83,8 +90,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!assetProfile?.assetSubClass"
-          [value]="assetProfile?.assetSubClass"
+          [hidden]="!assetSubClass"
+          [value]="assetSubClass"
           >Asset Sub Class</gf-value
         >
       </div>
