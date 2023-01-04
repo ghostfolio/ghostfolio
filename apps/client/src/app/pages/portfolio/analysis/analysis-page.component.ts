@@ -92,6 +92,15 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  get savingsRate() {
+    const savingsRate =
+      this.hasImpersonationId || this.user.settings.isRestrictedView
+        ? undefined
+        : this.user?.settings?.savingsRate;
+
+    return this.mode === 'year' ? savingsRate * 12 : savingsRate;
+  }
+
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 

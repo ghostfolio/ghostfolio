@@ -10,5 +10,6 @@ export interface UserSettings {
   isRestrictedView?: boolean;
   language?: string;
   locale?: string;
+  savingsRate?: number;
   viewMode?: ViewMode;
 }

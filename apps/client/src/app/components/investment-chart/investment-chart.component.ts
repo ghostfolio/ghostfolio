@@ -198,6 +198,15 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         this.chart.options.scales.x.min = this.daysInMarket
           ? subDays(new Date(), this.daysInMarket).toISOString()
           : undefined;
+
+        if (
+          this.savingsRate &&
+          this.chart.options.plugins.annotation.annotations.savingsRate
+        ) {
+          this.chart.options.plugins.annotation.annotations.savingsRate.value =
+            this.savingsRate;
+        }
+
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
