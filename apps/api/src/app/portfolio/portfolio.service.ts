@@ -235,8 +235,8 @@ export class PortfolioService {
       };
     });
 
-    if (groupBy === 'month') {
-      dividends = this.getDividendsByMonth(dividends);
+    if (groupBy) {
+      dividends = this.getDividendsByGroup({ dividends, groupBy });
     }
 
     const startDate = this.getStartDate(
@@ -282,26 +282,31 @@ export class PortfolioService {
 
     let investments: InvestmentItem[];
 
-    if (groupBy === 'month') {
-      investments = portfolioCalculator.getInvestmentsByMonth().map((item) => {
-        return {
-          date: item.date,
-          investment: item.investment.toNumber()
-        };
-      });
+    if (groupBy) {
+      investments = portfolioCalculator
+        .getInvestmentsByGroup(groupBy)
+        .map((item) => {
+          return {
+            date: item.date,
+            investment: item.investment.toNumber()
+          };
+        });
 
-      // Add investment of current month
-      const dateOfCurrentMonth = format(
-        set(new Date(), { date: 1 }),
+      // Add investment of current group
+      const dateOfCurrentGroup = format(
+        set(new Date(), {
+          date: 1,
+          month: groupBy === 'year' ? 0 : new Date().getMonth()
+        }),
         DATE_FORMAT
       );
-      const investmentOfCurrentMonth = investments.filter(({ date }) => {
-        return date === dateOfCurrentMonth;
+      const investmentOfCurrentGroup = investments.filter(({ date }) => {
+        return date === dateOfCurrentGroup;
       });
 
-      if (investmentOfCurrentMonth.length <= 0) {
+      if (investmentOfCurrentGroup.length <= 0) {
         investments.push({
-          date: dateOfCurrentMonth,
+          date: dateOfCurrentGroup,
           investment: 0
         });
       }
@@ -1264,47 +1269,66 @@ export class PortfolioService {
       );
   }
 
-  private getDividendsByMonth(aDividends: InvestmentItem[]): InvestmentItem[] {
-    if (aDividends.length === 0) {
+  private getDividendsByGroup({
+    dividends,
+    groupBy
+  }: {
+    dividends: InvestmentItem[];
+    groupBy: GroupBy;
+  }): InvestmentItem[] {
+    if (dividends.length === 0) {
       return [];
     }
 
-    const dividends = [];
+    const dividendsByGroup: InvestmentItem[] = [];
     let currentDate: Date;
-    let investmentByMonth = new Big(0);
+    let investmentByGroup = new Big(0);
 
-    for (const [index, dividend] of aDividends.entries()) {
+    for (const [index, dividend] of dividends.entries()) {
       if (
-        isSameMonth(parseDate(dividend.date), currentDate) &&
-        isSameYear(parseDate(dividend.date), currentDate)
+        isSameYear(parseDate(dividend.date), currentDate) &&
+        (groupBy === 'year' ||
+          isSameMonth(parseDate(dividend.date), currentDate))
       ) {
-        // Same month: Add up divididends
+        // Same group: Add up dividends
 
-        investmentByMonth = investmentByMonth.plus(dividend.investment);
+        investmentByGroup = investmentByGroup.plus(dividend.investment);
       } else {
-        // New month: Store previous month and reset
+        // New group: Store previous group and reset
 
         if (currentDate) {
-          dividends.push({
-            date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
-            investment: investmentByMonth
+          dividendsByGroup.push({
+            date: format(
+              set(currentDate, {
+                date: 1,
+                month: groupBy === 'year' ? 0 : currentDate.getMonth()
+              }),
+              DATE_FORMAT
+            ),
+            investment: investmentByGroup.toNumber()
           });
         }
 
         currentDate = parseDate(dividend.date);
-        investmentByMonth = new Big(dividend.investment);
+        investmentByGroup = new Big(dividend.investment);
       }
 
-      if (index === aDividends.length - 1) {
+      if (index === dividends.length - 1) {
         // Store current month (latest order)
-        dividends.push({
-          date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
-          investment: investmentByMonth
+        dividendsByGroup.push({
+          date: format(
+            set(currentDate, {
+              date: 1,
+              month: groupBy === 'year' ? 0 : currentDate.getMonth()
+            }),
+            DATE_FORMAT
+          ),
+          investment: investmentByGroup.toNumber()
         });
       }
     }
 
-    return dividends;
+    return dividendsByGroup;
   }
 
   private getFees({

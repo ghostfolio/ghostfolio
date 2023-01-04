@@ -180,15 +180,15 @@
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
-          groupBy="month"
-          [benchmarkDataItems]="investmentsByMonth"
+          [benchmarkDataItems]="investmentsByGroup"
           [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
+          [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
-          [savingsRate]="(hasImpersonationId || user.settings.isRestrictedView) ? undefined : user?.settings?.savingsRate"
+          [savingsRate]="savingsRate"
         ></gf-investment-chart>
       </div>
     </div>
@@ -217,11 +217,11 @@
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
-          groupBy="month"
-          [benchmarkDataItems]="dividendsByMonth"
+          [benchmarkDataItems]="dividendsByGroup"
           [benchmarkDataLabel]="dividendTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
+          [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"

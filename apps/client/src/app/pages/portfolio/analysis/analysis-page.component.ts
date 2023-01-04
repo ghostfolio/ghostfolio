@@ -39,19 +39,20 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public daysInMarket: number;
   public deviceType: string;
-  public dividendsByMonth: InvestmentItem[];
+  public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
   public filters$ = new Subject<Filter[]>();
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Deposit`;
-  public investmentsByMonth: InvestmentItem[];
+  public investmentsByGroup: InvestmentItem[];
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingInvestmentChart: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
-    { label: $localize`Monthly`, value: 'month' }
+    { label: $localize`Monthly`, value: 'month' },
+    { label: $localize`Yearly`, value: 'year' }
   ];
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
@@ -89,6 +90,17 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           });
         }
       });
+  }
+
+  get savingsRate() {
+    const savingsRatePerMonth =
+      this.hasImpersonationId || this.user.settings.isRestrictedView
+        ? undefined
+        : this.user?.settings?.savingsRate;
+
+    return this.mode === 'year'
+      ? savingsRatePerMonth * 12
+      : savingsRatePerMonth;
   }
 
   public ngOnInit() {
@@ -201,11 +213,40 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
+    this.fetchDividendsAndInvestments();
   }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchDividendsAndInvestments() {
+    this.dataService
+      .fetchDividends({
+        filters: this.activeFilters,
+        groupBy: this.mode,
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ dividends }) => {
+        this.dividendsByGroup = dividends;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
+      .fetchInvestments({
+        filters: this.activeFilters,
+        groupBy: this.mode,
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ investments }) => {
+        this.investmentsByGroup = investments;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private openPositionDialog({
@@ -292,32 +333,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchDividends({
-        filters: this.activeFilters,
-        groupBy: 'month',
-        range: this.user?.settings?.dateRange
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ dividends }) => {
-        this.dividendsByMonth = dividends;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchInvestments({
-        filters: this.activeFilters,
-        groupBy: 'month',
-        range: this.user?.settings?.dateRange
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ investments }) => {
-        this.investmentsByMonth = investments;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
       .fetchPositions({
         filters: this.activeFilters,
         range: this.user?.settings?.dateRange
@@ -340,6 +355,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
+    this.fetchDividendsAndInvestments();
     this.changeDetectorRef.markForCheck();
   }
 

@@ -2,6 +2,7 @@ import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
+import { GroupBy } from '@ghostfolio/common/types';
 import { Logger } from '@nestjs/common';
 import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
@@ -478,46 +479,60 @@ export class PortfolioCalculator {
     });
   }
 
-  public getInvestmentsByMonth(): { date: string; investment: Big }[] {
+  public getInvestmentsByGroup(
+    groupBy: GroupBy
+  ): { date: string; investment: Big }[] {
     if (this.orders.length === 0) {
       return [];
     }
 
     const investments = [];
     let currentDate: Date;
-    let investmentByMonth = new Big(0);
+    let investmentByGroup = new Big(0);
 
     for (const [index, order] of this.orders.entries()) {
       if (
-        isSameMonth(parseDate(order.date), currentDate) &&
-        isSameYear(parseDate(order.date), currentDate)
+        isSameYear(parseDate(order.date), currentDate) &&
+        (groupBy === 'year' || isSameMonth(parseDate(order.date), currentDate))
       ) {
-        // Same month: Add up investments
+        // Same group: Add up investments
 
-        investmentByMonth = investmentByMonth.plus(
+        investmentByGroup = investmentByGroup.plus(
           order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
         );
       } else {
-        // New month: Store previous month and reset
+        // New group: Store previous group and reset
 
         if (currentDate) {
           investments.push({
-            date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
-            investment: investmentByMonth
+            date: format(
+              set(currentDate, {
+                date: 1,
+                month: groupBy === 'year' ? 0 : currentDate.getMonth()
+              }),
+              DATE_FORMAT
+            ),
+            investment: investmentByGroup
           });
         }
 
         currentDate = parseDate(order.date);
-        investmentByMonth = order.quantity
+        investmentByGroup = order.quantity
           .mul(order.unitPrice)
           .mul(this.getFactor(order.type));
       }
 
       if (index === this.orders.length - 1) {
-        // Store current month (latest order)
+        // Store current group (latest order)
         investments.push({
-          date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
-          investment: investmentByMonth
+          date: format(
+            set(currentDate, {
+              date: 1,
+              month: groupBy === 'year' ? 0 : currentDate.getMonth()
+            }),
+            DATE_FORMAT
+          ),
+          investment: investmentByGroup
         });
       }
     }
