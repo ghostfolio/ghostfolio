@@ -93,12 +93,14 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   get savingsRate() {
-    const savingsRate =
+    const savingsRatePerMonth =
       this.hasImpersonationId || this.user.settings.isRestrictedView
         ? undefined
         : this.user?.settings?.savingsRate;
 
-    return this.mode === 'year' ? savingsRate * 12 : savingsRate;
+    return this.mode === 'year'
+      ? savingsRatePerMonth * 12
+      : savingsRatePerMonth;
   }
 
   public ngOnInit() {

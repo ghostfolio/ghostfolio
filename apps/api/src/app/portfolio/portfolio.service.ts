@@ -236,7 +236,7 @@ export class PortfolioService {
     });
 
     if (groupBy) {
-      dividends = this.getDividendsByGroup({ aDividends: dividends, groupBy });
+      dividends = this.getDividendsByGroup({ dividends, groupBy });
     }
 
     const startDate = this.getStartDate(
@@ -1270,21 +1270,21 @@ export class PortfolioService {
   }
 
   private getDividendsByGroup({
-    aDividends,
+    dividends,
     groupBy
   }: {
-    aDividends: InvestmentItem[];
+    dividends: InvestmentItem[];
     groupBy: GroupBy;
   }): InvestmentItem[] {
-    if (aDividends.length === 0) {
+    if (dividends.length === 0) {
       return [];
     }
 
-    const dividends = [];
+    const dividendsByGroup: InvestmentItem[] = [];
     let currentDate: Date;
     let investmentByGroup = new Big(0);
 
-    for (const [index, dividend] of aDividends.entries()) {
+    for (const [index, dividend] of dividends.entries()) {
       if (
         isSameYear(parseDate(dividend.date), currentDate) &&
         (groupBy === 'year' ||
@@ -1297,7 +1297,7 @@ export class PortfolioService {
         // New group: Store previous group and reset
 
         if (currentDate) {
-          dividends.push({
+          dividendsByGroup.push({
             date: format(
               set(currentDate, {
                 date: 1,
@@ -1305,7 +1305,7 @@ export class PortfolioService {
               }),
               DATE_FORMAT
             ),
-            investment: investmentByGroup
+            investment: investmentByGroup.toNumber()
           });
         }
 
@@ -1313,9 +1313,9 @@ export class PortfolioService {
         investmentByGroup = new Big(dividend.investment);
       }
 
-      if (index === aDividends.length - 1) {
+      if (index === dividends.length - 1) {
         // Store current month (latest order)
-        dividends.push({
+        dividendsByGroup.push({
           date: format(
             set(currentDate, {
               date: 1,
@@ -1323,12 +1323,12 @@ export class PortfolioService {
             }),
             DATE_FORMAT
           ),
-          investment: investmentByGroup
+          investment: investmentByGroup.toNumber()
         });
       }
     }
 
-    return dividends;
+    return dividendsByGroup;
   }
 
   private getFees({
