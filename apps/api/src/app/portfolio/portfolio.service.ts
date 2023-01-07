@@ -660,8 +660,9 @@ export class PortfolioService {
     }
 
     const positionCurrency = orders[0].SymbolProfile.currency;
-    const [SymbolProfile] =
-      await this.symbolProfileService.getSymbolProfilesBySymbols([aSymbol]);
+    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      { dataSource: aDataSource, symbol: aSymbol }
+    ]);
 
     const portfolioOrders: PortfolioOrder[] = orders
       .filter((order) => {
@@ -745,6 +746,7 @@ export class PortfolioService {
         historicalDataArray.push({
           averagePrice: orders[0].unitPrice,
           date: firstBuyDate,
+          quantity: orders[0].quantity,
           value: orders[0].unitPrice
         });
       }
@@ -761,6 +763,7 @@ export class PortfolioService {
             j++;
           }
           let currentAveragePrice = 0;
+          let currentQuantity = 0;
           const currentSymbol = transactionPoints[j].items.find(
             (item) => item.symbol === aSymbol
           );
@@ -768,11 +771,13 @@ export class PortfolioService {
             currentAveragePrice = currentSymbol.quantity.eq(0)
               ? 0
               : currentSymbol.investment.div(currentSymbol.quantity).toNumber();
+            currentQuantity = currentSymbol.quantity.toNumber();
           }
 
           historicalDataArray.push({
             date,
             averagePrice: currentAveragePrice,
+            quantity: currentQuantity,
             value: marketPrice
           });
 

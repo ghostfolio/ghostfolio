@@ -2,9 +2,16 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { OrderWithAccount } from '@ghostfolio/common/types';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { parseDate } from '@ghostfolio/common/helper';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AccountWithPlatform,
+  OrderWithAccount
+} from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
@@ -17,8 +24,80 @@ export class ImportService {
     private readonly accountService: AccountService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly orderService: OrderService
+    private readonly orderService: OrderService,
+    private readonly portfolioService: PortfolioService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async getDividends({
+    dataSource,
+    symbol,
+    userCurrency
+  }: UniqueAsset & { userCurrency: string }): Promise<Activity[]> {
+    try {
+      const { firstBuyDate, historicalData, orders } =
+        await this.portfolioService.getPosition(dataSource, undefined, symbol);
+
+      const [[assetProfile], dividends] = await Promise.all([
+        this.symbolProfileService.getSymbolProfiles([
+          {
+            dataSource,
+            symbol
+          }
+        ]),
+        await this.dataProviderService.getDividends({
+          dataSource,
+          symbol,
+          from: parseDate(firstBuyDate),
+          granularity: 'day',
+          to: new Date()
+        })
+      ]);
+
+      const accounts = orders.map((order) => {
+        return order.Account;
+      });
+
+      const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
+
+      return Object.entries(dividends).map(([dateString, { marketPrice }]) => {
+        const quantity =
+          historicalData.find((historicalDataItem) => {
+            return historicalDataItem.date === dateString;
+          })?.quantity ?? 0;
+
+        const value = new Big(quantity).mul(marketPrice).toNumber();
+
+        return {
+          Account,
+          quantity,
+          value,
+          accountId: Account?.id,
+          accountUserId: undefined,
+          comment: undefined,
+          createdAt: undefined,
+          date: parseDate(dateString),
+          fee: 0,
+          feeInBaseCurrency: 0,
+          id: assetProfile.id,
+          isDraft: false,
+          SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
+          symbolProfileId: assetProfile.id,
+          type: 'DIVIDEND',
+          unitPrice: marketPrice,
+          updatedAt: undefined,
+          userId: Account?.userId,
+          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            value,
+            assetProfile.currency,
+            userCurrency
+          )
+        };
+      });
+    } catch {
+      return [];
+    }
+  }
 
   public async import({
     activitiesDto,
@@ -159,6 +238,16 @@ export class ImportService {
     }
 
     return activities;
+  }
+
+  private isUniqueAccount(accounts: AccountWithPlatform[]) {
+    const uniqueAccountIds = new Set<string>();
+
+    for (const account of accounts) {
+      uniqueAccountIds.add(account.id);
+    }
+
+    return uniqueAccountIds.size === 1;
   }
 
   private async validateActivities({
