@@ -48,7 +48,7 @@ Ghostfolio is for you if you are...
 - 🧘 into minimalism
 - 🧺 caring about diversifying your financial resources
 - 🆓 interested in financial independence
-- 🙅 saying no to spreadsheets in 2022
+- 🙅 saying no to spreadsheets in 2023
 - 😎 still reading this list
 
 ## Features
@@ -282,6 +282,6 @@ If you like to support this project, get **[Ghostfolio Premium](https://ghostfol
 
 ## License
 
-© 2022 [Ghostfolio](https://ghostfol.io)
+© 2023 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).
