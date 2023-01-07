@@ -90,13 +90,16 @@ export class ImportActivitiesService {
     selectedActivities: Activity[]
   ): Promise<Activity[]> {
     const importData: CreateOrderDto[] = [];
+
     for (const activity of selectedActivities) {
       importData.push(this.convertToCreateOrderDto(activity));
     }
+
     return this.importJson({ content: importData });
   }
 
   private convertToCreateOrderDto({
+    accountId,
     date,
     fee,
     quantity,
@@ -105,6 +108,7 @@ export class ImportActivitiesService {
     unitPrice
   }: Activity): CreateOrderDto {
     return {
+      accountId,
       fee,
       quantity,
       type,
