@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for importing dividends from a data provider
 
+### Changed
+
+- Extended the Frequently Asked Questions (FAQ) page
+
 ## 1.224.0 - 2023-01-04
 
 ### Added
