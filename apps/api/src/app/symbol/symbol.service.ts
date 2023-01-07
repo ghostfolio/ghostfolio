@@ -5,10 +5,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import {
-  HistoricalDataItem,
-  ImportResponse
-} from '@ghostfolio/common/interfaces';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, subDays } from 'date-fns';
 

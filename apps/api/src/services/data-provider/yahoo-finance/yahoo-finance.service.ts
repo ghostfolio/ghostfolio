@@ -175,11 +175,9 @@ export class YahooFinanceService implements DataProviderInterface {
       to = addDays(to, 1);
     }
 
-    const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(symbol);
-
     try {
       const historicalResult = await yahooFinance.historical(
-        yahooFinanceSymbol,
+        this.convertToYahooFinanceSymbol(symbol),
         {
           events: 'dividends',
           interval: granularity === 'month' ? '1mo' : '1d',
@@ -227,11 +225,9 @@ export class YahooFinanceService implements DataProviderInterface {
       to = addDays(to, 1);
     }
 
-    const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(aSymbol);
-
     try {
       const historicalResult = await yahooFinance.historical(
-        yahooFinanceSymbol,
+        this.convertToYahooFinanceSymbol(aSymbol),
         {
           interval: '1d',
           period1: format(from, DATE_FORMAT),

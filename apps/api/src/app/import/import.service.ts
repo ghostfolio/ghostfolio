@@ -7,7 +7,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { parseDate } from '@ghostfolio/common/helper';
-import { ImportResponse, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import {
   AccountWithPlatform,
   OrderWithAccount
@@ -33,16 +33,10 @@ export class ImportService {
     dataSource,
     symbol,
     userCurrency
-  }: UniqueAsset & { userCurrency: string }): Promise<ImportResponse> {
+  }: UniqueAsset & { userCurrency: string }): Promise<Activity[]> {
     try {
       const { firstBuyDate, historicalData, orders } =
         await this.portfolioService.getPosition(dataSource, undefined, symbol);
-
-      const accounts = orders.map(({ Account }) => {
-        return Account;
-      });
-
-      const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
       const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([
@@ -60,46 +54,48 @@ export class ImportService {
         })
       ]);
 
-      return {
-        activities: Object.entries(dividends).map(
-          ([dateString, { marketPrice }]) => {
-            const quantity =
-              historicalData.find((historicalDataItem) => {
-                return historicalDataItem.date === dateString;
-              })?.quantity ?? 0;
+      const accounts = orders.map((order) => {
+        return order.Account;
+      });
 
-            const value = new Big(quantity).mul(marketPrice).toNumber();
+      const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
-            return {
-              Account,
-              quantity,
-              value,
-              accountId: Account?.id,
-              accountUserId: undefined,
-              comment: undefined,
-              createdAt: undefined,
-              date: parseDate(dateString),
-              fee: 0,
-              feeInBaseCurrency: 0,
-              id: assetProfile.id,
-              isDraft: false,
-              SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
-              symbolProfileId: assetProfile.id,
-              type: 'DIVIDEND',
-              unitPrice: marketPrice,
-              updatedAt: undefined,
-              userId: Account?.userId,
-              valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-                value,
-                assetProfile.currency,
-                userCurrency
-              )
-            };
-          }
-        )
-      };
+      return Object.entries(dividends).map(([dateString, { marketPrice }]) => {
+        const quantity =
+          historicalData.find((historicalDataItem) => {
+            return historicalDataItem.date === dateString;
+          })?.quantity ?? 0;
+
+        const value = new Big(quantity).mul(marketPrice).toNumber();
+
+        return {
+          Account,
+          quantity,
+          value,
+          accountId: Account?.id,
+          accountUserId: undefined,
+          comment: undefined,
+          createdAt: undefined,
+          date: parseDate(dateString),
+          fee: 0,
+          feeInBaseCurrency: 0,
+          id: assetProfile.id,
+          isDraft: false,
+          SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
+          symbolProfileId: assetProfile.id,
+          type: 'DIVIDEND',
+          unitPrice: marketPrice,
+          updatedAt: undefined,
+          userId: Account?.userId,
+          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            value,
+            assetProfile.currency,
+            userCurrency
+          )
+        };
+      });
     } catch {
-      return { activities: [] };
+      return [];
     }
   }
 

@@ -92,19 +92,12 @@ export class ImportController {
   ): Promise<ImportResponse> {
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    const result = await this.importService.getDividends({
+    const activities = await this.importService.getDividends({
       dataSource,
       symbol,
       userCurrency
     });
 
-    if (!result || isEmpty(result)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    return result;
+    return { activities };
   }
 }
