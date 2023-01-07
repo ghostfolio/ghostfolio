@@ -1,5 +1,4 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse
@@ -23,8 +22,7 @@ export class SymbolService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
-    private readonly symbolProfileService: SymbolProfileService,
-    private readonly yahooFinanceService: YahooFinanceService
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public async get({
@@ -84,17 +82,17 @@ export class SymbolService {
             symbol
           }
         ]),
-        // TODO: Use DataProviderService
-        this.yahooFinanceService.getDividends(
+        await this.dataProviderService.getDividends({
+          dataSource,
           symbol,
-          'day',
-          subYears(date, 5),
-          date
-        )
+          from: subYears(date, 5),
+          granularity: 'day',
+          to: date
+        })
       ]);
 
       return {
-        activities: Object.entries(historicalData[symbol]).map(
+        activities: Object.entries(historicalData).map(
           ([dateString, historicalDataItem]) => {
             return {
               accountId: undefined,

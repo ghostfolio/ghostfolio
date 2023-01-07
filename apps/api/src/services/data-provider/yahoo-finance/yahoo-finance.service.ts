@@ -160,70 +160,58 @@ export class YahooFinanceService implements DataProviderInterface {
     return response;
   }
 
-  public async getDividends(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
-    // TODO: Call getHistorical()
-
+  public async getDividends({
+    from,
+    granularity = 'day',
+    symbol,
+    to
+  }: {
+    from: Date;
+    granularity: Granularity;
+    symbol: string;
+    to: Date;
+  }) {
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
     }
 
-    const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(aSymbol);
+    const yahooFinanceSymbol = this.convertToYahooFinanceSymbol(symbol);
 
     try {
       const historicalResult = await yahooFinance.historical(
         yahooFinanceSymbol,
         {
           events: 'dividends',
-          interval: '1d',
+          interval: granularity === 'month' ? '1mo' : '1d',
           period1: format(from, DATE_FORMAT),
           period2: format(to, DATE_FORMAT)
         }
       );
 
       const response: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+        [date: string]: IDataProviderHistoricalResponse;
       } = {};
 
-      // Convert symbol back
-      const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
-
-      response[symbol] = {};
-
       for (const historicalItem of historicalResult) {
-        let marketPrice = historicalItem.dividends;
-
-        if (symbol === `${this.baseCurrency}GBp`) {
-          // Convert GPB to GBp (pence)
-          marketPrice = new Big(marketPrice).mul(100).toNumber();
-        } else if (symbol === `${this.baseCurrency}ILA`) {
-          // Convert ILS to ILA
-          marketPrice = new Big(marketPrice).mul(100).toNumber();
-        } else if (symbol === `${this.baseCurrency}ZAc`) {
-          // Convert ZAR to ZAc (cents)
-          marketPrice = new Big(marketPrice).mul(100).toNumber();
-        }
-
-        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice
+        response[format(historicalItem.date, DATE_FORMAT)] = {
+          marketPrice: this.getConvertedValue({
+            symbol,
+            value: historicalItem.dividends
+          })
         };
       }
 
       return response;
     } catch (error) {
-      // TODO: Log error and return empty response
-      throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+      Logger.error(
+        `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
+        'YahooFinanceService'
       );
+
+      return {};
     }
   }
 
@@ -255,27 +243,14 @@ export class YahooFinanceService implements DataProviderInterface {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
       } = {};
 
-      // Convert symbol back
-      const symbol = this.convertFromYahooFinanceSymbol(yahooFinanceSymbol);
-
-      response[symbol] = {};
+      response[aSymbol] = {};
 
       for (const historicalItem of historicalResult) {
-        let marketPrice = historicalItem.close;
-
-        if (symbol === `${this.baseCurrency}GBp`) {
-          // Convert GPB to GBp (pence)
-          marketPrice = new Big(marketPrice).mul(100).toNumber();
-        } else if (symbol === `${this.baseCurrency}ILA`) {
-          // Convert ILS to ILA
-          marketPrice = new Big(marketPrice).mul(100).toNumber();
-        } else if (symbol === `${this.baseCurrency}ZAc`) {
-          // Convert ZAR to ZAc (cents)
-          marketPrice = new Big(marketPrice).mul(100).toNumber();
-        }
-
-        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice,
+        response[aSymbol][format(historicalItem.date, DATE_FORMAT)] = {
+          marketPrice: this.getConvertedValue({
+            symbol: aSymbol,
+            value: historicalItem.close
+          }),
           performance: historicalItem.open - historicalItem.close
         };
       }
@@ -488,6 +463,27 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return name || shortName || symbol;
+  }
+
+  private getConvertedValue({
+    symbol,
+    value
+  }: {
+    symbol: string;
+    value: number;
+  }) {
+    if (symbol === `${this.baseCurrency}GBp`) {
+      // Convert GPB to GBp (pence)
+      return new Big(value).mul(100).toNumber();
+    } else if (symbol === `${this.baseCurrency}ILA`) {
+      // Convert ILS to ILA
+      return new Big(value).mul(100).toNumber();
+    } else if (symbol === `${this.baseCurrency}ZAc`) {
+      // Convert ZAR to ZAc (cents)
+      return new Big(value).mul(100).toNumber();
+    }
+
+    return value;
   }
 
   private parseAssetClass(aPrice: Price): {

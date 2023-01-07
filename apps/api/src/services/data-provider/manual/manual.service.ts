@@ -29,6 +29,20 @@ export class ManualService implements DataProviderInterface {
     };
   }
 
+  public async getDividends({
+    from,
+    granularity = 'day',
+    symbol,
+    to
+  }: {
+    from: Date;
+    granularity: Granularity;
+    symbol: string;
+    to: Date;
+  }) {
+    return {};
+  }
+
   public async getHistorical(
     aSymbol: string,
     aGranularity: Granularity = 'day',
