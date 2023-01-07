@@ -41,8 +41,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
-  @Input() showActions: boolean;
+  @Input() showActions = true;
   @Input() showCheckbox = false;
+  @Input() showFooter = true;
   @Input() showNameColumn = true;
 
   @Output() activityDeleted = new EventEmitter<string>();
@@ -51,6 +52,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Output() export = new EventEmitter<string[]>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
+  @Output() importDividends = new EventEmitter<UniqueAsset>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -233,6 +235,10 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
     this.import.emit();
   }
 
+  public onImportDividends() {
+    this.importDividends.emit();
+  }
+
   public onOpenComment(aComment: string) {
     alert(aComment);
   }
@@ -272,13 +278,18 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       };
     }
 
-    fieldValueMap[activity.SymbolProfile.currency] = {
-      id: activity.SymbolProfile.currency,
-      label: activity.SymbolProfile.currency,
-      type: 'TAG'
-    };
+    if (activity.SymbolProfile?.currency) {
+      fieldValueMap[activity.SymbolProfile.currency] = {
+        id: activity.SymbolProfile.currency,
+        label: activity.SymbolProfile.currency,
+        type: 'TAG'
+      };
+    }
 
-    if (!isUUID(activity.SymbolProfile.symbol)) {
+    if (
+      activity.SymbolProfile?.symbol &&
+      !isUUID(activity.SymbolProfile.symbol)
+    ) {
       fieldValueMap[activity.SymbolProfile.symbol] = {
         id: activity.SymbolProfile.symbol,
         label: activity.SymbolProfile.symbol,

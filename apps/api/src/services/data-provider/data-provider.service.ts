@@ -23,6 +23,27 @@ export class DataProviderService {
     private readonly prismaService: PrismaService
   ) {}
 
+  public async getDividends({
+    dataSource,
+    from,
+    granularity = 'day',
+    symbol,
+    to
+  }: {
+    dataSource: DataSource;
+    from: Date;
+    granularity: Granularity;
+    symbol: string;
+    to: Date;
+  }) {
+    return this.getDataProvider(DataSource[dataSource]).getDividends({
+      from,
+      granularity,
+      symbol,
+      to
+    });
+  }
+
   public async getHistorical(
     aItems: IDataGatheringItem[],
     aGranularity: Granularity = 'month',

@@ -11,7 +11,7 @@ import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
+import { UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
@@ -184,6 +184,24 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public onImport() {
     const dialogRef = this.dialog.open(ImportActivitiesDialog, {
       data: <ImportActivitiesDialogParams>{
+        deviceType: this.deviceType,
+        user: this.user
+      },
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchActivities();
+      });
+  }
+
+  public onImportDividends() {
+    const dialogRef = this.dialog.open(ImportActivitiesDialog, {
+      data: <ImportActivitiesDialogParams>{
+        activityTypes: ['DIVIDEND'],
         deviceType: this.deviceType,
         user: this.user
       },

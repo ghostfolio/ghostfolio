@@ -59,6 +59,10 @@ import { DataProviderService } from './data-provider.service';
       ]
     }
   ],
-  exports: [DataProviderService, GhostfolioScraperApiService]
+  exports: [
+    DataProviderService,
+    GhostfolioScraperApiService,
+    YahooFinanceService
+  ]
 })
 export class DataProviderModule {}

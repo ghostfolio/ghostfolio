@@ -5,12 +5,16 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { isArray } from 'lodash';
-import { Subject } from 'rxjs';
+import { Position } from '@ghostfolio/common/interfaces';
+import { AssetClass } from '@prisma/client';
+import { isArray, sortBy } from 'lodash';
+import { Subject, takeUntil } from 'rxjs';
 
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
@@ -24,20 +28,55 @@ export class ImportActivitiesDialog implements OnDestroy {
   public activities: Activity[] = [];
   public details: any[] = [];
   public errorMessages: string[] = [];
+  public holdings: Position[] = [];
   public isFileSelected = false;
+  public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
+  public uniqueAssetForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
+    private dataService: DataService,
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ImportActivitiesDialog>,
     private importActivitiesService: ImportActivitiesService,
     private snackBar: MatSnackBar
   ) {}
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.uniqueAssetForm = this.formBuilder.group({
+      uniqueAsset: [undefined, Validators.required]
+    });
+
+    if (
+      this.data?.activityTypes?.length === 1 &&
+      this.data?.activityTypes?.[0] === 'DIVIDEND'
+    ) {
+      this.mode = 'DIVIDEND';
+
+      this.dataService
+        .fetchPositions({
+          filters: [
+            {
+              id: AssetClass.EQUITY,
+              type: 'ASSET_CLASS'
+            }
+          ],
+          range: 'max'
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ positions }) => {
+          this.holdings = sortBy(positions, ({ name }) => {
+            return name.toLowerCase();
+          });
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
+  }
 
   public onCancel(): void {
     this.dialogRef.close();
@@ -71,6 +110,24 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
   }
 
+  public onLoadDividends() {
+    const { dataSource, symbol } =
+      this.uniqueAssetForm.controls['uniqueAsset'].value;
+
+    this.dataService
+      .fetchDividendsImport({
+        dataSource,
+        symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ activities }) => {
+        this.activities = activities;
+        this.isFileSelected = true;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   public onReset() {
     this.details = [];
     this.errorMessages = [];
@@ -94,8 +151,6 @@ export class ImportActivitiesDialog implements OnDestroy {
 
       reader.onload = async (readerEvent) => {
         const fileContent = readerEvent.target.result as string;
-
-        console.log(fileContent);
 
         try {
           if (file.name.endsWith('.json')) {

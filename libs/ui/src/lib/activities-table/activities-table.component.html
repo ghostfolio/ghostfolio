@@ -117,7 +117,7 @@
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex align-items-center">
           <div>
-            <span class="text-truncate">{{ element.SymbolProfile.name }}</span>
+            <span class="text-truncate">{{ element.SymbolProfile?.name }}</span>
             <span
               *ngIf="element.isDraft"
               class="badge badge-secondary ml-1"
@@ -126,9 +126,9 @@
             >
           </div>
         </div>
-        <div *ngIf="!isUUID(element.SymbolProfile.symbol)">
+        <div *ngIf="!isUUID(element.SymbolProfile?.symbol)">
           <small class="text-muted">{{
-            element.SymbolProfile.symbol | gfSymbol
+            element.SymbolProfile?.symbol | gfSymbol
           }}</small>
         </div>
       </td>
@@ -149,7 +149,7 @@
         class="d-none d-lg-table-cell px-1"
         mat-cell
       >
-        {{ element.SymbolProfile.currency }}
+        {{ element.SymbolProfile?.currency }}
       </td>
       <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
         {{ baseCurrency }}
@@ -389,6 +389,14 @@
             <span i18n>Import Activities</span>
           </button>
           <button
+            *ngIf="hasPermissionToImportActivities"
+            mat-menu-item
+            (click)="onImportDividends()"
+          >
+            <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
+            <span i18n>Import Dividends</span>
+          </button>
+          <button
             *ngIf="hasPermissionToExportActivities"
             class="align-items-center d-flex"
             mat-menu-item
@@ -459,7 +467,10 @@
     <tr
       *matFooterRowDef="displayedColumns"
       mat-footer-row
-      [ngClass]="{ 'd-none': isLoading || dataSource.data.length === 0 }"
+      [ngClass]="{
+        'd-none':
+          isLoading || dataSource.data.length === 0 || showFooter === false
+      }"
     ></tr>
   </table>
 </div>

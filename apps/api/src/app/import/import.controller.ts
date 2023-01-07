@@ -1,19 +1,26 @@
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   Inject,
   Logger,
+  Param,
   Post,
   Query,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { isEmpty } from 'lodash';
 
 import { ImportDataDto } from './import-data.dto';
 import { ImportService } from './import.service';
@@ -73,5 +80,24 @@ export class ImportController {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  @Get('dividends/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async gatherDividends(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<ImportResponse> {
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    const activities = await this.importService.getDividends({
+      dataSource,
+      symbol,
+      userCurrency
+    });
+
+    return { activities };
   }
 }

@@ -7,31 +7,59 @@
 
 <div class="flex-grow-1" mat-dialog-content>
   <ng-container *ngIf="!isFileSelected">
-    <div class="d-flex justify-content-center flex-column">
-      <button
-        class="py-3"
-        color="primary"
-        mat-stroked-button
-        (click)="onSelectFile()"
-      >
-        <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
-        <span i18n>Choose File</span>
-      </button>
-      <p class="mb-0 mt-4 text-center">
-        <span class="mr-1" i18n>The following file formats are supported:</span>
-        <a
-          href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
-          target="_blank"
-          >CSV</a
+    <ng-container *ngIf="mode === 'DIVIDEND'; else selectFile">
+      <form [formGroup]="uniqueAssetForm" (ngSubmit)="onLoadDividends()">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Holding</mat-label>
+          <mat-select formControlName="uniqueAsset">
+            <mat-option
+              *ngFor="let holding of holdings"
+              [value]="{dataSource: holding.dataSource, symbol: holding.symbol}"
+              >{{ holding.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+        <div class="d-flex justify-content-center flex-column">
+          <button
+            color="primary"
+            mat-flat-button
+            type="submit"
+            [disabled]="!uniqueAssetForm.valid"
+          >
+            <span i18n>Load Dividends</span>
+          </button>
+        </div>
+      </form>
+    </ng-container>
+    <ng-template #selectFile>
+      <div class="d-flex justify-content-center flex-column">
+        <button
+          class="py-3"
+          color="primary"
+          mat-stroked-button
+          (click)="onSelectFile()"
         >
-        <span class="mx-1" i18n>or</span>
-        <a
-          href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
-          target="_blank"
-          >JSON</a
-        >
-      </p>
-    </div>
+          <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+          <span i18n>Choose File</span>
+        </button>
+        <p class="mb-0 mt-4 text-center">
+          <span class="mr-1" i18n
+            >The following file formats are supported:</span
+          >
+          <a
+            href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
+            target="_blank"
+            >CSV</a
+          >
+          <span class="mx-1" i18n>or</span>
+          <a
+            href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
+            target="_blank"
+            >JSON</a
+          >
+        </p>
+      </div>
+    </ng-template>
   </ng-container>
   <ng-container *ngIf="isFileSelected">
     <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
@@ -47,6 +75,7 @@
         [locale]="data?.user?.settings?.locale"
         [showActions]="false"
         [showCheckbox]="true"
+        [showFooter]="false"
         [showSymbolColumn]="false"
         (selectedActivities)="updateSelection($event)"
       ></gf-activities-table>
