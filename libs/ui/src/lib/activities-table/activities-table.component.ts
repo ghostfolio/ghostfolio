@@ -41,8 +41,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
-  @Input() showActions: boolean;
+  @Input() showActions = true;
   @Input() showCheckbox = false;
+  @Input() showFooter = true;
   @Input() showNameColumn = true;
 
   @Output() activityDeleted = new EventEmitter<string>();
