@@ -42,7 +42,7 @@ export class ImportService {
         return Account;
       });
 
-      const mostFrequentAccount = this.getMostFrequentAccount(accounts);
+      const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
       const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([
@@ -71,11 +71,11 @@ export class ImportService {
             const value = new Big(quantity).mul(marketPrice).toNumber();
 
             return {
+              Account,
               quantity,
               value,
-              Account: mostFrequentAccount,
-              accountId: mostFrequentAccount.id,
-              accountUserId: mostFrequentAccount.userId,
+              accountId: Account?.id,
+              accountUserId: undefined,
               comment: undefined,
               createdAt: undefined,
               date: parseDate(dateString),
@@ -88,7 +88,7 @@ export class ImportService {
               type: 'DIVIDEND',
               unitPrice: marketPrice,
               updatedAt: undefined,
-              userId: mostFrequentAccount.userId,
+              userId: Account?.userId,
               valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
                 value,
                 assetProfile.currency,
@@ -244,29 +244,14 @@ export class ImportService {
     return activities;
   }
 
-  private getMostFrequentAccount(accounts: AccountWithPlatform[]) {
-    const accountFrequencyCountMap: { [accountId: string]: number } = {};
+  private isUniqueAccount(accounts: AccountWithPlatform[]) {
+    const uniqueAccountIds = new Set<string>();
 
-    // Iterate through the array of accounts and increment the frequency for each account
     for (const account of accounts) {
-      accountFrequencyCountMap[account.id] =
-        (accountFrequencyCountMap[account.id] || 0) + 1;
+      uniqueAccountIds.add(account.id);
     }
 
-    // Find the account with the highest frequency
-    let maxFrequencyCount = 0;
-    let mostFrequentAccount: AccountWithPlatform;
-
-    for (const accountId in accountFrequencyCountMap) {
-      if (accountFrequencyCountMap[accountId] > maxFrequencyCount) {
-        mostFrequentAccount = accounts.find(
-          (account) => account.id === accountId
-        );
-        maxFrequencyCount = accountFrequencyCountMap[accountId];
-      }
-    }
-
-    return mostFrequentAccount;
+    return uniqueAccountIds.size === 1;
   }
 
   private async validateActivities({
