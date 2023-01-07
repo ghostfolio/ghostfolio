@@ -1,6 +1,7 @@
 import { AccountModule } from '@ghostfolio/api/app/account/account.module';
 import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
@@ -23,6 +24,7 @@ import { ImportService } from './import.service';
     DataProviderModule,
     ExchangeRateDataModule,
     OrderModule,
+    PortfolioModule,
     PrismaModule,
     RedisCacheModule,
     SymbolProfileModule

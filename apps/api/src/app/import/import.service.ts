@@ -2,6 +2,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
@@ -11,7 +12,7 @@ import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { endOfToday, isAfter, isSameDay, parseISO, subYears } from 'date-fns';
+import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -21,6 +22,7 @@ export class ImportService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly orderService: OrderService,
+    private readonly portfolioService: PortfolioService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
@@ -29,9 +31,13 @@ export class ImportService {
     symbol
   }: UniqueAsset): Promise<ImportResponse> {
     try {
-      const date = new Date();
+      const { firstBuyDate } = await this.portfolioService.getPosition(
+        dataSource,
+        undefined,
+        symbol
+      );
 
-      const [[assetProfile], historicalData] = await Promise.all([
+      const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([
           {
             dataSource,
@@ -41,14 +47,14 @@ export class ImportService {
         await this.dataProviderService.getDividends({
           dataSource,
           symbol,
-          from: subYears(date, 5),
+          from: parseDate(firstBuyDate),
           granularity: 'day',
-          to: date
+          to: new Date()
         })
       ]);
 
       return {
-        activities: Object.entries(historicalData).map(
+        activities: Object.entries(dividends).map(
           ([dateString, historicalDataItem]) => {
             return {
               accountId: undefined,
