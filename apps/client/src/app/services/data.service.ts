@@ -122,7 +122,7 @@ export class DataService {
 
   public fetchDividendsImport({ dataSource, symbol }: UniqueAsset) {
     return this.http.get<ImportResponse>(
-      `/api/v1/symbol/${dataSource}/${symbol}/dividends`
+      `/api/v1/import/dividends/${dataSource}/${symbol}`
     );
   }
 

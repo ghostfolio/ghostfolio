@@ -4,11 +4,14 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { parseDate } from '@ghostfolio/common/helper';
+import { ImportResponse, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
+import { endOfToday, isAfter, isSameDay, parseISO, subYears } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -17,8 +20,63 @@ export class ImportService {
     private readonly accountService: AccountService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly orderService: OrderService
+    private readonly orderService: OrderService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async getDividends({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<ImportResponse> {
+    try {
+      const date = new Date();
+
+      const [[assetProfile], historicalData] = await Promise.all([
+        this.symbolProfileService.getSymbolProfiles([
+          {
+            dataSource,
+            symbol
+          }
+        ]),
+        await this.dataProviderService.getDividends({
+          dataSource,
+          symbol,
+          from: subYears(date, 5),
+          granularity: 'day',
+          to: date
+        })
+      ]);
+
+      return {
+        activities: Object.entries(historicalData).map(
+          ([dateString, historicalDataItem]) => {
+            return {
+              accountId: undefined,
+              accountUserId: undefined,
+              comment: undefined,
+              createdAt: undefined,
+              date: parseDate(dateString),
+              fee: 0,
+              feeInBaseCurrency: 0,
+              id: assetProfile.id,
+              isDraft: false,
+              quantity: 0,
+              SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
+              symbolProfileId: undefined,
+              type: 'DIVIDEND',
+              unitPrice: historicalDataItem.marketPrice,
+              updatedAt: undefined,
+              userId: undefined,
+              value: 0,
+              valueInBaseCurrency: 0
+            };
+          }
+        )
+      };
+    } catch {
+      return { activities: [] };
+    }
+  }
 
   public async import({
     activitiesDto,

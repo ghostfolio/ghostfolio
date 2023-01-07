@@ -76,29 +76,6 @@ export class SymbolController {
     return result;
   }
 
-  @Get(':dataSource/:symbol/dividends')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async gatherDividends(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<ImportResponse> {
-    const result = await this.symbolService.getDividends({
-      dataSource,
-      symbol
-    });
-
-    if (!result || isEmpty(result)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    return result;
-  }
-
   @Get(':dataSource/:symbol/:dateString')
   @UseGuards(AuthGuard('jwt'))
   public async gatherSymbolForDate(

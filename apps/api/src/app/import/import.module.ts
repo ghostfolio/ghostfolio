@@ -7,6 +7,7 @@ import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.mod
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { ImportController } from './import.controller';
@@ -23,7 +24,8 @@ import { ImportService } from './import.service';
     ExchangeRateDataModule,
     OrderModule,
     PrismaModule,
-    RedisCacheModule
+    RedisCacheModule,
+    SymbolProfileModule
   ],
   providers: [ImportService]
 })
