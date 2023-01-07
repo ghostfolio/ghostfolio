@@ -8,7 +8,10 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { parseDate } from '@ghostfolio/common/helper';
 import { ImportResponse, UniqueAsset } from '@ghostfolio/common/interfaces';
-import { OrderWithAccount } from '@ghostfolio/common/types';
+import {
+  AccountWithPlatform,
+  OrderWithAccount
+} from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
@@ -28,14 +31,18 @@ export class ImportService {
 
   public async getDividends({
     dataSource,
-    symbol
-  }: UniqueAsset): Promise<ImportResponse> {
+    symbol,
+    userCurrency
+  }: UniqueAsset & { userCurrency: string }): Promise<ImportResponse> {
     try {
-      const { firstBuyDate } = await this.portfolioService.getPosition(
-        dataSource,
-        undefined,
-        symbol
-      );
+      const { firstBuyDate, historicalData, orders } =
+        await this.portfolioService.getPosition(dataSource, undefined, symbol);
+
+      const accounts = orders.map(({ Account }) => {
+        return Account;
+      });
+
+      const mostFrequentAccount = this.getMostFrequentAccount(accounts);
 
       const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([
@@ -55,10 +62,20 @@ export class ImportService {
 
       return {
         activities: Object.entries(dividends).map(
-          ([dateString, historicalDataItem]) => {
+          ([dateString, { marketPrice }]) => {
+            const quantity =
+              historicalData.find((historicalDataItem) => {
+                return historicalDataItem.date === dateString;
+              })?.quantity ?? 0;
+
+            const value = new Big(quantity).mul(marketPrice).toNumber();
+
             return {
-              accountId: undefined,
-              accountUserId: undefined,
+              quantity,
+              value,
+              Account: mostFrequentAccount,
+              accountId: mostFrequentAccount.id,
+              accountUserId: mostFrequentAccount.userId,
               comment: undefined,
               createdAt: undefined,
               date: parseDate(dateString),
@@ -66,15 +83,17 @@ export class ImportService {
               feeInBaseCurrency: 0,
               id: assetProfile.id,
               isDraft: false,
-              quantity: 0,
               SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
-              symbolProfileId: undefined,
+              symbolProfileId: assetProfile.id,
               type: 'DIVIDEND',
-              unitPrice: historicalDataItem.marketPrice,
+              unitPrice: marketPrice,
               updatedAt: undefined,
-              userId: undefined,
-              value: 0,
-              valueInBaseCurrency: 0
+              userId: mostFrequentAccount.userId,
+              valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+                value,
+                assetProfile.currency,
+                userCurrency
+              )
             };
           }
         )
@@ -223,6 +242,31 @@ export class ImportService {
     }
 
     return activities;
+  }
+
+  private getMostFrequentAccount(accounts: AccountWithPlatform[]) {
+    const accountFrequencyCountMap: { [accountId: string]: number } = {};
+
+    // Iterate through the array of accounts and increment the frequency for each account
+    for (const account of accounts) {
+      accountFrequencyCountMap[account.id] =
+        (accountFrequencyCountMap[account.id] || 0) + 1;
+    }
+
+    // Find the account with the highest frequency
+    let maxFrequencyCount = 0;
+    let mostFrequentAccount: AccountWithPlatform;
+
+    for (const accountId in accountFrequencyCountMap) {
+      if (accountFrequencyCountMap[accountId] > maxFrequencyCount) {
+        mostFrequentAccount = accounts.find(
+          (account) => account.id === accountId
+        );
+        maxFrequencyCount = accountFrequencyCountMap[accountId];
+      }
+    }
+
+    return mostFrequentAccount;
   }
 
   private async validateActivities({

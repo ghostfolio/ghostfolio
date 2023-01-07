@@ -1,6 +1,6 @@
-import { Account, Order, Platform, SymbolProfile, Tag } from '@prisma/client';
+import { Order, SymbolProfile, Tag } from '@prisma/client';
 
-type AccountWithPlatform = Account & { Platform?: Platform };
+import { AccountWithPlatform } from './account-with-platform.type';
 
 export type OrderWithAccount = Order & {
   Account?: AccountWithPlatform;
