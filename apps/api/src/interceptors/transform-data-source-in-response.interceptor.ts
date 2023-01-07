@@ -1,3 +1,4 @@
+import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
 import { encodeDataSource } from '@ghostfolio/common/helper';
 import {
   CallHandler,
@@ -5,7 +6,7 @@ import {
   Injectable,
   NestInterceptor
 } from '@nestjs/common';
-import { isArray } from 'lodash';
+import { DataSource } from '@prisma/client';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -28,63 +29,23 @@ export class TransformDataSourceInResponseInterceptor<T>
         if (
           this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true
         ) {
-          if (data.activities) {
-            data.activities.map((activity) => {
-              activity.SymbolProfile.dataSource = encodeDataSource(
-                activity.SymbolProfile.dataSource
-              );
-              return activity;
-            });
-          }
-
-          if (isArray(data.benchmarks)) {
-            data.benchmarks.map((benchmark) => {
-              benchmark.dataSource = encodeDataSource(benchmark.dataSource);
-              return benchmark;
-            });
-          }
-
-          if (data.dataSource) {
-            data.dataSource = encodeDataSource(data.dataSource);
-          }
-
-          if (data.errors) {
-            for (const error of data.errors) {
-              if (error.dataSource) {
-                error.dataSource = encodeDataSource(error.dataSource);
+          data = redactAttributes({
+            options: [
+              {
+                attribute: 'dataSource',
+                valueMap: Object.keys(DataSource).reduce(
+                  (valueMap, dataSource) => {
+                    valueMap[dataSource] = encodeDataSource(
+                      DataSource[dataSource]
+                    );
+                    return valueMap;
+                  },
+                  {}
+                )
               }
-            }
-          }
-
-          if (data.holdings) {
-            for (const symbol of Object.keys(data.holdings)) {
-              if (data.holdings[symbol].dataSource) {
-                data.holdings[symbol].dataSource = encodeDataSource(
-                  data.holdings[symbol].dataSource
-                );
-              }
-            }
-          }
-
-          if (data.items) {
-            data.items.map((item) => {
-              item.dataSource = encodeDataSource(item.dataSource);
-              return item;
-            });
-          }
-
-          if (data.positions) {
-            data.positions.map((position) => {
-              position.dataSource = encodeDataSource(position.dataSource);
-              return position;
-            });
-          }
-
-          if (data.SymbolProfile) {
-            data.SymbolProfile.dataSource = encodeDataSource(
-              data.SymbolProfile.dataSource
-            );
-          }
+            ],
+            object: data
+          });
         }
 
         return data;
