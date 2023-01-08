@@ -1,6 +1,6 @@
 $mat-css-dark-theme-selector: '.is-dark-theme';
 
-@import '~angular-material-css-vars/src/lib/public-util';
+@import 'node_modules/angular-material-css-vars/src/lib/public-util';
 
 $alpha-disabled-text: 0.38;
 $alpha-hover: 0.04;
