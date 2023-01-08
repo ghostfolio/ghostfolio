@@ -257,8 +257,8 @@
         </mat-card-header>
         <mat-card-content>
           <gf-world-map-chart
-            [baseCurrency]="user?.settings?.baseCurrency"
             [countries]="countries"
+            [format]="worldMapChartFormat"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           ></gf-world-map-chart>
           <div class="row">
