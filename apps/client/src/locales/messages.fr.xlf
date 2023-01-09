@@ -235,7 +235,7 @@
       </trans-unit>
       <trans-unit id="28f86ffd419b869711aa13f5e5ff54be6d70731c" datatype="html">
         <source>Edit</source>
-        <target state="translated">Modifer</target>
+        <target state="translated">Modifier</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
           <context context-type="linenumber">224</context>
@@ -803,7 +803,7 @@
       </trans-unit>
       <trans-unit id="62f17fd50522539fd4c85854828db9d2e1c5330f" datatype="html">
         <source>User Signup</source>
-        <target state="translated">Inscription Nouveaux Utilisateurs</target>
+        <target state="translated">Inscription de Nouveaux Utilisateurs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">102</context>
@@ -867,7 +867,7 @@
       </trans-unit>
       <trans-unit id="2817099043823177227" datatype="html">
         <source>Do you really want to delete this user?</source>
-        <target state="translated">Voulez-vous vraiment supprimer cet utilisateur ?</target>
+        <target state="translated">Voulez-vous vraiment supprimer cet·te utilisateur·rice ?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -887,7 +887,7 @@
       </trans-unit>
       <trans-unit id="7d6573fb998f3a1cf1356623b85850d9d10edaa9" datatype="html">
         <source>Registration</source>
-        <target state="translated">Insricption</target>
+        <target state="translated">Inscription</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">11</context>
