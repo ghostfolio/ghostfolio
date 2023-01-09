@@ -835,7 +835,7 @@
       </trans-unit>
       <trans-unit id="e698b03c34b459b1b006d7f0473a49b9fcf5dfc1" datatype="html">
         <source>Coupons</source>
-        <target state="translated">Codes promotionnel</target>
+        <target state="translated">Codes promotionnels</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">152</context>
