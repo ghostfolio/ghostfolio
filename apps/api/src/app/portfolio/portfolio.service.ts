@@ -1682,7 +1682,7 @@ export class PortfolioService {
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
-          portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
+            portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ?? 0;
         let originalValueOfSymbolInBaseCurrency =
           this.exchangeRateDataService.toCurrency(
             order.quantity * order.unitPrice,
