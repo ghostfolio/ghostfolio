@@ -422,35 +422,33 @@ export class PortfolioCalculator {
         symbol: item.symbol
       });
 
-      if (item.quantity.gt(0)) {
-        hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
-        initialValues[item.symbol] = initialValue;
+      hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
+      initialValues[item.symbol] = initialValue;
 
-        positions.push({
-          averagePrice: item.quantity.eq(0)
-            ? new Big(0)
-            : item.investment.div(item.quantity),
-          currency: item.currency,
-          dataSource: item.dataSource,
-          firstBuyDate: item.firstBuyDate,
-          grossPerformance: !hasErrors ? grossPerformance ?? null : null,
-          grossPerformancePercentage: !hasErrors
-            ? grossPerformancePercentage ?? null
-            : null,
-          investment: item.investment,
-          marketPrice: marketValue?.toNumber() ?? null,
-          netPerformance: !hasErrors ? netPerformance ?? null : null,
-          netPerformancePercentage: !hasErrors
-            ? netPerformancePercentage ?? null
-            : null,
-          quantity: item.quantity,
-          symbol: item.symbol,
-          transactionCount: item.transactionCount
-        });
+      positions.push({
+        averagePrice: item.quantity.eq(0)
+          ? new Big(0)
+          : item.investment.div(item.quantity),
+        currency: item.currency,
+        dataSource: item.dataSource,
+        firstBuyDate: item.firstBuyDate,
+        grossPerformance: !hasErrors ? grossPerformance ?? null : null,
+        grossPerformancePercentage: !hasErrors
+          ? grossPerformancePercentage ?? null
+          : null,
+        investment: item.investment,
+        marketPrice: marketValue?.toNumber() ?? null,
+        netPerformance: !hasErrors ? netPerformance ?? null : null,
+        netPerformancePercentage: !hasErrors
+          ? netPerformancePercentage ?? null
+          : null,
+        quantity: item.quantity,
+        symbol: item.symbol,
+        transactionCount: item.transactionCount
+      });
 
-        if (hasErrors) {
-          errors.push({ dataSource: item.dataSource, symbol: item.symbol });
-        }
+      if (hasErrors) {
+        errors.push({ dataSource: item.dataSource, symbol: item.symbol });
       }
     }
 
