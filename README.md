@@ -1,34 +1,26 @@
 <div align="center">
-  <a href="https://ghostfol.io">
-    <img
-      alt="Ghostfolio Logo"
-      src="https://avatars.githubusercontent.com/u/82473144?s=200"
-      width="100"
-    />
-  </a>
 
-  <h1>Ghostfolio</h1>
-  <p>
-    <strong>Open Source Wealth Management Software</strong>
-  </p>
-  <p>
-    <a href="https://ghostfol.io"><strong>Ghostfol.io</strong></a> | <a href="https://ghostfol.io/en/demo"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/en/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/en/faq"><strong>FAQ</strong></a> | <a href="https://ghostfol.io/en/blog"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
-  </p>
-  <p>
-    <a href="https://www.buymeacoffee.com/ghostfolio">
-      <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-Support-yellow?logo=buymeacoffee"/></a>
-    <a href="#contributing">
-      <img src="https://img.shields.io/badge/Contributions-Welcome-orange.svg"/></a>
-    <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
-      <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"/></a>
-  </p>
+[<img src="https://avatars.githubusercontent.com/u/82473144?s=200" width="100" alt="Ghostfolio logo">](https://ghostfol.io)
+
+# Ghostfolio
+
+**Open Source Wealth Management Software**
+
+[**Ghostfol.io**](https://ghostfol.io) | [**Live Demo**](https://ghostfol.io/en/demo) | [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) | [**FAQ**](https://ghostfol.io/en/faq) | 
+[**Blog**](https://ghostfol.io/en/blog) | [**Slack**](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) | [**Twitter**](https://twitter.com/ghostfolio_)
+
+[![Shield: Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Support-yellow?logo=buymeacoffee)](https://www.buymeacoffee.com/ghostfolio)
+[![Shield: Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](#contributing)
+[![Shield: License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 </div>
 
 **Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions. The software is designed for personal use in continuous operation.
 
-<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
-  <a href="https://www.youtube.com/watch?v=yY6ObSQVJZk">
-    <img src="./apps/client/src/assets/images/video-preview.jpg" width="600"></a>
+<div align="center">
+
+[<img src="./apps/client/src/assets/images/video-preview.jpg" width="600" alt="Preview image of the Ghostfolio video trailer">](https://www.youtube.com/watch?v=yY6ObSQVJZk)
+
 </div>
 
 ## Ghostfolio Premium
@@ -63,8 +55,10 @@ Ghostfolio is for you if you are...
 - ✅ Zen Mode
 - ✅ Progressive Web App (PWA) with a mobile-first design
 
-<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
-  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+<div align="center">
+
+<img src="./apps/client/src/assets/images/screenshot.png" width="300" alt="Image of a phone showing the Ghostfolio app open">
+
 </div>
 
 ## Technology Stack
@@ -84,13 +78,9 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64` and `linux/arm64`.
 
 <div align="center">
-  <a href="https://www.buymeacoffee.com/ghostfolio">
-    <img
-      alt="Buy me a coffee button"
-      src="./apps/client/src/assets/images/button-buy-me-a-coffee.png"
-      width="150"
-    />
-  </a>
+
+[<img src="./apps/client/src/assets/images/button-buy-me-a-coffee.png" width="150" alt="Buy me a coffee button"/>](https://www.buymeacoffee.com/ghostfolio)
+
 </div>
 
 ### Supported Environment Variables
@@ -140,13 +130,13 @@ docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 Open http://localhost:3333 in your browser and accomplish these steps:
 
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-1. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
-1. Click _Sign out_ and check out the _Live Demo_
+2. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+3. Click _Sign out_ and check out the _Live Demo_
 
 #### Upgrade Version
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
-1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
+2. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
    At each start, the container will automatically apply the database schema migrations if needed.
 
 ### Run with _Unraid_ (Community)
@@ -165,20 +155,19 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 ### Setup
 
 1. Run `yarn install`
-1. Run `yarn build:dev` to build the source code including the assets
-1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
-1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
-1. Start the server and the client (see [_Development_](#Development))
-1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-1. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
-1. Click _Sign out_ and check out the _Live Demo_
+2. Run `yarn build:dev` to build the source code including the assets
+3. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
+4. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
+5. Start the server and the client (see [_Development_](#Development))
+6. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
+7. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+8. Click _Sign out_ and check out the _Live Demo_
 
 ### Start Server
-
-<ol type="a">
-  <li>Debug: Run <code>yarn watch:server</code> and click "Launch Program" in <a href="https://code.visualstudio.com">Visual Studio Code</a></li>
-  <li>Serve: Run <code>yarn start:server</code></li>
-</ol>
+#### Debug
+Run `yarn watch:server` and click "Launch program" in [Visual Studio Code](https://code.visualstudio.com)
+##### Serve
+Run `yarn start:server`
 
 ### Start Client
 
@@ -278,7 +267,7 @@ Ghostfolio is **100% free** and **open source**. We encourage and support an act
 
 Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack channel](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg), tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_) or send an e-mail to hi@ghostfol.io. We would love to hear from you.
 
-If you like to support this project, get **[Ghostfolio Premium](https://ghostfol.io/en/pricing)** or **[Buy me a coffee](https://www.buymeacoffee.com/ghostfolio)**.
+If you like to support this project, get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
 
 ## License
 
