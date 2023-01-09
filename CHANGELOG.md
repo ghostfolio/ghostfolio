@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the landing page (global heat map with subscribers)
+- Extended the landing page (global heat map of subscribers)
 
 ## 1.225.0 - 2023-01-07
 
