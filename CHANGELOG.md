@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the deprecated `~` in _Sass_ imports
+- Improved the form of the import dividends dialog (disable while loading)
+- Removed the deprecated `~` in _Sass_ imports
 
 ## 1.225.0 - 2023-01-07
 
