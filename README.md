@@ -130,13 +130,13 @@ docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 Open http://localhost:3333 in your browser and accomplish these steps:
 
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-2. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
-3. Click _Sign out_ and check out the _Live Demo_
+1. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+1. Click _Sign out_ and check out the _Live Demo_
 
 #### Upgrade Version
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
-2. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
+1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
    At each start, the container will automatically apply the database schema migrations if needed.
 
 ### Run with _Unraid_ (Community)
@@ -155,13 +155,13 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 ### Setup
 
 1. Run `yarn install`
-2. Run `yarn build:dev` to build the source code including the assets
-3. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
-4. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
-5. Start the server and the client (see [_Development_](#Development))
-6. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-7. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
-8. Click _Sign out_ and check out the _Live Demo_
+1. Run `yarn build:dev` to build the source code including the assets
+1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
+1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
+1. Start the server and the client (see [_Development_](#Development))
+1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
+1. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
+1.Click _Sign out_ and check out the _Live Demo_
 
 ### Start Server
 #### Debug
