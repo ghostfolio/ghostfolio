@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the landing page (global heat map of subscribers)
+- Extended the landing page by a global heat map of subscribers
+
+### Changed
+
+- Improved the deprecated `~` in _Sass_ imports
 
 ## 1.225.0 - 2023-01-07
 
