@@ -1,34 +1,26 @@
 <div align="center">
-  <a href="https://ghostfol.io">
-    <img
-      alt="Ghostfolio Logo"
-      src="https://avatars.githubusercontent.com/u/82473144?s=200"
-      width="100"
-    />
-  </a>
 
-  <h1>Ghostfolio</h1>
-  <p>
-    <strong>Open Source Wealth Management Software</strong>
-  </p>
-  <p>
-    <a href="https://ghostfol.io"><strong>Ghostfol.io</strong></a> | <a href="https://ghostfol.io/en/demo"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/en/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/en/faq"><strong>FAQ</strong></a> | <a href="https://ghostfol.io/en/blog"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
-  </p>
-  <p>
-    <a href="https://www.buymeacoffee.com/ghostfolio">
-      <img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-Support-yellow?logo=buymeacoffee"/></a>
-    <a href="#contributing">
-      <img src="https://img.shields.io/badge/Contributions-Welcome-orange.svg"/></a>
-    <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
-      <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"/></a>
-  </p>
+[<img src="https://avatars.githubusercontent.com/u/82473144?s=200" width="100" alt="Ghostfolio logo">](https://ghostfol.io)
+
+# Ghostfolio
+
+**Open Source Wealth Management Software**
+
+[**Ghostfol.io**](https://ghostfol.io) | [**Live Demo**](https://ghostfol.io/en/demo) | [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) | [**FAQ**](https://ghostfol.io/en/faq) |
+[**Blog**](https://ghostfol.io/en/blog) | [**Slack**](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) | [**Twitter**](https://twitter.com/ghostfolio_)
+
+[![Shield: Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Support-yellow?logo=buymeacoffee)](https://www.buymeacoffee.com/ghostfolio)
+[![Shield: Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](#contributing)
+[![Shield: License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 </div>
 
 **Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions. The software is designed for personal use in continuous operation.
 
-<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
-  <a href="https://www.youtube.com/watch?v=yY6ObSQVJZk">
-    <img src="./apps/client/src/assets/images/video-preview.jpg" width="600"></a>
+<div align="center">
+
+[<img src="./apps/client/src/assets/images/video-preview.jpg" width="600" alt="Preview image of the Ghostfolio video trailer">](https://www.youtube.com/watch?v=yY6ObSQVJZk)
+
 </div>
 
 ## Ghostfolio Premium
@@ -63,8 +55,10 @@ Ghostfolio is for you if you are...
 - ✅ Zen Mode
 - ✅ Progressive Web App (PWA) with a mobile-first design
 
-<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
-  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+<div align="center">
+
+<img src="./apps/client/src/assets/images/screenshot.png" width="300" alt="Image of a phone showing the Ghostfolio app open">
+
 </div>
 
 ## Technology Stack
@@ -84,13 +78,9 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64` and `linux/arm64`.
 
 <div align="center">
-  <a href="https://www.buymeacoffee.com/ghostfolio">
-    <img
-      alt="Buy me a coffee button"
-      src="./apps/client/src/assets/images/button-buy-me-a-coffee.png"
-      width="150"
-    />
-  </a>
+
+[<img src="./apps/client/src/assets/images/button-buy-me-a-coffee.png" width="150" alt="Buy me a coffee button"/>](https://www.buymeacoffee.com/ghostfolio)
+
 </div>
 
 ### Supported Environment Variables
@@ -175,10 +165,13 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 
 ### Start Server
 
-<ol type="a">
-  <li>Debug: Run <code>yarn watch:server</code> and click "Launch Program" in <a href="https://code.visualstudio.com">Visual Studio Code</a></li>
-  <li>Serve: Run <code>yarn start:server</code></li>
-</ol>
+#### Debug
+
+Run `yarn watch:server` and click "Launch program" in [Visual Studio Code](https://code.visualstudio.com)
+
+##### Serve
+
+Run `yarn start:server`
 
 ### Start Client
 
@@ -278,7 +271,7 @@ Ghostfolio is **100% free** and **open source**. We encourage and support an act
 
 Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack channel](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg), tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_) or send an e-mail to hi@ghostfol.io. We would love to hear from you.
 
-If you like to support this project, get **[Ghostfolio Premium](https://ghostfol.io/en/pricing)** or **[Buy me a coffee](https://www.buymeacoffee.com/ghostfolio)**.
+If you like to support this project, get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
 
 ## License
 
