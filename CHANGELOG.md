@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the landing page by a global heat map of subscribers
+
 ### Changed
 
 - Improved the form of the import dividends dialog (disable while loading)

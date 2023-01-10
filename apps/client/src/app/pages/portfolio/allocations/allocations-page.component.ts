@@ -84,6 +84,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   };
 
   public user: User;
+  public worldMapChartFormat: string;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -192,6 +193,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             ...assetClassFilters,
             ...tagFilters
           ];
+
+          this.worldMapChartFormat =
+            this.hasImpersonationId || this.user.settings.isRestrictedView
+              ? `{0}%`
+              : `{0} ${this.user?.settings?.baseCurrency}`;
 
           this.changeDetectorRef.markForCheck();
         }
