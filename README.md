@@ -167,9 +167,9 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 
 #### Debug
 
-Run `yarn watch:server` and click "Launch program" in [Visual Studio Code](https://code.visualstudio.com)
+Run `yarn watch:server` and click _Launch Program_ in [Visual Studio Code](https://code.visualstudio.com)
 
-##### Serve
+#### Serve
 
 Run `yarn start:server`
 
