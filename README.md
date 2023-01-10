@@ -6,7 +6,7 @@
 
 **Open Source Wealth Management Software**
 
-[**Ghostfol.io**](https://ghostfol.io) | [**Live Demo**](https://ghostfol.io/en/demo) | [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) | [**FAQ**](https://ghostfol.io/en/faq) | 
+[**Ghostfol.io**](https://ghostfol.io) | [**Live Demo**](https://ghostfol.io/en/demo) | [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) | [**FAQ**](https://ghostfol.io/en/faq) |
 [**Blog**](https://ghostfol.io/en/blog) | [**Slack**](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) | [**Twitter**](https://twitter.com/ghostfolio_)
 
 [![Shield: Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Support-yellow?logo=buymeacoffee)](https://www.buymeacoffee.com/ghostfolio)
@@ -161,12 +161,16 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 1. Start the server and the client (see [_Development_](#Development))
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 1. Go to the _Market Data_ tab in the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
-1.Click _Sign out_ and check out the _Live Demo_
+1. Click _Sign out_ and check out the _Live Demo_
 
 ### Start Server
+
 #### Debug
+
 Run `yarn watch:server` and click "Launch program" in [Visual Studio Code](https://code.visualstudio.com)
+
 ##### Serve
+
 Run `yarn start:server`
 
 ### Start Client
