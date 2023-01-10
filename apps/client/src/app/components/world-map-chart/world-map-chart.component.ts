@@ -7,6 +7,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { getNumberFormatGroup } from '@ghostfolio/common/helper';
 import svgMap from 'svgmap';
 
 @Component({
@@ -19,6 +20,7 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
   @Input() countries: { [code: string]: { name?: string; value: number } };
   @Input() format: string;
   @Input() isInPercent = false;
+  @Input() locale: string;
 
   public isLoading = true;
   public svgMapElement;
@@ -71,7 +73,8 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
         applyData: 'value',
         data: {
           value: {
-            format: this.format
+            format: this.format,
+            thousandSeparator: getNumberFormatGroup(this.locale)
           }
         },
         values: this.countries
