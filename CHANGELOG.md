@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the landing page by a global heat map of subscribers
+- Added support for the thousand separator in the global heat map component
+
+### Changed
+
+- Improved the form of the import dividends dialog (disable while loading)
+- Removed the deprecated `~` in _Sass_ imports
+
 ### Fixed
 
 - Fixed an exception in the _X-ray_ section

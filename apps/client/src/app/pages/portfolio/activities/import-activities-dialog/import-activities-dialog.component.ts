@@ -56,6 +56,7 @@ export class ImportActivitiesDialog implements OnDestroy {
       this.data?.activityTypes?.[0] === 'DIVIDEND'
     ) {
       this.mode = 'DIVIDEND';
+      this.uniqueAssetForm.controls['uniqueAsset'].disable();
 
       this.dataService
         .fetchPositions({
@@ -72,6 +73,7 @@ export class ImportActivitiesDialog implements OnDestroy {
           this.holdings = sortBy(positions, ({ name }) => {
             return name.toLowerCase();
           });
+          this.uniqueAssetForm.controls['uniqueAsset'].enable();
 
           this.changeDetectorRef.markForCheck();
         });
@@ -111,6 +113,8 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   public onLoadDividends() {
+    this.uniqueAssetForm.controls['uniqueAsset'].disable();
+
     const { dataSource, symbol } =
       this.uniqueAssetForm.controls['uniqueAsset'].value;
 
