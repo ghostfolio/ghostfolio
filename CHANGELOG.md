@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the landing page by a global heat map of subscribers
+- Added support for the thousand separator in the global heat map component
 
 ### Changed
 

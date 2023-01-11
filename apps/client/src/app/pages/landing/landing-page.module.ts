@@ -5,7 +5,6 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 import { GfLogoModule } from '@ghostfolio/ui/logo';
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { LandingPageRoutingModule } from './landing-page-routing.module';
@@ -16,7 +15,6 @@ import { LandingPageComponent } from './landing-page.component';
   imports: [
     CommonModule,
     GfLogoModule,
-    GfPremiumIndicatorModule,
     GfValueModule,
     GfWorldMapChartModule,
     LandingPageRoutingModule,
