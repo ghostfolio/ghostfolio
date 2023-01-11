@@ -910,12 +910,14 @@ export class PortfolioService {
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
     );
+
     const dataGatheringItem = positions.map((position) => {
       return {
         dataSource: position.dataSource,
         symbol: position.symbol
       };
     });
+
     const symbols = positions.map((position) => position.symbol);
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
@@ -1103,16 +1105,23 @@ export class PortfolioService {
       portfolioStart
     );
 
+    const positions = currentPositions.positions.filter(
+      (item) => !item.quantity.eq(0)
+    );
+
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
-    for (const position of currentPositions.positions) {
+
+    for (const position of positions) {
       portfolioItemsNow[position.symbol] = position;
     }
+
     const accounts = await this.getValueOfAccounts({
       orders,
       portfolioItemsNow,
-      userId,
-      userCurrency
+      userCurrency,
+      userId
     });
+
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
@@ -1136,19 +1145,19 @@ export class PortfolioService {
           [
             new CurrencyClusterRiskBaseCurrencyInitialInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             ),
             new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             ),
             new CurrencyClusterRiskInitialInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             ),
             new CurrencyClusterRiskCurrentInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             )
           ],
           <UserSettings>this.request.user.Settings.settings
@@ -1682,7 +1691,7 @@ export class PortfolioService {
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
-          portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
+            portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ?? 0;
         let originalValueOfSymbolInBaseCurrency =
           this.exchangeRateDataService.toCurrency(
             order.quantity * order.unitPrice,
