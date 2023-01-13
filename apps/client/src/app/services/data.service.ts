@@ -24,6 +24,7 @@ import {
   BenchmarkResponse,
   Export,
   Filter,
+  ImportResponse,
   InfoItem,
   OAuthResponse,
   PortfolioDetails,
@@ -117,6 +118,12 @@ export class DataService {
     return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
       params
     });
+  }
+
+  public fetchDividendsImport({ dataSource, symbol }: UniqueAsset) {
+    return this.http.get<ImportResponse>(
+      `/api/v1/import/dividends/${dataSource}/${symbol}`
+    );
   }
 
   public fetchExchangeRateForDate({

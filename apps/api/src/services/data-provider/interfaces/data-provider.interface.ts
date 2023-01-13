@@ -11,6 +11,18 @@ export interface DataProviderInterface {
 
   getAssetProfile(aSymbol: string): Promise<Partial<SymbolProfile>>;
 
+  getDividends({
+    from,
+    granularity,
+    symbol,
+    to
+  }: {
+    from: Date;
+    granularity: Granularity;
+    symbol: string;
+    to: Date;
+  }): Promise<{ [date: string]: IDataProviderHistoricalResponse }>;
+
   getHistorical(
     aSymbol: string,
     aGranularity: Granularity,

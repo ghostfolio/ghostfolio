@@ -13,10 +13,14 @@ import { Subject } from 'rxjs';
   templateUrl: './landing-page.html'
 })
 export class LandingPageComponent implements OnDestroy, OnInit {
+  public countriesOfSubscribersMap: {
+    [code: string]: { value: number };
+  } = {};
   public currentYear = format(new Date(), 'yyyy');
   public demoAuthToken: string;
   public deviceType: string;
   public hasPermissionForStatistics: boolean;
+  public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
   public statistics: Statistics;
   public testimonials = [
@@ -48,11 +52,23 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService
   ) {
-    const { globalPermissions, statistics } = this.dataService.fetchInfo();
+    const { countriesOfSubscribers, globalPermissions, statistics } =
+      this.dataService.fetchInfo();
+
+    for (const country of countriesOfSubscribers) {
+      this.countriesOfSubscribersMap[country] = {
+        value: 1
+      };
+    }
 
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
       permissions.enableStatistics
+    );
+
+    this.hasPermissionForSubscription = hasPermission(
+      globalPermissions,
+      permissions.enableSubscription
     );
 
     this.hasPermissionToCreateUser = hasPermission(

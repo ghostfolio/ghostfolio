@@ -660,8 +660,9 @@ export class PortfolioService {
     }
 
     const positionCurrency = orders[0].SymbolProfile.currency;
-    const [SymbolProfile] =
-      await this.symbolProfileService.getSymbolProfilesBySymbols([aSymbol]);
+    const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      { dataSource: aDataSource, symbol: aSymbol }
+    ]);
 
     const portfolioOrders: PortfolioOrder[] = orders
       .filter((order) => {
@@ -745,6 +746,7 @@ export class PortfolioService {
         historicalDataArray.push({
           averagePrice: orders[0].unitPrice,
           date: firstBuyDate,
+          quantity: orders[0].quantity,
           value: orders[0].unitPrice
         });
       }
@@ -761,6 +763,7 @@ export class PortfolioService {
             j++;
           }
           let currentAveragePrice = 0;
+          let currentQuantity = 0;
           const currentSymbol = transactionPoints[j].items.find(
             (item) => item.symbol === aSymbol
           );
@@ -768,11 +771,13 @@ export class PortfolioService {
             currentAveragePrice = currentSymbol.quantity.eq(0)
               ? 0
               : currentSymbol.investment.div(currentSymbol.quantity).toNumber();
+            currentQuantity = currentSymbol.quantity.toNumber();
           }
 
           historicalDataArray.push({
             date,
             averagePrice: currentAveragePrice,
+            quantity: currentQuantity,
             value: marketPrice
           });
 
@@ -905,12 +910,14 @@ export class PortfolioService {
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
     );
+
     const dataGatheringItem = positions.map((position) => {
       return {
         dataSource: position.dataSource,
         symbol: position.symbol
       };
     });
+
     const symbols = positions.map((position) => position.symbol);
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
@@ -1098,16 +1105,23 @@ export class PortfolioService {
       portfolioStart
     );
 
+    const positions = currentPositions.positions.filter(
+      (item) => !item.quantity.eq(0)
+    );
+
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
-    for (const position of currentPositions.positions) {
+
+    for (const position of positions) {
       portfolioItemsNow[position.symbol] = position;
     }
+
     const accounts = await this.getValueOfAccounts({
       orders,
       portfolioItemsNow,
-      userId,
-      userCurrency
+      userCurrency,
+      userId
     });
+
     return {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
@@ -1131,19 +1145,19 @@ export class PortfolioService {
           [
             new CurrencyClusterRiskBaseCurrencyInitialInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             ),
             new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             ),
             new CurrencyClusterRiskInitialInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             ),
             new CurrencyClusterRiskCurrentInvestment(
               this.exchangeRateDataService,
-              currentPositions
+              positions
             )
           ],
           <UserSettings>this.request.user.Settings.settings
@@ -1689,7 +1703,7 @@ export class PortfolioService {
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
-          portfolioItemsNow[order.SymbolProfile.symbol].marketPrice;
+            portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ?? 0;
         let originalValueOfSymbolInBaseCurrency =
           this.exchangeRateDataService.toCurrency(
             order.quantity * order.unitPrice,

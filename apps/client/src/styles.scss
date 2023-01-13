@@ -3,9 +3,9 @@
 @import './styles/bootstrap';
 @import './styles/table';
 
-@import '~angular-material-css-vars/src/lib/main';
+@import 'node_modules/angular-material-css-vars/src/lib/main';
 
-@import '~svgmap/dist/svgMap';
+@import 'node_modules/svgmap/dist/svgMap';
 
 $mat-css-dark-theme-selector: '.is-dark-theme';
 $mat-css-light-theme-selector: '.is-light-theme';

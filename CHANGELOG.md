@@ -11,6 +11,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the grouping by month / year of the dividend and investment timeline
 
+## 1.226.0 - 2023-01-11
+
+### Added
+
+- Added the language localization for Français (`fr`)
+- Extended the landing page by a global heat map of subscribers
+- Added support for the thousand separator in the global heat map component
+
+### Changed
+
+- Improved the form of the import dividends dialog (disable while loading)
+- Removed the deprecated `~` in _Sass_ imports
+
+### Fixed
+
+- Fixed an exception in the _X-ray_ section
+
+## 1.225.0 - 2023-01-07
+
+### Added
+
+- Added support for importing dividends from a data provider
+
+### Changed
+
+- Extended the Frequently Asked Questions (FAQ) page
+
 ## 1.224.0 - 2023-01-04
 
 ### Added
