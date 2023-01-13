@@ -3058,7 +3058,7 @@
       </trans-unit>
       <trans-unit id="0f845001c88b82c18535e6d44f5597061f506e42" datatype="html">
         <source>Holding</source>
-        <target state="new">Holding</target>
+        <target state="translated">Position</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">13,15</context>
@@ -3066,7 +3066,7 @@
       </trans-unit>
       <trans-unit id="050be0e7937dec05c8c8ded71cebc0bb027b38f6" datatype="html">
         <source>Load Dividends</source>
-        <target state="new">Load Dividends</target>
+        <target state="translated">Charger Dividendes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">29,33</context>
@@ -3074,7 +3074,7 @@
       </trans-unit>
       <trans-unit id="8036977202721714375" datatype="html">
         <source>Yearly</source>
-        <target state="new">Yearly</target>
+        <target state="translated">Annuel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
           <context context-type="linenumber">55</context>
@@ -3082,7 +3082,7 @@
       </trans-unit>
       <trans-unit id="c849bfcd57f5d4a2cb0a1fb3359b687f13878637" datatype="html">
         <source>Import Dividends</source>
-        <target state="new">Import Dividends</target>
+        <target state="translated">Importer Dividendes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">397</context>
