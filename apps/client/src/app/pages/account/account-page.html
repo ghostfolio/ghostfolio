@@ -24,8 +24,8 @@
                 ></gf-premium-indicator>
               </div>
               <div *ngIf="user?.subscription?.type === 'Premium'">
-                Valid until {{ user?.subscription?.expiresAt | date:
-                defaultDateFormat }}
+                <ng-container i18n>Valid until</ng-container> {{
+                user?.subscription?.expiresAt | date: defaultDateFormat }}
               </div>
               <div *ngIf="user?.subscription?.type === 'Basic'">
                 <ng-container *ngIf="hasPermissionForSubscription">
