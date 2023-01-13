@@ -3059,7 +3059,7 @@
       </trans-unit>
       <trans-unit id="0f845001c88b82c18535e6d44f5597061f506e42" datatype="html">
         <source>Holding</source>
-        <target state="new">Holding</target>
+        <target state="translated">Participatie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">13,15</context>
@@ -3075,7 +3075,7 @@
       </trans-unit>
       <trans-unit id="8036977202721714375" datatype="html">
         <source>Yearly</source>
-        <target state="new">Yearly</target>
+        <target state="translated">Jaarlijks</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
           <context context-type="linenumber">55</context>
