@@ -1,18 +1,20 @@
 import { Chart, TooltipPosition } from 'chart.js';
 
-import { getBackgroundColor, getTextColor } from './helper';
-import { ColorScheme } from './types';
+import { formatGroupedDate, getBackgroundColor, getTextColor } from './helper';
+import { ColorScheme, GroupBy } from './types';
 
 export function getTooltipOptions({
   colorScheme,
   currency = '',
   locale = '',
-  unit = ''
+  unit = '',
+  groupBy
 }: {
   colorScheme?: ColorScheme;
   currency?: string;
   locale?: string;
   unit?: string;
+  groupBy?: GroupBy;
 } = {}) {
   return {
     backgroundColor: getBackgroundColor(colorScheme),
@@ -38,6 +40,11 @@ export function getTooltipOptions({
           }
         }
         return label;
+      },
+      title: (contexts) => {
+        if (groupBy) {
+          return formatGroupedDate(contexts[0].parsed.x, groupBy);
+        }
       }
     },
     caretSize: 0,

@@ -1,11 +1,11 @@
 import * as currencies from '@dinero.js/currencies';
 import { DataSource } from '@prisma/client';
-import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
+import { format, getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 import { de, es, fr, it, nl, pt } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark } from './interfaces';
-import { ColorScheme } from './types';
+import { ColorScheme, GroupBy } from './types';
 
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
@@ -233,9 +233,19 @@ export function resolveMarketCondition(
 }
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
+export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
+export const DATE_FORMAT_YEARLY = 'yyyy';
 
 export function parseDate(date: string) {
   return parse(date, DATE_FORMAT, new Date());
+}
+
+export function formatGroupedDate(date: Date, groupBy: GroupBy) {
+  if (groupBy === 'month') {
+    return format(date, DATE_FORMAT_MONTHLY);
+  } else if (groupBy === 'year') {
+    return format(date, DATE_FORMAT_YEARLY);
+  }
 }
 
 export function prettifySymbol(aSymbol: string): string {
