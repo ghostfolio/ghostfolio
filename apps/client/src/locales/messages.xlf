@@ -2415,42 +2415,42 @@
         <source>Savings Rate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">242</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1270654249046226808" datatype="html">
         <source>Precious Metal</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1825829511397926879" datatype="html">
         <source>Tag</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1983771552391474467" datatype="html">
         <source>Equity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8432027249343784512" datatype="html">
         <source>Real Estate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2893204435511484886" datatype="html">
         <source>Cryptocurrency</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4086606389696938932" datatype="html">
@@ -2464,14 +2464,14 @@
         <source>Stock</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1346519036036997811" datatype="html">
         <source>Private Equity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4574987680940794089" datatype="html">
@@ -2485,49 +2485,49 @@
         <source>Mutual Fund</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
       <trans-unit id="787798817533231355" datatype="html">
         <source>Cash</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8106025670158480144" datatype="html">
         <source>Symbol</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8431989971855844965" datatype="html">
         <source>Commodity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8977365084844053365" datatype="html">
         <source>Bond</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9071695492820527473" datatype="html">
         <source>ETF</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6124744839836623630" datatype="html">
         <source>Fixed Income</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4893616715766810081" datatype="html">
@@ -2545,14 +2545,14 @@
         <source>Emergency Fund</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8693603235657020323" datatype="html">
         <source>Other</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">12</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/portfolio-proportion-chart/portfolio-proportion-chart.component.ts</context>
@@ -2563,42 +2563,42 @@
         <source>North America</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1413778527796351850" datatype="html">
         <source>Africa</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3228811828827738441" datatype="html">
         <source>Oceania</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3345512471687795386" datatype="html">
         <source>Asia</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5957846001261659229" datatype="html">
         <source>South America</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8350109327144196614" datatype="html">
         <source>Europe</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6f9fd3da06dc9000eef0d4dcbb37747b303048e9" datatype="html">
@@ -2694,7 +2694,7 @@
         <source>Securities</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8763985977445247551" datatype="html">
@@ -2765,6 +2765,55 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">397</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2963674907100579427" datatype="html">
+        <source>Higher Risk</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4152514811781104574" datatype="html">
+        <source>Lower Risk</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5036857680734170026" datatype="html">
+        <source>Grant</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7027401708987643293" datatype="html">
+        <source>Core</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8050244774979733855" datatype="html">
+        <source>Satellite</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9219851060664514927" datatype="html">
+        <source>Retirement Provision</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d82473cef3cd2258eab20223ffcdd5af0c0025cc" datatype="html">
+        <source>Valid until</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
     </body>
