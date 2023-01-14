@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the logo alignment
+
 ### Fixed
 
 - Fixed the grouping by month / year of the dividend and investment timeline

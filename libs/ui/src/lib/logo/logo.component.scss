@@ -5,6 +5,7 @@
 
   .logo {
     background-color: rgba(var(--dark-primary-text));
+    margin-top: -2px;
     mask: url('/assets/ghost.svg') no-repeat center;
   }
 }
