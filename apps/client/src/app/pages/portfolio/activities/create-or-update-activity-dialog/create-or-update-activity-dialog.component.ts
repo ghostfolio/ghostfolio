@@ -83,7 +83,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     this.currencies = currencies;
     this.platforms = platforms;
-    this.tags = tags;
+    this.tags = tags.map(({ id, name }) => {
+      return {
+        id,
+        name: translate(name)
+      };
+    });
 
     this.activityForm = this.formBuilder.group({
       accountId: [this.data.activity?.accountId, Validators.required],
@@ -114,7 +119,14 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         },
         Validators.required
       ],
-      tags: [this.data.activity?.tags],
+      tags: [
+        this.data.activity?.tags.map(({ id, name }) => {
+          return {
+            id,
+            name: translate(name)
+          };
+        })
+      ],
       type: [undefined, Validators.required], // Set after value changes subscription
       unitPrice: [this.data.activity?.unitPrice, Validators.required]
     });
