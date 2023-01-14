@@ -183,7 +183,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
             return {
               id,
-              label: name,
+              label: translate(name),
               type: 'TAG'
             };
           });
