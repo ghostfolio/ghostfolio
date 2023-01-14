@@ -1,5 +1,6 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
@@ -597,7 +598,12 @@ export class PortfolioService {
     const summary = await this.getSummary({
       impersonationId,
       userCurrency,
-      userId
+      userId,
+      balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
+      emergencyFundPositionsValueInBaseCurrency:
+        this.getEmergencyFundPositionsValueInBaseCurrency({
+          activities: orders
+        })
     });
 
     return {
@@ -1167,7 +1173,7 @@ export class PortfolioService {
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
               currentPositions.totalInvestment.toNumber(),
-              this.getFees({ orders, userCurrency }).toNumber()
+              this.getFees({ userCurrency, activities: orders }).toNumber()
             )
           ],
           <UserSettings>this.request.user.Settings.settings
@@ -1254,26 +1260,27 @@ export class PortfolioService {
   }
 
   private getDividend({
+    activities,
     date = new Date(0),
-    orders,
     userCurrency
   }: {
+    activities: OrderWithAccount[];
     date?: Date;
-    orders: OrderWithAccount[];
+
     userCurrency: string;
   }) {
-    return orders
-      .filter((order) => {
-        // Filter out all orders before given date and type dividend
+    return activities
+      .filter((activity) => {
+        // Filter out all activities before given date and type dividend
         return (
-          isBefore(date, new Date(order.date)) &&
-          order.type === TypeOfOrder.DIVIDEND
+          isBefore(date, new Date(activity.date)) &&
+          activity.type === TypeOfOrder.DIVIDEND
         );
       })
-      .map((order) => {
+      .map(({ quantity, SymbolProfile, unitPrice }) => {
         return this.exchangeRateDataService.toCurrency(
-          new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.SymbolProfile.currency,
+          new Big(quantity).mul(unitPrice).toNumber(),
+          SymbolProfile.currency,
           userCurrency
         );
       })
@@ -1345,24 +1352,56 @@ export class PortfolioService {
     return dividendsByGroup;
   }
 
+  private getEmergencyFundPositionsValueInBaseCurrency({
+    activities
+  }: {
+    activities: Activity[];
+  }) {
+    const emergencyFundOrders = activities.filter((activity) => {
+      return (
+        activity.tags?.some(({ name }) => {
+          return name === 'EMERGENCY_FUND';
+        }) ?? false
+      );
+    });
+
+    let valueInBaseCurrencyOfEmergencyFundPositions = new Big(0);
+
+    for (const order of emergencyFundOrders) {
+      if (order.type === 'BUY') {
+        valueInBaseCurrencyOfEmergencyFundPositions =
+          valueInBaseCurrencyOfEmergencyFundPositions.plus(
+            order.valueInBaseCurrency
+          );
+      } else if (order.type === 'SELL') {
+        valueInBaseCurrencyOfEmergencyFundPositions =
+          valueInBaseCurrencyOfEmergencyFundPositions.minus(
+            order.valueInBaseCurrency
+          );
+      }
+    }
+
+    return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
+  }
+
   private getFees({
+    activities,
     date = new Date(0),
-    orders,
     userCurrency
   }: {
+    activities: OrderWithAccount[];
     date?: Date;
-    orders: OrderWithAccount[];
     userCurrency: string;
   }) {
-    return orders
-      .filter((order) => {
-        // Filter out all orders before given date
-        return isBefore(date, new Date(order.date));
+    return activities
+      .filter((activity) => {
+        // Filter out all activities before given date
+        return isBefore(date, new Date(activity.date));
       })
-      .map((order) => {
+      .map(({ fee, SymbolProfile }) => {
         return this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.SymbolProfile.currency,
+          fee,
+          SymbolProfile.currency,
           userCurrency
         );
       })
@@ -1445,10 +1484,14 @@ export class PortfolioService {
   }
 
   private async getSummary({
+    balanceInBaseCurrency,
+    emergencyFundPositionsValueInBaseCurrency,
     impersonationId,
     userCurrency,
     userId
   }: {
+    balanceInBaseCurrency: number;
+    emergencyFundPositionsValueInBaseCurrency: number;
     impersonationId: string;
     userCurrency: string;
     userId: string;
@@ -1461,11 +1504,7 @@ export class PortfolioService {
       userId
     });
 
-    const { balanceInBaseCurrency } = await this.accountService.getCashDetails({
-      userId,
-      currency: userCurrency
-    });
-    const orders = await this.orderService.getOrders({
+    const activities = await this.orderService.getOrders({
       userCurrency,
       userId
     });
@@ -1480,18 +1519,24 @@ export class PortfolioService {
       return account?.isExcluded ?? false;
     });
 
-    const dividend = this.getDividend({ orders, userCurrency }).toNumber();
+    const dividend = this.getDividend({
+      activities,
+      userCurrency
+    }).toNumber();
     const emergencyFund = new Big(
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
-    const fees = this.getFees({ orders, userCurrency }).toNumber();
-    const firstOrderDate = orders[0]?.date;
-    const items = this.getItems(orders).toNumber();
+    const fees = this.getFees({ activities, userCurrency }).toNumber();
+    const firstOrderDate = activities[0]?.date;
+    const items = this.getItems(activities).toNumber();
 
-    const totalBuy = this.getTotalByType(orders, userCurrency, 'BUY');
-    const totalSell = this.getTotalByType(orders, userCurrency, 'SELL');
+    const totalBuy = this.getTotalByType(activities, userCurrency, 'BUY');
+    const totalSell = this.getTotalByType(activities, userCurrency, 'SELL');
 
-    const cash = new Big(balanceInBaseCurrency).minus(emergencyFund).toNumber();
+    const cash = new Big(balanceInBaseCurrency)
+      .minus(emergencyFund)
+      .plus(emergencyFundPositionsValueInBaseCurrency)
+      .toNumber();
     const committedFunds = new Big(totalBuy).minus(totalSell);
     const totalOfExcludedActivities = new Big(
       this.getTotalByType(excludedActivities, userCurrency, 'BUY')
@@ -1547,8 +1592,8 @@ export class PortfolioService {
       totalSell,
       committedFunds: committedFunds.toNumber(),
       emergencyFund: emergencyFund.toNumber(),
-      ordersCount: orders.filter((order) => {
-        return order.type === 'BUY' || order.type === 'SELL';
+      ordersCount: activities.filter(({ type }) => {
+        return type === 'BUY' || type === 'SELL';
       }).length
     };
   }
@@ -1565,7 +1610,7 @@ export class PortfolioService {
     withExcludedAccounts?: boolean;
   }): Promise<{
     transactionPoints: TransactionPoint[];
-    orders: OrderWithAccount[];
+    orders: Activity[];
     portfolioOrders: PortfolioOrder[];
   }> {
     const userCurrency =

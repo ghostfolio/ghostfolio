@@ -288,6 +288,16 @@ async function main() {
     skipDuplicates: true
   });
 
+  await prisma.tag.createMany({
+    data: [
+      {
+        id: '4452656d-9fa4-4bd0-ba38-70492e31d180',
+        name: 'EMERGENCY_FUND'
+      }
+    ],
+    skipDuplicates: true
+  });
+
   console.log({
     platformBitcoinSuisse,
     platformBitpanda,
