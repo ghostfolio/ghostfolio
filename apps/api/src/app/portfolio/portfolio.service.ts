@@ -1468,16 +1468,28 @@ export class PortfolioService {
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
     switch (aDateRange) {
       case '1d':
-        portfolioStart = max([portfolioStart, subDays(new Date(), 1)]);
+        portfolioStart = max([
+          portfolioStart,
+          subDays(new Date().setHours(0, 0, 0, 0), 1)
+        ]);
         break;
       case 'ytd':
-        portfolioStart = max([portfolioStart, setDayOfYear(new Date(), 1)]);
+        portfolioStart = max([
+          portfolioStart,
+          setDayOfYear(new Date().setHours(0, 0, 0, 0), 1)
+        ]);
         break;
       case '1y':
-        portfolioStart = max([portfolioStart, subYears(new Date(), 1)]);
+        portfolioStart = max([
+          portfolioStart,
+          subYears(new Date().setHours(0, 0, 0, 0), 1)
+        ]);
         break;
       case '5y':
-        portfolioStart = max([portfolioStart, subYears(new Date(), 5)]);
+        portfolioStart = max([
+          portfolioStart,
+          subYears(new Date().setHours(0, 0, 0, 0), 5)
+        ]);
         break;
     }
     return portfolioStart;

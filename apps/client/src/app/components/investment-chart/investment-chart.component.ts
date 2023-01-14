@@ -196,7 +196,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           this.getTooltipPluginConfiguration()
         );
         this.chart.options.scales.x.min = this.daysInMarket
-          ? subDays(new Date(), this.daysInMarket).toISOString()
+          ? subDays(
+              new Date().setHours(0, 0, 0, 0),
+              this.daysInMarket
+            ).toISOString()
           : undefined;
 
         if (
