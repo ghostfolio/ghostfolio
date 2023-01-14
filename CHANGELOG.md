@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed the create or edit activity dialog
+
 ## 1.227.0 - 2023-01-14
 
 ### Added

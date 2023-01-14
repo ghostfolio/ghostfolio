@@ -120,7 +120,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         Validators.required
       ],
       tags: [
-        this.data.activity?.tags.map(({ id, name }) => {
+        this.data.activity?.tags?.map(({ id, name }) => {
           return {
             id,
             name: translate(name)
