@@ -125,7 +125,12 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.quantity = quantity;
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
-          this.tags = tags;
+          this.tags = tags.map(({ id, name }) => {
+            return {
+              id,
+              name: translate(name)
+            };
+          });
           this.transactionCount = transactionCount;
           this.value = value;
 

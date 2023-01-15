@@ -12,6 +12,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the date formatting of the dividend timeline grouped by month / year
 - Improved the date formatting of the investment timeline grouped by month / year
 
+## 1.227.1 - 2023-01-14
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the create or edit activity dialog
+
+## 1.227.0 - 2023-01-14
+
+### Added
+
+- Added support for assets other than cash in emergency fund (affecting buying power)
+- Added support for translated tags
+
+### Changed
+
+- Improved the logo alignment
+
+### Fixed
+
+- Fixed the grouping by month / year of the dividend and investment timeline
+
+## 1.226.0 - 2023-01-11
+
+### Added
+
+- Added the language localization for Français (`fr`)
+- Extended the landing page by a global heat map of subscribers
+- Added support for the thousand separator in the global heat map component
+
+### Changed
+
+- Improved the form of the import dividends dialog (disable while loading)
+- Removed the deprecated `~` in _Sass_ imports
+
+### Fixed
+
+- Fixed an exception in the _X-ray_ section
+
 ## 1.225.0 - 2023-01-07
 
 ### Added

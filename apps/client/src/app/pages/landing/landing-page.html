@@ -269,6 +269,21 @@
     </div>
   </div>
 
+  <div *ngIf="hasPermissionForSubscription" class="row my-5">
+    <div class="col-12">
+      <h2 class="h4 text-center">
+        Members from around the globe are using
+        <a href="pricing"><strong>Ghostfolio Premium</strong></a>
+      </h2>
+    </div>
+    <div class="col-md-8 customer-map-container offset-md-2">
+      <gf-world-map-chart
+        format="👻"
+        [countries]="countriesOfSubscribersMap"
+      ></gf-world-map-chart>
+    </div>
+  </div>
+
   <div class="row my-3">
     <div class="col-12">
       <h2 class="h4 mb-1 text-center">

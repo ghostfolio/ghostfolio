@@ -7,6 +7,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEMO_USER_ID,
+  PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
@@ -92,6 +93,10 @@ export class InfoService {
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       globalPermissions.push(permissions.enableSubscription);
 
+      info.countriesOfSubscribers =
+        ((await this.propertyService.getByKey(
+          PROPERTY_COUNTRIES_OF_SUBSCRIBERS
+        )) as string[]) ?? [];
       info.stripePublicKey = this.configurationService.get('STRIPE_PUBLIC_KEY');
     }
 
