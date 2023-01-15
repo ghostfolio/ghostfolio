@@ -13,7 +13,10 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { getTooltipOptions, transformTickToAbbreviation } from '@ghostfolio/common/chart-helper';
+import {
+  getTooltipOptions,
+  transformTickToAbbreviation
+} from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
 import { ColorScheme } from '@ghostfolio/common/types';
 import {
