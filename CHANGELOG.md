@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the date formatting of the dividend timeline grouped by month / year
-- Improved the date formatting of the investment timeline grouped by month / year
+- Improved the date formatting in the tooltip of the dividend timeline grouped by month / year
+- Improved the date formatting in the tooltip of the investment timeline grouped by month / year
 
 ## 1.227.1 - 2023-01-14
 
