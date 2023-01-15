@@ -11,7 +11,8 @@ import {
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
-  getVerticalHoverLinePlugin
+  getVerticalHoverLinePlugin,
+  transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
@@ -19,8 +20,7 @@ import {
   getBackgroundColor,
   getDateFormatString,
   getTextColor,
-  parseDate,
-  transformTickToAbbreviation
+  parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
@@ -328,9 +328,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
         currency: this.isInPercent ? undefined : this.currency,
+        groupBy: this.groupBy,
         locale: this.isInPercent ? undefined : this.locale,
-        unit: this.isInPercent ? '%' : undefined,
-        groupBy: this.groupBy
+        unit: this.isInPercent ? '%' : undefined
       }),
       mode: 'index',
       position: <unknown>'top',

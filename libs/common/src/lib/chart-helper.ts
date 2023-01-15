@@ -1,20 +1,43 @@
 import { Chart, TooltipPosition } from 'chart.js';
+import { format } from 'date-fns';
 
-import { formatGroupedDate, getBackgroundColor, getTextColor } from './helper';
+import {
+  DATE_FORMAT,
+  DATE_FORMAT_MONTHLY,
+  DATE_FORMAT_YEARLY,
+  getBackgroundColor,
+  getTextColor
+} from './helper';
 import { ColorScheme, GroupBy } from './types';
+
+export function formatGroupedDate({
+  date,
+  groupBy
+}: {
+  date: Date;
+  groupBy: GroupBy;
+}) {
+  if (groupBy === 'month') {
+    return format(date, DATE_FORMAT_MONTHLY);
+  } else if (groupBy === 'year') {
+    return format(date, DATE_FORMAT_YEARLY);
+  }
+
+  return format(date, DATE_FORMAT);
+}
 
 export function getTooltipOptions({
   colorScheme,
   currency = '',
+  groupBy,
   locale = '',
-  unit = '',
-  groupBy
+  unit = ''
 }: {
   colorScheme?: ColorScheme;
   currency?: string;
+  groupBy?: GroupBy;
   locale?: string;
   unit?: string;
-  groupBy?: GroupBy;
 } = {}) {
   return {
     backgroundColor: getBackgroundColor(colorScheme),
@@ -43,8 +66,10 @@ export function getTooltipOptions({
       },
       title: (contexts) => {
         if (groupBy) {
-          return formatGroupedDate(contexts[0].parsed.x, groupBy);
+          return formatGroupedDate({ groupBy, date: contexts[0].parsed.x });
         }
+
+        return contexts[0].label;
       }
     },
     caretSize: 0,
@@ -103,4 +128,8 @@ export function getVerticalHoverLinePlugin(
     },
     id: 'verticalHoverLine'
   };
+}
+
+export function transformTickToAbbreviation(value: number) {
+  return value < 1000000 ? `${value / 1000}K` : `${value / 1000000}M`;
 }
