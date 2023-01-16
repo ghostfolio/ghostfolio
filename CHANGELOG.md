@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the date formatting in the tooltip of the dividend timeline grouped by month / year
+- Improved the date formatting in the tooltip of the investment timeline grouped by month / year
+
 ## 1.227.1 - 2023-01-14
 
 ### Changed

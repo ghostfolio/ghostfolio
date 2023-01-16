@@ -233,6 +233,8 @@ export function resolveMarketCondition(
 }
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
+export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
+export const DATE_FORMAT_YEARLY = 'yyyy';
 
 export function parseDate(date: string) {
   return parse(date, DATE_FORMAT, new Date());
@@ -240,8 +242,4 @@ export function parseDate(date: string) {
 
 export function prettifySymbol(aSymbol: string): string {
   return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
-}
-
-export function transformTickToAbbreviation(value: number) {
-  return value < 1000000 ? `${value / 1000}K` : `${value / 1000000}M`;
 }

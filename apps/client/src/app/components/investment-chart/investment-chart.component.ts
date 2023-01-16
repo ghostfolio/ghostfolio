@@ -11,7 +11,8 @@ import {
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
-  getVerticalHoverLinePlugin
+  getVerticalHoverLinePlugin,
+  transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
@@ -19,8 +20,7 @@ import {
   getBackgroundColor,
   getDateFormatString,
   getTextColor,
-  parseDate,
-  transformTickToAbbreviation
+  parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
@@ -136,10 +136,13 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         date,
         investment: last(this.investments).investment
       });
-      this.values.push({ date, value: last(this.values).value });
+      this.values.push({
+        date,
+        value: last(this.values).value
+      });
     }
 
-    const data = {
+    const chartData = {
       labels: this.historicalDataItems.map(({ date }) => {
         return parseDate(date);
       }),
@@ -191,7 +194,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
     if (this.chartCanvas) {
       if (this.chart) {
-        this.chart.data = data;
+        this.chart.data = chartData;
         this.chart.options.plugins.tooltip = <unknown>(
           this.getTooltipPluginConfiguration()
         );
@@ -213,7 +216,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
-          data,
+          data: chartData,
           options: {
             animation: false,
             elements: {
@@ -328,6 +331,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
         currency: this.isInPercent ? undefined : this.currency,
+        groupBy: this.groupBy,
         locale: this.isInPercent ? undefined : this.locale,
         unit: this.isInPercent ? '%' : undefined
       }),
