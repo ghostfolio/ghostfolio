@@ -4,12 +4,12 @@ import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  ghostfolioPrefix,
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED,
-  PROPERTY_SYSTEM_MESSAGE
+  PROPERTY_SYSTEM_MESSAGE,
+  ghostfolioPrefix
 } from '@ghostfolio/common/config';
 import { Coupon, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
