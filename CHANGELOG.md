@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the hints in user settings
+
 ### Changed
 
 - Improved the date formatting in the tooltip of the dividend timeline grouped by month / year
