@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the date formatting in the tooltip of the dividend timeline grouped by month / year
 - Improved the date formatting in the tooltip of the investment timeline grouped by month / year
 - Reduced the execution interval of the data gathering to every 4 hours
+- Removed emergency fund as an asset class
 
 ## 1.227.1 - 2023-01-14
 

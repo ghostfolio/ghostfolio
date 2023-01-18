@@ -20,7 +20,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import {
-  ASSET_SUB_CLASS_EMERGENCY_FUND,
+  EMERGENCY_FUND_TAG_ID,
   MAX_CHART_ITEMS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
@@ -575,7 +575,6 @@ export class PortfolioService {
     ) {
       const cashPositions = await this.getCashPositions({
         cashDetails,
-        emergencyFund,
         userCurrency,
         investment: totalInvestmentInBaseCurrency,
         value: filteredValueInBaseCurrency
@@ -594,6 +593,41 @@ export class PortfolioService {
       userId,
       withExcludedAccounts
     });
+
+    if (
+      filters?.length === 1 &&
+      filters[0].id === 'EMERGENCY_FUND_TAG_ID' &&
+      filters[0].type === 'TAG'
+    ) {
+      const cashPositions = await this.getCashPositions({
+        cashDetails,
+        userCurrency,
+        investment: totalInvestmentInBaseCurrency,
+        value: filteredValueInBaseCurrency
+      });
+
+      const emergencyFundInCash = emergencyFund
+        .minus(
+          this.getEmergencyFundPositionsValueInBaseCurrency({
+            activities: orders
+          })
+        )
+        .toNumber();
+
+      accounts[UNKNOWN_KEY] = {
+        balance: 0,
+        currency: userCurrency,
+        current: emergencyFundInCash,
+        name: UNKNOWN_KEY,
+        original: emergencyFundInCash
+      };
+
+      holdings[userCurrency] = {
+        ...cashPositions[userCurrency],
+        investment: emergencyFundInCash,
+        value: emergencyFundInCash
+      };
+    }
 
     const summary = await this.getSummary({
       impersonationId,
@@ -1184,16 +1218,14 @@ export class PortfolioService {
 
   private async getCashPositions({
     cashDetails,
-    emergencyFund,
     investment,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
-    emergencyFund: Big;
     investment: Big;
-    value: Big;
     userCurrency: string;
+    value: Big;
   }) {
     const cashPositions: PortfolioDetails['holdings'] = {
       [userCurrency]: this.getInitialCashPosition({
@@ -1222,28 +1254,6 @@ export class PortfolioService {
           currency: account.currency
         });
       }
-    }
-
-    if (emergencyFund.gt(0)) {
-      cashPositions[ASSET_SUB_CLASS_EMERGENCY_FUND] = {
-        ...cashPositions[userCurrency],
-        assetSubClass: ASSET_SUB_CLASS_EMERGENCY_FUND,
-        investment: emergencyFund.toNumber(),
-        name: ASSET_SUB_CLASS_EMERGENCY_FUND,
-        symbol: ASSET_SUB_CLASS_EMERGENCY_FUND,
-        value: emergencyFund.toNumber()
-      };
-
-      cashPositions[userCurrency].investment = new Big(
-        cashPositions[userCurrency].investment
-      )
-        .minus(emergencyFund)
-        .toNumber();
-      cashPositions[userCurrency].value = new Big(
-        cashPositions[userCurrency].value
-      )
-        .minus(emergencyFund)
-        .toNumber();
     }
 
     for (const symbol of Object.keys(cashPositions)) {
@@ -1359,8 +1369,8 @@ export class PortfolioService {
   }) {
     const emergencyFundOrders = activities.filter((activity) => {
       return (
-        activity.tags?.some(({ name }) => {
-          return name === 'EMERGENCY_FUND';
+        activity.tags?.some(({ id }) => {
+          return id === EMERGENCY_FUND_TAG_ID;
         }) ?? false
       );
     });
