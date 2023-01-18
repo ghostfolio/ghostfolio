@@ -8,7 +8,7 @@ export interface PortfolioPosition {
   allocationCurrent: number;
   allocationInvestment: number;
   assetClass?: AssetClass;
-  assetSubClass?: AssetSubClass | 'CASH' | 'EMERGENCY_FUND';
+  assetSubClass?: AssetSubClass | 'CASH';
   countries: Country[];
   currency: string;
   dataSource: DataSource;
