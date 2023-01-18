@@ -596,7 +596,7 @@ export class PortfolioService {
 
     if (
       filters?.length === 1 &&
-      filters[0].id === 'EMERGENCY_FUND_TAG_ID' &&
+      filters[0].id === EMERGENCY_FUND_TAG_ID &&
       filters[0].type === 'TAG'
     ) {
       const cashPositions = await this.getCashPositions({
