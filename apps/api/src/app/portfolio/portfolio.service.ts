@@ -537,12 +537,9 @@ export class PortfolioService {
 
       holdings[item.symbol] = {
         markets,
-        allocationCurrent: filteredValueInBaseCurrency.eq(0)
+        allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : value.div(filteredValueInBaseCurrency).toNumber(),
-        allocationInvestment: item.investment
-          .div(totalInvestmentInBaseCurrency)
-          .toNumber(),
         assetClass: symbolProfile.assetClass,
         assetSubClass: symbolProfile.assetSubClass,
         countries: symbolProfile.countries,
@@ -1258,11 +1255,8 @@ export class PortfolioService {
 
     for (const symbol of Object.keys(cashPositions)) {
       // Calculate allocations for each currency
-      cashPositions[symbol].allocationCurrent = value.gt(0)
+      cashPositions[symbol].allocationInPercentage = value.gt(0)
         ? new Big(cashPositions[symbol].value).div(value).toNumber()
-        : 0;
-      cashPositions[symbol].allocationInvestment = investment.gt(0)
-        ? new Big(cashPositions[symbol].investment).div(investment).toNumber()
         : 0;
     }
 
@@ -1430,8 +1424,7 @@ export class PortfolioService {
   }): PortfolioPosition {
     return {
       currency,
-      allocationCurrent: 0,
-      allocationInvestment: 0,
+      allocationInPercentage: 0,
       assetClass: AssetClass.CASH,
       assetSubClass: AssetClass.CASH,
       countries: [],
