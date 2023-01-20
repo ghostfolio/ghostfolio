@@ -614,6 +614,8 @@ export class PortfolioService {
         )
         .toNumber();
 
+      filteredValueInBaseCurrency = emergencyFund;
+
       accounts[UNKNOWN_KEY] = {
         balance: 0,
         currency: userCurrency,
