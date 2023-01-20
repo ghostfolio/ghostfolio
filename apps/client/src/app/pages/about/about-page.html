@@ -42,9 +42,11 @@
             href="https://twitter.com/ghostfolio_"
             title="Tweet to Ghostfolio on Twitter"
             >@ghostfolio_</a
-          >, send an e-mail to
-          <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
-            >hi@ghostfol.io</a
+          ><ng-container *ngIf="hasPermissionForSubscription"
+            >, send an e-mail to
+            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+              >hi@ghostfol.io</a
+            ></ng-container
           >
           or open an issue at
           <a
