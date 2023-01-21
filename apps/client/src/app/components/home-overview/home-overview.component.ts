@@ -110,13 +110,12 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.errors = response.errors;
-        this.hasError = response.hasErrors;
-        this.performance = response.performance;
+      .subscribe(({ chart, errors, performance }) => {
+        this.errors = errors;
+        this.performance = performance;
         this.isLoadingPerformance = false;
 
-        this.historicalDataItems = response.chart.map(
+        this.historicalDataItems = chart.map(
           ({ date, netPerformanceInPercentage }) => {
             return {
               date,
