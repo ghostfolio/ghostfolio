@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Hid error messages related to no current investment in the client
+
 ### Fixed
 
 - Fixed the value of the active (emergency fund) filter in percentage on the allocations page
