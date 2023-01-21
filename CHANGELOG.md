@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed the toggle _Original Shares_ vs. _Current Shares_ on the allocations page
 - Hid error messages related to no current investment in the client
+- Refactored the value redaction interceptor for the impersonation mode
 
 ### Fixed
 

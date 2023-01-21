@@ -1,5 +1,5 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
 import {
   CallHandler,
   ExecutionContext,
@@ -28,59 +28,35 @@ export class RedactValuesInResponseInterceptor<T>
           hasImpersonationId ||
           this.userService.isRestrictedView(request.user)
         ) {
-          if (data.accounts) {
-            for (const accountId of Object.keys(data.accounts)) {
-              if (data.accounts[accountId]?.balance !== undefined) {
-                data.accounts[accountId].balance = null;
-              }
-            }
-          }
-
-          if (data.activities) {
-            data.activities = data.activities.map((activity: Activity) => {
-              if (activity.Account?.balance !== undefined) {
-                activity.Account.balance = null;
-              }
-
-              if (activity.comment !== undefined) {
-                activity.comment = null;
-              }
-
-              if (activity.fee !== undefined) {
-                activity.fee = null;
-              }
-
-              if (activity.feeInBaseCurrency !== undefined) {
-                activity.feeInBaseCurrency = null;
-              }
-
-              if (activity.quantity !== undefined) {
-                activity.quantity = null;
-              }
-
-              if (activity.unitPrice !== undefined) {
-                activity.unitPrice = null;
-              }
-
-              if (activity.value !== undefined) {
-                activity.value = null;
-              }
-
-              if (activity.valueInBaseCurrency !== undefined) {
-                activity.valueInBaseCurrency = null;
-              }
-
-              return activity;
-            });
-          }
-
-          if (data.filteredValueInBaseCurrency) {
-            data.filteredValueInBaseCurrency = null;
-          }
-
-          if (data.totalValueInBaseCurrency) {
-            data.totalValueInBaseCurrency = null;
-          }
+          data = redactAttributes({
+            object: data,
+            options: [
+              'balance',
+              'balanceInBaseCurrency',
+              'comment',
+              'convertedBalance',
+              'fee',
+              'feeInBaseCurrency',
+              'filteredValueInBaseCurrency',
+              'grossPerformance',
+              'investment',
+              'netPerformance',
+              'quantity',
+              'symbolMapping',
+              'totalBalanceInBaseCurrency',
+              'totalValueInBaseCurrency',
+              'unitPrice',
+              'value',
+              'valueInBaseCurrency'
+            ].map((attribute) => {
+              return {
+                attribute,
+                valueMap: {
+                  '*': null
+                }
+              };
+            })
+          });
         }
 
         return data;
