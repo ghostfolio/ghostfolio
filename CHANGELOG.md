@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added _Sackgeld.com_ to the _As seen in_ section on the landing page
+
 ### Fixed
 
 - Fixed the value of the active (emergency fund) filter in percentage on the allocations page
