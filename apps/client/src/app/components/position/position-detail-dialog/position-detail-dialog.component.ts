@@ -111,7 +111,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
 
               return {
                 date: historicalDataItem.date,
-                value: historicalDataItem.value
+                value: historicalDataItem.marketPrice
               };
             }
           );

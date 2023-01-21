@@ -18,6 +18,7 @@ export interface PortfolioPublicDetails {
       | 'symbol'
       | 'url'
       | 'value'
+      | 'valueInPercentage'
     >;
   };
 }

@@ -131,7 +131,8 @@ export class PortfolioController {
           portfolioPosition.investment / totalInvestment;
         portfolioPosition.netPerformance = null;
         portfolioPosition.quantity = null;
-        portfolioPosition.value = portfolioPosition.value / totalValue;
+        portfolioPosition.valueInPercentage =
+          portfolioPosition.value / totalValue;
       }
 
       for (const [name, { current, original }] of Object.entries(accounts)) {
@@ -322,7 +323,7 @@ export class PortfolioController {
             totalInvestment: new Big(totalInvestment)
               .div(performanceInformation.performance.totalInvestment)
               .toNumber(),
-            value: new Big(value)
+            valueInPercentage: new Big(value)
               .div(performanceInformation.performance.currentValue)
               .toNumber()
           };
@@ -437,7 +438,7 @@ export class PortfolioController {
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
         url: portfolioPosition.url,
-        value: portfolioPosition.value / totalValue
+        valueInPercentage: portfolioPosition.value / totalValue
       };
     }
 
