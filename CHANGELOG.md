@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the unit format (`%`) in the global heat map component of the public page
+
+### Fixed
+
+- Fixed an issue with `value` in the value redaction interceptor for the impersonation mode
+
 ## 1.229.0 - 2023-01-21
 
 ### Added
