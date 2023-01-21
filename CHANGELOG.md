@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Removed the toggle _Original Shares_ vs. _Current Shares_ on the allocations page
 - Refactored the value redaction interceptor for the impersonation mode
 
 ### Fixed
