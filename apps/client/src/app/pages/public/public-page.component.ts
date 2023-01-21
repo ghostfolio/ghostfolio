@@ -131,7 +131,7 @@ export class PublicPageComponent implements OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioPublicDetails.holdings
     )) {
-      const value = position.allocationCurrent;
+      const value = position.allocationInPercentage;
 
       this.positions[symbol] = {
         value,

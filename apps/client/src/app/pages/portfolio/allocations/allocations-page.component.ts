@@ -18,7 +18,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Market, ToggleOption } from '@ghostfolio/common/types';
+import { Market } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -53,11 +53,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public markets: {
     [key in Market]: { name: string; value: number };
   };
-  public period = 'current';
-  public periodOptions: ToggleOption[] = [
-    { label: $localize`Initial`, value: 'original' },
-    { label: $localize`Current`, value: 'current' }
-  ];
   public placeholder = '';
   public portfolioDetails: PortfolioDetails;
   public positions: {
@@ -146,7 +141,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .subscribe((portfolioDetails) => {
         this.portfolioDetails = portfolioDetails;
 
-        this.initializeAnalysisData(this.period);
+        this.initializeAnalysisData();
 
         this.isLoading = false;
 
@@ -248,7 +243,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
   }
 
-  public initializeAnalysisData(aPeriod: string) {
+  public initializeAnalysisData() {
     this.initialize();
 
     for (const [id, { current, name, original }] of Object.entries(
@@ -257,7 +252,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.accounts[id] = {
         id,
         name,
-        value: aPeriod === 'original' ? original : current
+        value: current
       };
     }
 
@@ -266,18 +261,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     )) {
       let value = 0;
 
-      if (aPeriod === 'original') {
-        if (this.hasImpersonationId) {
-          value = position.allocationInvestment;
-        } else {
-          value = position.investment;
-        }
+      if (this.hasImpersonationId) {
+        value = position.allocationInPercentage;
       } else {
-        if (this.hasImpersonationId) {
-          value = position.allocationCurrent;
-        } else {
-          value = position.value;
-        }
+        value = position.value;
       }
 
       this.positions[symbol] = {
@@ -294,14 +281,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
         if (position.countries.length > 0) {
           this.markets.developedMarkets.value +=
-            position.markets.developedMarkets *
-            (aPeriod === 'original' ? position.investment : position.value);
+            position.markets.developedMarkets * position.value;
           this.markets.emergingMarkets.value +=
-            position.markets.emergingMarkets *
-            (aPeriod === 'original' ? position.investment : position.value);
+            position.markets.emergingMarkets * position.value;
           this.markets.otherMarkets.value +=
-            position.markets.otherMarkets *
-            (aPeriod === 'original' ? position.investment : position.value);
+            position.markets.otherMarkets * position.value;
 
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
@@ -311,11 +295,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             } else {
               this.continents[continent] = {
                 name: continent,
-                value:
-                  weight *
-                  (aPeriod === 'original'
-                    ? this.portfolioDetails.holdings[symbol].investment
-                    : this.portfolioDetails.holdings[symbol].value)
+                value: weight * this.portfolioDetails.holdings[symbol].value
               };
             }
 
@@ -324,24 +304,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             } else {
               this.countries[code] = {
                 name,
-                value:
-                  weight *
-                  (aPeriod === 'original'
-                    ? this.portfolioDetails.holdings[symbol].investment
-                    : this.portfolioDetails.holdings[symbol].value)
+                value: weight * this.portfolioDetails.holdings[symbol].value
               };
             }
           }
         } else {
           this.continents[UNKNOWN_KEY].value +=
-            aPeriod === 'original'
-              ? this.portfolioDetails.holdings[symbol].investment
-              : this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].value;
 
           this.countries[UNKNOWN_KEY].value +=
-            aPeriod === 'original'
-              ? this.portfolioDetails.holdings[symbol].investment
-              : this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].value;
         }
 
         if (position.sectors.length > 0) {
@@ -353,19 +325,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             } else {
               this.sectors[name] = {
                 name,
-                value:
-                  weight *
-                  (aPeriod === 'original'
-                    ? this.portfolioDetails.holdings[symbol].investment
-                    : this.portfolioDetails.holdings[symbol].value)
+                value: weight * this.portfolioDetails.holdings[symbol].value
               };
             }
           }
         } else {
           this.sectors[UNKNOWN_KEY].value +=
-            aPeriod === 'original'
-              ? this.portfolioDetails.holdings[symbol].investment
-              : this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].value;
         }
       }
 
@@ -373,7 +339,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         dataSource: position.dataSource,
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: aPeriod === 'original' ? position.investment : position.value
+        value: position.value
       };
     }
 
@@ -396,12 +362,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         queryParams: { accountId: symbol, accountDetailDialog: true }
       });
     }
-  }
-
-  public onChangePeriod(aValue: string) {
-    this.period = aValue;
-
-    this.initializeAnalysisData(this.period);
   }
 
   public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {

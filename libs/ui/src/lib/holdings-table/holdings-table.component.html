@@ -3,7 +3,7 @@
     class="gf-table w-100"
     mat-table
     matSort
-    matSortActive="allocationCurrent"
+    matSortActive="allocationInPercentage"
     matSortDirection="desc"
     [dataSource]="dataSource"
   >
@@ -85,7 +85,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="allocationCurrent">
+    <ng-container matColumnDef="allocationInPercentage">
       <th
         *matHeaderCellDef
         class="justify-content-end px-1"
@@ -99,7 +99,7 @@
           <gf-value
             [isPercent]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.allocationCurrent"
+            [value]="isLoading ? undefined : element.allocationInPercentage"
           ></gf-value>
         </div>
       </td>
