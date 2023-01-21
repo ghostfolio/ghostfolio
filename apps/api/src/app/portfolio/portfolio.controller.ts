@@ -356,6 +356,7 @@ export class PortfolioController {
 
   @Get('positions')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
     @Headers('impersonation-id') impersonationId: string,
@@ -370,27 +371,11 @@ export class PortfolioController {
       filterByTags
     });
 
-    const result = await this.portfolioService.getPositions({
+    return this.portfolioService.getPositions({
       dateRange,
       filters,
       impersonationId
     });
-
-    if (
-      impersonationId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      result.positions = result.positions.map((position) => {
-        return nullifyValuesInObject(position, [
-          'grossPerformance',
-          'investment',
-          'netPerformance',
-          'quantity'
-        ]);
-      });
-    }
-
-    return result;
   }
 
   @Get('public/:accessId')
@@ -460,6 +445,7 @@ export class PortfolioController {
   }
 
   @Get('position/:dataSource/:symbol')
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @UseGuards(AuthGuard('jwt'))
@@ -468,27 +454,13 @@ export class PortfolioController {
     @Param('dataSource') dataSource,
     @Param('symbol') symbol
   ): Promise<PortfolioPositionDetail> {
-    let position = await this.portfolioService.getPosition(
+    const position = await this.portfolioService.getPosition(
       dataSource,
       impersonationId,
       symbol
     );
 
     if (position) {
-      if (
-        impersonationId ||
-        this.userService.isRestrictedView(this.request.user)
-      ) {
-        position = nullifyValuesInObject(position, [
-          'grossPerformance',
-          'investment',
-          'netPerformance',
-          'orders',
-          'quantity',
-          'value'
-        ]);
-      }
-
       return position;
     }
 
