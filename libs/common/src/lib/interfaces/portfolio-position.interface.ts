@@ -5,8 +5,7 @@ import { Country } from './country.interface';
 import { Sector } from './sector.interface';
 
 export interface PortfolioPosition {
-  allocationCurrent: number;
-  allocationInvestment: number;
+  allocationInPercentage: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass | 'CASH';
   countries: Country[];

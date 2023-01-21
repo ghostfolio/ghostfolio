@@ -441,7 +441,7 @@ export class PortfolioController {
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       portfolioPublicDetails.holdings[symbol] = {
-        allocationCurrent: portfolioPosition.value / totalValue,
+        allocationInPercentage: portfolioPosition.value / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         dataSource: portfolioPosition.dataSource,
