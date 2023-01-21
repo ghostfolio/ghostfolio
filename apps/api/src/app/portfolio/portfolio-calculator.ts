@@ -447,7 +447,7 @@ export class PortfolioCalculator {
         transactionCount: item.transactionCount
       });
 
-      if (hasErrors) {
+      if (hasErrors && item.investment.gt(0)) {
         errors.push({ dataSource: item.dataSource, symbol: item.symbol });
       }
     }
