@@ -75,6 +75,10 @@
       filter: grayscale(1);
     }
 
+    &.logo-sackgeld {
+      mask-image: url('/assets/images/logo-sackgeld.png');
+    }
+
     &.logo-unraid {
       mask-image: url('/assets/images/logo-unraid.svg');
     }
@@ -112,6 +116,7 @@
     &.logo-agplv3,
     &.logo-alternative-to,
     &.logo-privacy-tools,
+    &.logo-sackgeld,
     &.logo-unraid {
       background-color: rgba(var(--light-primary-text));
     }

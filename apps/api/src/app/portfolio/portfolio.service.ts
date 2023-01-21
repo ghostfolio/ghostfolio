@@ -1039,29 +1039,21 @@ export class PortfolioService {
 
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(dateRange, portfolioStart);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      startDate
-    );
+    const {
+      currentValue,
+      errors,
+      grossPerformance,
+      grossPerformancePercentage,
+      hasErrors,
+      netPerformance,
+      netPerformancePercentage,
+      totalInvestment
+    } = await portfolioCalculator.getCurrentPositions(startDate);
 
-    const hasErrors = currentPositions.hasErrors;
-    const currentValue = currentPositions.currentValue.toNumber();
-    const currentGrossPerformance = currentPositions.grossPerformance;
-    const currentGrossPerformancePercent =
-      currentPositions.grossPerformancePercentage;
-    let currentNetPerformance = currentPositions.netPerformance;
-    let currentNetPerformancePercent =
-      currentPositions.netPerformancePercentage;
-    const totalInvestment = currentPositions.totalInvestment;
-
-    // if (currentGrossPerformance.mul(currentGrossPerformancePercent).lt(0)) {
-    //   // If algebraic sign is different, harmonize it
-    //   currentGrossPerformancePercent = currentGrossPerformancePercent.mul(-1);
-    // }
-
-    // if (currentNetPerformance.mul(currentNetPerformancePercent).lt(0)) {
-    //   // If algebraic sign is different, harmonize it
-    //   currentNetPerformancePercent = currentNetPerformancePercent.mul(-1);
-    // }
+    const currentGrossPerformance = grossPerformance;
+    const currentGrossPerformancePercent = grossPerformancePercentage;
+    let currentNetPerformance = netPerformance;
+    let currentNetPerformancePercent = netPerformancePercentage;
 
     const historicalDataContainer = await this.getChart({
       dateRange,
@@ -1083,28 +1075,28 @@ export class PortfolioService {
     }
 
     return {
+      errors,
+      hasErrors,
       chart: historicalDataContainer.items.map(
         ({
           date,
-          netPerformance,
+          netPerformance: netPerformanceOfItem,
           netPerformanceInPercentage,
-          totalInvestment,
+          totalInvestment: totalInvestmentOfItem,
           value
         }) => {
           return {
             date,
-            netPerformance,
             netPerformanceInPercentage,
-            totalInvestment,
-            value
+            value,
+            netPerformance: netPerformanceOfItem,
+            totalInvestment: totalInvestmentOfItem
           };
         }
       ),
-      errors: currentPositions.errors,
       firstOrderDate: parseDate(historicalDataContainer.items[0]?.date),
-      hasErrors: currentPositions.hasErrors || hasErrors,
       performance: {
-        currentValue,
+        currentValue: currentValue.toNumber(),
         currentGrossPerformance: currentGrossPerformance.toNumber(),
         currentGrossPerformancePercent:
           currentGrossPerformancePercent.toNumber(),
