@@ -58,7 +58,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
       this.displayedColumns.push('value');
     }
 
-    this.displayedColumns.push('allocationCurrent');
+    this.displayedColumns.push('allocationInPercentage');
     this.displayedColumns.push('performance');
 
     this.isLoading = true;
