@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added _Sackgeld.com_ to the _As seen in_ section on the landing page
+
 ### Changed
 
 - Removed the toggle _Original Shares_ vs. _Current Shares_ on the allocations page
