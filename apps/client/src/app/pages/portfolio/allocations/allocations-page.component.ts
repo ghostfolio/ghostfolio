@@ -357,7 +357,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   }
 
   public onAccountChartClicked({ symbol }: UniqueAsset) {
-    if (symbol) {
+    if (symbol && symbol !== UNKNOWN_KEY) {
       this.router.navigate([], {
         queryParams: { accountId: symbol, accountDetailDialog: true }
       });
