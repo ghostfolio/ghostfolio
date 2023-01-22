@@ -83,6 +83,13 @@ export class FrontendMiddleware implements NestMiddleware {
     ) {
       featureGraphicPath = 'assets/images/blog/20221226.jpg';
       title = `The importance of tracking your personal finances - ${title}`;
+    } else if (
+      request.path.startsWith(
+        '/de/blog/2023/01/ghostfolio-auf-sackgeld-vorgestellt'
+      )
+    ) {
+      featureGraphicPath = 'assets/images/blog/ghostfolio-x-sackgeld.png';
+      title = `Ghostfolio auf Sackgeld.com vorgestellt - ${title}`;
     }
 
     if (

@@ -11,6 +11,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 
+## 1.229.0 - 2023-01-21
+
+### Added
+
+- Added a blog post: _Ghostfolio auf Sackgeld.com vorgestellt_
+- Added _Sackgeld.com_ to the _As seen in_ section on the landing page
+
+### Changed
+
+- Removed the toggle _Original Shares_ vs. _Current Shares_ on the allocations page
+- Hid error messages related to no current investment in the client
+- Refactored the value redaction interceptor for the impersonation mode
+
+### Fixed
+
+- Fixed the value of the active (emergency fund) filter in percentage on the allocations page
+
+## 1.228.1 - 2023-01-18
+
+### Added
+
+- Extended the hints in user settings
+
+### Changed
+
+- Improved the date formatting in the tooltip of the dividend timeline grouped by month / year
+- Improved the date formatting in the tooltip of the investment timeline grouped by month / year
+- Reduced the execution interval of the data gathering to every 4 hours
+- Removed emergency fund as an asset class
+
+## 1.227.1 - 2023-01-14
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the create or edit activity dialog
+
+## 1.227.0 - 2023-01-14
+
+### Added
+
+- Added support for assets other than cash in emergency fund (affecting buying power)
+- Added support for translated tags
+
+### Changed
+
+- Improved the logo alignment
+
+### Fixed
+
+- Fixed the grouping by month / year of the dividend and investment timeline
+
 ## 1.226.0 - 2023-01-11
 
 ### Added
