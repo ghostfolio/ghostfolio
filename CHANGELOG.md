@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the unit format (`%`) in the global heat map component of the public page
+- Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 
 ### Fixed
 
