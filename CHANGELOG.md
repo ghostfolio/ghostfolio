@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a quote to the blog post _Ghostfolio auf Sackgeld.com vorgestellt_
+
 ### Changed
 
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
