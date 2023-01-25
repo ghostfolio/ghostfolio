@@ -180,13 +180,12 @@ export class ImportActivitiesDialog implements OnDestroy {
             }
 
             try {
+              this.accounts = content.accounts;
               const data = await this.importActivitiesService.importJson({
                 activities: content.activities,
-                accounts: content.accounts,
                 isDryRun: true
               });
               this.activities = data.activities;
-              this.accounts = data.accounts;
             } catch (error) {
               console.error(error);
               this.handleImportError({ error, activities: content.activities });

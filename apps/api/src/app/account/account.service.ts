@@ -104,6 +104,13 @@ export class AccountService {
     });
   }
 
+  public async getAccountById(accountId: string) {
+    const accounts = await this.accounts({
+      where: { id: accountId }
+    });
+    return accounts.length ? accounts[0] : null;
+  }
+
   public async getCashDetails({
     currency,
     filters = [],
