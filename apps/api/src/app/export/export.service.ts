@@ -22,7 +22,8 @@ export class ExportService {
         id: true,
         isDefault: true,
         isExcluded: true,
-        name: true
+        name: true,
+        platformId: true
       },
       where: { userId }
     });
