@@ -1,10 +1,14 @@
-import { Order } from '@prisma/client';
+import { Order, Account } from '@prisma/client';
 
 export interface Export {
   meta: {
     date: string;
     version: string;
   };
+  accounts: Omit<
+    Account,
+    'createdAt' | 'platformId' | 'updatedAt' | 'userId'
+  >[];
   activities: (Omit<
     Order,
     | 'accountUserId'
