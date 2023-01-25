@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 
+### Fixed
+
+- Fixed the click of unknown accounts in the portfolio proportion chart component
+
 ## 1.229.0 - 2023-01-21
 
 ### Added
