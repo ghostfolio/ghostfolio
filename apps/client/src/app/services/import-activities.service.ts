@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { Account, DataSource, Type } from '@prisma/client';
@@ -33,7 +34,10 @@ export class ImportActivitiesService {
     fileContent: string;
     isDryRun?: boolean;
     userAccounts: Account[];
-  }): Promise<Activity[]> {
+  }): Promise<{
+    accounts?: CreateAccountDto[];
+    activities: Activity[];
+  }> {
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
@@ -55,20 +59,26 @@ export class ImportActivitiesService {
       });
     }
 
-    return await this.importJson({ isDryRun, content: activities });
+    return await this.importJson({ isDryRun, activities });
   }
 
   public importJson({
-    content,
+    activities,
+    accounts,
     isDryRun = false
   }: {
-    content: CreateOrderDto[];
+    activities: CreateOrderDto[];
+    accounts?: CreateAccountDto[];
     isDryRun?: boolean;
-  }): Promise<Activity[]> {
+  }): Promise<{
+    accounts?: CreateAccountDto[];
+    activities: Activity[];
+  }> {
     return new Promise((resolve, reject) => {
       this.postImport(
         {
-          activities: content
+          activities,
+          accounts
         },
         isDryRun
       )
@@ -80,22 +90,29 @@ export class ImportActivitiesService {
         )
         .subscribe({
           next: (data) => {
-            resolve(data.activities);
+            resolve(data);
           }
         });
     });
   }
 
-  public importSelectedActivities(
-    selectedActivities: Activity[]
-  ): Promise<Activity[]> {
+  public importSelectedActivities({
+    accounts,
+    activities
+  }: {
+    accounts?: CreateAccountDto[];
+    activities: Activity[];
+  }): Promise<{
+    accounts?: CreateAccountDto[];
+    activities: Activity[];
+  }> {
     const importData: CreateOrderDto[] = [];
 
-    for (const activity of selectedActivities) {
+    for (const activity of activities) {
       importData.push(this.convertToCreateOrderDto(activity));
     }
 
-    return this.importJson({ content: importData });
+    return this.importJson({ activities: importData, accounts });
   }
 
   private convertToCreateOrderDto({
@@ -347,7 +364,7 @@ export class ImportActivitiesService {
   }
 
   private postImport(
-    aImportData: { activities: CreateOrderDto[] },
+    aImportData: { activities: CreateOrderDto[]; accounts: CreateAccountDto[] },
     aIsDryRun = false
   ) {
     return this.http.post<{ activities: Activity[] }>(

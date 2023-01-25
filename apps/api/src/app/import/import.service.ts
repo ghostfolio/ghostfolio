@@ -17,6 +17,7 @@ import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateAccountDto } from '../account/create-account.dto';
 
 @Injectable()
 export class ImportService {
@@ -101,17 +102,84 @@ export class ImportService {
 
   public async import({
     activitiesDto,
+    accountsDto,
     isDryRun = false,
     maxActivitiesToImport,
     userCurrency,
     userId
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
+    accountsDto: Partial<CreateAccountDto>[];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
     userCurrency: string;
     userId: string;
   }): Promise<Activity[]> {
+    const accountMappings = {};
+    //Validate accounts
+    if (accountsDto?.length) {
+      for (let account of accountsDto) {
+        const existingAccounts = await this.accountService.accounts({
+          where: { id: account.id }
+        });
+
+        const oldAccountId = account.id;
+        const platformId = account.platformId;
+
+        delete account.id;
+        delete account.platformId;
+        delete account.isDefault;
+
+        //If account id does not exist, then create a new one
+        if (existingAccounts.length === 0) {
+          const newAccountConfig = {
+            ...account,
+            User: { connect: { id: userId } }
+          };
+
+          if (platformId) {
+            Object.assign(newAccountConfig, {
+              Platform: { connect: { id: platformId } }
+            });
+          }
+
+          const newAccount = await this.accountService.createAccount(
+            newAccountConfig,
+            userId
+          );
+
+          accountMappings[oldAccountId] = newAccount.id;
+          continue;
+        }
+
+        //If account id is used, then check if it belongs to the same user
+        //Yes -> Merge the accounts and don't create a new one
+        if (existingAccounts[0].userId === userId) {
+          continue;
+        }
+
+        //No -> Replace the account id with a new account id as well as update all the activities when looping
+
+        const newAccountConfig = {
+          ...account,
+          User: { connect: { id: userId } }
+        };
+
+        if (platformId) {
+          Object.assign(newAccountConfig, {
+            Platform: { connect: { id: platformId } }
+          });
+        }
+
+        const newAccount = await this.accountService.createAccount(
+          newAccountConfig,
+          userId
+        );
+
+        accountMappings[oldAccountId] = newAccount.id;
+      }
+    }
+
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
         if (activity.type === 'ITEM') {
@@ -119,6 +187,11 @@ export class ImportService {
         } else {
           activity.dataSource = this.dataProviderService.getPrimaryDataSource();
         }
+      }
+
+      //If we updated the account id, then update the account id in the activity as well
+      if (Object.keys(accountMappings).includes(activity.accountId)) {
+        activity.accountId = accountMappings[activity.accountId];
       }
     }
 
