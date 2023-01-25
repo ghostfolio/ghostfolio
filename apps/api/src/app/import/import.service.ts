@@ -115,68 +115,48 @@ export class ImportService {
     userCurrency: string;
     userId: string;
   }): Promise<Activity[]> {
-    const accountMappings = {};
-    //Validate accounts
-    if (accountsDto?.length) {
+    const accountIdMapping = {};
+
+    if (!isDryRun && accountsDto?.length) {
       for (let account of accountsDto) {
-        const existingAccounts = await this.accountService.accounts({
-          where: { id: account.id }
-        });
+        //Check if there is any existing account with the same id
+        const accountWithSameId = await this.accountService.getAccountById(
+          account.id
+        );
 
-        const oldAccountId = account.id;
-        const platformId = account.platformId;
+        //If there is no account or if the account belongs to a different user then create a new account
+        if (!accountWithSameId || accountWithSameId.userId !== userId) {
+          let oldAccountId: string;
+          const platformId = account.platformId;
 
-        delete account.id;
-        delete account.platformId;
-        delete account.isDefault;
+          delete account.platformId;
+          delete account.isDefault;
 
-        //If account id does not exist, then create a new one
-        if (existingAccounts.length === 0) {
-          const newAccountConfig = {
+          if (accountWithSameId) {
+            oldAccountId = account.id;
+            delete account.id;
+          }
+
+          const newAccountObj = {
             ...account,
             User: { connect: { id: userId } }
           };
 
           if (platformId) {
-            Object.assign(newAccountConfig, {
+            Object.assign(newAccountObj, {
               Platform: { connect: { id: platformId } }
             });
           }
 
           const newAccount = await this.accountService.createAccount(
-            newAccountConfig,
+            newAccountObj,
             userId
           );
 
-          accountMappings[oldAccountId] = newAccount.id;
-          continue;
+          if (accountWithSameId && oldAccountId) {
+            accountIdMapping[oldAccountId] = newAccount.id;
+          }
         }
-
-        //If account id is used, then check if it belongs to the same user
-        //Yes -> Merge the accounts and don't create a new one
-        if (existingAccounts[0].userId === userId) {
-          continue;
-        }
-
-        //No -> Replace the account id with a new account id as well as update all the activities when looping
-
-        const newAccountConfig = {
-          ...account,
-          User: { connect: { id: userId } }
-        };
-
-        if (platformId) {
-          Object.assign(newAccountConfig, {
-            Platform: { connect: { id: platformId } }
-          });
-        }
-
-        const newAccount = await this.accountService.createAccount(
-          newAccountConfig,
-          userId
-        );
-
-        accountMappings[oldAccountId] = newAccount.id;
       }
     }
 
@@ -189,9 +169,11 @@ export class ImportService {
         }
       }
 
-      //If we updated the account id, then update the account id in the activity as well
-      if (Object.keys(accountMappings).includes(activity.accountId)) {
-        activity.accountId = accountMappings[activity.accountId];
+      if (!isDryRun) {
+        //If a new account is created, then update the accountId in all activities
+        if (Object.keys(accountIdMapping).includes(activity.accountId)) {
+          activity.accountId = accountIdMapping[activity.accountId];
+        }
       }
     }
 
