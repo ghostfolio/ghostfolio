@@ -36,7 +36,7 @@ export class MarketDataDetailDialog implements OnDestroy {
     this.dateAdapter.setLocale(this.locale);
   }
 
-  public onCancel(): void {
+  public onCancel() {
     this.dialogRef.close({ withRefresh: false });
   }
 
