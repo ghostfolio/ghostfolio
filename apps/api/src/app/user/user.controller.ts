@@ -1,6 +1,4 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_IS_USER_SIGNUP_ENABLED } from '@ghostfolio/common/config';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -31,7 +29,6 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
     private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
