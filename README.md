@@ -148,7 +148,7 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version 18+)
+- [Node.js](https://nodejs.org/en/download) (version 16)
 - [Yarn](https://yarnpkg.com/en/docs/install)
 - A local copy of this Git repository (clone)
 

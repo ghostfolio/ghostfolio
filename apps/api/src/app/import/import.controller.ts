@@ -20,7 +20,6 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { isEmpty } from 'lodash';
 
 import { ImportDataDto } from './import-data.dto';
 import { ImportService } from './import.service';

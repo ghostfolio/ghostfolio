@@ -19,6 +19,7 @@ export const permissions = {
   enableSocialLogin: 'enableSocialLogin',
   enableStatistics: 'enableStatistics',
   enableSubscription: 'enableSubscription',
+  enableSubscriptionInterstitial: 'enableSubscriptionInterstitial',
   enableSystemMessage: 'enableSystemMessage',
   reportDataGlitch: 'reportDataGlitch',
   toggleReadOnlyMode: 'toggleReadOnlyMode',

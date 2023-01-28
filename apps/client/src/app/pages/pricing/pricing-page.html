@@ -31,50 +31,71 @@
           <mat-card class="d-flex flex-column h-100">
             <div class="flex-grow-1">
               <h4>Open Source</h4>
-              <p>
-                For tech-savvy investors who prefer to run
-                <strong>Ghostfolio</strong> on their own infrastructure.
+              <p i18n>
+                For tech-savvy investors who prefer to run Ghostfolio on their
+                own infrastructure.
               </p>
               <ul class="list-unstyled mb-3">
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Unlimited Transactions</span>
+                  <span i18n>Unlimited Transactions</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Portfolio Performance</span>
+                  <span i18n>Unlimited Accounts</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Zen Mode</span>
+                  <span i18n>Portfolio Performance</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Portfolio Summary</span>
+                  <span i18n>Portfolio Summary</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Advanced Insights</span>
+                  <span i18n>Performance Benchmarks</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span i18n>Allocations</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span i18n>FIRE Calculator</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <a i18n [routerLink]="['/features']">and more Features...</a>
                 </li>
               </ul>
             </div>
-            <p>Self-hosted, update manually.</p>
-            <p class="h5 text-right">Free</p>
+            <p i18n>Self-hosted, update manually.</p>
+            <p class="h5 text-right" i18n>Free</p>
             <div
               *ngIf="user?.subscription?.type === 'Basic'"
               class="d-none d-lg-block hidden mt-3 text-center"
@@ -92,31 +113,54 @@
             [ngClass]="{ 'active': user?.subscription?.type === 'Basic' }"
           >
             <div class="flex-grow-1">
-              <h4 class="align-items-center d-flex">Basic</h4>
-              <p>
+              <div class="align-items-center d-flex mb-2">
+                <h4 class="flex-grow-1 m-0">Basic</h4>
+                <div *ngIf="user?.subscription?.type === 'Basic'">
+                  <ion-icon class="mr-1" name="checkmark-outline"></ion-icon>
+                </div>
+              </div>
+              <p i18n>
                 For new investors who are just getting started with trading.
               </p>
               <ul class="list-unstyled mb-3">
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Unlimited Transactions</span>
+                  <span i18n>Unlimited Transactions</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Portfolio Performance</span>
+                  <span i18n>Unlimited Accounts</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Zen Mode</span>
+                  <span i18n>Portfolio Performance</span>
+                </li>
+                <li>
+                  <ion-icon
+                    class="invisible"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                </li>
+                <li>
+                  <ion-icon
+                    class="invisible"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                </li>
+                <li>
+                  <ion-icon
+                    class="invisible"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
                 </li>
                 <li>
                   <ion-icon
@@ -132,8 +176,8 @@
                 </li>
               </ul>
             </div>
-            <p>Fully managed <strong>Ghostfolio</strong> cloud offering.</p>
-            <p class="h5 text-right">Free</p>
+            <p i18n>Fully managed Ghostfolio cloud offering.</p>
+            <p class="h5 text-right" i18n>Free</p>
             <div
               *ngIf="user?.subscription?.type === 'Basic'"
               class="d-none d-lg-block hidden mt-3 text-center"
@@ -151,56 +195,82 @@
             [ngClass]="{ 'active': user?.subscription?.type === 'Premium' }"
           >
             <div class="flex-grow-1">
-              <h4 class="align-items-center d-flex">
-                <span>Premium</span>
-                <gf-premium-indicator
-                  class="ml-1"
-                  [enableLink]="false"
-                ></gf-premium-indicator>
-              </h4>
-              <p>
+              <div class="align-items-center d-flex mb-2">
+                <h4 class="align-items-center d-flex flex-grow-1 m-0">
+                  <span>Premium</span>
+                  <gf-premium-indicator
+                    class="ml-1"
+                    [enableLink]="false"
+                  ></gf-premium-indicator>
+                </h4>
+                <div *ngIf="user?.subscription?.type === 'Premium'">
+                  <ion-icon class="mr-1" name="checkmark-outline"></ion-icon>
+                </div>
+              </div>
+              <p i18n>
                 For ambitious investors who need the full picture of their
                 financial assets.
               </p>
               <ul class="list-unstyled mb-3">
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Unlimited Transactions</span>
+                  <span i18n>Unlimited Transactions</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Portfolio Performance</span>
+                  <span i18n>Unlimited Accounts</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Zen Mode</span>
+                  <span i18n>Portfolio Performance</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Portfolio Summary</span>
+                  <span i18n>Portfolio Summary</span>
                 </li>
                 <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="mr-1 text-muted"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                  <span>Advanced Insights</span>
+                  <span i18n>Performance Benchmarks</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span i18n>Allocations</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span i18n>FIRE Calculator</span>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <a i18n [routerLink]="['/features']">and more Features...</a>
                 </li>
               </ul>
             </div>
-            <p>Fully managed <strong>Ghostfolio</strong> cloud offering.</p>
+            <p i18n>Fully managed Ghostfolio cloud offering.</p>
             <p class="h5 text-right" [hidden]="!price">
               <span class="font-weight-normal">
                 <ng-container *ngIf="coupon"
@@ -221,11 +291,16 @@
               *ngIf="user?.subscription?.type === 'Basic'"
               class="mt-3 text-center"
             >
-              <a color="primary" mat-flat-button [routerLink]="['/account']">
+              <a
+                color="primary"
+                i18n
+                mat-flat-button
+                [routerLink]="['/account']"
+              >
                 Upgrade Plan
               </a>
               <p class="m-0 text-muted">
-                <small>One-time payment, no auto-renewal.</small>
+                <small i18n>One-time payment, no auto-renewal.</small>
               </p>
             </div>
           </mat-card>
@@ -235,10 +310,10 @@
   </div>
   <div *ngIf="!user" class="row">
     <div class="col mt-3 text-center">
-      <a color="primary" mat-flat-button [routerLink]="['/register']">
+      <a color="primary" i18n mat-flat-button [routerLink]="['/register']">
         Get Started
       </a>
-      <p class="m-0 text-muted"><small>It’s free.</small></p>
+      <p class="m-0 text-muted"><small i18n>It’s free.</small></p>
     </div>
   </div>
 </div>

@@ -26,7 +26,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
 
   ngOnInit() {}
 
-  public onCancel(): void {
+  public onCancel() {
     this.dialogRef.close();
   }
 

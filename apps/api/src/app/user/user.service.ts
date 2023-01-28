@@ -97,6 +97,7 @@ export class UserService {
     const {
       accessToken,
       Account,
+      Analytics,
       authChallenge,
       createdAt,
       id,
@@ -107,7 +108,12 @@ export class UserService {
       thirdPartyId,
       updatedAt
     } = await this.prismaService.user.findUnique({
-      include: { Account: true, Settings: true, Subscription: true },
+      include: {
+        Account: true,
+        Analytics: true,
+        Settings: true,
+        Subscription: true
+      },
       where: userWhereUniqueInput
     });
 
@@ -121,7 +127,8 @@ export class UserService {
       role,
       Settings,
       thirdPartyId,
-      updatedAt
+      updatedAt,
+      activityCount: Analytics?.activityCount
     };
 
     if (user?.Settings) {
@@ -154,15 +161,22 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
+    let currentPermissions = getPermissions(user.role);
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);
-    }
 
-    let currentPermissions = getPermissions(user.role);
+      if (
+        Analytics?.activityCount % 25 === 0 &&
+        user.subscription?.type === 'Basic'
+      ) {
+        currentPermissions.push(permissions.enableSubscriptionInterstitial);
+      }
 
-    if (user.subscription?.type === 'Premium') {
-      currentPermissions.push(permissions.reportDataGlitch);
+      if (user.subscription?.type === 'Premium') {
+        currentPermissions.push(permissions.reportDataGlitch);
+      }
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {

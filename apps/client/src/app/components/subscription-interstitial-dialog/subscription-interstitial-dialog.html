@@ -1,0 +1,42 @@
+<h1 class="align-items-center d-flex" mat-dialog-title>
+  <span>Ghostfolio Premium</span>
+  <gf-premium-indicator class="ml-1"></gf-premium-indicator>
+</h1>
+<div class="flex-grow-1" mat-dialog-content>
+  <p class="h5" i18n>
+    Are you an ambitious investor who needs the full picture?
+  </p>
+  <p i18n>
+    By upgrading to Ghostfolio Premium, you will get these additional features:
+  </p>
+  <ul class="list-unstyled mb-3">
+    <li class="align-items-center d-flex mb-1">
+      <ion-icon class="mr-1" name="checkmark-circle-outline"></ion-icon>
+      <span i18n>Portfolio Summary</span>
+    </li>
+    <li class="align-items-center d-flex mb-1">
+      <ion-icon class="mr-1" name="checkmark-circle-outline"></ion-icon>
+      <span i18n>Performance Benchmarks</span>
+    </li>
+    <li class="align-items-center d-flex mb-1">
+      <ion-icon class="mr-1" name="checkmark-circle-outline"></ion-icon>
+      <span i18n>Allocations</span>
+    </li>
+    <li class="align-items-center d-flex mb-1">
+      <ion-icon class="mr-1" name="checkmark-circle-outline"></ion-icon>
+      <span i18n>FIRE Calculator</span>
+    </li>
+    <li class="align-items-center d-flex mb-1">
+      <ion-icon class="mr-1" name="checkmark-circle-outline"></ion-icon>
+      <a i18n [routerLink]="['/features']">and more Features...</a>
+    </li>
+  </ul>
+  <p>Refine your personal investment strategy now.</p>
+</div>
+<div class="justify-content-end" mat-dialog-actions>
+  <button i18n mat-button (click)="onCancel()">Skip</button>
+  <a color="primary" mat-flat-button [routerLink]="['/pricing']">
+    <span i18n>Upgrade Plan</span>
+    <ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
+  </a>
+</div>
