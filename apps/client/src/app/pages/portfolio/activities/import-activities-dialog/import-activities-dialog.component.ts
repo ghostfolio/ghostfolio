@@ -80,7 +80,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
   }
 
-  public onCancel(): void {
+  public onCancel() {
     this.dialogRef.close();
   }
 

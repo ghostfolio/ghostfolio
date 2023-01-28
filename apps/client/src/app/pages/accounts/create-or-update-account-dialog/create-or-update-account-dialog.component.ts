@@ -36,7 +36,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.platforms = platforms;
   }
 
-  public onCancel(): void {
+  public onCancel() {
     this.dialogRef.close();
   }
 

@@ -1,0 +1,11 @@
+:host {
+  display: block;
+
+  .mat-dialog-content {
+    max-height: unset;
+
+    ion-icon[name='checkmark-circle-outline'] {
+      color: rgba(var(--palette-accent-500), 1);
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { UserSettings } from './user-settings.interface';
 
 export type UserWithSettings = User & {
   Account: Account[];
+  activityCount: number;
   permissions?: string[];
   Settings: Settings & { settings: UserSettings };
   subscription?: {

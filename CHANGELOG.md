@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added an interstitial for the subscription
 - Added a quote to the blog post _Ghostfolio auf Sackgeld.com vorgestellt_
 
 ### Changed
 
+- Improved the pricing page
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 - Upgraded `prisma` from version `4.8.0` to `4.9.0`
 
