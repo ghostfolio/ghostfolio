@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added an interstitial for the subscription
+- Added _SourceForge_ to the _As seen in_ section on the landing page
 - Added a quote to the blog post _Ghostfolio auf Sackgeld.com vorgestellt_
 
 ### Changed
