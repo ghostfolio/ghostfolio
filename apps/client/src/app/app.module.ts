@@ -9,7 +9,6 @@ import {
   MAT_DATE_LOCALE,
   MatNativeDateModule
 } from '@angular/material/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
@@ -26,7 +25,6 @@ import { DateFormats } from './adapter/date-formats';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GfHeaderModule } from './components/header/header.module';
-import { SubscriptionInterstitialDialog } from './components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { GfSubscriptionInterstitialDialogModule } from './components/subscription-interstitial-dialog/subscription-interstitial-dialog.module';
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';

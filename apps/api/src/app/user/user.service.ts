@@ -173,10 +173,10 @@ export class UserService {
       ) {
         currentPermissions.push(permissions.enableSubscriptionInterstitial);
       }
-    }
 
-    if (user.subscription?.type === 'Premium') {
-      currentPermissions.push(permissions.reportDataGlitch);
+      if (user.subscription?.type === 'Premium') {
+        currentPermissions.push(permissions.reportDataGlitch);
+      }
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
