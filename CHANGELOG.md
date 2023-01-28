@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
+- Upgraded `prisma` from version `4.8.0` to `4.9.0`
 
 ### Fixed
 
