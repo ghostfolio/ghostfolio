@@ -38,7 +38,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public dividendInBaseCurrency: number;
-  public feesInBaseCurrency: number;
+  public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public grossPerformance: number;
   public grossPerformancePercent: number;
@@ -81,7 +81,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
         ({
           averagePrice,
           dividendInBaseCurrency,
-          feesInBaseCurrency,
+          feeInBaseCurrency,
           firstBuyDate,
           grossPerformance,
           grossPerformancePercent,
@@ -103,7 +103,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.benchmarkDataItems = [];
           this.countries = {};
           this.dividendInBaseCurrency = dividendInBaseCurrency;
-          this.feesInBaseCurrency = feesInBaseCurrency;
+          this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;
           this.grossPerformancePercent = grossPerformancePercent;

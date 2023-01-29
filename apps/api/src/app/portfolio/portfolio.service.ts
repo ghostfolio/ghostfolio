@@ -681,7 +681,7 @@ export class PortfolioService {
         tags,
         averagePrice: undefined,
         dividendInBaseCurrency: undefined,
-        feesInBaseCurrency: undefined,
+        feeInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
@@ -852,7 +852,7 @@ export class PortfolioService {
         transactionCount,
         averagePrice: averagePrice.toNumber(),
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
-        feesInBaseCurrency: this.exchangeRateDataService.toCurrency(
+        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fees.toNumber(),
           SymbolProfile.currency,
           userCurrency
@@ -914,7 +914,7 @@ export class PortfolioService {
         tags,
         averagePrice: 0,
         dividendInBaseCurrency: 0,
-        feesInBaseCurrency: 0,
+        feeInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,

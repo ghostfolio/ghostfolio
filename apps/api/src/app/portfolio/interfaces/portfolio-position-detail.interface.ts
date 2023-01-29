@@ -8,7 +8,7 @@ import { Tag } from '@prisma/client';
 export interface PortfolioPositionDetail {
   averagePrice: number;
   dividendInBaseCurrency: number;
-  feesInBaseCurrency: number;
+  feeInBaseCurrency: number;
   firstBuyDate: string;
   grossPerformance: number;
   grossPerformancePercent: number;
