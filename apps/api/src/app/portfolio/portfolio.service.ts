@@ -573,7 +573,6 @@ export class PortfolioService {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
-        investment: totalInvestmentInBaseCurrency,
         value: filteredValueInBaseCurrency
       });
 
@@ -599,7 +598,6 @@ export class PortfolioService {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
-        investment: totalInvestmentInBaseCurrency,
         value: filteredValueInBaseCurrency
       });
 
