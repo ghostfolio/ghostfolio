@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the unit format (`%`) in the global heat map component of the public page
 - Improved the pricing page
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 - Upgraded `prisma` from version `4.8.0` to `4.9.0`
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the click of unknown accounts in the portfolio proportion chart component
+- Fixed an issue with `value` in the value redaction interceptor for the impersonation mode
 
 ## 1.229.0 - 2023-01-21
 

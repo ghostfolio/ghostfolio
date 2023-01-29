@@ -785,8 +785,8 @@ export class PortfolioService {
         historicalDataArray.push({
           averagePrice: orders[0].unitPrice,
           date: firstBuyDate,
-          quantity: orders[0].quantity,
-          value: orders[0].unitPrice
+          marketPrice: orders[0].unitPrice,
+          quantity: orders[0].quantity
         });
       }
 
@@ -815,9 +815,9 @@ export class PortfolioService {
 
           historicalDataArray.push({
             date,
+            marketPrice,
             averagePrice: currentAveragePrice,
-            quantity: currentQuantity,
-            value: marketPrice
+            quantity: currentQuantity
           });
 
           maxPrice = Math.max(marketPrice ?? 0, maxPrice);

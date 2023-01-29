@@ -21,6 +21,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { Account, AssetClass, DataSource } from '@prisma/client';
+import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -339,7 +340,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         dataSource: position.dataSource,
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: position.value
+        value: isNumber(position.value)
+          ? position.value
+          : position.valueInPercentage
       };
     }
 
