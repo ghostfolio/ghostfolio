@@ -1269,9 +1269,7 @@ export class PortfolioCalculator {
     }
 
     const averageInvestmentBetweenStartAndEndDate = getAverage(
-      Object.values(investmentValues).map((investmentValue) => {
-        return investmentValue.toNumber();
-      })
+      Object.values(investmentValues)
     );
 
     const totalGrossPerformance = grossPerformance.minus(
@@ -1286,7 +1284,7 @@ export class PortfolioCalculator {
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? averageInvestmentBetweenStartAndEndDate > 0
+        ? averageInvestmentBetweenStartAndEndDate.gt(0)
           ? totalGrossPerformance.div(averageInvestmentBetweenStartAndEndDate)
           : new Big(0)
         : // This formula has the issue that buying more units with a price
@@ -1307,7 +1305,7 @@ export class PortfolioCalculator {
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? averageInvestmentBetweenStartAndEndDate > 0
+        ? averageInvestmentBetweenStartAndEndDate.gt(0)
           ? totalNetPerformance.div(averageInvestmentBetweenStartAndEndDate)
           : new Big(0)
         : // This formula has the issue that buying more units with a price
