@@ -24,7 +24,7 @@ import {
   MAX_CHART_ITEMS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   EnhancedSymbolProfile,
@@ -680,6 +680,8 @@ export class PortfolioService {
       return {
         tags,
         averagePrice: undefined,
+        dividendInBaseCurrency: undefined,
+        feesInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
@@ -746,11 +748,22 @@ export class PortfolioService {
         averagePrice,
         currency,
         dataSource,
+        fees,
         firstBuyDate,
         marketPrice,
         quantity,
         transactionCount
       } = position;
+
+      const dividendInBaseCurrency = getSum(
+        orders
+          .filter(({ type }) => {
+            return type === 'DIVIDEND';
+          })
+          .map(({ valueInBaseCurrency }) => {
+            return new Big(valueInBaseCurrency);
+          })
+      );
 
       // Convert investment, gross and net performance to currency of user
       const investment = this.exchangeRateDataService.toCurrency(
@@ -838,6 +851,12 @@ export class PortfolioService {
         tags,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
+        dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+        feesInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          fees.toNumber(),
+          SymbolProfile.currency,
+          userCurrency
+        ),
         grossPerformancePercent:
           position.grossPerformancePercentage?.toNumber(),
         historicalData: historicalDataArray,
@@ -894,6 +913,8 @@ export class PortfolioService {
         SymbolProfile,
         tags,
         averagePrice: 0,
+        dividendInBaseCurrency: 0,
+        feesInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
