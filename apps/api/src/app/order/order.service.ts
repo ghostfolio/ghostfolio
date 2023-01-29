@@ -76,22 +76,20 @@ export class OrderService {
       userId: string;
     }
   ): Promise<Order> {
-    const defaultAccount = (
-      await this.accountService.getAccounts(data.userId)
-    ).find((account) => {
-      return account.isDefault === true;
-    });
+    let Account;
+
+    if (data.accountId) {
+      Account = {
+        connect: {
+          id_userId: {
+            userId: data.userId,
+            id: data.accountId
+          }
+        }
+      };
+    }
 
     const tags = data.tags ?? [];
-
-    let Account = {
-      connect: {
-        id_userId: {
-          userId: data.userId,
-          id: data.accountId ?? defaultAccount?.id
-        }
-      }
-    };
 
     if (data.type === 'ITEM') {
       const assetClass = data.assetClass;
@@ -101,7 +99,6 @@ export class OrderService {
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
 
-      Account = undefined;
       data.id = id;
       data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
       data.SymbolProfile.connectOrCreate.create.assetSubClass = assetSubClass;

@@ -37,8 +37,7 @@ export class AccountController {
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Delete(':id')
