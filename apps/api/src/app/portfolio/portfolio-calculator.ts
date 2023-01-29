@@ -1,6 +1,11 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAverage,
+  parseDate,
+  resetHours
+} from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   ResponseError,
@@ -43,9 +48,6 @@ import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.in
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
 export class PortfolioCalculator {
-  private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
-    true;
-
   private static readonly ENABLE_LOGGING = false;
 
   private currency: string;
@@ -1162,11 +1164,11 @@ export class PortfolioCalculator {
         order.type === 'BUY'
           ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
           : totalUnits.gt(0)
-          ? totalInvestment
-              .div(totalUnits)
-              .mul(order.quantity)
-              .mul(this.getFactor(order.type))
-          : new Big(0);
+            ? totalInvestment
+                .div(totalUnits)
+                .mul(order.quantity)
+                .mul(this.getFactor(order.type))
+            : new Big(0);
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log('totalInvestment', totalInvestment.toNumber());
@@ -1266,6 +1268,12 @@ export class PortfolioCalculator {
       }
     }
 
+    const averageInvestmentBetweenStartAndEndDate = getAverage(
+      Object.values(investmentValues).map((investmentValue) => {
+        return investmentValue.toNumber();
+      })
+    );
+
     const totalGrossPerformance = grossPerformance.minus(
       grossPerformanceAtStartDate
     );
@@ -1274,17 +1282,12 @@ export class PortfolioCalculator {
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
 
-    const maxInvestmentBetweenStartAndEndDate = valueAtStartDate.plus(
-      maxTotalInvestment.minus(investmentAtStartDate)
-    );
-
     const grossPerformancePercentage =
-      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? maxInvestmentBetweenStartAndEndDate.gt(0)
-          ? totalGrossPerformance.div(maxInvestmentBetweenStartAndEndDate)
+        ? averageInvestmentBetweenStartAndEndDate > 0
+          ? totalGrossPerformance.div(averageInvestmentBetweenStartAndEndDate)
           : new Big(0)
         : // This formula has the issue that buying more units with a price
           // lower than the average buying price results in a positive
@@ -1301,12 +1304,11 @@ export class PortfolioCalculator {
       : new Big(0);
 
     const netPerformancePercentage =
-      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
       averagePriceAtStartDate.eq(0) ||
       averagePriceAtEndDate.eq(0) ||
       orders[indexOfStartOrder].unitPrice.eq(0)
-        ? maxInvestmentBetweenStartAndEndDate.gt(0)
-          ? totalNetPerformance.div(maxInvestmentBetweenStartAndEndDate)
+        ? averageInvestmentBetweenStartAndEndDate > 0
+          ? totalNetPerformance.div(averageInvestmentBetweenStartAndEndDate)
           : new Big(0)
         : // This formula has the issue that buying more units with a price
           // lower than the average buying price results in a positive
