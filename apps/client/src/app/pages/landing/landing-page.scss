@@ -79,6 +79,10 @@
       mask-image: url('/assets/images/logo-sackgeld.png');
     }
 
+    &.logo-sourceforge {
+      mask-image: url('/assets/images/logo-sourceforge.svg');
+    }
+
     &.logo-unraid {
       mask-image: url('/assets/images/logo-unraid.svg');
     }
@@ -117,6 +121,7 @@
     &.logo-alternative-to,
     &.logo-privacy-tools,
     &.logo-sackgeld,
+    &.logo-sourceforge,
     &.logo-unraid {
       background-color: rgba(var(--light-primary-text));
     }
