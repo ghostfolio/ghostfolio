@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the dividend and fees to the position detail dialog
 - Added support to link a (wealth) item to an account
 
 ### Changed

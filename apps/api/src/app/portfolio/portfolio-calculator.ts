@@ -431,6 +431,7 @@ export class PortfolioCalculator {
           : item.investment.div(item.quantity),
         currency: item.currency,
         dataSource: item.dataSource,
+        fee: item.fee,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? grossPerformance ?? null : null,
         grossPerformancePercentage: !hasErrors

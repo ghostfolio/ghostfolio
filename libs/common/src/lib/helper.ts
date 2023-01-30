@@ -1,5 +1,6 @@
 import * as currencies from '@dinero.js/currencies';
 import { DataSource } from '@prisma/client';
+import Big from 'big.js';
 import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 import { de, es, fr, it, nl, pt } from 'date-fns/locale';
 
@@ -137,6 +138,14 @@ export function getNumberFormatGroup(aLocale?: string) {
   return formatObject.find((object) => {
     return object.type === 'group';
   }).value;
+}
+
+export function getSum(aArray: Big[]) {
+  if (aArray?.length > 0) {
+    return aArray.reduce((a, b) => a.plus(b), new Big(0));
+  }
+
+  return new Big(0);
 }
 
 export function getTextColor(aColorScheme: ColorScheme) {
