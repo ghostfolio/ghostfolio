@@ -5,16 +5,16 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import {
-  MatSlideToggle,
-  MatSlideToggleChange
-} from '@angular/material/slide-toggle';
+  MatLegacySlideToggle as MatSlideToggle,
+  MatLegacySlideToggleChange as MatSlideToggleChange
+} from '@angular/material/legacy-slide-toggle';
 import {
-  MatSnackBar,
-  MatSnackBarRef,
-  TextOnlySnackBar
-} from '@angular/material/snack-bar';
+  MatLegacySnackBar as MatSnackBar,
+  MatLegacySnackBarRef as MatSnackBarRef,
+  LegacyTextOnlySnackBar as TextOnlySnackBar
+} from '@angular/material/legacy-snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';

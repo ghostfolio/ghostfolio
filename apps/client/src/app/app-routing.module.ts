@@ -222,9 +222,8 @@ const routes: Routes = [
       // Preload all lazy loaded modules with the attribute preload === true
       {
         anchorScrolling: 'enabled',
-        preloadingStrategy: ModulePreloadService,
+        preloadingStrategy: ModulePreloadService
         // enableTracing: true // <-- debugging purposes only
-        relativeLinkResolution: 'legacy'
       }
     )
   ],

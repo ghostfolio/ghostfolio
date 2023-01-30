@@ -6,7 +6,10 @@ import {
   OnDestroy
 } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+  MatLegacyDialogRef as MatDialogRef
+} from '@angular/material/legacy-dialog';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { Subject, takeUntil } from 'rxjs';
 
