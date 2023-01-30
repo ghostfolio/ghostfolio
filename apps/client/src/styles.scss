@@ -1,16 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'angular-material-css-vars/main' as mat-css;
 
 @import './styles/bootstrap';
 @import './styles/table';
-
-@import 'node_modules/angular-material-css-vars/src/lib/main';
 
 @import 'node_modules/svgmap/dist/svgMap';
 
 $mat-css-dark-theme-selector: '.is-dark-theme';
 $mat-css-light-theme-selector: '.is-light-theme';
 
-@include init-material-css-vars() {
+@include mat-css.init-material-css-vars() using($mat-css-theme) {
   // If your app has any theme mixins, call them here.
   // $mat-css-theme gets set to an appropriate value before this content is called.
   // @include your-custom-component-theme($mat-css-theme);
