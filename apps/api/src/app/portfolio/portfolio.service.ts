@@ -573,7 +573,6 @@ export class PortfolioService {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
-        investment: totalInvestmentInBaseCurrency,
         value: filteredValueInBaseCurrency
       });
 
@@ -599,7 +598,6 @@ export class PortfolioService {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
-        investment: totalInvestmentInBaseCurrency,
         value: filteredValueInBaseCurrency
       });
 
@@ -1209,12 +1207,10 @@ export class PortfolioService {
 
   private async getCashPositions({
     cashDetails,
-    investment,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
-    investment: Big;
     userCurrency: string;
     value: Big;
   }) {
@@ -1692,6 +1688,14 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }) {
+    const ordersOfTypeItem = await this.orderService.getOrders({
+      filters,
+      userCurrency,
+      userId,
+      withExcludedAccounts,
+      types: ['ITEM']
+    });
+
     const accounts: PortfolioDetails['accounts'] = {};
 
     let currentAccounts: (Account & {
@@ -1722,9 +1726,17 @@ export class PortfolioService {
     });
 
     for (const account of currentAccounts) {
-      const ordersByAccount = orders.filter(({ accountId }) => {
+      let ordersByAccount = orders.filter(({ accountId }) => {
         return accountId === account.id;
       });
+
+      const ordersOfTypeItemByAccount = ordersOfTypeItem.filter(
+        ({ accountId }) => {
+          return accountId === account.id;
+        }
+      );
+
+      ordersByAccount = ordersByAccount.concat(ordersOfTypeItemByAccount);
 
       accounts[account.id] = {
         balance: account.balance,
@@ -1745,7 +1757,9 @@ export class PortfolioService {
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
-            portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ?? 0;
+          (portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ??
+            order.unitPrice ??
+            0);
         let originalValueOfSymbolInBaseCurrency =
           this.exchangeRateDataService.toCurrency(
             order.quantity * order.unitPrice,
