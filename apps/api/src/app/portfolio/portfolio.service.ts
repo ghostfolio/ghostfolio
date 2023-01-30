@@ -746,7 +746,7 @@ export class PortfolioService {
         averagePrice,
         currency,
         dataSource,
-        fees,
+        fee,
         firstBuyDate,
         marketPrice,
         quantity,
@@ -851,7 +851,7 @@ export class PortfolioService {
         averagePrice: averagePrice.toNumber(),
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          fees.toNumber(),
+          fee.toNumber(),
           SymbolProfile.currency,
           userCurrency
         ),

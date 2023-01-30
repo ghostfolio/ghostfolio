@@ -82,7 +82,7 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('0'),
             currency: 'CHF',
             dataSource: 'YAHOO',
-            fees: new Big('3.2'),
+            fee: new Big('3.2'),
             firstBuyDate: '2021-11-22',
             grossPerformance: new Big('-12.6'),
             grossPerformancePercentage: new Big('-0.0440867739678096571'),
