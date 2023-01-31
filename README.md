@@ -40,7 +40,7 @@ Ghostfolio is for you if you are...
 - 🧘 into minimalism
 - 🧺 caring about diversifying your financial resources
 - 🆓 interested in financial independence
-- 🙅 saying no to spreadsheets in 2023
+- 🙅 saying no to spreadsheets
 - 😎 still reading this list
 
 ## Features
