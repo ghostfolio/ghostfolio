@@ -2682,11 +2682,6 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@ctrl/tinycolor@^3.4.0":
-  version "3.4.1"
-  resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.4.1.tgz"
-  integrity sha512-ej5oVy6lykXsvieQtqZxCOaLT+xD4+QNarq78cIYISHmZXshCvROLudpQN3lfL8G0NL7plMSSK+zlyvCaIJ4Iw==
-
 "@cypress/listr-verbose-renderer@^0.4.1":
   version "0.4.1"
   resolved "https://registry.npmjs.org/@cypress/listr-verbose-renderer/-/listr-verbose-renderer-0.4.1.tgz"
@@ -7094,14 +7089,6 @@ alphavantage@2.2.0:
   integrity sha512-wsN6c78DWEfnmT7zIqs95N0cBT/h9WHxby3pSscUtTA+wRIO29BqDJQqZnQcy6GddlIsBp5GQk8gEeIAR0FdBg==
   dependencies:
     cross-fetch "^3.0.5"
-
-angular-material-css-vars@4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/angular-material-css-vars/-/angular-material-css-vars-4.2.0.tgz#364c6cde0ed5f7096541eed95d3a6697e451110f"
-  integrity sha512-6gx5y71BgP+HcICQAUiJ7dlXljnGeJHvadVaIuJAT5bX3uv2jQoODcoLNk3a8wYcU2Z+kk1xsrFYJeB4UQeGNA==
-  dependencies:
-    "@ctrl/tinycolor" "^3.4.0"
-    tslib "^2.3.0"
 
 ansi-align@^3.0.0:
   version "3.0.1"

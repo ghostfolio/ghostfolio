@@ -14,7 +14,6 @@ import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/le
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { MaterialCssVarsModule } from 'angular-material-css-vars';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
@@ -46,11 +45,6 @@ export function NgxStripeFactory(): string {
     MarkdownModule.forRoot(),
     MatAutocompleteModule,
     MatChipsModule,
-    MaterialCssVarsModule.forRoot({
-      darkThemeClass: 'is-dark-theme',
-      isAutoContrast: true,
-      lightThemeClass: 'is-light-theme'
-    }),
     MatNativeDateModule,
     MatSnackBarModule,
     MatTooltipModule,
