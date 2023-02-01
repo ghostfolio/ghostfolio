@@ -35,7 +35,6 @@ export class ImportActivitiesService {
     isDryRun?: boolean;
     userAccounts: Account[];
   }): Promise<{
-    accounts?: CreateAccountDto[];
     activities: Activity[];
   }> {
     const content = csvToJson(fileContent, {
@@ -71,14 +70,14 @@ export class ImportActivitiesService {
     accounts?: CreateAccountDto[];
     isDryRun?: boolean;
   }): Promise<{
-    accounts?: CreateAccountDto[];
     activities: Activity[];
+    accounts?: CreateAccountDto[];
   }> {
     return new Promise((resolve, reject) => {
       this.postImport(
         {
-          activities,
-          accounts
+          accounts,
+          activities
         },
         isDryRun
       )
@@ -100,11 +99,11 @@ export class ImportActivitiesService {
     accounts,
     activities
   }: {
-    accounts?: CreateAccountDto[];
     activities: Activity[];
+    accounts?: CreateAccountDto[];
   }): Promise<{
-    accounts?: CreateAccountDto[];
     activities: Activity[];
+    accounts?: CreateAccountDto[];
   }> {
     const importData: CreateOrderDto[] = [];
 
