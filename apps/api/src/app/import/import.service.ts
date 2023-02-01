@@ -117,7 +117,8 @@ export class ImportService {
   }): Promise<Activity[]> {
     const accountIdMapping = {};
 
-    if (!isDryRun && accountsDto?.length) {
+    //Create new accounts during dryRun so that new account Ids don't get invalidated
+    if (isDryRun && accountsDto?.length) {
       for (let account of accountsDto) {
         //Check if there is any existing account with the same id
         const accountWithSameId = await this.accountService.getAccountById(
@@ -169,7 +170,7 @@ export class ImportService {
         }
       }
 
-      if (!isDryRun) {
+      if (isDryRun) {
         //If a new account is created, then update the accountId in all activities
         if (Object.keys(accountIdMapping).includes(activity.accountId)) {
           activity.accountId = accountIdMapping[activity.accountId];
