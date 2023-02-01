@@ -42,7 +42,7 @@ export class ConfigurationService {
       MAX_ITEM_IN_CACHE: num({ default: 9999 }),
       PORT: port({ default: 3333 }),
       RAPID_API_API_KEY: str({ default: '' }),
-      REDIS_HOST: host({ default: 'localhost' }),
+      REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),
       REDIS_PORT: port({ default: 6379 }),
       ROOT_URL: str({ default: 'http://localhost:4200' }),
