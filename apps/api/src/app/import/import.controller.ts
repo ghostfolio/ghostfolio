@@ -68,11 +68,11 @@ export class ImportController {
 
     try {
       const activities = await this.importService.import({
-        maxActivitiesToImport,
-        isDryRun,
-        userCurrency,
-        activitiesDto: importData.activities,
         accountsDto: importData.accounts || [],
+        activitiesDto: importData.activities,
+        isDryRun,
+        maxActivitiesToImport,
+        userCurrency,
         userId: this.request.user.id
       });
 

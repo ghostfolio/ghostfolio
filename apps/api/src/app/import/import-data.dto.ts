@@ -1,6 +1,6 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Type } from 'class-transformer';
-import { IsArray, ValidateNested, IsOptional } from 'class-validator';
+import { IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { CreateAccountDto } from '../account/create-account.dto';
 
 export class ImportDataDto {

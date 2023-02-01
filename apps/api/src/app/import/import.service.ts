@@ -1,4 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
@@ -17,7 +18,6 @@ import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateAccountDto } from '../account/create-account.dto';
 
 @Injectable()
 export class ImportService {
@@ -101,15 +101,15 @@ export class ImportService {
   }
 
   public async import({
-    activitiesDto,
     accountsDto,
+    activitiesDto,
     isDryRun = false,
     maxActivitiesToImport,
     userCurrency,
     userId
   }: {
-    activitiesDto: Partial<CreateOrderDto>[];
     accountsDto: Partial<CreateAccountDto>[];
+    activitiesDto: Partial<CreateOrderDto>[];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
     userCurrency: string;
@@ -117,10 +117,10 @@ export class ImportService {
   }): Promise<Activity[]> {
     const accountIdMapping = {};
 
-    //Create new accounts during dryRun so that new account Ids don't get invalidated
+    //Create new accounts during dryRun so that new account IDs don't get invalidated
     if (isDryRun && accountsDto?.length) {
       for (let account of accountsDto) {
-        //Check if there is any existing account with the same id
+        //Check if there is any existing account with the same ID
         const accountWithSameId = await this.accountService.getAccountById(
           account.id
         );
@@ -154,6 +154,7 @@ export class ImportService {
             userId
           );
 
+          //Store the new to old account ID mappings for updating activities
           if (accountWithSameId && oldAccountId) {
             accountIdMapping[oldAccountId] = newAccount.id;
           }
@@ -170,8 +171,8 @@ export class ImportService {
         }
       }
 
+      //If a new account is created, then update the accountId in all activities
       if (isDryRun) {
-        //If a new account is created, then update the accountId in all activities
         if (Object.keys(accountIdMapping).includes(activity.accountId)) {
           activity.accountId = accountIdMapping[activity.accountId];
         }

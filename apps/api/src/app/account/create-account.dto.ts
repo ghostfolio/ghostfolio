@@ -8,14 +8,6 @@ import {
 } from 'class-validator';
 
 export class CreateAccountDto {
-  @IsOptional()
-  @IsString()
-  id: string;
-
-  @IsOptional()
-  @IsBoolean()
-  isDefault: boolean;
-
   @IsString()
   accountType: AccountType;
 
@@ -24,6 +16,14 @@ export class CreateAccountDto {
 
   @IsString()
   currency: string;
+
+  @IsOptional()
+  @IsString()
+  id: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isDefault: boolean;
 
   @IsBoolean()
   @IsOptional()

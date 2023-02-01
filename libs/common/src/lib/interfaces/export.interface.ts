@@ -1,4 +1,4 @@
-import { Order, Account } from '@prisma/client';
+import { Account, Order } from '@prisma/client';
 
 export interface Export {
   meta: {

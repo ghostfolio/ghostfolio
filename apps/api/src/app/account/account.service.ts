@@ -80,6 +80,13 @@ export class AccountService {
     });
   }
 
+  public async getAccountById(accountId: string) {
+    const accounts = await this.accounts({
+      where: { id: accountId }
+    });
+    return accounts.length ? accounts[0] : null;
+  }
+
   public async getAccounts(aUserId: string) {
     const accounts = await this.accounts({
       include: { Order: true, Platform: true },
@@ -102,13 +109,6 @@ export class AccountService {
 
       return result;
     });
-  }
-
-  public async getAccountById(accountId: string) {
-    const accounts = await this.accounts({
-      where: { id: accountId }
-    });
-    return accounts.length ? accounts[0] : null;
   }
 
   public async getCashDetails({
