@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Relaxed the validation rule of the _Redis_ host environment variable (`REDIS_HOST`)
 - Improved the language localization for German (`de`)
 
 ## 1.230.0 - 2023-01-29
