@@ -1,0 +1,110 @@
+@use '@angular/material' as mat;
+
+$dark-primary-text: rgba(black, 0.87);
+$light-primary-text: white;
+
+$gf-primary: (
+  50: var(--gf-theme-primary-50),
+  100: var(--gf-theme-primary-100),
+  200: var(--gf-theme-primary-200),
+  300: var(--gf-theme-primary-300),
+  400: var(--gf-theme-primary-400),
+  500: var(--gf-theme-primary-500),
+  600: var(--gf-theme-primary-600),
+  700: var(--gf-theme-primary-700),
+  800: var(--gf-theme-primary-800),
+  900: var(--gf-theme-primary-900),
+  A100: var(--gf-theme-primary-A100),
+  A200: var(--gf-theme-primary-A200),
+  A400: var(--gf-theme-primary-A400),
+  A700: var(--gf-theme-primary-A700),
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $light-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text
+  )
+);
+
+$gf-secondary: (
+  50: var(--gf-theme-secondary-50),
+  100: var(--gf-theme-secondary-100),
+  200: var(--gf-theme-secondary-200),
+  300: var(--gf-theme-secondary-300),
+  400: var(--gf-theme-secondary-400),
+  500: var(--gf-theme-secondary-500),
+  600: var(--gf-theme-secondary-600),
+  700: var(--gf-theme-secondary-700),
+  800: var(--gf-theme-secondary-800),
+  900: var(--gf-theme-secondary-900),
+  A100: var(--gf-theme-secondary-A100),
+  A200: var(--gf-theme-secondary-A200),
+  A400: var(--gf-theme-secondary-A400),
+  A700: var(--gf-theme-secondary-A700),
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $light-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text
+  )
+);
+
+@include mat.core();
+@include mat.legacy-core();
+
+// Create default theme
+$gf-theme-default: mat.define-light-theme(
+  (
+    color: (
+      primary: mat.define-palette($gf-primary),
+      accent: mat.define-palette($gf-secondary, 500, 900, A100)
+    ),
+    density: 0,
+    typography: mat.define-typography-config()
+  )
+);
+@include mat.all-component-themes($gf-theme-default);
+@include mat.all-legacy-component-themes($gf-theme-default);
+
+// Create dark theme
+$gf-theme-dark: mat.define-dark-theme(
+  (
+    color: (
+      primary: mat.define-palette($gf-primary),
+      accent: mat.define-palette($gf-secondary, 500, 900, A100)
+    ),
+    density: 0,
+    typography: mat.define-typography-config()
+  )
+);
+.is-dark-theme {
+  @include mat.all-component-colors($gf-theme-dark);
+  @include mat.all-legacy-component-colors($gf-theme-dark);
+}
+
+:root {
+  --gf-theme-primary-500: #36cfcc;
+  --gf-theme-primary-500-rgb: 0, 187, 255;
+  --gf-theme-secondary-500: #3686cf;
+  --gf-theme-secondary-500-rgb: 78, 208, 94;
+}

@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
+import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
+import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
 import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
 
 import { AdminMarketDataComponent } from './admin-market-data.component';
-import { GfAssetProfileDialogModule } from './asset-profile-dialog/assset-profile-dialog.module';
+import { GfAssetProfileDialogModule } from './asset-profile-dialog/asset-profile-dialog.module';
 
 @NgModule({
   declarations: [AdminMarketDataComponent],

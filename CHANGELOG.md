@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Relaxed the validation rule of the _Redis_ host environment variable (`REDIS_HOST`)
 - Improved the language localization for German (`de`)
+- Eliminated `angular-material-css-vars`
+- Upgraded `angular` from version `14.2.0` to `15.1.2`
+- Upgraded `Nx` from version `15.0.13` to `15.6.3`
 
 ## 1.230.0 - 2023-01-29
 

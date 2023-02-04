@@ -7,20 +7,20 @@
         </mat-form-field>-->
 
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label i18n>Savings Rate</mat-label>
+          <mat-label i18n>Savings Rate per Month</mat-label>
           <input
             formControlName="paymentPerPeriod"
             matInput
             step="100"
             type="number"
           />
-          <span class="ml-2" i18n matSuffix>{{ currency }} per month</span>
+          <span class="ml-2" matTextSuffix>{{ currency }}</span>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Investment Horizon</mat-label>
           <input formControlName="time" matInput type="number" />
-          <span class="ml-2" i18n matSuffix>years</span>
+          <span class="ml-2" i18n matTextSuffix>years</span>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
@@ -31,7 +31,7 @@
             step="0.25"
             type="number"
           />
-          <span class="ml-2" matSuffix>%</span>
+          <div class="ml-2" matTextSuffix>%</div>
         </mat-form-field>
 
         <gf-value

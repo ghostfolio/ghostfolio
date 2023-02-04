@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { SubscriptionInterstitialDialogParams } from '@ghostfolio/client/components/subscription-interstitial-dialog/interfaces/interfaces';
 import { SubscriptionInterstitialDialog } from '@ghostfolio/client/components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { of, Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 
