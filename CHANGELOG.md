@@ -5,15 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 1.231.0 - 2023-02-04
 
 ### Added
 
+- Added the dividend and fees to the position detail dialog
+- Added support to link a (wealth) item to an account
+
+### Changed
+
+- Relaxed the validation rule of the _Redis_ host environment variable (`REDIS_HOST`)
+- Improved the language localization for German (`de`)
+- Eliminated `angular-material-css-vars`
+- Upgraded `angular` from version `14.2.0` to `15.1.2`
+- Upgraded `Nx` from version `15.0.13` to `15.6.3`
+
+## 1.230.0 - 2023-01-29
+
+### Added
+
+- Added an interstitial for the subscription
+- Added _SourceForge_ to the _As seen in_ section on the landing page
 - Added a quote to the blog post _Ghostfolio auf Sackgeld.com vorgestellt_
 
 ### Changed
 
+- Improved the unit format (`%`) in the global heat map component of the public page
+- Improved the pricing page
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
+- Upgraded `prisma` from version `4.8.0` to `4.9.0`
+
+### Fixed
+
+- Fixed the click of unknown accounts in the portfolio proportion chart component
+- Fixed an issue with `value` in the value redaction interceptor for the impersonation mode
 
 ## 1.229.0 - 2023-01-21
 

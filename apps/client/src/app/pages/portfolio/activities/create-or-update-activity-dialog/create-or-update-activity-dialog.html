@@ -18,12 +18,14 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div
-      [ngClass]="{ 'd-none': !activityForm.controls['accountId'].hasValidator(Validators.required) }"
-    >
+    <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
+          <mat-option
+            *ngIf="!activityForm.controls['accountId'].hasValidator(Validators.required)"
+            [value]="null"
+          ></mat-option>
           <mat-option *ngFor="let account of data.accounts" [value]="account.id"
             >{{ account.name }}</mat-option
           >

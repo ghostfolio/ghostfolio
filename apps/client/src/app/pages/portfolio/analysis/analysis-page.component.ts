@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
@@ -19,7 +19,7 @@ import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, DataSource, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
-import { sortBy } from 'lodash';
+import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
@@ -312,12 +312,13 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           date,
           netPerformanceInPercentage,
           totalInvestment,
-          value
+          value,
+          valueInPercentage
         } of chart) {
           this.investments.push({ date, investment: totalInvestment });
           this.performanceDataItems.push({
             date,
-            value
+            value: isNumber(value) ? value : valueInPercentage
           });
           this.performanceDataItemsInPercentage.push({
             date,

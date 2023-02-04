@@ -9,9 +9,9 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatLegacyPaginator as MatPaginator } from '@angular/material/legacy-paginator';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { AssetClass, Order as OrderModel } from '@prisma/client';

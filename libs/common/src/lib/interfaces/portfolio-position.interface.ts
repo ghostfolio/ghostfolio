@@ -30,5 +30,6 @@ export interface PortfolioPosition {
   symbol: string;
   type?: string;
   url?: string;
-  value: number;
+  value?: number;
+  valueInPercentage?: number;
 }

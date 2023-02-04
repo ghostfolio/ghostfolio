@@ -2,12 +2,14 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  a {
-    color: rgba(var(--palette-primary-500), 1);
-    font-weight: 500;
+  p {
+    a {
+      color: rgba(var(--palette-primary-500), 1);
+      font-weight: 500;
 
-    &:hover {
-      color: rgba(var(--palette-primary-300), 1);
+      &:hover {
+        color: rgba(var(--palette-primary-300), 1);
+      }
     }
   }
 
@@ -16,6 +18,10 @@
     &.active {
       border-color: rgba(var(--palette-primary-500), 1);
       box-shadow: 0 0 0 1px rgba(var(--palette-primary-500), 1);
+    }
+
+    ion-icon[name='checkmark-circle-outline'] {
+      color: rgba(var(--palette-accent-500), 1);
     }
   }
 }

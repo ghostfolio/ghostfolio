@@ -35,6 +35,7 @@ export class RedactValuesInResponseInterceptor<T>
               'balanceInBaseCurrency',
               'comment',
               'convertedBalance',
+              'dividendInBaseCurrency',
               'fee',
               'feeInBaseCurrency',
               'filteredValueInBaseCurrency',

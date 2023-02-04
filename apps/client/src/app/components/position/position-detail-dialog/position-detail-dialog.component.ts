@@ -6,7 +6,10 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
+  MatLegacyDialogRef as MatDialogRef
+} from '@angular/material/legacy-dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
@@ -37,6 +40,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
+  public dividendInBaseCurrency: number;
+  public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public grossPerformance: number;
   public grossPerformancePercent: number;
@@ -78,6 +83,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       .subscribe(
         ({
           averagePrice,
+          dividendInBaseCurrency,
+          feeInBaseCurrency,
           firstBuyDate,
           grossPerformance,
           grossPerformancePercent,
@@ -98,7 +105,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
+          this.dividendInBaseCurrency = dividendInBaseCurrency;
+          this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;
           this.grossPerformancePercent = grossPerformancePercent;
@@ -111,7 +119,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
 
               return {
                 date: historicalDataItem.date,
-                value: historicalDataItem.value
+                value: historicalDataItem.marketPrice
               };
             }
           );
@@ -123,6 +131,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.netPerformancePercent = netPerformancePercent;
           this.orders = orders;
           this.quantity = quantity;
+          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
           this.tags = tags.map(({ id, name }) => {

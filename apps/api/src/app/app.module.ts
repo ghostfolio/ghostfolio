@@ -1,24 +1,23 @@
 import { join } from 'path';
 
-import { AuthDeviceModule } from '@ghostfolio/api/app/auth-device/auth-device.module';
-import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
-import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
-import { CronService } from '@ghostfolio/api/services/cron.service';
-import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering.module';
-import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
-import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
-import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
-import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
+import { ConfigurationModule } from '../services/configuration.module';
+import { CronService } from '../services/cron.service';
+import { DataGatheringModule } from '../services/data-gathering.module';
+import { DataProviderModule } from '../services/data-provider/data-provider.module';
+import { ExchangeRateDataModule } from '../services/exchange-rate-data.module';
+import { PrismaModule } from '../services/prisma.module';
+import { TwitterBotModule } from '../services/twitter-bot/twitter-bot.module';
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
+import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
 import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
@@ -30,6 +29,7 @@ import { InfoModule } from './info/info.module';
 import { LogoModule } from './logo/logo.module';
 import { OrderModule } from './order/order.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
+import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
@@ -45,7 +45,7 @@ import { UserModule } from './user/user.module';
     BullModule.forRoot({
       redis: {
         host: process.env.REDIS_HOST,
-        port: parseInt(process.env.REDIS_PORT, 10),
+        port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
         password: process.env.REDIS_PASSWORD
       }
     }),

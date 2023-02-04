@@ -24,7 +24,7 @@ import {
   MAX_CHART_ITEMS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   EnhancedSymbolProfile,
@@ -573,7 +573,6 @@ export class PortfolioService {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
-        investment: totalInvestmentInBaseCurrency,
         value: filteredValueInBaseCurrency
       });
 
@@ -599,7 +598,6 @@ export class PortfolioService {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
-        investment: totalInvestmentInBaseCurrency,
         value: filteredValueInBaseCurrency
       });
 
@@ -680,6 +678,8 @@ export class PortfolioService {
       return {
         tags,
         averagePrice: undefined,
+        dividendInBaseCurrency: undefined,
+        feeInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
@@ -746,11 +746,22 @@ export class PortfolioService {
         averagePrice,
         currency,
         dataSource,
+        fee,
         firstBuyDate,
         marketPrice,
         quantity,
         transactionCount
       } = position;
+
+      const dividendInBaseCurrency = getSum(
+        orders
+          .filter(({ type }) => {
+            return type === 'DIVIDEND';
+          })
+          .map(({ valueInBaseCurrency }) => {
+            return new Big(valueInBaseCurrency);
+          })
+      );
 
       // Convert investment, gross and net performance to currency of user
       const investment = this.exchangeRateDataService.toCurrency(
@@ -785,8 +796,8 @@ export class PortfolioService {
         historicalDataArray.push({
           averagePrice: orders[0].unitPrice,
           date: firstBuyDate,
-          quantity: orders[0].quantity,
-          value: orders[0].unitPrice
+          marketPrice: orders[0].unitPrice,
+          quantity: orders[0].quantity
         });
       }
 
@@ -815,9 +826,9 @@ export class PortfolioService {
 
           historicalDataArray.push({
             date,
+            marketPrice,
             averagePrice: currentAveragePrice,
-            quantity: currentQuantity,
-            value: marketPrice
+            quantity: currentQuantity
           });
 
           maxPrice = Math.max(marketPrice ?? 0, maxPrice);
@@ -838,6 +849,12 @@ export class PortfolioService {
         tags,
         transactionCount,
         averagePrice: averagePrice.toNumber(),
+        dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          fee.toNumber(),
+          SymbolProfile.currency,
+          userCurrency
+        ),
         grossPerformancePercent:
           position.grossPerformancePercentage?.toNumber(),
         historicalData: historicalDataArray,
@@ -894,6 +911,8 @@ export class PortfolioService {
         SymbolProfile,
         tags,
         averagePrice: 0,
+        dividendInBaseCurrency: 0,
+        feeInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
         grossPerformancePercent: undefined,
@@ -1209,12 +1228,10 @@ export class PortfolioService {
 
   private async getCashPositions({
     cashDetails,
-    investment,
     userCurrency,
     value
   }: {
     cashDetails: CashDetails;
-    investment: Big;
     userCurrency: string;
     value: Big;
   }) {
@@ -1692,6 +1709,14 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }) {
+    const ordersOfTypeItem = await this.orderService.getOrders({
+      filters,
+      userCurrency,
+      userId,
+      withExcludedAccounts,
+      types: ['ITEM']
+    });
+
     const accounts: PortfolioDetails['accounts'] = {};
 
     let currentAccounts: (Account & {
@@ -1722,9 +1747,17 @@ export class PortfolioService {
     });
 
     for (const account of currentAccounts) {
-      const ordersByAccount = orders.filter(({ accountId }) => {
+      let ordersByAccount = orders.filter(({ accountId }) => {
         return accountId === account.id;
       });
+
+      const ordersOfTypeItemByAccount = ordersOfTypeItem.filter(
+        ({ accountId }) => {
+          return accountId === account.id;
+        }
+      );
+
+      ordersByAccount = ordersByAccount.concat(ordersOfTypeItemByAccount);
 
       accounts[account.id] = {
         balance: account.balance,
@@ -1745,7 +1778,9 @@ export class PortfolioService {
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
-            portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ?? 0;
+          (portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ??
+            order.unitPrice ??
+            0);
         let originalValueOfSymbolInBaseCurrency =
           this.exchangeRateDataService.toCurrency(
             order.quantity * order.unitPrice,

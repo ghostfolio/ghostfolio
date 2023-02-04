@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
@@ -21,6 +21,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { Account, AssetClass, DataSource } from '@prisma/client';
+import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -339,7 +340,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         dataSource: position.dataSource,
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: position.value
+        value: isNumber(position.value)
+          ? position.value
+          : position.valueInPercentage
       };
     }
 
@@ -357,7 +360,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   }
 
   public onAccountChartClicked({ symbol }: UniqueAsset) {
-    if (symbol) {
+    if (symbol && symbol !== UNKNOWN_KEY) {
       this.router.navigate([], {
         queryParams: { accountId: symbol, accountDetailDialog: true }
       });

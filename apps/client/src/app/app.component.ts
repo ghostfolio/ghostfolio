@@ -1,26 +1,17 @@
+import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   OnDestroy,
   OnInit
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  PRIMARY_OUTLET,
-  Router
-} from '@angular/router';
-import {
-  primaryColorHex,
-  secondaryColorHex,
-  warnColorHex
-} from '@ghostfolio/common/config';
+import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
-import { MaterialCssVarsService } from 'angular-material-css-vars';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
@@ -52,7 +43,7 @@ export class AppComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
-    private materialCssVarsService: MaterialCssVarsService,
+    @Inject(DOCUMENT) private document: Document,
     private router: Router,
     private title: Title,
     private tokenStorageService: TokenStorageService,
@@ -126,16 +117,20 @@ export class AppComponent implements OnDestroy, OnInit {
       ? userPreferredColorScheme === 'DARK'
       : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    this.materialCssVarsService.setDarkTheme(isDarkTheme);
+    this.toggleThemeStyleClass(isDarkTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       if (!this.user?.settings.colorScheme) {
-        this.materialCssVarsService.setDarkTheme(event.matches);
+        this.toggleThemeStyleClass(event.matches);
       }
     });
+  }
 
-    this.materialCssVarsService.setPrimaryColor(primaryColorHex);
-    this.materialCssVarsService.setAccentColor(secondaryColorHex);
-    this.materialCssVarsService.setWarnColor(warnColorHex);
+  private toggleThemeStyleClass(isDarkTheme: boolean) {
+    if (isDarkTheme) {
+      this.document.body.classList.add('is-dark-theme');
+    } else {
+      this.document.body.classList.remove('is-dark-theme');
+    }
   }
 }

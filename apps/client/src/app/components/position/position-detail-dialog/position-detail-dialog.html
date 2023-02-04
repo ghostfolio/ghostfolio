@@ -123,6 +123,26 @@
         <gf-value
           i18n
           size="medium"
+          [currency]="data.baseCurrency"
+          [locale]="data.locale"
+          [value]="dividendInBaseCurrency"
+          >Dividend</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [currency]="data.baseCurrency"
+          [locale]="data.locale"
+          [value]="feeInBaseCurrency"
+          >Fees</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
           [isDate]="true"
           [locale]="data.locale"
           [value]="firstBuyDate"
