@@ -20,36 +20,15 @@
       }
     }
 
-    .mat-chip {
-      cursor: pointer;
-      min-height: 1.5rem !important;
-    }
-
-    .mat-form-field-appearance-outline {
-      ::ng-deep {
-        .mat-form-field-suffix {
-          top: -0.3rem;
-        }
-      }
-
-      ion-icon {
-        font-size: 130%;
-      }
-    }
-
-    .mat-select {
-      &.no-arrow {
-        ::ng-deep {
-          .mat-select-arrow {
-            opacity: 0;
-          }
-        }
-      }
-    }
-
     .mat-datepicker-input {
-      &.mat-input-element:disabled {
+      &.mat-mdc-input-element:disabled {
         color: var(--dark-primary-text);
+      }
+    }
+
+    .mat-mdc-button {
+      &.apply-current-market-price {
+        height: 56px;
       }
     }
   }
@@ -58,7 +37,7 @@
 :host-context(.is-dark-theme) {
   .mat-dialog-content {
     .mat-datepicker-input {
-      &.mat-input-element:disabled {
+      &.mat-mdc-input-element:disabled {
         color: var(--light-primary-text);
       }
     }

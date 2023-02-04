@@ -1,6 +1,6 @@
 <form class="d-flex flex-column h-100">
   <h1 i18n mat-dialog-title>Details for {{ data.symbol }}</h1>
-  <div class="flex-grow-1" mat-dialog-content>
+  <div class="flex-grow-1 pt-3" mat-dialog-content>
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
@@ -11,7 +11,7 @@
           [matDatepicker]="date"
           [(ngModel)]="data.date"
         />
-        <mat-datepicker-toggle matSuffix [for]="date">
+        <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
             class="text-muted"
             matDatepickerToggleIcon
@@ -21,7 +21,7 @@
         <mat-datepicker #date disabled="true"></mat-datepicker>
       </mat-form-field>
     </div>
-    <div>
+    <div class="align-items-start d-flex">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Market Price</mat-label>
         <input
@@ -30,16 +30,16 @@
           type="number"
           [(ngModel)]="data.marketPrice"
         />
-        <span class="ml-2" matSuffix>{{ data.currency }}</span>
-        <button
-          mat-icon-button
-          matSuffix
-          title="Fetch market price"
-          (click)="onFetchSymbolForDate()"
-        >
-          <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
-        </button>
+        <span class="ml-2" matTextSuffix>{{ data.currency }}</span>
       </mat-form-field>
+      <button
+        class="apply-current-market-price ml-2 no-min-width"
+        mat-button
+        title="Fetch market price"
+        (click)="onFetchSymbolForDate()"
+      >
+        <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+      </button>
     </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
