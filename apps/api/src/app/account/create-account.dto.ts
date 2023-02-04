@@ -21,10 +21,6 @@ export class CreateAccountDto {
   @IsString()
   id: string;
 
-  @IsOptional()
-  @IsBoolean()
-  isDefault: boolean;
-
   @IsBoolean()
   @IsOptional()
   isExcluded?: boolean;

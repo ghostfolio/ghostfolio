@@ -20,7 +20,6 @@ export class ExportService {
         balance: true,
         currency: true,
         id: true,
-        isDefault: true,
         isExcluded: true,
         name: true,
         platformId: true

@@ -11,7 +11,6 @@ import {
   MatLegacyDialogRef as MatDialogRef
 } from '@angular/material/legacy-dialog';
 import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
@@ -29,7 +28,6 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   templateUrl: 'import-activities-dialog.html'
 })
 export class ImportActivitiesDialog implements OnDestroy {
-  public accounts: CreateAccountDto[] = [];
   public activities: Activity[] = [];
   public details: any[] = [];
   public errorMessages: string[] = [];
@@ -94,7 +92,6 @@ export class ImportActivitiesDialog implements OnDestroy {
       this.snackBar.open('⏳ ' + $localize`Importing data...`);
 
       await this.importActivitiesService.importSelectedActivities({
-        accounts: this.accounts,
         activities: this.selectedActivities
       });
 
@@ -183,13 +180,13 @@ export class ImportActivitiesDialog implements OnDestroy {
             }
 
             try {
-              const data = await this.importActivitiesService.importJson({
-                activities: content.activities,
-                isDryRun: true,
-                accounts: content.accounts
-              });
-              this.accounts = content.accounts;
-              this.activities = data.activities;
+              const { activities } =
+                await this.importActivitiesService.importJson({
+                  accounts: content.accounts,
+                  activities: content.activities,
+                  isDryRun: true
+                });
+              this.activities = activities;
             } catch (error) {
               console.error(error);
               this.handleImportError({ error, activities: content.activities });

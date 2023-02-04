@@ -58,12 +58,12 @@ export class ImportActivitiesService {
       });
     }
 
-    return await this.importJson({ isDryRun, activities });
+    return await this.importJson({ activities, isDryRun });
   }
 
   public importJson({
-    activities,
     accounts,
+    activities,
     isDryRun = false
   }: {
     activities: CreateOrderDto[];
@@ -96,14 +96,11 @@ export class ImportActivitiesService {
   }
 
   public importSelectedActivities({
-    accounts,
     activities
   }: {
     activities: Activity[];
-    accounts?: CreateAccountDto[];
   }): Promise<{
     activities: Activity[];
-    accounts?: CreateAccountDto[];
   }> {
     const importData: CreateOrderDto[] = [];
 
@@ -111,7 +108,7 @@ export class ImportActivitiesService {
       importData.push(this.convertToCreateOrderDto(activity));
     }
 
-    return this.importJson({ activities: importData, accounts });
+    return this.importJson({ activities: importData });
   }
 
   private convertToCreateOrderDto({
@@ -363,7 +360,7 @@ export class ImportActivitiesService {
   }
 
   private postImport(
-    aImportData: { activities: CreateOrderDto[]; accounts: CreateAccountDto[] },
+    aImportData: { accounts: CreateAccountDto[]; activities: CreateOrderDto[] },
     aIsDryRun = false
   ) {
     return this.http.post<{ activities: Activity[] }>(

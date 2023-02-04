@@ -5,7 +5,7 @@ export interface Export {
     date: string;
     version: string;
   };
-  accounts: Omit<Account, 'createdAt' | 'updatedAt' | 'userId'>[];
+  accounts: Omit<Account, 'createdAt' | 'isDefault' | 'updatedAt' | 'userId'>[];
   activities: (Omit<
     Order,
     | 'accountUserId'
