@@ -79,7 +79,8 @@ $gf-theme-default: mat.define-light-theme(
       primary: mat.define-palette($gf-primary),
       accent: mat.define-palette($gf-secondary, 500, 900, A100)
     ),
-    density: 0
+    density: 0,
+    typography: mat.define-typography-config()
   )
 );
 @include mat.all-component-themes($gf-theme-default);
@@ -92,7 +93,8 @@ $gf-theme-dark: mat.define-dark-theme(
       primary: mat.define-palette($gf-primary),
       accent: mat.define-palette($gf-secondary, 500, 900, A100)
     ),
-    density: 0
+    density: 0,
+    typography: mat.define-typography-config()
   )
 );
 .is-dark-theme {
