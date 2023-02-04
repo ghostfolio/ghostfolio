@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
 import { MatSortModule } from '@angular/material/sort';
@@ -20,7 +19,6 @@ import { AccountsTableComponent } from './accounts-table.component';
     GfSymbolIconModule,
     GfValueModule,
     MatButtonModule,
-    MatInputModule,
     MatMenuModule,
     MatSortModule,
     MatTableModule,

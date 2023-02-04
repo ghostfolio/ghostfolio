@@ -86,7 +86,6 @@
     "@simplewebauthn/server": "5.2.1",
     "@stripe/stripe-js": "1.22.0",
     "alphavantage": "2.2.0",
-    "angular-material-css-vars": "4.2.0",
     "bent": "7.3.12",
     "big.js": "6.2.1",
     "bootstrap": "4.6.0",
