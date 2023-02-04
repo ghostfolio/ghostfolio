@@ -115,7 +115,7 @@ export class ImportService {
     userCurrency: string;
     userId: string;
   }): Promise<Activity[]> {
-    const accountIdMapping = {};
+    const accountIdMapping: { [oldAccountId: string]: string } = {};
 
     //Create new accounts during dryRun so that new account IDs don't get invalidated
     if (isDryRun && accountsDto?.length) {
@@ -131,7 +131,6 @@ export class ImportService {
           const platformId = account.platformId;
 
           delete account.platformId;
-          delete account.isDefault;
 
           if (accountWithSameId) {
             oldAccountId = account.id;
