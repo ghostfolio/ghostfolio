@@ -6097,10 +6097,10 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.182.tgz"
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
 
-"@types/marked@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.npmjs.org/@types/marked/-/marked-4.0.3.tgz"
-  integrity sha512-HnMWQkLJEf/PnxZIfbm0yGJRRZYYMhb++O9M36UCTA9z53uPvVoSlAwJr3XOpDEryb7Hwl1qAx/MV6YIW1RXxg==
+"@types/marked@4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/marked/-/marked-4.0.8.tgz#b316887ab3499d0a8f4c70b7bd8508f92d477955"
+  integrity sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==
 
 "@types/mdast@^3.0.0":
   version "3.0.10"
@@ -10729,10 +10729,10 @@ emoji-regex@^8.0.0:
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
 
-emoji-toolkit@^6.6.0:
-  version "6.6.0"
-  resolved "https://registry.npmjs.org/emoji-toolkit/-/emoji-toolkit-6.6.0.tgz"
-  integrity sha512-pEu0kow2p1N8zCKnn/L6H0F3rWUBB3P3hVjr/O5yl1fK7N9jU4vO4G7EFapC5Y3XwZLUCY0FZbOPyTkH+4V2eQ==
+emoji-toolkit@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/emoji-toolkit/-/emoji-toolkit-7.0.0.tgz#63b5e5bdc63acd2e5629a0157969b94d414961fb"
+  integrity sha512-swoVbGlR/cyJ2ysrw1+axjRkEHAlH0myhbK1ybkv8zR6r9KpL4vzb96m3Y2j0hixUKj1Nb8YBQbk3ihB+XkpBw==
 
 emojis-list@^3.0.0:
   version "3.0.0"
@@ -15698,10 +15698,10 @@ markdown-escapes@^1.0.0:
   resolved "https://registry.npmjs.org/markdown-escapes/-/markdown-escapes-1.0.4.tgz"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
 
-marked@^4.0.17:
-  version "4.0.17"
-  resolved "https://registry.npmjs.org/marked/-/marked-4.0.17.tgz"
-  integrity sha512-Wfk0ATOK5iPxM4ptrORkFemqroz0ZDxp5MWfYA7H/F+wO17NRWV5Ypxi6p3g2Xmw2bKeiYOl6oVnLHKxBA0VhA==
+marked@4.2.12:
+  version "4.2.12"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.2.12.tgz#d69a64e21d71b06250da995dcd065c11083bebb5"
+  integrity sha512-yr8hSKa3Fv4D3jdZmtMMPghgVt6TWbk86WQaWhDloQjRSQhMMYCAro7jP7VDJrjjdV8pxVxMssXS8B8Y5DZ5aw==
 
 md5.js@^1.3.4:
   version "1.3.5"
@@ -16293,19 +16293,18 @@ ngx-device-detector@3.0.0:
   dependencies:
     tslib "^2.0.0"
 
-ngx-markdown@14.0.1:
-  version "14.0.1"
-  resolved "https://registry.npmjs.org/ngx-markdown/-/ngx-markdown-14.0.1.tgz"
-  integrity sha512-y5CY4e0QM0uR6+MvU1rnh1Ks+rku14309kVVojyXLcWl4zlrt8VAYCcf/+A+8z/IDOaz38yTrxNBnvYDJzNzYA==
+ngx-markdown@15.1.0:
+  version "15.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-15.1.0.tgz#819e0b07027cf57a10a5cfe5bbac214e426a572b"
+  integrity sha512-BmbhIY9O4ldPxEymjrCUHgwWPphfY2nO36QoNU8UCzFThkbxcgsfWmyM3fBm81W1BbOPt6mxz6PVx6MaOinB9A==
   dependencies:
-    "@types/marked" "^4.0.3"
+    tslib "^2.3.0"
+  optionalDependencies:
     clipboard "^2.0.11"
-    emoji-toolkit "^6.6.0"
+    emoji-toolkit "^7.0.0"
     katex "^0.16.0"
-    marked "^4.0.17"
     mermaid "^9.1.2"
     prismjs "^1.28.0"
-    tslib "^2.3.0"
 
 ngx-skeleton-loader@5.0.0:
   version "5.0.0"
