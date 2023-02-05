@@ -6,7 +6,7 @@
 >
   <h1 *ngIf="data.activity.id" i18n mat-dialog-title>Update activity</h1>
   <h1 *ngIf="!data.activity.id" i18n mat-dialog-title>Add activity</h1>
-  <div class="flex-grow-1" mat-dialog-content>
+  <div class="flex-grow-1 pt-3" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
@@ -76,7 +76,7 @@
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
-        <mat-select class="no-arrow" formControlName="currency">
+        <mat-select formControlName="currency">
           <mat-option *ngFor="let currency of currencies" [value]="currency"
             >{{ currency }}</mat-option
           >
@@ -93,7 +93,7 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
         <input formControlName="date" matInput [matDatepicker]="date" />
-        <mat-datepicker-toggle matSuffix [for]="date">
+        <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
             class="text-muted"
             matDatepickerToggleIcon
@@ -109,7 +109,7 @@
         <input formControlName="quantity" matInput type="number" />
       </mat-form-field>
     </div>
-    <div>
+    <div class="align-items-start d-flex">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label
           ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
@@ -121,20 +121,20 @@
           </ng-container>
         </mat-label>
         <input formControlName="unitPrice" matInput type="number" />
-        <span class="ml-2" matSuffix
+        <span class="ml-2" matTextSuffix
           >{{ activityForm.controls['currency'].value }}</span
         >
-        <button
-          *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
-          mat-icon-button
-          matSuffix
-          title="Apply current market price"
-          type="button"
-          (click)="applyCurrentMarketPrice()"
-        >
-          <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
-        </button>
       </mat-form-field>
+      <button
+        *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
+        class="apply-current-market-price ml-2 no-min-width"
+        mat-button
+        title="Apply current market price"
+        type="button"
+        (click)="applyCurrentMarketPrice()"
+      >
+        <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+      </button>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
@@ -142,7 +142,7 @@
         <input formControlName="feeInCustomCurrency" matInput type="number" />
         <div
           class="ml-2"
-          matSuffix
+          matTextSuffix
           [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
         >
           <mat-select formControlName="currencyOfFee">
@@ -157,7 +157,7 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
         <input formControlName="fee" matInput type="number" />
-        <span class="ml-2" matSuffix
+        <span class="ml-2" matTextSuffix
           >{{ activityForm.controls['currency'].value }}</span
         >
       </mat-form-field>
@@ -207,8 +207,8 @@
     <div [ngClass]="{ 'd-none': tags?.length <= 0 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Tags</mat-label>
-        <mat-chip-list #tagsChipList>
-          <mat-chip
+        <mat-chip-grid #tagsChipList>
+          <mat-chip-row
             *ngFor="let tag of activityForm.controls['tags']?.value"
             matChipRemove
             [removable]="true"
@@ -216,7 +216,7 @@
           >
             {{ tag.name }}
             <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
-          </mat-chip>
+          </mat-chip-row>
           <input
             #tagInput
             name="close-outline"
@@ -224,7 +224,7 @@
             [matChipInputFor]="tagsChipList"
             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           />
-        </mat-chip-list>
+        </mat-chip-grid>
         <mat-autocomplete
           #autocompleteTags="matAutocomplete"
           (optionSelected)="onAddTag($event)"
