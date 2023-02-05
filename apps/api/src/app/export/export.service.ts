@@ -15,6 +15,9 @@ export class ExportService {
     userId: string;
   }): Promise<Export> {
     const accounts = await this.prismaService.account.findMany({
+      orderBy: {
+        name: 'asc'
+      },
       select: {
         accountType: true,
         balance: true,

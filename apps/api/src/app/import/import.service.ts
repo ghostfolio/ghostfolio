@@ -120,20 +120,22 @@ export class ImportService {
     const existingAccounts = await this.accountService.accounts({
       where: {
         id: {
-          in: accountsDto.map((account) => account.id)
+          in: accountsDto.map(({ id }) => {
+            return id;
+          })
         }
       }
     });
 
-    //Create new accounts during dryRun so that new account IDs don't get invalidated
+    // Create new accounts during dryRun so that new account IDs don't get invalidated
     if (isDryRun && accountsDto?.length) {
-      for (let account of accountsDto) {
-        //Check if there is any existing account with the same ID
+      for (const account of accountsDto) {
+        // Check if there is any existing account with the same ID
         const accountWithSameId = existingAccounts.find(
           (existingAccount) => existingAccount.id === account.id
         );
 
-        //If there is no account or if the account belongs to a different user then create a new account
+        // If there is no account or if the account belongs to a different user then create a new account
         if (!accountWithSameId || accountWithSameId.userId !== userId) {
           let oldAccountId: string;
           const platformId = account.platformId;
@@ -145,23 +147,23 @@ export class ImportService {
             delete account.id;
           }
 
-          const newAccountObj = {
+          const newAccountObject = {
             ...account,
             User: { connect: { id: userId } }
           };
 
           if (platformId) {
-            Object.assign(newAccountObj, {
+            Object.assign(newAccountObject, {
               Platform: { connect: { id: platformId } }
             });
           }
 
           const newAccount = await this.accountService.createAccount(
-            newAccountObj,
+            newAccountObject,
             userId
           );
 
-          //Store the new to old account ID mappings for updating activities
+          // Store the new to old account ID mappings for updating activities
           if (accountWithSameId && oldAccountId) {
             accountIdMapping[oldAccountId] = newAccount.id;
           }
@@ -178,7 +180,7 @@ export class ImportService {
         }
       }
 
-      //If a new account is created, then update the accountId in all activities
+      // If a new account is created, then update the accountId in all activities
       if (isDryRun) {
         if (Object.keys(accountIdMapping).includes(activity.accountId)) {
           activity.accountId = accountIdMapping[activity.accountId];
