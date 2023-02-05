@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { AdminData, User } from '@ghostfolio/common/interfaces';
+import { AdminData, InfoItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   differenceInSeconds,
   formatDistanceToNowStrict,
@@ -16,6 +17,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
+  public hasPermissionForSubscription: boolean;
+  public info: InfoItem;
   public user: User;
   public users: AdminData['users'];
 
@@ -26,6 +29,13 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {

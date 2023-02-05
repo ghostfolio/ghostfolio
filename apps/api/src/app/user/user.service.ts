@@ -18,6 +18,8 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
 
+import { CreateUserDto } from './create-user.dto';
+
 const crypto = require('crypto');
 
 @Injectable()
@@ -234,7 +236,7 @@ export class UserService {
   public async createUser({
     country,
     data
-  }: { country?: string } & { data: Prisma.UserCreateInput }): Promise<User> {
+  }: CreateUserDto & { data: Prisma.UserCreateInput }): Promise<User> {
     if (!data?.provider) {
       data.provider = 'ANONYMOUS';
     }

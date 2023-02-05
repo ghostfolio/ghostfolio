@@ -244,6 +244,7 @@ export class AdminService {
         Analytics: {
           select: {
             activityCount: true,
+            country: true,
             updatedAt: true
           }
         },
@@ -277,6 +278,7 @@ export class AdminService {
           id,
           subscription,
           accountCount: _count.Account || 0,
+          country: Analytics.country,
           lastActivity: Analytics.updatedAt,
           transactionCount: _count.Order || 0
         };
