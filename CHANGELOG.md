@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
 - Migrated the style of `ActivitiesPageModule` to `@angular/material` `15` (mdc)
 - Migrated the style of `GfCreateOrUpdateActivityDialogModule` to `@angular/material` `15` (mdc)
 - Migrated the style of `GfMarketDataDetailDialogModule` to `@angular/material` `15` (mdc)
