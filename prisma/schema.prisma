@@ -46,6 +46,13 @@ model Analytics {
   User          User     @relation(fields: [userId], references: [id])
 }
 
+model AnalyticsEvent {
+  createdAt DateTime @default(now())
+  data      Json?
+  id        String   @id @default(uuid())
+  type      String
+}
+
 model AuthDevice {
   createdAt           DateTime @default(now())
   credentialId        Bytes

@@ -14,6 +14,7 @@ import {
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
+import { AnalyticsEventType } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
@@ -231,7 +232,10 @@ export class UserService {
     return hash.digest('hex');
   }
 
-  public async createUser(data: Prisma.UserCreateInput): Promise<User> {
+  public async createUser({
+    country,
+    data
+  }: { country?: string } & { data: Prisma.UserCreateInput }): Promise<User> {
     if (!data?.provider) {
       data.provider = 'ANONYMOUS';
     }
@@ -255,6 +259,17 @@ export class UserService {
         }
       }
     });
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      await this.prismaService.analyticsEvent.create({
+        data: {
+          data: {
+            country
+          },
+          type: <AnalyticsEventType>'createUser'
+        }
+      });
+    }
 
     if (data.provider === 'ANONYMOUS') {
       const accessToken = this.createAccessToken(

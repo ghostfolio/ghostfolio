@@ -61,8 +61,10 @@ export class AuthService {
 
         // Create new user if not found
         user = await this.userService.createUser({
-          provider,
-          thirdPartyId: principalId
+          data: {
+            provider,
+            thirdPartyId: principalId
+          }
         });
       }
 
@@ -96,8 +98,10 @@ export class AuthService {
 
         // Create new user if not found
         user = await this.userService.createUser({
-          provider,
-          thirdPartyId
+          data: {
+            provider,
+            thirdPartyId
+          }
         });
       }
 
