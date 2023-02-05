@@ -124,17 +124,6 @@
     rxjs "6.6.7"
     source-map "0.7.3"
 
-"@angular-devkit/core@14.1.2", "@angular-devkit/core@^13.0.0 || ^14.0.0":
-  version "14.1.2"
-  resolved "https://registry.npmjs.org/@angular-devkit/core/-/core-14.1.2.tgz"
-  integrity sha512-fIfymD1erjoj1eVh7pa/dvOtUhSd7sEOGuWEJ81HJqdzwZbPWweRu3Nh/9kj/ttUy8xawWfdJHLwyG2KnRu0DA==
-  dependencies:
-    ajv "8.11.0"
-    ajv-formats "2.1.1"
-    jsonc-parser "3.1.0"
-    rxjs "6.6.7"
-    source-map "0.7.4"
-
 "@angular-devkit/core@14.2.1":
   version "14.2.1"
   resolved "https://registry.npmjs.org/@angular-devkit/core/-/core-14.2.1.tgz"
@@ -157,6 +146,17 @@
     rxjs "6.6.7"
     source-map "0.7.4"
 
+"@angular-devkit/core@15.1.4", "@angular-devkit/core@^13.0.0 || ^14.0.0 || ^15.0.0":
+  version "15.1.4"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-15.1.4.tgz#462f123d56f9298cb04b3fa31b425fc31abb76c5"
+  integrity sha512-PW5MRmd9DHJR4FaXchwQtj9pXnsghSTnwRvfZeCRNYgU2sv0DKyTV+YTSJB+kNXnoPNG1Je6amDEkiXecpspXg==
+  dependencies:
+    ajv "8.12.0"
+    ajv-formats "2.1.1"
+    jsonc-parser "3.2.0"
+    rxjs "6.6.7"
+    source-map "0.7.4"
+
 "@angular-devkit/schematics@14.0.5":
   version "14.0.5"
   resolved "https://registry.npmjs.org/@angular-devkit/schematics/-/schematics-14.0.5.tgz"
@@ -165,17 +165,6 @@
     "@angular-devkit/core" "14.0.5"
     jsonc-parser "3.0.0"
     magic-string "0.26.1"
-    ora "5.4.1"
-    rxjs "6.6.7"
-
-"@angular-devkit/schematics@14.1.2", "@angular-devkit/schematics@^13.0.0 || ^14.0.0":
-  version "14.1.2"
-  resolved "https://registry.npmjs.org/@angular-devkit/schematics/-/schematics-14.1.2.tgz"
-  integrity sha512-vC9UA3heXbq9CAkwMXHJfIu0G7Ty2oTJ5PtrrFQpig1PrFnRfr4sg+qRS1CLsEAJYQNo14xV55OQkKEPTij/Gg==
-  dependencies:
-    "@angular-devkit/core" "14.1.2"
-    jsonc-parser "3.1.0"
-    magic-string "0.26.2"
     ora "5.4.1"
     rxjs "6.6.7"
 
@@ -196,6 +185,17 @@
   integrity sha512-IXZ56/5uFnHqnLq+80JhmFx5mflyW8LgS/8Tr2l5DYVA71Fh3b1q+vGrEZB1X2zPoFeDOGAxv3Fi+kmjcz1GZg==
   dependencies:
     "@angular-devkit/core" "15.1.3"
+    jsonc-parser "3.2.0"
+    magic-string "0.27.0"
+    ora "5.4.1"
+    rxjs "6.6.7"
+
+"@angular-devkit/schematics@15.1.4", "@angular-devkit/schematics@^13.0.0 || ^14.0.0 || ^15.0.0":
+  version "15.1.4"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-15.1.4.tgz#30e38777f1bd98e20e6dbe1bfddabc3bcd42605f"
+  integrity sha512-jpddxo9Qd2yRQ1t9FLhAx5S+luz6HkyhDytq0LFKbxf9ikf1J4oy9riPBFl4pRmrNARWcHZ6GbD20/Ky8PjmXQ==
+  dependencies:
+    "@angular-devkit/core" "15.1.4"
     jsonc-parser "3.2.0"
     magic-string "0.27.0"
     ora "5.4.1"
@@ -4864,14 +4864,14 @@
     "@angular-devkit/schematics" "15.1.3"
     jsonc-parser "3.2.0"
 
-"@schematics/angular@^13.0.0 || ^14.0.0":
-  version "14.1.2"
-  resolved "https://registry.npmjs.org/@schematics/angular/-/angular-14.1.2.tgz"
-  integrity sha512-vttvYpffkG/cy9aUCXLW+Dc0msUNbyoFXTQRHN/MYX5uNVvXaRCEzWVE3tp87Dt5XlGo2r9e21gNAoY1TyXj3Q==
+"@schematics/angular@^13.0.0 || ^14.0.0 || ^15.0.0":
+  version "15.1.4"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-15.1.4.tgz#2a5ef92fc5852f6d3acb0ec6f3db81deffd9d0f3"
+  integrity sha512-4SV8dDGZeSvts01b8y2W6FmpDD0dQhBlGMhMJKC/tUnhfNKfYCs2VKtMBsIc3ZiGP2yoA3+nUiMmtS6hEkXYHw==
   dependencies:
-    "@angular-devkit/core" "14.1.2"
-    "@angular-devkit/schematics" "14.1.2"
-    jsonc-parser "3.1.0"
+    "@angular-devkit/core" "15.1.4"
+    "@angular-devkit/schematics" "15.1.4"
+    jsonc-parser "3.2.0"
 
 "@simplewebauthn/browser@5.2.1":
   version "5.2.1"
@@ -16273,16 +16273,16 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   resolved "https://registry.npmjs.org/nested-error-stacks/-/nested-error-stacks-2.1.1.tgz"
   integrity sha512-9iN1ka/9zmX1ZvLV9ewJYEk9h7RyRRtqdK0woXcqohu8EWIerfPUjYJPg0ULy0UqP7cslmdGc8xKDJcojlKiaw==
 
-ng-extract-i18n-merge@2.1.2:
-  version "2.1.2"
-  resolved "https://registry.npmjs.org/ng-extract-i18n-merge/-/ng-extract-i18n-merge-2.1.2.tgz"
-  integrity sha512-dRo/oO4m3tr26uE4+DHJh0iTqSV3qVl+WGTSHGKKyAM628dP3hZunhBTs7fCpLs57aEex84cJax8X+Y8wmBXTQ==
+ng-extract-i18n-merge@2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/ng-extract-i18n-merge/-/ng-extract-i18n-merge-2.5.0.tgz#bc58fd8f50d08f690cdcc00b4f9ff068a0550a9d"
+  integrity sha512-/RCYvStp6326SgK8JQVPlu48vt3tzTOM8XggXUtekTBLc1Q6wXyACSurQk7vQPuAt+l0Lk93734aFoDcC1W59A==
   dependencies:
     "@angular-devkit/architect" "^0.1301.0"
-    "@angular-devkit/core" "^13.0.0 || ^14.0.0"
-    "@angular-devkit/schematics" "^13.0.0 || ^14.0.0"
-    "@schematics/angular" "^13.0.0 || ^14.0.0"
-    xliff-simple-merge "~0.12.4"
+    "@angular-devkit/core" "^13.0.0 || ^14.0.0 || ^15.0.0"
+    "@angular-devkit/schematics" "^13.0.0 || ^14.0.0 || ^15.0.0"
+    "@schematics/angular" "^13.0.0 || ^14.0.0 || ^15.0.0"
+    xliff-simple-merge "~1.0.1"
     xml_normalize "~0.8.4"
     xmldoc "~1.1.2"
 
@@ -21554,10 +21554,10 @@ x-default-browser@^0.4.0:
   optionalDependencies:
     default-browser-id "^1.0.4"
 
-xliff-simple-merge@~0.12.4:
-  version "0.12.4"
-  resolved "https://registry.npmjs.org/xliff-simple-merge/-/xliff-simple-merge-0.12.4.tgz"
-  integrity sha512-Rk88D62XUoMgyBLEILpgOx3ARnxONLwH/xz+/c1HsRHYPHDnuZhYORkwrBCXsE942esG+J+OUCCOiydXJxY4Ug==
+xliff-simple-merge@~1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/xliff-simple-merge/-/xliff-simple-merge-1.0.2.tgz#55f88a84630de625db2b3ddfc3d0d741ac940bfd"
+  integrity sha512-9Dtw/l91o0DeLkNFJrlh5nxJSS8OD+IHeq5rjA6hkVtv6SWf7rJyr4YNSQc/6opDssRI8JgAWcQlj2ZfcvW11Q==
   dependencies:
     commander "~8.3.0"
     js-levenshtein "~1.1.6"

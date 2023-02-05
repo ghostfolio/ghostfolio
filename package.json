@@ -109,7 +109,7 @@
     "ionicons": "6.0.4",
     "lodash": "4.17.21",
     "ms": "3.0.0-canary.1",
-    "ng-extract-i18n-merge": "2.1.2",
+    "ng-extract-i18n-merge": "2.5.0",
     "ngx-device-detector": "3.0.0",
     "ngx-markdown": "14.0.1",
     "ngx-skeleton-loader": "5.0.0",
