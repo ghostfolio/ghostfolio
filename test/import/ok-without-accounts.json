@@ -1,23 +1,10 @@
 {
   "meta": {
-    "date": "2023-02-05T00:00:00.000Z",
+    "date": "2022-04-01T00:00:00.000Z",
     "version": "dev"
   },
-  "accounts": [
-    {
-      "accountType": "SECURITIES",
-      "balance": 2000,
-      "currency": "USD",
-      "id": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
-      "isExcluded": false,
-      "name": "My Online Trading Account",
-      "platformId": null
-    }
-  ],
   "activities": [
     {
-      "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
-      "comment": null,
       "fee": 0,
       "quantity": 0,
       "type": "BUY",
@@ -28,8 +15,6 @@
       "symbol": "MSFT"
     },
     {
-      "accountId": null,
-      "comment": null,
       "fee": 0,
       "quantity": 1,
       "type": "ITEM",
@@ -40,8 +25,6 @@
       "symbol": "Penthouse Apartment"
     },
     {
-      "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
-      "comment": null,
       "fee": 0,
       "quantity": 5,
       "type": "DIVIDEND",
@@ -52,8 +35,6 @@
       "symbol": "MSFT"
     },
     {
-      "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
-      "comment": "My first order",
       "fee": 19,
       "quantity": 5,
       "type": "BUY",
