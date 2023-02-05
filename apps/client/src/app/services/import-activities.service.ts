@@ -96,11 +96,14 @@ export class ImportActivitiesService {
   }
 
   public importSelectedActivities({
+    accounts,
     activities
   }: {
+    accounts: CreateAccountDto[];
     activities: Activity[];
   }): Promise<{
     activities: Activity[];
+    accounts?: CreateAccountDto[];
   }> {
     const importData: CreateOrderDto[] = [];
 
@@ -108,7 +111,7 @@ export class ImportActivitiesService {
       importData.push(this.convertToCreateOrderDto(activity));
     }
 
-    return this.importJson({ activities: importData });
+    return this.importJson({ accounts, activities: importData });
   }
 
   private convertToCreateOrderDto({

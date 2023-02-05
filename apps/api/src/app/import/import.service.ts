@@ -117,18 +117,17 @@ export class ImportService {
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
 
-    const existingAccounts = await this.accountService.accounts({
-      where: {
-        id: {
-          in: accountsDto.map(({ id }) => {
-            return id;
-          })
+    if (!isDryRun && accountsDto?.length) {
+      const existingAccounts = await this.accountService.accounts({
+        where: {
+          id: {
+            in: accountsDto.map(({ id }) => {
+              return id;
+            })
+          }
         }
-      }
-    });
+      });
 
-    // Create new accounts during dryRun so that new account IDs don't get invalidated
-    if (isDryRun && accountsDto?.length) {
       for (const account of accountsDto) {
         // Check if there is any existing account with the same ID
         const accountWithSameId = existingAccounts.find(
@@ -181,7 +180,7 @@ export class ImportService {
       }
 
       // If a new account is created, then update the accountId in all activities
-      if (isDryRun) {
+      if (!isDryRun) {
         if (Object.keys(accountIdMapping).includes(activity.accountId)) {
           activity.accountId = accountIdMapping[activity.accountId];
         }
@@ -199,6 +198,10 @@ export class ImportService {
         return account.id;
       }
     );
+
+    if (isDryRun) {
+      accountsDto.forEach((accountsDto) => accountIds.push(accountsDto.id));
+    }
 
     const activities: Activity[] = [];
 
