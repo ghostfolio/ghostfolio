@@ -14,7 +14,6 @@ import {
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
-import { AnalyticsEventType } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
@@ -261,12 +260,10 @@ export class UserService {
     });
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      await this.prismaService.analyticsEvent.create({
+      await this.prismaService.analytics.create({
         data: {
-          data: {
-            country
-          },
-          type: <AnalyticsEventType>'createUser'
+          country,
+          User: { connect: { id: user.id } }
         }
       });
     }

@@ -1,7 +1,6 @@
 import type { AccessWithGranteeUser } from './access-with-grantee-user.type';
 import { AccountWithPlatform } from './account-with-platform.type';
 import { AccountWithValue } from './account-with-value.type';
-import { AnalyticsEventType } from './analyticsEventType.type';
 import type { ColorScheme } from './color-scheme';
 import type { DateRange } from './date-range.type';
 import type { Granularity } from './granularity.type';
@@ -17,7 +16,6 @@ export type {
   AccessWithGranteeUser,
   AccountWithPlatform,
   AccountWithValue,
-  AnalyticsEventType,
   ColorScheme,
   DateRange,
   Granularity,

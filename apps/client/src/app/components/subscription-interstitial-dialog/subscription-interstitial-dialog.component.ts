@@ -19,7 +19,7 @@ export class SubscriptionInterstitialDialog {
     public dialogRef: MatDialogRef<SubscriptionInterstitialDialog>
   ) {}
 
-  public onCancel() {
+  public closeDialog() {
     this.dialogRef.close({});
   }
 }

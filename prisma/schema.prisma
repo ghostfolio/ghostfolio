@@ -41,16 +41,10 @@ model Account {
 
 model Analytics {
   activityCount Int      @default(0)
+  country       String?
   updatedAt     DateTime @updatedAt
   userId        String   @id
   User          User     @relation(fields: [userId], references: [id])
-}
-
-model AnalyticsEvent {
-  createdAt DateTime @default(now())
-  data      Json?
-  id        String   @id @default(uuid())
-  type      String
 }
 
 model AuthDevice {
