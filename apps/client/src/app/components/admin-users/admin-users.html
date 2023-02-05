@@ -7,7 +7,13 @@
             <tr class="mat-header-row">
               <th class="mat-header-cell px-1 py-2 text-right">#</th>
               <th class="mat-header-cell px-1 py-2" i18n>User</th>
-              <th class="mat-header-cell px-1 py-2 text-right">
+              <th
+                *ngIf="hasPermissionForSubscription"
+                class="mat-header-cell px-1 py-2 text-right"
+              >
+                <ng-container i18n>Country</ng-container>
+              </th>
+              <th class="mat-header-cell px-1 py-2">
                 <ng-container i18n>Registration</ng-container>
               </th>
               <th class="mat-header-cell px-1 py-2 text-right">
@@ -16,7 +22,10 @@
               <th class="mat-header-cell px-1 py-2 text-right">
                 <ng-container i18n>Activities</ng-container>
               </th>
-              <th class="mat-header-cell px-1 py-2 text-right">
+              <th
+                *ngIf="hasPermissionForSubscription"
+                class="mat-header-cell px-1 py-2 text-right"
+              >
                 <ng-container i18n>Engagement per Day</ng-container>
               </th>
               <th class="mat-header-cell px-1 py-2" i18n>Last Request</th>
@@ -41,7 +50,13 @@
                   ></gf-premium-indicator>
                 </div>
               </td>
-              <td class="mat-cell px-1 py-2 text-right">
+              <td
+                *ngIf="hasPermissionForSubscription"
+                class="mat-cell px-1 py-2 text-right"
+              >
+                {{ userItem.country }}
+              </td>
+              <td class="mat-cell px-1 py-2">
                 {{ formatDistanceToNow(userItem.createdAt) }}
               </td>
               <td class="mat-cell px-1 py-2 text-right">
@@ -58,7 +73,10 @@
                   [value]="userItem.transactionCount"
                 ></gf-value>
               </td>
-              <td class="mat-cell px-1 py-2 text-right">
+              <td
+                *ngIf="hasPermissionForSubscription"
+                class="mat-cell px-1 py-2 text-right"
+              >
                 <gf-value
                   class="d-inline-block justify-content-end"
                   [locale]="user?.settings?.locale"

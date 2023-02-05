@@ -34,8 +34,13 @@
   <p>Refine your personal investment strategy now.</p>
 </div>
 <div class="justify-content-end" mat-dialog-actions>
-  <button i18n mat-button (click)="onCancel()">Skip</button>
-  <a color="primary" mat-flat-button [routerLink]="['/pricing']">
+  <button i18n mat-button (click)="closeDialog()">Skip</button>
+  <a
+    color="primary"
+    mat-flat-button
+    [routerLink]="['/pricing']"
+    (click)="closeDialog()"
+  >
     <span i18n>Upgrade Plan</span>
     <ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
   </a>

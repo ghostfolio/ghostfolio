@@ -18,6 +18,8 @@ import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
 
+import { CreateUserDto } from './create-user.dto';
+
 const crypto = require('crypto');
 
 @Injectable()
@@ -231,7 +233,10 @@ export class UserService {
     return hash.digest('hex');
   }
 
-  public async createUser(data: Prisma.UserCreateInput): Promise<User> {
+  public async createUser({
+    country,
+    data
+  }: CreateUserDto & { data: Prisma.UserCreateInput }): Promise<User> {
     if (!data?.provider) {
       data.provider = 'ANONYMOUS';
     }
@@ -255,6 +260,15 @@ export class UserService {
         }
       }
     });
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      await this.prismaService.analytics.create({
+        data: {
+          country,
+          User: { connect: { id: user.id } }
+        }
+      });
+    }
 
     if (data.provider === 'ANONYMOUS') {
       const accessToken = this.createAccessToken(
