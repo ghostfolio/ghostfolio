@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { getEmojiFlag } from '@ghostfolio/common/helper';
 import { AdminData, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
@@ -17,6 +18,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
+  public getEmojiFlag = getEmojiFlag;
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public user: User;

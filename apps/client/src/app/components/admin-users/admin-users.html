@@ -9,7 +9,7 @@
               <th class="mat-header-cell px-1 py-2" i18n>User</th>
               <th
                 *ngIf="hasPermissionForSubscription"
-                class="mat-header-cell px-1 py-2 text-right"
+                class="mat-header-cell px-1 py-2"
               >
                 <ng-container i18n>Country</ng-container>
               </th>
@@ -37,10 +37,10 @@
               <td class="mat-cell px-1 py-2 text-right">{{ i + 1 }}</td>
               <td class="mat-cell px-1 py-2">
                 <div class="d-flex align-items-center">
-                  <span class="d-none d-sm-inline-block"
+                  <span class="d-none d-sm-inline-block text-monospace"
                     >{{ userItem.id }}</span
                   >
-                  <span class="d-inline-block d-sm-none"
+                  <span class="d-inline-block d-sm-none text-monospace"
                     >{{ (userItem.id | slice:0:5) + '...' }}</span
                   >
                   <gf-premium-indicator
@@ -52,9 +52,11 @@
               </td>
               <td
                 *ngIf="hasPermissionForSubscription"
-                class="mat-cell px-1 py-2 text-right"
+                class="mat-cell px-1 py-2"
               >
-                {{ userItem.country }}
+                <span class="h5" [title]="userItem.country"
+                  >{{ getEmojiFlag(userItem.country) }}</span
+                >
               </td>
               <td class="mat-cell px-1 py-2">
                 {{ formatDistanceToNow(userItem.createdAt) }}
