@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated the style of `GfMarketDataDetailDialogModule` to `@angular/material` `15` (mdc)
 - Upgraded `ng-extract-i18n-merge` from version `2.1.2` to `2.5.0`
 
+### Fixed
+
+- Fixed the `Upgrade Plan` button of the interstitial for the subscription
+
 ## 1.231.0 - 2023-02-04
 
 ### Added
