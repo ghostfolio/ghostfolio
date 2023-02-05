@@ -117,12 +117,20 @@ export class ImportService {
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
 
+    const existingAccounts = await this.accountService.accounts({
+      where: {
+        id: {
+          in: accountsDto.map((account) => account.id)
+        }
+      }
+    });
+
     //Create new accounts during dryRun so that new account IDs don't get invalidated
     if (isDryRun && accountsDto?.length) {
       for (let account of accountsDto) {
         //Check if there is any existing account with the same ID
-        const accountWithSameId = await this.accountService.getAccountById(
-          account.id
+        const accountWithSameId = existingAccounts.find(
+          (existingAccount) => existingAccount.id === account.id
         );
 
         //If there is no account or if the account belongs to a different user then create a new account
