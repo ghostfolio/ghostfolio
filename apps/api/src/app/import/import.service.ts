@@ -193,14 +193,16 @@ export class ImportService {
       userId
     });
 
-    const accountIds = (await this.accountService.getAccounts(userId)).map(
+    const accounts = (await this.accountService.getAccounts(userId)).map(
       (account) => {
-        return account.id;
+        return { id: account.id, name: account.name };
       }
     );
 
     if (isDryRun) {
-      accountsDto.forEach((accountsDto) => accountIds.push(accountsDto.id));
+      accountsDto.forEach((accountsDto) =>
+        accounts.push({ id: accountsDto.id, name: accountsDto.name })
+      );
     }
 
     const activities: Activity[] = [];
@@ -218,11 +220,15 @@ export class ImportService {
       unitPrice
     } of activitiesDto) {
       const date = parseISO(<string>(<unknown>dateString));
-      const validatedAccountId = accountIds.includes(accountId)
-        ? accountId
-        : undefined;
+      const validatedAccount = accounts.find(
+        (account) => account.id === accountId
+      );
 
-      let order: OrderWithAccount;
+      let order:
+        | OrderWithAccount
+        | (Omit<OrderWithAccount, 'Account'> & {
+            Account?: { id: string; name: string };
+          });
 
       if (isDryRun) {
         order = {
@@ -233,7 +239,7 @@ export class ImportService {
           type,
           unitPrice,
           userId,
-          accountId: validatedAccountId,
+          accountId: validatedAccount.id,
           accountUserId: undefined,
           createdAt: new Date(),
           id: uuidv4(),
@@ -256,6 +262,7 @@ export class ImportService {
             url: null,
             ...assetProfiles[symbol]
           },
+          Account: validatedAccount,
           symbolProfileId: undefined,
           updatedAt: new Date()
         };
@@ -268,7 +275,7 @@ export class ImportService {
           type,
           unitPrice,
           userId,
-          accountId: validatedAccountId,
+          accountId: validatedAccount.id,
           SymbolProfile: {
             connectOrCreate: {
               create: {
@@ -290,6 +297,7 @@ export class ImportService {
 
       const value = new Big(quantity).mul(unitPrice).toNumber();
 
+      //@ts-ignore
       activities.push({
         ...order,
         value,
