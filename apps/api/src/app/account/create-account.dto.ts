@@ -19,7 +19,7 @@ export class CreateAccountDto {
 
   @IsOptional()
   @IsString()
-  id: string;
+  id?: string;
 
   @IsBoolean()
   @IsOptional()

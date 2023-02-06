@@ -41,11 +41,7 @@ export class ImportController {
   ): Promise<ImportResponse> {
     if (
       !this.configurationService.get('ENABLE_FEATURE_IMPORT') ||
-      (importData.accounts?.length > 0 &&
-        !hasPermission(
-          this.request.user.permissions,
-          permissions.createAccount
-        ))
+      !hasPermission(this.request.user.permissions, permissions.createAccount)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

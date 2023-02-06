@@ -200,9 +200,9 @@ export class ImportService {
     );
 
     if (isDryRun) {
-      accountsDto.forEach((accountsDto) =>
-        accounts.push({ id: accountsDto.id, name: accountsDto.name })
-      );
+      accountsDto.forEach(({ id, name }) => {
+        accounts.push({ id, name });
+      });
     }
 
     const activities: Activity[] = [];
@@ -220,9 +220,9 @@ export class ImportService {
       unitPrice
     } of activitiesDto) {
       const date = parseISO(<string>(<unknown>dateString));
-      const validatedAccount = accounts.find(
-        (account) => account.id === accountId
-      );
+      const validatedAccount = accounts.find(({ id }) => {
+        return id === accountId;
+      });
 
       let order:
         | OrderWithAccount
@@ -239,7 +239,7 @@ export class ImportService {
           type,
           unitPrice,
           userId,
-          accountId: validatedAccount.id,
+          accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
           id: uuidv4(),
@@ -275,7 +275,7 @@ export class ImportService {
           type,
           unitPrice,
           userId,
-          accountId: validatedAccount.id,
+          accountId: validatedAccount?.id,
           SymbolProfile: {
             connectOrCreate: {
               create: {
