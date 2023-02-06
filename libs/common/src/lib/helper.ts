@@ -118,6 +118,18 @@ export function getDateWithTimeFormatString(aLocale?: string) {
   return `${getDateFormatString(aLocale)}, HH:mm:ss`;
 }
 
+export function getEmojiFlag(aCountryCode: string) {
+  if (!aCountryCode) {
+    return aCountryCode;
+  }
+
+  return aCountryCode
+    .toUpperCase()
+    .replace(/./g, (character) =>
+      String.fromCodePoint(127397 + character.charCodeAt(0))
+    );
+}
+
 export function getLocale() {
   return navigator.languages?.length
     ? navigator.languages[0]

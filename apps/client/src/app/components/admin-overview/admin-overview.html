@@ -151,16 +151,23 @@
           >
             <div class="w-50" i18n>Coupons</div>
             <div class="w-50">
-              <div *ngFor="let coupon of coupons">
-                <span>{{ coupon.code }} ({{ coupon.duration }})</span>
-                <button
-                  class="mini-icon mx-1 no-min-width px-2"
-                  mat-button
-                  (click)="onDeleteCoupon(coupon.code)"
-                >
-                  <ion-icon name="trash-outline"></ion-icon>
-                </button>
-              </div>
+              <table>
+                <tr *ngFor="let coupon of coupons">
+                  <td class="text-monospace">{{ coupon.code }}</td>
+                  <td class="d-flex justify-content-end pl-2">
+                    {{ coupon.duration }}
+                  </td>
+                  <td>
+                    <button
+                      class="mini-icon mx-1 no-min-width px-2"
+                      mat-button
+                      (click)="onDeleteCoupon(coupon.code)"
+                    >
+                      <ion-icon name="trash-outline"></ion-icon>
+                    </button>
+                  </td>
+                </tr>
+              </table>
               <div class="mt-2">
                 <form #couponForm="ngForm" class="align-items-center d-flex">
                   <mat-form-field
