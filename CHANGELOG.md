@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to export accounts
+- Added suport to import accounts
+
 ### Changed
 
 - Improved the styling in the admin control panel

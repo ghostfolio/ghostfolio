@@ -2,6 +2,7 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { ImportResponse } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -38,7 +39,10 @@ export class ImportController {
     @Body() importData: ImportDataDto,
     @Query('dryRun') isDryRun?: boolean
   ): Promise<ImportResponse> {
-    if (!this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
+    if (
+      !this.configurationService.get('ENABLE_FEATURE_IMPORT') ||
+      !hasPermission(this.request.user.permissions, permissions.createAccount)
+    ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -60,9 +64,10 @@ export class ImportController {
 
     try {
       const activities = await this.importService.import({
-        maxActivitiesToImport,
         isDryRun,
+        maxActivitiesToImport,
         userCurrency,
+        accountsDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
         userId: this.request.user.id
       });
