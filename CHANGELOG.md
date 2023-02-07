@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the styling in the admin control panel
+- Removed the _Google Play_ badge from the landing page
 
 ## 1.232.0 - 2023-02-05
 
