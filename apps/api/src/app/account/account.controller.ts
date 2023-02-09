@@ -1,5 +1,4 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { Accounts } from '@ghostfolio/common/interfaces';
