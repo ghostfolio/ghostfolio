@@ -1,4 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
@@ -100,24 +101,88 @@ export class ImportService {
   }
 
   public async import({
+    accountsDto,
     activitiesDto,
     isDryRun = false,
     maxActivitiesToImport,
     userCurrency,
     userId
   }: {
+    accountsDto: Partial<CreateAccountDto>[];
     activitiesDto: Partial<CreateOrderDto>[];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
     userCurrency: string;
     userId: string;
   }): Promise<Activity[]> {
+    const accountIdMapping: { [oldAccountId: string]: string } = {};
+
+    if (!isDryRun && accountsDto?.length) {
+      const existingAccounts = await this.accountService.accounts({
+        where: {
+          id: {
+            in: accountsDto.map(({ id }) => {
+              return id;
+            })
+          }
+        }
+      });
+
+      for (const account of accountsDto) {
+        // Check if there is any existing account with the same ID
+        const accountWithSameId = existingAccounts.find(
+          (existingAccount) => existingAccount.id === account.id
+        );
+
+        // If there is no account or if the account belongs to a different user then create a new account
+        if (!accountWithSameId || accountWithSameId.userId !== userId) {
+          let oldAccountId: string;
+          const platformId = account.platformId;
+
+          delete account.platformId;
+
+          if (accountWithSameId) {
+            oldAccountId = account.id;
+            delete account.id;
+          }
+
+          const newAccountObject = {
+            ...account,
+            User: { connect: { id: userId } }
+          };
+
+          if (platformId) {
+            Object.assign(newAccountObject, {
+              Platform: { connect: { id: platformId } }
+            });
+          }
+
+          const newAccount = await this.accountService.createAccount(
+            newAccountObject,
+            userId
+          );
+
+          // Store the new to old account ID mappings for updating activities
+          if (accountWithSameId && oldAccountId) {
+            accountIdMapping[oldAccountId] = newAccount.id;
+          }
+        }
+      }
+    }
+
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
         if (activity.type === 'ITEM') {
           activity.dataSource = 'MANUAL';
         } else {
           activity.dataSource = this.dataProviderService.getPrimaryDataSource();
+        }
+      }
+
+      // If a new account is created, then update the accountId in all activities
+      if (!isDryRun) {
+        if (Object.keys(accountIdMapping).includes(activity.accountId)) {
+          activity.accountId = accountIdMapping[activity.accountId];
         }
       }
     }
@@ -128,11 +193,17 @@ export class ImportService {
       userId
     });
 
-    const accountIds = (await this.accountService.getAccounts(userId)).map(
+    const accounts = (await this.accountService.getAccounts(userId)).map(
       (account) => {
-        return account.id;
+        return { id: account.id, name: account.name };
       }
     );
+
+    if (isDryRun) {
+      accountsDto.forEach(({ id, name }) => {
+        accounts.push({ id, name });
+      });
+    }
 
     const activities: Activity[] = [];
 
@@ -149,11 +220,15 @@ export class ImportService {
       unitPrice
     } of activitiesDto) {
       const date = parseISO(<string>(<unknown>dateString));
-      const validatedAccountId = accountIds.includes(accountId)
-        ? accountId
-        : undefined;
+      const validatedAccount = accounts.find(({ id }) => {
+        return id === accountId;
+      });
 
-      let order: OrderWithAccount;
+      let order:
+        | OrderWithAccount
+        | (Omit<OrderWithAccount, 'Account'> & {
+            Account?: { id: string; name: string };
+          });
 
       if (isDryRun) {
         order = {
@@ -164,7 +239,7 @@ export class ImportService {
           type,
           unitPrice,
           userId,
-          accountId: validatedAccountId,
+          accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
           id: uuidv4(),
@@ -187,6 +262,7 @@ export class ImportService {
             url: null,
             ...assetProfiles[symbol]
           },
+          Account: validatedAccount,
           symbolProfileId: undefined,
           updatedAt: new Date()
         };
@@ -199,7 +275,7 @@ export class ImportService {
           type,
           unitPrice,
           userId,
-          accountId: validatedAccountId,
+          accountId: validatedAccount?.id,
           SymbolProfile: {
             connectOrCreate: {
               create: {
@@ -221,6 +297,7 @@ export class ImportService {
 
       const value = new Big(quantity).mul(unitPrice).toNumber();
 
+      //@ts-ignore
       activities.push({
         ...order,
         value,

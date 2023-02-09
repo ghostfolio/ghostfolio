@@ -17,6 +17,10 @@ export class CreateAccountDto {
   @IsString()
   currency: string;
 
+  @IsOptional()
+  @IsString()
+  id?: string;
+
   @IsBoolean()
   @IsOptional()
   isExcluded?: boolean;

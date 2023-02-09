@@ -14,6 +14,22 @@ export class ExportService {
     activityIds?: string[];
     userId: string;
   }): Promise<Export> {
+    const accounts = await this.prismaService.account.findMany({
+      orderBy: {
+        name: 'asc'
+      },
+      select: {
+        accountType: true,
+        balance: true,
+        currency: true,
+        id: true,
+        isExcluded: true,
+        name: true,
+        platformId: true
+      },
+      where: { userId }
+    });
+
     let activities = await this.prismaService.order.findMany({
       orderBy: { date: 'desc' },
       select: {
@@ -38,6 +54,7 @@ export class ExportService {
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
+      accounts,
       activities: activities.map(
         ({
           accountId,
