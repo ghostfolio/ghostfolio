@@ -55,7 +55,7 @@ export class PortfolioProportionChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart;
+  public chart: Chart<'pie'>;
   public isLoading = true;
 
   private readonly OTHER_KEY = 'OTHER';

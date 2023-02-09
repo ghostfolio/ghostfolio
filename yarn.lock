@@ -3511,6 +3511,11 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@kurkle/color@^0.3.0":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.1.tgz#ef72bc8022ccf77cdd2715097f062ee591ec145c"
+  integrity sha512-hW0GwZj06z/ZFUW2Espl7toVDjghJN+EKqyXzPSV8NV89d5BYp5rRMBJoc+aUN0x5OXDMeRQHazejr2Xmqj2tw==
+
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.4"
   resolved "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz"
@@ -8617,20 +8622,22 @@ chardet@^0.7.0:
   resolved "https://registry.npmjs.org/chardet/-/chardet-0.7.0.tgz"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
-chart.js@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.0.1.tgz#93d5d50ac222a5b3b6ac7488e82e1553ac031592"
-  integrity sha512-5/8/9eBivwBZK81mKvmIwTb2Pmw4D/5h1RK9fBWZLLZ8mCJ+kfYNmV9rMrGoa5Hgy2/wVDBMLSUDudul2/9ihA==
+chart.js@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.2.0.tgz#dd281b2ce890bff32f3e249cf2972a1e74bc032c"
+  integrity sha512-wbtcV+QKeH0F7gQZaCJEIpsNriFheacouJQTVIjITi3eQA8bTlIBoknz0+dgV79aeKLNMAX+nDslIVE/nJ3rzA==
+  dependencies:
+    "@kurkle/color" "^0.3.0"
 
-chartjs-adapter-date-fns@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/chartjs-adapter-date-fns/-/chartjs-adapter-date-fns-2.0.1.tgz#3d007d4985391362fb15c96310fff8376a434bae"
-  integrity sha512-v3WV9rdnQ05ce3A0ZCjzUekJCAbfm6+3HqSoeY2BIkdMYZoYr/4T+ril1tZyDl869lz6xdNVMXejUFT9YKpw4A==
+chartjs-adapter-date-fns@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/chartjs-adapter-date-fns/-/chartjs-adapter-date-fns-3.0.0.tgz#c25f63c7f317c1f96f9a7c44bd45eeedb8a478e5"
+  integrity sha512-Rs3iEB3Q5pJ973J93OBTpnP7qoGwvq3nUnoMdtxO+9aoJof7UFcRbWcIDteXuYd1fgAvct/32T9qaLyLuZVwCg==
 
-chartjs-plugin-annotation@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-annotation/-/chartjs-plugin-annotation-2.1.0.tgz#c43172d26ec8e7e3bc104932d1a1807bf0c46db7"
-  integrity sha512-wHxP6mBWrgdldAEbHM5nMaMJ3PuunXgiotVh8natosuZsEqpjU0ZeyvMTBwIkKXLSDncb3faLunl4BI89Vmj/g==
+chartjs-plugin-annotation@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-annotation/-/chartjs-plugin-annotation-2.1.2.tgz#8c307c931fda735a1acf1b606ad0e3fd7d96299b"
+  integrity sha512-kmEp2WtpogwnKKnDPO3iO3mVwvVGtmG5BkZVtAEZm5YzJ9CYxojjYEgk7OTrFbJ5vU098b84UeJRe8kRfNcq5g==
 
 chartjs-plugin-datalabels@2.2.0:
   version "2.2.0"

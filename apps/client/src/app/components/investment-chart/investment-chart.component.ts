@@ -29,6 +29,7 @@ import {
   BarController,
   BarElement,
   Chart,
+  ChartData,
   LineController,
   LineElement,
   LinearScale,
@@ -62,7 +63,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public chart: Chart<any>;
+  public chart: Chart<'bar' | 'line'>;
   private investments: InvestmentItem[];
   private values: LineChartItem[];
 
@@ -142,7 +143,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       });
     }
 
-    const chartData = {
+    const chartData: ChartData<'line'> = {
       labels: this.historicalDataItems.map(({ date }) => {
         return parseDate(date);
       }),
@@ -153,7 +154,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           borderWidth: this.groupBy ? 0 : 1,
           data: this.investments.map(({ date, investment }) => {
             return {
-              x: parseDate(date),
+              x: parseDate(date).getTime(),
               y: this.isInPercent ? investment * 100 : investment
             };
           }),
@@ -173,7 +174,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           borderWidth: 2,
           data: this.values.map(({ date, value }) => {
             return {
-              x: parseDate(date),
+              x: parseDate(date).getTime(),
               y: this.isInPercent ? value * 100 : value
             };
           }),
