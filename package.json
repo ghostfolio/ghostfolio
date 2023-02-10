@@ -181,7 +181,7 @@
     "jest-environment-jsdom": "29.4.1",
     "jest-preset-angular": "12.2.3",
     "nx": "15.6.3",
-    "prettier": "2.8.1",
+    "prettier": "2.8.4",
     "prettier-plugin-organize-attributes": "0.0.5",
     "replace-in-file": "6.3.5",
     "rimraf": "3.0.2",
