@@ -189,6 +189,11 @@ With the following command you can keep your database schema in sync:
 yarn database:push
 ```
 
+### PG Admin
+
+You can use pgadmin to debug the postgres database locally
+Open http://localhost:5050 in your browser and login with the credentials set in .env
+
 ## Testing
 
 Run `yarn test`
