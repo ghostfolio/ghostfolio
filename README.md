@@ -175,7 +175,7 @@ Run `yarn start:server`
 
 ### Start Client
 
-Run `yarn start:client`
+Run `yarn start:client` and open http://localhost:4200/en in your browser
 
 ### Start _Storybook_
 
