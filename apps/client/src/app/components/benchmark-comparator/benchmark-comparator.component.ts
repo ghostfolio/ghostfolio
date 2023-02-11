@@ -27,6 +27,7 @@ import { ColorScheme } from '@ghostfolio/common/types';
 import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
+  ChartData,
   LineController,
   LineElement,
   LinearScale,
@@ -57,7 +58,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public chart: Chart<any>;
+  public chart: Chart<'line'>;
 
   public constructor() {
     Chart.register(
@@ -89,14 +90,14 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    const data = {
+    const data: ChartData<'line'> = {
       datasets: [
         {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
           data: this.performanceDataItems.map(({ date, value }) => {
-            return { x: parseDate(date), y: value };
+            return { x: parseDate(date).getTime(), y: value };
           }),
           label: $localize`Portfolio`
         },
@@ -105,7 +106,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 2,
           data: this.benchmarkDataItems.map(({ date, value }) => {
-            return { x: parseDate(date), y: value };
+            return { x: parseDate(date).getTime(), y: value };
           }),
           label: $localize`Benchmark`
         }

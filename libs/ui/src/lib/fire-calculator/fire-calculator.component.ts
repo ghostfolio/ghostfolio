@@ -61,7 +61,7 @@ export class FireCalculatorComponent
     principalInvestmentAmount: new FormControl<number>(undefined),
     time: new FormControl<number>(undefined)
   });
-  public chart: Chart;
+  public chart: Chart<'bar'>;
   public isLoading = true;
   public projectedTotalAmount: number;
 

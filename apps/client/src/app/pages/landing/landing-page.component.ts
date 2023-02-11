@@ -52,8 +52,11 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService
   ) {
-    const { countriesOfSubscribers, globalPermissions, statistics } =
-      this.dataService.fetchInfo();
+    const {
+      countriesOfSubscribers = [],
+      globalPermissions,
+      statistics
+    } = this.dataService.fetchInfo();
 
     for (const country of countriesOfSubscribers) {
       this.countriesOfSubscribersMap[country] = {
