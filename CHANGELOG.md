@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the exposed port as an environment variable (`PORT`) in `Dockerfile`
 - Upgraded `chart.js` from version `4.0.1` to `4.2.0`
 - Upgraded `prettier` from version `2.8.1` to `2.8.4`
 
