@@ -55,10 +55,12 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     const { countriesOfSubscribers, globalPermissions, statistics } =
       this.dataService.fetchInfo();
 
-    for (const country of countriesOfSubscribers) {
-      this.countriesOfSubscribersMap[country] = {
-        value: 1
-      };
+    if (countriesOfSubscribers) {
+      for (const country of countriesOfSubscribers) {
+        this.countriesOfSubscribersMap[country] = {
+          value: 1
+        };
+      }
     }
 
     this.hasPermissionForStatistics = hasPermission(
