@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `chart.js` from version `4.0.1` to `4.2.0`
 - Upgraded `prettier` from version `2.8.1` to `2.8.4`
 
+### Fixed
+
+- Fixed an issue on the landing page caused by the global heat map of subscribers
+
 ## 1.233.0 - 2023-02-09
 
 ### Added
