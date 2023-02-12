@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the content of the landing page
+- Improved the content of the Frequently Asked Questions (FAQ) page
 - Set the exposed port as an environment variable (`PORT`) in `Dockerfile`
 - Upgraded `chart.js` from version `4.0.1` to `4.2.0`
 - Upgraded `ionicons` from version `6.0.4` to `6.1.2`
