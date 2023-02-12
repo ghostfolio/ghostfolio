@@ -117,7 +117,7 @@ export class YahooFinanceService implements DataProviderInterface {
       });
       response.symbol = aSymbol;
 
-      if (assetSubClass === AssetSubClass.MUTUALFUND) {
+      if (assetSubClass === AssetSubClass.MUTUALFUND || assetSubClass === AssetSubClass.ETF) {
         response.sectors = [];
 
         for (const sectorWeighting of assetProfile.topHoldings

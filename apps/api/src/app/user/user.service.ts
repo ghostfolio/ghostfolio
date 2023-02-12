@@ -163,6 +163,10 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
+    if (!(user.Settings.settings as UserSettings).unknownMode) {
+      (user.Settings.settings as UserSettings).unknownMode = 'DEFAULT';
+    }
+
     let currentPermissions = getPermissions(user.role);
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {

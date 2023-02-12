@@ -218,6 +218,11 @@ enum ViewMode {
   ZEN
 }
 
+enum UnknownMode {
+  DEFAULT
+  OFF
+}
+
 enum Provider {
   ANONYMOUS
   GOOGLE

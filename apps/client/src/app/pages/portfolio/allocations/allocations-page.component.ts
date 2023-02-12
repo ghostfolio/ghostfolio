@@ -309,7 +309,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               };
             }
           }
-        } else {
+        } else if (this.user.settings.unknownMode === "DEFAULT") {
           this.continents[UNKNOWN_KEY].value +=
             this.portfolioDetails.holdings[symbol].value;
 
@@ -330,7 +330,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               };
             }
           }
-        } else {
+        } else if (this.user.settings.unknownMode === "DEFAULT") {
           this.sectors[UNKNOWN_KEY].value +=
             this.portfolioDetails.holdings[symbol].value;
         }

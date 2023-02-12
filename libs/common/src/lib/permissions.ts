@@ -27,7 +27,8 @@ export const permissions = {
   updateAuthDevice: 'updateAuthDevice',
   updateOrder: 'updateOrder',
   updateUserSettings: 'updateUserSettings',
-  updateViewMode: 'updateViewMode'
+  updateViewMode: 'updateViewMode',
+  updateUnknownMode: 'updateUnknownMode'
 };
 
 export function getPermissions(aRole: Role): string[] {
@@ -47,7 +48,8 @@ export function getPermissions(aRole: Role): string[] {
         permissions.updateAuthDevice,
         permissions.updateOrder,
         permissions.updateUserSettings,
-        permissions.updateViewMode
+        permissions.updateViewMode,
+        permissions.updateUnknownMode
       ];
 
     case 'DEMO':
@@ -66,7 +68,8 @@ export function getPermissions(aRole: Role): string[] {
         permissions.updateAuthDevice,
         permissions.updateOrder,
         permissions.updateUserSettings,
-        permissions.updateViewMode
+        permissions.updateViewMode,
+        permissions.updateUnknownMode
       ];
 
     default:

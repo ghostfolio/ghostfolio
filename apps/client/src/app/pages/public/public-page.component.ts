@@ -5,7 +5,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
-  PortfolioPublicDetails
+  PortfolioPublicDetails, User
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
 import { StatusCodes } from 'http-status-codes';
@@ -13,6 +13,7 @@ import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 
 @Component({
   host: { class: 'page' },
@@ -47,23 +48,34 @@ export class PublicPageComponent implements OnInit {
   };
 
   private id: string;
+
+  private user: User;
+
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private userService: UserService,
     private deviceService: DeviceDetectorService,
     private router: Router
   ) {
     this.activatedRoute.params.subscribe((params) => {
       this.id = params['id'];
     });
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+          this.initializeAnalysisData()
+        }
+      });
   }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.dataService
       .fetchPortfolioPublic(this.id)
       .pipe(
@@ -191,7 +203,7 @@ export class PublicPageComponent implements OnInit {
             };
           }
         }
-      } else {
+      } else if (this.user.settings.unknownMode === "DEFAULT") {
         this.sectors[UNKNOWN_KEY].value +=
           this.portfolioPublicDetails.holdings[symbol].value;
       }

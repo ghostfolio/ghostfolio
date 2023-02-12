@@ -1,7 +1,8 @@
 import type {
   ColorScheme,
   DateRange,
-  ViewMode
+  ViewMode,
+  UnknownMode
 } from '@ghostfolio/common/types';
 import {
   IsBoolean,
@@ -55,4 +56,8 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
+
+  @IsIn(<UnknownMode[]>['DEFAULT', 'OFF'])
+  @IsOptional()
+  unknownMode?: UnknownMode;
 }
