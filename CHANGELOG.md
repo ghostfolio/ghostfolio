@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Set the exposed port as an environment variable (`PORT`) in `Dockerfile`
+- Migrated the style of `GfHeaderModule` to `@angular/material` `15` (mdc)
 - Upgraded `chart.js` from version `4.0.1` to `4.2.0`
 - Upgraded `ionicons` from version `6.0.4` to `6.1.2`
 - Upgraded `prettier` from version `2.8.1` to `2.8.4`
