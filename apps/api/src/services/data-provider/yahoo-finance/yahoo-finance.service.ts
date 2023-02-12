@@ -1,15 +1,15 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {LookupItem} from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import {ConfigurationService} from '@ghostfolio/api/services/configuration.service';
+import {CryptocurrencyService} from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
+import {DataProviderInterface} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
-import { Injectable, Logger } from '@nestjs/common';
+import {UNKNOWN_KEY} from '@ghostfolio/common/config';
+import {DATE_FORMAT, isCurrency} from '@ghostfolio/common/helper';
+import {Granularity} from '@ghostfolio/common/types';
+import {Injectable, Logger} from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
@@ -17,10 +17,10 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import Big from 'big.js';
-import { countries } from 'countries-list';
-import { addDays, format, isSameDay } from 'date-fns';
+import {countries} from 'countries-list';
+import {addDays, format, isSameDay} from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
-import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
+import type {Price} from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -101,7 +101,7 @@ export class YahooFinanceService implements DataProviderInterface {
         modules: ['price', 'summaryProfile', 'topHoldings']
       });
 
-      const { assetClass, assetSubClass } = this.parseAssetClass(
+      const {assetClass, assetSubClass} = this.parseAssetClass(
         assetProfile.price
       );
 
@@ -123,7 +123,7 @@ export class YahooFinanceService implements DataProviderInterface {
         for (const sectorWeighting of assetProfile.topHoldings
           ?.sectorWeightings ?? []) {
           for (const [sector, weight] of Object.entries(sectorWeighting)) {
-            response.sectors.push({ weight, name: this.parseSector(sector) });
+            response.sectors.push({weight, name: this.parseSector(sector)});
           }
         }
       } else if (
@@ -138,13 +138,14 @@ export class YahooFinanceService implements DataProviderInterface {
           });
 
           if (code) {
-            response.countries = [{ code, weight: 1 }];
+            response.countries = [{code, weight: 1}];
           }
-        } catch {}
+        } catch {
+        }
 
         if (assetProfile.summaryProfile?.sector) {
           response.sectors = [
-            { name: assetProfile.summaryProfile?.sector, weight: 1 }
+            {name: assetProfile.summaryProfile?.sector, weight: 1}
           ];
         }
       }
@@ -161,11 +162,11 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
+                              from,
+                              granularity = 'day',
+                              symbol,
+                              to
+                            }: {
     from: Date;
     granularity: Granularity;
     symbol: string;
@@ -368,7 +369,7 @@ export class YahooFinanceService implements DataProviderInterface {
           // Filter out undefined symbols
           return quote.symbol;
         })
-        .filter(({ quoteType, symbol }) => {
+        .filter(({quoteType, symbol}) => {
           return (
             (quoteType === 'CRYPTOCURRENCY' &&
               this.cryptocurrencyService.isCryptocurrency(
@@ -380,7 +381,7 @@ export class YahooFinanceService implements DataProviderInterface {
             ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'].includes(quoteType)
           );
         })
-        .filter(({ quoteType, symbol }) => {
+        .filter(({quoteType, symbol}) => {
           if (quoteType === 'CRYPTOCURRENCY') {
             // Only allow cryptocurrencies in base currency to avoid having redundancy in the database.
             // Transactions need to be converted manually to the base currency before
@@ -394,7 +395,7 @@ export class YahooFinanceService implements DataProviderInterface {
         });
 
       const marketData = await yahooFinance.quote(
-        quotes.map(({ symbol }) => {
+        quotes.map(({symbol}) => {
           return symbol;
         })
       );
@@ -424,15 +425,15 @@ export class YahooFinanceService implements DataProviderInterface {
       Logger.error(error, 'YahooFinanceService');
     }
 
-    return { items };
+    return {items};
   }
 
   private formatName({
-    longName,
-    quoteType,
-    shortName,
-    symbol
-  }: {
+                       longName,
+                       quoteType,
+                       shortName,
+                       symbol
+                     }: {
     longName: Price['longName'];
     quoteType: Price['quoteType'];
     shortName: Price['shortName'];
@@ -462,9 +463,9 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   private getConvertedValue({
-    symbol,
-    value
-  }: {
+                              symbol,
+                              value
+                            }: {
     symbol: string;
     value: number;
   }) {
@@ -522,7 +523,7 @@ export class YahooFinanceService implements DataProviderInterface {
         break;
     }
 
-    return { assetClass, assetSubClass };
+    return {assetClass, assetSubClass};
   }
 
   private parseSector(aString: string): string {
@@ -562,6 +563,8 @@ export class YahooFinanceService implements DataProviderInterface {
       case 'utilities':
         sector = 'Utilities';
         break;
+      default:
+        sector = aString;
     }
 
     return sector;
