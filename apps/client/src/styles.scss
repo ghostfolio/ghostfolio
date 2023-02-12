@@ -394,6 +394,15 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-menu-panel {
+  .mat-mdc-menu-item {
+    .mdc-list-item__primary-text {
+      align-items: center;
+      display: flex;
+    }
+  }
+}
+
 .mat-paginator {
   background-color: rgba(var(--palette-foreground-base-light), 0.02);
 

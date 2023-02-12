@@ -110,11 +110,7 @@
     </button>
     <mat-menu #accountMenu="matMenu" xPosition="before">
       <ng-container *ngIf="user?.access?.length > 0">
-        <button
-          class="align-items-center d-flex"
-          mat-menu-item
-          (click)="impersonateAccount(null)"
-        >
+        <button mat-menu-item (click)="impersonateAccount(null)">
           <ion-icon
             *ngIf="user?.access?.length > 0"
             class="mr-2"
@@ -128,7 +124,6 @@
         </button>
         <button
           *ngFor="let accessItem of user?.access"
-          class="align-items-center d-flex"
           mat-menu-item
           (click)="impersonateAccount(accessItem.id)"
         >
@@ -147,7 +142,7 @@
         <hr class="m-0" />
       </ng-container>
       <a
-        class="d-block d-sm-none"
+        class="d-flex d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{
@@ -157,7 +152,7 @@
         >Overview</a
       >
       <a
-        class="d-block d-sm-none"
+        class="d-flex d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{
@@ -167,7 +162,7 @@
         >Portfolio</a
       >
       <a
-        class="d-block d-sm-none"
+        class="d-flex d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
@@ -175,7 +170,6 @@
         >Accounts</a
       >
       <a
-        class="align-items-center d-flex"
         i18n
         mat-menu-item
         [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
@@ -184,7 +178,7 @@
       >
       <a
         *ngIf="hasPermissionToAccessAdminControl"
-        class="d-block d-sm-none"
+        class="d-flex d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
@@ -193,7 +187,7 @@
       >
       <hr class="m-0" />
       <a
-        class="d-block d-sm-none"
+        class="d-flex d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{
@@ -206,7 +200,7 @@
         *ngIf="
           hasPermissionForSubscription && user?.subscription?.type === 'Basic'
         "
-        class="d-block d-sm-none"
+        class="d-flex d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{ 'font-weight-bold': currentRoute === 'pricing' }"
@@ -214,14 +208,14 @@
         >Pricing</a
       >
       <a
-        class="d-block d-sm-none"
+        class="d-flex d-sm-none"
         i18n
         mat-menu-item
         [ngClass]="{ 'font-weight-bold': currentRoute === 'about' }"
         [routerLink]="['/about']"
         >About Ghostfolio</a
       >
-      <hr class="d-block d-sm-none m-0" />
+      <hr class="d-flex d-sm-none m-0" />
       <button mat-menu-item (click)="onSignOut()">Logout</button>
     </mat-menu>
   </ng-container>
@@ -283,9 +277,9 @@
       >Markets</a
     >
     <a
-      class="d-none d-sm-block mx-1 no-min-width px-1"
+      class="d-none d-sm-block no-min-width"
       href="https://github.com/ghostfolio/ghostfolio"
-      mat-flat-button
+      mat-icon-button
       ><ion-icon name="logo-github"></ion-icon
     ></a>
     <button class="mx-1" mat-flat-button (click)="openLoginDialog()">
