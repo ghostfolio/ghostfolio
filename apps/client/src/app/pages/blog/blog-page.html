@@ -54,7 +54,11 @@
           </div>
         </mat-card-content>
       </mat-card>
-      <mat-card appearance="outlined" *ngIf="hasPermissionForSubscription" class="mb-3">
+      <mat-card
+        *ngIf="hasPermissionForSubscription"
+        appearance="outlined"
+        class="mb-3"
+      >
         <mat-card-content>
           <div class="container p-0">
             <div class="flex-nowrap no-gutters row">
