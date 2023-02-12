@@ -420,6 +420,15 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-menu-panel {
+  .mat-mdc-menu-item {
+    .mdc-list-item__primary-text {
+      align-items: center;
+      display: flex;
+    }
+  }
+}
+
 .mat-mdc-unelevated-button {
   &:not(:disabled) {
     --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));

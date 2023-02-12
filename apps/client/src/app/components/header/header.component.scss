@@ -11,7 +11,9 @@
       flex: 1 1 auto;
     }
 
-    .mat-flat-button {
+    .mat-mdc-unelevated-button {
+      height: unset;
+
       &:not(.mat-primary) {
         background-color: transparent;
         text-decoration-color: rgba(var(--palette-primary-500), 1) !important;
