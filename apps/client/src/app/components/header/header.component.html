@@ -21,16 +21,60 @@
       >Overview</a
     >
     <a
+      #portfolioMenuTrigger="matMenuTrigger"
       class="d-none d-sm-block mx-1"
       i18n
       mat-flat-button
+      [matMenuTriggerFor]="portfolioMenu"
       [ngClass]="{
         'font-weight-bold': currentRoute === 'portfolio',
         'text-decoration-underline': currentRoute === 'portfolio'
       }"
       [routerLink]="['/portfolio']"
+      (mouseover)="deviceType === 'desktop' && openMenu(portfolioMenuTrigger)"
       >Portfolio</a
     >
+    <mat-menu #portfolioMenu="matMenu" xPosition="before">
+      <div (mouseleave)="closeMenu(portfolioMenuTrigger)">
+        <a
+          i18n
+          mat-menu-item
+          [ngClass]="{
+            'font-weight-bold': currentSubRoute === 'analysis'
+          }"
+          [routerLink]="['/portfolio', 'analysis']"
+          >Analysis</a
+        >
+        <a
+          i18n
+          mat-menu-item
+          [ngClass]="{ 'font-weight-bold': currentSubRoute === 'holdings' }"
+          [routerLink]="['/portfolio', 'holdings']"
+          >Holdings</a
+        >
+        <a
+          i18n
+          mat-menu-item
+          [ngClass]="{ 'font-weight-bold': currentSubRoute === 'activities' }"
+          [routerLink]="['/portfolio', 'activities']"
+          >Activities</a
+        >
+        <a
+          i18n
+          mat-menu-item
+          [ngClass]="{ 'font-weight-bold': currentSubRoute === 'allocations' }"
+          [routerLink]="['/portfolio', 'allocations']"
+          >Allocations</a
+        >
+        <a
+          i18n
+          mat-menu-item
+          [ngClass]="{ 'font-weight-bold': currentSubRoute === 'fire' }"
+          [routerLink]="['/portfolio', 'fire']"
+          >FIRE</a
+        >
+      </div>
+    </mat-menu>
     <a
       class="d-none d-sm-block mx-1"
       i18n

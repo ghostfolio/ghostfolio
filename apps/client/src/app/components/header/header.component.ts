@@ -7,6 +7,7 @@ import {
   Output
 } from '@angular/core';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -29,6 +30,8 @@ import { catchError, takeUntil } from 'rxjs/operators';
 })
 export class HeaderComponent implements OnChanges {
   @Input() currentRoute: string;
+  @Input() currentSubRoute: string;
+  @Input() deviceType: string;
   @Input() info: InfoItem;
   @Input() pageTitle: string;
   @Input() user: User;
@@ -88,6 +91,10 @@ export class HeaderComponent implements OnChanges {
     );
   }
 
+  public closeMenu(menuTrigger: MatMenuTrigger) {
+    menuTrigger.closeMenu();
+  }
+
   public impersonateAccount(aId: string) {
     if (aId) {
       this.impersonationStorageService.setId(aId);
@@ -141,6 +148,10 @@ export class HeaderComponent implements OnChanges {
             });
         }
       });
+  }
+
+  public openMenu(menuTrigger: MatMenuTrigger) {
+    menuTrigger.openMenu();
   }
 
   public setToken(aToken: string) {

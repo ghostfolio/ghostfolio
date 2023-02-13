@@ -30,6 +30,7 @@ import { UserService } from './services/user/user.service';
 export class AppComponent implements OnDestroy, OnInit {
   public canCreateAccount: boolean;
   public currentRoute: string;
+  public currentSubRoute: string;
   public currentYear = new Date().getFullYear();
   public deviceType: string;
   public info: InfoItem;
@@ -62,7 +63,8 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlTree = this.router.parseUrl(this.router.url);
         const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
         const urlSegments = urlSegmentGroup.segments;
-        this.currentRoute = urlSegments[0].path;
+        this.currentRoute = urlSegments[0]?.path;
+        this.currentSubRoute = urlSegments[1]?.path;
 
         this.info = this.dataService.fetchInfo();
 
