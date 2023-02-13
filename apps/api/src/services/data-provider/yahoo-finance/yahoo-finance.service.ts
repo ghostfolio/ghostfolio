@@ -161,11 +161,11 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async getDividends({
-                              from,
-                              granularity = 'day',
-                              symbol,
-                              to
-                            }: {
+    from,
+    granularity = 'day',
+    symbol,
+    to
+  }: {
     from: Date;
     granularity: Granularity;
     symbol: string;
@@ -428,11 +428,11 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   private formatName({
-                       longName,
-                       quoteType,
-                       shortName,
-                       symbol
-                     }: {
+    longName,
+    quoteType,
+    shortName,
+    symbol
+  }: {
     longName: Price['longName'];
     quoteType: Price['quoteType'];
     shortName: Price['shortName'];
@@ -462,9 +462,9 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   private getConvertedValue({
-                              symbol,
-                              value
-                            }: {
+    symbol,
+    value
+  }: {
     symbol: string;
     value: number;
   }) {
