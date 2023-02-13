@@ -462,7 +462,7 @@ export class PortfolioService {
     });
 
     const holdings: PortfolioDetails['holdings'] = {};
-    currentPositions.totalInvestment.plus(
+    const totalInvestmentInBaseCurrency = currentPositions.totalInvestment.plus(
       cashDetails.balanceInBaseCurrency
     );
     let filteredValueInBaseCurrency = currentPositions.currentValue;
@@ -1273,7 +1273,7 @@ export class PortfolioService {
 
     return cashPositions;
   }
-  
+
   private getDividend({
     activities,
     date = new Date(0),
