@@ -115,7 +115,7 @@
           >.</mat-card-content
         >
       </mat-card>
-      <mat-card class="mb-3">
+      <mat-card *ngIf="user?.subscription?.type === 'Premium'" class="mb-3">
         <mat-card-title
           >I cannot find my broker in the list of platforms. What can I
           do?</mat-card-title

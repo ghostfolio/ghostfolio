@@ -52,6 +52,7 @@
 
   <div *ngIf="hasPermissionForStatistics" class="row mb-5">
     <div
+      *ngIf="hasPermissionForSubscription"
       class="col-md-4 d-flex my-1"
       [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
     >
@@ -65,6 +66,24 @@
           size="large"
           [value]="statistics?.activeUsers30d ?? '-'"
           >Monthly Active Users</gf-value
+        >
+      </a>
+    </div>
+    <div
+      *ngIf="!hasPermissionForSubscription"
+      class="col-md-4 d-flex my-1"
+      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+    >
+      <a
+        class="d-block"
+        title="Ghostfolio in Numbers: Contributors on GitHub"
+        [routerLink]="['/about']"
+      >
+        <gf-value
+          icon="people-outline"
+          size="large"
+          [value]="statistics?.gitHubContributors ?? '-'"
+          >Contributors on GitHub</gf-value
         >
       </a>
     </div>
@@ -300,7 +319,7 @@
     </div>
   </div>
 
-  <div class="row my-3">
+  <div *ngIf="hasPermissionForSubscription" class="row my-3">
     <div class="col-12">
       <h2 class="h4 mb-1 text-center">
         How does <strong>Ghostfolio</strong> work?
