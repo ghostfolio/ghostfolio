@@ -1273,6 +1273,7 @@ export class PortfolioService {
 
     return cashPositions;
   }
+  
   private getDividend({
     activities,
     date = new Date(0),
