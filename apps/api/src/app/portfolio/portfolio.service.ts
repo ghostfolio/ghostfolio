@@ -1271,25 +1271,10 @@ export class PortfolioService {
       cashPositions[symbol].allocationInPercentage = value.gt(0)
         ? new Big(cashPositions[symbol].value).div(value).toNumber()
         : 0;
-      cashPositions[symbol].sectors = [                {
-        "name": "OTHER",
-        "weight": 1
-      }]
-      cashPositions[symbol].countries = this.matchCurrencyToCountries(symbol)
     }
 
     return cashPositions;
   }
-  private matchCurrencyToCountries(aString: string): Country[] {
-    const csformat = []
-    switch (aString) {
-      case 'USD':
-        csformat.push(countries.US)
-        break;
-    }
-    return csformat;
-  }
-
   private getDividend({
     activities,
     date = new Date(0),
