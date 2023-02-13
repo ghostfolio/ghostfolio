@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a sub menu for _Portfolio_ to the header on desktop
+
 ### Changed
 
 - Set the exposed port as an environment variable (`PORT`) in `Dockerfile`
