@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copy logic of `GhostfolioScraperApiService` to `ManualService`
 - Improved the content of the landing page
 - Improved the content of the Frequently Asked Questions (FAQ) page
+- Improved the usability of the _Import Activities..._ action
+- Eliminated the permission `enableImport`
 - Set the exposed port as an environment variable (`PORT`) in `Dockerfile`
 - Migrated the style of `AboutPageModule` to `@angular/material` `15` (mdc)
 - Migrated the style of `BlogPageModule` to `@angular/material` `15` (mdc)
@@ -35,6 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rename the `dataSource` from `GHOSTFOLIO` to `MANUAL`
 - Eliminate `GhostfolioScraperApiService`
+
+### Todo
+
+- Remove the environment variable `ENABLE_FEATURE_IMPORT`
 
 ## 1.233.0 - 2023-02-09
 
