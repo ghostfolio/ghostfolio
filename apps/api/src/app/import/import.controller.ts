@@ -40,8 +40,11 @@ export class ImportController {
     @Query('dryRun') isDryRun?: boolean
   ): Promise<ImportResponse> {
     if (
-      !this.configurationService.get('ENABLE_FEATURE_IMPORT') ||
-      !hasPermission(this.request.user.permissions, permissions.createAccount)
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.createAccount
+      ) ||
+      !hasPermission(this.request.user.permissions, permissions.createOrder)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

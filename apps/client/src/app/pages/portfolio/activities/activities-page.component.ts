@@ -36,7 +36,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
   public hasPermissionToDeleteActivity: boolean;
-  public hasPermissionToImportActivities: boolean;
   public routeQueryParams: Subscription;
   public user: User;
 
@@ -91,10 +90,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((aId) => {
         this.hasImpersonationId = !!aId;
-
-        this.hasPermissionToImportActivities =
-          hasPermission(globalPermissions, permissions.enableImport) &&
-          !this.hasImpersonationId;
       });
 
     this.userService.stateChanged
@@ -356,13 +351,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       return account.isDefault;
     })?.id;
 
-    this.hasPermissionToCreateActivity = hasPermission(
-      this.user.permissions,
-      permissions.createOrder
-    );
-    this.hasPermissionToDeleteActivity = hasPermission(
-      this.user.permissions,
-      permissions.deleteOrder
-    );
+    this.hasPermissionToCreateActivity =
+      !this.hasImpersonationId &&
+      hasPermission(this.user.permissions, permissions.createOrder);
+    this.hasPermissionToDeleteActivity =
+      !this.hasImpersonationId &&
+      hasPermission(this.user.permissions, permissions.deleteOrder);
   }
 }

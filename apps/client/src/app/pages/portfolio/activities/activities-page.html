@@ -8,7 +8,6 @@
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
-        [hasPermissionToImportActivities]="hasPermissionToImportActivities"
         [locale]="user?.settings?.locale"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
         (activityDeleted)="onDeleteActivity($event)"
