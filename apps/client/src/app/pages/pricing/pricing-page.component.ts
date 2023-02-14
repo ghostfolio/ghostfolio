@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -14,6 +15,12 @@ import { takeUntil } from 'rxjs/operators';
 export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency: string;
   public coupon: number;
+  public importAndExportTooltipOSS = translate(
+    'DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS'
+  );
+  public importAndExportTooltipPremium = translate(
+    'DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM'
+  );
   public isLoggedIn: boolean;
   public price: number;
   public user: User;
