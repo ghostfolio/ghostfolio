@@ -203,7 +203,7 @@ body {
 
   .blog {
     a {
-      &:not(.mat-flat-button) {
+      &:not(.mdc-button) {
         color: rgba(var(--palette-primary-500), 1) !important;
         font-weight: 500;
 

@@ -2,20 +2,18 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  .mat-card {
-    &.changelog {
-      a {
-        color: rgba(var(--palette-primary-500), 1);
-        font-weight: 500;
-
-        &:hover {
-          color: rgba(var(--palette-primary-300), 1);
-        }
-      }
-    }
-
+  .mat-mdc-card {
     &.changelog {
       ::ng-deep {
+        a {
+          color: rgba(var(--palette-primary-500), 1);
+          font-weight: 500;
+
+          &:hover {
+            color: rgba(var(--palette-primary-300), 1);
+          }
+        }
+
         markdown {
           h1,
           p {
