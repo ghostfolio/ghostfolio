@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `chart.js` from version `4.0.1` to `4.2.0`
 - Upgraded `ionicons` from version `6.0.4` to `6.1.2`
 - Upgraded `prettier` from version `2.8.1` to `2.8.4`
+- Upgraded `prisma` from version `4.9.0` to `4.10.1`
 
 ### Fixed
 
