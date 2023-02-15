@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Copy logic of `GhostfolioScraperApiService` to `ManualService`
 - Improved the content of the landing page
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Set the exposed port as an environment variable (`PORT`) in `Dockerfile`
@@ -25,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue on the landing page caused by the global heat map of subscribers
 - Fixed the links in the interstitial for the subscription
+
+### Todo
+
+- Rename the `dataSource` from `GHOSTFOLIO` to `MANUAL`
+- Eliminate `GhostfolioScraperApiService`
 
 ## 1.233.0 - 2023-02-09
 

@@ -65,7 +65,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
       const [symbolProfile] =
         await this.symbolProfileService.getSymbolProfilesBySymbols([symbol]);
       const { defaultMarketPrice, selector, url } =
-        symbolProfile.scraperConfiguration;
+        symbolProfile.scraperConfiguration ?? {};
 
       if (defaultMarketPrice) {
         const historical: {
@@ -148,7 +148,7 @@ export class GhostfolioScraperApiService implements DataProviderInterface {
           dataSource: this.getName(),
           marketPrice: marketData.find((marketDataItem) => {
             return marketDataItem.symbol === symbolProfile.symbol;
-          }).marketPrice,
+          })?.marketPrice,
           marketState: 'delayed'
         };
       }
