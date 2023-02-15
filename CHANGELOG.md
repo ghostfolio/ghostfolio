@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the data import and export feature to the pricing page
+
 ### Changed
 
 - Copy logic of `GhostfolioScraperApiService` to `ManualService`

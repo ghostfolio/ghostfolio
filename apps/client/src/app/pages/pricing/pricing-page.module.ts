@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { RouterModule } from '@angular/router';
 import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 
@@ -15,6 +16,7 @@ import { PricingPageComponent } from './pricing-page.component';
     GfPremiumIndicatorModule,
     MatButtonModule,
     MatCardModule,
+    MatTooltipModule,
     PricingPageRoutingModule,
     RouterModule
   ],
