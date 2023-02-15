@@ -29,7 +29,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-overview.html'
 })
 export class AdminOverviewComponent implements OnDestroy, OnInit {
-  public couponDuration: StringValue = '30 days';
+  public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
   public customCurrencies: string[];
   public exchangeRates: { label1: string; label2: string; value: number }[];
