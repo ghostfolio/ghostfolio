@@ -6,6 +6,56 @@
   (valueChanged)="filters$.next($event)"
 ></gf-activities-filter>
 
+<div *ngIf="hasPermissionToCreateActivity" class="d-flex justify-content-end">
+  <button
+    class="align-items-center d-flex"
+    mat-stroked-button
+    (click)="onImport()"
+  >
+    <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+    <span i18n>Import Activities...</span>
+  </button>
+  <button
+    *ngIf="hasPermissionToExportActivities"
+    class="mx-1 no-min-width px-2"
+    mat-stroked-button
+    [matMenuTriggerFor]="activitiesMenu"
+    (click)="$event.stopPropagation()"
+  >
+    <ion-icon name="ellipsis-vertical"></ion-icon>
+  </button>
+  <mat-menu #activitiesMenu="matMenu" xPosition="before">
+    <button
+      mat-menu-item
+      [disabled]="dataSource.data.length === 0"
+      (click)="onImportDividends()"
+    >
+      <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
+      <span i18n>Import Dividends...</span>
+    </button>
+    <button
+      *ngIf="hasPermissionToExportActivities"
+      class="align-items-center d-flex"
+      mat-menu-item
+      [disabled]="dataSource.data.length === 0"
+      (click)="onExport()"
+    >
+      <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
+      <span i18n>Export Activities</span>
+    </button>
+    <button
+      *ngIf="hasPermissionToExportActivities"
+      class="align-items-center d-flex"
+      mat-menu-item
+      [disabled]="!hasDrafts"
+      (click)="onExportDrafts()"
+    >
+      <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+      <span i18n>Export Drafts as ICS</span>
+    </button>
+  </mat-menu>
+</div>
+
 <div class="activities">
   <table
     class="gf-table w-100"
@@ -369,7 +419,7 @@
       <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
         <button
           *ngIf="
-            hasPermissionToExportActivities || hasPermissionToImportActivities
+            !hasPermissionToCreateActivity && hasPermissionToExportActivities
           "
           class="mx-1 no-min-width px-2"
           mat-button
@@ -380,21 +430,22 @@
         </button>
         <mat-menu #activitiesMenu="matMenu" xPosition="before">
           <button
-            *ngIf="hasPermissionToImportActivities"
+            *ngIf="hasPermissionToCreateActivity"
             class="align-items-center d-flex"
             mat-menu-item
             (click)="onImport()"
           >
             <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
-            <span i18n>Import Activities</span>
+            <span i18n>Import Activities...</span>
           </button>
           <button
-            *ngIf="hasPermissionToImportActivities"
+            *ngIf="hasPermissionToCreateActivity"
             mat-menu-item
+            [disabled]="dataSource.data.length === 0"
             (click)="onImportDividends()"
           >
             <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
-            <span i18n>Import Dividends</span>
+            <span i18n>Import Dividends...</span>
           </button>
           <button
             *ngIf="hasPermissionToExportActivities"

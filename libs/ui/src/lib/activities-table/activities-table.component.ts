@@ -40,7 +40,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToFilter = true;
-  @Input() hasPermissionToImportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
   @Input() pageSize = DEFAULT_PAGE_SIZE;

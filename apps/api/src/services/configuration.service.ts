@@ -24,7 +24,6 @@ export class ConfigurationService {
       ENABLE_FEATURE_BLOG: bool({ default: false }),
       ENABLE_FEATURE_CUSTOM_SYMBOLS: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
-      ENABLE_FEATURE_IMPORT: bool({ default: true }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
       ENABLE_FEATURE_STATISTICS: bool({ default: false }),
