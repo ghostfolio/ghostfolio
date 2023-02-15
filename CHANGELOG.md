@@ -10,14 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Copy logic of `GhostfolioScraperApiService` to `ManualService`
+- Improved the content of the landing page
+- Improved the content of the Frequently Asked Questions (FAQ) page
 - Set the exposed port as an environment variable (`PORT`) in `Dockerfile`
+- Migrated the style of `AboutPageModule` to `@angular/material` `15` (mdc)
+- Migrated the style of `BlogPageModule` to `@angular/material` `15` (mdc)
+- Migrated the style of `ChangelogPageModule` to `@angular/material` `15` (mdc)
+- Migrated the style of `ResourcesPageModule` to `@angular/material` `15` (mdc)
 - Upgraded `chart.js` from version `4.0.1` to `4.2.0`
 - Upgraded `ionicons` from version `6.0.4` to `6.1.2`
 - Upgraded `prettier` from version `2.8.1` to `2.8.4`
+- Upgraded `prisma` from version `4.9.0` to `4.10.1`
 
 ### Fixed
 
 - Fixed an issue on the landing page caused by the global heat map of subscribers
+- Fixed the links in the interstitial for the subscription
 
 ### Todo
 

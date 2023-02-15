@@ -1,6 +1,9 @@
 <h1 class="align-items-center d-flex" mat-dialog-title>
   <span>Ghostfolio Premium</span>
-  <gf-premium-indicator class="ml-1"></gf-premium-indicator>
+  <gf-premium-indicator
+    class="ml-1"
+    [enableLink]="false"
+  ></gf-premium-indicator>
 </h1>
 <div class="flex-grow-1" mat-dialog-content>
   <p class="h5" i18n>
@@ -28,7 +31,7 @@
     </li>
     <li class="align-items-center d-flex mb-1">
       <ion-icon class="mr-1" name="checkmark-circle-outline"></ion-icon>
-      <a i18n [routerLink]="['/features']">and more Features...</a>
+      <span i18n>and more Features...</span>
     </li>
   </ul>
   <p>Refine your personal investment strategy now.</p>
