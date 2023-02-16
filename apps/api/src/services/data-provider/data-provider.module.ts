@@ -2,7 +2,6 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration.modu
 import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.module';
 import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
 import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider/eod-historical-data/eod-historical-data.service';
-import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
@@ -24,7 +23,6 @@ import { DataProviderService } from './data-provider.service';
     AlphaVantageService,
     DataProviderService,
     EodHistoricalDataService,
-    GhostfolioScraperApiService,
     GoogleSheetsService,
     ManualService,
     RapidApiService,
@@ -33,7 +31,6 @@ import { DataProviderService } from './data-provider.service';
       inject: [
         AlphaVantageService,
         EodHistoricalDataService,
-        GhostfolioScraperApiService,
         GoogleSheetsService,
         ManualService,
         RapidApiService,
@@ -43,7 +40,6 @@ import { DataProviderService } from './data-provider.service';
       useFactory: (
         alphaVantageService,
         eodHistoricalDataService,
-        ghostfolioScraperApiService,
         googleSheetsService,
         manualService,
         rapidApiService,
@@ -51,7 +47,6 @@ import { DataProviderService } from './data-provider.service';
       ) => [
         alphaVantageService,
         eodHistoricalDataService,
-        ghostfolioScraperApiService,
         googleSheetsService,
         manualService,
         rapidApiService,
@@ -59,10 +54,6 @@ import { DataProviderService } from './data-provider.service';
       ]
     }
   ],
-  exports: [
-    DataProviderService,
-    GhostfolioScraperApiService,
-    YahooFinanceService
-  ]
+  exports: [DataProviderService, YahooFinanceService]
 })
 export class DataProviderModule {}

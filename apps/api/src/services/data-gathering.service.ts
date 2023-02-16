@@ -278,7 +278,6 @@ export class DataGatheringService {
     return symbolProfiles
       .filter(({ dataSource }) => {
         return (
-          dataSource !== DataSource.GHOSTFOLIO &&
           dataSource !== DataSource.MANUAL &&
           dataSource !== DataSource.RAPID_API
         );
