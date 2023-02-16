@@ -62,7 +62,7 @@
             mat-icon-button
             title="Follow Ghostfolio on Twitter"
           >
-            <ion-icon name="logo-twitter" size="large"></ion-icon>
+            <ion-icon name="logo-twitter"></ion-icon>
           </a>
           <a
             class="mx-2"
@@ -70,7 +70,7 @@
             mat-icon-button
             title="Send an e-mail"
           >
-            <ion-icon name="mail" size="large"></ion-icon>
+            <ion-icon name="mail"></ion-icon>
           </a>
           <a
             class="mx-2"
@@ -78,7 +78,7 @@
             mat-icon-button
             title="Join the Ghostfolio Slack channel"
           >
-            <ion-icon name="logo-slack" size="large"></ion-icon>
+            <ion-icon name="logo-slack"></ion-icon>
           </a>
           <a
             class="mx-2"
@@ -86,7 +86,7 @@
             mat-icon-button
             title="Find Ghostfolio on GitHub"
           >
-            <ion-icon name="logo-github" size="large"></ion-icon>
+            <ion-icon name="logo-github"></ion-icon>
           </a>
         </p>
         <div
@@ -191,7 +191,7 @@
   <div class="row">
     <div *ngIf="hasPermissionForSubscription" class="col-md-3 col-xs-12 my-2">
       <a
-        class="py-2 w-100"
+        class="py-4 w-100"
         color="primary"
         mat-flat-button
         [routerLink]="['/faq']"
@@ -203,7 +203,7 @@
       [ngClass]="{ 'offset-md-4': !hasPermissionForBlog }"
     >
       <a
-        class="py-2 w-100"
+        class="py-4 w-100"
         color="primary"
         mat-flat-button
         [routerLink]="['/about', 'changelog']"
@@ -212,7 +212,7 @@
     </div>
     <div *ngIf="hasPermissionForSubscription" class="col-md-3 col-xs-12 my-2">
       <a
-        class="py-2 w-100"
+        class="py-4 w-100"
         color="primary"
         mat-flat-button
         [routerLink]="['/about', 'privacy-policy']"
@@ -221,7 +221,7 @@
     </div>
     <div *ngIf="hasPermissionForBlog" class="col-md-3 col-xs-12 my-2">
       <a
-        class="py-2 w-100"
+        class="py-4 w-100"
         color="primary"
         mat-flat-button
         [routerLink]="['/blog']"

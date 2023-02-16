@@ -256,6 +256,23 @@ body {
       }
     }
 
+    .mat-mdc-card {
+      --mdc-elevated-card-container-color: var(--dark-background);
+    }
+
+    .mat-mdc-fab {
+      &.mat-primary {
+        --mdc-fab-icon-color: rgba(var(--dark-primary-text));
+        --mat-mdc-fab-color: rgba(var(--dark-primary-text));
+      }
+    }
+
+    .mat-mdc-unelevated-button {
+      &.mat-primary {
+        --mdc-filled-button-label-text-color: rgba(var(--dark-primary-text));
+      }
+    }
+
     .mat-paginator {
       background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
@@ -391,6 +408,21 @@ ngx-skeleton-loader {
     .mat-form-field-wrapper {
       padding-bottom: 0;
     }
+  }
+}
+
+.mat-mdc-fab {
+  color: var(--mat-mdc-fab-color, inherit) !important;
+
+  &.mat-primary {
+    --mdc-fab-icon-color: rgba(var(--light-primary-text));
+    --mat-mdc-fab-color: rgba(var(--light-primary-text));
+  }
+}
+
+.mat-mdc-unelevated-button {
+  &:not(:disabled) {
+    --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));
   }
 }
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the styles on the about page
 - Eliminated the `GhostfolioScraperApiService`
 
 ## 1.234.0 - 2023-02-15
