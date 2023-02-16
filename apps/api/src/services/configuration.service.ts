@@ -19,7 +19,7 @@ export class ConfigurationService {
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_PRIMARY: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({
-        default: [DataSource.GHOSTFOLIO, DataSource.MANUAL, DataSource.YAHOO]
+        default: [DataSource.MANUAL, DataSource.YAHOO]
       }),
       ENABLE_FEATURE_BLOG: bool({ default: false }),
       ENABLE_FEATURE_CUSTOM_SYMBOLS: bool({ default: false }),
