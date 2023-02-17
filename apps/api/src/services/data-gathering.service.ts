@@ -207,10 +207,6 @@ export class DataGatheringService {
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
     for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
-      if (dataSource === 'MANUAL') {
-        continue;
-      }
-
       await this.addJobToQueue(
         GATHER_HISTORICAL_MARKET_DATA_PROCESS,
         {
