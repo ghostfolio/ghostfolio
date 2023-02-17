@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Beautified the ETF names in the asset profile
+
 ## 1.235.0 - 2023-02-16
 
 ### Changed
@@ -1338,7 +1344,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Beautified the ETF names in the symbol profile
+- Beautified the ETF names in the asset profile
 
 ### Fixed
 
