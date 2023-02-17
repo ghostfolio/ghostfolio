@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Beautified the ETF names in the asset profile
+- Removed the data source type `GHOSTFOLIO`
 
 ### Fixed
 
