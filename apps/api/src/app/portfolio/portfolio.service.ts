@@ -1550,7 +1550,10 @@ export class PortfolioService {
       userCurrency
     }).toNumber();
     const emergencyFund = new Big(
-      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
+      Math.max(
+        emergencyFundPositionsValueInBaseCurrency,
+        (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
+      )
     );
     const fees = this.getFees({ activities, userCurrency }).toNumber();
     const firstOrderDate = activities[0]?.date;
