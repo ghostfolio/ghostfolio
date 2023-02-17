@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue in the data gathering service (do not skip `MANUAL` data source)
 - Fixed the buying power calculation if no emergency fund is set but an activity is tagged as _Emergency Fund_
+- Fixed the url on logout during the local development
 
 ## 1.235.0 - 2023-02-16
 
