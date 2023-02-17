@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Beautified the ETF names in the symbol profile
+- Beautified the ETF names in the asset profile
 
 ## 1.235.0 - 2023-02-16
 
