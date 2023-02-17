@@ -441,8 +441,10 @@ export class YahooFinanceService implements DataProviderInterface {
     let name = longName;
 
     if (name) {
+      name = name.replace('Amundi Index Solutions - ', '');
       name = name.replace('iShares ETF (CH) - ', '');
       name = name.replace('iShares III Public Limited Company - ', '');
+      name = name.replace('iShares V PLC - ', '');
       name = name.replace('iShares VI Public Limited Company - ', '');
       name = name.replace('iShares VII PLC - ', '');
       name = name.replace('Multi Units Luxembourg - ', '');
