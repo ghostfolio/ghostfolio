@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the support details to the pricing page
+
 ### Changed
 
 - Upgraded `angular` from version `15.1.2` to `15.1.5`
