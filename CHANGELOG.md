@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `15.1.2` to `15.1.5`
 - Upgraded `Nx` from version `15.6.3` to `15.7.2`
 
+### Fixed
+
+- Fixed an issue with exact matches in the activities table filter (`VT` vs. `VTI`)
+
 ## 1.236.0 - 2023-02-17
 
 ### Changed
