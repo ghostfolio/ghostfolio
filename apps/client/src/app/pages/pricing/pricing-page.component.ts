@@ -15,7 +15,9 @@ import { takeUntil } from 'rxjs/operators';
 export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency: string;
   public coupon: number;
-  public exportTooltipBasic = translate('DATA_EXPORT_TOOLTIP_BASIC');
+  public importAndExportTooltipBasic = translate(
+    'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
+  );
   public importAndExportTooltipOSS = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS'
   );
