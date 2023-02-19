@@ -249,11 +249,6 @@ export class DataGatheringService {
           },
           scraperConfiguration: true,
           symbol: true
-        },
-        where: {
-          dataSource: {
-            not: 'MANUAL'
-          }
         }
       })
     ).map((symbolProfile) => {
@@ -295,11 +290,6 @@ export class DataGatheringService {
         dataSource: true,
         scraperConfiguration: true,
         symbol: true
-      },
-      where: {
-        dataSource: {
-          not: 'MANUAL'
-        }
       }
     });
 
