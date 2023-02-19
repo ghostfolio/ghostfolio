@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with exact matches in the activities table filter (`VT` vs. `VTI`)
+- Fixed an issue in the data gathering service (do not skip `MANUAL` data source)
 
 ## 1.236.0 - 2023-02-17
 
