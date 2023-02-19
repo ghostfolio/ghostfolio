@@ -1,6 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
@@ -103,17 +104,23 @@ describe('CurrentRateService', () => {
         },
         userCurrency: 'CHF'
       })
-    ).toMatchObject<GetValueObject[]>([
-      {
-        date: undefined,
-        marketPriceInBaseCurrency: 1841.823902,
-        symbol: 'AMZN'
-      },
-      {
-        date: undefined,
-        marketPriceInBaseCurrency: 1847.839966,
-        symbol: 'AMZN'
-      }
-    ]);
+    ).toMatchObject<{
+      dataProviderInfos: DataProviderInfo[];
+      values: GetValueObject[];
+    }>({
+      dataProviderInfos: [],
+      values: [
+        {
+          date: undefined,
+          marketPriceInBaseCurrency: 1841.823902,
+          symbol: 'AMZN'
+        },
+        {
+          date: undefined,
+          marketPriceInBaseCurrency: 1847.839966,
+          symbol: 'AMZN'
+        }
+      ]
+    });
   });
 });

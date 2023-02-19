@@ -2,6 +2,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { isBefore, isToday } from 'date-fns';
 import { flatten } from 'lodash';
@@ -22,7 +23,11 @@ export class CurrentRateService {
     dataGatheringItems,
     dateQuery,
     userCurrency
-  }: GetValuesParams): Promise<GetValueObject[]> {
+  }: GetValuesParams): Promise<{
+    dataProviderInfos: DataProviderInfo[];
+    values: GetValueObject[];
+  }> {
+    const dataProviderInfos: DataProviderInfo[] = [];
     const includeToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
@@ -38,6 +43,14 @@ export class CurrentRateService {
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
             for (const dataGatheringItem of dataGatheringItems) {
+              if (
+                dataResultProvider?.[dataGatheringItem.symbol]?.dataProviderInfo
+              ) {
+                dataProviderInfos.push(
+                  dataResultProvider[dataGatheringItem.symbol].dataProviderInfo
+                );
+              }
+
               result.push({
                 date: today,
                 marketPriceInBaseCurrency:
@@ -81,7 +94,10 @@ export class CurrentRateService {
         })
     );
 
-    return flatten(await Promise.all(promises));
+    return {
+      dataProviderInfos,
+      values: flatten(await Promise.all(promises))
+    };
   }
 
   private containsToday(dates: Date[]): boolean {
