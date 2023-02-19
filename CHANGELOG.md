@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the support details to the pricing page
+- Added support for data provider information to the position detail dialog
 
 ### Changed
 
