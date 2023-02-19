@@ -54,11 +54,14 @@
           <ng-container>
             <mat-option
               *ngFor="let lookupItem of filteredLookupItemsObservable | async"
-              class="autocomplete"
+              class="line-height-1"
               [value]="lookupItem"
             >
-              <span class="mr-2 symbol">{{ lookupItem.symbol | gfSymbol }}</span
-              ><span><b>{{ lookupItem.name }}</b></span>
+              <span><b>{{ lookupItem.name }}</b></span>
+              <br />
+              <small class="text-muted"
+                >{{ lookupItem.symbol | gfSymbol }}</small
+              >
             </mat-option>
           </ng-container>
         </mat-autocomplete>
