@@ -106,6 +106,13 @@
                   ></ion-icon>
                   <a i18n [routerLink]="['/features']">and more Features...</a>
                 </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span i18n>Community Support</span>
+                </li>
               </ul>
             </div>
             <p i18n>Self-hosted, update manually.</p>
@@ -158,35 +165,19 @@
                   ></ion-icon>
                   <span i18n>Portfolio Performance</span>
                 </li>
-                <li>
+                <li class="align-items-center d-flex mb-1">
                   <ion-icon
-                    class="invisible"
+                    class="mr-1"
                     name="checkmark-circle-outline"
                   ></ion-icon>
-                </li>
-                <li>
-                  <ion-icon
-                    class="invisible"
-                    name="checkmark-circle-outline"
-                  ></ion-icon>
-                </li>
-                <li>
-                  <ion-icon
-                    class="invisible"
-                    name="checkmark-circle-outline"
-                  ></ion-icon>
-                </li>
-                <li>
-                  <ion-icon
-                    class="invisible"
-                    name="checkmark-circle-outline"
-                  ></ion-icon>
-                </li>
-                <li>
-                  <ion-icon
-                    class="invisible"
-                    name="checkmark-circle-outline"
-                  ></ion-icon>
+                  <span i18n>Data Import and Export</span>
+                  <span
+                    class="align-items-center d-flex ml-1"
+                    matTooltipPosition="above"
+                    [matTooltip]="importAndExportTooltipBasic"
+                  >
+                    <ion-icon name="information-circle-outline"></ion-icon>
+                  </span>
                 </li>
               </ul>
             </div>
@@ -295,6 +286,13 @@
                     name="checkmark-circle-outline"
                   ></ion-icon>
                   <a i18n [routerLink]="['/features']">and more Features...</a>
+                </li>
+                <li class="align-items-center d-flex mb-1">
+                  <ion-icon
+                    class="mr-1"
+                    name="checkmark-circle-outline"
+                  ></ion-icon>
+                  <span i18n>Email and Chat Support</span>
                 </li>
               </ul>
             </div>
