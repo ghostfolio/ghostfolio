@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Increased the file size limit for the activities import
+- Improved the style of the search results for symbols
 - Migrated the style of `GfHeaderModule` to `@angular/material` `15` (mdc)
 - Upgraded `angular` from version `15.1.2` to `15.1.5`
 - Upgraded `Nx` from version `15.6.3` to `15.7.2`
