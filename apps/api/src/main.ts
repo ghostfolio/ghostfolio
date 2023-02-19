@@ -34,9 +34,8 @@ async function bootstrap() {
     })
   );
 
-  // support 10mb csv/json files for importing activities
+  // Support 10mb csv/json files for importing activities
   app.use(bodyParser.json({ limit: '10mb' }));
-  app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
   const PORT = configService.get<number>('PORT') || 3333;
