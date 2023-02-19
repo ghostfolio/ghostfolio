@@ -267,14 +267,14 @@ body {
       }
     }
 
-    .mat-mdc-unelevated-button {
+    .mat-paginator {
+      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+    }
+
+    .mdc-button {
       &.mat-primary {
         --mdc-filled-button-label-text-color: rgba(var(--dark-primary-text));
       }
-    }
-
-    .mat-paginator {
-      background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
 
     .svgMap-tooltip {
@@ -353,6 +353,10 @@ ngx-skeleton-loader {
   visibility: hidden;
 }
 
+.line-height-1 {
+  line-height: 1;
+}
+
 .lead {
   font-weight: unset;
 }
@@ -429,17 +433,17 @@ ngx-skeleton-loader {
   }
 }
 
-.mat-mdc-unelevated-button {
-  &:not(:disabled) {
-    --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));
-  }
-}
-
 .mat-paginator {
   background-color: rgba(var(--palette-foreground-base-light), 0.02);
 
   .mat-paginator-page-size {
     display: none;
+  }
+}
+
+.mdc-button {
+  &.mat-primary {
+    --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));
   }
 }
 

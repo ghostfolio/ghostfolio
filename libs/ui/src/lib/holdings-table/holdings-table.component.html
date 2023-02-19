@@ -27,7 +27,7 @@
       >
         <ng-container i18n>Name</ng-container>
       </th>
-      <td *matCellDef="let element" class="px-1" mat-cell>
+      <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
         <div *ngIf="element.name !== element.symbol" class="text-truncate">
           {{ element.name }}
         </div>

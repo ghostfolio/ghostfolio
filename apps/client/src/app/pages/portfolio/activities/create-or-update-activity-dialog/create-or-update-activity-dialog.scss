@@ -10,16 +10,6 @@
   .mat-dialog-content {
     max-height: unset;
 
-    .autocomplete {
-      font-size: 90%;
-      height: 2.5rem;
-
-      .symbol {
-        display: inline-block;
-        min-width: 4rem;
-      }
-    }
-
     .mat-datepicker-input {
       &.mat-mdc-input-element:disabled {
         color: var(--dark-primary-text);
