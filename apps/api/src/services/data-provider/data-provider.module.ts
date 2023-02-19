@@ -1,6 +1,7 @@
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
 import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.module';
 import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
+import { CoinGeckoDataService } from '@ghostfolio/api/services/data-provider/coingecko/coingecko-data.service';
 import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider/eod-historical-data/eod-historical-data.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
@@ -21,6 +22,7 @@ import { DataProviderService } from './data-provider.service';
   ],
   providers: [
     AlphaVantageService,
+    CoinGeckoDataService,
     DataProviderService,
     EodHistoricalDataService,
     GoogleSheetsService,
@@ -30,6 +32,7 @@ import { DataProviderService } from './data-provider.service';
     {
       inject: [
         AlphaVantageService,
+        CoinGeckoDataService,
         EodHistoricalDataService,
         GoogleSheetsService,
         ManualService,
@@ -39,6 +42,7 @@ import { DataProviderService } from './data-provider.service';
       provide: 'DataProviderInterfaces',
       useFactory: (
         alphaVantageService,
+        CoinGeckoDataService,
         eodHistoricalDataService,
         googleSheetsService,
         manualService,
@@ -46,6 +50,7 @@ import { DataProviderService } from './data-provider.service';
         yahooFinanceService
       ) => [
         alphaVantageService,
+        CoinGeckoDataService,
         eodHistoricalDataService,
         googleSheetsService,
         manualService,
