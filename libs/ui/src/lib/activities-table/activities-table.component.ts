@@ -6,6 +6,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -33,7 +34,7 @@ import { Subject, Subscription, distinctUntilChanged, takeUntil } from 'rxjs';
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })
-export class ActivitiesTableComponent implements OnChanges, OnDestroy {
+export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() activities: Activity[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
@@ -89,6 +90,17 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
       });
   }
 
+  public ngOnInit() {
+    if (this.showCheckbox) {
+      this.toggleAllRows();
+      this.selectedRows.changed
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe((selectedRows) => {
+          this.selectedActivities.emit(selectedRows.source.selected);
+        });
+    }
+  }
+
   public areAllRowsSelected() {
     const numSelectedRows = this.selectedRows.selected.length;
     const numTotalRows = this.dataSource.data.length;
@@ -136,36 +148,25 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy {
 
       this.dataSource = new MatTableDataSource(this.activities);
       this.dataSource.filterPredicate = (data, filter) => {
-        const dataString = this.getFilterableValues(data)
-          .map((currentFilter) => {
-            return currentFilter.label;
-          })
-          .join(' ')
-          .toLowerCase();
+        const filterableLabels = this.getFilterableValues(data).map(
+          ({ label }) => {
+            return label.toLowerCase();
+          }
+        );
 
-        let contains = true;
+        let includes = true;
         for (const singleFilter of filter.split(this.SEARCH_STRING_SEPARATOR)) {
-          contains =
-            contains && dataString.includes(singleFilter.trim().toLowerCase());
+          includes =
+            includes &&
+            filterableLabels.includes(singleFilter.trim().toLowerCase());
         }
-        return contains;
+        return includes;
       };
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = get;
 
       this.updateFilters();
-    }
-  }
-
-  ngOnInit() {
-    if (this.showCheckbox) {
-      this.toggleAllRows();
-      this.selectedRows.changed
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe((selectedRows) => {
-          this.selectedActivities.emit(selectedRows.source.selected);
-        });
     }
   }
 

@@ -1,6 +1,7 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import * as bodyParser from 'body-parser';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -32,6 +33,9 @@ async function bootstrap() {
       whitelist: true
     })
   );
+
+  // Support 10mb csv/json files for importing activities
+  app.use(bodyParser.json({ limit: '10mb' }));
 
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
   const PORT = configService.get<number>('PORT') || 3333;
