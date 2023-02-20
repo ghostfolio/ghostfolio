@@ -18,16 +18,16 @@ import bent from 'bent';
 import { format, differenceInDays, addDays, subDays } from 'date-fns';
 
 @Injectable()
-export class CoinGeckoDataService implements DataProviderInterface {
+export class CoinGeckoService implements DataProviderInterface {
   private readonly URL = 'https://api.coingecko.com/api/v3';
   private COINLIST = [];
-  private DEFAULT_CURRENCY: string;
+  private baseCurrency: string;
   private DB = {};
 
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    this.DEFAULT_CURRENCY = this.configurationService
+    this.baseCurrency = this.configurationService
       .get('BASE_CURRENCY')
       .toUpperCase();
     this.DB = {};
@@ -51,7 +51,7 @@ export class CoinGeckoDataService implements DataProviderInterface {
     return {};
   }
 
-  public async getCoinList() {
+  private async getCoinList() {
     // TODO: Some caching refresh after X?
     if (this.COINLIST.length == 0) {
       const req = bent(`${this.URL}/coins/list`, 'GET', 'json', 200);
@@ -66,14 +66,14 @@ export class CoinGeckoDataService implements DataProviderInterface {
     return {
       assetClass: AssetClass.CASH,
       assetSubClass: AssetSubClass.CRYPTOCURRENCY,
-      currency: this.DEFAULT_CURRENCY.toUpperCase(),
+      currency: this.baseCurrency.toUpperCase(),
       dataSource: this.getName(),
       name: aSymbol,
       symbol: aSymbol
     };
   }
 
-  public async popolateDb(datefrom: Date, symbol: string) {
+  private async populateDatabase(datefrom: Date, symbol: string) {
     let start_day;
     let end_day;
     datefrom.setHours(0, 0, 1);
@@ -81,7 +81,7 @@ export class CoinGeckoDataService implements DataProviderInterface {
     end_day = Math.round(new Date().getTime() / 1000);
     const targeturl = `${
       this.URL
-    }/coins/${symbol.toLowerCase()}/market_chart/range?vs_currency=${this.DEFAULT_CURRENCY.toLowerCase()}&from=${start_day}&to=${end_day}`;
+    }/coins/${symbol.toLowerCase()}/market_chart/range?vs_currency=${this.baseCurrency.toLowerCase()}&from=${start_day}&to=${end_day}`;
     const req = bent(targeturl, 'GET', 'json', 200);
     const response = await req();
     if (response.prices.length) {
@@ -94,7 +94,7 @@ export class CoinGeckoDataService implements DataProviderInterface {
     }
   }
 
-  public async getDayStat(datein: Date, symbol: string) {
+  private async getDayStat(datein: Date, symbol: string) {
     let out = { marketPrice: 0 };
     let prevday = subDays(datein, 1);
     datein.setHours(0, 0, 1, 1);
@@ -119,9 +119,9 @@ export class CoinGeckoDataService implements DataProviderInterface {
   }> {
     let out = {};
     out[aSymbol] = {};
-    const total_days = Math.abs(differenceInDays(from, to)) + 1;
-    await this.popolateDb(from, aSymbol);
-    for (const iter of Array(total_days).keys()) {
+    const totalDays = Math.abs(differenceInDays(from, to)) + 1;
+    await this.populateDatabase(from, aSymbol);
+    for (const iter of Array(totalDays).keys()) {
       let day = addDays(from, iter);
       let datestr = format(day, DATE_FORMAT);
       out[aSymbol][datestr] = await this.getDayStat(day, aSymbol);
@@ -143,26 +143,25 @@ export class CoinGeckoDataService implements DataProviderInterface {
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
     var results = {};
-
     if (aSymbols.length <= 0) {
       return {};
     }
     try {
       for (const coin of aSymbols) {
-        const coinlower = coin.toLowerCase();
         const req = bent(
           `${
             this.URL
-          }/simple/price?ids=${coinlower}&vs_currencies=${this.DEFAULT_CURRENCY.toLowerCase()}`,
+          }/simple/price?ids=${coin.toLowerCase()}&vs_currencies=${this.baseCurrency.toLowerCase()}`,
           'GET',
           'json',
           200
         );
         const response = await req();
-        const price = response[coinlower][this.DEFAULT_CURRENCY.toLowerCase()];
+        const price =
+          response[coin.toLowerCase()][this.baseCurrency.toLowerCase()];
 
         results[coin] = {
-          currency: this.DEFAULT_CURRENCY,
+          currency: this.baseCurrency,
           dataSource: DataSource.COINGECKO,
           marketPrice: price,
           marketState: 'closed'
@@ -177,22 +176,21 @@ export class CoinGeckoDataService implements DataProviderInterface {
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+    const items: LookupItem[] = [];
     await this.getCoinList();
     if (aQuery.length <= 2) {
-      return { items: [] };
+      return { items };
     }
-    var coins = [];
-
     for (const coiniter of this.COINLIST) {
       if (coiniter.id.toLowerCase().includes(aQuery)) {
-        coins.push({
+        items.push({
           symbol: coiniter.id.toUpperCase(),
-          currency: this.DEFAULT_CURRENCY,
+          currency: this.baseCurrency,
           dataSource: this.getName(),
           name: `${coiniter.name} (From CoinGecko)`
         });
       }
     }
-    return { items: coins };
+    return { items };
   }
 }
