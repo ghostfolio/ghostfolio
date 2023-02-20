@@ -39,7 +39,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.isLoading = true;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.dataService
       .fetchPortfolioDetails({})
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -92,8 +91,29 @@ export class FirePageComponent implements OnDestroy, OnInit {
   }
 
   public onSavingsRateChange(savingsRate: number) {
+    console.log(this.user.settings);
     this.dataService
       .putUserSetting({ savingsRate })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  public onTargetNetWorthChanged(targetNetWorth: number) {
+    console.log('onTargetNetWorthChanged: ' + targetNetWorth);
+    console.log(this.user.settings);
+    this.dataService
+      .putUserSetting({ targetNetWorth })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.userService.remove();

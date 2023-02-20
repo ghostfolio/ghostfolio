@@ -28,11 +28,12 @@ import {
   Tooltip
 } from 'chart.js';
 import * as Color from 'color';
-import { getMonth } from 'date-fns';
+import { add, format, getMonth } from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 
 @Component({
   selector: 'gf-fire-calculator',
@@ -50,8 +51,10 @@ export class FireCalculatorComponent
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() locale: string;
   @Input() savingsRate = 0;
+  @Input() targetNetWorth = 0;
 
   @Output() savingsRateChanged = new EventEmitter<number>();
+  @Output() targetNetWorthChanged = new EventEmitter<number>();
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -59,11 +62,13 @@ export class FireCalculatorComponent
     annualInterestRate: new FormControl<number>(undefined),
     paymentPerPeriod: new FormControl<number>(undefined),
     principalInvestmentAmount: new FormControl<number>(undefined),
-    time: new FormControl<number>(undefined)
+    time: new FormControl<number>(undefined),
+    retirementNetWorth: new FormControl<number>(undefined)
   });
   public chart: Chart<'bar'>;
   public isLoading = true;
   public projectedTotalAmount: number;
+  public retirementDate: string;
 
   private readonly CONTRIBUTION_PERIOD = 12;
   private unsubscribeSubject = new Subject<void>();
@@ -86,7 +91,8 @@ export class FireCalculatorComponent
         annualInterestRate: 5,
         paymentPerPeriod: this.savingsRate,
         principalInvestmentAmount: 0,
-        time: 10
+        time: 10,
+        retirementNetWorth: this.targetNetWorth
       },
       {
         emitEvent: false
@@ -105,6 +111,12 @@ export class FireCalculatorComponent
       .subscribe((savingsRate) => {
         this.savingsRateChanged.emit(savingsRate);
       });
+    this.calculatorForm
+      .get('retirementNetWorth')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((targetNetWorth) => {
+        this.targetNetWorthChanged.emit(targetNetWorth);
+      });
   }
 
   public ngAfterViewInit() {
@@ -114,7 +126,8 @@ export class FireCalculatorComponent
         this.calculatorForm.patchValue(
           {
             principalInvestmentAmount: this.fireWealth,
-            paymentPerPeriod: this.savingsRate ?? 0
+            paymentPerPeriod: this.savingsRate ?? 0,
+            retirementNetWorth: this.targetNetWorth ?? 0
           },
           {
             emitEvent: false
@@ -128,8 +141,14 @@ export class FireCalculatorComponent
 
     if (this.hasPermissionToUpdateUserSettings === true) {
       this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
+      this.calculatorForm
+        .get('retirementNetWorth')
+        .enable({ emitEvent: false });
     } else {
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
+      this.calculatorForm
+        .get('retirementNetWorth')
+        .disable({ emitEvent: false });
     }
   }
 
@@ -140,7 +159,8 @@ export class FireCalculatorComponent
         this.calculatorForm.patchValue(
           {
             principalInvestmentAmount: this.fireWealth,
-            paymentPerPeriod: this.savingsRate ?? 0
+            paymentPerPeriod: this.savingsRate ?? 0,
+            retirementNetWorth: this.targetNetWorth ?? 0
           },
           {
             emitEvent: false
@@ -154,8 +174,14 @@ export class FireCalculatorComponent
 
     if (this.hasPermissionToUpdateUserSettings === true) {
       this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
+      this.calculatorForm
+        .get('retirementNetWorth')
+        .enable({ emitEvent: false });
     } else {
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
+      this.calculatorForm
+        .get('retirementNetWorth')
+        .disable({ emitEvent: false });
     }
   }
 
@@ -273,6 +299,8 @@ export class FireCalculatorComponent
     // Time
     const t = this.calculatorForm.get('time').value;
 
+    const targetNetWorth = this.calculatorForm.get('retirementNetWorth').value;
+
     for (let year = currentYear; year < currentYear + t; year++) {
       labels.push(year);
     }
@@ -324,6 +352,25 @@ export class FireCalculatorComponent
         this.projectedTotalAmount = totalAmount.toNumber();
       }
     }
+
+    // Calculate retirement date
+    const periodsToRetire = this.fireCalculatorService.calculatePeriodsToRetire(
+      {
+        P,
+        totalAmount: targetNetWorth,
+        PMT,
+        r
+      }
+    );
+
+    const years = Math.floor(periodsToRetire / 12);
+    const months = periodsToRetire % 12;
+
+    const retirementDate = add(new Date(), {
+      years,
+      months
+    });
+    this.retirementDate = format(retirementDate, 'MMMM yyyy');
 
     return {
       labels,

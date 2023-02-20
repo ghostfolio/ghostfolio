@@ -11,5 +11,6 @@ export interface UserSettings {
   language?: string;
   locale?: string;
   savingsRate?: number;
+  targetNetWorth?: number;
   viewMode?: ViewMode;
 }

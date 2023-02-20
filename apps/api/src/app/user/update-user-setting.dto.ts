@@ -52,6 +52,10 @@ export class UpdateUserSettingDto {
   @IsOptional()
   savingsRate?: number;
 
+  @IsNumber()
+  @IsOptional()
+  targetNetWorth?: number;
+
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;

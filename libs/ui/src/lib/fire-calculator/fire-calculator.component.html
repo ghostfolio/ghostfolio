@@ -33,6 +33,16 @@
           />
           <div class="ml-2" matTextSuffix>%</div>
         </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Target Net Worth</mat-label>
+          <input
+            formControlName="retirementNetWorth"
+            matInput
+            step="100"
+            type="number"
+          />
+          <span class="ml-2" matTextSuffix>{{ currency }}</span>
+        </mat-form-field>
 
         <gf-value
           i18n
@@ -42,6 +52,15 @@
           [locale]="locale"
           [value]="projectedTotalAmount"
           >Projected Total Amount</gf-value
+        >
+        <gf-value
+          *ngIf="targetNetWorth"
+          i18n
+          size="large"
+          [isCurrency]="false"
+          [locale]="locale"
+          [value]="retirementDate"
+          >Retirement Date</gf-value
         >
       </form>
     </div>

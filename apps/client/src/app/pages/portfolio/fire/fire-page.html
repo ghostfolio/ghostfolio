@@ -18,7 +18,9 @@
           [hasPermissionToUpdateUserSettings]="hasPermissionToUpdateUserSettings"
           [locale]="user?.settings?.locale"
           [savingsRate]="user?.settings?.savingsRate"
+          [targetNetWorth]="user?.settings?.targetNetWorth"
           (savingsRateChanged)="onSavingsRateChange($event)"
+          (targetNetWorthChanged)="onTargetNetWorthChanged($event)"
         ></gf-fire-calculator>
       </div>
     </div>
