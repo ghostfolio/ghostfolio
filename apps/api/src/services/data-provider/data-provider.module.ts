@@ -42,7 +42,7 @@ import { DataProviderService } from './data-provider.service';
       provide: 'DataProviderInterfaces',
       useFactory: (
         alphaVantageService,
-        CoinGeckoService,
+        coinGeckoService,
         eodHistoricalDataService,
         googleSheetsService,
         manualService,
@@ -50,7 +50,7 @@ import { DataProviderService } from './data-provider.service';
         yahooFinanceService
       ) => [
         alphaVantageService,
-        CoinGeckoService,
+        coinGeckoService,
         eodHistoricalDataService,
         googleSheetsService,
         manualService,

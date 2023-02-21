@@ -20,7 +20,6 @@ import { format, differenceInDays, addDays, subDays } from 'date-fns';
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
   private readonly URL = 'https://api.coingecko.com/api/v3';
-  private COINLIST = [];
   private baseCurrency: string;
   private DB = {};
 
@@ -49,15 +48,6 @@ export class CoinGeckoService implements DataProviderInterface {
     to: Date;
   }) {
     return {};
-  }
-
-  private async getCoinList() {
-    // TODO: Some caching refresh after X?
-    if (this.COINLIST.length == 0) {
-      const req = bent(`${this.URL}/coins/list`, 'GET', 'json', 200);
-      const response = await req();
-      this.COINLIST = response;
-    }
   }
 
   public async getAssetProfile(
@@ -177,11 +167,12 @@ export class CoinGeckoService implements DataProviderInterface {
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const items: LookupItem[] = [];
-    await this.getCoinList();
     if (aQuery.length <= 2) {
       return { items };
     }
-    for (const coiniter of this.COINLIST) {
+    const req = bent(`${this.URL}/search?query=${aQuery}`, 'GET', 'json', 200);
+    const response = await req();
+    for (const coiniter of response.coins) {
       if (coiniter.id.toLowerCase().includes(aQuery)) {
         items.push({
           symbol: coiniter.id.toUpperCase(),
