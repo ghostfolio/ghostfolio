@@ -15,25 +15,44 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import bent from 'bent';
-import { format, differenceInDays, addDays, subDays } from 'date-fns';
+import { format, fromUnixTime, getUnixTime } from 'date-fns';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
-  private readonly URL = 'https://api.coingecko.com/api/v3';
   private baseCurrency: string;
-  private DB = {};
+  private readonly URL = 'https://api.coingecko.com/api/v3';
 
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    this.baseCurrency = this.configurationService
-      .get('BASE_CURRENCY')
-      .toUpperCase();
-    this.DB = {};
+    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
   public canHandle(symbol: string) {
     return true;
+  }
+
+  public async getAssetProfile(
+    aSymbol: string
+  ): Promise<Partial<SymbolProfile>> {
+    const response: Partial<SymbolProfile> = {
+      assetClass: AssetClass.CASH,
+      assetSubClass: AssetSubClass.CRYPTOCURRENCY,
+      currency: this.baseCurrency,
+      dataSource: this.getName(),
+      symbol: aSymbol
+    };
+
+    try {
+      const get = bent(`${this.URL}/coins/${aSymbol}`, 'GET', 'json', 200);
+      const { name } = await get();
+
+      response.name = name;
+    } catch (error) {
+      Logger.error(error, 'CoinGeckoService');
+    }
+
+    return response;
   }
 
   public async getDividends({
@@ -50,55 +69,6 @@ export class CoinGeckoService implements DataProviderInterface {
     return {};
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
-    return {
-      assetClass: AssetClass.CASH,
-      assetSubClass: AssetSubClass.CRYPTOCURRENCY,
-      currency: this.baseCurrency.toUpperCase(),
-      dataSource: this.getName(),
-      name: aSymbol,
-      symbol: aSymbol
-    };
-  }
-
-  private async populateDatabase(datefrom: Date, symbol: string) {
-    let start_day;
-    let end_day;
-    datefrom.setHours(0, 0, 1);
-    start_day = Math.round(datefrom.getTime() / 1000);
-    end_day = Math.round(new Date().getTime() / 1000);
-    const targeturl = `${
-      this.URL
-    }/coins/${symbol.toLowerCase()}/market_chart/range?vs_currency=${this.baseCurrency.toLowerCase()}&from=${start_day}&to=${end_day}`;
-    const req = bent(targeturl, 'GET', 'json', 200);
-    const response = await req();
-    if (response.prices.length) {
-      for (const iter of response.prices) {
-        let day = new Date(iter[0]);
-        day.setHours(0, 0, 1, 1);
-        let dayepoch = Math.round(day.getTime() / 1000);
-        this.DB[dayepoch] = iter[1];
-      }
-    }
-  }
-
-  private async getDayStat(datein: Date, symbol: string) {
-    let out = { marketPrice: 0 };
-    let prevday = subDays(datein, 1);
-    datein.setHours(0, 0, 1, 1);
-    let start_day = Math.round(datein.getTime() / 1000);
-    let prev_day = Math.round(prevday.getTime() / 1000);
-    out['marketPrice'] = this.DB[start_day];
-    if (prev_day in this.DB) {
-      out['performance'] = this.DB[start_day] / this.DB[prev_day];
-    } else {
-      out['performance'] = 0;
-    }
-    return out;
-  }
-
   public async getHistorical(
     aSymbol: string,
     aGranularity: Granularity = 'day',
@@ -107,22 +77,44 @@ export class CoinGeckoService implements DataProviderInterface {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    let out = {};
-    out[aSymbol] = {};
-    const totalDays = Math.abs(differenceInDays(from, to)) + 1;
-    await this.populateDatabase(from, aSymbol);
-    for (const iter of Array(totalDays).keys()) {
-      let day = addDays(from, iter);
-      let datestr = format(day, DATE_FORMAT);
-      out[aSymbol][datestr] = await this.getDayStat(day, aSymbol);
-    }
+    try {
+      const get = bent(
+        `${
+          this.URL
+        }/coins/${aSymbol}/market_chart/range?vs_currency=${this.baseCurrency.toLowerCase()}&from=${getUnixTime(
+          from
+        )}&to=${getUnixTime(to)}`,
+        'GET',
+        'json',
+        200
+      );
+      const { prices } = await get();
 
-    return out;
+      const result: {
+        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      } = {
+        [aSymbol]: {}
+      };
+
+      for (const [timestamp, marketPrice] of prices) {
+        result[aSymbol][format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
+          marketPrice
+        };
+      }
+
+      return result;
+    } catch (error) {
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
+    }
   }
 
   public getMaxNumberOfSymbolsPerRequest() {
-    // Safe Rate Limit: https://www.coingecko.com/en/api/pricing#general
-    return 20;
+    return 50;
   }
 
   public getName(): DataSource {
@@ -132,56 +124,68 @@ export class CoinGeckoService implements DataProviderInterface {
   public async getQuotes(
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    var results = {};
+    const results: { [symbol: string]: IDataProviderResponse } = {};
+
     if (aSymbols.length <= 0) {
       return {};
     }
+
     try {
-      for (const coin of aSymbols) {
-        const req = bent(
-          `${
-            this.URL
-          }/simple/price?ids=${coin.toLowerCase()}&vs_currencies=${this.baseCurrency.toLowerCase()}`,
-          'GET',
-          'json',
-          200
-        );
-        const response = await req();
-        const price =
-          response[coin.toLowerCase()][this.baseCurrency.toLowerCase()];
+      const get = bent(
+        `${this.URL}/simple/price?ids=${aSymbols.join(
+          ','
+        )}&vs_currencies=${this.baseCurrency.toLowerCase()}`,
+        'GET',
+        'json',
+        200
+      );
+      const response = await get();
 
-        results[coin] = {
-          currency: this.baseCurrency,
-          dataSource: DataSource.COINGECKO,
-          marketPrice: price,
-          marketState: 'closed'
-        };
+      for (const symbol in response) {
+        if (Object.prototype.hasOwnProperty.call(response, symbol)) {
+          results[symbol] = {
+            currency: this.baseCurrency,
+            dataSource: DataSource.COINGECKO,
+            marketPrice: response[symbol][this.baseCurrency.toLowerCase()],
+            marketState: 'open'
+          };
+        }
       }
-
-      return results;
     } catch (error) {
-      Logger.error(error, 'CoinGecko');
-      return {};
+      Logger.error(error, 'CoinGeckoService');
     }
+
+    return results;
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    const items: LookupItem[] = [];
+    let items: LookupItem[] = [];
+
     if (aQuery.length <= 2) {
       return { items };
     }
-    const req = bent(`${this.URL}/search?query=${aQuery}`, 'GET', 'json', 200);
-    const response = await req();
-    for (const coiniter of response.coins) {
-      if (coiniter.id.toLowerCase().includes(aQuery)) {
-        items.push({
-          symbol: coiniter.id.toUpperCase(),
+
+    try {
+      const get = bent(
+        `${this.URL}/search?query=${aQuery}`,
+        'GET',
+        'json',
+        200
+      );
+      const { coins } = await get();
+
+      items = coins.map(({ id: symbol, name }) => {
+        return {
+          name,
+          symbol,
           currency: this.baseCurrency,
-          dataSource: this.getName(),
-          name: `${coiniter.name} (From CoinGecko)`
-        });
-      }
+          dataSource: this.getName()
+        };
+      });
+    } catch (error) {
+      Logger.error(error, 'CoinGeckoService');
     }
+
     return { items };
   }
 }
