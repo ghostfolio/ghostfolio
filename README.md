@@ -75,7 +75,7 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 
 ## Self-hosting
 
-We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64` and `linux/arm64`.
+We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64`, `linux/arm/v7` and `linux/arm64`.
 
 <div align="center">
 
