@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added the configuration to publish a `linux/arm/v7` docker image
+
 ## 1.237.0 - 2023-02-19
 
 ### Added
@@ -757,7 +763,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the alias to the `Access` database schema
 - Added support for translated time distances
-- Added a _GitHub Action_ to create an `arm64` docker image
+- Added a _GitHub Action_ to create an `linux/arm64` docker image
 
 ### Changed
 
