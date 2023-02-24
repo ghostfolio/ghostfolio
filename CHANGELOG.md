@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the configuration to publish a `linux/arm/v7` docker image
 
+### Fixed
+
+- Reset the letter spacing in buttons
+
 ## 1.237.0 - 2023-02-19
 
 ### Added
