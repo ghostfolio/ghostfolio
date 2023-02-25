@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for data provider information to the position detail dialog
 - Added the configuration to publish a `linux/arm/v7` docker image
 
+### Changed
+
+- Upgraded `zone.js` from version `0.11.8` to `0.12.0`
+
 ### Fixed
 
 - Fixed `RangeError: Maximum call stack size exceeded` for values of type `Big` in the value redaction interceptor for the impersonation mode
