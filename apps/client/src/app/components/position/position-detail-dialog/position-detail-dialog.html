@@ -227,6 +227,12 @@
           </div>
         </ng-template>
       </ng-container>
+      <div *ngIf="dataProviderInfo" class="col-md-12 mb-3 text-center">
+        <hr />
+        <gf-data-provider-credits [dataProviderInfos]="[dataProviderInfo]">
+        </gf-data-provider-credits>
+        <hr />
+      </div>
     </div>
 
     <div class="row" [ngClass]="{ 'd-none': !orders?.length }">
@@ -249,7 +255,7 @@
     </div>
 
     <div *ngIf="tags?.length > 0" class="row">
-      <div class="col mb-3">
+      <div class="col">
         <div class="h5" i18n>Tags</div>
         <mat-chip-list>
           <mat-chip *ngFor="let tag of tags">{{ tag.name }}</mat-chip>
@@ -261,7 +267,7 @@
       *ngIf="data.hasPermissionToReportDataGlitch === true && orders?.length > 0"
       class="row"
     >
-      <div class="col mb-3">
+      <div class="col">
         <hr />
         <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
           ><ion-icon class="mr-1" name="flag-outline"></ion-icon
