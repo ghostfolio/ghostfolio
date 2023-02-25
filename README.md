@@ -106,7 +106,8 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 - Basic knowledge of Docker
 - Installation of [Docker](https://www.docker.com/products/docker-desktop)
-- Local copy of this Git repository (clone)
+- Create a local copy of this Git repository (clone)
+- Copy the file `.env.example` to `.env` and populate it with your data (`cp .env.example .env`)
 
 #### a. Run environment
 
@@ -150,7 +151,8 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Node.js](https://nodejs.org/en/download) (version 16)
 - [Yarn](https://yarnpkg.com/en/docs/install)
-- A local copy of this Git repository (clone)
+- Create a local copy of this Git repository (clone)
+- Copy the file `.env.example` to `.env` and populate it with your data (`cp .env.example .env`)
 
 ### Setup
 

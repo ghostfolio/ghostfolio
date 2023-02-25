@@ -44,7 +44,7 @@
     "start:prod": "yarn database:migrate && yarn database:seed && node main",
     "start:server": "nx run api:serve --watch",
     "start:storybook": "nx run ui:storybook",
-    "test": "nx test",
+    "test": "npx dotenv-cli -e .env.example -- nx test",
     "test:single": "nx test --test-file portfolio-calculator-novn-buy-and-sell.spec.ts",
     "ts-node": "ts-node",
     "update": "nx migrate latest",

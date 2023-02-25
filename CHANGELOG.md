@@ -17,12 +17,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed the example environment variable file from `.env` to `.env.example`
 - Upgraded `zone.js` from version `0.11.8` to `0.12.0`
 
 ### Fixed
 
 - Fixed `RangeError: Maximum call stack size exceeded` for values of type `Big` in the value redaction interceptor for the impersonation mode
 - Reset the letter spacing in buttons
+
+### Todo
+
+- Ensure that you still have a `.env` file in your project
 
 ## 1.237.0 - 2023-02-19
 
