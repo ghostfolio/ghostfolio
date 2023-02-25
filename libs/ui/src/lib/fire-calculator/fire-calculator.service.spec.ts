@@ -16,10 +16,6 @@ describe('FireCalculatorService', () => {
     );
   });
 
-  it('true', async () => {
-    expect(true).toBe(true);
-  });
-
   describe('Test periods to retire', () => {
     it('should return the correct amount of periods to retire with no interst rate', async () => {
       const r = 0;

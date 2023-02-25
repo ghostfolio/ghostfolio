@@ -39,6 +39,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.isLoading = true;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.dataService
       .fetchPortfolioDetails({})
       .pipe(takeUntil(this.unsubscribeSubject))

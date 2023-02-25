@@ -53,7 +53,7 @@ export class FireCalculatorService {
     totalAmount: number;
   }) {
     if (r == 0) {
-      //No compound interest
+      // No compound interest
       return (totalAmount - P) / PMT;
     } else if (totalAmount <= 0) {
       return 0;

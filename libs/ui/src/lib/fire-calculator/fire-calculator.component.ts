@@ -62,8 +62,8 @@ export class FireCalculatorComponent
     annualInterestRate: new FormControl<number>(undefined),
     paymentPerPeriod: new FormControl<number>(undefined),
     principalInvestmentAmount: new FormControl<number>(undefined),
-    time: new FormControl<number>(undefined),
-    retirementNetWorth: new FormControl<number>(undefined)
+    retirementNetWorth: new FormControl<number>(undefined),
+    time: new FormControl<number>(undefined)
   });
   public chart: Chart<'bar'>;
   public isLoading = true;
@@ -91,8 +91,8 @@ export class FireCalculatorComponent
         annualInterestRate: 5,
         paymentPerPeriod: this.savingsRate,
         principalInvestmentAmount: 0,
-        time: 10,
-        retirementNetWorth: this.targetNetWorth
+        retirementNetWorth: this.targetNetWorth,
+        time: 10
       },
       {
         emitEvent: false
