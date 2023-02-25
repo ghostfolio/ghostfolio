@@ -124,6 +124,13 @@ const routes: Routes = [
       ).then((m) => m.GhostfolioAufSackgeldVorgestelltPageModule)
   },
   {
+    path: 'blog/2023/02/ghostfolio-meets-umbrel',
+    loadChildren: () =>
+      import(
+        './pages/blog/2023/02/ghostfolio-meets-umbrel/ghostfolio-meets-umbrel-page.module'
+      ).then((m) => m.GhostfolioMeetsUmbrelPageModule)
+  },
+  {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)

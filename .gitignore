@@ -25,6 +25,7 @@
 
 # misc
 /.angular/cache
+.env
 .env.prod
 /.sass-cache
 /connect.lock

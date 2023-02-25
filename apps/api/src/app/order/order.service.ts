@@ -110,9 +110,6 @@ export class OrderService {
         dataSource,
         symbol: id
       };
-    } else {
-      data.SymbolProfile.connectOrCreate.create.symbol =
-        data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
     }
 
     await this.dataGatheringService.addJobToQueue(

@@ -69,12 +69,22 @@
       filter: grayscale(1);
     }
 
+    &.logo-reddit {
+      mask-image: url('/assets/images/logo-reddit.svg');
+      max-height: 1rem;
+    }
+
     &.logo-sackgeld {
       mask-image: url('/assets/images/logo-sackgeld.png');
     }
 
     &.logo-sourceforge {
       mask-image: url('/assets/images/logo-sourceforge.svg');
+    }
+
+    &.logo-umbrel {
+      mask-image: url('/assets/images/logo-umbrel.svg');
+      max-height: 1.5rem;
     }
 
     &.logo-unraid {
@@ -114,8 +124,10 @@
     &.logo-agplv3,
     &.logo-alternative-to,
     &.logo-privacy-tools,
+    &.logo-reddit,
     &.logo-sackgeld,
     &.logo-sourceforge,
+    &.logo-umbrel,
     &.logo-unraid {
       background-color: rgba(var(--light-primary-text));
     }

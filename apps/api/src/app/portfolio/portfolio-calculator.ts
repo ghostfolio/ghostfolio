@@ -1,7 +1,11 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  ResponseError,
+  TimelinePosition
+} from '@ghostfolio/common/interfaces';
 import { GroupBy } from '@ghostfolio/common/types';
 import { Logger } from '@nestjs/common';
 import { Type as TypeOfOrder } from '@prisma/client';
@@ -45,6 +49,7 @@ export class PortfolioCalculator {
 
   private currency: string;
   private currentRateService: CurrentRateService;
+  private dataProviderInfos: DataProviderInfo[];
   private orders: PortfolioOrder[];
   private transactionPoints: TransactionPoint[];
 
@@ -202,14 +207,17 @@ export class PortfolioCalculator {
       symbols[item.symbol] = true;
     }
 
-    const marketSymbols = await this.currentRateService.getValues({
-      currencies,
-      dataGatheringItems,
-      dateQuery: {
-        in: dates
-      },
-      userCurrency: this.currency
-    });
+    const { dataProviderInfos, values: marketSymbols } =
+      await this.currentRateService.getValues({
+        currencies,
+        dataGatheringItems,
+        dateQuery: {
+          in: dates
+        },
+        userCurrency: this.currency
+      });
+
+    this.dataProviderInfos = dataProviderInfos;
 
     const marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
@@ -368,14 +376,17 @@ export class PortfolioCalculator {
 
     dates.push(resetHours(end));
 
-    const marketSymbols = await this.currentRateService.getValues({
-      currencies,
-      dataGatheringItems,
-      dateQuery: {
-        in: dates
-      },
-      userCurrency: this.currency
-    });
+    const { dataProviderInfos, values: marketSymbols } =
+      await this.currentRateService.getValues({
+        currencies,
+        dataGatheringItems,
+        dateQuery: {
+          in: dates
+        },
+        userCurrency: this.currency
+      });
+
+    this.dataProviderInfos = dataProviderInfos;
 
     const marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
@@ -461,6 +472,10 @@ export class PortfolioCalculator {
       positions,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
+  }
+
+  public getDataProviderInfos() {
+    return this.dataProviderInfos;
   }
 
   public getInvestments(): { date: string; investment: Big }[] {
@@ -748,7 +763,7 @@ export class PortfolioCalculator {
       let marketSymbols: GetValueObject[] = [];
       if (dataGatheringItems.length > 0) {
         try {
-          marketSymbols = await this.currentRateService.getValues({
+          const { values } = await this.currentRateService.getValues({
             currencies,
             dataGatheringItems,
             dateQuery: {
@@ -757,6 +772,7 @@ export class PortfolioCalculator {
             },
             userCurrency: this.currency
           });
+          marketSymbols = values;
         } catch (error) {
           Logger.error(
             `Failed to fetch info for date ${startDate} with exception`,
