@@ -13,6 +13,7 @@ import {
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
+  DataProviderInfo,
   EnhancedSymbolProfile,
   LineChartItem
 } from '@ghostfolio/common/interfaces';
@@ -40,6 +41,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
+  public dataProviderInfo: DataProviderInfo;
   public dividendInBaseCurrency: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
@@ -83,6 +85,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       .subscribe(
         ({
           averagePrice,
+          dataProviderInfo,
           dividendInBaseCurrency,
           feeInBaseCurrency,
           firstBuyDate,
@@ -105,6 +108,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
+          this.dataProviderInfo = dataProviderInfo;
           this.dividendInBaseCurrency = dividendInBaseCurrency;
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;

@@ -69,6 +69,8 @@ $gf-secondary: (
   )
 );
 
+$gf-typography: mat.define-typography-config();
+
 @include mat.core();
 @include mat.legacy-core();
 
@@ -80,7 +82,7 @@ $gf-theme-default: mat.define-light-theme(
       accent: mat.define-palette($gf-secondary, 500, 900, A100)
     ),
     density: 0,
-    typography: mat.define-typography-config()
+    typography: $gf-typography
   )
 );
 @include mat.all-component-themes($gf-theme-default);
@@ -94,7 +96,7 @@ $gf-theme-dark: mat.define-dark-theme(
       accent: mat.define-palette($gf-secondary, 500, 900, A100)
     ),
     density: 0,
-    typography: mat.define-typography-config()
+    typography: $gf-typography
   )
 );
 .is-dark-theme {
@@ -107,4 +109,6 @@ $gf-theme-dark: mat.define-dark-theme(
   --gf-theme-primary-500-rgb: 0, 187, 255;
   --gf-theme-secondary-500: #3686cf;
   --gf-theme-secondary-500-rgb: 78, 208, 94;
+
+  --mdc-typography-button-letter-spacing: normal;
 }
