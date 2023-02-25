@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import { cloneDeep, isArray, isObject } from 'lodash';
 
 export function hasNotDefinedValuesInObject(aObject: Object): boolean {
@@ -59,7 +60,10 @@ export function redactAttributes({
               return redactAttributes({ options, object: currentObject });
             }
           );
-        } else if (isObject(redactedObject[property])) {
+        } else if (
+          isObject(redactedObject[property]) &&
+          !(redactedObject[property] instanceof Big)
+        ) {
           // Recursively call the function on the nested object
           redactedObject[property] = redactAttributes({
             options,
