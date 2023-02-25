@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed `RangeError: Maximum call stack size exceeded` for values of type `Big` in the value redaction interceptor for the impersonation mode
 - Reset the letter spacing in buttons
 
 ## 1.237.0 - 2023-02-19
