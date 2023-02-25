@@ -18,12 +18,6 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label i18n>Investment Horizon</mat-label>
-          <input formControlName="time" matInput type="number" />
-          <span class="ml-2" i18n matTextSuffix>years</span>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Annual Interest Rate</mat-label>
           <input
             formControlName="annualInterestRate"
@@ -33,6 +27,13 @@
           />
           <div class="ml-2" matTextSuffix>%</div>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Investment Horizon</mat-label>
+          <input formControlName="time" matInput type="number" />
+          <span class="ml-2" i18n matTextSuffix>years</span>
+        </mat-form-field>
+
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Target Net Worth</mat-label>
           <input
@@ -45,6 +46,7 @@
         </mat-form-field>
 
         <gf-value
+          *ngIf="!targetNetWorth"
           i18n
           size="large"
           [currency]="currency"

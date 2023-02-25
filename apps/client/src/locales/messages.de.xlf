@@ -3505,6 +3505,22 @@
           <context context-type="linenumber">199,201</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="46d3a0f17b741c93f9e61aa7157820da41506f53" datatype="html">
+        <source>Target Net Worth</source>
+        <target state="new">Angestrebtes Nettovermögen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7383cd391b1967e03f0636c231d20f036d5c37ee" datatype="html">
+        <source>Retirement Date</source>
+        <target state="new">Pensionierungsdatum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

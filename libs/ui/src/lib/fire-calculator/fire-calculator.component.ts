@@ -285,6 +285,7 @@ export class FireCalculatorComponent
   private getChartData() {
     const currentYear = new Date().getFullYear();
     const labels = [];
+    let t: number;
 
     // Principal investment amount
     const P: number =
@@ -296,10 +297,28 @@ export class FireCalculatorComponent
     // Annual interest rate
     const r: number = this.calculatorForm.get('annualInterestRate').value / 100;
 
-    // Time
-    const t = this.calculatorForm.get('time').value;
-
+    // Target net worth
     const targetNetWorth = this.calculatorForm.get('retirementNetWorth').value;
+
+    // Calculate retirement date
+    const periodsToRetire = this.fireCalculatorService.calculatePeriodsToRetire(
+      {
+        P,
+        totalAmount: targetNetWorth,
+        PMT,
+        r
+      }
+    );
+    const yearsToRetire = Math.floor(periodsToRetire / 12);
+    const monthsToRetire = periodsToRetire % 12;
+
+    // Time
+    if (targetNetWorth) {
+      // +1 to take into account the current year
+      t = yearsToRetire + 1;
+    } else {
+      t = this.calculatorForm.get('time').value;
+    }
 
     for (let year = currentYear; year < currentYear + t; year++) {
       labels.push(year);
@@ -353,22 +372,9 @@ export class FireCalculatorComponent
       }
     }
 
-    // Calculate retirement date
-    const periodsToRetire = this.fireCalculatorService.calculatePeriodsToRetire(
-      {
-        P,
-        totalAmount: targetNetWorth,
-        PMT,
-        r
-      }
-    );
-
-    const years = Math.floor(periodsToRetire / 12);
-    const months = periodsToRetire % 12;
-
     const retirementDate = add(new Date(), {
-      years,
-      months
+      years: yearsToRetire,
+      months: monthsToRetire
     });
     this.retirementDate = format(retirementDate, 'MMMM yyyy');
 
