@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `COINGECKO` as a new data source type
 - Added support for data provider information to the position detail dialog
 - Added the configuration to publish a `linux/arm/v7` docker image
+- Added _Reddit_ to the _As seen in_ section on the landing page
+- Added _Umbrel_ to the _As seen in_ section on the landing page
 
 ### Changed
 
