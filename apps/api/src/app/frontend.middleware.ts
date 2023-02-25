@@ -90,6 +90,11 @@ export class FrontendMiddleware implements NestMiddleware {
     ) {
       featureGraphicPath = 'assets/images/blog/ghostfolio-x-sackgeld.png';
       title = `Ghostfolio auf Sackgeld.com vorgestellt - ${title}`;
+    } else if (
+      request.path.startsWith('/de/blog/2023/02/ghostfolio-meets-umbrel')
+    ) {
+      featureGraphicPath = 'assets/images/blog/ghostfolio-meets-umbrel.png';
+      title = `Ghostfolio meets Umbrel - ${title}`;
     }
 
     if (
