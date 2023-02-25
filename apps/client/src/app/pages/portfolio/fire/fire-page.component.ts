@@ -91,7 +91,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
   }
 
   public onSavingsRateChange(savingsRate: number) {
-    console.log(this.user.settings);
     this.dataService
       .putUserSetting({ savingsRate })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -110,8 +109,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
   }
 
   public onTargetNetWorthChanged(targetNetWorth: number) {
-    console.log('onTargetNetWorthChanged: ' + targetNetWorth);
-    console.log(this.user.settings);
     this.dataService
       .putUserSetting({ targetNetWorth })
       .pipe(takeUntil(this.unsubscribeSubject))
