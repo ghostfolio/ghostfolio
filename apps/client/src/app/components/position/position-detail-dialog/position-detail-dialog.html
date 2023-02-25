@@ -227,6 +227,12 @@
           </div>
         </ng-template>
       </ng-container>
+      <div *ngIf="dataProviderInfo" class="col-md-12 mb-3 text-center">
+        <hr />
+        <gf-data-provider-credits [dataProviderInfos]="[dataProviderInfo]">
+        </gf-data-provider-credits>
+        <hr />
+      </div>
     </div>
 
     <div class="row" [ngClass]="{ 'd-none': !orders?.length }">
@@ -268,12 +274,6 @@
           ><span i18n>Report Data Glitch</span></a
         >
       </div>
-    </div>
-
-    <div *ngIf="dataProviderInfo" class="text-center">
-      <hr />
-      <gf-data-provider-credits [dataProviderInfos]="[dataProviderInfo]">
-      </gf-data-provider-credits>
     </div>
   </div>
 </div>

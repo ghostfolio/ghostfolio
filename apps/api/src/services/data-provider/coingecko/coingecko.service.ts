@@ -6,6 +6,7 @@ import {
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -145,6 +146,7 @@ export class CoinGeckoService implements DataProviderInterface {
         if (Object.prototype.hasOwnProperty.call(response, symbol)) {
           results[symbol] = {
             currency: this.baseCurrency,
+            dataProviderInfo: this.getDataProviderInfo(),
             dataSource: DataSource.COINGECKO,
             marketPrice: response[symbol][this.baseCurrency.toLowerCase()],
             marketState: 'open'
@@ -187,5 +189,12 @@ export class CoinGeckoService implements DataProviderInterface {
     }
 
     return { items };
+  }
+
+  private getDataProviderInfo(): DataProviderInfo {
+    return {
+      name: 'CoinGecko',
+      url: 'https://coingecko.com'
+    };
   }
 }
