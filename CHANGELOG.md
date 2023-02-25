@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a blog post: _Ghostfolio meets Umbrel_
 
+### Changed
+
+- Removed the dependency `rimraf`
+
 ## 1.238.0 - 2023-02-25
 
 ### Added
