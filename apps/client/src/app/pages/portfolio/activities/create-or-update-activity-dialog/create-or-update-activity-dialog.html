@@ -123,10 +123,22 @@
             <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
           </ng-container>
         </mat-label>
-        <input formControlName="unitPrice" matInput type="number" />
-        <span class="ml-2" matTextSuffix
-          >{{ activityForm.controls['currency'].value }}</span
+        <input
+          formControlName="unitPriceInCustomCurrency"
+          matInput
+          type="number"
+        />
+        <div
+          class="ml-2"
+          matTextSuffix
+          [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
         >
+          <mat-select formControlName="currencyOfUnitPrice">
+            <mat-option *ngFor="let currency of currencies" [value]="currency">
+              {{ currency }}
+            </mat-option>
+          </mat-select>
+        </div>
       </mat-form-field>
       <button
         *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
@@ -138,6 +150,23 @@
       >
         <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
       </button>
+    </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label
+          ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
+            <ng-container *ngSwitchCase="'DIVIDEND'" i18n
+              >Dividend</ng-container
+            >
+            <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
+            <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
+          </ng-container>
+        </mat-label>
+        <input formControlName="unitPrice" matInput type="number" />
+        <span class="ml-2" matTextSuffix
+          >{{ activityForm.controls['currency'].value }}</span
+        >
+      </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
