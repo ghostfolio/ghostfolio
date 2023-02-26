@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported a manual currency for the activity unit price
 
+### Fixed
+
+- Fixed the feature graphic of the _Ghostfolio meets Umbrel_ blog post
+
 ## 1.239.0 - 2023-02-25
 
 ### Added
