@@ -5859,10 +5859,10 @@
     regenerator-runtime "^0.13.7"
     resolve-from "^5.0.0"
 
-"@stripe/stripe-js@1.22.0":
-  version "1.22.0"
-  resolved "https://registry.npmjs.org/@stripe/stripe-js/-/stripe-js-1.22.0.tgz"
-  integrity sha512-fm8TR8r4LwbXgBIYdPmeMjJJkxxFC66tvoliNnmXOpUgZSgQKoNPW3ON0ZphZIiif1oqWNhAaSrr7tOvGu+AFg==
+"@stripe/stripe-js@1.47.0":
+  version "1.47.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.47.0.tgz#48626a2e43302330aa826ce498a2d9761db4053d"
+  integrity sha512-jKSClqEIKS2MbPCXlSsseDSZyJ3dVrfUrYMz5LBY1o9iS2tfKbpTZACt8r2g+xyQozI+uHr76pVTyFsmBKA4Mg==
 
 "@tootallnate/once@2":
   version "2.0.0"
@@ -16492,10 +16492,10 @@ ngx-skeleton-loader@5.0.0:
     perf-marks "^1.13.4"
     tslib "^2.0.0"
 
-ngx-stripe@13.0.0:
-  version "13.0.0"
-  resolved "https://registry.npmjs.org/ngx-stripe/-/ngx-stripe-13.0.0.tgz"
-  integrity sha512-SImKvoC/mZZrtzh2UUmxFdkqMLKX2y+BtcvMAPdHD4D7miXWEjCTZeXt8h85mcfy7y1NKKwIipH4CSr9eBzZ4w==
+ngx-stripe@15.5.0:
+  version "15.5.0"
+  resolved "https://registry.yarnpkg.com/ngx-stripe/-/ngx-stripe-15.5.0.tgz#b05fc1cf9f55bb5e7f307ac5cfdf29807a2f48a9"
+  integrity sha512-Ut3JANfxSzl/4qy+pokHOXGVITgNSlSMv7XGN2Y4tPDk6BVUD9SSl/3VuXW9UdbKAmX0XS68nRACiKCOSet5zw==
   dependencies:
     tslib "^2.3.0"
 
@@ -18268,14 +18268,14 @@ qs@6.10.3:
   dependencies:
     side-channel "^1.0.4"
 
-qs@6.11.0:
+qs@6.11.0, qs@^6.11.0:
   version "6.11.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.0.tgz#fd0d963446f7a65e1367e01abd85429453f0c37a"
   integrity sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==
   dependencies:
     side-channel "^1.0.4"
 
-qs@^6.10.0, qs@^6.4.0, qs@^6.6.0:
+qs@^6.10.0, qs@^6.4.0:
   version "6.10.5"
   resolved "https://registry.npmjs.org/qs/-/qs-6.10.5.tgz"
   integrity sha512-O5RlPh0VFtR78y79rgcgKK4wbAI0C5zGVLztOIdpWX6ep368q5Hv6XRxDvXuZ9q3C6v+e3n8UfZZJw7IIG27eQ==
@@ -20016,13 +20016,13 @@ strip-json-comments@^3.1.0, strip-json-comments@^3.1.1:
   resolved "https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-3.1.1.tgz"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-stripe@8.199.0:
-  version "8.199.0"
-  resolved "https://registry.npmjs.org/stripe/-/stripe-8.199.0.tgz"
-  integrity sha512-Bc5Zfp6eOOCdde9x5NPrAczeGSKuNwemzjsfGJXWtpbUfQXgJujzTGgkhx2YuzamqakDYJkTgf9w7Ry2uY8QNA==
+stripe@11.12.0:
+  version "11.12.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-11.12.0.tgz#2d7d4c37a6447a972128b1266e027693241704e3"
+  integrity sha512-7yzFyVV/eYpYalfjnw1f9sh/N3r5QVdx5MFtmpOg2QikKVAW4AptXC8P0wj1KNCd/LIo23nTDo0+m9788jHswg==
   dependencies:
     "@types/node" ">=8.1.0"
-    qs "^6.6.0"
+    qs "^6.11.0"
 
 strong-log-transformer@^2.1.0:
   version "2.1.0"
