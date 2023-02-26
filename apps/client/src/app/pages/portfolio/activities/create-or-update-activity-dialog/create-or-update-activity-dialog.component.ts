@@ -106,6 +106,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
       ],
+      currencyOfUnitPrice: [
+        this.data.activity?.SymbolProfile?.currency,
+        Validators.required
+      ],
       dataSource: [
         this.data.activity?.SymbolProfile?.dataSource,
         Validators.required
@@ -131,16 +135,23 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         })
       ],
       type: [undefined, Validators.required], // Set after value changes subscription
-      unitPrice: [this.data.activity?.unitPrice, Validators.required]
+      unitPrice: [this.data.activity?.unitPrice, Validators.required],
+      unitPriceInCustomCurrency: [
+        this.data.activity?.unitPrice,
+        Validators.required
+      ]
     });
 
     this.activityForm.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(async () => {
-        let exchangeRate = 1;
+        let exchangeRateOfFee = 1;
+        let exchangeRateOfUnitPrice = 1;
 
         const currency = this.activityForm.controls['currency'].value;
         const currencyOfFee = this.activityForm.controls['currencyOfFee'].value;
+        const currencyOfUnitPrice =
+          this.activityForm.controls['currencyOfUnitPrice'].value;
         const date = this.activityForm.controls['date'].value;
 
         if (currency && currencyOfFee && currency !== currencyOfFee && date) {
@@ -154,17 +165,48 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
                 .pipe(takeUntil(this.unsubscribeSubject))
             );
 
-            exchangeRate = marketPrice;
+            exchangeRateOfFee = marketPrice;
           } catch {}
         }
 
         const feeInCustomCurrency =
           this.activityForm.controls['feeInCustomCurrency'].value *
-          exchangeRate;
+          exchangeRateOfFee;
 
         this.activityForm.controls['fee'].setValue(feeInCustomCurrency, {
           emitEvent: false
         });
+
+        if (
+          currency &&
+          currencyOfUnitPrice &&
+          currency !== currencyOfUnitPrice &&
+          date
+        ) {
+          try {
+            const { marketPrice } = await lastValueFrom(
+              this.dataService
+                .fetchExchangeRateForDate({
+                  date,
+                  symbol: `${currencyOfUnitPrice}-${currency}`
+                })
+                .pipe(takeUntil(this.unsubscribeSubject))
+            );
+
+            exchangeRateOfUnitPrice = marketPrice;
+          } catch {}
+        }
+
+        const unitPriceInCustomCurrency =
+          this.activityForm.controls['unitPriceInCustomCurrency'].value *
+          exchangeRateOfUnitPrice;
+
+        this.activityForm.controls['unitPrice'].setValue(
+          unitPriceInCustomCurrency,
+          {
+            emitEvent: false
+          }
+        );
 
         if (
           this.activityForm.controls['type'].value === 'BUY' ||
@@ -231,6 +273,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['currencyOfFee'].setValue(
             this.data.user.settings.baseCurrency
           );
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(
+            this.data.user.settings.baseCurrency
+          );
           this.activityForm.controls['dataSource'].removeValidators(
             Validators.required
           );
@@ -288,7 +333,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
   public applyCurrentMarketPrice() {
     this.activityForm.patchValue({
-      unitPrice: this.currentMarketPrice
+      currencyOfUnitPrice: this.activityForm.controls['currency'].value,
+      unitPriceInCustomCurrency: this.currentMarketPrice
     });
   }
 
@@ -415,6 +461,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       .subscribe(({ currency, dataSource, marketPrice }) => {
         this.activityForm.controls['currency'].setValue(currency);
         this.activityForm.controls['currencyOfFee'].setValue(currency);
+        this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
         this.activityForm.controls['dataSource'].setValue(dataSource);
 
         this.currentMarketPrice = marketPrice;
