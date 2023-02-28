@@ -117,7 +117,7 @@ export class SubscriptionController {
       return await this.subscriptionService.createCheckoutSession({
         couponId,
         priceId,
-        userId: this.request.user.id
+        user: this.request.user
       });
     } catch (error) {
       Logger.error(error, 'SubscriptionController');
