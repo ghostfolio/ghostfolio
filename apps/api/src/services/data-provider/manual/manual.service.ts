@@ -16,6 +16,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import bent from 'bent';
 import * as cheerio from 'cheerio';
+import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 
 @Injectable()
@@ -162,7 +163,7 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    const items = await this.prismaService.symbolProfile.findMany({
+    let items = await this.prismaService.symbolProfile.findMany({
       select: {
         currency: true,
         dataSource: true,
@@ -187,6 +188,11 @@ export class ManualService implements DataProviderInterface {
           }
         ]
       }
+    });
+
+    items = items.filter(({ symbol }) => {
+      // Remove UUID symbols (activities of type ITEM)
+      return !isUUID(symbol);
     });
 
     return { items };
