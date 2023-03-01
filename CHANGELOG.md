@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Filtered activities with type `ITEM` from search results
 - Upgraded `twitter-api-v2` from version `1.10.3` to `1.14.2`
 
 ## 1.240.0 - 2023-02-26
