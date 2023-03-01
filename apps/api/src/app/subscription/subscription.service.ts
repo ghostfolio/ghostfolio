@@ -4,6 +4,7 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_STRIPE_CONFIG
 } from '@ghostfolio/common/config';
+import { UserWithSettings } from '@ghostfolio/common/interfaces';
 import { Subscription as SubscriptionInterface } from '@ghostfolio/common/interfaces/subscription.interface';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
 import { Injectable, Logger } from '@nestjs/common';
@@ -23,7 +24,7 @@ export class SubscriptionService {
     this.stripe = new Stripe(
       this.configurationService.get('STRIPE_SECRET_KEY'),
       {
-        apiVersion: '2020-08-27'
+        apiVersion: '2022-11-15'
       }
     );
   }
@@ -31,17 +32,17 @@ export class SubscriptionService {
   public async createCheckoutSession({
     couponId,
     priceId,
-    userId
+    user
   }: {
     couponId?: string;
     priceId: string;
-    userId: string;
+    user: UserWithSettings;
   }) {
     const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
-      cancel_url: `${this.configurationService.get(
-        'ROOT_URL'
-      )}/${DEFAULT_LANGUAGE_CODE}/account`,
-      client_reference_id: userId,
+      cancel_url: `${this.configurationService.get('ROOT_URL')}/${
+        user.Settings?.settings?.language ?? DEFAULT_LANGUAGE_CODE
+      }/account`,
+      client_reference_id: user.id,
       line_items: [
         {
           price: priceId,
@@ -114,10 +115,6 @@ export class SubscriptionService {
       await this.createSubscription({
         price: price - coupon,
         userId: session.client_reference_id
-      });
-
-      await this.stripe.customers.update(session.customer as string, {
-        description: session.client_reference_id
       });
 
       return session.client_reference_id;

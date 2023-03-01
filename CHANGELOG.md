@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Considered the user's language in the _Stripe_ checkout
+- Upgraded the _Stripe_ dependencies
 - Upgraded `twitter-api-v2` from version `1.10.3` to `1.14.2`
 
 ## 1.240.0 - 2023-02-26
@@ -1845,7 +1847,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the historical data view in the admin control panel
-- Upgraded _Stripe_ dependencies
+- Upgraded the _Stripe_ dependencies
 - Upgraded `prisma` from version `3.7.0` to `3.8.1`
 
 ### Fixed
