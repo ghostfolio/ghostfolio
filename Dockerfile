@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:18-slim as builder
+FROM --platform=$BUILDPLATFORM node:16-slim as builder
 
 # Build application and add additional files
 WORKDIR /ghostfolio
@@ -50,7 +50,7 @@ COPY package.json /ghostfolio/dist/apps/api
 RUN yarn database:generate-typings
 
 # Image to run, copy everything needed from builder
-FROM node:18-slim
+FROM node:16-slim
 RUN apt update && apt install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
