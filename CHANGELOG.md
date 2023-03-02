@@ -7,11 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changed
+### Fixed
 
-- Downgraded Node from v18 to v16 (Dockerfile) to resolve prisma SEGSEGV errors during db migration
-  (see https://github.com/prisma/prisma/issues/10649)
-
+- Downgraded Node from v18 to v16 (Dockerfile) to resolve prisma SEGSEGV errors during db migration (see https://github.com/prisma/prisma/issues/10649)
 
 ## 1.241.0 - 2023-03-01
 
