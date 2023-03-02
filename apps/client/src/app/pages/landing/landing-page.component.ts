@@ -17,8 +17,8 @@ export class LandingPageComponent implements OnDestroy, OnInit {
     [code: string]: { value: number };
   } = {};
   public currentYear = format(new Date(), 'yyyy');
-  public demoAuthToken: string;
   public deviceType: string;
+  public hasPermissionForDemo: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
@@ -54,6 +54,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   ) {
     const {
       countriesOfSubscribers = [],
+      demoAuthToken,
       globalPermissions,
       statistics
     } = this.dataService.fetchInfo();
@@ -64,6 +65,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
       };
     }
 
+    this.hasPermissionForDemo = !!demoAuthToken;
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
       permissions.enableStatistics
