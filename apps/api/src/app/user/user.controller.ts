@@ -1,4 +1,5 @@
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { HEADER_KEY_TIMEZONE } from '@ghostfolio/common/config';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -22,7 +23,6 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { size } from 'lodash';
 
-import { CreateUserDto } from './create-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
@@ -66,7 +66,9 @@ export class UserController {
   }
 
   @Post()
-  public async signupUser(@Body() data: CreateUserDto): Promise<UserItem> {
+  public async signupUser(
+    @Headers(HEADER_KEY_TIMEZONE.toLowerCase()) timezone
+  ): Promise<UserItem> {
     const isUserSignupEnabled =
       await this.propertyService.isUserSignupEnabled();
 
@@ -80,7 +82,7 @@ export class UserController {
     const hasAdmin = await this.userService.hasAdmin();
 
     const { accessToken, id, role } = await this.userService.createUser({
-      country: data.country,
+      timezone,
       data: { role: hasAdmin ? 'USER' : 'ADMIN' }
     });
 

@@ -6,7 +6,6 @@ import { SubscriptionInterstitialDialogParams } from '@ghostfolio/client/compone
 import { SubscriptionInterstitialDialog } from '@ghostfolio/client/components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { timezoneCitiesToCountries } from '@ghostfolio/common/timezone-cities-to-countries';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, of } from 'rxjs';
 import { throwError } from 'rxjs';
@@ -44,20 +43,6 @@ export class UserService extends ObservableStore<UserStoreState> {
       // Get from endpoint
       return this.fetchUser().pipe(catchError(this.handleError));
     }
-  }
-
-  public getCountry() {
-    let country: string;
-
-    if (Intl) {
-      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const timeZoneArray = timeZone.split('/');
-      const city = timeZoneArray[timeZoneArray.length - 1];
-
-      country = timezoneCitiesToCountries[city];
-    }
-
-    return country;
   }
 
   public remove() {

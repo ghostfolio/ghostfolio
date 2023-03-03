@@ -1,5 +1,6 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
+import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   CallHandler,
   ExecutionContext,
@@ -22,7 +23,8 @@ export class RedactValuesInResponseInterceptor<T>
     return next.handle().pipe(
       map((data: any) => {
         const request = context.switchToHttp().getRequest();
-        const hasImpersonationId = !!request.headers?.['impersonation-id'];
+        const hasImpersonationId =
+          !!request.headers?.[HEADER_KEY_IMPERSONATION.toLowerCase()];
 
         if (
           hasImpersonationId ||
