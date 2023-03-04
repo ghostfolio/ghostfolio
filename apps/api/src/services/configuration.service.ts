@@ -22,7 +22,6 @@ export class ConfigurationService {
         default: [DataSource.MANUAL, DataSource.YAHOO]
       }),
       ENABLE_FEATURE_BLOG: bool({ default: false }),
-      ENABLE_FEATURE_CUSTOM_SYMBOLS: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
