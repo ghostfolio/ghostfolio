@@ -2,8 +2,6 @@ import { DataSource } from '@prisma/client';
 import { JobOptions, JobStatus } from 'bull';
 import ms from 'ms';
 
-export const DEMO_USER_ID = '9b112b4d-3b7d-4bad-9bdd-3b0f7b4dac2f';
-
 export const ghostfolioPrefix = 'GF';
 export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
 export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;
@@ -79,6 +77,7 @@ export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_COUNTRIES_OF_SUBSCRIBERS = 'COUNTRIES_OF_SUBSCRIBERS';
 export const PROPERTY_COUPONS = 'COUPONS';
 export const PROPERTY_CURRENCIES = 'CURRENCIES';
+export const PROPERTY_DEMO_USER_ID = 'DEMO_USER_ID';
 export const PROPERTY_IS_READ_ONLY_MODE = 'IS_READ_ONLY_MODE';
 export const PROPERTY_IS_USER_SIGNUP_ENABLED = 'IS_USER_SIGNUP_ENABLED';
 export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';

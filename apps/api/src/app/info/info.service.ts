@@ -6,12 +6,12 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
-  DEMO_USER_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE,
+  PROPERTY_DEMO_USER_ID,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -118,7 +118,7 @@ export class InfoService {
       baseCurrency: this.configurationService.get('BASE_CURRENCY'),
       benchmarks: await this.benchmarkService.getBenchmarkAssetProfiles(),
       currencies: this.exchangeRateDataService.getCurrencies(),
-      demoAuthToken: this.getDemoAuthToken(),
+      demoAuthToken: await this.getDemoAuthToken(),
       statistics: await this.getStatistics(),
       subscriptions: await this.getSubscriptions(),
       tags: await this.tagService.get()
@@ -246,10 +246,18 @@ export class InfoService {
     )) as string;
   }
 
-  private getDemoAuthToken() {
-    return this.jwtService.sign({
-      id: DEMO_USER_ID
-    });
+  private async getDemoAuthToken() {
+    const demoUserId = (await this.propertyService.getByKey(
+      PROPERTY_DEMO_USER_ID
+    )) as string;
+
+    if (demoUserId) {
+      return this.jwtService.sign({
+        id: demoUserId
+      });
+    }
+
+    return undefined;
   }
 
   private async getStatistics() {
