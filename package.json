@@ -100,6 +100,7 @@
     "class-transformer": "0.3.2",
     "class-validator": "0.13.1",
     "color": "4.2.3",
+    "countries-and-timezones": "3.4.1",
     "countries-list": "2.6.1",
     "countup.js": "2.3.2",
     "date-fns": "2.29.3",

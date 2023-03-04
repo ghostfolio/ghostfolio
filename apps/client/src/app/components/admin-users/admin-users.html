@@ -28,7 +28,13 @@
               >
                 <ng-container i18n>Engagement per Day</ng-container>
               </th>
-              <th class="mat-header-cell px-1 py-2" i18n>Last Request</th>
+              <th
+                *ngIf="hasPermissionForSubscription"
+                class="mat-header-cell px-1 py-2"
+                i18n
+              >
+                Last Request
+              </th>
               <th class="mat-header-cell px-1 py-2"></th>
             </tr>
           </thead>
@@ -86,7 +92,10 @@
                   [value]="userItem.engagement"
                 ></gf-value>
               </td>
-              <td class="mat-cell px-1 py-2">
+              <td
+                *ngIf="hasPermissionForSubscription"
+                class="mat-cell px-1 py-2"
+              >
                 {{ formatDistanceToNow(userItem.lastActivity) }}
               </td>
               <td class="mat-cell px-1 py-2">

@@ -40,12 +40,18 @@
           >
             Get Started
           </a>
-          <div class="d-inline-block mx-3 text-muted">or</div></ng-container
-        >
-
-        <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
-          Live Demo
-        </a>
+        </ng-container>
+        <ng-container *ngIf="hasPermissionForDemo">
+          <div
+            *ngIf="hasPermissionToCreateUser"
+            class="d-inline-block mx-3 text-muted"
+          >
+            or
+          </div>
+          <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
+            Live Demo
+          </a>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -379,16 +385,20 @@
     <div class="col">
       <h2 class="h4 mb-1 text-center">Are <strong>you</strong> ready?</h2>
       <p class="lead mb-3 text-center">
-        Join now or check out the example account
+        Join now<ng-container *ngIf="hasPermissionForDemo">
+          or check out the example account</ng-container
+        >
       </p>
       <div class="py-2 text-center">
         <a color="primary" mat-flat-button [routerLink]="['/register']">
           Get Started
         </a>
-        <div class="d-inline-block mx-3 text-muted">or</div>
-        <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
-          Live Demo
-        </a>
+        <ng-container *ngIf="hasPermissionForDemo">
+          <div class="d-inline-block mx-3 text-muted">or</div>
+          <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
+            Live Demo
+          </a>
+        </ng-container>
       </div>
     </div>
   </div>
