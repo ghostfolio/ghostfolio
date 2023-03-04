@@ -5,13 +5,15 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {
+  HEADER_KEY_IMPERSONATION,
+  HEADER_KEY_TIMEZONE,
+  HEADER_KEY_TOKEN
+} from '@ghostfolio/common/config';
 import { Observable } from 'rxjs';
 
 import { ImpersonationStorageService } from '../services/impersonation-storage.service';
 import { TokenStorageService } from '../services/token-storage.service';
-
-const IMPERSONATION_KEY = 'Impersonation-Id';
-const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -24,21 +26,27 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    let authReq = req;
+    let request = req;
+    let headers = request.headers.set(
+      HEADER_KEY_TIMEZONE,
+      Intl?.DateTimeFormat().resolvedOptions().timeZone
+    );
+
     const token = this.tokenStorageService.getToken();
-    const impersonationId = this.impersonationStorageService.getId();
 
     if (token !== null) {
-      let headers = req.headers.set(TOKEN_HEADER_KEY, `Bearer ${token}`);
+      headers = headers.set(HEADER_KEY_TOKEN, `Bearer ${token}`);
+
+      const impersonationId = this.impersonationStorageService.getId();
 
       if (impersonationId !== null) {
-        headers = headers.set(IMPERSONATION_KEY, impersonationId);
+        headers = headers.set(HEADER_KEY_IMPERSONATION, impersonationId);
       }
-
-      authReq = req.clone({ headers });
     }
 
-    return next.handle(authReq);
+    request = request.clone({ headers });
+
+    return next.handle(request);
   }
 }
 

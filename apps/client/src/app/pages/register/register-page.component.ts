@@ -63,7 +63,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
 
   public async createAccount() {
     this.dataService
-      .postUser({ country: this.userService.getCountry() })
+      .postUser()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ accessToken, authToken, role }) => {
         this.openShowAccessTokenDialog(accessToken, authToken, role);

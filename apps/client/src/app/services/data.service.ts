@@ -405,8 +405,8 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/order`, aOrder);
   }
 
-  public postUser({ country }: { country: string }) {
-    return this.http.post<UserItem>(`/api/v1/user`, { country });
+  public postUser() {
+    return this.http.post<UserItem>(`/api/v1/user`, {});
   }
 
   public putAccount(aAccount: UpdateAccountDto) {

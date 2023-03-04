@@ -59,9 +59,7 @@ export class InfoService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
-      if (
-        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true
-      ) {
+      if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         info.fearAndGreedDataSource = encodeDataSource(
           ghostfolioFearAndGreedIndexDataSource
         );

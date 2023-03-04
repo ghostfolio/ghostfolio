@@ -22,7 +22,6 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { size } from 'lodash';
 
-import { CreateUserDto } from './create-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
@@ -66,7 +65,7 @@ export class UserController {
   }
 
   @Post()
-  public async signupUser(@Body() data: CreateUserDto): Promise<UserItem> {
+  public async signupUser(): Promise<UserItem> {
     const isUserSignupEnabled =
       await this.propertyService.isUserSignupEnabled();
 
@@ -80,7 +79,6 @@ export class UserController {
     const hasAdmin = await this.userService.hasAdmin();
 
     const { accessToken, id, role } = await this.userService.createUser({
-      country: data.country,
       data: { role: hasAdmin ? 'USER' : 'ADMIN' }
     });
 

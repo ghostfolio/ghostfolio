@@ -69,6 +69,10 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
   }
 };
 
+export const HEADER_KEY_IMPERSONATION = 'Impersonation-Id';
+export const HEADER_KEY_TIMEZONE = 'Timezone';
+export const HEADER_KEY_TOKEN = 'Authorization';
+
 export const MAX_CHART_ITEMS = 365;
 
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
