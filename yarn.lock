@@ -16489,10 +16489,10 @@ ngx-markdown@15.1.0:
     mermaid "^9.1.2"
     prismjs "^1.28.0"
 
-ngx-skeleton-loader@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.npmjs.org/ngx-skeleton-loader/-/ngx-skeleton-loader-5.0.0.tgz"
-  integrity sha512-6cz8UAu4WcYnBp/LnU053LCIwjKNZWX8GX1v3bvqQVdDa1ubsEeJm+CZxk5B8W2jP9CcFhvWrBlmmVUyl1Yxug==
+ngx-skeleton-loader@7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-skeleton-loader/-/ngx-skeleton-loader-7.0.0.tgz#3b1325025a7208a20f3a0fdba6e578532a09cfcd"
+  integrity sha512-myc6GNcNhyksZrimIFkCxeihi0kQ8JhQVZiGbtiIv4gYrnnRk5nXbs3kYitK8E8OstHG+jlsmRofqGBxuIsYTA==
   dependencies:
     perf-marks "^1.13.4"
     tslib "^2.0.0"

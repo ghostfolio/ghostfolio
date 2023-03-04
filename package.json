@@ -114,7 +114,7 @@
     "ng-extract-i18n-merge": "2.5.0",
     "ngx-device-detector": "3.0.0",
     "ngx-markdown": "15.1.0",
-    "ngx-skeleton-loader": "5.0.0",
+    "ngx-skeleton-loader": "7.0.0",
     "ngx-stripe": "15.5.0",
     "papaparse": "5.3.1",
     "passport": "0.6.0",

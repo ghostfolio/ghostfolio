@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Simplified the database seeding
+- Upgraded `ngx-skeleton-loader` from version `5.0.0` to `7.0.0`
 
 ### Fixed
 
