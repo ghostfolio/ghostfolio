@@ -26,9 +26,7 @@ export class TransformDataSourceInResponseInterceptor<T>
   ): Observable<any> {
     return next.handle().pipe(
       map((data: any) => {
-        if (
-          this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true
-        ) {
+        if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
           data = redactAttributes({
             options: [
               {

@@ -1,5 +1,4 @@
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { HEADER_KEY_TIMEZONE } from '@ghostfolio/common/config';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -66,9 +65,7 @@ export class UserController {
   }
 
   @Post()
-  public async signupUser(
-    @Headers(HEADER_KEY_TIMEZONE.toLowerCase()) timezone
-  ): Promise<UserItem> {
+  public async signupUser(): Promise<UserItem> {
     const isUserSignupEnabled =
       await this.propertyService.isUserSignupEnabled();
 
@@ -82,7 +79,6 @@ export class UserController {
     const hasAdmin = await this.userService.hasAdmin();
 
     const { accessToken, id, role } = await this.userService.createUser({
-      timezone,
       data: { role: hasAdmin ? 'USER' : 'ADMIN' }
     });
 

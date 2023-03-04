@@ -24,7 +24,7 @@ export class TransformDataSourceInRequestInterceptor<T>
     const http = context.switchToHttp();
     const request = http.getRequest();
 
-    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') === true) {
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       if (request.body.dataSource) {
         request.body.dataSource = decodeDataSource(request.body.dataSource);
       }
