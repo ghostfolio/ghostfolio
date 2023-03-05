@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the validation of the manual currency for the activity fee and unit price
 - Removed the environment variable `ENABLE_FEATURE_CUSTOM_SYMBOLS`
 
 ## 1.242.0 - 2023-03-04
