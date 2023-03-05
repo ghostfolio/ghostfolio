@@ -109,9 +109,35 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onTargetNetWorthChanged(targetNetWorth: number) {
+  public onRetirementDateChange(retirementDate: Date) {
     this.dataService
-      .putUserSetting({ targetNetWorth })
+      .putUserSetting({
+        projectedTotalAmount: null,
+        projectedTotalAmountSet: false,
+        retirementDate: retirementDate.toISOString()
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  public onProjectedTotalAmountChanged(projectedTotalAmount: number) {
+    this.dataService
+      .putUserSetting({
+        projectedTotalAmount,
+        projectedTotalAmountSet: true,
+        retirementDate: null
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.userService.remove();

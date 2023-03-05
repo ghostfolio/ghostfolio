@@ -29,41 +29,35 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label i18n>Investment Horizon</mat-label>
-          <input formControlName="time" matInput type="number" />
-          <span class="ml-2" i18n matTextSuffix>years</span>
+          <mat-label i18n>Retirement Date</mat-label>
+          <input
+            formControlName="retirementDate"
+            matInput
+            [matDatepicker]="dp"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="dp"
+          ></mat-datepicker-toggle>
+          <mat-datepicker
+            #dp
+            panelClass="example-month-picker"
+            startView="multi-year"
+            (monthSelected)="setMonthAndYear($event, dp)"
+          >
+          </mat-datepicker>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label i18n>Target Net Worth</mat-label>
+          <mat-label i18n>Projected Total Amount</mat-label>
           <input
-            formControlName="retirementNetWorth"
+            formControlName="projectedTotalAmount"
             matInput
             step="100"
             type="number"
           />
           <span class="ml-2" matTextSuffix>{{ currency }}</span>
         </mat-form-field>
-
-        <gf-value
-          *ngIf="!targetNetWorth"
-          i18n
-          size="large"
-          [currency]="currency"
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="projectedTotalAmount"
-          >Projected Total Amount</gf-value
-        >
-        <gf-value
-          *ngIf="targetNetWorth"
-          i18n
-          size="large"
-          [isCurrency]="false"
-          [locale]="locale"
-          [value]="retirementDate"
-          >Retirement Date</gf-value
-        >
       </form>
     </div>
     <div class="col-md-9 text-center">

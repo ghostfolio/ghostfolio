@@ -55,7 +55,7 @@ export class FireCalculatorService {
     if (r == 0) {
       // No compound interest
       return (totalAmount - P) / PMT;
-    } else if (totalAmount <= 0) {
+    } else if (totalAmount <= P) {
       return 0;
     }
 

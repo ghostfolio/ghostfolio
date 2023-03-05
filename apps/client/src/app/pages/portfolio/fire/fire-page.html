@@ -17,10 +17,13 @@
           [fireWealth]="fireWealth?.toNumber()"
           [hasPermissionToUpdateUserSettings]="hasPermissionToUpdateUserSettings"
           [locale]="user?.settings?.locale"
+          [projectedTotalAmount]="user?.settings?.projectedTotalAmount"
+          [projectedTotalAmountSet]="user?.settings?.projectedTotalAmountSet"
+          [retirementDate]="user?.settings?.retirementDate"
           [savingsRate]="user?.settings?.savingsRate"
-          [targetNetWorth]="user?.settings?.targetNetWorth"
+          (projectedTotalAmountChanged)="onProjectedTotalAmountChanged($event)"
+          (retirementDateChanged)="onRetirementDateChange($event)"
           (savingsRateChanged)="onSavingsRateChange($event)"
-          (targetNetWorthChanged)="onTargetNetWorthChanged($event)"
         ></gf-fire-calculator>
       </div>
     </div>

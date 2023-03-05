@@ -3515,10 +3515,10 @@
       </trans-unit>
       <trans-unit id="7383cd391b1967e03f0636c231d20f036d5c37ee" datatype="html">
         <source>Retirement Date</source>
-        <target state="new">Pensionierungsdatum</target>
+        <target state="translated">Pensionierungsdatum</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
     </body>

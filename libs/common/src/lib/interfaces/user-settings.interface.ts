@@ -11,6 +11,8 @@ export interface UserSettings {
   language?: string;
   locale?: string;
   savingsRate?: number;
-  targetNetWorth?: number;
+  retirementDate?: string;
+  projectedTotalAmount?: number;
+  projectedTotalAmountSet?: boolean;
   viewMode?: ViewMode;
 }

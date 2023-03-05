@@ -2193,7 +2193,7 @@
         <source>Projected Total Amount</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1054498214311181686" datatype="html">
@@ -3157,7 +3157,7 @@
         <source>Retirement Date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
     </body>
