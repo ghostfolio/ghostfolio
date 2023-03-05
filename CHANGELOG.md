@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the axis style of charts
 - Removed the environment variable `ENABLE_FEATURE_CUSTOM_SYMBOLS`
 
 ## 1.242.0 - 2023-03-04
