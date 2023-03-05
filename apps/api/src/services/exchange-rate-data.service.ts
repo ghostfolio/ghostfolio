@@ -168,7 +168,7 @@ export class ExchangeRateDataService {
       return this.toCurrency(aValue, aFromCurrency, aToCurrency);
     }
 
-    let factor = 1;
+    let factor: number;
 
     if (aFromCurrency !== aToCurrency) {
       const dataSource = this.dataProviderService.getPrimaryDataSource();
@@ -185,7 +185,6 @@ export class ExchangeRateDataService {
       } else {
         // TODO: Get from data provider service or calculate indirectly via base currency
         // and market data
-        return this.toCurrency(aValue, aFromCurrency, aToCurrency);
       }
     }
 
@@ -193,12 +192,15 @@ export class ExchangeRateDataService {
       return factor * aValue;
     }
 
-    // Fallback with error, if currencies are not available
     Logger.error(
-      `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
+      `No exchange rate has been found for ${aFromCurrency}${aToCurrency} at ${format(
+        aDate,
+        DATE_FORMAT
+      )}`,
       'ExchangeRateDataService'
     );
-    return aValue;
+
+    return undefined;
   }
 
   private async prepareCurrencies(): Promise<string[]> {

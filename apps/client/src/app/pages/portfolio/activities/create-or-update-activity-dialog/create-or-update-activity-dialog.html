@@ -7,7 +7,7 @@
   <h1 *ngIf="data.activity.id" i18n mat-dialog-title>Update activity</h1>
   <h1 *ngIf="!data.activity.id" i18n mat-dialog-title>Add activity</h1>
   <div class="flex-grow-1 pt-3" mat-dialog-content>
-    <div>
+    <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
@@ -18,7 +18,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div>
+    <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
@@ -33,6 +33,7 @@
       </mat-form-field>
     </div>
     <div
+      class="mb-3"
       [ngClass]="{ 'd-none': !activityForm.controls['searchSymbol'].hasValidator(Validators.required) }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -69,6 +70,7 @@
       </mat-form-field>
     </div>
     <div
+      class="mb-3"
       [ngClass]="{ 'd-none': !activityForm.controls['name'].hasValidator(Validators.required) }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -92,7 +94,7 @@
         <input formControlName="dataSource" matInput />
       </mat-form-field>
     </div>
-    <div>
+    <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
         <input formControlName="date" matInput [matDatepicker]="date" />
@@ -106,13 +108,13 @@
         <mat-datepicker #date disabled="false"></mat-datepicker>
       </mat-form-field>
     </div>
-    <div>
+    <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
         <input formControlName="quantity" matInput type="number" />
       </mat-form-field>
     </div>
-    <div class="align-items-start d-flex">
+    <div class="align-items-start d-flex mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label
           ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
@@ -139,6 +141,14 @@
             </mat-option>
           </mat-select>
         </div>
+        <mat-error
+          *ngIf="activityForm.controls['unitPriceInCustomCurrency'].hasError('invalid')"
+          ><ng-container i18n
+            >Oops! Could not get the historical exchange rate from</ng-container
+          >
+          {{ activityForm.controls['date']?.value | date: defaultDateFormat
+          }}</mat-error
+        >
       </mat-form-field>
       <button
         *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
@@ -168,7 +178,7 @@
         >
       </mat-form-field>
     </div>
-    <div>
+    <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
         <input formControlName="feeInCustomCurrency" matInput type="number" />
@@ -183,6 +193,14 @@
             </mat-option>
           </mat-select>
         </div>
+        <mat-error
+          *ngIf="activityForm.controls['feeInCustomCurrency'].hasError('invalid')"
+          ><ng-container i18n
+            >Oops! Could not get the historical exchange rate from</ng-container
+          >
+          {{ activityForm.controls['date']?.value | date: defaultDateFormat
+          }}</mat-error
+        >
       </mat-form-field>
     </div>
     <div class="d-none">
@@ -194,7 +212,7 @@
         >
       </mat-form-field>
     </div>
-    <div>
+    <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Note</mat-label>
         <textarea
@@ -207,6 +225,7 @@
       </mat-form-field>
     </div>
     <div
+      class="mb-3"
       [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -222,6 +241,7 @@
       </mat-form-field>
     </div>
     <div
+      class="mb-3"
       [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -236,7 +256,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div [ngClass]="{ 'd-none': tags?.length <= 0 }">
+    <div class="mb-3" [ngClass]="{ 'd-none': tags?.length <= 0 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Tags</mat-label>
         <mat-chip-grid #tagsChipList>
