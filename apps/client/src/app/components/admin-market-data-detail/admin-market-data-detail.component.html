@@ -1,6 +1,7 @@
 <div>
   <gf-line-chart
     class="mb-4"
+    [colorScheme]="user?.settings?.colorScheme"
     [historicalDataItems]="historicalDataItems"
     [isAnimated]="true"
     [locale]="locale"
@@ -28,7 +29,7 @@
         }"
         [title]="
           (itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
-            | date: defaultDateFormat) ?? ''
+            | date : defaultDateFormat) ?? ''
         "
         (click)="
           onOpenMarketDataDetail({

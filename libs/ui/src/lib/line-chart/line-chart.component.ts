@@ -217,7 +217,6 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
                 },
                 display: this.showXAxis,
                 grid: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 time: {
@@ -228,12 +227,23 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               },
               y: {
                 border: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                  width: 0
                 },
                 display: this.showYAxis,
                 grid: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false
+                  color: ({ scale, tick }) => {
+                    if (
+                      tick.value === 0 ||
+                      tick.value === scale.max ||
+                      tick.value === scale.min ||
+                      tick.value === this.yMax ||
+                      tick.value === this.yMin
+                    ) {
+                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
+                    }
+
+                    return 'transparent';
+                  }
                 },
                 max: this.yMax,
                 min: this.yMin,
