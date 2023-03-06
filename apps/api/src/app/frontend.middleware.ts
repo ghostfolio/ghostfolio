@@ -26,7 +26,7 @@ export class FrontendMiddleware implements NestMiddleware {
   ) {
     const NODE_ENV =
       this.configService.get<'development' | 'production'>('NODE_ENV') ??
-      'development';
+      'production';
 
     this.isProduction = NODE_ENV === 'production';
 

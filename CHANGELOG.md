@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the environment variable `ENABLE_FEATURE_CUSTOM_SYMBOLS`
+- Changed the default `NODE_ENV` variable from `development` to `production` to avoid a requirement for self-hosted users to specify this value or receive `ENOENT: no such file or directory` error message on startup.
 
 ## 1.242.0 - 2023-03-04
 

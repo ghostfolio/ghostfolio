@@ -12,7 +12,7 @@ async function bootstrap() {
 
   const NODE_ENV =
     configService.get<'development' | 'production'>('NODE_ENV') ??
-    'development';
+    'production';
 
   const app = await NestFactory.create(AppModule, {
     logger:
