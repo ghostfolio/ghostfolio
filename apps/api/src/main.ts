@@ -11,8 +11,7 @@ async function bootstrap() {
   const configService = configApp.get<ConfigService>(ConfigService);
 
   const NODE_ENV =
-    configService.get<'development' | 'production'>('NODE_ENV') ??
-    'production';
+    configService.get<'development' | 'production'>('NODE_ENV') ?? 'production';
 
   const app = await NestFactory.create(AppModule, {
     logger:
