@@ -5,9 +5,10 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration.ser
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
+
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class FrontendMiddleware implements NestMiddleware {
@@ -18,18 +19,10 @@ export class FrontendMiddleware implements NestMiddleware {
   public indexHtmlIt = '';
   public indexHtmlNl = '';
   public indexHtmlPt = '';
-  public isProduction: boolean;
 
   public constructor(
-    private readonly configService: ConfigService,
     private readonly configurationService: ConfigurationService
   ) {
-    const NODE_ENV =
-      this.configService.get<'development' | 'production'>('NODE_ENV') ??
-      'production';
-
-    this.isProduction = NODE_ENV === 'production';
-
     try {
       this.indexHtmlDe = fs.readFileSync(
         this.getPathOfIndexHtmlFile('de'),
@@ -100,7 +93,7 @@ export class FrontendMiddleware implements NestMiddleware {
     if (
       request.path.startsWith('/api/') ||
       this.isFileRequest(request.url) ||
-      !this.isProduction
+      !environment.production
     ) {
       // Skip
       next();
