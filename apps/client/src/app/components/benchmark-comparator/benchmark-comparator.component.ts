@@ -166,7 +166,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 },
                 display: true,
                 grid: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 type: 'time',
@@ -177,13 +176,21 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               },
               y: {
                 border: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  display: false
+                  width: 0
                 },
                 display: true,
                 grid: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false
+                  color: ({ scale, tick }) => {
+                    if (
+                      tick.value === 0 ||
+                      tick.value === scale.max ||
+                      tick.value === scale.min
+                    ) {
+                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
+                    }
+
+                    return 'transparent';
+                  }
                 },
                 position: 'right',
                 ticks: {
