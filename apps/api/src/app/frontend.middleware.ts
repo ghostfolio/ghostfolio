@@ -1,14 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
-
-import { environment } from '../environments/environment';
 
 @Injectable()
 export class FrontendMiddleware implements NestMiddleware {
