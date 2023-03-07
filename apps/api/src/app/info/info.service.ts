@@ -7,11 +7,11 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
+  PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
   PROPERTY_SYSTEM_MESSAGE,
-  PROPERTY_DEMO_USER_ID,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
