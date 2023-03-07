@@ -10,15 +10,10 @@ async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
 
-  const NODE_ENV =
-    configService.get<'development' | 'production'>('NODE_ENV') ??
-    'development';
-
   const app = await NestFactory.create(AppModule, {
-    logger:
-      NODE_ENV === 'production'
-        ? ['error', 'log', 'warn']
-        : ['debug', 'error', 'log', 'verbose', 'warn']
+    logger: environment.production
+      ? ['error', 'log', 'warn']
+      : ['debug', 'error', 'log', 'verbose', 'warn']
   });
   app.enableCors();
   app.enableVersioning({
