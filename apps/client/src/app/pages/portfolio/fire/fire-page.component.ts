@@ -130,7 +130,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onProjectedTotalAmountChanged(projectedTotalAmount: number) {
+  public onProjectedTotalAmountChange(projectedTotalAmount: number) {
     this.dataService
       .putUserSetting({
         projectedTotalAmount,

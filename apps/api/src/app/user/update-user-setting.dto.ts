@@ -49,6 +49,10 @@ export class UpdateUserSettingDto {
   @IsOptional()
   locale?: string;
 
+  @IsNumber()
+  @IsOptional()
+  projectedTotalAmount?: number;
+
   @IsDate()
   @IsOptional()
   retirementDate?: Date;
@@ -56,10 +60,6 @@ export class UpdateUserSettingDto {
   @IsNumber()
   @IsOptional()
   savingsRate?: number;
-
-  @IsNumber()
-  @IsOptional()
-  projectedTotalAmount?: number;
 
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
