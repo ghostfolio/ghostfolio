@@ -5,6 +5,7 @@ import type {
 } from '@ghostfolio/common/types';
 import {
   IsBoolean,
+  IsDate,
   IsIn,
   IsNumber,
   IsOptional,
@@ -48,9 +49,9 @@ export class UpdateUserSettingDto {
   @IsOptional()
   locale?: string;
 
-  @IsString()
+  @IsDate()
   @IsOptional()
-  retirementDate?: string;
+  retirementDate?: Date;
 
   @IsNumber()
   @IsOptional()
@@ -59,10 +60,6 @@ export class UpdateUserSettingDto {
   @IsNumber()
   @IsOptional()
   projectedTotalAmount?: number;
-
-  @IsBoolean()
-  @IsOptional()
-  projectedTotalAmountSet?: boolean;
 
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()

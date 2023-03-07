@@ -33,17 +33,16 @@
           <input
             formControlName="retirementDate"
             matInput
-            [matDatepicker]="dp"
+            [matDatepicker]="datepicker"
           />
           <mat-datepicker-toggle
             matIconSuffix
-            [for]="dp"
+            [for]="datepicker"
           ></mat-datepicker-toggle>
           <mat-datepicker
-            #dp
-            panelClass="example-month-picker"
+            #datepicker
             startView="multi-year"
-            (monthSelected)="setMonthAndYear($event, dp)"
+            (monthSelected)="setMonthAndYear($event, datepicker)"
           >
           </mat-datepicker>
         </mat-form-field>

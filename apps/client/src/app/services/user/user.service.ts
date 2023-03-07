@@ -6,8 +6,9 @@ import { SubscriptionInterstitialDialogParams } from '@ghostfolio/client/compone
 import { SubscriptionInterstitialDialog } from '@ghostfolio/client/components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, of } from 'rxjs';
+import { Subject, of, Observable } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 
@@ -49,9 +50,13 @@ export class UserService extends ObservableStore<UserStoreState> {
     this.setState({ user: null }, UserStoreActions.RemoveUser);
   }
 
-  private fetchUser() {
-    return this.http.get<User>('/api/v1/user').pipe(
+  private fetchUser(): Observable<User> {
+    return this.http.get<any>('/api/v1/user').pipe(
       map((user) => {
+        if (user.settings?.retirementDate) {
+          user.settings.retirementDate = parseISO(user.settings.retirementDate);
+        }
+
         this.setState({ user }, UserStoreActions.GetUser);
 
         if (

@@ -29,62 +29,25 @@ import {
   Tooltip
 } from 'chart.js';
 import * as Color from 'color';
-import { add, getMonth, sub } from 'date-fns';
+import {
+  add,
+  addYears,
+  getMonth,
+  setMonth,
+  setYear,
+  startOfMonth,
+  sub
+} from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE
-} from '@angular/material/core';
-import {
-  MomentDateAdapter,
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS
-} from '@angular/material-moment-adapter';
-// Depending on whether rollup is used, moment needs to be imported differently.
-// Since Moment.js doesn't have a default export, we normally need to import using the `* as`
-// syntax. However, rollup creates a synthetic default module and we thus need to import it using
-// the `default as` syntax.
-import * as _moment from 'moment';
-// tslint:disable-next-line:no-duplicate-imports
-import { default as _rollupMoment, Moment } from 'moment';
-
-const moment = _rollupMoment || _moment;
-
-// See the Moment.js docs for the meaning of these formats:
-// https://momentjs.com/docs/#/displaying/format/
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY'
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY'
-  }
-};
-
-export const DEFAULT_RETIREMENT_DATE = add(new Date(), { years: 10 });
 
 @Component({
-  selector: 'gf-fire-calculator',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './fire-calculator.component.html',
+  selector: 'gf-fire-calculator',
   styleUrls: ['./fire-calculator.component.scss'],
-  providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
-  ]
+  templateUrl: './fire-calculator.component.html'
 })
 export class FireCalculatorComponent
   implements AfterViewInit, OnChanges, OnDestroy
@@ -95,14 +58,13 @@ export class FireCalculatorComponent
   @Input() fireWealth: number;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() locale: string;
-  @Input() retirementDate: string;
-  @Input() savingsRate = 0;
   @Input() projectedTotalAmount = 0;
-  @Input() projectedTotalAmountSet: boolean;
+  @Input() retirementDate: Date;
+  @Input() savingsRate = 0;
 
+  @Output() projectedTotalAmountChanged = new EventEmitter<number>();
   @Output() retirementDateChanged = new EventEmitter<Date>();
   @Output() savingsRateChanged = new EventEmitter<number>();
-  @Output() projectedTotalAmountChanged = new EventEmitter<number>();
 
   @ViewChild('chartCanvas') chartCanvas;
 
@@ -111,12 +73,16 @@ export class FireCalculatorComponent
     paymentPerPeriod: new FormControl<number>(undefined),
     principalInvestmentAmount: new FormControl<number>(undefined),
     projectedTotalAmount: new FormControl<number>(undefined),
-    retirementDate: new FormControl(moment())
+    retirementDate: new FormControl<Date>(undefined)
   });
   public chart: Chart<'bar'>;
   public isLoading = true;
   public periodsToRetire = 0;
+
   private readonly CONTRIBUTION_PERIOD = 12;
+  private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
+    addYears(new Date(), 10)
+  );
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -138,7 +104,7 @@ export class FireCalculatorComponent
         paymentPerPeriod: this.savingsRate,
         principalInvestmentAmount: 0,
         projectedTotalAmount: this.projectedTotalAmount,
-        retirementDate: moment(this.retirementDate)
+        retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
       },
       {
         emitEvent: false
@@ -161,7 +127,7 @@ export class FireCalculatorComponent
       .get('retirementDate')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((retirementDate) => {
-        this.retirementDateChanged.emit(retirementDate.toDate());
+        this.retirementDateChanged.emit(retirementDate);
       });
     this.calculatorForm
       .get('projectedTotalAmount')
@@ -179,9 +145,8 @@ export class FireCalculatorComponent
           {
             principalInvestmentAmount: this.getP(),
             paymentPerPeriod: this.getPMT(),
-            retirementDate: moment(
-              this.getRetirementDate() || DEFAULT_RETIREMENT_DATE
-            ),
+            retirementDate:
+              this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE,
             projectedTotalAmount:
               Number(this.getProjectedTotalAmount().toFixed(2)) ?? 0
           },
@@ -220,11 +185,10 @@ export class FireCalculatorComponent
           {
             principalInvestmentAmount: this.fireWealth,
             paymentPerPeriod: this.savingsRate ?? 0,
-            retirementDate: moment(
-              this.getRetirementDate() || DEFAULT_RETIREMENT_DATE
-            ),
             projectedTotalAmount:
-              Number(this.getProjectedTotalAmount().toFixed(2)) ?? 0
+              Number(this.getProjectedTotalAmount().toFixed(2)) ?? 0,
+            retirementDate:
+              this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE
           },
           {
             emitEvent: false
@@ -249,6 +213,19 @@ export class FireCalculatorComponent
         .get('projectedTotalAmount')
         .disable({ emitEvent: false });
     }
+  }
+
+  public setMonthAndYear(
+    normalizedMonthAndYear: Date,
+    datepicker: MatDatepicker<Date>
+  ) {
+    const ctrlValue = this.calculatorForm.get('retirementDate').value;
+    const newDate = setMonth(
+      setYear(ctrlValue, normalizedMonthAndYear.getFullYear()),
+      normalizedMonthAndYear.getMonth()
+    );
+    this.calculatorForm.get('retirementDate').setValue(newDate);
+    datepicker.close();
   }
 
   public ngOnDestroy() {
@@ -361,7 +338,7 @@ export class FireCalculatorComponent
   }
 
   private getProjectedTotalAmount() {
-    if (this.projectedTotalAmountSet) {
+    if (this.projectedTotalAmount) {
       return this.projectedTotalAmount || 0;
     } else {
       const { totalAmount } =
@@ -377,7 +354,7 @@ export class FireCalculatorComponent
   }
 
   private getPeriodsToRetire(): number {
-    if (this.projectedTotalAmountSet) {
+    if (this.projectedTotalAmount) {
       const periods = this.fireCalculatorService.calculatePeriodsToRetire({
         P: this.getP(),
         totalAmount: this.projectedTotalAmount,
@@ -388,9 +365,8 @@ export class FireCalculatorComponent
       return periods;
     } else {
       const today = new Date();
-      const retirementDate = this.retirementDate
-        ? new Date(this.retirementDate)
-        : DEFAULT_RETIREMENT_DATE;
+      const retirementDate =
+        this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE;
 
       return (
         12 * (retirementDate.getFullYear() - today.getFullYear()) +
@@ -401,13 +377,15 @@ export class FireCalculatorComponent
   }
 
   private getRetirementDate(): Date {
-    const yearsToRetire = Math.floor(this.periodsToRetire / 12);
     const monthsToRetire = this.periodsToRetire % 12;
+    const yearsToRetire = Math.floor(this.periodsToRetire / 12);
 
-    return add(new Date(), {
-      years: yearsToRetire,
-      months: monthsToRetire
-    });
+    return startOfMonth(
+      add(new Date(), {
+        months: monthsToRetire,
+        years: yearsToRetire
+      })
+    );
   }
 
   private getChartData() {
@@ -484,16 +462,5 @@ export class FireCalculatorComponent
       labels,
       datasets: [datasetDeposit, datasetSavings, datasetInterest]
     };
-  }
-
-  setMonthAndYear(
-    normalizedMonthAndYear: Moment,
-    datepicker: MatDatepicker<Moment>
-  ) {
-    const ctrlValue = this.calculatorForm.get('retirementDate').value!;
-    ctrlValue.month(normalizedMonthAndYear.month());
-    ctrlValue.year(normalizedMonthAndYear.year());
-    this.calculatorForm.get('retirementDate').setValue(ctrlValue);
-    datepicker.close();
   }
 }
