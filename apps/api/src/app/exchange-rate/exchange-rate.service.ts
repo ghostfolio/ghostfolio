@@ -1,5 +1,4 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -14,16 +13,14 @@ export class ExchangeRateService {
   }: {
     date: Date;
     symbol: string;
-  }): Promise<IDataProviderHistoricalResponse> {
+  }): Promise<number> {
     const [currency1, currency2] = symbol.split('-');
 
-    const marketPrice = await this.exchangeRateDataService.toCurrencyAtDate(
+    return this.exchangeRateDataService.toCurrencyAtDate(
       1,
       currency1,
       currency2,
       date
     );
-
-    return { marketPrice };
   }
 }

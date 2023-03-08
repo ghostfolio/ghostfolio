@@ -1,6 +1,13 @@
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  UseGuards
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ExchangeRateService } from './exchange-rate.service';
 
@@ -18,9 +25,18 @@ export class ExchangeRateController {
   ): Promise<IDataProviderHistoricalResponse> {
     const date = new Date(dateString);
 
-    return this.exchangeRateService.getExchangeRate({
+    const exchangeRate = await this.exchangeRateService.getExchangeRate({
       date,
       symbol
     });
+
+    if (exchangeRate) {
+      return { marketPrice: exchangeRate };
+    }
+
+    throw new HttpException(
+      getReasonPhrase(StatusCodes.NOT_FOUND),
+      StatusCodes.NOT_FOUND
+    );
   }
 }

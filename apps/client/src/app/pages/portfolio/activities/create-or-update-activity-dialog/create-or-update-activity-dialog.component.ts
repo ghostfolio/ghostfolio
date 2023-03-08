@@ -15,6 +15,7 @@ import {
   MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
   MatLegacyDialogRef as MatDialogRef
 } from '@angular/material/legacy-dialog';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
@@ -56,6 +57,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   });
   public currencies: string[] = [];
   public currentMarketPrice = null;
+  public defaultDateFormat: string;
   public filteredLookupItems: LookupItem[];
   public filteredLookupItemsObservable: Observable<LookupItem[]>;
   public filteredTagsObservable: Observable<Tag[]>;
@@ -85,6 +87,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     const { currencies, platforms, tags } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
+    this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
     this.tags = tags.map(({ id, name }) => {
       return {
@@ -148,6 +151,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         let exchangeRateOfFee = 1;
         let exchangeRateOfUnitPrice = 1;
 
+        this.activityForm.controls['feeInCustomCurrency'].setErrors(null);
+        this.activityForm.controls['unitPriceInCustomCurrency'].setErrors(null);
+
         const currency = this.activityForm.controls['currency'].value;
         const currencyOfFee = this.activityForm.controls['currencyOfFee'].value;
         const currencyOfUnitPrice =
@@ -166,7 +172,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             );
 
             exchangeRateOfFee = marketPrice;
-          } catch {}
+          } catch {
+            this.activityForm.controls['feeInCustomCurrency'].setErrors({
+              invalid: true
+            });
+          }
         }
 
         const feeInCustomCurrency =
@@ -194,7 +204,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             );
 
             exchangeRateOfUnitPrice = marketPrice;
-          } catch {}
+          } catch {
+            this.activityForm.controls['unitPriceInCustomCurrency'].setErrors({
+              invalid: true
+            });
+          }
         }
 
         const unitPriceInCustomCurrency =

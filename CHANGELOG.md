@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the validation of the manual currency for the activity fee and unit price
 - Harmonized the axis style of charts
 - Made setting `NODE_ENV: production` optional (to avoid `ENOENT: no such file or directory` errors on startup)
 - Removed the environment variable `ENABLE_FEATURE_CUSTOM_SYMBOLS`
