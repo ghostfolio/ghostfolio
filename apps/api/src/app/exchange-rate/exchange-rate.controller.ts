@@ -25,13 +25,13 @@ export class ExchangeRateController {
   ): Promise<IDataProviderHistoricalResponse> {
     const date = new Date(dateString);
 
-    const { marketPrice } = await this.exchangeRateService.getExchangeRate({
+    const exchangeRate = await this.exchangeRateService.getExchangeRate({
       date,
       symbol
     });
 
-    if (marketPrice) {
-      return { marketPrice };
+    if (exchangeRate) {
+      return { marketPrice: exchangeRate };
     }
 
     throw new HttpException(
