@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added `COINGECKO` as a default to `DATA_SOURCES`
+
 ### Changed
 
 - Harmonized the axis style of charts
