@@ -19,7 +19,7 @@ export class ConfigurationService {
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_PRIMARY: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({
-        default: [DataSource.MANUAL, DataSource.YAHOO]
+        default: [DataSource.COINGECKO, DataSource.MANUAL, DataSource.YAHOO]
       }),
       ENABLE_FEATURE_BLOG: bool({ default: false }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
