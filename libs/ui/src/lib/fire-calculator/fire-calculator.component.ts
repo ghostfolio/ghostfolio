@@ -201,16 +201,16 @@ export class FireCalculatorComponent
 
     if (this.hasPermissionToUpdateUserSettings === true) {
       this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
-      this.calculatorForm.get('retirementDate').enable({ emitEvent: false });
       this.calculatorForm
         .get('projectedTotalAmount')
         .enable({ emitEvent: false });
+      this.calculatorForm.get('retirementDate').enable({ emitEvent: false });
     } else {
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
-      this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
       this.calculatorForm
         .get('projectedTotalAmount')
         .disable({ emitEvent: false });
+      this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
     }
   }
 
@@ -218,12 +218,12 @@ export class FireCalculatorComponent
     normalizedMonthAndYear: Date,
     datepicker: MatDatepicker<Date>
   ) {
-    const ctrlValue = this.calculatorForm.get('retirementDate').value;
-    const newDate = setMonth(
-      setYear(ctrlValue, normalizedMonthAndYear.getFullYear()),
+    const retirementDate = this.calculatorForm.get('retirementDate').value;
+    const newRetirementDate = setMonth(
+      setYear(retirementDate, normalizedMonthAndYear.getFullYear()),
       normalizedMonthAndYear.getMonth()
     );
-    this.calculatorForm.get('retirementDate').setValue(newDate);
+    this.calculatorForm.get('retirementDate').setValue(newRetirementDate);
     datepicker.close();
   }
 
@@ -381,7 +381,7 @@ export class FireCalculatorComponent
     for (let period = 1; period <= t; period++) {
       const periodInMonths =
         period * this.CONTRIBUTION_PERIOD - monthsPassedInCurrentYear;
-      const { interest, principal, totalAmount } =
+      const { interest, principal } =
         this.fireCalculatorService.calculateCompoundInterest({
           P,
           periodInMonths,
@@ -402,14 +402,6 @@ export class FireCalculatorComponent
 
   private getP() {
     return this.fireWealth || 0;
-  }
-
-  private getPMT() {
-    return this.savingsRate ?? 0;
-  }
-
-  private getR() {
-    return this.calculatorForm.get('annualInterestRate').value / 100;
   }
 
   private getPeriodsToRetire(): number {
@@ -435,6 +427,10 @@ export class FireCalculatorComponent
     }
   }
 
+  private getPMT() {
+    return this.savingsRate ?? 0;
+  }
+
   private getProjectedTotalAmount() {
     if (this.projectedTotalAmount) {
       return this.projectedTotalAmount || 0;
@@ -449,6 +445,10 @@ export class FireCalculatorComponent
 
       return totalAmount.toNumber();
     }
+  }
+
+  private getR() {
+    return this.calculatorForm.get('annualInterestRate').value / 100;
   }
 
   private getRetirementDate(): Date {

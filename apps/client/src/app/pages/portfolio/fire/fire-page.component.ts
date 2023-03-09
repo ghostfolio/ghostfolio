@@ -91,9 +91,12 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onSavingsRateChange(savingsRate: number) {
+  public onRetirementDateChange(retirementDate: Date) {
     this.dataService
-      .putUserSetting({ savingsRate })
+      .putUserSetting({
+        retirementDate: retirementDate.toISOString(),
+        projectedTotalAmount: null
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.userService.remove();
@@ -109,12 +112,9 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onRetirementDateChange(retirementDate: Date) {
+  public onSavingsRateChange(savingsRate: number) {
     this.dataService
-      .putUserSetting({
-        retirementDate: retirementDate.toISOString(),
-        projectedTotalAmount: null
-      })
+      .putUserSetting({ savingsRate })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.userService.remove();
