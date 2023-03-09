@@ -13,6 +13,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
+import { MatDatepicker } from '@angular/material/datepicker';
 import {
   getTooltipOptions,
   transformTickToAbbreviation
@@ -28,17 +29,25 @@ import {
   Tooltip
 } from 'chart.js';
 import * as Color from 'color';
-import { getMonth } from 'date-fns';
+import {
+  add,
+  addYears,
+  getMonth,
+  setMonth,
+  setYear,
+  startOfMonth,
+  sub
+} from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
 
 @Component({
-  selector: 'gf-fire-calculator',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './fire-calculator.component.html',
-  styleUrls: ['./fire-calculator.component.scss']
+  selector: 'gf-fire-calculator',
+  styleUrls: ['./fire-calculator.component.scss'],
+  templateUrl: './fire-calculator.component.html'
 })
 export class FireCalculatorComponent
   implements AfterViewInit, OnChanges, OnDestroy
@@ -49,8 +58,12 @@ export class FireCalculatorComponent
   @Input() fireWealth: number;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() locale: string;
+  @Input() projectedTotalAmount = 0;
+  @Input() retirementDate: Date;
   @Input() savingsRate = 0;
 
+  @Output() projectedTotalAmountChanged = new EventEmitter<number>();
+  @Output() retirementDateChanged = new EventEmitter<Date>();
   @Output() savingsRateChanged = new EventEmitter<number>();
 
   @ViewChild('chartCanvas') chartCanvas;
@@ -59,13 +72,17 @@ export class FireCalculatorComponent
     annualInterestRate: new FormControl<number>(undefined),
     paymentPerPeriod: new FormControl<number>(undefined),
     principalInvestmentAmount: new FormControl<number>(undefined),
-    time: new FormControl<number>(undefined)
+    projectedTotalAmount: new FormControl<number>(undefined),
+    retirementDate: new FormControl<Date>(undefined)
   });
   public chart: Chart<'bar'>;
   public isLoading = true;
-  public projectedTotalAmount: number;
+  public periodsToRetire = 0;
 
   private readonly CONTRIBUTION_PERIOD = 12;
+  private readonly DEFAULT_RETIREMENT_DATE = startOfMonth(
+    addYears(new Date(), 10)
+  );
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -86,7 +103,8 @@ export class FireCalculatorComponent
         annualInterestRate: 5,
         paymentPerPeriod: this.savingsRate,
         principalInvestmentAmount: 0,
-        time: 10
+        projectedTotalAmount: this.projectedTotalAmount,
+        retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
       },
       {
         emitEvent: false
@@ -105,6 +123,18 @@ export class FireCalculatorComponent
       .subscribe((savingsRate) => {
         this.savingsRateChanged.emit(savingsRate);
       });
+    this.calculatorForm
+      .get('projectedTotalAmount')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((projectedTotalAmount) => {
+        this.projectedTotalAmountChanged.emit(projectedTotalAmount);
+      });
+    this.calculatorForm
+      .get('retirementDate')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((retirementDate) => {
+        this.retirementDateChanged.emit(retirementDate);
+      });
   }
 
   public ngAfterViewInit() {
@@ -113,8 +143,12 @@ export class FireCalculatorComponent
         // Wait for the chartCanvas
         this.calculatorForm.patchValue(
           {
-            principalInvestmentAmount: this.fireWealth,
-            paymentPerPeriod: this.savingsRate ?? 0
+            paymentPerPeriod: this.getPMT(),
+            principalInvestmentAmount: this.getP(),
+            projectedTotalAmount:
+              Number(this.getProjectedTotalAmount().toFixed(2)) ?? 0,
+            retirementDate:
+              this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE
           },
           {
             emitEvent: false
@@ -128,19 +162,32 @@ export class FireCalculatorComponent
 
     if (this.hasPermissionToUpdateUserSettings === true) {
       this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
+      this.calculatorForm
+        .get('projectedTotalAmount')
+        .enable({ emitEvent: false });
+      this.calculatorForm.get('retirementDate').enable({ emitEvent: false });
     } else {
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
+      this.calculatorForm
+        .get('projectedTotalAmount')
+        .disable({ emitEvent: false });
+      this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
     }
   }
 
   public ngOnChanges() {
+    this.periodsToRetire = this.getPeriodsToRetire();
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
         this.calculatorForm.patchValue(
           {
             principalInvestmentAmount: this.fireWealth,
-            paymentPerPeriod: this.savingsRate ?? 0
+            paymentPerPeriod: this.savingsRate ?? 0,
+            projectedTotalAmount:
+              Number(this.getProjectedTotalAmount().toFixed(2)) ?? 0,
+            retirementDate:
+              this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE
           },
           {
             emitEvent: false
@@ -154,9 +201,30 @@ export class FireCalculatorComponent
 
     if (this.hasPermissionToUpdateUserSettings === true) {
       this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
+      this.calculatorForm
+        .get('projectedTotalAmount')
+        .enable({ emitEvent: false });
+      this.calculatorForm.get('retirementDate').enable({ emitEvent: false });
     } else {
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
+      this.calculatorForm
+        .get('projectedTotalAmount')
+        .disable({ emitEvent: false });
+      this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
     }
+  }
+
+  public setMonthAndYear(
+    normalizedMonthAndYear: Date,
+    datepicker: MatDatepicker<Date>
+  ) {
+    const retirementDate = this.calculatorForm.get('retirementDate').value;
+    const newRetirementDate = setMonth(
+      setYear(retirementDate, normalizedMonthAndYear.getFullYear()),
+      normalizedMonthAndYear.getMonth()
+    );
+    this.calculatorForm.get('retirementDate').setValue(newRetirementDate);
+    datepicker.close();
   }
 
   public ngOnDestroy() {
@@ -261,17 +329,22 @@ export class FireCalculatorComponent
     const labels = [];
 
     // Principal investment amount
-    const P: number =
-      this.calculatorForm.get('principalInvestmentAmount').value || 0;
+    const P: number = this.getP();
 
     // Payment per period
-    const PMT = this.calculatorForm.get('paymentPerPeriod').value;
+    const PMT = this.getPMT();
 
     // Annual interest rate
-    const r: number = this.calculatorForm.get('annualInterestRate').value / 100;
+    const r: number = this.getR();
+
+    // Calculate retirement date
+    // if we want to retire at month x, we need the projectedTotalAmount at month x-1
+    const lastPeriodDate = sub(this.getRetirementDate(), { months: 1 });
+    const yearsToRetire = lastPeriodDate.getFullYear() - currentYear;
 
     // Time
-    const t = this.calculatorForm.get('time').value;
+    // +1 to take into account the current year
+    const t = yearsToRetire + 1;
 
     for (let year = currentYear; year < currentYear + t; year++) {
       labels.push(year);
@@ -308,7 +381,7 @@ export class FireCalculatorComponent
     for (let period = 1; period <= t; period++) {
       const periodInMonths =
         period * this.CONTRIBUTION_PERIOD - monthsPassedInCurrentYear;
-      const { interest, principal, totalAmount } =
+      const { interest, principal } =
         this.fireCalculatorService.calculateCompoundInterest({
           P,
           periodInMonths,
@@ -319,15 +392,74 @@ export class FireCalculatorComponent
       datasetDeposit.data.push(this.fireWealth);
       datasetInterest.data.push(interest.toNumber());
       datasetSavings.data.push(principal.minus(this.fireWealth).toNumber());
-
-      if (period === t) {
-        this.projectedTotalAmount = totalAmount.toNumber();
-      }
     }
 
     return {
       labels,
       datasets: [datasetDeposit, datasetSavings, datasetInterest]
     };
+  }
+
+  private getP() {
+    return this.fireWealth || 0;
+  }
+
+  private getPeriodsToRetire(): number {
+    if (this.projectedTotalAmount) {
+      const periods = this.fireCalculatorService.calculatePeriodsToRetire({
+        P: this.getP(),
+        totalAmount: this.projectedTotalAmount,
+        PMT: this.getPMT(),
+        r: this.getR()
+      });
+
+      return periods;
+    } else {
+      const today = new Date();
+      const retirementDate =
+        this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE;
+
+      return (
+        12 * (retirementDate.getFullYear() - today.getFullYear()) +
+        retirementDate.getMonth() -
+        today.getMonth()
+      );
+    }
+  }
+
+  private getPMT() {
+    return this.savingsRate ?? 0;
+  }
+
+  private getProjectedTotalAmount() {
+    if (this.projectedTotalAmount) {
+      return this.projectedTotalAmount || 0;
+    } else {
+      const { totalAmount } =
+        this.fireCalculatorService.calculateCompoundInterest({
+          P: this.getP(),
+          periodInMonths: this.periodsToRetire,
+          PMT: this.getPMT(),
+          r: this.getR()
+        });
+
+      return totalAmount.toNumber();
+    }
+  }
+
+  private getR() {
+    return this.calculatorForm.get('annualInterestRate').value / 100;
+  }
+
+  private getRetirementDate(): Date {
+    const monthsToRetire = this.periodsToRetire % 12;
+    const yearsToRetire = Math.floor(this.periodsToRetire / 12);
+
+    return startOfMonth(
+      add(new Date(), {
+        months: monthsToRetire,
+        years: yearsToRetire
+      })
+    );
   }
 }

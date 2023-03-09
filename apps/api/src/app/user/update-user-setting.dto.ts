@@ -3,9 +3,11 @@ import type {
   DateRange,
   ViewMode
 } from '@ghostfolio/common/types';
+import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsIn,
+  IsISO8601,
   IsNumber,
   IsOptional,
   IsString
@@ -47,6 +49,14 @@ export class UpdateUserSettingDto {
   @IsString()
   @IsOptional()
   locale?: string;
+
+  @IsNumber()
+  @IsOptional()
+  projectedTotalAmount?: number;
+
+  @IsISO8601()
+  @IsOptional()
+  retirementDate?: string;
 
   @IsNumber()
   @IsOptional()

@@ -10,6 +10,8 @@ export interface UserSettings {
   isRestrictedView?: boolean;
   language?: string;
   locale?: string;
+  projectedTotalAmount?: number;
+  retirementDate?: string;
   savingsRate?: number;
   viewMode?: ViewMode;
 }

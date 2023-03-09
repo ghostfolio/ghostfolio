@@ -2434,7 +2434,7 @@
         <target state="translated">Verwacht totaalbedrag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1054498214311181686" datatype="html">
@@ -3503,6 +3503,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">199,201</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="46d3a0f17b741c93f9e61aa7157820da41506f53" datatype="html">
+        <source>Target Net Worth</source>
+        <target state="translated">Beoogd Netto Vermogen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7383cd391b1967e03f0636c231d20f036d5c37ee" datatype="html">
+        <source>Retirement Date</source>
+        <target state="translated">Pensioen Datum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/fire-calculator/fire-calculator.component.html</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
     </body>
