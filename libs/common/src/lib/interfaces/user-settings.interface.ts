@@ -11,7 +11,7 @@ export interface UserSettings {
   language?: string;
   locale?: string;
   projectedTotalAmount?: number;
-  retirementDate?: Date;
+  retirementDate?: string;
   savingsRate?: number;
   viewMode?: ViewMode;
 }

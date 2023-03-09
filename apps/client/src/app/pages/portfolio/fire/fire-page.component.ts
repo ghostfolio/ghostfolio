@@ -112,7 +112,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public onRetirementDateChange(retirementDate: Date) {
     this.dataService
       .putUserSetting({
-        retirementDate,
+        retirementDate: retirementDate.toISOString(),
         projectedTotalAmount: null
       })
       .pipe(takeUntil(this.unsubscribeSubject))
