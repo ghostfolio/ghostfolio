@@ -11,6 +11,7 @@
           ></gf-premium-indicator>
         </h4>
         <gf-fire-calculator
+          [annualInterestRate]="user?.settings?.annualInterestRate"
           [colorScheme]="user?.settings?.colorScheme"
           [currency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
@@ -20,6 +21,7 @@
           [projectedTotalAmount]="user?.settings?.projectedTotalAmount"
           [retirementDate]="user?.settings?.retirementDate"
           [savingsRate]="user?.settings?.savingsRate"
+          (annualInterestRateChanged)="onAnnualInterestRateChange($event)"
           (projectedTotalAmountChanged)="onProjectedTotalAmountChange($event)"
           (retirementDateChanged)="onRetirementDateChange($event)"
           (savingsRateChanged)="onSavingsRateChange($event)"
@@ -73,12 +75,14 @@
         ></gf-value>
         per month</span
       >, based on your total assets of
-      <gf-value
-        class="d-inline-block"
-        [currency]="user?.settings?.baseCurrency"
-        [locale]="user?.settings?.locale"
-        [value]="fireWealth?.toNumber()"
-      ></gf-value>
+      <span class="font-weight-bold"
+        ><gf-value
+          class="d-inline-block"
+          [currency]="user?.settings?.baseCurrency"
+          [locale]="user?.settings?.locale"
+          [value]="fireWealth?.toNumber()"
+        ></gf-value
+      ></span>
       and a withdrawal rate of 4%.
     </div>
   </div>

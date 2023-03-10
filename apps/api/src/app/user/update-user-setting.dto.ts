@@ -3,7 +3,6 @@ import type {
   DateRange,
   ViewMode
 } from '@ghostfolio/common/types';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsIn,
@@ -14,6 +13,10 @@ import {
 } from 'class-validator';
 
 export class UpdateUserSettingDto {
+  @IsNumber()
+  @IsOptional()
+  annualInterestRate?: number;
+
   @IsOptional()
   @IsString()
   baseCurrency?: string;

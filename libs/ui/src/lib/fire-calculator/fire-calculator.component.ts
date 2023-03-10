@@ -39,7 +39,7 @@ import {
   sub
 } from 'date-fns';
 import { isNumber } from 'lodash';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
 
@@ -52,6 +52,7 @@ import { FireCalculatorService } from './fire-calculator.service';
 export class FireCalculatorComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
+  @Input() annualInterestRate = 5;
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() deviceType: string;
@@ -62,6 +63,7 @@ export class FireCalculatorComponent
   @Input() retirementDate: Date;
   @Input() savingsRate = 0;
 
+  @Output() annualInterestRateChanged = new EventEmitter<number>();
   @Output() projectedTotalAmountChanged = new EventEmitter<number>();
   @Output() retirementDateChanged = new EventEmitter<Date>();
   @Output() savingsRateChanged = new EventEmitter<number>();
@@ -100,7 +102,7 @@ export class FireCalculatorComponent
 
     this.calculatorForm.setValue(
       {
-        annualInterestRate: 5,
+        annualInterestRate: this.annualInterestRate,
         paymentPerPeriod: this.savingsRate,
         principalInvestmentAmount: 0,
         projectedTotalAmount: this.projectedTotalAmount,
@@ -118,20 +120,26 @@ export class FireCalculatorComponent
       });
 
     this.calculatorForm
+      .get('annualInterestRate')
+      .valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
+      .subscribe((annualInterestRate) => {
+        this.annualInterestRateChanged.emit(annualInterestRate);
+      });
+    this.calculatorForm
       .get('paymentPerPeriod')
-      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
       .subscribe((savingsRate) => {
         this.savingsRateChanged.emit(savingsRate);
       });
     this.calculatorForm
       .get('projectedTotalAmount')
-      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
       .subscribe((projectedTotalAmount) => {
         this.projectedTotalAmountChanged.emit(projectedTotalAmount);
       });
     this.calculatorForm
       .get('retirementDate')
-      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .valueChanges.pipe(debounceTime(500), takeUntil(this.unsubscribeSubject))
       .subscribe((retirementDate) => {
         this.retirementDateChanged.emit(retirementDate);
       });
@@ -143,10 +151,11 @@ export class FireCalculatorComponent
         // Wait for the chartCanvas
         this.calculatorForm.patchValue(
           {
+            annualInterestRate: this.annualInterestRate,
             paymentPerPeriod: this.getPMT(),
             principalInvestmentAmount: this.getP(),
             projectedTotalAmount:
-              Number(this.getProjectedTotalAmount().toFixed(2)) ?? 0,
+              Number(this.getProjectedTotalAmount().toFixed(0)) ?? 0,
             retirementDate:
               this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE
           },
@@ -165,14 +174,14 @@ export class FireCalculatorComponent
       this.calculatorForm
         .get('projectedTotalAmount')
         .enable({ emitEvent: false });
-      this.calculatorForm.get('retirementDate').enable({ emitEvent: false });
     } else {
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
       this.calculatorForm
         .get('projectedTotalAmount')
         .disable({ emitEvent: false });
-      this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
     }
+
+    this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
   }
 
   public ngOnChanges() {
@@ -182,10 +191,11 @@ export class FireCalculatorComponent
         // Wait for the chartCanvas
         this.calculatorForm.patchValue(
           {
+            annualInterestRate: this.annualInterestRate,
             principalInvestmentAmount: this.fireWealth,
             paymentPerPeriod: this.savingsRate ?? 0,
             projectedTotalAmount:
-              Number(this.getProjectedTotalAmount().toFixed(2)) ?? 0,
+              Number(this.getProjectedTotalAmount().toFixed(0)) ?? 0,
             retirementDate:
               this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE
           },
@@ -204,14 +214,14 @@ export class FireCalculatorComponent
       this.calculatorForm
         .get('projectedTotalAmount')
         .enable({ emitEvent: false });
-      this.calculatorForm.get('retirementDate').enable({ emitEvent: false });
     } else {
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
       this.calculatorForm
         .get('projectedTotalAmount')
         .disable({ emitEvent: false });
-      this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
     }
+
+    this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
   }
 
   public setMonthAndYear(

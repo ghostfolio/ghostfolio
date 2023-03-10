@@ -37,11 +37,13 @@
           />
           <mat-datepicker-toggle
             matIconSuffix
+            [disabled]="false"
             [for]="datepicker"
           ></mat-datepicker-toggle>
           <mat-datepicker
             #datepicker
             startView="multi-year"
+            [disabled]="false"
             (monthSelected)="setMonthAndYear($event, datepicker)"
           >
           </mat-datepicker>

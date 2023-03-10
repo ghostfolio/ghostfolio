@@ -91,6 +91,24 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onAnnualInterestRateChange(annualInterestRate: number) {
+    this.dataService
+      .putUserSetting({ annualInterestRate })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
   public onRetirementDateChange(retirementDate: Date) {
     this.dataService
       .putUserSetting({
