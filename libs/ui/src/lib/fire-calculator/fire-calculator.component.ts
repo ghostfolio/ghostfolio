@@ -1,7 +1,6 @@
 import 'chartjs-adapter-date-fns';
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -49,9 +48,7 @@ import { FireCalculatorService } from './fire-calculator.service';
   styleUrls: ['./fire-calculator.component.scss'],
   templateUrl: './fire-calculator.component.html'
 })
-export class FireCalculatorComponent
-  implements AfterViewInit, OnChanges, OnDestroy
-{
+export class FireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() annualInterestRate = 5;
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
@@ -145,47 +142,9 @@ export class FireCalculatorComponent
       });
   }
 
-  public ngAfterViewInit() {
-    if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
-      setTimeout(() => {
-        // Wait for the chartCanvas
-        this.calculatorForm.patchValue(
-          {
-            annualInterestRate: this.annualInterestRate,
-            paymentPerPeriod: this.getPMT(),
-            principalInvestmentAmount: this.getP(),
-            projectedTotalAmount:
-              Number(this.getProjectedTotalAmount().toFixed(0)) ?? 0,
-            retirementDate:
-              this.getRetirementDate() ?? this.DEFAULT_RETIREMENT_DATE
-          },
-          {
-            emitEvent: false
-          }
-        );
-        this.calculatorForm.get('principalInvestmentAmount').disable();
-
-        this.changeDetectorRef.markForCheck();
-      });
-    }
-
-    if (this.hasPermissionToUpdateUserSettings === true) {
-      this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
-      this.calculatorForm
-        .get('projectedTotalAmount')
-        .enable({ emitEvent: false });
-    } else {
-      this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
-      this.calculatorForm
-        .get('projectedTotalAmount')
-        .disable({ emitEvent: false });
-    }
-
-    this.calculatorForm.get('retirementDate').disable({ emitEvent: false });
-  }
-
   public ngOnChanges() {
     this.periodsToRetire = this.getPeriodsToRetire();
+
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
       setTimeout(() => {
         // Wait for the chartCanvas
@@ -210,11 +169,17 @@ export class FireCalculatorComponent
     }
 
     if (this.hasPermissionToUpdateUserSettings === true) {
+      this.calculatorForm
+        .get('annualInterestRate')
+        .enable({ emitEvent: false });
       this.calculatorForm.get('paymentPerPeriod').enable({ emitEvent: false });
       this.calculatorForm
         .get('projectedTotalAmount')
         .enable({ emitEvent: false });
     } else {
+      this.calculatorForm
+        .get('annualInterestRate')
+        .disable({ emitEvent: false });
       this.calculatorForm.get('paymentPerPeriod').disable({ emitEvent: false });
       this.calculatorForm
         .get('projectedTotalAmount')
