@@ -264,6 +264,10 @@ export class DataProviderService {
     const promises: Promise<{ items: LookupItem[] }>[] = [];
     let lookupItems: LookupItem[] = [];
 
+    if (aQuery?.length < 2) {
+      return { items: lookupItems };
+    }
+
     for (const dataSource of this.configurationService.get('DATA_SOURCES')) {
       promises.push(
         this.getDataProvider(DataSource[dataSource]).search(aQuery)

@@ -158,10 +158,6 @@ export class EodHistoricalDataService implements DataProviderInterface {
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     let items: LookupItem[] = [];
 
-    if (aQuery.length <= 2) {
-      return { items };
-    }
-
     try {
       const get = bent(
         `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
