@@ -183,8 +183,29 @@ export class ExchangeRateDataService {
       if (marketData?.marketPrice) {
         factor = marketData?.marketPrice;
       } else {
-        // TODO: Get from data provider service or calculate indirectly via base currency
-        // and market data
+        // Calculate indirectly via base currency
+        try {
+          const [
+            { marketPrice: marketPriceBaseCurrencyFromCurrency },
+            { marketPrice: marketPriceBaseCurrencyToCurrency }
+          ] = await Promise.all([
+            this.marketDataService.get({
+              dataSource,
+              date: aDate,
+              symbol: `${this.baseCurrency}${aFromCurrency}`
+            }),
+            this.marketDataService.get({
+              dataSource,
+              date: aDate,
+              symbol: `${this.baseCurrency}${aToCurrency}`
+            })
+          ]);
+
+          // Calculate the opposite direction
+          factor =
+            (1 / marketPriceBaseCurrencyFromCurrency) *
+            marketPriceBaseCurrencyToCurrency;
+        } catch {}
       }
     }
 
