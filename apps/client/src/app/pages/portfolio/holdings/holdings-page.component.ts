@@ -72,8 +72,8 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((aId) => {
-        this.hasImpersonationId = !!aId;
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
       });
 
     this.filters$

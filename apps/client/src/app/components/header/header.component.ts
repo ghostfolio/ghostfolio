@@ -56,8 +56,8 @@ export class HeaderComponent implements OnChanges {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((id) => {
-        this.impersonationId = id;
+      .subscribe((impersonationId) => {
+        this.impersonationId = impersonationId;
       });
   }
 
