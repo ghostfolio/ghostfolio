@@ -5,13 +5,12 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import bent from 'bent';
-import { format } from 'date-fns';
+import { format, isToday } from 'date-fns';
 
 @Injectable()
 export class EodHistoricalDataService implements DataProviderInterface {
@@ -19,8 +18,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly configurationService: ConfigurationService
   ) {
     this.apiKey = this.configurationService.get('EOD_HISTORICAL_DATA_API_KEY');
   }
@@ -32,8 +30,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
+    const { items } = await this.search(aSymbol);
+
     return {
-      dataSource: this.getName()
+      currency: items[0]?.currency,
+      dataSource: this.getName(),
+      name: items[0]?.name
     };
   }
 
@@ -122,32 +124,30 @@ export class EodHistoricalDataService implements DataProviderInterface {
         200
       );
 
-      const [response, symbolProfiles] = await Promise.all([
+      const [realTimeResponse, searchResponse] = await Promise.all([
         get(),
-        this.symbolProfileService.getSymbolProfiles(
-          aSymbols.map((symbol) => {
-            return {
-              symbol,
-              dataSource: DataSource.EOD_HISTORICAL_DATA
-            };
-          })
-        )
+        this.search(aSymbols[0])
       ]);
 
-      const quotes = aSymbols.length === 1 ? [response] : response;
+      const quotes =
+        aSymbols.length === 1 ? [realTimeResponse] : realTimeResponse;
 
-      return quotes.reduce((result, item, index, array) => {
-        result[item.code] = {
-          currency: symbolProfiles.find((symbolProfile) => {
-            return symbolProfile.symbol === item.code;
-          })?.currency,
-          dataSource: DataSource.EOD_HISTORICAL_DATA,
-          marketPrice: item.close,
-          marketState: 'delayed'
-        };
+      return quotes.reduce(
+        (
+          result: { [symbol: string]: IDataProviderResponse },
+          { close, code, timestamp }
+        ) => {
+          result[code] = {
+            currency: searchResponse?.items[0]?.currency,
+            dataSource: DataSource.EOD_HISTORICAL_DATA,
+            marketPrice: close,
+            marketState: isToday(new Date(timestamp * 1000)) ? 'open' : 'closed'
+          };
 
-        return result;
-      }, {});
+          return result;
+        },
+        {}
+      );
     } catch (error) {
       Logger.error(error, 'EodHistoricalDataService');
     }
@@ -156,6 +156,35 @@ export class EodHistoricalDataService implements DataProviderInterface {
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    return { items: [] };
+    let items: LookupItem[] = [];
+
+    if (aQuery.length <= 2) {
+      return { items };
+    }
+
+    try {
+      const get = bent(
+        `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
+        'GET',
+        'json',
+        200
+      );
+      const response = await get();
+
+      items = response.map(
+        ({ Code, Currency: currency, Exchange, Name: name }) => {
+          return {
+            currency,
+            name,
+            dataSource: this.getName(),
+            symbol: `${Code}.${Exchange}`
+          };
+        }
+      );
+    } catch (error) {
+      Logger.error(error, 'EodHistoricalDataService');
+    }
+
+    return { items };
   }
 }

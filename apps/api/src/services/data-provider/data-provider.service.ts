@@ -272,14 +272,20 @@ export class DataProviderService {
 
     const searchResults = await Promise.all(promises);
 
-    searchResults.forEach((searchResult) => {
-      lookupItems = lookupItems.concat(searchResult.items);
+    searchResults.forEach(({ items }) => {
+      if (items?.length > 0) {
+        lookupItems = lookupItems.concat(items);
+      }
     });
 
-    const filteredItems = lookupItems.filter((lookupItem) => {
-      // Only allow symbols with supported currency
-      return lookupItem.currency ? true : false;
-    });
+    const filteredItems = lookupItems
+      .filter((lookupItem) => {
+        // Only allow symbols with supported currency
+        return lookupItem.currency ? true : false;
+      })
+      .sort(({ name: name1 }, { name: name2 }) => {
+        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
+      });
 
     return {
       items: filteredItems

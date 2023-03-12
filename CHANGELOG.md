@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the search functionality for the `EOD_HISTORICAL_DATA` data source type
+
 ### Changed
 
 - Improved the usability of the _FIRE_ calculator
