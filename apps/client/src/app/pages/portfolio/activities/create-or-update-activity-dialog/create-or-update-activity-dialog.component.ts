@@ -243,11 +243,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.filteredLookupItemsObservable = this.activityForm.controls[
       'searchSymbol'
     ].valueChanges.pipe(
-      startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
       switchMap((query: string) => {
-        if (isString(query)) {
+        if (isString(query) && query.length > 1) {
           const filteredLookupItemsObservable =
             this.dataService.fetchSymbols(query);
 

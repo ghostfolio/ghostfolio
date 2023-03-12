@@ -163,10 +163,6 @@ export class CoinGeckoService implements DataProviderInterface {
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     let items: LookupItem[] = [];
 
-    if (aQuery.length <= 2) {
-      return { items };
-    }
-
     try {
       const get = bent(
         `${this.URL}/search?query=${aQuery}`,
