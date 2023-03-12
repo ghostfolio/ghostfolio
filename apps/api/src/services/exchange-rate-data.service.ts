@@ -191,13 +191,13 @@ export class ExchangeRateDataService {
           ] = await Promise.all([
             this.marketDataService.get({
               dataSource,
-              symbol: `${this.baseCurrency}${aFromCurrency}`,
-              date: aDate
+              date: aDate,
+              symbol: `${this.baseCurrency}${aFromCurrency}`
             }),
             this.marketDataService.get({
               dataSource,
-              symbol: `${this.baseCurrency}${aToCurrency}`,
-              date: aDate
+              date: aDate,
+              symbol: `${this.baseCurrency}${aToCurrency}`
             })
           ]);
 
