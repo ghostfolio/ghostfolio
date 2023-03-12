@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the _FIRE_ calculator
+- Upgraded `ngx-device-detector` from version `3.0.0` to `5.0.1`
 
 ## 1.244.0 - 2023-03-09
 
