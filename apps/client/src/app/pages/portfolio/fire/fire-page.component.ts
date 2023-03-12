@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { PortfolioReportRule, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -20,6 +21,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
+  public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
@@ -33,6 +35,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
+    private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {}
 
@@ -70,6 +73,13 @@ export class FirePageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -88,6 +98,24 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
           this.changeDetectorRef.markForCheck();
         }
+      });
+  }
+
+  public onAnnualInterestRateChange(annualInterestRate: number) {
+    this.dataService
+      .putUserSetting({ annualInterestRate })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
       });
   }
 
