@@ -127,9 +127,11 @@ export class DataGatheringService {
       );
 
     for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
-      const symbolMapping = symbolProfiles.find((symbolProfile) => {
-        return symbolProfile.symbol === symbol;
-      })?.symbolMapping;
+      const symbolMapping =
+        assetProfile.symbolMapping ??
+        symbolProfiles.find((symbolProfile) => {
+          return symbolProfile.symbol === symbol;
+        })?.symbolMapping;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
@@ -155,7 +157,7 @@ export class DataGatheringService {
         name,
         sectors,
         url
-      } = assetProfiles[symbol];
+      } = assetProfile;
 
       try {
         await this.prismaService.symbolProfile.upsert({
@@ -168,6 +170,7 @@ export class DataGatheringService {
             name,
             sectors,
             symbol,
+            symbolMapping,
             url
           },
           update: {
@@ -177,6 +180,7 @@ export class DataGatheringService {
             currency,
             name,
             sectors,
+            symbolMapping,
             url
           },
           where: {

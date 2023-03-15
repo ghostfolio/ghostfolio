@@ -8,7 +8,12 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  SymbolProfile
+} from '@prisma/client';
 import bent from 'bent';
 import { format, isToday } from 'date-fns';
 
@@ -30,12 +35,21 @@ export class EodHistoricalDataService implements DataProviderInterface {
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
-    const { items } = await this.search(aSymbol);
+    const [searchResult] = await this.getSearchResult(aSymbol);
+
+    const symbolMapping = searchResult?.ISIN
+      ? {
+          ISIN: searchResult.ISIN
+        }
+      : undefined;
 
     return {
-      currency: items[0]?.currency,
+      symbolMapping,
+      assetClass: searchResult?.assetClass,
+      assetSubClass: searchResult?.assetSubClass,
+      currency: searchResult?.currency,
       dataSource: this.getName(),
-      name: items[0]?.name
+      name: searchResult?.name
     };
   }
 
@@ -156,7 +170,27 @@ export class EodHistoricalDataService implements DataProviderInterface {
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    let items: LookupItem[] = [];
+    const searchResult = await this.getSearchResult(aQuery);
+
+    return {
+      items: searchResult
+        .filter(({ symbol }) => {
+          return !symbol.toLowerCase().endsWith('forex');
+        })
+        .map(({ currency, dataSource, name, symbol }) => {
+          return { currency, dataSource, name, symbol };
+        })
+    };
+  }
+
+  private async getSearchResult(aQuery: string): Promise<
+    (LookupItem & {
+      assetClass: AssetClass;
+      assetSubClass: AssetSubClass;
+      ISIN: string;
+    })[]
+  > {
+    let searchResult = [];
 
     try {
       const get = bent(
@@ -167,10 +201,18 @@ export class EodHistoricalDataService implements DataProviderInterface {
       );
       const response = await get();
 
-      items = response.map(
-        ({ Code, Currency: currency, Exchange, Name: name }) => {
+      searchResult = response.map(
+        ({ Code, Currency: currency, Exchange, ISIN, Name: name, Type }) => {
+          const { assetClass, assetSubClass } = this.parseAssetClass({
+            Exchange,
+            Type
+          });
+
           return {
+            assetClass,
+            assetSubClass,
             currency,
+            ISIN,
             name,
             dataSource: this.getName(),
             symbol: `${Code}.${Exchange}`
@@ -181,6 +223,41 @@ export class EodHistoricalDataService implements DataProviderInterface {
       Logger.error(error, 'EodHistoricalDataService');
     }
 
-    return { items };
+    return searchResult;
+  }
+
+  private parseAssetClass({
+    Exchange,
+    Type
+  }: {
+    Exchange: string;
+    Type: string;
+  }): {
+    assetClass: AssetClass;
+    assetSubClass: AssetSubClass;
+  } {
+    let assetClass: AssetClass;
+    let assetSubClass: AssetSubClass;
+
+    switch (Type?.toLowerCase()) {
+      case 'common stock':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.STOCK;
+        break;
+      case 'currency':
+        assetClass = AssetClass.CASH;
+
+        if (Exchange?.toLowerCase() === 'cc') {
+          assetSubClass = AssetSubClass.CRYPTOCURRENCY;
+        }
+
+        break;
+      case 'etf':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.ETF;
+        break;
+    }
+
+    return { assetClass, assetSubClass };
   }
 }
