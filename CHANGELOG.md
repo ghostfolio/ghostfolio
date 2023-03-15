@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for asset and asset sub class to the `EOD_HISTORICAL_DATA` data source type
+- Added support for symbol mapping (_ISIN_) to the `EOD_HISTORICAL_DATA` data source type
+
 ### Changed
 
 - Improved the language localization for _Gather Data_
