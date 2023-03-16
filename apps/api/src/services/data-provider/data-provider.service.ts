@@ -8,6 +8,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { UserWithSettings } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
@@ -260,18 +261,33 @@ export class DataProviderService {
     return response;
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async search({
+    query,
+    user
+  }: {
+    query: string;
+    user: UserWithSettings;
+  }): Promise<{ items: LookupItem[] }> {
     const promises: Promise<{ items: LookupItem[] }>[] = [];
     let lookupItems: LookupItem[] = [];
 
-    if (aQuery?.length < 2) {
+    if (query?.length < 2) {
       return { items: lookupItems };
     }
 
-    for (const dataSource of this.configurationService.get('DATA_SOURCES')) {
-      promises.push(
-        this.getDataProvider(DataSource[dataSource]).search(aQuery)
-      );
+    let dataSources = this.configurationService.get('DATA_SOURCES');
+
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      user.subscription.type === 'Basic'
+    ) {
+      dataSources = dataSources.filter((dataSource) => {
+        return !this.isPremiumDataSource(DataSource[dataSource]);
+      });
+    }
+
+    for (const dataSource of dataSources) {
+      promises.push(this.getDataProvider(DataSource[dataSource]).search(query));
     }
 
     const searchResults = await Promise.all(promises);
@@ -304,5 +320,9 @@ export class DataProviderService {
     }
 
     throw new Error('No data provider has been found.');
+  }
+
+  private isPremiumDataSource(aDataSource: DataSource) {
+    return aDataSource === DataSource.EOD_HISTORICAL_DATA;
   }
 }

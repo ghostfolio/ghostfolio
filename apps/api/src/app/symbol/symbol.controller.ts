@@ -1,15 +1,18 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
   Get,
   HttpException,
+  Inject,
   Param,
   Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -21,7 +24,10 @@ import { SymbolService } from './symbol.service';
 
 @Controller('symbol')
 export class SymbolController {
-  public constructor(private readonly symbolService: SymbolService) {}
+  public constructor(
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly symbolService: SymbolService
+  ) {}
 
   /**
    * Must be before /:symbol
@@ -33,7 +39,10 @@ export class SymbolController {
     @Query() { query = '' }
   ): Promise<{ items: LookupItem[] }> {
     try {
-      return this.symbolService.lookup(query.toLowerCase());
+      return this.symbolService.lookup({
+        query: query.toLowerCase(),
+        user: this.request.user
+      });
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
