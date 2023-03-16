@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for _Gather Data_
+
 ### Fixed
 
 - Fixed the border color in the _FIRE_ calculator (dark mode)
