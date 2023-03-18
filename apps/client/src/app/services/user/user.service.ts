@@ -8,7 +8,7 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, of, Observable } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { throwError } from 'rxjs';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 

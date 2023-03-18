@@ -5,8 +5,8 @@ import type {
 } from '@ghostfolio/common/types';
 import {
   IsBoolean,
-  IsIn,
   IsISO8601,
+  IsIn,
   IsNumber,
   IsOptional,
   IsString
