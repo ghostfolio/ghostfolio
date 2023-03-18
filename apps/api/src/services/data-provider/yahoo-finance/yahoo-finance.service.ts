@@ -101,9 +101,10 @@ export class YahooFinanceService implements DataProviderInterface {
         modules: ['price', 'summaryProfile', 'topHoldings']
       });
 
-      const { assetClass, assetSubClass } = this.parseAssetClass(
-        assetProfile.price
-      );
+      const { assetClass, assetSubClass } = this.parseAssetClass({
+        quoteType: assetProfile.price.quoteType,
+        shortName: assetProfile.price.shortName
+      });
 
       response.assetClass = assetClass;
       response.assetSubClass = assetSubClass;
@@ -408,7 +409,14 @@ export class YahooFinanceService implements DataProviderInterface {
           marketDataItem.symbol
         );
 
+        const { assetClass, assetSubClass } = this.parseAssetClass({
+          quoteType: quote.quoteType,
+          shortName: quote.shortname
+        });
+
         items.push({
+          assetClass,
+          assetSubClass,
           symbol,
           currency: marketDataItem.currency,
           dataSource: this.getName(),
@@ -484,14 +492,20 @@ export class YahooFinanceService implements DataProviderInterface {
     return value;
   }
 
-  private parseAssetClass(aPrice: Price): {
+  private parseAssetClass({
+    quoteType,
+    shortName
+  }: {
+    quoteType: string;
+    shortName: string;
+  }): {
     assetClass: AssetClass;
     assetSubClass: AssetSubClass;
   } {
     let assetClass: AssetClass;
     let assetSubClass: AssetSubClass;
 
-    switch (aPrice?.quoteType?.toLowerCase()) {
+    switch (quoteType?.toLowerCase()) {
       case 'cryptocurrency':
         assetClass = AssetClass.CASH;
         assetSubClass = AssetSubClass.CRYPTOCURRENCY;
@@ -509,10 +523,10 @@ export class YahooFinanceService implements DataProviderInterface {
         assetSubClass = AssetSubClass.COMMODITY;
 
         if (
-          aPrice?.shortName?.toLowerCase()?.startsWith('gold') ||
-          aPrice?.shortName?.toLowerCase()?.startsWith('palladium') ||
-          aPrice?.shortName?.toLowerCase()?.startsWith('platinum') ||
-          aPrice?.shortName?.toLowerCase()?.startsWith('silver')
+          shortName?.toLowerCase()?.startsWith('gold') ||
+          shortName?.toLowerCase()?.startsWith('palladium') ||
+          shortName?.toLowerCase()?.startsWith('platinum') ||
+          shortName?.toLowerCase()?.startsWith('silver')
         ) {
           assetSubClass = AssetSubClass.PRECIOUS_METAL;
         }

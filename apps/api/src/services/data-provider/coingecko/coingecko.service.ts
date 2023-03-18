@@ -176,6 +176,8 @@ export class CoinGeckoService implements DataProviderInterface {
         return {
           name,
           symbol,
+          assetClass: AssetClass.CASH,
+          assetSubClass: AssetSubClass.CRYPTOCURRENCY,
           currency: this.baseCurrency,
           dataSource: this.getName()
         };

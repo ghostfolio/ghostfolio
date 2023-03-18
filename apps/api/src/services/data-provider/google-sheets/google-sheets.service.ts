@@ -145,6 +145,8 @@ export class GoogleSheetsService implements DataProviderInterface {
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const items = await this.prismaService.symbolProfile.findMany({
       select: {
+        assetClass: true,
+        assetSubClass: true,
         currency: true,
         dataSource: true,
         name: true,
