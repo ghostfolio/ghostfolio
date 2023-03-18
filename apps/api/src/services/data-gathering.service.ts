@@ -127,11 +127,9 @@ export class DataGatheringService {
       );
 
     for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
-      const symbolMapping =
-        assetProfile.symbolMapping ??
-        symbolProfiles.find((symbolProfile) => {
-          return symbolProfile.symbol === symbol;
-        })?.symbolMapping;
+      const symbolMapping = symbolProfiles.find((symbolProfile) => {
+        return symbolProfile.symbol === symbol;
+      })?.symbolMapping;
 
       for (const dataEnhancer of this.dataEnhancers) {
         try {
@@ -154,6 +152,7 @@ export class DataGatheringService {
         countries,
         currency,
         dataSource,
+        isin,
         name,
         sectors,
         url
@@ -167,10 +166,10 @@ export class DataGatheringService {
             countries,
             currency,
             dataSource,
+            isin,
             name,
             sectors,
             symbol,
-            symbolMapping,
             url
           },
           update: {
@@ -178,9 +177,9 @@ export class DataGatheringService {
             assetSubClass,
             countries,
             currency,
+            isin,
             name,
             sectors,
-            symbolMapping,
             url
           },
           where: {

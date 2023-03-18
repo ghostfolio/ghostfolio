@@ -37,18 +37,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
   ): Promise<Partial<SymbolProfile>> {
     const [searchResult] = await this.getSearchResult(aSymbol);
 
-    const symbolMapping = searchResult?.ISIN
-      ? {
-          ISIN: searchResult.ISIN
-        }
-      : undefined;
-
     return {
-      symbolMapping,
       assetClass: searchResult?.assetClass,
       assetSubClass: searchResult?.assetSubClass,
       currency: searchResult?.currency,
       dataSource: this.getName(),
+      isin: searchResult?.ISIN,
       name: searchResult?.name
     };
   }
