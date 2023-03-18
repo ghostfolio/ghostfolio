@@ -42,7 +42,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       assetSubClass: searchResult?.assetSubClass,
       currency: searchResult?.currency,
       dataSource: this.getName(),
-      isin: searchResult?.ISIN,
+      isin: searchResult?.isin,
       name: searchResult?.name
     };
   }
@@ -181,7 +181,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     (LookupItem & {
       assetClass: AssetClass;
       assetSubClass: AssetSubClass;
-      ISIN: string;
+      isin: string;
     })[]
   > {
     let searchResult = [];
@@ -196,7 +196,14 @@ export class EodHistoricalDataService implements DataProviderInterface {
       const response = await get();
 
       searchResult = response.map(
-        ({ Code, Currency: currency, Exchange, ISIN, Name: name, Type }) => {
+        ({
+          Code,
+          Currency: currency,
+          Exchange,
+          ISIN: isin,
+          Name: name,
+          Type
+        }) => {
           const { assetClass, assetSubClass } = this.parseAssetClass({
             Exchange,
             Type
@@ -206,7 +213,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
             assetClass,
             assetSubClass,
             currency,
-            ISIN,
+            isin,
             name,
             dataSource: this.getName(),
             symbol: `${Code}.${Exchange}`
