@@ -5,7 +5,10 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import {
+  HistoricalDataItem,
+  UserWithSettings
+} from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, subDays } from 'date-fns';
 
@@ -79,15 +82,24 @@ export class SymbolService {
     };
   }
 
-  public async lookup(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async lookup({
+    query,
+    user
+  }: {
+    query: string;
+    user: UserWithSettings;
+  }): Promise<{ items: LookupItem[] }> {
     const results: { items: LookupItem[] } = { items: [] };
 
-    if (!aQuery) {
+    if (!query) {
       return results;
     }
 
     try {
-      const { items } = await this.dataProviderService.search(aQuery);
+      const { items } = await this.dataProviderService.search({
+        query,
+        user
+      });
       results.items = items;
       return results;
     } catch (error) {

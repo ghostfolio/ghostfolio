@@ -254,6 +254,7 @@ export class ImportService {
             countries: null,
             createdAt: undefined,
             id: undefined,
+            isin: null,
             name: null,
             scraperConfiguration: null,
             sectors: null,

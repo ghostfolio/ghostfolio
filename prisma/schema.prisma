@@ -119,6 +119,7 @@ model SymbolProfile {
   currency               String
   dataSource             DataSource
   id                     String                  @id @default(uuid())
+  isin                   String?
   name                   String?
   updatedAt              DateTime                @updatedAt
   scraperConfiguration   Json?

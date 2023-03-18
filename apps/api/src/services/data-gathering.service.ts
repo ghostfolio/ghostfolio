@@ -152,10 +152,11 @@ export class DataGatheringService {
         countries,
         currency,
         dataSource,
+        isin,
         name,
         sectors,
         url
-      } = assetProfiles[symbol];
+      } = assetProfile;
 
       try {
         await this.prismaService.symbolProfile.upsert({
@@ -165,6 +166,7 @@ export class DataGatheringService {
             countries,
             currency,
             dataSource,
+            isin,
             name,
             sectors,
             symbol,
@@ -175,6 +177,7 @@ export class DataGatheringService {
             assetSubClass,
             countries,
             currency,
+            isin,
             name,
             sectors,
             url
