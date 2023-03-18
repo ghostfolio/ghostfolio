@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for asset and asset sub class to the `EOD_HISTORICAL_DATA` data source type
-- Added support for symbol mapping (_ISIN_) to the `EOD_HISTORICAL_DATA` data source type
+- Added `ISIN` to the asset profile model
 
 ### Changed
 
