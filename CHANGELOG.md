@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the _Trackinsight_ data enhancer for asset profile data by `isin`
 - Improved the language localization for _Gather Data_
 
 ### Fixed
