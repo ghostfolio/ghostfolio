@@ -53,6 +53,7 @@
                     *ngIf="userItem?.subscription?.type === 'Premium'"
                     class="ml-1"
                     [enableLink]="false"
+                    [title]="userItem.subscription.expiresAt | date: defaultDateFormat"
                   ></gf-premium-indicator>
                 </div>
               </td>
