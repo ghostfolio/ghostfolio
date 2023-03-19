@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the subscription expiration date to the users table of the admin control panel
+
 ### Changed
 
 - Upgraded `prisma` from version `4.10.1` to `4.11.0`
