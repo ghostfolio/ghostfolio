@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prisma` from version `4.10.1` to `4.11.0`
 
+### Fixed
+
+- Fixed the total amount calculation in the portfolio evolution chart
+
 ## 1.246.0 - 2023-03-18
 
 ### Added
