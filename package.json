@@ -111,7 +111,7 @@
     "lodash": "4.17.21",
     "marked": "4.2.12",
     "ms": "3.0.0-canary.1",
-    "ng-extract-i18n-merge": "2.5.0",
+    "ng-extract-i18n-merge": "2.6.0",
     "ngx-device-detector": "5.0.1",
     "ngx-markdown": "15.1.0",
     "ngx-skeleton-loader": "7.0.0",
