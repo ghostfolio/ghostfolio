@@ -171,9 +171,25 @@ export class EodHistoricalDataService implements DataProviderInterface {
         .filter(({ symbol }) => {
           return !symbol.toLowerCase().endsWith('forex');
         })
-        .map(({ currency, dataSource, name, symbol }) => {
-          return { currency, dataSource, name, symbol };
-        })
+        .map(
+          ({
+            assetClass,
+            assetSubClass,
+            currency,
+            dataSource,
+            name,
+            symbol
+          }) => {
+            return {
+              assetClass,
+              assetSubClass,
+              currency,
+              dataSource,
+              name,
+              symbol
+            };
+          }
+        )
     };
   }
 

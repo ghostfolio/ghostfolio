@@ -165,6 +165,8 @@ export class ManualService implements DataProviderInterface {
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     let items = await this.prismaService.symbolProfile.findMany({
       select: {
+        assetClass: true,
+        assetSubClass: true,
         currency: true,
         dataSource: true,
         name: true,
