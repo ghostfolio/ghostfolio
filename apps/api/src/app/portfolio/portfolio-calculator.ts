@@ -235,7 +235,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const netPerformanceValuesBySymbol: {
+    const currentValuesBySymbol: {
       [symbol: string]: { [date: string]: Big };
     } = {};
 
@@ -247,21 +247,31 @@ export class PortfolioCalculator {
       [symbol: string]: { [date: string]: Big };
     } = {};
 
+    const netPerformanceValuesBySymbol: {
+      [symbol: string]: { [date: string]: Big };
+    } = {};
+
+    const totalCurrentValues: { [date: string]: Big } = {};
     const totalNetPerformanceValues: { [date: string]: Big } = {};
     const totalInvestmentValues: { [date: string]: Big } = {};
     const maxTotalInvestmentValues: { [date: string]: Big } = {};
 
     for (const symbol of Object.keys(symbols)) {
-      const { investmentValues, maxInvestmentValues, netPerformanceValues } =
-        this.getSymbolMetrics({
-          end,
-          marketSymbolMap,
-          start,
-          step,
-          symbol,
-          isChartMode: true
-        });
+      const {
+        currentValues,
+        investmentValues,
+        maxInvestmentValues,
+        netPerformanceValues
+      } = this.getSymbolMetrics({
+        end,
+        marketSymbolMap,
+        start,
+        step,
+        symbol,
+        isChartMode: true
+      });
 
+      currentValuesBySymbol[symbol] = currentValues;
       netPerformanceValuesBySymbol[symbol] = netPerformanceValues;
       investmentValuesBySymbol[symbol] = investmentValues;
       maxInvestmentValuesBySymbol[symbol] = maxInvestmentValues;
@@ -271,6 +281,15 @@ export class PortfolioCalculator {
       const dateString = format(currentDate, DATE_FORMAT);
 
       for (const symbol of Object.keys(netPerformanceValuesBySymbol)) {
+        totalCurrentValues[dateString] =
+          totalCurrentValues[dateString] ?? new Big(0);
+
+        if (currentValuesBySymbol[symbol]?.[dateString]) {
+          totalCurrentValues[dateString] = totalCurrentValues[dateString].add(
+            currentValuesBySymbol[symbol][dateString]
+          );
+        }
+
         totalNetPerformanceValues[dateString] =
           totalNetPerformanceValues[dateString] ?? new Big(0);
 
@@ -283,14 +302,14 @@ export class PortfolioCalculator {
         totalInvestmentValues[dateString] =
           totalInvestmentValues[dateString] ?? new Big(0);
 
-        maxTotalInvestmentValues[dateString] =
-          maxTotalInvestmentValues[dateString] ?? new Big(0);
-
         if (investmentValuesBySymbol[symbol]?.[dateString]) {
           totalInvestmentValues[dateString] = totalInvestmentValues[
             dateString
           ].add(investmentValuesBySymbol[symbol][dateString]);
         }
+
+        maxTotalInvestmentValues[dateString] =
+          maxTotalInvestmentValues[dateString] ?? new Big(0);
 
         if (maxInvestmentValuesBySymbol[symbol]?.[dateString]) {
           maxTotalInvestmentValues[dateString] = maxTotalInvestmentValues[
@@ -313,9 +332,7 @@ export class PortfolioCalculator {
         netPerformanceInPercentage,
         netPerformance: totalNetPerformanceValues[date].toNumber(),
         totalInvestment: totalInvestmentValues[date].toNumber(),
-        value: totalInvestmentValues[date]
-          .plus(totalNetPerformanceValues[date])
-          .toNumber()
+        value: totalCurrentValues[date].toNumber()
       };
     });
   }
@@ -906,12 +923,16 @@ export class PortfolioCalculator {
 
     if (orders.length <= 0) {
       return {
+        currentValues: {},
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0),
         hasErrors: false,
         initialValue: new Big(0),
+        investmentValues: {},
+        maxInvestmentValues: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0)
+        netPerformanceValues: {}
       };
     }
 
@@ -946,6 +967,7 @@ export class PortfolioCalculator {
     let grossPerformanceFromSells = new Big(0);
     let initialValue: Big;
     let investmentAtStartDate: Big;
+    const currentValues: { [date: string]: Big } = {};
     const investmentValues: { [date: string]: Big } = {};
     const maxInvestmentValues: { [date: string]: Big } = {};
     let lastAveragePrice = new Big(0);
@@ -1164,6 +1186,7 @@ export class PortfolioCalculator {
       }
 
       if (isChartMode && i > indexOfStartOrder) {
+        currentValues[order.date] = valueOfInvestment;
         netPerformanceValues[order.date] = grossPerformance
           .minus(grossPerformanceAtStartDate)
           .minus(fees.minus(feesAtStartDate));
@@ -1261,15 +1284,16 @@ export class PortfolioCalculator {
     }
 
     return {
-      initialValue,
+      currentValues,
       grossPerformancePercentage,
+      initialValue,
       investmentValues,
       maxInvestmentValues,
       netPerformancePercentage,
       netPerformanceValues,
+      grossPerformance: totalGrossPerformance,
       hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
-      netPerformance: totalNetPerformance,
-      grossPerformance: totalGrossPerformance
+      netPerformance: totalNetPerformance
     };
   }
 

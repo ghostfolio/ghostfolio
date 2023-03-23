@@ -86,7 +86,7 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentage: 13.100263852242744,
         netPerformance: 19.86,
         totalInvestment: 0,
-        value: 19.86
+        value: 0
       });
 
       expect(currentPositions).toEqual({
