@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated the URL of the Ghostfolio Slack channel
 - Upgraded `prisma` from version `4.10.1` to `4.11.0`
 
 ## 1.246.0 - 2023-03-18

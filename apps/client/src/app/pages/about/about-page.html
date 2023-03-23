@@ -34,7 +34,7 @@
           <a [routerLink]="['/features']">feature</a>, please join the
           Ghostfolio
           <a
-            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            href="https://ghostfolio.slack.com"
             title="Join the Ghostfolio Slack community"
             >Slack community</a
           >, tweet to
@@ -42,7 +42,7 @@
             href="https://twitter.com/ghostfolio_"
             title="Tweet to Ghostfolio on Twitter"
             >@ghostfolio_</a
-          ><ng-container *ngIf="hasPermissionForSubscription"
+          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
             >, send an e-mail to
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
               >hi@ghostfol.io</a
@@ -65,6 +65,7 @@
             <ion-icon name="logo-twitter"></ion-icon>
           </a>
           <a
+            *ngIf="user?.subscription?.type === 'Premium'"
             class="mx-2"
             href="mailto:hi@ghostfol.io"
             mat-icon-button
@@ -74,7 +75,7 @@
           </a>
           <a
             class="mx-2"
-            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            href="https://ghostfolio.slack.com"
             mat-icon-button
             title="Join the Ghostfolio Slack channel"
           >
@@ -147,10 +148,7 @@
               >
             </div>
             <div class="col-xs-12 col-md-4 my-2">
-              <a
-                class="d-block"
-                href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
-              >
+              <a class="d-block" href="https://ghostfolio.slack.com">
                 <gf-value
                   size="large"
                   [value]="statistics?.slackCommunityUsers ?? '-'"

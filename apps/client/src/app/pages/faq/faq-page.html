@@ -140,23 +140,55 @@
           >, a star on
           <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>,
           feedback, bug reports, feature requests and of course contributions!
-          You can reach us by e-mail at
-          <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a> or on Twitter
-          <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a
+          You can reach us via Ghostfolio
+          <a
+            href="https://ghostfolio.slack.com"
+            title="Join the Ghostfolio Slack community"
+            >Slack community</a
+          >,
+          <a
+            href="https://twitter.com/ghostfolio_"
+            title="Tweet to Ghostfolio on Twitter"
+            >@ghostfolio_</a
+          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
+            >,
+            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+              >hi@ghostfol.io</a
+            ></ng-container
+          >
+          or
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >GitHub</a
           >.</mat-card-content
         >
       </mat-card>
       <mat-card class="mb-3">
         <mat-card-title>Got any other questions?</mat-card-title>
         <mat-card-content
-          >Join the Ghostfolio
+          >Please join the Ghostfolio
           <a
-            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            href="https://ghostfolio.slack.com"
+            title="Join the Ghostfolio Slack community"
             >Slack community</a
           >, tweet to
-          <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a> or send an
-          e-mail to
-          <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a>.</mat-card-content
+          <a
+            href="https://twitter.com/ghostfolio_"
+            title="Tweet to Ghostfolio on Twitter"
+            >@ghostfolio_</a
+          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
+            >, send an e-mail to
+            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+              >hi@ghostfol.io</a
+            ></ng-container
+          >
+          or start a discussion at
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >GitHub</a
+          >.</mat-card-content
         >
       </mat-card>
     </div>
