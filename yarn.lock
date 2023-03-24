@@ -10,20 +10,12 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@angular-devkit/architect@0.1501.6":
+"@angular-devkit/architect@0.1501.6", "@angular-devkit/architect@^0.1301.0 || ^0.1401.0 || ^0.1501.0":
   version "0.1501.6"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1501.6.tgz#dc8b935d6aa12a9a7e84fec7b5011dd7cf19b981"
   integrity sha512-u07zZFlfrg0Qn4mu5M9Nz0pH2Yd2028XF/73980PsZMxwkSm4diF08v4bHk3UyR7yPT7phwvt4znj6ryZhx1gw==
   dependencies:
     "@angular-devkit/core" "15.1.6"
-    rxjs "6.6.7"
-
-"@angular-devkit/architect@^0.1301.0":
-  version "0.1301.4"
-  resolved "https://registry.npmjs.org/@angular-devkit/architect/-/architect-0.1301.4.tgz"
-  integrity sha512-p6G8CEMnE+gYwxRyEttj3QGsuNJ3Kusi7iwBIzWyf2RpJSdGzXdwUEiRGg6iS0YHFr06/ZFfAWfnM2DQvNm4TA==
-  dependencies:
-    "@angular-devkit/core" "13.1.4"
     rxjs "6.6.7"
 
 "@angular-devkit/build-angular@15.1.6":
@@ -101,18 +93,6 @@
   dependencies:
     "@angular-devkit/architect" "0.1501.6"
     rxjs "6.6.7"
-
-"@angular-devkit/core@13.1.4":
-  version "13.1.4"
-  resolved "https://registry.npmjs.org/@angular-devkit/core/-/core-13.1.4.tgz"
-  integrity sha512-225Gjy4iVxh5Jo9njJnaG75M/Dt95UW+dEPCGWKV5E/++7UUlXlo9sNWq8x2vJm2nhtsPkpnXNOt4pW1mIDwqQ==
-  dependencies:
-    ajv "8.8.2"
-    ajv-formats "2.1.1"
-    fast-json-stable-stringify "2.1.0"
-    magic-string "0.25.7"
-    rxjs "6.6.7"
-    source-map "0.7.3"
 
 "@angular-devkit/core@14.0.5":
   version "14.0.5"
@@ -7132,16 +7112,6 @@ ajv@8.12.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-ajv@8.8.2:
-  version "8.8.2"
-  resolved "https://registry.npmjs.org/ajv/-/ajv-8.8.2.tgz"
-  integrity sha512-x9VuX+R/jcFj1DHo/fCp99esgGDWiHENrKxaCENuCxpoMCmAt/COCGVDwA7kleEpEzJjDnvh3yGoOuLu0Dtllw==
-  dependencies:
-    fast-deep-equal "^3.1.1"
-    json-schema-traverse "^1.0.0"
-    require-from-string "^2.0.2"
-    uri-js "^4.2.2"
-
 ajv@^6.1.0, ajv@^6.10.0, ajv@^6.10.2, ajv@^6.12.2, ajv@^6.12.4, ajv@^6.12.5, ajv@^6.9.1:
   version "6.12.6"
   resolved "https://registry.npmjs.org/ajv/-/ajv-6.12.6.tgz"
@@ -11824,7 +11794,7 @@ fast-glob@^3.2.12:
     merge2 "^1.3.0"
     micromatch "^4.0.4"
 
-fast-json-stable-stringify@2.1.0, fast-json-stable-stringify@2.x, fast-json-stable-stringify@^2.0.0, fast-json-stable-stringify@^2.1.0:
+fast-json-stable-stringify@2.x, fast-json-stable-stringify@^2.0.0, fast-json-stable-stringify@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz"
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
@@ -15743,13 +15713,6 @@ luxon@^1.23.x, luxon@^1.28.0:
   resolved "https://registry.npmjs.org/luxon/-/luxon-1.28.0.tgz"
   integrity sha512-TfTiyvZhwBYM/7QdAVDh+7dBTBA29v4ik0Ce9zda3Mnf8on1S5KJI8P2jKFZ8+5C0jhmr0KwJEO/Wdpm0VeWJQ==
 
-magic-string@0.25.7:
-  version "0.25.7"
-  resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.25.7.tgz"
-  integrity sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==
-  dependencies:
-    sourcemap-codec "^1.4.4"
-
 magic-string@0.26.1:
   version "0.26.1"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.26.1.tgz"
@@ -16456,17 +16419,17 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   resolved "https://registry.npmjs.org/nested-error-stacks/-/nested-error-stacks-2.1.1.tgz"
   integrity sha512-9iN1ka/9zmX1ZvLV9ewJYEk9h7RyRRtqdK0woXcqohu8EWIerfPUjYJPg0ULy0UqP7cslmdGc8xKDJcojlKiaw==
 
-ng-extract-i18n-merge@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/ng-extract-i18n-merge/-/ng-extract-i18n-merge-2.5.0.tgz#bc58fd8f50d08f690cdcc00b4f9ff068a0550a9d"
-  integrity sha512-/RCYvStp6326SgK8JQVPlu48vt3tzTOM8XggXUtekTBLc1Q6wXyACSurQk7vQPuAt+l0Lk93734aFoDcC1W59A==
+ng-extract-i18n-merge@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/ng-extract-i18n-merge/-/ng-extract-i18n-merge-2.6.0.tgz#1b797fea85d90690c787c7f86710d37916aa008d"
+  integrity sha512-Lgd9zsAkAQX3gCUypE53S7/2A+fdpMiSJ8cVMOBctI3Et3e9nEPSfb2n0wkj1BnlitdjtQP+x42CldqjHtnAgw==
   dependencies:
-    "@angular-devkit/architect" "^0.1301.0"
+    "@angular-devkit/architect" "^0.1301.0 || ^0.1401.0 || ^0.1501.0"
     "@angular-devkit/core" "^13.0.0 || ^14.0.0 || ^15.0.0"
     "@angular-devkit/schematics" "^13.0.0 || ^14.0.0 || ^15.0.0"
     "@schematics/angular" "^13.0.0 || ^14.0.0 || ^15.0.0"
     xliff-simple-merge "~1.0.1"
-    xml_normalize "~0.8.4"
+    xml_normalize "^1.0.0"
     xmldoc "~1.1.2"
 
 ngx-device-detector@5.0.1:
@@ -19609,7 +19572,7 @@ source-map@^0.5.0, source-map@^0.5.6, source-map@^0.5.7:
   resolved "https://registry.npmjs.org/source-map/-/source-map-0.5.7.tgz"
   integrity sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==
 
-sourcemap-codec@^1.4.4, sourcemap-codec@^1.4.8:
+sourcemap-codec@^1.4.8:
   version "1.4.8"
   resolved "https://registry.npmjs.org/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz"
   integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
@@ -21798,10 +21761,10 @@ xml-name-validator@^4.0.0:
   resolved "https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-4.0.0.tgz"
   integrity sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==
 
-xml_normalize@~0.8.4:
-  version "0.8.4"
-  resolved "https://registry.npmjs.org/xml_normalize/-/xml_normalize-0.8.4.tgz"
-  integrity sha512-I+PiD+W/fS7YOWb4THhQfvkzd1mCuTT3KoRt4PTxiWYbH1RY74w5ewcIas8ja9APC8Ho2izg8VcNnTTN35qM9A==
+xml_normalize@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/xml_normalize/-/xml_normalize-1.0.0.tgz#e844d8abae27b64fcb4eb0d567ecff278e0b166c"
+  integrity sha512-VzDbw9DW849WoLor6CP1eIPiVWwbq8CV3dlSrfVfsMqBqvp3VVkmLxA8J55WyLf6CnAf2sV29TQO77BKM/cxBw==
   dependencies:
     commander "~7.1.0"
     xmldoc "~1.1.2"
