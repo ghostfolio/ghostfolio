@@ -182,10 +182,10 @@ export class PortfolioCalculator {
         return isBefore(parseDate(transactionPoint.date), end);
       }) ?? [];
 
-    const firstIndex = transactionPointsBeforeEndDate.length;
+    const currencies: { [symbol: string]: string } = {};
     const dates: Date[] = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
-    const currencies: { [symbol: string]: string } = {};
+    const firstIndex = transactionPointsBeforeEndDate.length;
 
     let day = start;
 
@@ -235,26 +235,23 @@ export class PortfolioCalculator {
       }
     }
 
-    const currentValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
+    const valuesByDate: {
+      [date: string]: {
+        maxTotalInvestmentValue: Big;
+        totalCurrentValue: Big;
+        totalInvestmentValue: Big;
+        totalNetPerformanceValue: Big;
+      };
     } = {};
 
-    const investmentValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
+    const valuesBySymbol: {
+      [symbol: string]: {
+        currentValues: { [date: string]: Big };
+        investmentValues: { [date: string]: Big };
+        maxInvestmentValues: { [date: string]: Big };
+        netPerformanceValues: { [date: string]: Big };
+      };
     } = {};
-
-    const maxInvestmentValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
-    } = {};
-
-    const netPerformanceValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
-    } = {};
-
-    const totalCurrentValues: { [date: string]: Big } = {};
-    const totalNetPerformanceValues: { [date: string]: Big } = {};
-    const totalInvestmentValues: { [date: string]: Big } = {};
-    const maxTotalInvestmentValues: { [date: string]: Big } = {};
 
     for (const symbol of Object.keys(symbols)) {
       const {
@@ -271,68 +268,67 @@ export class PortfolioCalculator {
         isChartMode: true
       });
 
-      currentValuesBySymbol[symbol] = currentValues;
-      netPerformanceValuesBySymbol[symbol] = netPerformanceValues;
-      investmentValuesBySymbol[symbol] = investmentValues;
-      maxInvestmentValuesBySymbol[symbol] = maxInvestmentValues;
+      valuesBySymbol[symbol] = {
+        currentValues,
+        investmentValues,
+        maxInvestmentValues,
+        netPerformanceValues
+      };
     }
 
     for (const currentDate of dates) {
       const dateString = format(currentDate, DATE_FORMAT);
 
-      for (const symbol of Object.keys(netPerformanceValuesBySymbol)) {
-        totalCurrentValues[dateString] =
-          totalCurrentValues[dateString] ?? new Big(0);
+      for (const symbol of Object.keys(valuesBySymbol)) {
+        const symbolValues = valuesBySymbol[symbol];
 
-        if (currentValuesBySymbol[symbol]?.[dateString]) {
-          totalCurrentValues[dateString] = totalCurrentValues[dateString].add(
-            currentValuesBySymbol[symbol][dateString]
-          );
-        }
+        const currentValue =
+          symbolValues.currentValues?.[dateString] ?? new Big(0);
+        const investmentValue =
+          symbolValues.investmentValues?.[dateString] ?? new Big(0);
+        const maxInvestmentValue =
+          symbolValues.maxInvestmentValues?.[dateString] ?? new Big(0);
+        const netPerformanceValue =
+          symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
 
-        totalNetPerformanceValues[dateString] =
-          totalNetPerformanceValues[dateString] ?? new Big(0);
-
-        if (netPerformanceValuesBySymbol[symbol]?.[dateString]) {
-          totalNetPerformanceValues[dateString] = totalNetPerformanceValues[
-            dateString
-          ].add(netPerformanceValuesBySymbol[symbol][dateString]);
-        }
-
-        totalInvestmentValues[dateString] =
-          totalInvestmentValues[dateString] ?? new Big(0);
-
-        if (investmentValuesBySymbol[symbol]?.[dateString]) {
-          totalInvestmentValues[dateString] = totalInvestmentValues[
-            dateString
-          ].add(investmentValuesBySymbol[symbol][dateString]);
-        }
-
-        maxTotalInvestmentValues[dateString] =
-          maxTotalInvestmentValues[dateString] ?? new Big(0);
-
-        if (maxInvestmentValuesBySymbol[symbol]?.[dateString]) {
-          maxTotalInvestmentValues[dateString] = maxTotalInvestmentValues[
-            dateString
-          ].add(maxInvestmentValuesBySymbol[symbol][dateString]);
-        }
+        valuesByDate[dateString] = {
+          totalCurrentValue: (
+            valuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
+          ).add(currentValue),
+          totalInvestmentValue: (
+            valuesByDate[dateString]?.totalInvestmentValue ?? new Big(0)
+          ).add(investmentValue),
+          maxTotalInvestmentValue: (
+            valuesByDate[dateString]?.maxTotalInvestmentValue ?? new Big(0)
+          ).add(maxInvestmentValue),
+          totalNetPerformanceValue: (
+            valuesByDate[dateString]?.totalNetPerformanceValue ?? new Big(0)
+          ).add(netPerformanceValue)
+        };
       }
     }
 
-    return Object.keys(totalNetPerformanceValues).map((date) => {
-      const netPerformanceInPercentage = maxTotalInvestmentValues[date].eq(0)
+    return Object.entries(valuesByDate).map(([date, values]) => {
+      const {
+        maxTotalInvestmentValue,
+        totalCurrentValue,
+        totalInvestmentValue,
+        totalNetPerformanceValue
+      } = values;
+
+      const netPerformanceInPercentage = maxTotalInvestmentValue.eq(0)
         ? 0
-        : totalNetPerformanceValues[date]
-            .div(maxTotalInvestmentValues[date])
+        : totalNetPerformanceValue
+            .div(maxTotalInvestmentValue)
             .mul(100)
             .toNumber();
 
       return {
         date,
         netPerformanceInPercentage,
-        netPerformance: totalNetPerformanceValues[date].toNumber(),
-        totalInvestment: totalInvestmentValues[date].toNumber(),
-        value: totalCurrentValues[date].toNumber()
+        netPerformance: totalNetPerformanceValue.toNumber(),
+        totalInvestment: totalInvestmentValue.toNumber(),
+        value: totalCurrentValue.toNumber()
       };
     });
   }

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the calculation of the chart
 - Upgraded `ng-extract-i18n-merge` from version `2.5.0` to `2.6.0`
 
 ## 1.247.0 - 2023-03-23
