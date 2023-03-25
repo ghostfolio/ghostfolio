@@ -235,6 +235,15 @@ export class PortfolioCalculator {
       }
     }
 
+    const valuesByDate: {
+      [date: string]: {
+        maxTotalInvestmentValue: Big;
+        totalCurrentValue: Big;
+        totalInvestmentValue: Big;
+        totalNetPerformanceValue: Big;
+      };
+    } = {};
+
     const valuesBySymbol: {
       [symbol: string]: {
         currentValues: { [date: string]: Big };
@@ -243,11 +252,6 @@ export class PortfolioCalculator {
         netPerformanceValues: { [date: string]: Big };
       };
     } = {};
-
-    const totalCurrentValues: { [date: string]: Big } = {};
-    const totalNetPerformanceValues: { [date: string]: Big } = {};
-    const totalInvestmentValues: { [date: string]: Big } = {};
-    const maxTotalInvestmentValues: { [date: string]: Big } = {};
 
     for (const symbol of Object.keys(symbols)) {
       const {
@@ -276,58 +280,55 @@ export class PortfolioCalculator {
       const dateString = format(currentDate, DATE_FORMAT);
 
       for (const symbol of Object.keys(valuesBySymbol)) {
-        totalCurrentValues[dateString] =
-          totalCurrentValues[dateString] ?? new Big(0);
+        const symbolValues = valuesBySymbol[symbol];
 
-        if (valuesBySymbol[symbol]?.currentValues?.[dateString]) {
-          totalCurrentValues[dateString] = totalCurrentValues[dateString].add(
-            valuesBySymbol[symbol].currentValues[dateString]
-          );
-        }
+        const currentValue =
+          symbolValues.currentValues?.[dateString] ?? new Big(0);
+        const investmentValue =
+          symbolValues.investmentValues?.[dateString] ?? new Big(0);
+        const maxInvestmentValue =
+          symbolValues.maxInvestmentValues?.[dateString] ?? new Big(0);
+        const netPerformanceValue =
+          symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
 
-        totalNetPerformanceValues[dateString] =
-          totalNetPerformanceValues[dateString] ?? new Big(0);
-
-        if (valuesBySymbol[symbol]?.netPerformanceValues?.[dateString]) {
-          totalNetPerformanceValues[dateString] = totalNetPerformanceValues[
-            dateString
-          ].add(valuesBySymbol[symbol].netPerformanceValues[dateString]);
-        }
-
-        totalInvestmentValues[dateString] =
-          totalInvestmentValues[dateString] ?? new Big(0);
-
-        if (valuesBySymbol[symbol]?.investmentValues?.[dateString]) {
-          totalInvestmentValues[dateString] = totalInvestmentValues[
-            dateString
-          ].add(valuesBySymbol[symbol].investmentValues[dateString]);
-        }
-
-        maxTotalInvestmentValues[dateString] =
-          maxTotalInvestmentValues[dateString] ?? new Big(0);
-
-        if (valuesBySymbol[symbol]?.maxInvestmentValues?.[dateString]) {
-          maxTotalInvestmentValues[dateString] = maxTotalInvestmentValues[
-            dateString
-          ].add(valuesBySymbol[symbol].maxInvestmentValues[dateString]);
-        }
+        valuesByDate[dateString] = {
+          totalCurrentValue: (
+            valuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
+          ).add(currentValue),
+          totalInvestmentValue: (
+            valuesByDate[dateString]?.totalInvestmentValue ?? new Big(0)
+          ).add(investmentValue),
+          maxTotalInvestmentValue: (
+            valuesByDate[dateString]?.maxTotalInvestmentValue ?? new Big(0)
+          ).add(maxInvestmentValue),
+          totalNetPerformanceValue: (
+            valuesByDate[dateString]?.totalNetPerformanceValue ?? new Big(0)
+          ).add(netPerformanceValue)
+        };
       }
     }
 
-    return Object.keys(totalNetPerformanceValues).map((date) => {
-      const netPerformanceInPercentage = maxTotalInvestmentValues[date].eq(0)
+    return Object.entries(valuesByDate).map(([date, values]) => {
+      const {
+        maxTotalInvestmentValue,
+        totalCurrentValue,
+        totalInvestmentValue,
+        totalNetPerformanceValue
+      } = values;
+
+      const netPerformanceInPercentage = maxTotalInvestmentValue.eq(0)
         ? 0
-        : totalNetPerformanceValues[date]
-            .div(maxTotalInvestmentValues[date])
+        : totalNetPerformanceValue
+            .div(maxTotalInvestmentValue)
             .mul(100)
             .toNumber();
 
       return {
         date,
         netPerformanceInPercentage,
-        netPerformance: totalNetPerformanceValues[date].toNumber(),
-        totalInvestment: totalInvestmentValues[date].toNumber(),
-        value: totalCurrentValues[date].toNumber()
+        netPerformance: totalNetPerformanceValue.toNumber(),
+        totalInvestment: totalInvestmentValue.toNumber(),
+        value: totalCurrentValue.toNumber()
       };
     });
   }
