@@ -92,7 +92,7 @@ export class FrontendMiddleware implements NestMiddleware {
         '/en/blog/2023/03/ghostfolio-reaches-1000-stars-on-github'
       )
     ) {
-      featureGraphicPath = 'assets/images/blog/100-stars-on-github.jpg';
+      featureGraphicPath = 'assets/images/blog/1000-stars-on-github.jpg';
       title = `Ghostfolio reaches 1’000 Stars on GitHub - ${title}`;
     }
 
