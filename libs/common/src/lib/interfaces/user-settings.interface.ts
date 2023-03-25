@@ -1,4 +1,4 @@
-import { ColorScheme, DateRange, ViewMode } from '@ghostfolio/common/types';
+import {ColorScheme, DateRange, UnknownMode, ViewMode} from '@ghostfolio/common/types';
 
 export interface UserSettings {
   annualInterestRate?: number;
@@ -15,4 +15,5 @@ export interface UserSettings {
   retirementDate?: string;
   savingsRate?: number;
   viewMode?: ViewMode;
+  unknownMode?: UnknownMode;
 }

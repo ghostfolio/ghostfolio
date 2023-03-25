@@ -225,6 +225,22 @@
               ></mat-slide-toggle>
             </div>
           </div>
+          <div class="d-flex mt-4 py-1">
+            <div class="pr-1 w-50">
+              <div i18n>Unknown Mode</div>
+              <div class="hint-text text-muted" i18n>
+                Show Unknown categories in Portfolio Allocation View
+              </div>
+            </div>
+            <div class="pl-1 w-50">
+              <mat-slide-toggle
+                color="primary"
+                [checked]="user.settings.unknownMode === 'DEFAULT'"
+                [disabled]="!hasPermissionToUpdateUnknownMode"
+                (change)="onUnknownChange($event)"
+              ></mat-slide-toggle>
+            </div>
+          </div>
           <div class="align-items-center d-flex mt-4 py-1">
             <div class="pr-1 w-50" i18n>Sign in with fingerprint</div>
             <div class="pl-1 w-50">

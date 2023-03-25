@@ -53,6 +53,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateAccess: boolean;
   public hasPermissionToDeleteAccess: boolean;
   public hasPermissionToUpdateViewMode: boolean;
+  public hasPermissionToUpdateUnknownMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public language = document.documentElement.lang;
   public locales = [
@@ -136,6 +137,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           this.hasPermissionToUpdateViewMode = hasPermission(
             this.user.permissions,
             permissions.updateViewMode
+          );
+
+          this.hasPermissionToUpdateUnknownMode = hasPermission(
+            this.user.permissions,
+            permissions.updateUnknownMode
           );
 
           this.locales.push(this.user.settings.locale);
@@ -326,6 +332,22 @@ export class AccountPageComponent implements OnDestroy, OnInit {
           .subscribe((user) => {
             this.user = user;
 
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+  public onUnknownChange(aEvent: MatSlideToggleChange) {
+    this.dataService
+      .putUserSetting({ unknownMode: aEvent.checked === true ? 'DEFAULT' : 'OFF'})
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
             this.changeDetectorRef.markForCheck();
           });
       });
