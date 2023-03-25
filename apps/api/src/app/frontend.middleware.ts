@@ -87,6 +87,13 @@ export class FrontendMiddleware implements NestMiddleware {
     ) {
       featureGraphicPath = 'assets/images/blog/ghostfolio-x-umbrel.png';
       title = `Ghostfolio meets Umbrel - ${title}`;
+    } else if (
+      request.path.startsWith(
+        '/en/blog/2023/03/ghostfolio-reaches-1000-stars-on-github'
+      )
+    ) {
+      featureGraphicPath = 'assets/images/blog/1000-stars-on-github.jpg';
+      title = `Ghostfolio reaches 1’000 Stars on GitHub - ${title}`;
     }
 
     if (

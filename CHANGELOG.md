@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post: _Ghostfolio reaches 1’000 Stars on GitHub_
+- Added a breadcrumb navigation to the blog post pages
+
 ### Changed
 
 - Refactored the calculation of the chart
