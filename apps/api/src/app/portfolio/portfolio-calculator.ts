@@ -182,10 +182,10 @@ export class PortfolioCalculator {
         return isBefore(parseDate(transactionPoint.date), end);
       }) ?? [];
 
-    const firstIndex = transactionPointsBeforeEndDate.length;
+    const currencies: { [symbol: string]: string } = {};
     const dates: Date[] = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
-    const currencies: { [symbol: string]: string } = {};
+    const firstIndex = transactionPointsBeforeEndDate.length;
 
     let day = start;
 
@@ -235,20 +235,13 @@ export class PortfolioCalculator {
       }
     }
 
-    const currentValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
-    } = {};
-
-    const investmentValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
-    } = {};
-
-    const maxInvestmentValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
-    } = {};
-
-    const netPerformanceValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
+    const valuesBySymbol: {
+      [symbol: string]: {
+        currentValues: { [date: string]: Big };
+        investmentValues: { [date: string]: Big };
+        maxInvestmentValues: { [date: string]: Big };
+        netPerformanceValues: { [date: string]: Big };
+      };
     } = {};
 
     const totalCurrentValues: { [date: string]: Big } = {};
@@ -271,50 +264,52 @@ export class PortfolioCalculator {
         isChartMode: true
       });
 
-      currentValuesBySymbol[symbol] = currentValues;
-      netPerformanceValuesBySymbol[symbol] = netPerformanceValues;
-      investmentValuesBySymbol[symbol] = investmentValues;
-      maxInvestmentValuesBySymbol[symbol] = maxInvestmentValues;
+      valuesBySymbol[symbol] = {
+        currentValues,
+        investmentValues,
+        maxInvestmentValues,
+        netPerformanceValues
+      };
     }
 
     for (const currentDate of dates) {
       const dateString = format(currentDate, DATE_FORMAT);
 
-      for (const symbol of Object.keys(netPerformanceValuesBySymbol)) {
+      for (const symbol of Object.keys(valuesBySymbol)) {
         totalCurrentValues[dateString] =
           totalCurrentValues[dateString] ?? new Big(0);
 
-        if (currentValuesBySymbol[symbol]?.[dateString]) {
+        if (valuesBySymbol[symbol].currentValues[dateString]) {
           totalCurrentValues[dateString] = totalCurrentValues[dateString].add(
-            currentValuesBySymbol[symbol][dateString]
+            valuesBySymbol[symbol].currentValues[dateString]
           );
         }
 
         totalNetPerformanceValues[dateString] =
           totalNetPerformanceValues[dateString] ?? new Big(0);
 
-        if (netPerformanceValuesBySymbol[symbol]?.[dateString]) {
+        if (valuesBySymbol[symbol].netPerformanceValues[dateString]) {
           totalNetPerformanceValues[dateString] = totalNetPerformanceValues[
             dateString
-          ].add(netPerformanceValuesBySymbol[symbol][dateString]);
+          ].add(valuesBySymbol[symbol].netPerformanceValues[dateString]);
         }
 
         totalInvestmentValues[dateString] =
           totalInvestmentValues[dateString] ?? new Big(0);
 
-        if (investmentValuesBySymbol[symbol]?.[dateString]) {
+        if (valuesBySymbol[symbol].investmentValues[dateString]) {
           totalInvestmentValues[dateString] = totalInvestmentValues[
             dateString
-          ].add(investmentValuesBySymbol[symbol][dateString]);
+          ].add(valuesBySymbol[symbol].investmentValues[dateString]);
         }
 
         maxTotalInvestmentValues[dateString] =
           maxTotalInvestmentValues[dateString] ?? new Big(0);
 
-        if (maxInvestmentValuesBySymbol[symbol]?.[dateString]) {
+        if (valuesBySymbol[symbol].maxInvestmentValues[dateString]) {
           maxTotalInvestmentValues[dateString] = maxTotalInvestmentValues[
             dateString
-          ].add(maxInvestmentValuesBySymbol[symbol][dateString]);
+          ].add(valuesBySymbol[symbol].maxInvestmentValues[dateString]);
         }
       }
     }
