@@ -131,6 +131,13 @@ const routes: Routes = [
       ).then((m) => m.GhostfolioMeetsUmbrelPageModule)
   },
   {
+    path: 'blog/2023/03/ghostfolio-reaches-1000-stars-on-github',
+    loadChildren: () =>
+      import(
+        './pages/blog/2023/03/1000-stars-on-github/1000-stars-on-github-page.module'
+      ).then((m) => m.ThousandStarsOnGitHubPageModule)
+  },
+  {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)

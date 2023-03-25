@@ -331,6 +331,17 @@ ngx-skeleton-loader {
   visibility: hidden;
 }
 
+.breadcrumb {
+  background-color: unset;
+  padding: unset;
+}
+
+.breadcrumb-item {
+  &.active {
+    color: unset;
+  }
+}
+
 .cdk-overlay-container {
   .cdk-overlay-pane {
     max-width: 95vw !important;
