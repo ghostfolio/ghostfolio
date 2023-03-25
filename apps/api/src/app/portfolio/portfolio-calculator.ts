@@ -279,7 +279,7 @@ export class PortfolioCalculator {
         totalCurrentValues[dateString] =
           totalCurrentValues[dateString] ?? new Big(0);
 
-        if (valuesBySymbol[symbol].currentValues[dateString]) {
+        if (valuesBySymbol[symbol]?.currentValues?.[dateString]) {
           totalCurrentValues[dateString] = totalCurrentValues[dateString].add(
             valuesBySymbol[symbol].currentValues[dateString]
           );
@@ -288,7 +288,7 @@ export class PortfolioCalculator {
         totalNetPerformanceValues[dateString] =
           totalNetPerformanceValues[dateString] ?? new Big(0);
 
-        if (valuesBySymbol[symbol].netPerformanceValues[dateString]) {
+        if (valuesBySymbol[symbol]?.netPerformanceValues?.[dateString]) {
           totalNetPerformanceValues[dateString] = totalNetPerformanceValues[
             dateString
           ].add(valuesBySymbol[symbol].netPerformanceValues[dateString]);
@@ -297,7 +297,7 @@ export class PortfolioCalculator {
         totalInvestmentValues[dateString] =
           totalInvestmentValues[dateString] ?? new Big(0);
 
-        if (valuesBySymbol[symbol].investmentValues[dateString]) {
+        if (valuesBySymbol[symbol]?.investmentValues?.[dateString]) {
           totalInvestmentValues[dateString] = totalInvestmentValues[
             dateString
           ].add(valuesBySymbol[symbol].investmentValues[dateString]);
@@ -306,7 +306,7 @@ export class PortfolioCalculator {
         maxTotalInvestmentValues[dateString] =
           maxTotalInvestmentValues[dateString] ?? new Big(0);
 
-        if (valuesBySymbol[symbol].maxInvestmentValues[dateString]) {
+        if (valuesBySymbol[symbol]?.maxInvestmentValues?.[dateString]) {
           maxTotalInvestmentValues[dateString] = maxTotalInvestmentValues[
             dateString
           ].add(valuesBySymbol[symbol].maxInvestmentValues[dateString]);
