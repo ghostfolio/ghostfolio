@@ -39,7 +39,7 @@
         />
       </mat-form-field>
     </div>
-    <div>
+    <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
         <mat-select name="platformId" [(value)]="data.account.platformId">
