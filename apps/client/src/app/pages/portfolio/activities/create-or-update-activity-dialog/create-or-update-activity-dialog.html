@@ -257,7 +257,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': tags?.length <= 0 }">
+    <div class="mb-3" [ngClass]="{ 'd-none': tags?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Tags</mat-label>
         <mat-chip-grid #tagsChipList>
