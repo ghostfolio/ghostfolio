@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the value component by always showing the label (also while loading)
+
 ### Fixed
 
 - Fixed an issue with the algebraic sign in the value component
