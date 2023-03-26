@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the loading state of the value component on the allocations page
+- Improved the value component by always showing the label (also while loading)
 
 ### Fixed
 
