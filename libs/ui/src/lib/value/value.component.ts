@@ -37,6 +37,8 @@ export class ValueComponent implements OnChanges {
   public constructor() {}
 
   public ngOnChanges() {
+    this.initializeVariables();
+
     if (this.value || this.value === 0) {
       if (isNumber(this.value)) {
         this.isNumber = true;
@@ -119,5 +121,13 @@ export class ValueComponent implements OnChanges {
     if (this.formattedValue === '0.00') {
       this.useAbsoluteValue = true;
     }
+  }
+
+  private initializeVariables() {
+    this.absoluteValue = 0;
+    this.formattedValue = '';
+    this.isNumber = false;
+    this.isString = false;
+    this.useAbsoluteValue = false;
   }
 }
