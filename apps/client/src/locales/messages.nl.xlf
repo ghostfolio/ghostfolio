@@ -1285,6 +1285,54 @@
         <source>Blog</source>
         <target state="translated">Blog</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2021/07/hallo-ghostfolio/hallo-ghostfolio-page.html</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2021/07/hello-ghostfolio/hello-ghostfolio-page.html</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2022/01/first-months-in-open-source/first-months-in-open-source-page.html</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2022/07/ghostfolio-meets-internet-identity/ghostfolio-meets-internet-identity-page.html</context>
+          <context context-type="linenumber">183</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2022/07/how-do-i-get-my-finances-in-order/how-do-i-get-my-finances-in-order-page.html</context>
+          <context context-type="linenumber">209</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2022/08/500-stars-on-github/500-stars-on-github-page.html</context>
+          <context context-type="linenumber">193,192</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2022/10/hacktoberfest-2022/hacktoberfest-2022-page.html</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2022/11/black-friday-2022/black-friday-2022-page.html</context>
+          <context context-type="linenumber">138</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2022/12/the-importance-of-tracking-your-personal-finances/the-importance-of-tracking-your-personal-finances-page.html</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2023/01/ghostfolio-auf-sackgeld-vorgestellt/ghostfolio-auf-sackgeld-vorgestellt-page.html</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2023/02/ghostfolio-meets-umbrel/ghostfolio-meets-umbrel-page.html</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2023/03/1000-stars-on-github/1000-stars-on-github-page.html</context>
+          <context context-type="linenumber">245</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/blog-page.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
@@ -3507,6 +3555,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">288</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9ba87e803f0b976584dc2a4dd69d32090cdfc229" datatype="html">
+        <source>Pricing Plans</source>
+        <target state="new">Pricing Plans</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="42f6196093e783200895a022bbf830713bf6ee7b" datatype="html">
+        <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs. </source>
+        <target state="new"> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">6,10</context>
         </context-group>
       </trans-unit>
     </body>
