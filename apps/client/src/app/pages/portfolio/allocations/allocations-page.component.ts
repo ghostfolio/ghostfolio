@@ -198,6 +198,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.initialize();
   }
 
   public initialize() {
@@ -217,15 +219,15 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.markets = {
       developedMarkets: {
         name: 'developedMarkets',
-        value: 0
+        value: undefined
       },
       emergingMarkets: {
         name: 'emergingMarkets',
-        value: 0
+        value: undefined
       },
       otherMarkets: {
         name: 'otherMarkets',
-        value: 0
+        value: undefined
       }
     };
     this.positions = {};
@@ -281,6 +283,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
+          if (!this.markets.developedMarkets.value) {
+            this.markets.developedMarkets.value = 0;
+          }
+          if (!this.markets.emergingMarkets.value) {
+            this.markets.emergingMarkets.value = 0;
+          }
+          if (!this.markets.otherMarkets.value) {
+            this.markets.otherMarkets.value = 0;
+          }
+
           this.markets.developedMarkets.value +=
             position.markets.developedMarkets * position.value;
           this.markets.emergingMarkets.value +=
