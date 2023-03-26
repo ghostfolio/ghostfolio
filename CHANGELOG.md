@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the loading state of the value component on the allocations page
+
 ### Fixed
 
 - Fixed an issue with the algebraic sign in the value component
