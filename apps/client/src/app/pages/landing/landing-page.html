@@ -319,7 +319,12 @@
         <div>
           <div>{{ testimonial.quote }}</div>
           <div class="mt-2 text-muted">
-            — {{ testimonial.author }}, {{ testimonial.country }}
+            —
+            <a *ngIf="testimonial.url" target="_blank" [href]="testimonial.url"
+              >{{ testimonial.author }}</a
+            >
+            <span *ngIf="!testimonial.url">{{ testimonial.author }}</span>, {{
+            testimonial.country }}
           </div>
         </div>
       </div>

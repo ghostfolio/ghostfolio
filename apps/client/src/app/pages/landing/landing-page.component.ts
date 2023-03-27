@@ -25,24 +25,40 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public statistics: Statistics;
   public testimonials = [
     {
-      author: 'Philipp',
-      country: 'Germany 🇩🇪',
-      quote: `Super slim app with a great user interface. On top of that, it's open source.`
-    },
-    {
-      author: 'Onur',
-      country: 'Switzerland 🇨🇭',
-      quote: `Ghostfolio looks like the perfect portfolio tracker I've been searching for all these years.`
+      author: 'Damjan',
+      country: 'Slovenia 🇸🇮',
+      quote:
+        'Ghostfolio helps me track all my investments in one place, it has a built-in portfolio analyzer and a very neat, seamless user interface.'
     },
     {
       author: 'Ivo',
       country: 'Netherlands 🇳🇱',
-      quote: `A fantastic open source app to track my investments across platforms. Love the simplicity of its design and the depth of the insights.`
+      quote:
+        'A fantastic open source app to track my investments across platforms. Love the simplicity of its design and the depth of the insights.'
     },
     {
-      author: 'Damjan',
-      country: 'Slovenia 🇸🇮',
-      quote: `Ghostfolio helps me track all my investments in one place, it has a built-in portfolio analyzer and a very neat, seamless user interface.`
+      author: 'Lars',
+      country: 'Denmark 🇩🇰',
+      quote: 'Great app!'
+    },
+    {
+      author: 'Marius',
+      country: 'Romania 🇷🇴',
+      quote:
+        'Ghostfolio is an awesome project. It helps me keep track of cryptocurrencies in an easy way. I really like it!',
+      url: 'https://mariushosting.com'
+    },
+    {
+      author: 'Onur',
+      country: 'Switzerland 🇨🇭',
+      quote:
+        'Ghostfolio looks like the perfect portfolio tracker I’ve been searching for all these years.'
+    },
+    {
+      author: 'Philipp',
+      country: 'Germany 🇩🇪',
+      quote:
+        'Super slim app with a great user interface. On top of that, it’s open source.'
     }
   ];
 
