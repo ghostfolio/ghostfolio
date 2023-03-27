@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the testimonial section on the landing page
+
 ### Changed
 
 - Improved the loading state of the value component on the allocations page
