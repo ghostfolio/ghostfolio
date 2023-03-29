@@ -304,18 +304,18 @@ export class InfoService {
     return statistics;
   }
 
-  private async getSubscriptions(): Promise<Subscription[]> {
+  private async getSubscriptions(): Promise<{ [offer: string]: Subscription }> {
     if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       return undefined;
     }
 
-    let subscriptions: Subscription[] = [];
+    let subscriptions: { [offer: string]: Subscription } = {};
 
     const stripeConfig = (await this.prismaService.property.findUnique({
       where: { key: PROPERTY_STRIPE_CONFIG }
     })) ?? { value: '{}' };
 
-    subscriptions = [JSON.parse(stripeConfig.value)];
+    subscriptions = JSON.parse(stripeConfig.value);
 
     return subscriptions;
   }
