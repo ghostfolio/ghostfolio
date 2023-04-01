@@ -13,6 +13,7 @@ import { Module } from '@nestjs/common';
 
 import { ImportController } from './import.controller';
 import { ImportService } from './import.service';
+import { PlatformModule } from '@ghostfolio/api/services/platform/platform.module';
 
 @Module({
   controllers: [ImportController],
@@ -24,6 +25,7 @@ import { ImportService } from './import.service';
     DataProviderModule,
     ExchangeRateDataModule,
     OrderModule,
+    PlatformModule,
     PortfolioModule,
     PrismaModule,
     RedisCacheModule,

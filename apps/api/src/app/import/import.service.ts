@@ -6,6 +6,7 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { PlatformService } from '@ghostfolio/api/services/platform/platform.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { parseDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -14,7 +15,7 @@ import {
   OrderWithAccount
 } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { SymbolProfile } from '@prisma/client';
+import { Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +27,7 @@ export class ImportService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly orderService: OrderService,
+    private readonly platformService: PlatformService,
     private readonly portfolioService: PortfolioService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -118,15 +120,18 @@ export class ImportService {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
 
     if (!isDryRun && accountsDto?.length) {
-      const existingAccounts = await this.accountService.accounts({
-        where: {
-          id: {
-            in: accountsDto.map(({ id }) => {
-              return id;
-            })
+      const [existingAccounts, existingPlatforms] = await Promise.all([
+        this.accountService.accounts({
+          where: {
+            id: {
+              in: accountsDto.map(({ id }) => {
+                return id;
+              })
+            }
           }
-        }
-      });
+        }),
+        this.platformService.get()
+      ]);
 
       for (const account of accountsDto) {
         // Check if there is any existing account with the same ID
@@ -146,19 +151,24 @@ export class ImportService {
             delete account.id;
           }
 
-          const newAccountObject = {
+          let accountObject: Prisma.AccountCreateInput = {
             ...account,
             User: { connect: { id: userId } }
           };
 
-          if (platformId) {
-            Object.assign(newAccountObject, {
+          if (
+            existingPlatforms.some(({ id }) => {
+              return id === platformId;
+            })
+          ) {
+            accountObject = {
+              ...accountObject,
               Platform: { connect: { id: platformId } }
-            });
+            };
           }
 
           const newAccount = await this.accountService.createAccount(
-            newAccountObject,
+            accountObject,
             userId
           );
 
