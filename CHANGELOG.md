@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the accounts import by handling the platform
 
+### Fixed
+
+- Fixed an issue with more than 50 activities in the activities import (`dryRun`)
+
 ## 1.249.0 - 2023-03-27
 
 ### Added
