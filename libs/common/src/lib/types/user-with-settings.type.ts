@@ -1,8 +1,10 @@
-import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
+import { SubscriptionOffer } from '@ghostfolio/common/types';
+import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 import { Account, Settings, User } from '@prisma/client';
 
-import { UserSettings } from './user-settings.interface';
+import { UserSettings } from '../interfaces/user-settings.interface';
 
+// TODO: Compare with User type
 export type UserWithSettings = User & {
   Account: Account[];
   activityCount: number;
@@ -10,7 +12,7 @@ export type UserWithSettings = User & {
   Settings: Settings & { settings: UserSettings };
   subscription?: {
     expiresAt?: Date;
-    offer: 'default' | 'renewal'; // TODO: Extract type
+    offer: SubscriptionOffer;
     type: SubscriptionType;
   };
 };

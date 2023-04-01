@@ -9,7 +9,9 @@ import { MarketState } from './market-state.type';
 import { Market } from './market.type';
 import type { OrderWithAccount } from './order-with-account.type';
 import type { RequestWithUser } from './request-with-user.type';
+import { SubscriptionOffer } from './subscription-offer.type';
 import { ToggleOption } from './toggle-option.type';
+import { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
 
 export type {
@@ -24,6 +26,8 @@ export type {
   MarketState,
   OrderWithAccount,
   RequestWithUser,
+  SubscriptionOffer,
   ToggleOption,
+  UserWithSettings,
   ViewMode
 };

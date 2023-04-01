@@ -1,3 +1,5 @@
+import { SubscriptionOffer } from '@ghostfolio/common/types';
+import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 import { Account, Tag } from '@prisma/client';
 
 import { UserSettings } from './user-settings.interface';
@@ -14,8 +16,8 @@ export interface User {
   settings: UserSettings;
   subscription: {
     expiresAt?: Date;
-    offer: 'default' | 'renewal';
-    type: 'Basic' | 'Premium';
+    offer: SubscriptionOffer;
+    type: SubscriptionType;
   };
   tags: Tag[];
 }

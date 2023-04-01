@@ -40,7 +40,6 @@ import { ScraperConfiguration } from './scraper-configuration.interface';
 import { TimelinePosition } from './timeline-position.interface';
 import { UniqueAsset } from './unique-asset.interface';
 import { UserSettings } from './user-settings.interface';
-import { UserWithSettings } from './user-with-settings';
 import { User } from './user.interface';
 
 export {
@@ -84,6 +83,5 @@ export {
   TimelinePosition,
   UniqueAsset,
   User,
-  UserSettings,
-  UserWithSettings
+  UserSettings
 };

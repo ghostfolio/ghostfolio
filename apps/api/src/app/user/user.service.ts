@@ -4,16 +4,13 @@ import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
-import {
-  User as IUser,
-  UserSettings,
-  UserWithSettings
-} from '@ghostfolio/common/interfaces';
+import { User as IUser, UserSettings } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
+import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
