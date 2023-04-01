@@ -35,6 +35,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public errorMessages: string[] = [];
   public holdings: Position[] = [];
   public isFileSelected = false;
+  public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
   public uniqueAssetForm: FormGroup;
