@@ -4,7 +4,7 @@ import { Account, Settings, User } from '@prisma/client';
 
 import { UserSettings } from '../interfaces/user-settings.interface';
 
-// TODO: Compare with User type
+// TODO: Compare with User interface
 export type UserWithSettings = User & {
   Account: Account[];
   activityCount: number;
