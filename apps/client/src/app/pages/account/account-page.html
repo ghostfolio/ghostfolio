@@ -34,7 +34,16 @@
                     mat-flat-button
                     (click)="onCheckout(priceId)"
                   >
-                    <ng-container i18n>Upgrade</ng-container>
+                    <ng-container
+                      *ngIf="user.subscription.offer === 'default'"
+                      i18n
+                      >Upgrade</ng-container
+                    >
+                    <ng-container
+                      *ngIf="user.subscription.offer === 'renewal'"
+                      i18n
+                      >Renew</ng-container
+                    >
                   </button>
                   <div *ngIf="price" class="mt-1">
                     <ng-container *ngIf="coupon"
