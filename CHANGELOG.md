@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the portfolio evolution chart (ignore first item)
 - Improved the accounts import by handling the platform
 
 ### Fixed

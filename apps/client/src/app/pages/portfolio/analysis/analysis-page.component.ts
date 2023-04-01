@@ -308,18 +308,24 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
 
-        for (const {
-          date,
-          netPerformanceInPercentage,
-          totalInvestment,
-          value,
-          valueInPercentage
-        } of chart) {
-          this.investments.push({ date, investment: totalInvestment });
-          this.performanceDataItems.push({
+        for (const [
+          index,
+          {
             date,
-            value: isNumber(value) ? value : valueInPercentage
-          });
+            netPerformanceInPercentage,
+            totalInvestment,
+            value,
+            valueInPercentage
+          }
+        ] of chart.entries()) {
+          if (index > 0 || this.user?.settings?.dateRange === 'max') {
+            // Ignore first item where value is 0
+            this.investments.push({ date, investment: totalInvestment });
+            this.performanceDataItems.push({
+              date,
+              value: isNumber(value) ? value : valueInPercentage
+            });
+          }
           this.performanceDataItemsInPercentage.push({
             date,
             value: netPerformanceInPercentage
