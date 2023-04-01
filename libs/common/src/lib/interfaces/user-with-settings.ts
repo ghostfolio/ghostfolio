@@ -10,7 +10,7 @@ export type UserWithSettings = User & {
   Settings: Settings & { settings: UserSettings };
   subscription?: {
     expiresAt?: Date;
-    offer: 'default' | 'renewal'; // TOOD: Extract type
+    offer: 'default' | 'renewal'; // TODO: Extract type
     type: SubscriptionType;
   };
 };
