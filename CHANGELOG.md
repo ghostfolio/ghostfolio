@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for multiple subscription offers
+
 ### Changed
 
 - Improved the portfolio evolution chart (ignore first item)

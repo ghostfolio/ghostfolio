@@ -4,9 +4,9 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_STRIPE_CONFIG
 } from '@ghostfolio/common/config';
-import { UserWithSettings } from '@ghostfolio/common/interfaces';
 import { Subscription as SubscriptionInterface } from '@ghostfolio/common/interfaces/subscription.interface';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
+import { UserWithSettings } from '@ghostfolio/common/types';
+import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
@@ -123,7 +123,9 @@ export class SubscriptionService {
     }
   }
 
-  public getSubscription(aSubscriptions: Subscription[]) {
+  public getSubscription(
+    aSubscriptions: Subscription[]
+  ): UserWithSettings['subscription'] {
     if (aSubscriptions.length > 0) {
       const latestSubscription = aSubscriptions.reduce((a, b) => {
         return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
@@ -131,12 +133,14 @@ export class SubscriptionService {
 
       return {
         expiresAt: latestSubscription.expiresAt,
+        offer: latestSubscription.price === 0 ? 'default' : 'renewal',
         type: isBefore(new Date(), latestSubscription.expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic
       };
     } else {
       return {
+        offer: 'default',
         type: SubscriptionType.Basic
       };
     }

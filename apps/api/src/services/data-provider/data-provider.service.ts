@@ -8,7 +8,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { UserWithSettings } from '@ghostfolio/common/interfaces';
+import { UserWithSettings } from '@ghostfolio/common/types';
 import { Granularity } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';

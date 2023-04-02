@@ -91,8 +91,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
-    this.coupon = subscriptions?.[0]?.coupon;
-    this.couponId = subscriptions?.[0]?.couponId;
     this.currencies = currencies;
 
     this.hasPermissionForSubscription = hasPermission(
@@ -104,9 +102,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       globalPermissions,
       permissions.deleteAccess
     );
-
-    this.price = subscriptions?.[0]?.price;
-    this.priceId = subscriptions?.[0]?.priceId;
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -140,6 +135,12 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
           this.locales.push(this.user.settings.locale);
           this.locales = uniq(this.locales.sort());
+
+          this.coupon = subscriptions?.[this.user.subscription.offer]?.coupon;
+          this.couponId =
+            subscriptions?.[this.user.subscription.offer]?.couponId;
+          this.price = subscriptions?.[this.user.subscription.offer]?.price;
+          this.priceId = subscriptions?.[this.user.subscription.offer]?.priceId;
 
           this.changeDetectorRef.markForCheck();
         }

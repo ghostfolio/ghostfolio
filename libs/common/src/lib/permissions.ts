@@ -1,6 +1,5 @@
+import { UserWithSettings } from '@ghostfolio/common/types';
 import { Role } from '@prisma/client';
-
-import { UserWithSettings } from './interfaces';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',

@@ -22,6 +22,7 @@ import { InfoItem } from '@ghostfolio/common/interfaces';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
 import { permissions } from '@ghostfolio/common/permissions';
+import { SubscriptionOffer } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bent from 'bent';
@@ -304,19 +305,17 @@ export class InfoService {
     return statistics;
   }
 
-  private async getSubscriptions(): Promise<Subscription[]> {
+  private async getSubscriptions(): Promise<{
+    [offer in SubscriptionOffer]: Subscription;
+  }> {
     if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       return undefined;
     }
-
-    let subscriptions: Subscription[] = [];
 
     const stripeConfig = (await this.prismaService.property.findUnique({
       where: { key: PROPERTY_STRIPE_CONFIG }
     })) ?? { value: '{}' };
 
-    subscriptions = [JSON.parse(stripeConfig.value)];
-
-    return subscriptions;
+    return JSON.parse(stripeConfig.value);
   }
 }

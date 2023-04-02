@@ -34,20 +34,23 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private userService: UserService
-  ) {
-    const { baseCurrency, subscriptions } = this.dataService.fetchInfo();
-
-    this.baseCurrency = baseCurrency;
-    this.coupon = subscriptions?.[0]?.coupon;
-    this.price = subscriptions?.[0]?.price;
-  }
+  ) {}
 
   public ngOnInit() {
+    const { baseCurrency, subscriptions } = this.dataService.fetchInfo();
+    this.baseCurrency = baseCurrency;
+
+    this.coupon = subscriptions?.default?.coupon;
+    this.price = subscriptions?.default?.price;
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.coupon = subscriptions?.[this.user?.subscription?.offer]?.coupon;
+          this.price = subscriptions?.[this.user?.subscription?.offer]?.price;
 
           this.changeDetectorRef.markForCheck();
         }

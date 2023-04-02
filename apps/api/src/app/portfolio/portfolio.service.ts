@@ -37,8 +37,7 @@ import {
   PortfolioSummary,
   Position,
   TimelinePosition,
-  UserSettings,
-  UserWithSettings
+  UserSettings
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import type {
@@ -47,7 +46,8 @@ import type {
   GroupBy,
   Market,
   OrderWithAccount,
-  RequestWithUser
+  RequestWithUser,
+  UserWithSettings
 } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
