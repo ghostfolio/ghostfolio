@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the activities import for `csv` files exported by _Interactive Brokers_
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Improved the content of the pricing page
 
