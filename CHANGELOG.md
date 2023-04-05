@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the activities import for `csv` files exported by _Interactive Brokers_
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Improved the content of the pricing page
+- Changed the `auth` endpoint of the login with _Security Token_ from `GET` to `POST`
+- Changed the `auth` endpoint of the _Internet Identity_ login provider from `GET` to `POST`
 
 ## 1.250.0 - 2023-04-02
 

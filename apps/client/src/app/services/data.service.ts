@@ -388,9 +388,9 @@ export class DataService {
   }
 
   public loginAnonymous(accessToken: string) {
-    return this.http.get<OAuthResponse>(
-      `/api/v1/auth/anonymous/${accessToken}`
-    );
+    return this.http.post<OAuthResponse>(`/api/v1/auth/anonymous`, {
+      accessToken
+    });
   }
 
   public postAccess(aAccess: CreateAccessDto) {
