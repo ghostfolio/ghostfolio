@@ -15,14 +15,19 @@ import { catchError } from 'rxjs/operators';
 })
 export class ImportActivitiesService {
   private static ACCOUNT_KEYS = ['account', 'accountid'];
-  private static CURRENCY_KEYS = ['ccy', 'currency'];
+  private static CURRENCY_KEYS = ['ccy', 'currency', 'currencyprimary'];
   private static DATA_SOURCE_KEYS = ['datasource'];
-  private static DATE_KEYS = ['date'];
-  private static FEE_KEYS = ['commission', 'fee'];
+  private static DATE_KEYS = ['date', 'tradedate'];
+  private static FEE_KEYS = ['commission', 'fee', 'ibcommission'];
   private static QUANTITY_KEYS = ['qty', 'quantity', 'shares', 'units'];
   private static SYMBOL_KEYS = ['code', 'symbol', 'ticker'];
-  private static TYPE_KEYS = ['action', 'type'];
-  private static UNIT_PRICE_KEYS = ['price', 'unitprice', 'value'];
+  private static TYPE_KEYS = ['action', 'buy/sell', 'type'];
+  private static UNIT_PRICE_KEYS = [
+    'price',
+    'tradeprice',
+    'unitprice',
+    'value'
+  ];
 
   public constructor(private http: HttpClient) {}
 
@@ -218,6 +223,8 @@ export class ImportActivitiesService {
           date = parse(item[key], 'dd-MM-yyyy', new Date()).toISOString();
         } else if (isMatch(item[key], 'dd/MM/yyyy')) {
           date = parse(item[key], 'dd/MM/yyyy', new Date()).toISOString();
+        } else if (isMatch(item[key], 'yyyyMMdd')) {
+          date = parse(item[key], 'yyyyMMdd', new Date()).toISOString();
         } else {
           try {
             date = parseISO(item[key]).toISOString();
@@ -249,7 +256,7 @@ export class ImportActivitiesService {
 
     for (const key of ImportActivitiesService.FEE_KEYS) {
       if (isFinite(item[key])) {
-        return item[key];
+        return Math.abs(item[key]);
       }
     }
 
