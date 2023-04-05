@@ -208,8 +208,10 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
         if (
           this.savingsRate &&
+          // @ts-ignore
           this.chart.options.plugins.annotation.annotations.savingsRate
         ) {
+          // @ts-ignore
           this.chart.options.plugins.annotation.annotations.savingsRate.value =
             this.savingsRate;
         }
