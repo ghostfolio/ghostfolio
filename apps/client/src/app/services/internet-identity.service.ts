@@ -30,9 +30,9 @@ export class InternetIdentityService implements OnDestroy {
           const principalId = authClient.getIdentity().getPrincipal();
 
           this.http
-            .get<OAuthResponse>(
-              `/api/v1/auth/internet-identity/${principalId.toText()}`
-            )
+            .post<OAuthResponse>(`/api/v1/auth/internet-identity`, {
+              principalId: principalId.toText()
+            })
             .pipe(
               catchError(() => {
                 reject();

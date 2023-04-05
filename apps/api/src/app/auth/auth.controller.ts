@@ -7,7 +7,6 @@ import {
   Controller,
   Get,
   HttpException,
-  Param,
   Post,
   Req,
   Res,
@@ -33,13 +32,13 @@ export class AuthController {
     private readonly webAuthService: WebAuthService
   ) {}
 
-  @Get('anonymous/:accessToken')
+  @Post('anonymous')
   public async accessTokenLogin(
-    @Param('accessToken') accessToken: string
+    @Body() body: { accessToken: string }
   ): Promise<OAuthResponse> {
     try {
       const authToken = await this.authService.validateAnonymousLogin(
-        accessToken
+        body.accessToken
       );
       return { authToken };
     } catch {
@@ -81,13 +80,13 @@ export class AuthController {
     }
   }
 
-  @Get('internet-identity/:principalId')
+  @Post('internet-identity')
   public async internetIdentityLogin(
-    @Param('principalId') principalId: string
+    @Body() body: { principalId: string }
   ): Promise<OAuthResponse> {
     try {
       const authToken = await this.authService.validateInternetIdentityLogin(
-        principalId
+        body.principalId
       );
       return { authToken };
     } catch {

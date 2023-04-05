@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the `auth` endpoint of the login with _Security Token_ from `GET` to `POST`
+- Changed the `auth` endpoint of the _Internet Identity_ login provider from `GET` to `POST`
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Improved the content of the pricing page
 
