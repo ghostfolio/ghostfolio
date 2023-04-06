@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the content of the pricing page
 - Changed the `auth` endpoint of the login with _Security Token_ from `GET` to `POST`
 - Changed the `auth` endpoint of the _Internet Identity_ login provider from `GET` to `POST`
+- Upgraded `angular` from version `15.1.5` to `15.2.5`
+- Upgraded `Nx` from version `15.7.2` to `15.9.2`
 
 ## 1.250.0 - 2023-04-02
 
