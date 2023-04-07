@@ -4,30 +4,26 @@
   display: block;
 
   ::ng-deep {
-    .mat-form-field-infix {
-      border-top: 0 solid transparent !important;
-    }
-
-    .mat-spinner {
+    .mat-mdc-progress-spinner {
       circle {
         stroke: rgba(var(--dark-dividers));
       }
     }
   }
 
-  .mat-chip {
+  .mat-mdc-chip {
     cursor: pointer;
     min-height: 1.5rem !important;
   }
 }
 
 :host-context(.is-dark-theme) {
-  .mat-form-field {
+  .mat-mdc-form-field {
     color: rgba(var(--light-primary-text));
   }
 
   ::ng-deep {
-    .mat-spinner {
+    .mat-mdc-progress-spinner {
       circle {
         stroke: rgba(var(--light-dividers));
       }
