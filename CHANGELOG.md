@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the activities import for `csv` files exported by _Interactive Brokers_
+- Increased the historical market data gathering of currency pairs to 10+ years
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Improved the content of the pricing page
 - Changed the `auth` endpoint of the login with _Security Token_ from `GET` to `POST`

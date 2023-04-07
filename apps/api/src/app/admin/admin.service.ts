@@ -100,6 +100,7 @@ export class AdminService {
             dataSource,
             marketDataItemCount,
             symbol,
+            assetClass: 'CASH',
             countriesCount: 0,
             sectorsCount: 0
           };
@@ -186,8 +187,11 @@ export class AdminService {
     ]);
 
     return {
-      assetProfile,
-      marketData
+      marketData,
+      assetProfile: assetProfile ?? {
+        symbol,
+        currency: '-'
+      }
     };
   }
 

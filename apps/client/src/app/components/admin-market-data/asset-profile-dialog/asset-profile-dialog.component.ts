@@ -14,6 +14,7 @@ import {
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import {
+  AdminMarketDataDetails,
   EnhancedSymbolProfile,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -33,7 +34,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetClass: string;
-  public assetProfile: EnhancedSymbolProfile;
+  public assetProfile: AdminMarketDataDetails['assetProfile'];
   public assetProfileForm = this.formBuilder.group({
     comment: '',
     symbolMapping: ''
