@@ -11,7 +11,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
-import { format, subDays } from 'date-fns';
+import { format, min, subDays, subYears } from 'date-fns';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
@@ -236,7 +236,7 @@ export class DataGatheringService {
         return {
           dataSource,
           symbol,
-          date: startDate
+          date: min([startDate, subYears(new Date(), 10)])
         };
       });
 

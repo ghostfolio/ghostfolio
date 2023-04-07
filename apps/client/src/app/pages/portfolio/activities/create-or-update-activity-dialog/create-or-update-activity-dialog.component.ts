@@ -24,7 +24,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { isString } from 'lodash';
-import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
+import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -58,9 +58,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public currencies: string[] = [];
   public currentMarketPrice = null;
   public defaultDateFormat: string;
-  public filteredLookupItems: LookupItem[];
-  public filteredLookupItemsObservable: Observable<LookupItem[]>;
-  public filteredTagsObservable: Observable<Tag[]>;
+  public filteredLookupItems: LookupItem[] = [];
+  public filteredLookupItemsObservable: Observable<LookupItem[]> = of([]);
+  public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
   public platforms: { id: string; name: string }[];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
