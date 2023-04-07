@@ -131,5 +131,11 @@ export function getVerticalHoverLinePlugin(
 }
 
 export function transformTickToAbbreviation(value: number) {
-  return value < 1000000 ? `${value / 1000}K` : `${value / 1000000}M`;
+  if (value >= -999 && value <= 999) {
+    return value.toString();
+  } else if (value >= -999999 && value <= 999999) {
+    return `${value / 1000}K`;
+  } else {
+    return `${value / 1000000}M`;
+  }
 }
