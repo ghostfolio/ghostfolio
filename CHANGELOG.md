@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the content of the pricing page
 - Changed the `auth` endpoint of the login with _Security Token_ from `GET` to `POST`
 - Changed the `auth` endpoint of the _Internet Identity_ login provider from `GET` to `POST`
+- Migrated the style of the `libs` components to `@angular/material` `15` (mdc)
+  - `ActivitiesFilterComponent`
+  - `ActivitiesTableComponent`
+  - `BenchmarkComponent`
+  - `HoldingsTableComponent`
 - Upgraded `angular` from version `15.1.5` to `15.2.5`
 - Upgraded `Nx` from version `15.7.2` to `15.9.2`
 

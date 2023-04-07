@@ -6,7 +6,7 @@
   .holdings {
     overflow-x: auto;
 
-    .mat-table {
+    .mat-mdc-table {
       th {
         ::ng-deep {
           .mat-sort-header-container {
@@ -15,7 +15,7 @@
         }
       }
 
-      .mat-row {
+      .mat-mdc-row {
         &.cursor-pointer {
           cursor: pointer;
         }

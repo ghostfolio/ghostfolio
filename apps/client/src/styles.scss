@@ -267,6 +267,7 @@ body {
       }
     }
 
+    .mat-mdc-paginator,
     .mat-paginator {
       background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
@@ -444,9 +445,11 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-paginator,
 .mat-paginator {
   background-color: rgba(var(--palette-foreground-base-light), 0.02);
 
+  .mat-mdc-paginator-page-size,
   .mat-paginator-page-size {
     display: none;
   }

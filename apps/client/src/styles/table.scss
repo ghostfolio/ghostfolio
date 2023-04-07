@@ -9,6 +9,20 @@
     }
   }
 
+  .mat-mdc-row {
+    &:nth-child(even) {
+      background-color: rgba(var(--palette-foreground-base), 0.02);
+    }
+
+    &:hover {
+      background-color: rgba(var(--palette-foreground-base), 0.05) !important;
+    }
+
+    .mat-mdc-cell {
+      background: none;
+    }
+  }
+
   .mat-row {
     &:nth-child(even) {
       background-color: rgba(var(--palette-foreground-base), 0.02);
@@ -20,6 +34,23 @@
   }
 
   @if $darkTheme {
+    .mat-mdc-row {
+      &:nth-child(even) {
+        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+      }
+
+      &:hover {
+        background-color: rgba(
+          var(--palette-foreground-base-dark),
+          0.05
+        ) !important;
+      }
+
+      .mat-mdc-cell {
+        background: none;
+      }
+    }
+
     .mat-row {
       &:nth-child(even) {
         background-color: rgba(var(--palette-foreground-base-dark), 0.02);

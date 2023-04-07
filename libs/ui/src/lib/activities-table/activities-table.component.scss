@@ -6,9 +6,9 @@
   .activities {
     overflow-x: auto;
 
-    .mat-table {
+    .mat-mdc-table {
       td {
-        &.mat-footer-cell {
+        &.mat-mdc-footer-cell {
           border-top: 1px solid
             rgba(
               var(--palette-foreground-divider),
@@ -25,7 +25,7 @@
         }
       }
 
-      .mat-row {
+      .mat-mdc-row {
         .type-badge {
           background-color: rgba(var(--palette-foreground-text), 0.05);
           border-radius: 1rem;
@@ -57,9 +57,9 @@
 }
 
 :host-context(.is-dark-theme) {
-  .mat-table {
+  .mat-mdc-table {
     td {
-      &.mat-footer-cell {
+      &.mat-mdc-footer-cell {
         border-top-color: rgba(
           var(--palette-foreground-divider-dark),
           var(--palette-foreground-divider-dark-alpha)
