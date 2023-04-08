@@ -7,7 +7,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import { MatTableDataSource } from '@angular/material/table';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { Access } from '@ghostfolio/common/interfaces';
 

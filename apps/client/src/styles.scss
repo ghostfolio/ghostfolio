@@ -249,8 +249,8 @@ body {
       background: var(--dark-background);
     }
 
-    .mat-fab,
-    .mat-flat-button {
+    .mat-mdc-fab,
+    .mat-mdc-unelevated-button {
       &.mat-primary {
         color: rgba(var(--dark-primary-text)) !important;
       }
@@ -268,11 +268,12 @@ body {
     }
 
     .mat-mdc-paginator,
-    .mat-paginator {
+    .mat-mdc-paginator {
       background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
 
     .mdc-button {
+      &.mat-accent,
       &.mat-primary {
         --mdc-filled-button-label-text-color: rgba(var(--dark-primary-text));
       }
@@ -384,8 +385,15 @@ ngx-skeleton-loader {
   margin: 0 !important;
 }
 
-.mat-fab,
-.mat-flat-button {
+.mat-mdc-button-base {
+  .mdc-button__label {
+    align-items: center;
+    display: flex;
+  }
+}
+
+.mat-mdc-fab,
+.mat-mdc-unelevated-button {
   &.mat-primary {
     color: rgba(var(--light-primary-text)) !important;
   }
@@ -446,16 +454,17 @@ ngx-skeleton-loader {
 }
 
 .mat-mdc-paginator,
-.mat-paginator {
+.mat-mdc-paginator {
   background-color: rgba(var(--palette-foreground-base-light), 0.02);
 
   .mat-mdc-paginator-page-size,
-  .mat-paginator-page-size {
+  .mat-mdc-paginator-page-size {
     display: none;
   }
 }
 
 .mdc-button {
+  &.mat-accent,
   &.mat-primary {
     --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));
   }

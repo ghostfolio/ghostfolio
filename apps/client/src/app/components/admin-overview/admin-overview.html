@@ -51,7 +51,7 @@
                   <td>
                     <button
                       *ngIf="customCurrencies.includes(exchangeRate.label2)"
-                      class="mini-icon mx-1 no-min-width px-2"
+                      class="h-100 mx-1 no-min-width px-2"
                       mat-button
                       (click)="onDeleteCurrency(exchangeRate.label2)"
                     >
@@ -124,7 +124,7 @@
               <div *ngIf="info?.systemMessage">
                 <span>{{ info.systemMessage }}</span>
                 <button
-                  class="mini-icon mx-1 no-min-width px-2"
+                  class="h-100 mx-1 no-min-width px-2"
                   mat-button
                   (click)="onDeleteSystemMessage()"
                 >
@@ -159,7 +159,7 @@
                   </td>
                   <td>
                     <button
-                      class="mini-icon mx-1 no-min-width px-2"
+                      class="h-100 mx-1 no-min-width px-2"
                       mat-button
                       (click)="onDeleteCoupon(coupon.code)"
                     >

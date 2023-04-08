@@ -3,24 +3,6 @@
 :host {
   display: block;
 
-  .mat-button {
-    &.mini-icon {
-      line-height: 1.5;
-    }
-  }
-
-  .mat-flat-button {
-    ::ng-deep {
-      .mat-button-wrapper {
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-      }
-    }
-  }
-
   .subscription {
     .mat-form-field {
       max-width: 100%;
