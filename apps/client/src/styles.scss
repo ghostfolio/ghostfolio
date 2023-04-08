@@ -236,15 +236,6 @@ body {
       @include gf-table(true);
     }
 
-    .mat-card {
-      background: var(--dark-background);
-
-      &:not([class*='mat-elevation-z']) {
-        border-color: rgba(var(--light-dividers));
-        box-shadow: none;
-      }
-    }
-
     .mat-dialog-container {
       background: var(--dark-background);
     }
@@ -372,17 +363,6 @@ ngx-skeleton-loader {
 
 .lead {
   font-weight: unset;
-}
-
-.mat-card {
-  &:not([class*='mat-elevation-z']) {
-    border: 1px solid rgba(var(--dark-dividers));
-    box-shadow: none;
-  }
-}
-
-.mat-card-header-text {
-  margin: 0 !important;
 }
 
 .mat-mdc-button-base {

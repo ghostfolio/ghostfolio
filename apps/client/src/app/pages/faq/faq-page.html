@@ -4,32 +4,42 @@
       <h3 class="d-none d-sm-block mb-3 text-center">
         Frequently Asked Questions (FAQ)
       </h3>
-      <mat-card class="mb-3">
-        <mat-card-title>What is Ghostfolio?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>What is Ghostfolio?</mat-card-title>
+        </mat-card-header>
         <mat-card-content>
           Ghostfolio is a lightweight, open source wealth management application
           for individuals to keep track of their net worth. The software
           empowers you to make solid, data-driven investment decisions.
         </mat-card-content>
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title
-          >What assets can I track with Ghostfolio?</mat-card-title
-        >
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >What assets can I track with Ghostfolio?</mat-card-title
+          >
+        </mat-card-header>
         <mat-card-content>
           With Ghostfolio, you can keep track of various assets like stocks,
           ETFs or cryptocurrencies.
         </mat-card-content>
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>What else is included in Ghostfolio?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >What else is included in Ghostfolio?</mat-card-title
+          ></mat-card-header
+        >
         <mat-card-content>
           Please find a feature overview to manage your wealth
           <a [routerLink]="['/features']">here</a>.
         </mat-card-content>
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>How do I start?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>How do I start?</mat-card-title></mat-card-header
+        >
         <mat-card-content>
           You can sign up via the “<a [routerLink]="['/register']"
             >Get Started</a
@@ -41,8 +51,12 @@
           or <i>Google Sign</i>. We will guide you to set up your portfolio.
         </mat-card-content>
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>Can I use Ghostfolio anonymously?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Can I use Ghostfolio anonymously?</mat-card-title
+          ></mat-card-header
+        >
         <mat-card-content>
           Yes, the authentication systems (via security token or
           <a href="../en/blog/2022/07/ghostfolio-meets-internet-identity"
@@ -51,8 +65,12 @@
           is no need for an e-mail address, phone number, or a username.
         </mat-card-content>
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>How can Ghostfolio be free?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >How can Ghostfolio be free?</mat-card-title
+          ></mat-card-header
+        >
         <mat-card-content
           >This project is driven by the efforts of contributors from around the
           world. The
@@ -64,16 +82,22 @@
           investors.</mat-card-content
         >
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>Is it really free?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Is it really free?</mat-card-title></mat-card-header
+        >
         <mat-card-content
           >Yes, it is! Our
           <a [routerLink]="['/pricing']">pricing page</a> details everything you
           get for free.</mat-card-content
         >
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>What is Ghostfolio Premium?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >What is Ghostfolio Premium?</mat-card-title
+          ></mat-card-header
+        >
         <mat-card-content
           ><a [routerLink]="['/pricing']">Ghostfolio Premium</a> is a fully
           managed Ghostfolio cloud offering for ambitious investors. The revenue
@@ -83,8 +107,12 @@
           data provider.</mat-card-content
         >
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>Can I start with a trial version?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Can I start with a trial version?</mat-card-title
+          ></mat-card-header
+        >
         <mat-card-content
           >Yes, you can try
           <a [routerLink]="['/pricing']">Ghostfolio Premium</a> by signing up
@@ -93,19 +121,23 @@
           time.</mat-card-content
         >
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title
-          >How can I get a student discount for Ghostfolio
-          Premium?</mat-card-title
-        >
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >How can I get a student discount for Ghostfolio
+            Premium?</mat-card-title
+          >
+        </mat-card-header>
         <mat-card-content
           >Request your student discount
           <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a> with
           your university e-mail address.</mat-card-content
         >
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>Which devices are supported?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Which devices are supported?</mat-card-title>
+        </mat-card-header>
         <mat-card-content
           >Ghostfolio works in every modern web browser on smartphones, tablets
           and desktop computers. For <i>Android</i> users, there is a dedicated
@@ -116,21 +148,29 @@
           >.</mat-card-content
         >
       </mat-card>
-      <mat-card *ngIf="user?.subscription?.type === 'Premium'" class="mb-3">
-        <mat-card-title
-          >I cannot find my broker in the list of platforms. What can I
-          do?</mat-card-title
-        >
+      <mat-card
+        *ngIf="user?.subscription?.type === 'Premium'"
+        appearance="outlined"
+        class="mb-3"
+      >
+        <mat-card-header>
+          <mat-card-title
+            >I cannot find my broker in the list of platforms. What can I
+            do?</mat-card-title
+          >
+        </mat-card-header>
         <mat-card-content>
           Please send an e-mail with the web address of your broker to
           <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a> and we are happy to
           add it.
         </mat-card-content>
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title
-          >Ghostfolio sounds cool, how can I get involved?</mat-card-title
-        >
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Ghostfolio sounds cool, how can I get involved?</mat-card-title
+          >
+        </mat-card-header>
         <mat-card-content
           >Any support for Ghostfolio is welcome. Be it with a
           <a [routerLink]="['/pricing']">Ghostfolio Premium</a> subscription to
@@ -165,8 +205,10 @@
           >.</mat-card-content
         >
       </mat-card>
-      <mat-card class="mb-3">
-        <mat-card-title>Got any other questions?</mat-card-title>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Got any other questions?</mat-card-title>
+        </mat-card-header>
         <mat-card-content
           >Please join the Ghostfolio
           <a
