@@ -30,29 +30,15 @@
 <div class="container">
   <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
-      <div class="text-center">
-        <ng-container *ngIf="hasPermissionToCreateUser">
-          <a
-            class="d-inline-block"
-            color="primary"
-            mat-flat-button
-            [routerLink]="['/register']"
-          >
-            Get Started
-          </a>
-        </ng-container>
-        <ng-container *ngIf="hasPermissionForDemo">
-          <div
-            *ngIf="hasPermissionToCreateUser"
-            class="d-inline-block mx-3 text-muted"
-          >
-            or
-          </div>
-          <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
-            Live Demo
-          </a>
-        </ng-container>
-      </div>
+      <ng-container *ngIf="hasPermissionToCreateUser">
+        <a color="primary" mat-flat-button [routerLink]="['/register']">
+          Get Started
+        </a>
+      </ng-container>
+      <ng-container *ngIf="hasPermissionForDemo">
+        <div *ngIf="hasPermissionToCreateUser" class="mx-3 text-muted">or</div>
+        <a mat-stroked-button [routerLink]="['/demo']"> Live Demo </a>
+      </ng-container>
     </div>
   </div>
 
@@ -394,15 +380,13 @@
           or check out the example account</ng-container
         >
       </p>
-      <div class="py-2 text-center">
+      <div class="align-items-center d-flex justify-content-center py-2">
         <a color="primary" mat-flat-button [routerLink]="['/register']">
           Get Started
         </a>
         <ng-container *ngIf="hasPermissionForDemo">
-          <div class="d-inline-block mx-3 text-muted">or</div>
-          <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
-            Live Demo
-          </a>
+          <div class="mx-3 text-muted">or</div>
+          <a mat-stroked-button [routerLink]="['/demo']"> Live Demo </a>
         </ng-container>
       </div>
     </div>

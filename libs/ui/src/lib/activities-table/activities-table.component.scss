@@ -7,16 +7,6 @@
     overflow-x: auto;
 
     .mat-mdc-table {
-      td {
-        &.mat-mdc-footer-cell {
-          border-top: 1px solid
-            rgba(
-              var(--palette-foreground-divider),
-              var(--palette-foreground-divider-alpha)
-            );
-        }
-      }
-
       th {
         ::ng-deep {
           .mat-sort-header-container {
@@ -58,15 +48,6 @@
 
 :host-context(.is-dark-theme) {
   .mat-mdc-table {
-    td {
-      &.mat-mdc-footer-cell {
-        border-top-color: rgba(
-          var(--palette-foreground-divider-dark),
-          var(--palette-foreground-divider-dark-alpha)
-        );
-      }
-    }
-
     .type-badge {
       background-color: rgba(
         var(--palette-foreground-text-dark),

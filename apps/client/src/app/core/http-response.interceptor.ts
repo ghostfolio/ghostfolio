@@ -8,10 +8,10 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  MatLegacySnackBar as MatSnackBar,
-  MatLegacySnackBarRef as MatSnackBarRef,
-  LegacyTextOnlySnackBar as TextOnlySnackBar
-} from '@angular/material/legacy-snack-bar';
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar
+} from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
