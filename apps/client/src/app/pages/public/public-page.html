@@ -9,7 +9,7 @@
   </div>
   <div class="proportion-charts row">
     <div class="col-md-12 allocations-by-symbol">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Holdings</mat-card-title>
         </mat-card-header>
@@ -25,7 +25,7 @@
       </mat-card>
     </div>
     <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Currencies</mat-card-title>
         </mat-card-header>
@@ -40,7 +40,7 @@
       </mat-card>
     </div>
     <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Sectors</mat-card-title>
         </mat-card-header>
@@ -55,7 +55,7 @@
       </mat-card>
     </div>
     <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Continents</mat-card-title>
         </mat-card-header>
@@ -71,16 +71,18 @@
   </div>
   <div *ngIf="portfolioPublicDetails?.hasDetails" class="row world-map-chart">
     <div class="col-lg">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Regions</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-world-map-chart
-            format="{0}%"
-            [countries]="countries"
-            [isInPercent]="true"
-          ></gf-world-map-chart>
+          <div class="world-map-chart-container">
+            <gf-world-map-chart
+              format="{0}%"
+              [countries]="countries"
+              [isInPercent]="true"
+            ></gf-world-map-chart>
+          </div>
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value

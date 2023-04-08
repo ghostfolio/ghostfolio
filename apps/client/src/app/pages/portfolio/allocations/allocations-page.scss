@@ -8,17 +8,17 @@
   }
 
   .world-map-chart {
-    .mat-card {
-      .mat-card-content {
+    .mat-mdc-card {
+      .world-map-chart-container {
         aspect-ratio: 16 / 9;
       }
     }
   }
 
-  .mat-card {
-    .mat-card-header {
+  .mat-mdc-card {
+    .mat-mdc-card-header {
       ::ng-deep {
-        .mat-card-header-text {
+        .mat-mdc-card-header-text {
           flex: 1 1 auto;
           overflow: hidden;
         }
