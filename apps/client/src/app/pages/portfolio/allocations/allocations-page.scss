@@ -30,16 +30,12 @@
     }
   }
 
-  .mat-progress-bar {
+  .mat-mdc-progress-bar {
+    --mdc-linear-progress-track-height: 0.5rem;
     border-radius: 0.25rem;
-    height: 0.5rem;
 
     ::ng-deep {
-      .mat-progress-bar-background {
-        fill: rgb(var(--palette-background-unselected-chip));
-      }
-
-      .mat-progress-bar-buffer {
+      .mdc-linear-progress__buffer-bar {
         background-color: rgb(var(--palette-background-unselected-chip));
       }
     }
@@ -47,13 +43,9 @@
 }
 
 :host-context(.is-dark-theme) {
-  .mat-progress-bar {
+  .mat-mdc-progress-bar {
     ::ng-deep {
-      .mat-progress-bar-background {
-        fill: rgb(var(--palette-background-unselected-chip-dark));
-      }
-
-      .mat-progress-bar-buffer {
+      .mdc-linear-progress__buffer-bar {
         background-color: rgb(var(--palette-background-unselected-chip-dark));
       }
     }
