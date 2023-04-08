@@ -273,6 +273,7 @@ body {
     }
 
     .mdc-button {
+      &.mat-accent,
       &.mat-primary {
         --mdc-filled-button-label-text-color: rgba(var(--dark-primary-text));
       }
@@ -463,6 +464,7 @@ ngx-skeleton-loader {
 }
 
 .mdc-button {
+  &.mat-accent,
   &.mat-primary {
     --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));
   }
