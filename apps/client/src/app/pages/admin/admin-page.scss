@@ -19,19 +19,10 @@
       overflow-y: auto;
     }
 
-    .mat-tab-header {
-      border-bottom: 0;
+    .mat-mdc-tab-link-container {
+      --mdc-tab-indicator-active-indicator-color: transparent;
 
-      .mat-ink-bar {
-        visibility: hidden !important;
-      }
-
-      .mat-tab-label-active {
-        color: rgba(var(--palette-primary-500), 1);
-        opacity: 1;
-      }
-
-      .mat-tab-link {
+      .mat-mdc-tab-link {
         &:hover {
           opacity: 0.75;
         }

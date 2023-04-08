@@ -1,6 +1,8 @@
-<router-outlet></router-outlet>
+<mat-tab-nav-panel #tabPanel class="flex-grow-1 overflow-auto">
+  <router-outlet></router-outlet>
+</mat-tab-nav-panel>
 
-<nav mat-align-tabs="center" mat-tab-nav-bar>
+<nav mat-align-tabs="center" mat-tab-nav-bar [tabPanel]="tabPanel">
   <a
     #rla="routerLinkActive"
     *ngFor="let tab of tabs"

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { GfAdminJobsModule } from '@ghostfolio/client/components/admin-jobs/admin-jobs.module';
 import { GfAdminMarketDataModule } from '@ghostfolio/client/components/admin-market-data/admin-market-data.module';
 import { GfAdminOverviewModule } from '@ghostfolio/client/components/admin-overview/admin-overview.module';
