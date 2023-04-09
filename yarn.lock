@@ -350,10 +350,10 @@
     glob "8.1.0"
     yargs "^17.2.1"
 
-"@angular/material@15.2.5":
-  version "15.2.5"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-15.2.5.tgz#a0531b629334dfd2997dd01e549bd0c40680f4e9"
-  integrity sha512-Lk6l1VsBA2ActVN9YsX2W5lVFYHJEVwswbbUdBPjWaXJzp7TdgghTFczac7vsNA6y3DM3Rd+CvRsJPD2kK4g4A==
+"@angular/material@15.2.6":
+  version "15.2.6"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-15.2.6.tgz#ac094216961a22058db7af898489808f02093038"
+  integrity sha512-r5feEcgs+xufI+GaO01XCehpnJVNB8sMS4l8DRV72DzgEIXhqYoLSWnQy7gYOKRXCUT66r1BxDmPG5fGa7jNzg==
   dependencies:
     "@material/animation" "15.0.0-canary.684e33d25.0"
     "@material/auto-init" "15.0.0-canary.684e33d25.0"
