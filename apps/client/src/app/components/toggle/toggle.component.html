@@ -6,6 +6,7 @@
   <mat-radio-button
     *ngFor="let option of options"
     [disabled]="isLoading"
+    [ngClass]="{ 'cursor-pointer': !isLoading }"
     [value]="option.value"
     >{{ option.label }}</mat-radio-button
   >
