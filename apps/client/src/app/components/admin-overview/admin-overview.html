@@ -101,21 +101,21 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Signup</div>
             <div class="w-50">
-              <mat-slide-toggle
+              <mat-checkbox
                 color="primary"
                 [checked]="info.globalPermissions.includes(permissions.createUserAccount)"
                 (change)="onEnableUserSignupModeChange($event)"
-              ></mat-slide-toggle>
+              ></mat-checkbox>
             </div>
           </div>
           <div *ngIf="hasPermissionToToggleReadOnlyMode" class="d-flex my-3">
             <div class="w-50" i18n>Read-only Mode</div>
             <div class="w-50">
-              <mat-slide-toggle
+              <mat-checkbox
                 color="primary"
                 [checked]="info?.isReadOnlyMode"
                 (change)="onReadOnlyModeChange($event)"
-              ></mat-slide-toggle>
+              ></mat-checkbox>
             </div>
           </div>
           <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">

@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog';
 import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 import { RouterModule } from '@angular/router';
 import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
 import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
@@ -28,10 +28,10 @@ import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-di
     GfValueModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatSlideToggleModule,
     ReactiveFormsModule,
     RouterModule
   ]
