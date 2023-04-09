@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the slide toggles to checkboxes on the account page
+- Changed the slide toggles to checkboxes in the admin control panel
 - Migrated the style of various components to `@angular/material` `15` (mdc)
+- Upgraded `@angular/material` from version `15.2.5` to `15.2.6`
 
 ## 1.251.0 - 2023-04-07
 

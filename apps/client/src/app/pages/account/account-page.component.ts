@@ -5,11 +5,8 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
-import {
-  MatLegacySlideToggle as MatSlideToggle,
-  MatLegacySlideToggleChange as MatSlideToggleChange
-} from '@angular/material/legacy-slide-toggle';
 import {
   MatSnackBar,
   MatSnackBarRef,
@@ -39,7 +36,7 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
 })
 export class AccountPageComponent implements OnDestroy, OnInit {
   @ViewChild('toggleSignInWithFingerprintEnabledElement')
-  signInWithFingerprintElement: MatSlideToggle;
+  signInWithFingerprintElement: MatCheckbox;
 
   public accesses: Access[];
   public appearancePlaceholder = $localize`Auto`;
@@ -215,7 +212,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
+  public onExperimentalFeaturesChange(aEvent: MatCheckboxChange) {
     this.dataService
       .putUserSetting({ isExperimentalFeatures: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -280,7 +277,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
+  public onRestrictedViewChange(aEvent: MatCheckboxChange) {
     this.dataService
       .putUserSetting({ isRestrictedView: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -298,7 +295,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
+  public onSignInWithFingerprintChange(aEvent: MatCheckboxChange) {
     if (aEvent.checked) {
       this.registerDevice();
     } else {
@@ -314,7 +311,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onViewModeChange(aEvent: MatSlideToggleChange) {
+  public onViewModeChange(aEvent: MatCheckboxChange) {
     this.dataService
       .putUserSetting({ viewMode: aEvent.checked === true ? 'ZEN' : 'DEFAULT' })
       .pipe(takeUntil(this.unsubscribeSubject))
