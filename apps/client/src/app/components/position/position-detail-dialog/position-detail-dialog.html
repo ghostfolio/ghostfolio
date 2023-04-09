@@ -257,9 +257,11 @@
     <div *ngIf="tags?.length > 0" class="row">
       <div class="col">
         <div class="h5" i18n>Tags</div>
-        <mat-chip-list>
-          <mat-chip *ngFor="let tag of tags">{{ tag.name }}</mat-chip>
-        </mat-chip-list>
+        <mat-chip-listbox>
+          <mat-chip-option *ngFor="let tag of tags" disabled
+            >{{ tag.name }}</mat-chip-option
+          >
+        </mat-chip-listbox>
       </div>
     </div>
 
