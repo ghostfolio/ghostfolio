@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.252.0 - 2023-04-10
+## 1.252.1 - 2023-04-10
 
 ### Changed
 
@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Decreased the density of the theme
 - Migrated the style of various components to `@angular/material` `15` (mdc)
 - Upgraded `@angular/cdk` and `@angular/material` from version `15.2.5` to `15.2.6`
+- Upgraded `bull` from version `4.10.2` to `4.10.4`
 
 ## 1.251.0 - 2023-04-07
 
@@ -32,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `BenchmarkComponent`
   - `HoldingsTableComponent`
 - Upgraded `angular` from version `15.1.5` to `15.2.5`
-- Upgraded `nestjs` from version `9.1.4` to `9.4.0`
 - Upgraded `Nx` from version `15.7.2` to `15.9.2`
 
 ## 1.250.0 - 2023-04-02
