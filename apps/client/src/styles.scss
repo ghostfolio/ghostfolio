@@ -279,16 +279,13 @@ body {
     }
 
     .with-placeholder-as-option {
-      .mat-select-placeholder {
+      .mat-mdc-select-placeholder {
         color: rgba(var(--light-primary-text));
       }
 
-      &.mat-select-disabled {
-        .mat-select-placeholder {
-          color: rgba(
-            var(--palette-foreground-disabled-text-dark),
-            var(--palette-foreground-disabled-text-dark-alpha)
-          );
+      &.mat-mdc-select-disabled {
+        .mat-mdc-select-placeholder {
+          color: rgba(var(--light-disabled-text));
         }
       }
     }
@@ -372,46 +369,16 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-checkbox {
+  label {
+    margin-bottom: 0;
+  }
+}
+
 .mat-mdc-fab,
 .mat-mdc-unelevated-button {
   &.mat-primary {
     color: rgba(var(--light-primary-text)) !important;
-  }
-}
-
-.mat-form-field {
-  &.compact-with-outline {
-    .mat-form-field-wrapper {
-      margin: 0.5rem 0 0.25rem;
-      padding-bottom: 1rem;
-
-      .mat-form-field-infix {
-        border-top-width: 0;
-        padding: 1rem 0 0.75rem;
-
-        .mat-form-field-label {
-          margin-top: 0.1rem;
-        }
-
-        .mat-select-arrow-wrapper {
-          transform: none;
-        }
-      }
-
-      .mat-form-field-prefix {
-        top: 0;
-      }
-
-      .mat-form-field-suffix {
-        top: 0;
-      }
-    }
-  }
-
-  &.without-hint {
-    .mat-form-field-wrapper {
-      padding-bottom: 0;
-    }
   }
 }
 
@@ -421,6 +388,18 @@ ngx-skeleton-loader {
   &.mat-primary {
     --mdc-fab-icon-color: rgba(var(--light-primary-text));
     --mat-mdc-fab-color: rgba(var(--light-primary-text));
+  }
+}
+
+.mat-mdc-form-field {
+  &.compact-with-outline {
+    // TODO: Configure density in Angular Material
+  }
+
+  &.without-hint {
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
   }
 }
 
@@ -475,16 +454,13 @@ ngx-skeleton-loader {
 }
 
 .with-placeholder-as-option {
-  .mat-select-placeholder {
+  .mat-mdc-select-placeholder {
     color: rgba(var(--dark-primary-text));
   }
 
-  &.mat-select-disabled {
-    .mat-select-placeholder {
-      color: rgba(
-        var(--palette-foreground-disabled-text),
-        var(--palette-foreground-disabled-text-alpha)
-      );
+  &.mat-mdc-select-disabled {
+    .mat-mdc-select-placeholder {
+      color: rgba(var(--dark-disabled-text));
     }
   }
 }

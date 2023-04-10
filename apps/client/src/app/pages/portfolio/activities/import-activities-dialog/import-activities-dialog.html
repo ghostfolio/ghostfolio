@@ -5,7 +5,7 @@
   (closeButtonClicked)="onCancel()"
 ></gf-dialog-header>
 
-<div class="flex-grow-1" mat-dialog-content>
+<div class="flex-grow-1 py-3" mat-dialog-content>
   <ng-container *ngIf="!isFileSelected">
     <ng-container *ngIf="mode === 'DIVIDEND'; else selectFile">
       <form [formGroup]="uniqueAssetForm" (ngSubmit)="onLoadDividends()">

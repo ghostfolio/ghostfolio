@@ -17,14 +17,6 @@
     font-size: 90%;
     line-height: 1.2;
   }
-
-  .mat-form-field {
-    ::ng-deep {
-      .mat-form-field-wrapper {
-        padding-bottom: 0;
-      }
-    }
-  }
 }
 
 :host-context(.is-dark-theme) {
