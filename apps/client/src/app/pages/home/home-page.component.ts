@@ -25,7 +25,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public hasMessage: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public info: InfoItem;
-  public tabs: { iconName: string; path: string }[] = [];
+  public tabs: { iconName: string; label: string; path: string }[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -42,9 +42,21 @@ export class HomePageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.tabs = [
-            { iconName: 'analytics-outline', path: 'overview' },
-            { iconName: 'wallet-outline', path: 'holdings' },
-            { iconName: 'reader-outline', path: 'summary' }
+            {
+              iconName: 'analytics-outline',
+              label: $localize`Overview`,
+              path: 'overview'
+            },
+            {
+              iconName: 'wallet-outline',
+              label: $localize`Holdings`,
+              path: 'holdings'
+            },
+            {
+              iconName: 'reader-outline',
+              label: $localize`Summary`,
+              path: 'summary'
+            }
           ];
           this.user = state.user;
 
@@ -60,7 +72,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
           );
 
           if (this.hasPermissionToAccessFearAndGreedIndex) {
-            this.tabs.push({ iconName: 'newspaper-outline', path: 'market' });
+            this.tabs.push({
+              iconName: 'newspaper-outline',
+              label: $localize`Markets`,
+              path: 'market'
+            });
           }
 
           this.changeDetectorRef.markForCheck();

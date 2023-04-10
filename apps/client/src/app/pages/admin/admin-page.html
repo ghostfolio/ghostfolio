@@ -5,17 +5,13 @@
 <nav mat-align-tabs="center" mat-tab-nav-bar [tabPanel]="tabPanel">
   <a
     #rla="routerLinkActive"
-    *ngFor="let link of [
-      { iconName: 'reader-outline', path: 'overview' },
-      { iconName: 'people-outline', path: 'users' },
-      { iconName: 'server-outline', path: 'market-data' },
-      { iconName: 'flash-outline', path: 'jobs' }
-    ]"
+    *ngFor="let tab of tabs"
     mat-tab-link
     routerLinkActive
     [active]="rla.isActive"
-    [routerLink]="link.path"
+    [routerLink]="tab.path"
   >
-    <ion-icon size="large" [name]="link.iconName"></ion-icon>
+    <ion-icon size="large" [name]="tab.iconName"></ion-icon>
+    <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
   </a>
 </nav>

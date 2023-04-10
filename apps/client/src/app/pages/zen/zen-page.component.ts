@@ -18,7 +18,7 @@ import { first, takeUntil } from 'rxjs/operators';
   styleUrls: ['./zen-page.scss']
 })
 export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
-  public tabs: { iconName: string; path: string }[] = [];
+  public tabs: { iconName: string; label: string; path: string }[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -34,8 +34,16 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.tabs = [
-            { iconName: 'analytics-outline', path: 'overview' },
-            { iconName: 'wallet-outline', path: 'holdings' }
+            {
+              iconName: 'analytics-outline',
+              label: $localize`Overview`,
+              path: 'overview'
+            },
+            {
+              iconName: 'wallet-outline',
+              label: $localize`Holdings`,
+              path: 'holdings'
+            }
           ];
           this.user = state.user;
 

@@ -13,6 +13,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
   }
 
   public hasMessage: boolean;
+  public tabs: { iconName: string; label: string; path: string }[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -22,7 +23,22 @@ export class AdminPageComponent implements OnDestroy, OnInit {
     this.hasMessage = !!systemMessage;
   }
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.tabs = [
+      {
+        iconName: 'reader-outline',
+        label: $localize`Overview`,
+        path: 'overview'
+      },
+      { iconName: 'people-outline', label: $localize`Users`, path: 'users' },
+      {
+        iconName: 'server-outline',
+        label: $localize`Market Data`,
+        path: 'market-data'
+      },
+      { iconName: 'flash-outline', label: $localize`Jobs`, path: 'jobs' }
+    ];
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
