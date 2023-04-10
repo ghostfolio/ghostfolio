@@ -72,7 +72,6 @@ $gf-secondary: (
 $gf-typography: mat.define-typography-config();
 
 @include mat.core();
-@include mat.legacy-core();
 
 // Create default theme
 $gf-theme-default: mat.define-light-theme(
@@ -86,7 +85,6 @@ $gf-theme-default: mat.define-light-theme(
   )
 );
 @include mat.all-component-themes($gf-theme-default);
-@include mat.all-legacy-component-themes($gf-theme-default);
 
 // Create dark theme
 $gf-theme-dark: mat.define-dark-theme(
@@ -101,7 +99,6 @@ $gf-theme-dark: mat.define-dark-theme(
 );
 .is-dark-theme {
   @include mat.all-component-colors($gf-theme-dark);
-  @include mat.all-legacy-component-colors($gf-theme-dark);
 }
 
 :root {
