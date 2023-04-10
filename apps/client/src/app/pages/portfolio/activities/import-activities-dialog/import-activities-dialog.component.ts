@@ -6,10 +6,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
