@@ -236,8 +236,12 @@ body {
       @include gf-table(true);
     }
 
-    .mat-dialog-container {
+    .mat-mdc-dialog-container {
       background: var(--dark-background);
+
+      .mdc-dialog__content {
+        --mdc-dialog-supporting-text-color: rgba(var(--light-primary-text));
+      }
     }
 
     .mat-mdc-fab,
@@ -375,6 +379,12 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-dialog-container {
+  .mdc-dialog__content {
+    --mdc-dialog-supporting-text-color: rgba(var(--dark-primary-text));
+  }
+}
+
 .mat-mdc-fab,
 .mat-mdc-unelevated-button {
   &.mat-primary {
@@ -427,6 +437,14 @@ ngx-skeleton-loader {
   &.mat-primary {
     --mdc-filled-button-label-text-color: rgba(var(--light-primary-text));
   }
+}
+
+.mdc-dialog__actions {
+  padding: 12px 24px !important;
+}
+
+.mdc-dialog__title {
+  padding: 9px 24px !important;
 }
 
 .no-min-width {

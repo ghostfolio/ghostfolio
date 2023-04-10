@@ -7,9 +7,9 @@ import {
   OnInit
 } from '@angular/core';
 import {
-  MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA,
-  MatLegacyDialogRef as MatDialogRef
-} from '@angular/material/legacy-dialog';
+  MAT_DIALOG_DATA,
+  MatDialogRef
+} from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
