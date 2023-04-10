@@ -402,10 +402,6 @@ ngx-skeleton-loader {
 }
 
 .mat-mdc-form-field {
-  &.compact-with-outline {
-    // TODO: Configure density in Angular Material
-  }
-
   &.without-hint {
     .mat-mdc-form-field-subscript-wrapper {
       display: none;

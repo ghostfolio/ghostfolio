@@ -80,11 +80,12 @@ $gf-theme-default: mat.define-light-theme(
       primary: mat.define-palette($gf-primary),
       accent: mat.define-palette($gf-secondary, 500, 900, A100)
     ),
-    density: 0,
+    density: -3,
     typography: $gf-typography
   )
 );
 @include mat.all-component-themes($gf-theme-default);
+@include mat.button-density(0);
 
 // Create dark theme
 $gf-theme-dark: mat.define-dark-theme(
@@ -93,12 +94,13 @@ $gf-theme-dark: mat.define-dark-theme(
       primary: mat.define-palette($gf-primary),
       accent: mat.define-palette($gf-secondary, 500, 900, A100)
     ),
-    density: 0,
+    density: -3,
     typography: $gf-typography
   )
 );
 .is-dark-theme {
   @include mat.all-component-colors($gf-theme-dark);
+  @include mat.button-density(0);
 }
 
 :root {
