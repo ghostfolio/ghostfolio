@@ -7,6 +7,7 @@ import {
   Controller,
   Get,
   HttpException,
+  Param,
   Post,
   Req,
   Res,
@@ -31,6 +32,26 @@ export class AuthController {
     private readonly configurationService: ConfigurationService,
     private readonly webAuthService: WebAuthService
   ) {}
+
+  /**
+   * @deprecated
+   */
+  @Get('anonymous/:accessToken')
+  public async accessTokenLoginGet(
+    @Param('accessToken') accessToken: string
+  ): Promise<OAuthResponse> {
+    try {
+      const authToken = await this.authService.validateAnonymousLogin(
+        accessToken
+      );
+      return { authToken };
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+  }
 
   @Post('anonymous')
   public async accessTokenLogin(
