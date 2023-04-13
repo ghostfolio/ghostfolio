@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prisma` from version `4.11.0` to `4.12.0`
 
+### Fixed
+
+- Fixed the background color of dialogs in dark mode
+
 ## 1.252.2 - 2023-04-11
 
 ### Changed

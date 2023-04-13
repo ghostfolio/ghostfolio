@@ -237,7 +237,7 @@ body {
     }
 
     .mat-mdc-dialog-container {
-      background: var(--dark-background);
+      --mdc-dialog-container-color: var(--dark-background);
 
       .mdc-dialog__content {
         --mdc-dialog-supporting-text-color: rgba(var(--light-primary-text));
