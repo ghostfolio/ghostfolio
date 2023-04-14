@@ -118,7 +118,10 @@ export class OrderService {
         dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
         symbol: data.SymbolProfile.connectOrCreate.create.symbol
       },
-      GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+      {
+        ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+        jobId: `${data.SymbolProfile.connectOrCreate.create.dataSource}-${data.SymbolProfile.connectOrCreate.create.symbol}}`
+      }
     );
 
     const isDraft = isAfter(data.date as Date, endOfToday());

@@ -2,8 +2,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.se
 import {
   DATA_GATHERING_QUEUE,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
-  QUEUE_JOB_STATUS_LIST
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -34,17 +33,14 @@ export class DataGatheringService {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
-  public async addJobToQueue(name: string, data: any, options?: JobOptions) {
-    const hasJob = await this.hasJob(name, data);
+  public async addJobToQueue(name: string, data: any, opts?: JobOptions) {
+    return this.dataGatheringQueue.add(name, data, opts);
+  }
 
-    if (hasJob) {
-      Logger.log(
-        `Job ${name} with data ${JSON.stringify(data)} already exists.`,
-        'DataGatheringService'
-      );
-    } else {
-      return this.dataGatheringQueue.add(name, data, options);
-    }
+  public async addJobsToQueue(
+    jobs: { data: any; name: string; opts?: JobOptions }[]
+  ) {
+    return this.dataGatheringQueue.addBulk(jobs);
   }
 
   public async gather7Days() {
@@ -209,17 +205,22 @@ export class DataGatheringService {
   }
 
   public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
-    for (const { dataSource, date, symbol } of aSymbolsWithStartDate) {
-      await this.addJobToQueue(
-        GATHER_HISTORICAL_MARKET_DATA_PROCESS,
-        {
-          dataSource,
-          date,
-          symbol
-        },
-        GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS
-      );
-    }
+    await this.addJobsToQueue(
+      aSymbolsWithStartDate.map(({ dataSource, date, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            date,
+            symbol
+          },
+          name: GATHER_HISTORICAL_MARKET_DATA_PROCESS,
+          opts: {
+            ...GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
+            jobId: `${dataSource}-${symbol}-${format(date, DATE_FORMAT)}`
+          }
+        };
+      })
+    );
   }
 
   public async getSymbolsMax(): Promise<IDataGatheringItem[]> {
@@ -340,19 +341,5 @@ export class DataGatheringService {
       });
 
     return [...currencyPairsToGather, ...symbolProfilesToGather];
-  }
-
-  private async hasJob(name: string, data: any) {
-    const jobs = await this.dataGatheringQueue.getJobs(
-      QUEUE_JOB_STATUS_LIST.filter((status) => {
-        return status !== 'completed';
-      })
-    );
-
-    return jobs.some((job) => {
-      return (
-        job.name === name && JSON.stringify(job.data) === JSON.stringify(data)
-      );
-    });
   }
 }
