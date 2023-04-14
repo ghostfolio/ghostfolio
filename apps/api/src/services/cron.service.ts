@@ -21,12 +21,13 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_4_HOURS)
   public async runEveryFourHours() {
-    await this.dataGatheringService.gather7Days();
+    // await this.dataGatheringService.gather7Days();
   }
 
   @Cron(CronExpression.EVERY_12_HOURS)
   public async runEveryTwelveHours() {
     await this.exchangeRateDataService.loadCurrencies();
+    await this.dataGatheringService.gather7Days();
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_5PM)
