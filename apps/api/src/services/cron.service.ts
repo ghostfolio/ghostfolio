@@ -21,13 +21,12 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_4_HOURS)
   public async runEveryFourHours() {
-    // await this.dataGatheringService.gather7Days();
+    await this.dataGatheringService.gather7Days();
   }
 
   @Cron(CronExpression.EVERY_12_HOURS)
   public async runEveryTwelveHours() {
     await this.exchangeRateDataService.loadCurrencies();
-    await this.dataGatheringService.gather7Days();
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_5PM)
@@ -46,7 +45,10 @@ export class CronService {
           dataSource,
           symbol
         },
-        GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+        {
+          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+          jobId: `${dataSource}-${symbol}}`
+        }
       );
     }
   }

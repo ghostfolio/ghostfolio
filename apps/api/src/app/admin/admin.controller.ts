@@ -107,7 +107,10 @@ export class AdminController {
           dataSource,
           symbol
         },
-        GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+        {
+          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+          jobId: `${dataSource}-${symbol}}`
+        }
       );
     }
 
@@ -138,7 +141,10 @@ export class AdminController {
           dataSource,
           symbol
         },
-        GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+        {
+          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+          jobId: `${dataSource}-${symbol}}`
+        }
       );
     }
   }
@@ -167,7 +173,10 @@ export class AdminController {
         dataSource,
         symbol
       },
-      GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+      {
+        ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+        jobId: `${dataSource}-${symbol}}`
+      }
     );
   }
 
