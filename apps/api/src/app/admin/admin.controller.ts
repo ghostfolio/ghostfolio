@@ -101,17 +101,17 @@ export class AdminController {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringService.addJobToQueue(
-        GATHER_ASSET_PROFILE_PROCESS,
-        {
+      await this.dataGatheringService.addJobToQueue({
+        data: {
           dataSource,
           symbol
         },
-        {
+        name: GATHER_ASSET_PROFILE_PROCESS,
+        opts: {
           ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
           jobId: `${dataSource}-${symbol}}`
         }
-      );
+      });
     }
 
     this.dataGatheringService.gatherMax();
@@ -135,17 +135,17 @@ export class AdminController {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringService.addJobToQueue(
-        GATHER_ASSET_PROFILE_PROCESS,
-        {
+      await this.dataGatheringService.addJobToQueue({
+        data: {
           dataSource,
           symbol
         },
-        {
+        name: GATHER_ASSET_PROFILE_PROCESS,
+        opts: {
           ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
           jobId: `${dataSource}-${symbol}}`
         }
-      );
+      });
     }
   }
 
@@ -167,17 +167,17 @@ export class AdminController {
       );
     }
 
-    await this.dataGatheringService.addJobToQueue(
-      GATHER_ASSET_PROFILE_PROCESS,
-      {
+    await this.dataGatheringService.addJobToQueue({
+      data: {
         dataSource,
         symbol
       },
-      {
+      name: GATHER_ASSET_PROFILE_PROCESS,
+      opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
         jobId: `${dataSource}-${symbol}}`
       }
-    );
+    });
   }
 
   @Post('gather/:dataSource/:symbol')

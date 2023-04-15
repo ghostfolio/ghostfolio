@@ -34,7 +34,15 @@ export class DataGatheringService {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
-  public async addJobToQueue(name: string, data: any, opts?: JobOptions) {
+  public async addJobToQueue({
+    data,
+    name,
+    opts
+  }: {
+    data: any;
+    name: string;
+    opts?: JobOptions;
+  }) {
     return this.dataGatheringQueue.add(name, data, opts);
   }
 
