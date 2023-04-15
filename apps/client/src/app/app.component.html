@@ -31,7 +31,8 @@
         >
         <div
           *ngIf="!canCreateAccount && info?.systemMessage && user"
-          class="d-inline-block info-message px-3 py-2"
+          class="cursor-pointer d-inline-block info-message px-3 py-2 text-truncate"
+          (click)="onShowSystemMessage()"
         >
           {{ info.systemMessage }}
         </div>

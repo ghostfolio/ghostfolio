@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Made the system message expandable
+
 ### Changed
 
 - Skipped creating queue jobs for asset profiles with `MANUAL` data source not having a scraper configuration
