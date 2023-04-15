@@ -722,7 +722,7 @@ export class PortfolioCalculator {
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
-          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`,
+          `Missing historical market data for symbol ${currentPosition.symbol}`,
           'PortfolioCalculator'
         );
         hasErrors = true;
