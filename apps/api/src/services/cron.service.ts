@@ -19,8 +19,8 @@ export class CronService {
     private readonly twitterBotService: TwitterBotService
   ) {}
 
-  @Cron(CronExpression.EVERY_4_HOURS)
-  public async runEveryFourHours() {
+  @Cron(CronExpression.EVERY_HOUR)
+  public async runEveryHour() {
     await this.dataGatheringService.gather7Days();
   }
 

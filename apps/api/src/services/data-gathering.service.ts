@@ -11,6 +11,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
+import { isEmpty } from 'lodash';
 
 import { DataProviderService } from './data-provider/data-provider.service';
 import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
@@ -223,48 +224,6 @@ export class DataGatheringService {
     );
   }
 
-  public async getSymbolsMax(): Promise<IDataGatheringItem[]> {
-    const startDate =
-      (
-        await this.prismaService.order.findFirst({
-          orderBy: [{ date: 'asc' }]
-        })
-      )?.date ?? new Date();
-
-    const currencyPairsToGather = this.exchangeRateDataService
-      .getCurrencyPairs()
-      .map(({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol,
-          date: min([startDate, subYears(new Date(), 10)])
-        };
-      });
-
-    const symbolProfilesToGather = (
-      await this.prismaService.symbolProfile.findMany({
-        orderBy: [{ symbol: 'asc' }],
-        select: {
-          dataSource: true,
-          Order: {
-            orderBy: [{ date: 'asc' }],
-            select: { date: true },
-            take: 1
-          },
-          scraperConfiguration: true,
-          symbol: true
-        }
-      })
-    ).map((symbolProfile) => {
-      return {
-        ...symbolProfile,
-        date: symbolProfile.Order?.[0]?.date ?? startDate
-      };
-    });
-
-    return [...currencyPairsToGather, ...symbolProfilesToGather];
-  }
-
   public async getUniqueAssets(): Promise<UniqueAsset[]> {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
       orderBy: [{ symbol: 'asc' }]
@@ -299,7 +258,7 @@ export class DataGatheringService {
 
     // Only consider symbols with incomplete market data for the last
     // 7 days
-    const symbolsNotToGather = (
+    const symbolsWithCompleteMarketData = (
       await this.prismaService.marketData.groupBy({
         _count: true,
         by: ['symbol'],
@@ -317,8 +276,14 @@ export class DataGatheringService {
       });
 
     const symbolProfilesToGather = symbolProfiles
-      .filter(({ symbol }) => {
-        return !symbolsNotToGather.includes(symbol);
+      .filter(({ dataSource, scraperConfiguration, symbol }) => {
+        const manualDataSourceWithScraperConfiguration =
+          dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
+
+        return (
+          !symbolsWithCompleteMarketData.includes(symbol) &&
+          (dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration)
+        );
       })
       .map((symbolProfile) => {
         return {
@@ -330,13 +295,66 @@ export class DataGatheringService {
     const currencyPairsToGather = this.exchangeRateDataService
       .getCurrencyPairs()
       .filter(({ symbol }) => {
-        return !symbolsNotToGather.includes(symbol);
+        return !symbolsWithCompleteMarketData.includes(symbol);
       })
       .map(({ dataSource, symbol }) => {
         return {
           dataSource,
           symbol,
           date: startDate
+        };
+      });
+
+    return [...currencyPairsToGather, ...symbolProfilesToGather];
+  }
+
+  private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
+    const startDate =
+      (
+        await this.prismaService.order.findFirst({
+          orderBy: [{ date: 'asc' }]
+        })
+      )?.date ?? new Date();
+
+    const currencyPairsToGather = this.exchangeRateDataService
+      .getCurrencyPairs()
+      .map(({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol,
+          date: min([startDate, subYears(new Date(), 10)])
+        };
+      });
+
+    const symbolProfilesToGather = (
+      await this.prismaService.symbolProfile.findMany({
+        orderBy: [{ symbol: 'asc' }],
+        select: {
+          dataSource: true,
+          Order: {
+            orderBy: [{ date: 'asc' }],
+            select: { date: true },
+            take: 1
+          },
+          scraperConfiguration: true,
+          symbol: true
+        }
+      })
+    )
+      .filter((symbolProfile) => {
+        const manualDataSourceWithScraperConfiguration =
+          symbolProfile.dataSource === 'MANUAL' &&
+          !isEmpty(symbolProfile.scraperConfiguration);
+
+        return (
+          symbolProfile.dataSource !== 'MANUAL' ||
+          manualDataSourceWithScraperConfiguration
+        );
+      })
+      .map((symbolProfile) => {
+        return {
+          ...symbolProfile,
+          date: symbolProfile.Order?.[0]?.date ?? startDate
         };
       });
 
