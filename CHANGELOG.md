@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Skipped creating queue jobs for asset profiles with `MANUAL` data source not having a scraper configuration
 - Reduced the execution interval of the data gathering to every hour
+- Upgraded `prisma` from version `4.11.0` to `4.12.0`
 
 ### Fixed
 
