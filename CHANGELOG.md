@@ -5,12 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Skipped creating queue jobs for asset profiles with `MANUAL` data source not having a scraper configuration
+- Reduced the execution interval of the data gathering to every hour
+
 ## 1.254.0 - 2023-04-14
 
 ### Changed
 
 - Improved the queue jobs implementation by adding in bulk
 - Improved the queue jobs implementation by introducing unique job ids
+- Reverted the execution interval of the data gathering from every 12 hours to every 4 hours
 
 ## 1.253.0 - 2023-04-14
 
