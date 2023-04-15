@@ -464,7 +464,7 @@ ngx-skeleton-loader {
 }
 
 .with-info-message {
-  height: calc(100vh - 5rem - 3.5rem) !important;
+  height: calc(100vh - 5rem - 3.5rem + 0.5rem) !important;
 }
 
 .with-placeholder-as-option {
