@@ -100,19 +100,21 @@ export class AdminController {
 
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringService.addJobToQueue({
-        data: {
-          dataSource,
-          symbol
-        },
-        name: GATHER_ASSET_PROFILE_PROCESS,
-        opts: {
-          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-          jobId: `${dataSource}-${symbol}}`
-        }
-      });
-    }
+    await this.dataGatheringService.addJobsToQueue(
+      uniqueAssets.map(({ dataSource, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            symbol
+          },
+          name: GATHER_ASSET_PROFILE_PROCESS,
+          opts: {
+            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            jobId: `${dataSource}-${symbol}}`
+          }
+        };
+      })
+    );
 
     this.dataGatheringService.gatherMax();
   }
@@ -134,19 +136,21 @@ export class AdminController {
 
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringService.addJobToQueue({
-        data: {
-          dataSource,
-          symbol
-        },
-        name: GATHER_ASSET_PROFILE_PROCESS,
-        opts: {
-          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-          jobId: `${dataSource}-${symbol}}`
-        }
-      });
-    }
+    await this.dataGatheringService.addJobsToQueue(
+      uniqueAssets.map(({ dataSource, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            symbol
+          },
+          name: GATHER_ASSET_PROFILE_PROCESS,
+          opts: {
+            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            jobId: `${dataSource}-${symbol}}`
+          }
+        };
+      })
+    );
   }
 
   @Post('gather/profile-data/:dataSource/:symbol')
