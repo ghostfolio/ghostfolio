@@ -19,8 +19,8 @@ export class CronService {
     private readonly twitterBotService: TwitterBotService
   ) {}
 
-  @Cron(CronExpression.EVERY_4_HOURS)
-  public async runEveryFourHours() {
+  @Cron(CronExpression.EVERY_HOUR)
+  public async runEveryHour() {
     await this.dataGatheringService.gather7Days();
   }
 
@@ -38,18 +38,20 @@ export class CronService {
   public async runEverySundayAtTwelvePm() {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringService.addJobToQueue(
-        GATHER_ASSET_PROFILE_PROCESS,
-        {
-          dataSource,
-          symbol
-        },
-        {
-          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-          jobId: `${dataSource}-${symbol}}`
-        }
-      );
-    }
+    await this.dataGatheringService.addJobsToQueue(
+      uniqueAssets.map(({ dataSource, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            symbol
+          },
+          name: GATHER_ASSET_PROFILE_PROCESS,
+          opts: {
+            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            jobId: `${dataSource}-${symbol}}`
+          }
+        };
+      })
+    );
   }
 }
