@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Skipped creating queue jobs for asset profiles with `MANUAL` data source not having a scraper configuration
 - Reduced the execution interval of the data gathering to every hour
 
+### Fixed
+
+- Improved the style of the system message
+
 ## 1.254.0 - 2023-04-14
 
 ### Changed
