@@ -100,6 +100,10 @@ export class AppComponent implements OnDestroy, OnInit {
     this.tokenStorageService.signOut();
   }
 
+  public onShowSystemMessage() {
+    alert(this.info.systemMessage);
+  }
+
   public onSignOut() {
     this.tokenStorageService.signOut();
     this.userService.remove();
