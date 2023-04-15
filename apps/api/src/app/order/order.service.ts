@@ -112,17 +112,17 @@ export class OrderService {
       };
     }
 
-    await this.dataGatheringService.addJobToQueue(
-      GATHER_ASSET_PROFILE_PROCESS,
-      {
+    await this.dataGatheringService.addJobToQueue({
+      data: {
         dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
         symbol: data.SymbolProfile.connectOrCreate.create.symbol
       },
-      {
+      name: GATHER_ASSET_PROFILE_PROCESS,
+      opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
         jobId: `${data.SymbolProfile.connectOrCreate.create.dataSource}-${data.SymbolProfile.connectOrCreate.create.symbol}}`
       }
-    );
+    });
 
     const isDraft = isAfter(data.date as Date, endOfToday());
 
