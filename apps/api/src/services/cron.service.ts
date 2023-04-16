@@ -48,7 +48,7 @@ export class CronService {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: `${dataSource}-${symbol}}`
+            jobId: `${dataSource}-${symbol}`
           }
         };
       })
