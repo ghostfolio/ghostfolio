@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Yahoo Finance_ data enhancer for countries, sectors and urls
+
 ### Changed
 
 - Enabled the configuration to immediately remove queue jobs on complete
