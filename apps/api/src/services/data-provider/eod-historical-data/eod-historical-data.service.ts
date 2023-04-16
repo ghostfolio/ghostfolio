@@ -43,7 +43,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
       currency: searchResult?.currency,
       dataSource: this.getName(),
       isin: searchResult?.isin,
-      name: searchResult?.name
+      name: searchResult?.name,
+      symbol: aSymbol
     };
   }
 
