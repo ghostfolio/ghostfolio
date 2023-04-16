@@ -82,9 +82,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       if (response.dataSource === 'YAHOO') {
         yahooSymbol = symbol;
       } else {
-        // const { items } = await this.yahooFinanceService.search(response.isin);
-        const searchResult = await yahooFinance.search(response.isin);
-        yahooSymbol = searchResult.quotes[0].symbol;
+        const { quotes } = await yahooFinance.search(response.isin);
+        yahooSymbol = quotes[0].symbol;
       }
 
       const {
