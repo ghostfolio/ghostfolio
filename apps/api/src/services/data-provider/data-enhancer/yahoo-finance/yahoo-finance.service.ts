@@ -25,6 +25,19 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
+  public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
+    let symbol = aYahooFinanceSymbol.replace(
+      new RegExp(`-${this.baseCurrency}$`),
+      this.baseCurrency
+    );
+
+    if (symbol.includes('=X') && !symbol.includes(this.baseCurrency)) {
+      symbol = `${this.baseCurrency}${symbol}`;
+    }
+
+    return symbol.replace('=X', '');
+  }
+
   /**
    * Converts a symbol to a Yahoo Finance symbol
    *

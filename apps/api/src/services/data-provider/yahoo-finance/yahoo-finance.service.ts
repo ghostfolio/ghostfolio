@@ -31,19 +31,6 @@ export class YahooFinanceService implements DataProviderInterface {
     return true;
   }
 
-  public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
-    let symbol = aYahooFinanceSymbol.replace(
-      new RegExp(`-${this.baseCurrency}$`),
-      this.baseCurrency
-    );
-
-    if (symbol.includes('=X') && !symbol.includes(this.baseCurrency)) {
-      symbol = `${this.baseCurrency}${symbol}`;
-    }
-
-    return symbol.replace('=X', '');
-  }
-
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
@@ -184,7 +171,10 @@ export class YahooFinanceService implements DataProviderInterface {
 
       for (const quote of quotes) {
         // Convert symbols back
-        const symbol = this.convertFromYahooFinanceSymbol(quote.symbol);
+        const symbol =
+          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+            quote.symbol
+          );
 
         response[symbol] = {
           currency: quote.currency,
@@ -301,9 +291,10 @@ export class YahooFinanceService implements DataProviderInterface {
           return currentQuote.symbol === marketDataItem.symbol;
         });
 
-        const symbol = this.convertFromYahooFinanceSymbol(
-          marketDataItem.symbol
-        );
+        const symbol =
+          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+            marketDataItem.symbol
+          );
 
         const { assetClass, assetSubClass } =
           this.yahooFinanceDataEnhancerService.parseAssetClass({
