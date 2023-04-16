@@ -4,7 +4,7 @@ import {
 } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
 import { InjectQueue } from '@nestjs/bull';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JobStatus, Queue } from 'bull';
 
 @Injectable()
@@ -23,14 +23,11 @@ export class QueueService {
   }: {
     status?: JobStatus[];
   }) {
-    const jobs = await this.dataGatheringQueue.getJobs(status);
-
-    for (const job of jobs) {
-      try {
-        await job.remove();
-      } catch (error) {
-        Logger.warn(error, 'QueueService');
-      }
+    for (const statusItem of status) {
+      await this.dataGatheringQueue.clean(
+        300,
+        statusItem === 'waiting' ? 'wait' : statusItem
+      );
     }
   }
 
@@ -44,18 +41,23 @@ export class QueueService {
     const jobs = await this.dataGatheringQueue.getJobs(status);
 
     const jobsWithState = await Promise.all(
-      jobs.slice(0, limit).map(async (job) => {
-        return {
-          attemptsMade: job.attemptsMade + 1,
-          data: job.data,
-          finishedOn: job.finishedOn,
-          id: job.id,
-          name: job.name,
-          stacktrace: job.stacktrace,
-          state: await job.getState(),
-          timestamp: job.timestamp
-        };
-      })
+      jobs
+        .filter((job) => {
+          return job;
+        })
+        .slice(0, limit)
+        .map(async (job) => {
+          return {
+            attemptsMade: job.attemptsMade + 1,
+            data: job.data,
+            finishedOn: job.finishedOn,
+            id: job.id,
+            name: job.name,
+            stacktrace: job.stacktrace,
+            state: await job.getState(),
+            timestamp: job.timestamp
+          };
+        })
     );
 
     return {
