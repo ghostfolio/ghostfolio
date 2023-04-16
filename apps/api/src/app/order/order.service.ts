@@ -120,7 +120,7 @@ export class OrderService {
       name: GATHER_ASSET_PROFILE_PROCESS,
       opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: `${data.SymbolProfile.connectOrCreate.create.dataSource}-${data.SymbolProfile.connectOrCreate.create.symbol}}`
+        jobId: `${data.SymbolProfile.connectOrCreate.create.dataSource}-${data.SymbolProfile.connectOrCreate.create.symbol}`
       }
     });
 
