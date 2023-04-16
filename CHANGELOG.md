@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Enabled the configuration to immediately remove queue jobs on complete
+- Refactored the implementation of removing queue jobs
+
 ### Fixed
 
 - Fixed the unique job ids of the gather asset profile process

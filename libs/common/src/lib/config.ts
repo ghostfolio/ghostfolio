@@ -49,9 +49,7 @@ export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
     type: 'exponential'
   },
   priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-  removeOnComplete: {
-    age: ms('2 weeks') / 1000
-  }
+  removeOnComplete: true
 };
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
   'GATHER_HISTORICAL_MARKET_DATA';
@@ -62,9 +60,7 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
     type: 'exponential'
   },
   priority: DATA_GATHERING_QUEUE_PRIORITY_LOW,
-  removeOnComplete: {
-    age: ms('2 weeks') / 1000
-  }
+  removeOnComplete: true
 };
 
 export const HEADER_KEY_IMPERSONATION = 'Impersonation-Id';
