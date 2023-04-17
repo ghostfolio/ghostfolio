@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the unique job ids of the gather asset profile process
+- Fixed the style of the button to fetch the current market price
 
 ## 1.255.0 - 2023-04-15
 
