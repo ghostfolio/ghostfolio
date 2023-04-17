@@ -99,34 +99,12 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         yahooSymbol = quotes[0].symbol;
       }
 
-      const {
-        assetClass,
-        assetSubClass,
-        countries,
-        currency,
-        name,
-        sectors,
-        url
-      } = await this.getAssetProfile(yahooSymbol);
-
-      if (assetClass) {
-        response.assetClass = assetClass;
-      }
-
-      if (assetSubClass) {
-        response.assetSubClass = assetSubClass;
-      }
+      const { countries, sectors, url } = await this.getAssetProfile(
+        yahooSymbol
+      );
 
       if (countries) {
         response.countries = countries;
-      }
-
-      if (currency) {
-        response.currency = currency;
-      }
-
-      if (name) {
-        response.name = name;
       }
 
       if (sectors) {
