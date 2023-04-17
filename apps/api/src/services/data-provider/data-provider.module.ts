@@ -11,12 +11,15 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
+import { DataEnhancerModule } from './data-enhancer/data-enhancer.module';
+import { YahooFinanceDataEnhancerService } from './data-enhancer/yahoo-finance/yahoo-finance.service';
 import { DataProviderService } from './data-provider.service';
 
 @Module({
   imports: [
     ConfigurationModule,
     CryptocurrencyModule,
+    DataEnhancerModule,
     PrismaModule,
     SymbolProfileModule
   ],
@@ -57,7 +60,8 @@ import { DataProviderService } from './data-provider.service';
         rapidApiService,
         yahooFinanceService
       ]
-    }
+    },
+    YahooFinanceDataEnhancerService
   ],
   exports: [DataProviderService, YahooFinanceService]
 })

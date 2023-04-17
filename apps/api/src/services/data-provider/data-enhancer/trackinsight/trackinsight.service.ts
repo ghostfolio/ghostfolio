@@ -1,11 +1,13 @@
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
+import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import bent from 'bent';
 
 const getJSON = bent('json');
 
+@Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://data.trackinsight.com';
   private static countries = require('countries-list/dist/countries.json');

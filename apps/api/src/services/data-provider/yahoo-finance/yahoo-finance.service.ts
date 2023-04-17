@@ -1,26 +1,19 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
+import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  SymbolProfile
-} from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { countries } from 'countries-list';
 import { addDays, format, isSameDay } from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
-import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -28,7 +21,8 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly cryptocurrencyService: CryptocurrencyService
+    private readonly cryptocurrencyService: CryptocurrencyService,
+    private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
   ) {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
@@ -37,128 +31,20 @@ export class YahooFinanceService implements DataProviderInterface {
     return true;
   }
 
-  public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
-    let symbol = aYahooFinanceSymbol.replace(
-      new RegExp(`-${this.baseCurrency}$`),
-      this.baseCurrency
-    );
-
-    if (symbol.includes('=X') && !symbol.includes(this.baseCurrency)) {
-      symbol = `${this.baseCurrency}${symbol}`;
-    }
-
-    return symbol.replace('=X', '');
-  }
-
-  /**
-   * Converts a symbol to a Yahoo Finance symbol
-   *
-   * Currency:        USDCHF  -> USDCHF=X
-   * Cryptocurrency:  BTCUSD  -> BTC-USD
-   *                  DOGEUSD -> DOGE-USD
-   */
-  public convertToYahooFinanceSymbol(aSymbol: string) {
-    if (
-      aSymbol.includes(this.baseCurrency) &&
-      aSymbol.length > this.baseCurrency.length
-    ) {
-      if (
-        isCurrency(
-          aSymbol.substring(0, aSymbol.length - this.baseCurrency.length)
-        )
-      ) {
-        return `${aSymbol}=X`;
-      } else if (
-        this.cryptocurrencyService.isCryptocurrency(
-          aSymbol.replace(
-            new RegExp(`-${this.baseCurrency}$`),
-            this.baseCurrency
-          )
-        )
-      ) {
-        // Add a dash before the last three characters
-        // BTCUSD  -> BTC-USD
-        // DOGEUSD -> DOGE-USD
-        // SOL1USD -> SOL1-USD
-        return aSymbol.replace(
-          new RegExp(`-?${this.baseCurrency}$`),
-          `-${this.baseCurrency}`
-        );
-      }
-    }
-
-    return aSymbol;
-  }
-
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
-    const response: Partial<SymbolProfile> = {};
+    const { assetClass, assetSubClass, currency, name } =
+      await this.yahooFinanceDataEnhancerService.getAssetProfile(aSymbol);
 
-    try {
-      const symbol = this.convertToYahooFinanceSymbol(aSymbol);
-      const assetProfile = await yahooFinance.quoteSummary(symbol, {
-        modules: ['price', 'summaryProfile', 'topHoldings']
-      });
-
-      const { assetClass, assetSubClass } = this.parseAssetClass({
-        quoteType: assetProfile.price.quoteType,
-        shortName: assetProfile.price.shortName
-      });
-
-      response.assetClass = assetClass;
-      response.assetSubClass = assetSubClass;
-      response.currency = assetProfile.price.currency;
-      response.dataSource = this.getName();
-      response.name = this.formatName({
-        longName: assetProfile.price.longName,
-        quoteType: assetProfile.price.quoteType,
-        shortName: assetProfile.price.shortName,
-        symbol: assetProfile.price.symbol
-      });
-      response.symbol = aSymbol;
-
-      if (assetSubClass === AssetSubClass.MUTUALFUND) {
-        response.sectors = [];
-
-        for (const sectorWeighting of assetProfile.topHoldings
-          ?.sectorWeightings ?? []) {
-          for (const [sector, weight] of Object.entries(sectorWeighting)) {
-            response.sectors.push({ weight, name: this.parseSector(sector) });
-          }
-        }
-      } else if (
-        assetSubClass === AssetSubClass.STOCK &&
-        assetProfile.summaryProfile?.country
-      ) {
-        // Add country if asset is stock and country available
-
-        try {
-          const [code] = Object.entries(countries).find(([, country]) => {
-            return country.name === assetProfile.summaryProfile?.country;
-          });
-
-          if (code) {
-            response.countries = [{ code, weight: 1 }];
-          }
-        } catch {}
-
-        if (assetProfile.summaryProfile?.sector) {
-          response.sectors = [
-            { name: assetProfile.summaryProfile?.sector, weight: 1 }
-          ];
-        }
-      }
-
-      const url = assetProfile.summaryProfile?.website;
-      if (url) {
-        response.url = url;
-      }
-    } catch (error) {
-      Logger.error(error, 'YahooFinanceService');
-    }
-
-    return response;
+    return {
+      assetClass,
+      assetSubClass,
+      currency,
+      name,
+      dataSource: this.getName(),
+      symbol: aSymbol
+    };
   }
 
   public async getDividends({
@@ -178,7 +64,9 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const historicalResult = await yahooFinance.historical(
-        this.convertToYahooFinanceSymbol(symbol),
+        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+          symbol
+        ),
         {
           events: 'dividends',
           interval: granularity === 'month' ? '1mo' : '1d',
@@ -228,7 +116,9 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const historicalResult = await yahooFinance.historical(
-        this.convertToYahooFinanceSymbol(aSymbol),
+        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+          aSymbol
+        ),
         {
           interval: '1d',
           period1: format(from, DATE_FORMAT),
@@ -278,7 +168,7 @@ export class YahooFinanceService implements DataProviderInterface {
       return {};
     }
     const yahooFinanceSymbols = aSymbols.map((symbol) =>
-      this.convertToYahooFinanceSymbol(symbol)
+      this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(symbol)
     );
 
     try {
@@ -288,7 +178,10 @@ export class YahooFinanceService implements DataProviderInterface {
 
       for (const quote of quotes) {
         // Convert symbols back
-        const symbol = this.convertFromYahooFinanceSymbol(quote.symbol);
+        const symbol =
+          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+            quote.symbol
+          );
 
         response[symbol] = {
           currency: quote.currency,
@@ -405,14 +298,16 @@ export class YahooFinanceService implements DataProviderInterface {
           return currentQuote.symbol === marketDataItem.symbol;
         });
 
-        const symbol = this.convertFromYahooFinanceSymbol(
-          marketDataItem.symbol
-        );
+        const symbol =
+          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+            marketDataItem.symbol
+          );
 
-        const { assetClass, assetSubClass } = this.parseAssetClass({
-          quoteType: quote.quoteType,
-          shortName: quote.shortname
-        });
+        const { assetClass, assetSubClass } =
+          this.yahooFinanceDataEnhancerService.parseAssetClass({
+            quoteType: quote.quoteType,
+            shortName: quote.shortname
+          });
 
         items.push({
           assetClass,
@@ -420,7 +315,7 @@ export class YahooFinanceService implements DataProviderInterface {
           symbol,
           currency: marketDataItem.currency,
           dataSource: this.getName(),
-          name: this.formatName({
+          name: this.yahooFinanceDataEnhancerService.formatName({
             longName: quote.longname,
             quoteType: quote.quoteType,
             shortName: quote.shortname,
@@ -433,42 +328,6 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return { items };
-  }
-
-  private formatName({
-    longName,
-    quoteType,
-    shortName,
-    symbol
-  }: {
-    longName: Price['longName'];
-    quoteType: Price['quoteType'];
-    shortName: Price['shortName'];
-    symbol: Price['symbol'];
-  }) {
-    let name = longName;
-
-    if (name) {
-      name = name.replace('Amundi Index Solutions - ', '');
-      name = name.replace('iShares ETF (CH) - ', '');
-      name = name.replace('iShares III Public Limited Company - ', '');
-      name = name.replace('iShares V PLC - ', '');
-      name = name.replace('iShares VI Public Limited Company - ', '');
-      name = name.replace('iShares VII PLC - ', '');
-      name = name.replace('Multi Units Luxembourg - ', '');
-      name = name.replace('VanEck ETFs N.V. - ', '');
-      name = name.replace('Vaneck Vectors Ucits Etfs Plc - ', '');
-      name = name.replace('Vanguard Funds Public Limited Company - ', '');
-      name = name.replace('Vanguard Index Funds - ', '');
-      name = name.replace('Xtrackers (IE) Plc - ', '');
-    }
-
-    if (quoteType === 'FUTURE') {
-      // "Gold Jun 22" -> "Gold"
-      name = shortName?.slice(0, -6);
-    }
-
-    return name || shortName || symbol;
   }
 
   private getConvertedValue({
@@ -490,96 +349,5 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return value;
-  }
-
-  private parseAssetClass({
-    quoteType,
-    shortName
-  }: {
-    quoteType: string;
-    shortName: string;
-  }): {
-    assetClass: AssetClass;
-    assetSubClass: AssetSubClass;
-  } {
-    let assetClass: AssetClass;
-    let assetSubClass: AssetSubClass;
-
-    switch (quoteType?.toLowerCase()) {
-      case 'cryptocurrency':
-        assetClass = AssetClass.CASH;
-        assetSubClass = AssetSubClass.CRYPTOCURRENCY;
-        break;
-      case 'equity':
-        assetClass = AssetClass.EQUITY;
-        assetSubClass = AssetSubClass.STOCK;
-        break;
-      case 'etf':
-        assetClass = AssetClass.EQUITY;
-        assetSubClass = AssetSubClass.ETF;
-        break;
-      case 'future':
-        assetClass = AssetClass.COMMODITY;
-        assetSubClass = AssetSubClass.COMMODITY;
-
-        if (
-          shortName?.toLowerCase()?.startsWith('gold') ||
-          shortName?.toLowerCase()?.startsWith('palladium') ||
-          shortName?.toLowerCase()?.startsWith('platinum') ||
-          shortName?.toLowerCase()?.startsWith('silver')
-        ) {
-          assetSubClass = AssetSubClass.PRECIOUS_METAL;
-        }
-
-        break;
-      case 'mutualfund':
-        assetClass = AssetClass.EQUITY;
-        assetSubClass = AssetSubClass.MUTUALFUND;
-        break;
-    }
-
-    return { assetClass, assetSubClass };
-  }
-
-  private parseSector(aString: string): string {
-    let sector = UNKNOWN_KEY;
-
-    switch (aString) {
-      case 'basic_materials':
-        sector = 'Basic Materials';
-        break;
-      case 'communication_services':
-        sector = 'Communication Services';
-        break;
-      case 'consumer_cyclical':
-        sector = 'Consumer Cyclical';
-        break;
-      case 'consumer_defensive':
-        sector = 'Consumer Staples';
-        break;
-      case 'energy':
-        sector = 'Energy';
-        break;
-      case 'financial_services':
-        sector = 'Financial Services';
-        break;
-      case 'healthcare':
-        sector = 'Healthcare';
-        break;
-      case 'industrials':
-        sector = 'Industrials';
-        break;
-      case 'realestate':
-        sector = 'Real Estate';
-        break;
-      case 'technology':
-        sector = 'Technology';
-        break;
-      case 'utilities':
-        sector = 'Utilities';
-        break;
-    }
-
-    return sector;
   }
 }

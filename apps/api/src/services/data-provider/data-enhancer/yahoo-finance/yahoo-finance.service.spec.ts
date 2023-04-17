@@ -1,7 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 
-import { YahooFinanceService } from './yahoo-finance.service';
+import { YahooFinanceDataEnhancerService } from './yahoo-finance.service';
 
 jest.mock(
   '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service',
@@ -25,16 +25,16 @@ jest.mock(
   }
 );
 
-describe('YahooFinanceService', () => {
+describe('YahooFinanceDataEnhancerService', () => {
   let configurationService: ConfigurationService;
   let cryptocurrencyService: CryptocurrencyService;
-  let yahooFinanceService: YahooFinanceService;
+  let yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService;
 
   beforeAll(async () => {
     configurationService = new ConfigurationService();
     cryptocurrencyService = new CryptocurrencyService();
 
-    yahooFinanceService = new YahooFinanceService(
+    yahooFinanceDataEnhancerService = new YahooFinanceDataEnhancerService(
       configurationService,
       cryptocurrencyService
     );
@@ -42,25 +42,37 @@ describe('YahooFinanceService', () => {
 
   it('convertFromYahooFinanceSymbol', async () => {
     expect(
-      await yahooFinanceService.convertFromYahooFinanceSymbol('BRK-B')
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+        'BRK-B'
+      )
     ).toEqual('BRK-B');
     expect(
-      await yahooFinanceService.convertFromYahooFinanceSymbol('BTC-USD')
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+        'BTC-USD'
+      )
     ).toEqual('BTCUSD');
     expect(
-      await yahooFinanceService.convertFromYahooFinanceSymbol('EURUSD=X')
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
+        'EURUSD=X'
+      )
     ).toEqual('EURUSD');
   });
 
   it('convertToYahooFinanceSymbol', async () => {
     expect(
-      await yahooFinanceService.convertToYahooFinanceSymbol('BTCUSD')
+      await yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+        'BTCUSD'
+      )
     ).toEqual('BTC-USD');
     expect(
-      await yahooFinanceService.convertToYahooFinanceSymbol('DOGEUSD')
+      await yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+        'DOGEUSD'
+      )
     ).toEqual('DOGE-USD');
     expect(
-      await yahooFinanceService.convertToYahooFinanceSymbol('USDCHF')
+      await yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+        'USDCHF'
+      )
     ).toEqual('USDCHF=X');
   });
 });
