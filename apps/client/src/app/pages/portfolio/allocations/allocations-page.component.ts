@@ -65,7 +65,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       | 'exchange'
       | 'name'
       | 'value'
-    >;
+    > & { organization: string };
   };
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -276,7 +276,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         assetSubClass: position.assetSubClass,
         currency: position.currency,
         exchange: position.exchange,
-        name: position.name
+        name: position.name,
+        organization: this.nameToOrganization({
+          assetClass: position.assetClass,
+          assetSubClass: position.assetSubClass,
+          name: position.name
+        })
       };
 
       if (position.assetClass !== AssetClass.CASH) {
@@ -451,5 +456,24 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });
+  }
+
+  private nameToOrganization({
+    assetClass,
+    assetSubClass,
+    name
+  }: {
+    assetClass: AssetClass;
+    assetSubClass: PortfolioPosition['assetSubClass'];
+    name: string;
+  }) {
+    if (assetClass.toUpperCase() === 'CASH') {
+      return UNKNOWN_KEY;
+    } else if (assetSubClass === 'ETF' || name.includes('ETF')) {
+      const [firstWord] = name.split(' ');
+      return firstWord;
+    }
+
+    return name;
   }
 }
