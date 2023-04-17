@@ -15,13 +15,12 @@ import { Module } from '@nestjs/common';
     TrackinsightDataEnhancerService,
     YahooFinanceDataEnhancerService,
     {
-      // Yahoo Finance before Trackinsight
       inject: [
-        YahooFinanceDataEnhancerService,
-        TrackinsightDataEnhancerService
+        TrackinsightDataEnhancerService,
+        YahooFinanceDataEnhancerService
       ],
       provide: 'DataEnhancers',
-      useFactory: (yahooFinance, trackinsight) => [yahooFinance, trackinsight]
+      useFactory: (trackinsight, yahooFinance) => [trackinsight, yahooFinance]
     }
   ]
 })

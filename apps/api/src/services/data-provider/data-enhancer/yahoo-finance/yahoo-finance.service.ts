@@ -179,60 +179,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     return name || shortName || symbol;
   }
 
-  public getName() {
-    return DataSource.YAHOO;
-  }
-
-  public parseAssetClass({
-    quoteType,
-    shortName
-  }: {
-    quoteType: string;
-    shortName: string;
-  }): {
-    assetClass: AssetClass;
-    assetSubClass: AssetSubClass;
-  } {
-    let assetClass: AssetClass;
-    let assetSubClass: AssetSubClass;
-
-    switch (quoteType?.toLowerCase()) {
-      case 'cryptocurrency':
-        assetClass = AssetClass.CASH;
-        assetSubClass = AssetSubClass.CRYPTOCURRENCY;
-        break;
-      case 'equity':
-        assetClass = AssetClass.EQUITY;
-        assetSubClass = AssetSubClass.STOCK;
-        break;
-      case 'etf':
-        assetClass = AssetClass.EQUITY;
-        assetSubClass = AssetSubClass.ETF;
-        break;
-      case 'future':
-        assetClass = AssetClass.COMMODITY;
-        assetSubClass = AssetSubClass.COMMODITY;
-
-        if (
-          shortName?.toLowerCase()?.startsWith('gold') ||
-          shortName?.toLowerCase()?.startsWith('palladium') ||
-          shortName?.toLowerCase()?.startsWith('platinum') ||
-          shortName?.toLowerCase()?.startsWith('silver')
-        ) {
-          assetSubClass = AssetSubClass.PRECIOUS_METAL;
-        }
-
-        break;
-      case 'mutualfund':
-        assetClass = AssetClass.EQUITY;
-        assetSubClass = AssetSubClass.MUTUALFUND;
-        break;
-    }
-
-    return { assetClass, assetSubClass };
-  }
-
-  private async getAssetProfile(
+  public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
     const response: Partial<SymbolProfile> = {};
@@ -301,6 +248,59 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     }
 
     return response;
+  }
+
+  public getName() {
+    return DataSource.YAHOO;
+  }
+
+  public parseAssetClass({
+    quoteType,
+    shortName
+  }: {
+    quoteType: string;
+    shortName: string;
+  }): {
+    assetClass: AssetClass;
+    assetSubClass: AssetSubClass;
+  } {
+    let assetClass: AssetClass;
+    let assetSubClass: AssetSubClass;
+
+    switch (quoteType?.toLowerCase()) {
+      case 'cryptocurrency':
+        assetClass = AssetClass.CASH;
+        assetSubClass = AssetSubClass.CRYPTOCURRENCY;
+        break;
+      case 'equity':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.STOCK;
+        break;
+      case 'etf':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.ETF;
+        break;
+      case 'future':
+        assetClass = AssetClass.COMMODITY;
+        assetSubClass = AssetSubClass.COMMODITY;
+
+        if (
+          shortName?.toLowerCase()?.startsWith('gold') ||
+          shortName?.toLowerCase()?.startsWith('palladium') ||
+          shortName?.toLowerCase()?.startsWith('platinum') ||
+          shortName?.toLowerCase()?.startsWith('silver')
+        ) {
+          assetSubClass = AssetSubClass.PRECIOUS_METAL;
+        }
+
+        break;
+      case 'mutualfund':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.MUTUALFUND;
+        break;
+    }
+
+    return { assetClass, assetSubClass };
   }
 
   private parseSector(aString: string): string {
