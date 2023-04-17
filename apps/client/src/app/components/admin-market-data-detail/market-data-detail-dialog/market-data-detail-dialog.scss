@@ -3,11 +3,5 @@
 
   .mat-mdc-dialog-content {
     max-height: unset;
-
-    .mat-mdc-button {
-      &.apply-current-market-price {
-        height: 56px;
-      }
-    }
   }
 }
