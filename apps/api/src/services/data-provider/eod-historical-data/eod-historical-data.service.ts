@@ -40,7 +40,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return {
       assetClass: searchResult?.assetClass,
       assetSubClass: searchResult?.assetSubClass,
-      currency: searchResult?.currency,
+      currency: this.convertCurrency(searchResult?.currency),
       dataSource: this.getName(),
       isin: searchResult?.isin,
       name: searchResult?.name,
@@ -147,7 +147,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
           { close, code, timestamp }
         ) => {
           result[code] = {
-            currency: searchResponse?.items[0]?.currency,
+            currency: this.convertCurrency(searchResponse?.items[0]?.currency),
             dataSource: DataSource.EOD_HISTORICAL_DATA,
             marketPrice: close,
             marketState: isToday(new Date(timestamp * 1000)) ? 'open' : 'closed'
@@ -184,14 +184,29 @@ export class EodHistoricalDataService implements DataProviderInterface {
             return {
               assetClass,
               assetSubClass,
-              currency,
               dataSource,
               name,
-              symbol
+              symbol,
+              currency: this.convertCurrency(currency)
             };
           }
         )
     };
+  }
+
+  private convertCurrency(aCurrency: string) {
+    let currency = aCurrency;
+
+    console.log('convertCurrency', currency);
+
+    if (currency === 'GBX') {
+      currency = 'GBp';
+    }
+
+    console.log(currency);
+    console.log('---');
+
+    return currency;
   }
 
   private async getSearchResult(aQuery: string): Promise<
@@ -213,14 +228,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       const response = await get();
 
       searchResult = response.map(
-        ({
-          Code,
-          Currency: currency,
-          Exchange,
-          ISIN: isin,
-          Name: name,
-          Type
-        }) => {
+        ({ Code, Currency, Exchange, ISIN: isin, Name: name, Type }) => {
           const { assetClass, assetSubClass } = this.parseAssetClass({
             Exchange,
             Type
@@ -229,9 +237,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
           return {
             assetClass,
             assetSubClass,
-            currency,
             isin,
             name,
+            currency: this.convertCurrency(Currency),
             dataSource: this.getName(),
             symbol: `${Code}.${Exchange}`
           };
