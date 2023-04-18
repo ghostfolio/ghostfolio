@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced the allocations by ETF provider chart on the allocations page
+
 ### Fixed
 
 - Fixed an issue in the global heat map component caused by manipulating an input property
