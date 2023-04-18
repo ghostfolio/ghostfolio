@@ -197,14 +197,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
   private convertCurrency(aCurrency: string) {
     let currency = aCurrency;
 
-    console.log('convertCurrency', currency);
-
     if (currency === 'GBX') {
       currency = 'GBp';
     }
-
-    console.log(currency);
-    console.log('---');
 
     return currency;
   }
