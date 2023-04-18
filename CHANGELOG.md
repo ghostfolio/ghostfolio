@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Introduced the allocations by organization chart on the allocations page
+- Introduced the allocations by ETF provider chart on the allocations page
 
 ## 1.256.0 - 2023-04-17
 
