@@ -30,6 +30,9 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
+    // Create a copy before manipulating countries object
+    this.countries = structuredClone(this.countries);
+
     if (this.countries) {
       this.isLoading = true;
 
