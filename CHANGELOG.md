@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced the allocations by ETF provider chart on the allocations page
 
+### Fixed
+
+- Fixed an issue with the currency inconsistency in the _EOD Historical Data_ service (convert from `GBX` to `GBp`)
+
 ## 1.256.0 - 2023-04-17
 
 ### Added
