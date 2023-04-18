@@ -65,7 +65,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       | 'exchange'
       | 'name'
       | 'value'
-    >;
+    > & { etfProvider: string };
   };
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -249,7 +249,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public initializeAnalysisData() {
     this.initialize();
 
-    for (const [id, { current, name, original }] of Object.entries(
+    for (const [id, { current, name }] of Object.entries(
       this.portfolioDetails.accounts
     )) {
       this.accounts[id] = {
@@ -275,6 +275,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         assetClass: position.assetClass,
         assetSubClass: position.assetSubClass,
         currency: position.currency,
+        etfProvider: this.extractEtfProvider({
+          assetSubClass: position.assetSubClass,
+          name: position.name
+        }),
         exchange: position.exchange,
         name: position.name
       };
@@ -451,5 +455,20 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });
+  }
+
+  private extractEtfProvider({
+    assetSubClass,
+    name
+  }: {
+    assetSubClass: PortfolioPosition['assetSubClass'];
+    name: string;
+  }) {
+    if (assetSubClass === 'ETF') {
+      const [firstWord] = name.split(' ');
+      return firstWord;
+    }
+
+    return UNKNOWN_KEY;
   }
 }
