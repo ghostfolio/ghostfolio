@@ -304,6 +304,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.270.1 - 2023-05-19
 
+### Changed
+
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `5.2.1` to `7.2.0`
+
+## Unreleased
+
 ### Added
 
 - Added the cash balance and the value of equity to the account detail dialog
