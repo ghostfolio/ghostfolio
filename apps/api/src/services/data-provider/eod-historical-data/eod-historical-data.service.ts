@@ -146,12 +146,20 @@ export class EodHistoricalDataService implements DataProviderInterface {
           result: { [symbol: string]: IDataProviderResponse },
           { close, code, timestamp }
         ) => {
-          result[code] = {
-            currency: this.convertCurrency(searchResponse?.items[0]?.currency),
-            dataSource: DataSource.EOD_HISTORICAL_DATA,
-            marketPrice: close,
-            marketState: isToday(new Date(timestamp * 1000)) ? 'open' : 'closed'
-          };
+          const currency = this.convertCurrency(
+            searchResponse?.items[0]?.currency
+          );
+
+          if (currency) {
+            result[code] = {
+              currency,
+              dataSource: DataSource.EOD_HISTORICAL_DATA,
+              marketPrice: close,
+              marketState: isToday(new Date(timestamp * 1000))
+                ? 'open'
+                : 'closed'
+            };
+          }
 
           return result;
         },

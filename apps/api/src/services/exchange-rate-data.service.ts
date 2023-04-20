@@ -62,7 +62,8 @@ export class ExchangeRateDataService {
       getYesterday()
     );
 
-    if (Object.keys(result).length !== this.currencyPairs.length) {
+    // TODO: add fallback
+    /*if (Object.keys(result).length !== this.currencyPairs.length) {
       // Load currencies directly from data provider as a fallback
       // if historical data is not fully available
       const historicalData = await this.dataProviderService.getQuotes(
@@ -72,13 +73,15 @@ export class ExchangeRateDataService {
       );
 
       Object.keys(historicalData).forEach((key) => {
-        result[key] = {
-          [format(getYesterday(), DATE_FORMAT)]: {
-            marketPrice: historicalData[key].marketPrice
-          }
-        };
+        if (isNumber(historicalData[key].marketPrice)) {
+          result[key] = {
+            [format(getYesterday(), DATE_FORMAT)]: {
+              marketPrice: historicalData[key].marketPrice
+            }
+          };
+        }
       });
-    }
+    }*/
 
     const resultExtended = result;
 
