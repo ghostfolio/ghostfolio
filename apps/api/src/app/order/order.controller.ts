@@ -5,7 +5,7 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -76,6 +76,23 @@ export class OrderController {
 
     return this.orderService.deleteOrder({
       id
+    });
+  }
+
+  @Delete()
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteOrders(): Promise<number> {
+    if (
+      !hasPermission(this.request.user.permissions, permissions.deleteOrder)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.orderService.deleteOrders({
+      userId: this.request.user.id
     });
   }
 

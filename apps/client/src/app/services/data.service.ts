@@ -154,6 +154,10 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
+  public deleteAllOrders() {
+    return this.http.delete<any>(`/api/v1/order/`);
+  }
+
   public deleteUser(aId: string) {
     return this.http.delete<any>(`/api/v1/user/${aId}`);
   }
