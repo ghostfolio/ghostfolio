@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed the targets in `proxy.conf.json` from `http://localhost:3333` to `http://0.0.0.0:3333` for local development
+
 ## 1.258.0 - 2023-04-20
 
 ### Added
