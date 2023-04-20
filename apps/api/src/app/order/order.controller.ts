@@ -62,6 +62,23 @@ export class OrderController {
     });
   }
 
+  @Delete()
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteOrders(): Promise<number> {
+    if (
+      !hasPermission(this.request.user.permissions, permissions.deleteOrder)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.orderService.deleteOrders({
+      userId: this.request.user.id
+    });
+  }
+
   @Get()
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(RedactValuesInResponseInterceptor)

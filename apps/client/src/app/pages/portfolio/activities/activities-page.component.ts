@@ -138,6 +138,23 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onDeleteAllActivities() {
+    const confirmation = confirm(
+      $localize`Do you really want to delete all your activities?`
+    );
+
+    if (confirmation) {
+      this.dataService
+        .deleteAllOrders()
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe({
+          next: () => {
+            this.fetchActivities();
+          }
+        });
+    }
+  }
+
   public onExport(activityIds?: string[]) {
     this.dataService
       .fetchExport(activityIds)
