@@ -462,10 +462,17 @@ export class PortfolioService {
     });
 
     const holdings: PortfolioDetails['holdings'] = {};
-    const totalInvestmentInBaseCurrency = currentPositions.totalInvestment.plus(
+    const totalInvestmentInBaseCurrency = currentPositions.currentValue.plus(
       cashDetails.balanceInBaseCurrency
     );
-    let filteredValueInBaseCurrency = currentPositions.currentValue;
+
+    const isFilteredByAccount = filters.some(
+      (filter) => filter.type === 'ACCOUNT'
+    );
+
+    let filteredValueInBaseCurrency = isFilteredByAccount
+      ? totalInvestmentInBaseCurrency
+      : currentPositions.currentValue;
 
     if (
       filters?.length === 0 ||
@@ -564,12 +571,11 @@ export class PortfolioService {
       };
     }
 
-    if (
-      filters?.length === 0 ||
-      (filters?.length === 1 &&
-        filters[0].type === 'ASSET_CLASS' &&
-        filters[0].id === 'CASH')
-    ) {
+    const isFilteredByCash = filters.some(
+      (filter) => filter.type === 'ASSET_CLASS' && filter.id === 'CASH'
+    );
+
+    if (filters.length === 0 || isFilteredByCash || isFilteredByAccount) {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
@@ -595,7 +601,7 @@ export class PortfolioService {
       filters[0].id === EMERGENCY_FUND_TAG_ID &&
       filters[0].type === 'TAG'
     ) {
-      const cashPositions = await this.getCashPositions({
+      const emergencyFundCashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
         value: filteredValueInBaseCurrency
@@ -620,7 +626,7 @@ export class PortfolioService {
       };
 
       holdings[userCurrency] = {
-        ...cashPositions[userCurrency],
+        ...emergencyFundCashPositions[userCurrency],
         investment: emergencyFundInCash,
         value: emergencyFundInCash
       };
