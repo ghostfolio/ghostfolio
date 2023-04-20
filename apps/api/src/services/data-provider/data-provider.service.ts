@@ -14,15 +14,29 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { format, isValid } from 'date-fns';
 import { groupBy, isEmpty } from 'lodash';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { PROPERTY_DATA_SOURCE_MAPPING } from '@ghostfolio/common/config';
 
 @Injectable()
 export class DataProviderService {
+  private dataProviderMapping: { [dataProviderName: string]: string };
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     @Inject('DataProviderInterfaces')
     private readonly dataProviderInterfaces: DataProviderInterface[],
-    private readonly prismaService: PrismaService
-  ) {}
+    private readonly prismaService: PrismaService,
+    private readonly propertyService: PropertyService
+  ) {
+    this.initialize();
+  }
+
+  public async initialize() {
+    this.dataProviderMapping =
+      ((await this.propertyService.getByKey(PROPERTY_DATA_SOURCE_MAPPING)) as {
+        [dataProviderName: string]: string;
+      }) ?? {};
+  }
 
   public async getDividends({
     dataSource,
@@ -314,6 +328,21 @@ export class DataProviderService {
 
   private getDataProvider(providerName: DataSource) {
     for (const dataProviderInterface of this.dataProviderInterfaces) {
+      if (this.dataProviderMapping[dataProviderInterface.getName()]) {
+        const mappedDataProviderInterface = this.dataProviderInterfaces.find(
+          (currentDataProviderInterface) => {
+            return (
+              currentDataProviderInterface.getName() ===
+              this.dataProviderMapping[dataProviderInterface.getName()]
+            );
+          }
+        );
+
+        if (mappedDataProviderInterface) {
+          return mappedDataProviderInterface;
+        }
+      }
+
       if (dataProviderInterface.getName() === providerName) {
         return dataProviderInterface;
       }

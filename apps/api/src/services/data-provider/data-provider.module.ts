@@ -14,6 +14,7 @@ import { Module } from '@nestjs/common';
 import { DataEnhancerModule } from './data-enhancer/data-enhancer.module';
 import { YahooFinanceDataEnhancerService } from './data-enhancer/yahoo-finance/yahoo-finance.service';
 import { DataProviderService } from './data-provider.service';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DataProviderService } from './data-provider.service';
     CryptocurrencyModule,
     DataEnhancerModule,
     PrismaModule,
+    PropertyModule,
     SymbolProfileModule
   ],
   providers: [
