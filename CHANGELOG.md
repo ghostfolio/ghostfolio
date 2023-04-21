@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the alignment of the performance column header in the holdings table
 - Fixed the targets in `proxy.conf.json` from `http://localhost:3333` to `http://0.0.0.0:3333` for local development
-- Fix: performance table header alignment in holdings page
 
 ## 1.258.0 - 2023-04-20
 
