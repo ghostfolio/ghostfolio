@@ -24,6 +24,7 @@ import { CacheModule } from './cache/cache.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
 import { FrontendMiddleware } from './frontend.middleware';
+import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
 import { LogoModule } from './logo/logo.module';
@@ -57,6 +58,7 @@ import { UserModule } from './user/user.module';
     ExchangeRateModule,
     ExchangeRateDataModule,
     ExportModule,
+    HealthModule,
     ImportModule,
     InfoModule,
     LogoModule,

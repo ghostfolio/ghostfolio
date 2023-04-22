@@ -40,5 +40,7 @@ export interface DataProviderInterface {
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }>;
 
+  getTestSymbol(): string;
+
   search(aQuery: string): Promise<{ items: LookupItem[] }>;
 }

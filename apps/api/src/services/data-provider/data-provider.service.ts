@@ -38,6 +38,24 @@ export class DataProviderService {
       }) ?? {};
   }
 
+  public async checkQuote(dataSource: DataSource) {
+    const dataProvider = this.getDataProvider(dataSource);
+    const symbol = dataProvider.getTestSymbol();
+
+    const quotes = await this.getQuotes([
+      {
+        dataSource,
+        symbol
+      }
+    ]);
+
+    if (quotes[symbol]?.marketPrice > 0) {
+      return true;
+    }
+
+    return false;
+  }
+
   public async getDividends({
     dataSource,
     from,
