@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a fallback to historical market data if a data provider does not provide live data
+- Added a general health check endpoint
+- Added health check endpoints for data providers
 
 ### Changed
 
