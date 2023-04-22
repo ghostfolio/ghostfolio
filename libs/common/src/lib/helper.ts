@@ -152,6 +152,13 @@ export function getNumberFormatGroup(aLocale?: string) {
   }).value;
 }
 
+export function getStartOfUtcDate(aDate: Date) {
+  const date = new Date(aDate);
+  date.setUTCHours(0, 0, 0, 0);
+
+  return date;
+}
+
 export function getSum(aArray: Big[]) {
   if (aArray?.length > 0) {
     return aArray.reduce((a, b) => a.plus(b), new Big(0));

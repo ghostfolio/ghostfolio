@@ -7,13 +7,13 @@ import {
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { Granularity } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { format, isValid } from 'date-fns';
-import { groupBy, isEmpty } from 'lodash';
+import { groupBy, isEmpty, isNumber } from 'lodash';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_DATA_SOURCE_MAPPING } from '@ghostfolio/common/config';
 
@@ -241,7 +241,7 @@ export class DataProviderService {
         const promise = Promise.resolve(dataProvider.getQuotes(symbolsChunk));
 
         promises.push(
-          promise.then((result) => {
+          promise.then(async (result) => {
             for (const [symbol, dataProviderResponse] of Object.entries(
               result
             )) {
@@ -256,6 +256,38 @@ export class DataProviderService {
                 1000
               ).toFixed(3)} seconds`
             );
+
+            try {
+              const date = getStartOfUtcDate(new Date());
+
+              // Upsert quotes by imitating missing upsertMany functionality
+              // with $transaction
+              const upsertPromises = Object.keys(response)
+                .filter((symbol) => {
+                  return (
+                    isNumber(response[symbol].marketPrice) &&
+                    response[symbol].marketPrice > 0
+                  );
+                })
+                .map((symbol) =>
+                  this.prismaService.marketData.upsert({
+                    create: {
+                      date,
+                      symbol,
+                      dataSource: response[symbol].dataSource,
+                      marketPrice: response[symbol].marketPrice
+                    },
+                    update: {
+                      marketPrice: response[symbol].marketPrice
+                    },
+                    where: {
+                      date_symbol: { date, symbol }
+                    }
+                  })
+                );
+
+              await this.prismaService.$transaction(upsertPromises);
+            } catch {}
           })
         );
       }
