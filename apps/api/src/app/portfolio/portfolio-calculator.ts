@@ -24,9 +24,10 @@ import {
   isSameYear,
   max,
   min,
-  set
+  set,
+  subDays
 } from 'date-fns';
-import { first, flatten, isNumber, last, sortBy } from 'lodash';
+import { first, flatten, isNumber, last, sortBy, uniq } from 'lodash';
 
 import { CurrentRateService } from './current-rate.service';
 import { CurrentPositions } from './interfaces/current-positions.interface';
@@ -360,7 +361,7 @@ export class PortfolioCalculator {
 
     let firstTransactionPoint: TransactionPoint = null;
     let firstIndex = transactionPointsBeforeEndDate.length;
-    const dates = [];
+    let dates = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
     const currencies: { [symbol: string]: string } = {};
 
@@ -389,15 +390,37 @@ export class PortfolioCalculator {
 
     dates.push(resetHours(end));
 
-    const { dataProviderInfos, values: marketSymbols } =
-      await this.currentRateService.getValues({
-        currencies,
-        dataGatheringItems,
-        dateQuery: {
-          in: dates
-        },
-        userCurrency: this.currency
-      });
+    // Add dates of last week for fallback
+    dates.push(subDays(resetHours(new Date()), 7));
+    dates.push(subDays(resetHours(new Date()), 6));
+    dates.push(subDays(resetHours(new Date()), 5));
+    dates.push(subDays(resetHours(new Date()), 4));
+    dates.push(subDays(resetHours(new Date()), 3));
+    dates.push(subDays(resetHours(new Date()), 2));
+    dates.push(subDays(resetHours(new Date()), 1));
+    dates.push(resetHours(new Date()));
+
+    dates = uniq(
+      dates.map((date) => {
+        return date.getTime();
+      })
+    ).map((timestamp) => {
+      return new Date(timestamp);
+    });
+    dates.sort((a, b) => a.getTime() - b.getTime());
+
+    const {
+      dataProviderInfos,
+      errors: currentRateErrors,
+      values: marketSymbols
+    } = await this.currentRateService.getValues({
+      currencies,
+      dataGatheringItems,
+      dateQuery: {
+        in: dates
+      },
+      userCurrency: this.currency
+    });
 
     this.dataProviderInfos = dataProviderInfos;
 
@@ -472,7 +495,13 @@ export class PortfolioCalculator {
         transactionCount: item.transactionCount
       });
 
-      if (hasErrors && item.investment.gt(0)) {
+      if (
+        (hasErrors ||
+          currentRateErrors.find(({ dataSource, symbol }) => {
+            return dataSource === item.dataSource && symbol === item.symbol;
+          })) &&
+        item.investment.gt(0)
+      ) {
         errors.push({ dataSource: item.dataSource, symbol: item.symbol });
       }
     }

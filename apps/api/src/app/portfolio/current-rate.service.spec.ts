@@ -1,12 +1,11 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
-import { GetValueObject } from './interfaces/get-value-object.interface';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { GetValuesObject } from './interfaces/get-values-object.interface';
 
 jest.mock('@ghostfolio/api/services/market-data.service', () => {
   return {
@@ -123,20 +122,13 @@ describe('CurrentRateService', () => {
         },
         userCurrency: 'CHF'
       })
-    ).toMatchObject<{
-      dataProviderInfos: DataProviderInfo[];
-      values: GetValueObject[];
-    }>({
+    ).toMatchObject<GetValuesObject>({
       dataProviderInfos: [],
+      errors: [],
       values: [
         {
           date: undefined,
           marketPriceInBaseCurrency: 1841.823902,
-          symbol: 'AMZN'
-        },
-        {
-          date: undefined,
-          marketPriceInBaseCurrency: 1847.839966,
           symbol: 'AMZN'
         }
       ]

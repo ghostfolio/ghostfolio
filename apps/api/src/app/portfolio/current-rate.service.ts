@@ -2,13 +2,14 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import { DataProviderInfo, ResponseError } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { isBefore, isToday } from 'date-fns';
-import { flatten } from 'lodash';
+import { flatten, isEmpty, uniqBy } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
+import { GetValuesObject } from './interfaces/get-values-object.interface';
 
 @Injectable()
 export class CurrentRateService {
@@ -23,10 +24,7 @@ export class CurrentRateService {
     dataGatheringItems,
     dateQuery,
     userCurrency
-  }: GetValuesParams): Promise<{
-    dataProviderInfos: DataProviderInfo[];
-    values: GetValueObject[];
-  }> {
+  }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
     const includeToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
@@ -34,9 +32,10 @@ export class CurrentRateService {
       (!dateQuery.in || this.containsToday(dateQuery.in));
 
     const promises: Promise<GetValueObject[]>[] = [];
+    const quoteErrors: ResponseError['errors'] = [];
+    const today = resetHours(new Date());
 
     if (includeToday) {
-      const today = resetHours(new Date());
       promises.push(
         this.dataProviderService
           .getQuotes(dataGatheringItems)
@@ -51,18 +50,26 @@ export class CurrentRateService {
                 );
               }
 
-              result.push({
-                date: today,
-                marketPriceInBaseCurrency:
-                  this.exchangeRateDataService.toCurrency(
-                    dataResultProvider?.[dataGatheringItem.symbol]
-                      ?.marketPrice ?? 0,
-                    dataResultProvider?.[dataGatheringItem.symbol]?.currency,
-                    userCurrency
-                  ),
-                symbol: dataGatheringItem.symbol
-              });
+              if (dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice) {
+                result.push({
+                  date: today,
+                  marketPriceInBaseCurrency:
+                    this.exchangeRateDataService.toCurrency(
+                      dataResultProvider?.[dataGatheringItem.symbol]
+                        ?.marketPrice,
+                      dataResultProvider?.[dataGatheringItem.symbol]?.currency,
+                      userCurrency
+                    ),
+                  symbol: dataGatheringItem.symbol
+                });
+              } else {
+                quoteErrors.push({
+                  dataSource: dataGatheringItem.dataSource,
+                  symbol: dataGatheringItem.symbol
+                });
+              }
             }
+
             return result;
           })
       );
@@ -94,10 +101,60 @@ export class CurrentRateService {
         })
     );
 
-    return {
+    const values = flatten(await Promise.all(promises));
+
+    const response: GetValuesObject = {
       dataProviderInfos,
-      values: flatten(await Promise.all(promises))
+      errors: quoteErrors.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      }),
+      values: uniqBy(values, ({ date, symbol }) => `${date}-${symbol}`)
     };
+
+    if (!isEmpty(quoteErrors)) {
+      for (const { symbol } of quoteErrors) {
+        try {
+          // If missing quote, fallback to the latest available historical market price
+          let value: GetValueObject = response.values.find((currentValue) => {
+            return currentValue.symbol === symbol && isToday(currentValue.date);
+          });
+
+          if (!value) {
+            value = {
+              symbol,
+              date: today,
+              marketPriceInBaseCurrency: 0
+            };
+
+            response.values.push(value);
+          }
+
+          const [latestValue] = response.values
+            .filter((currentValue) => {
+              return (
+                currentValue.symbol === symbol &&
+                currentValue.marketPriceInBaseCurrency
+              );
+            })
+            .sort((a, b) => {
+              if (a.date < b.date) {
+                return 1;
+              }
+
+              if (a.date > b.date) {
+                return -1;
+              }
+
+              return 0;
+            });
+
+          value.marketPriceInBaseCurrency =
+            latestValue.marketPriceInBaseCurrency;
+        } catch {}
+      }
+    }
+
+    return response;
   }
 
   private containsToday(dates: Date[]): boolean {

@@ -1,9 +1,9 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
+import { GetValuesObject } from './interfaces/get-values-object.interface';
 
 function mockGetValue(symbol: string, date: Date) {
   switch (symbol) {
@@ -49,11 +49,9 @@ export const CurrentRateServiceMock = {
   getValues: ({
     dataGatheringItems,
     dateQuery
-  }: GetValuesParams): Promise<{
-    dataProviderInfos: DataProviderInfo[];
-    values: GetValueObject[];
-  }> => {
+  }: GetValuesParams): Promise<GetValuesObject> => {
     const values: GetValueObject[] = [];
+
     if (dateQuery.lt) {
       for (
         let date = resetHours(dateQuery.gte);
@@ -85,6 +83,7 @@ export const CurrentRateServiceMock = {
         }
       }
     }
-    return Promise.resolve({ values, dataProviderInfos: [] });
+
+    return Promise.resolve({ values, dataProviderInfos: [], errors: [] });
   }
 };
