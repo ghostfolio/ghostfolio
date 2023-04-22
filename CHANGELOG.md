@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Persisted today's market data continuously
+
 ### Fixed
 
 - Fixed the alignment of the performance column header in the holdings table
