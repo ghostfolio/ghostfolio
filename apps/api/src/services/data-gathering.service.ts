@@ -102,7 +102,7 @@ export class DataGatheringService {
             symbol
           },
           update: { marketPrice },
-          where: { date_symbol: { date, symbol } }
+          where: { dataSource_date_symbol: { dataSource, date, symbol } }
         });
       }
     } catch (error) {

@@ -102,11 +102,46 @@ export class MarketDataService {
       where,
       create: {
         dataSource: data.dataSource,
-        date: where.date_symbol.date,
+        date: where.dataSource_date_symbol.date,
         marketPrice: data.marketPrice,
-        symbol: where.date_symbol.symbol
+        symbol: where.dataSource_date_symbol.symbol
       },
       update: { marketPrice: data.marketPrice }
     });
+  }
+
+  /**
+   * Upsert market data by imitating missing upsertMany functionality
+   * with $transaction
+   */
+  public async updateMany({
+    data
+  }: {
+    data: Prisma.MarketDataUpdateInput[];
+  }): Promise<MarketData[]> {
+    const upsertPromises = data.map(
+      ({ dataSource, date, marketPrice, symbol }) => {
+        return this.prismaService.marketData.upsert({
+          create: {
+            dataSource: <DataSource>dataSource,
+            date: <Date>date,
+            marketPrice: <number>marketPrice,
+            symbol: <string>symbol
+          },
+          update: {
+            marketPrice: <number>marketPrice
+          },
+          where: {
+            dataSource_date_symbol: {
+              dataSource: <DataSource>dataSource,
+              date: <Date>date,
+              symbol: <string>symbol
+            }
+          }
+        });
+      }
+    );
+
+    return this.prismaService.$transaction(upsertPromises);
   }
 }

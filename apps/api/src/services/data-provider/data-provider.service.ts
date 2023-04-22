@@ -6,6 +6,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UserWithSettings } from '@ghostfolio/common/types';
@@ -25,6 +26,7 @@ export class DataProviderService {
     private readonly configurationService: ConfigurationService,
     @Inject('DataProviderInterfaces')
     private readonly dataProviderInterfaces: DataProviderInterface[],
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {
@@ -276,35 +278,23 @@ export class DataProviderService {
             );
 
             try {
-              const date = getStartOfUtcDate(new Date());
-
-              // Upsert quotes by imitating missing upsertMany functionality
-              // with $transaction
-              const upsertPromises = Object.keys(response)
-                .filter((symbol) => {
-                  return (
-                    isNumber(response[symbol].marketPrice) &&
-                    response[symbol].marketPrice > 0
-                  );
-                })
-                .map((symbol) =>
-                  this.prismaService.marketData.upsert({
-                    create: {
-                      date,
+              await this.marketDataService.updateMany({
+                data: Object.keys(response)
+                  .filter((symbol) => {
+                    return (
+                      isNumber(response[symbol].marketPrice) &&
+                      response[symbol].marketPrice > 0
+                    );
+                  })
+                  .map((symbol) => {
+                    return {
                       symbol,
                       dataSource: response[symbol].dataSource,
+                      date: getStartOfUtcDate(new Date()),
                       marketPrice: response[symbol].marketPrice
-                    },
-                    update: {
-                      marketPrice: response[symbol].marketPrice
-                    },
-                    where: {
-                      date_symbol: { date, symbol }
-                    }
+                    };
                   })
-                );
-
-              await this.prismaService.$transaction(upsertPromises);
+              });
             } catch {}
           })
         );
