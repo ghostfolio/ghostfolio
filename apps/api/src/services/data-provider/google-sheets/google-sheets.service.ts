@@ -143,6 +143,10 @@ export class GoogleSheetsService implements DataProviderInterface {
     return {};
   }
 
+  public getTestSymbol() {
+    return 'INDEXSP:.INX';
+  }
+
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const items = await this.prismaService.symbolProfile.findMany({
       select: {

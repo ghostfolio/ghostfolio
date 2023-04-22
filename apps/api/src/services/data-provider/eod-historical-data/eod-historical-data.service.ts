@@ -172,6 +172,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return {};
   }
 
+  public getTestSymbol() {
+    return 'AAPL.US';
+  }
+
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     const searchResult = await this.getSearchResult(aQuery);
 

@@ -163,6 +163,10 @@ export class ManualService implements DataProviderInterface {
     return {};
   }
 
+  public getTestSymbol() {
+    return undefined;
+  }
+
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     let items = await this.prismaService.symbolProfile.findMany({
       select: {

@@ -113,6 +113,10 @@ export class RapidApiService implements DataProviderInterface {
     return {};
   }
 
+  public getTestSymbol() {
+    return undefined;
+  }
+
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }

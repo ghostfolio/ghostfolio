@@ -7,7 +7,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format, isAfter, isBefore, parse } from 'date-fns';
 
@@ -108,6 +108,10 @@ export class AlphaVantageService implements DataProviderInterface {
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }> {
     return {};
+  }
+
+  public getTestSymbol() {
+    return undefined;
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {

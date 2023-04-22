@@ -160,6 +160,10 @@ export class CoinGeckoService implements DataProviderInterface {
     return results;
   }
 
+  public getTestSymbol() {
+    return 'bitcoin';
+  }
+
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
     let items: LookupItem[] = [];
 

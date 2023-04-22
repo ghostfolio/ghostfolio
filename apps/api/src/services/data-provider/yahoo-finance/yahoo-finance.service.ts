@@ -167,6 +167,7 @@ export class YahooFinanceService implements DataProviderInterface {
     if (aSymbols.length <= 0) {
       return {};
     }
+
     const yahooFinanceSymbols = aSymbols.map((symbol) =>
       this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(symbol)
     );
@@ -249,6 +250,10 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return {};
     }
+  }
+
+  public getTestSymbol() {
+    return 'AAPL';
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
