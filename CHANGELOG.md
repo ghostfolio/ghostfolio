@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a fallback to historical market data if a data provider does not provide live data
+
 ### Changed
 
 - Persisted today's market data continuously
