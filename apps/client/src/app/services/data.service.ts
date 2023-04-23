@@ -146,12 +146,12 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account/${aId}`);
   }
 
-  public deleteOrder(aId: string) {
-    return this.http.delete<any>(`/api/v1/order/${aId}`);
-  }
-
   public deleteAllOrders() {
     return this.http.delete<any>(`/api/v1/order/`);
+  }
+
+  public deleteOrder(aId: string) {
+    return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
   public deleteUser(aId: string) {

@@ -49,10 +49,10 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
   @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
+  @Output() deleteAllActivities = new EventEmitter<void>();
   @Output() export = new EventEmitter<string[]>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
-  @Output() deleteAllActivities = new EventEmitter<void>();
   @Output() importDividends = new EventEmitter<UniqueAsset>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
 
