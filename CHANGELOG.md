@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `dataSource` as a unique constraint to the `MarketData` database schema
+
 ### Fixed
 
 - Removed the unnecessary sort header of the comment column in the historical market data table of the admin control panel

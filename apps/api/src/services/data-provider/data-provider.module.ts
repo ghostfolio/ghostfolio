@@ -7,20 +7,22 @@ import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/goog
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
+import { MarketDataModule } from '@ghostfolio/api/services/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile.module';
 import { Module } from '@nestjs/common';
 
 import { DataEnhancerModule } from './data-enhancer/data-enhancer.module';
 import { YahooFinanceDataEnhancerService } from './data-enhancer/yahoo-finance/yahoo-finance.service';
 import { DataProviderService } from './data-provider.service';
-import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 
 @Module({
   imports: [
     ConfigurationModule,
     CryptocurrencyModule,
     DataEnhancerModule,
+    MarketDataModule,
     PrismaModule,
     PropertyModule,
     SymbolProfileModule

@@ -319,7 +319,8 @@ export class AdminController {
     return this.marketDataService.updateMarketData({
       data: { ...data, dataSource },
       where: {
-        date_symbol: {
+        dataSource_date_symbol: {
+          dataSource,
           date,
           symbol
         }

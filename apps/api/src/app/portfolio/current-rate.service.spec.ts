@@ -91,6 +91,7 @@ describe('CurrentRateService', () => {
       null,
       [],
       null,
+      null,
       propertyService
     );
     exchangeRateDataService = new ExchangeRateDataService(
