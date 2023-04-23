@@ -2,8 +2,8 @@ import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.s
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
-import { ConfigurationModule } from '@ghostfolio/api/services/configuration.module';
-import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';

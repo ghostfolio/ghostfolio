@@ -1,13 +1,13 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 
-jest.mock('@ghostfolio/api/services/market-data.service', () => {
+jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
   return {
     MarketDataService: jest.fn().mockImplementation(() => {
       return {
@@ -54,18 +54,21 @@ jest.mock('@ghostfolio/api/services/market-data.service', () => {
   };
 });
 
-jest.mock('@ghostfolio/api/services/exchange-rate-data.service', () => {
-  return {
-    ExchangeRateDataService: jest.fn().mockImplementation(() => {
-      return {
-        initialize: () => Promise.resolve(),
-        toCurrency: (value: number) => {
-          return 1 * value;
-        }
-      };
-    })
-  };
-});
+jest.mock(
+  '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service',
+  () => {
+    return {
+      ExchangeRateDataService: jest.fn().mockImplementation(() => {
+        return {
+          initialize: () => Promise.resolve(),
+          toCurrency: (value: number) => {
+            return 1 * value;
+          }
+        };
+      })
+    };
+  }
+);
 
 jest.mock('@ghostfolio/api/services/property/property.service', () => {
   return {

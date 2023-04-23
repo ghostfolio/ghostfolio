@@ -1,13 +1,15 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { PROPERTY_DATA_SOURCE_MAPPING } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { Granularity } from '@ghostfolio/common/types';
@@ -15,8 +17,6 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber } from 'lodash';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_DATA_SOURCE_MAPPING } from '@ghostfolio/common/config';
 
 @Injectable()
 export class DataProviderService {

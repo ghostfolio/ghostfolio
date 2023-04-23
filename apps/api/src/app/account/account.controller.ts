@@ -1,6 +1,6 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { Accounts } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';

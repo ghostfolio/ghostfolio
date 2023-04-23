@@ -1,4 +1,4 @@
-import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { Module } from '@nestjs/common';
 
 import { AccessController } from './access.controller';

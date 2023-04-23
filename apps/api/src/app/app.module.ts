@@ -1,18 +1,18 @@
 import { join } from 'path';
 
+import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { CronService } from '@ghostfolio/api/services/cron.service';
+import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
+import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
+import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
-import { ConfigurationModule } from '../services/configuration.module';
-import { CronService } from '../services/cron.service';
-import { DataGatheringModule } from '../services/data-gathering.module';
-import { DataProviderModule } from '../services/data-provider/data-provider.module';
-import { ExchangeRateDataModule } from '../services/exchange-rate-data.module';
-import { PrismaModule } from '../services/prisma.module';
-import { TwitterBotModule } from '../services/twitter-bot/twitter-bot.module';
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';

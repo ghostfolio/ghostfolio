@@ -6,10 +6,10 @@ import {
   Param,
   UseInterceptors
 } from '@nestjs/common';
-
-import { HealthService } from './health.service';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
+import { HealthService } from './health.service';
 
 @Controller('health')
 export class HealthController {

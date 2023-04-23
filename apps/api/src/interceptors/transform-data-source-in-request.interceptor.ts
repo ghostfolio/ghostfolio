@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { decodeDataSource } from '@ghostfolio/common/helper';
 import {
   CallHandler,
@@ -6,8 +7,6 @@ import {
   NestInterceptor
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-
-import { ConfigurationService } from '../services/configuration.service';
 
 @Injectable()
 export class TransformDataSourceInRequestInterceptor<T>

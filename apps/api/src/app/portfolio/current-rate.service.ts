@@ -1,6 +1,6 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { DataProviderInfo, ResponseError } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
@@ -8,8 +8,8 @@ import { isBefore, isToday } from 'date-fns';
 import { flatten, isEmpty, uniqBy } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
-import { GetValuesParams } from './interfaces/get-values-params.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
+import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 @Injectable()
 export class CurrentRateService {

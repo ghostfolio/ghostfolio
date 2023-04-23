@@ -1,5 +1,5 @@
 import { environment } from '@ghostfolio/api/environments/environment';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Export } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 

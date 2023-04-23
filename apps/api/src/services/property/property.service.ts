@@ -1,4 +1,4 @@
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
   PROPERTY_CURRENCIES,
   PROPERTY_IS_USER_SIGNUP_ENABLED

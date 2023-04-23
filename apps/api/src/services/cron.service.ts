@@ -5,8 +5,8 @@ import {
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
-import { DataGatheringService } from './data-gathering.service';
-import { ExchangeRateDataService } from './exchange-rate-data.service';
+import { DataGatheringService } from './data-gathering/data-gathering.service';
+import { ExchangeRateDataService } from './exchange-rate-data/exchange-rate-data.service';
 import { TwitterBotService } from './twitter-bot/twitter-bot.service';
 
 @Injectable()

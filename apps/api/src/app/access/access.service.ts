@@ -1,4 +1,4 @@
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { AccessWithGranteeUser } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Access, Prisma } from '@prisma/client';
