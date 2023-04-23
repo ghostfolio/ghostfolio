@@ -1,5 +1,5 @@
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
-import { PrismaModule } from '@ghostfolio/api/services/prisma.module';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { Module } from '@nestjs/common';
 
 @Module({

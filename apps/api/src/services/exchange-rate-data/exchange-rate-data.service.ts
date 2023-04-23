@@ -1,15 +1,14 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, isToday } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
-
-import { ConfigurationService } from './configuration.service';
-import { DataProviderService } from './data-provider/data-provider.service';
-import { IDataGatheringItem } from './interfaces/interfaces';
-import { MarketDataService } from './market-data.service';
-import { PrismaService } from './prisma.service';
-import { PropertyService } from './property/property.service';
 
 @Injectable()
 export class ExchangeRateDataService {

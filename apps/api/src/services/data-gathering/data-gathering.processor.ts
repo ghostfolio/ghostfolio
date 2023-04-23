@@ -1,3 +1,6 @@
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import {
   DATA_GATHERING_QUEUE,
   GATHER_ASSET_PROFILE_PROCESS,
@@ -18,9 +21,6 @@ import {
 } from 'date-fns';
 
 import { DataGatheringService } from './data-gathering.service';
-import { DataProviderService } from './data-provider/data-provider.service';
-import { IDataGatheringItem } from './interfaces/interfaces';
-import { PrismaService } from './prisma.service';
 
 @Injectable()
 @Processor(DATA_GATHERING_QUEUE)

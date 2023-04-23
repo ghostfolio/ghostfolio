@@ -1,4 +1,10 @@
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS,
@@ -12,13 +18,6 @@ import { DataSource } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
-
-import { DataProviderService } from './data-provider/data-provider.service';
-import { DataEnhancerInterface } from './data-provider/interfaces/data-enhancer.interface';
-import { ExchangeRateDataService } from './exchange-rate-data.service';
-import { IDataGatheringItem } from './interfaces/interfaces';
-import { MarketDataService } from './market-data.service';
-import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class DataGatheringService {

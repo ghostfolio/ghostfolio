@@ -1,4 +1,4 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { Module } from '@nestjs/common';
 
 @Module({

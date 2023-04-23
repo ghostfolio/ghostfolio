@@ -1,4 +1,4 @@
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { HttpException, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';

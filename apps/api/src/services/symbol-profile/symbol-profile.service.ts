@@ -1,4 +1,4 @@
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   EnhancedSymbolProfile,

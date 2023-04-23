@@ -1,5 +1,5 @@
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
   GATHER_ASSET_PROFILE_PROCESS,

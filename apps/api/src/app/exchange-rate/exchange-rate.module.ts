@@ -1,4 +1,4 @@
-import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data.module';
+import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { Module } from '@nestjs/common';
 
 import { ExchangeRateController } from './exchange-rate.controller';

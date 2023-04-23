@@ -1,8 +1,7 @@
+import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { bool, cleanEnv, host, json, num, port, str } from 'envalid';
-
-import { Environment } from './interfaces/environment.interface';
 
 @Injectable()
 export class ConfigurationService {

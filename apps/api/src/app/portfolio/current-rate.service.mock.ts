@@ -2,8 +2,8 @@ import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
-import { GetValuesParams } from './interfaces/get-values-params.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
+import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 function mockGetValue(symbol: string, date: Date) {
   switch (symbol) {
