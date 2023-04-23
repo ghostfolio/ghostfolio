@@ -181,6 +181,14 @@ export class OrderService {
     return order;
   }
 
+  public async deleteOrders(where: Prisma.OrderWhereInput): Promise<number> {
+    const { count } = await this.prismaService.order.deleteMany({
+      where
+    });
+
+    return count;
+  }
+
   public async getOrders({
     filters,
     includeDrafts = false,

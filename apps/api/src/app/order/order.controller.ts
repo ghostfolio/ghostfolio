@@ -41,6 +41,23 @@ export class OrderController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  @Delete()
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteOrders(): Promise<number> {
+    if (
+      !hasPermission(this.request.user.permissions, permissions.deleteOrder)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.orderService.deleteOrders({
+      userId: this.request.user.id
+    });
+  }
+
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
