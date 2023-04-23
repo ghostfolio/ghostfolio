@@ -18,7 +18,13 @@
 
 ### Prisma
 
-#### Create schema migration (local)
+#### Synchronize schema with database for prototyping
+
+Run `yarn database:push`
+
+https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
+
+#### Create schema migration
 
 Run `yarn prisma migrate dev --name added_job_title`
 
