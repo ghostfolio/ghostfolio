@@ -271,7 +271,8 @@ export class DataGatheringService {
         by: ['symbol'],
         orderBy: [{ symbol: 'asc' }],
         where: {
-          date: { gt: startDate }
+          date: { gt: startDate },
+          state: 'CLOSE'
         }
       })
     )

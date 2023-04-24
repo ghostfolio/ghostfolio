@@ -291,7 +291,8 @@ export class DataProviderService {
                       symbol,
                       dataSource: response[symbol].dataSource,
                       date: getStartOfUtcDate(new Date()),
-                      marketPrice: response[symbol].marketPrice
+                      marketPrice: response[symbol].marketPrice,
+                      state: 'INTRADAY'
                     };
                   })
               });
