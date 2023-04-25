@@ -462,16 +462,16 @@ export class PortfolioService {
     });
 
     const holdings: PortfolioDetails['holdings'] = {};
-    const totalInvestmentInBaseCurrency = currentPositions.currentValue.plus(
+    const totalValueInBaseCurrency = currentPositions.currentValue.plus(
       cashDetails.balanceInBaseCurrency
     );
 
-    const isFilteredByAccount = filters.some(
-      (filter) => filter.type === 'ACCOUNT'
-    );
+    const isFilteredByAccount = filters.some((filter) => {
+      return filter.type === 'ACCOUNT';
+    });
 
     let filteredValueInBaseCurrency = isFilteredByAccount
-      ? totalInvestmentInBaseCurrency
+      ? totalValueInBaseCurrency
       : currentPositions.currentValue;
 
     if (
@@ -571,9 +571,9 @@ export class PortfolioService {
       };
     }
 
-    const isFilteredByCash = filters.some(
-      (filter) => filter.type === 'ASSET_CLASS' && filter.id === 'CASH'
-    );
+    const isFilteredByCash = filters.some((filter) => {
+      return filter.type === 'ASSET_CLASS' && filter.id === 'CASH';
+    });
 
     if (filters.length === 0 || isFilteredByCash || isFilteredByAccount) {
       const cashPositions = await this.getCashPositions({
