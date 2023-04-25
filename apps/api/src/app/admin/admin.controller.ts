@@ -317,7 +317,7 @@ export class AdminController {
     const date = new Date(dateString);
 
     return this.marketDataService.updateMarketData({
-      data: { ...data, dataSource },
+      data: { marketPrice: data.marketPrice, state: 'CLOSE' },
       where: {
         dataSource_date_symbol: {
           dataSource,

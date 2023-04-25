@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Introduced a new button to delete all activities from the portfolio activities page
+- Added `state` to the `MarketData` database schema to distinguish `CLOSE` and `INTRADAY` in the data gathering
 
 ## 1.260.0 - 2023-04-23
 

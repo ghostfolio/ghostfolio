@@ -5,7 +5,12 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
-import { DataSource, MarketData, Prisma } from '@prisma/client';
+import {
+  DataSource,
+  MarketData,
+  MarketDataState,
+  Prisma
+} from '@prisma/client';
 
 @Injectable()
 export class MarketDataService {
@@ -92,7 +97,9 @@ export class MarketDataService {
   }
 
   public async updateMarketData(params: {
-    data: { dataSource: DataSource } & UpdateMarketDataDto;
+    data: {
+      state: MarketDataState;
+    } & UpdateMarketDataDto;
     where: Prisma.MarketDataWhereUniqueInput;
   }): Promise<MarketData> {
     const { data, where } = params;
@@ -100,12 +107,13 @@ export class MarketDataService {
     return this.prismaService.marketData.upsert({
       where,
       create: {
-        dataSource: data.dataSource,
+        dataSource: where.dataSource_date_symbol.dataSource,
         date: where.dataSource_date_symbol.date,
         marketPrice: data.marketPrice,
+        state: data.state,
         symbol: where.dataSource_date_symbol.symbol
       },
-      update: { marketPrice: data.marketPrice }
+      update: { marketPrice: data.marketPrice, state: data.state }
     });
   }
 
@@ -119,16 +127,18 @@ export class MarketDataService {
     data: Prisma.MarketDataUpdateInput[];
   }): Promise<MarketData[]> {
     const upsertPromises = data.map(
-      ({ dataSource, date, marketPrice, symbol }) => {
+      ({ dataSource, date, marketPrice, symbol, state }) => {
         return this.prismaService.marketData.upsert({
           create: {
             dataSource: <DataSource>dataSource,
             date: <Date>date,
             marketPrice: <number>marketPrice,
+            state: <MarketDataState>state,
             symbol: <string>symbol
           },
           update: {
-            marketPrice: <number>marketPrice
+            marketPrice: <number>marketPrice,
+            state: <MarketDataState>state
           },
           where: {
             dataSource_date_symbol: {
