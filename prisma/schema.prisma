@@ -63,9 +63,9 @@ model MarketData {
   dataSource  DataSource
   date        DateTime
   id          String          @id @default(uuid())
+  marketPrice Float
   state       MarketDataState @default(CLOSE)
   symbol      String
-  marketPrice Float
 
   @@unique([dataSource, date, symbol])
   @@index([symbol])
