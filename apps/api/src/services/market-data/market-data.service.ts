@@ -110,8 +110,8 @@ export class MarketDataService {
         dataSource: where.dataSource_date_symbol.dataSource,
         date: where.dataSource_date_symbol.date,
         marketPrice: data.marketPrice,
-        symbol: where.dataSource_date_symbol.symbol,
-        state: data.state
+        state: data.state,
+        symbol: where.dataSource_date_symbol.symbol
       },
       update: { marketPrice: data.marketPrice, state: data.state }
     });
@@ -133,8 +133,8 @@ export class MarketDataService {
             dataSource: <DataSource>dataSource,
             date: <Date>date,
             marketPrice: <number>marketPrice,
-            symbol: <string>symbol,
-            state: <MarketDataState>state
+            state: <MarketDataState>state,
+            symbol: <string>symbol
           },
           update: {
             marketPrice: <number>marketPrice,
