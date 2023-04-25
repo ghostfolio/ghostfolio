@@ -6,8 +6,9 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
@@ -28,7 +29,7 @@ export class DataGatheringProcessor {
   public constructor(
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
-    private readonly prismaService: PrismaService
+    private readonly marketDataService: MarketDataService
   ) {}
 
   @Process(GATHER_ASSET_PROFILE_PROCESS)
@@ -83,19 +84,17 @@ export class DataGatheringProcessor {
 
         if (lastMarketPrice) {
           try {
-            await this.prismaService.marketData.create({
+            await this.marketDataService.updateMarketData({
               data: {
-                dataSource,
-                symbol,
-                date: new Date(
-                  Date.UTC(
-                    getYear(currentDate),
-                    getMonth(currentDate),
-                    getDate(currentDate),
-                    0
-                  )
-                ),
-                marketPrice: lastMarketPrice
+                marketPrice: lastMarketPrice,
+                state: 'CLOSE'
+              },
+              where: {
+                dataSource_date_symbol: {
+                  dataSource,
+                  symbol,
+                  date: getStartOfUtcDate(currentDate)
+                }
               }
             });
           } catch {}
