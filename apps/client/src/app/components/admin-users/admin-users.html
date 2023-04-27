@@ -106,12 +106,20 @@
                 <button
                   class="mx-1 no-min-width px-2"
                   mat-button
-                  [matMenuTriggerFor]="accountMenu"
+                  [matMenuTriggerFor]="userMenu"
                   (click)="$event.stopPropagation()"
                 >
                   <ion-icon name="ellipsis-vertical"></ion-icon>
                 </button>
-                <mat-menu #accountMenu="matMenu" xPosition="before">
+                <mat-menu #userMenu="matMenu" xPosition="before">
+                  <button
+                    *ngIf="hasPermissionToImpersonateAllUsers"
+                    mat-menu-item
+                    (click)="onImpersonateUser(userItem.id)"
+                  >
+                    <ion-icon class="mr-2" name="contract-outline"></ion-icon>
+                    <span i18n>Impersonate</span>
+                  </button>
                   <button
                     mat-menu-item
                     [disabled]="userItem.id === user?.id"

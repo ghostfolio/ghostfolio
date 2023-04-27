@@ -20,6 +20,7 @@ export const permissions = {
   enableSubscription: 'enableSubscription',
   enableSubscriptionInterstitial: 'enableSubscriptionInterstitial',
   enableSystemMessage: 'enableSystemMessage',
+  impersonateAllUsers: 'impersonateAllUsers',
   reportDataGlitch: 'reportDataGlitch',
   toggleReadOnlyMode: 'toggleReadOnlyMode',
   updateAccount: 'updateAccount',

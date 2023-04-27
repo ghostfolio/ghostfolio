@@ -87,10 +87,7 @@ export class AccountController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId
   ): Promise<Accounts> {
     const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        impersonationId,
-        this.request.user.id
-      );
+      await this.impersonationService.validateImpersonationId(impersonationId);
 
     return this.portfolioService.getAccountsWithAggregations({
       userId: impersonationUserId || this.request.user.id,
@@ -106,10 +103,7 @@ export class AccountController {
     @Param('id') id: string
   ): Promise<AccountWithValue> {
     const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        impersonationId,
-        this.request.user.id
-      );
+      await this.impersonationService.validateImpersonationId(impersonationId);
 
     const accountsWithAggregations =
       await this.portfolioService.getAccountsWithAggregations({

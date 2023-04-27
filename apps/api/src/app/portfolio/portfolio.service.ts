@@ -1821,10 +1821,7 @@ export class PortfolioService {
 
   private async getUserId(aImpersonationId: string, aUserId: string) {
     const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        aImpersonationId,
-        aUserId
-      );
+      await this.impersonationService.validateImpersonationId(aImpersonationId);
 
     return impersonationUserId || aUserId;
   }
