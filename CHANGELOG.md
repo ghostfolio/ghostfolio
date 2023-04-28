@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Improved the holdings table by showing the cash position also when the filter contains the accounts, so that we can see the total allocation for that account
+
 ## 1.261.0 - 2023-04-25
 
 ### Added
@@ -40,7 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the alignment of the performance column header in the holdings table
 - Removed the unnecessary sort header of the comment column in the activities table
 - Fixed the targets in `proxy.conf.json` from `http://localhost:3333` to `http://0.0.0.0:3333` for local development
-- Improved the holdings table by showing the cash position also when the filter contains the accounts, so that we can see the total allocation for that account
 
 ## 1.258.0 - 2023-04-20
 
