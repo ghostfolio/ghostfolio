@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the support of the impersonation mode for local development
 
+### Fixed
+
+- Improved the holdings table by showing the cash position also when the filter contains the accounts, so that we can see the total allocation for that account
+
 ## 1.261.0 - 2023-04-25
 
 ### Added
