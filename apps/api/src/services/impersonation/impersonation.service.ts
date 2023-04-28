@@ -1,15 +1,35 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { RequestWithUser } from '@ghostfolio/common/types';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class ImpersonationService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly prismaService: PrismaService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
+  ) {}
 
-  public async validateImpersonationId(aId = '', aUserId: string) {
+  public async validateImpersonationId(aId = '') {
     const accessObject = await this.prismaService.access.findFirst({
-      where: { GranteeUser: { id: aUserId }, id: aId }
+      where: {
+        GranteeUser: { id: this.request.user.id },
+        id: aId
+      }
     });
 
-    return accessObject?.userId;
+    if (accessObject?.userId) {
+      return accessObject?.userId;
+    } else if (
+      hasPermission(
+        this.request.user.permissions,
+        permissions.impersonateAllUsers
+      )
+    ) {
+      return aId;
+    }
+
+    return null;
   }
 }

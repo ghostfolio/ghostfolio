@@ -1,4 +1,5 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
+import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -194,6 +195,10 @@ export class UserService {
           );
         });
       }
+    }
+
+    if (!environment.production && role === 'ADMIN') {
+      currentPermissions.push(permissions.impersonateAllUsers);
     }
 
     user.Account = sortBy(user.Account, (account) => {
