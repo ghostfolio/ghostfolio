@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the queue jobs implementation by adding / updating historical market data in bulk
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
