@@ -24,7 +24,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
 
   public hasMessage: boolean;
   public info: InfoItem;
-  public tabs: { iconName: string; path: string }[] = [];
+  public tabs: { iconName: string; label: string; path: string }[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -41,11 +41,31 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.tabs = [
-            { iconName: 'analytics-outline', path: 'analysis' },
-            { iconName: 'wallet-outline', path: 'holdings' },
-            { iconName: 'swap-vertical-outline', path: 'activities' },
-            { iconName: 'pie-chart-outline', path: 'allocations' },
-            { iconName: 'calculator-outline', path: 'fire' }
+            {
+              iconName: 'analytics-outline',
+              label: $localize`Analysis`,
+              path: 'analysis'
+            },
+            {
+              iconName: 'wallet-outline',
+              label: $localize`Holdings`,
+              path: 'holdings'
+            },
+            {
+              iconName: 'swap-vertical-outline',
+              label: $localize`Activities`,
+              path: 'activities'
+            },
+            {
+              iconName: 'pie-chart-outline',
+              label: $localize`Allocations`,
+              path: 'allocations'
+            },
+            {
+              iconName: 'calculator-outline',
+              label: 'FIRE / X-ray',
+              path: 'fire'
+            }
           ];
           this.user = state.user;
 

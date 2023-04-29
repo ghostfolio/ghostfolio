@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the labels to the tabs to increase the usability
 - Extended the support of the impersonation mode for local development
 
 ### Changed
