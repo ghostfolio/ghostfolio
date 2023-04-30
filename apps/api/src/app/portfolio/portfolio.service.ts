@@ -466,9 +466,10 @@ export class PortfolioService {
       cashDetails.balanceInBaseCurrency
     );
 
-    const isFilteredByAccount = filters.some((filter) => {
-      return filter.type === 'ACCOUNT';
-    });
+    const isFilteredByAccount =
+      filters?.some((filter) => {
+        return filter.type === 'ACCOUNT';
+      }) ?? false;
 
     let filteredValueInBaseCurrency = isFilteredByAccount
       ? totalValueInBaseCurrency
@@ -571,11 +572,11 @@ export class PortfolioService {
       };
     }
 
-    const isFilteredByCash = filters.some((filter) => {
+    const isFilteredByCash = filters?.some((filter) => {
       return filter.type === 'ASSET_CLASS' && filter.id === 'CASH';
     });
 
-    if (filters.length === 0 || isFilteredByCash || isFilteredByAccount) {
+    if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
       const cashPositions = await this.getCashPositions({
         cashDetails,
         userCurrency,
