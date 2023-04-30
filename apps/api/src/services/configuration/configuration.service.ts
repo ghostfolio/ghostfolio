@@ -16,7 +16,8 @@ export class ConfigurationService {
         default: 'USD'
       }),
       CACHE_TTL: num({ default: 1 }),
-      DATA_SOURCE_PRIMARY: str({ default: DataSource.YAHOO }),
+      DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
+      DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({
         default: [DataSource.COINGECKO, DataSource.MANUAL, DataSource.YAHOO]
       }),

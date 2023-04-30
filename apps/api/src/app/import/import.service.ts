@@ -15,7 +15,7 @@ import {
   OrderWithAccount
 } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
-import { Prisma, SymbolProfile } from '@prisma/client';
+import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
@@ -183,9 +183,10 @@ export class ImportService {
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
         if (activity.type === 'ITEM') {
-          activity.dataSource = 'MANUAL';
+          activity.dataSource = DataSource.MANUAL;
         } else {
-          activity.dataSource = this.dataProviderService.getPrimaryDataSource();
+          activity.dataSource =
+            this.dataProviderService.getDataSourceForImport();
         }
       }
 
