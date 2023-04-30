@@ -203,9 +203,10 @@ export class YahooFinanceService implements DataProviderInterface {
           response[`${this.baseCurrency}GBp`] = {
             ...response[symbol],
             currency: 'GBp',
-            marketPrice: new Big(response[symbol].marketPrice)
-              .mul(100)
-              .toNumber()
+            marketPrice: this.getConvertedValue({
+              symbol: `${this.baseCurrency}GBp`,
+              value: response[symbol].marketPrice
+            })
           };
         } else if (
           symbol === `${this.baseCurrency}ILS` &&
@@ -215,9 +216,10 @@ export class YahooFinanceService implements DataProviderInterface {
           response[`${this.baseCurrency}ILA`] = {
             ...response[symbol],
             currency: 'ILA',
-            marketPrice: new Big(response[symbol].marketPrice)
-              .mul(100)
-              .toNumber()
+            marketPrice: this.getConvertedValue({
+              symbol: `${this.baseCurrency}ILA`,
+              value: response[symbol].marketPrice
+            })
           };
         } else if (
           symbol === `${this.baseCurrency}ZAR` &&
@@ -227,9 +229,10 @@ export class YahooFinanceService implements DataProviderInterface {
           response[`${this.baseCurrency}ZAc`] = {
             ...response[symbol],
             currency: 'ZAc',
-            marketPrice: new Big(response[symbol].marketPrice)
-              .mul(100)
-              .toNumber()
+            marketPrice: this.getConvertedValue({
+              symbol: `${this.baseCurrency}ZAc`,
+              value: response[symbol].marketPrice
+            })
           };
         }
       }

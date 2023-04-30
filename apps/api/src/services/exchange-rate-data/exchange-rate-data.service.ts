@@ -61,42 +61,41 @@ export class ExchangeRateDataService {
       getYesterday()
     );
 
-    // TODO: add fallback
-    /*if (Object.keys(result).length !== this.currencyPairs.length) {
+    if (Object.keys(result).length !== this.currencyPairs.length) {
       // Load currencies directly from data provider as a fallback
       // if historical data is not fully available
-      const historicalData = await this.dataProviderService.getQuotes(
+      const quotes = await this.dataProviderService.getQuotes(
         this.currencyPairs.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
         })
       );
 
-      Object.keys(historicalData).forEach((key) => {
-        if (isNumber(historicalData[key].marketPrice)) {
-          result[key] = {
+      for (const symbol of Object.keys(quotes)) {
+        if (isNumber(quotes[symbol].marketPrice)) {
+          result[symbol] = {
             [format(getYesterday(), DATE_FORMAT)]: {
-              marketPrice: historicalData[key].marketPrice
+              marketPrice: quotes[symbol].marketPrice
             }
           };
         }
-      });
-    }*/
+      }
+    }
 
     const resultExtended = result;
 
-    Object.keys(result).forEach((pair) => {
-      const [currency1, currency2] = pair.match(/.{1,3}/g);
-      const [date] = Object.keys(result[pair]);
+    for (const symbol of Object.keys(result)) {
+      const [currency1, currency2] = symbol.match(/.{1,3}/g);
+      const [date] = Object.keys(result[symbol]);
 
       // Calculate the opposite direction
       resultExtended[`${currency2}${currency1}`] = {
         [date]: {
-          marketPrice: 1 / result[pair][date].marketPrice
+          marketPrice: 1 / result[symbol][date].marketPrice
         }
       };
-    });
+    }
 
-    Object.keys(resultExtended).forEach((symbol) => {
+    for (const symbol of Object.keys(resultExtended)) {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
       const date = format(getYesterday(), DATE_FORMAT);
 
@@ -114,7 +113,7 @@ export class ExchangeRateDataService {
         this.exchangeRates[`${currency2}${currency1}`] =
           1 / this.exchangeRates[symbol];
       }
-    });
+    }
   }
 
   public toCurrency(
@@ -173,7 +172,8 @@ export class ExchangeRateDataService {
     let factor: number;
 
     if (aFromCurrency !== aToCurrency) {
-      const dataSource = this.dataProviderService.getPrimaryDataSource();
+      const dataSource =
+        this.dataProviderService.getDataSourceForExchangeRates();
       const symbol = `${aFromCurrency}${aToCurrency}`;
 
       const marketData = await this.marketDataService.get({
@@ -274,7 +274,7 @@ export class ExchangeRateDataService {
         return {
           currency1: this.baseCurrency,
           currency2: currency,
-          dataSource: this.dataProviderService.getPrimaryDataSource(),
+          dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
           symbol: `${this.baseCurrency}${currency}`
         };
       });
