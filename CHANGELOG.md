@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Split the environment variable `DATA_SOURCE_PRIMARY` in `DATA_SOURCE_EXCHANGE_RATES` and `DATA_SOURCE_IMPORT`
+
 ### Fixed
 
 - Fixed the exception on the accounts page

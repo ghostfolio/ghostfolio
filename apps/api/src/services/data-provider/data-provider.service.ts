@@ -58,6 +58,52 @@ export class DataProviderService {
     return false;
   }
 
+  public async getAssetProfiles(items: IDataGatheringItem[]): Promise<{
+    [symbol: string]: Partial<SymbolProfile>;
+  }> {
+    const response: {
+      [symbol: string]: Partial<SymbolProfile>;
+    } = {};
+
+    const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
+
+    const promises = [];
+
+    for (const [dataSource, dataGatheringItems] of Object.entries(
+      itemsGroupedByDataSource
+    )) {
+      const symbols = dataGatheringItems.map((dataGatheringItem) => {
+        return dataGatheringItem.symbol;
+      });
+
+      for (const symbol of symbols) {
+        const promise = Promise.resolve(
+          this.getDataProvider(DataSource[dataSource]).getAssetProfile(symbol)
+        );
+
+        promises.push(
+          promise.then((symbolProfile) => {
+            response[symbol] = symbolProfile;
+          })
+        );
+      }
+    }
+
+    await Promise.all(promises);
+
+    return response;
+  }
+
+  public getDataSourceForExchangeRates(): DataSource {
+    return DataSource[
+      this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
+    ];
+  }
+
+  public getDataSourceForImport(): DataSource {
+    return DataSource[this.configurationService.get('DATA_SOURCE_IMPORT')];
+  }
+
   public async getDividends({
     dataSource,
     from,
@@ -180,46 +226,6 @@ export class DataProviderService {
     }
 
     return result;
-  }
-
-  public getPrimaryDataSource(): DataSource {
-    return DataSource[this.configurationService.get('DATA_SOURCE_PRIMARY')];
-  }
-
-  public async getAssetProfiles(items: IDataGatheringItem[]): Promise<{
-    [symbol: string]: Partial<SymbolProfile>;
-  }> {
-    const response: {
-      [symbol: string]: Partial<SymbolProfile>;
-    } = {};
-
-    const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
-
-    const promises = [];
-
-    for (const [dataSource, dataGatheringItems] of Object.entries(
-      itemsGroupedByDataSource
-    )) {
-      const symbols = dataGatheringItems.map((dataGatheringItem) => {
-        return dataGatheringItem.symbol;
-      });
-
-      for (const symbol of symbols) {
-        const promise = Promise.resolve(
-          this.getDataProvider(DataSource[dataSource]).getAssetProfile(symbol)
-        );
-
-        promises.push(
-          promise.then((symbolProfile) => {
-            response[symbol] = symbolProfile;
-          })
-        );
-      }
-    }
-
-    await Promise.all(promises);
-
-    return response;
   }
 
   public async getQuotes(items: IDataGatheringItem[]): Promise<{
