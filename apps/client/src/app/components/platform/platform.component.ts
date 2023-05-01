@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,7 +31,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
-  public displayedColumns = ['id', 'name', 'url'];
+  public displayedColumns = ['id', 'name', 'url', 'actions'];
 
   public platforms: PlatformModel[];
   public deviceType: string;
@@ -69,7 +70,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
               return id === params['platformId'];
             });
 
-            // this.openUpdateAccountDialog(account);
+            this.openUpdatePlatformDialog(platform);
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -114,6 +115,28 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     this.unsubscribeSubject.complete();
   }
 
+  public onUpdatePlatform(aPlatform: PlatformModel) {
+    this.router.navigate([], {
+      queryParams: { platformId: aPlatform.id, editDialog: true }
+    });
+  }
+
+  public deletePlatform(aId: string) {
+    this.dataService
+      .deletePlatform(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.userService
+            .get(true)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe();
+
+          this.fetchPlatforms();
+        }
+      });
+  }
+
   private fetchPlatforms() {
     this.dataService
       .fetchPlatforms()
@@ -147,6 +170,46 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
         if (platform) {
           this.dataService
             .postPlatform(platform)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe({
+              next: () => {
+                this.userService
+                  .get(true)
+                  .pipe(takeUntil(this.unsubscribeSubject))
+                  .subscribe();
+
+                this.fetchPlatforms();
+              }
+            });
+        }
+
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
+  }
+
+  private openUpdatePlatformDialog({ id, name, url }) {
+    const dialogRef = this.dialog.open(CreateOrUpdatePlatformDialog, {
+      data: {
+        platform: {
+          id: id,
+          name: name,
+          url: url
+        }
+      },
+
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        const platform: UpdatePlatformDto = data?.platform;
+
+        if (platform) {
+          this.dataService
+            .putPlatform(platform)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
               next: () => {

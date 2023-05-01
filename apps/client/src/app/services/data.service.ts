@@ -7,6 +7,7 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
@@ -149,6 +150,10 @@ export class DataService {
 
   public deleteAccount(aId: string) {
     return this.http.delete<any>(`/api/v1/account/${aId}`);
+  }
+
+  public deletePlatform(aId: string) {
+    return this.http.delete<any>(`/api/v1/platform/${aId}`);
   }
 
   public deleteAllOrders() {
@@ -424,6 +429,13 @@ export class DataService {
 
   public putAccount(aAccount: UpdateAccountDto) {
     return this.http.put<UserItem>(`/api/v1/account/${aAccount.id}`, aAccount);
+  }
+
+  public putPlatform(aPlatform: UpdatePlatformDto) {
+    return this.http.put<UserItem>(
+      `/api/v1/platform/${aPlatform.id}`,
+      aPlatform
+    );
   }
 
   public putAdminSetting(key: string, aData: PropertyDto) {
