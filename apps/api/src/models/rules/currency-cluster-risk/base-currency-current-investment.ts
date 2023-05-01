@@ -10,7 +10,7 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     private positions: TimelinePosition[]
   ) {
     super(exchangeRateDataService, {
-      name: 'Current Investment: Base Currency'
+      name: 'Investment: Base Currency'
     });
   }
 
