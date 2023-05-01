@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platform-dialog/create-or-update-platform-dialog.module';
 
 @NgModule({
   declarations: [AdminPlatformComponent],
@@ -13,7 +14,8 @@ import { MatTableModule } from '@angular/material/table';
     RouterModule,
     MatButtonModule,
     MatSortModule,
-    MatTableModule
+    MatTableModule,
+    GfCreateOrUpdatePlatformDialogModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

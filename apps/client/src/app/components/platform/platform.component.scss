@@ -11,4 +11,14 @@
     bottom: 4rem;
     z-index: 999;
   }
+
+  .mat-mdc-table {
+    th {
+      ::ng-deep {
+        .mat-sort-header-container {
+          justify-content: inherit;
+        }
+      }
+    }
+  }
 }

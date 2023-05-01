@@ -14,7 +14,11 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Id</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
+            <td
+              *matCellDef="let element"
+              class="d-none d-lg-table-cell px-1"
+              mat-cell
+            >
               {{ element.id }}
             </td>
           </ng-container>
@@ -23,7 +27,11 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Name</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
+            <td
+              *matCellDef="let element"
+              class="d-none d-lg-table-cell px-1"
+              mat-cell
+            >
               {{ element.name }}
             </td>
           </ng-container>
@@ -32,7 +40,11 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Url</ng-container>
             </th>
-            <td *matCellDef="let element" class="px-1" mat-cell>
+            <td
+              *matCellDef="let element"
+              class="d-none d-lg-table-cell px-1"
+              mat-cell
+            >
               {{ element.url }}
             </td>
           </ng-container>

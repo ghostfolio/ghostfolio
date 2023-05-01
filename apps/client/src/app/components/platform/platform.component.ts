@@ -1,41 +1,55 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { MatSort } from '@angular/material/sort';
+import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
-import { AdminPlatformsItem } from '@ghostfolio/common/interfaces/admin-platforms.interface';
 
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Platform as PlatformModel } from '@prisma/client';
+import { Platform, Platform as PlatformModel } from '@prisma/client';
 import { Subject, takeUntil } from 'rxjs';
+import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
+import { MatDialog } from '@angular/material/dialog';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { DataService } from '@ghostfolio/client/services/data.service';
 
 @Component({
   selector: 'gf-platform-overview',
   styleUrls: ['./platform.component.scss'],
   templateUrl: './platform.component.html'
 })
-export class AdminPlatformComponent implements OnInit {
+export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public displayedColumns = ['id', 'name', 'url'];
 
   public platforms: PlatformModel[];
+  public deviceType: string;
   public hasPermissionToCreatePlatform: boolean;
   public hasPermissionToDeletePlatform: boolean;
   public hasImpersonationId: boolean;
   public user: User;
 
-  public dataSource: MatTableDataSource<AdminPlatformsItem> =
-    new MatTableDataSource();
+  public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private dataService: DataService,
     private changeDetectorRef: ChangeDetectorRef,
     private userService: UserService,
+    private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -48,7 +62,7 @@ export class AdminPlatformComponent implements OnInit {
           params['createDialog'] &&
           this.hasPermissionToCreatePlatform
         ) {
-          //this.openCreateAccountDialog();
+          this.openCreatePlatformDialog();
         } else if (params['editDialog']) {
           if (this.platforms) {
             const platform = this.platforms.find(({ id }) => {
@@ -64,6 +78,8 @@ export class AdminPlatformComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -93,5 +109,58 @@ export class AdminPlatformComponent implements OnInit {
     this.fetchPlatforms();
   }
 
-  private fetchPlatforms() {}
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private fetchPlatforms() {
+    this.dataService
+      .fetchPlatforms()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((platforms) => {
+        this.platforms = platforms;
+        this.dataSource = new MatTableDataSource(platforms);
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private openCreatePlatformDialog() {
+    const dialogRef = this.dialog.open(CreateOrUpdatePlatformDialog, {
+      data: {
+        platform: {
+          name: null,
+          url: null
+        }
+      },
+
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        const platform: CreatePlatformDto = data?.platform;
+
+        if (platform) {
+          this.dataService
+            .postPlatform(platform)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe({
+              next: () => {
+                this.userService
+                  .get(true)
+                  .pipe(takeUntil(this.unsubscribeSubject))
+                  .subscribe();
+
+                this.fetchPlatforms();
+              }
+            });
+        }
+
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
+  }
 }

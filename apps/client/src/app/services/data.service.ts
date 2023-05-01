@@ -6,6 +6,7 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
@@ -39,7 +40,7 @@ import {
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import { DataSource, Order as OrderModel } from '@prisma/client';
+import { DataSource, Order as OrderModel, Platform } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
@@ -70,6 +71,10 @@ export class DataService {
 
   public fetchAccounts() {
     return this.http.get<Accounts>('/api/v1/account');
+  }
+
+  public fetchPlatforms() {
+    return this.http.get<Platform[]>('/api/v1/platform');
   }
 
   public fetchActivities({
@@ -403,6 +408,10 @@ export class DataService {
 
   public postAccount(aAccount: CreateAccountDto) {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
+  }
+
+  public postPlatform(aPlatform: CreatePlatformDto) {
+    return this.http.post<OrderModel>(`/api/v1/platform`, aPlatform);
   }
 
   public postOrder(aOrder: CreateOrderDto) {
