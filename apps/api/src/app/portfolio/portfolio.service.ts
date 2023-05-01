@@ -1727,6 +1727,7 @@ export class PortfolioService {
       currentAccounts = await this.accountService.getAccounts(userId);
     } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
       currentAccounts = await this.accountService.accounts({
+        include: { Platform: true },
         where: { id: filters[0].id }
       });
     } else {
@@ -1737,6 +1738,7 @@ export class PortfolioService {
       );
 
       currentAccounts = await this.accountService.accounts({
+        include: { Platform: true },
         where: { id: { in: accountIds } }
       });
     }
