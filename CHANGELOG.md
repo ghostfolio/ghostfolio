@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the tooltip of the portfolio proportion chart component
+
 ### Fixed
 
 - Fixed the missing platform name in the allocations by platform chart on the allocations page

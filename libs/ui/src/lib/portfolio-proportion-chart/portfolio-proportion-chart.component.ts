@@ -394,6 +394,9 @@ export class PortfolioProportionChartComponent
               })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
             ];
           }
+        },
+        title: () => {
+          return '';
         }
       }
     };
