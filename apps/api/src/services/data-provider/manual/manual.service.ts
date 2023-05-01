@@ -64,8 +64,9 @@ export class ManualService implements DataProviderInterface {
     try {
       const symbol = aSymbol;
 
-      const [symbolProfile] =
-        await this.symbolProfileService.getSymbolProfilesBySymbols([symbol]);
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [{ symbol, dataSource: this.getName() }]
+      );
       const { defaultMarketPrice, selector, url } =
         symbolProfile.scraperConfiguration ?? {};
 
@@ -128,8 +129,11 @@ export class ManualService implements DataProviderInterface {
     }
 
     try {
-      const symbolProfiles =
-        await this.symbolProfileService.getSymbolProfilesBySymbols(aSymbols);
+      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+        aSymbols.map((symbol) => {
+          return { symbol, dataSource: this.getName() };
+        })
+      );
 
       const marketData = await this.prismaService.marketData.findMany({
         distinct: ['symbol'],

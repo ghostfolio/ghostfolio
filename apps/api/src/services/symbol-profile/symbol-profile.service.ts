@@ -87,29 +87,6 @@ export class SymbolProfileService {
       .then((symbolProfiles) => this.getSymbols(symbolProfiles));
   }
 
-  /**
-   * @deprecated
-   */
-  public async getSymbolProfilesBySymbols(
-    symbols: string[]
-  ): Promise<EnhancedSymbolProfile[]> {
-    return this.prismaService.symbolProfile
-      .findMany({
-        include: {
-          _count: {
-            select: { Order: true }
-          },
-          SymbolProfileOverrides: true
-        },
-        where: {
-          symbol: {
-            in: symbols
-          }
-        }
-      })
-      .then((symbolProfiles) => this.getSymbols(symbolProfiles));
-  }
-
   public updateSymbolProfile({
     comment,
     dataSource,
