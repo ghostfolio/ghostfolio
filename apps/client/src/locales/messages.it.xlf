@@ -118,6 +118,14 @@
           <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
@@ -186,6 +194,10 @@
           <context context-type="linenumber">224</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">492</context>
         </context-group>
@@ -200,6 +212,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">163</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
@@ -374,6 +390,10 @@
           <context context-type="linenumber">173</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
@@ -404,6 +424,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">180</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
@@ -3696,6 +3720,42 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ec87c89615dd278ed8ebf7d77faae0ab684a127e" datatype="html">
+        <source>Update platform</source>
+        <target state="new">Update platform</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c5f34d334a98f08937ea528d62bc1d1543ada53d" datatype="html">
+        <source>Add platform</source>
+        <target state="new">Add platform</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="484d369ab6d7e37d808403e2141c38c01f6f9911" datatype="html">
+        <source>Url</source>
+        <target state="new">Url</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2798cc1e152b1ec07fd8daf94a2a073d1ba1ebcc" datatype="html">
+        <source>Id</source>
+        <target state="new">Id</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
     </body>
