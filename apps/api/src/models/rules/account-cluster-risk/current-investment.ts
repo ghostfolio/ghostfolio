@@ -28,7 +28,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     for (const [accountId, account] of Object.entries(this.accounts)) {
       accounts[accountId] = {
         name: account.name,
-        investment: account.current
+        investment: account.valueInBaseCurrency
       };
     }
 

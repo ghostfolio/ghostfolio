@@ -249,13 +249,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public initializeAnalysisData() {
     this.initialize();
 
-    for (const [id, { current, name }] of Object.entries(
+    for (const [id, { name, valueInBaseCurrency }] of Object.entries(
       this.portfolioDetails.accounts
     )) {
       this.accounts[id] = {
         id,
         name,
-        value: current
+        value: valueInBaseCurrency
       };
     }
 
