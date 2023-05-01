@@ -27,12 +27,14 @@
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Name</ng-container>
             </th>
-            <td
-              *matCellDef="let element"
-              class="d-none d-lg-table-cell px-1"
-              mat-cell
-            >
-              {{ element.name }}
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              <gf-symbol-icon
+                *ngIf="element.url"
+                class="d-inline d-sm-none mr-1"
+                [tooltip]="element.name"
+                [url]="element.url"
+              ></gf-symbol-icon>
+              <span>{{ element.name }} </span>
             </td>
           </ng-container>
 

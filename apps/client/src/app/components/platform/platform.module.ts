@@ -7,6 +7,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platform-dialog/create-or-update-platform-dialog.module';
 import { MatMenuModule } from '@angular/material/menu';
+import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
 
 @NgModule({
   declarations: [AdminPlatformComponent],
@@ -14,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
     CommonModule,
     RouterModule,
     MatButtonModule,
+    GfSymbolIconModule,
     MatSortModule,
     MatTableModule,
     MatMenuModule,
