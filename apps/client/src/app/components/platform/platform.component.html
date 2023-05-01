@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="platforms">
+        <table
+          class="gf-table w-100"
+          mat-table
+          matSort
+          matSortActive="id"
+          matSortDirection="asc"
+          [dataSource]="dataSource"
+        >
+          <ng-container matColumnDef="id">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Id</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ element.id }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Name</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ element.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="url">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Url</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ element.url }}
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr
+            *matRowDef="let row; columns: displayedColumns"
+            class="cursor-pointer"
+            mat-row
+            (click)="
+              onOpenAssetProfileDialog({
+                dataSource: row.dataSource,
+                symbol: row.symbol
+              })
+            "
+          ></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="
+      !hasImpersonationId &&
+      hasPermissionToCreatePlatform &&
+      !user.settings.isRestrictedView
+    "
+    class="fab-container"
+  >
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [queryParams]="{ createDialog: true }"
+      [routerLink]="[]"
+    >
+      <ion-icon name="add-outline" size="large"></ion-icon>
+    </a>
+  </div>
+</div>

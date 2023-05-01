@@ -4,6 +4,7 @@ import { AdminJobsComponent } from '@ghostfolio/client/components/admin-jobs/adm
 import { AdminMarketDataComponent } from '@ghostfolio/client/components/admin-market-data/admin-market-data.component';
 import { AdminOverviewComponent } from '@ghostfolio/client/components/admin-overview/admin-overview.component';
 import { AdminUsersComponent } from '@ghostfolio/client/components/admin-users/admin-users.component';
+import { AdminPlatformComponent } from '@ghostfolio/client/components/platform/platform.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
 import { AdminPageComponent } from './admin-page.component';
@@ -24,7 +25,16 @@ const routes: Routes = [
         component: AdminOverviewComponent,
         title: $localize`Admin Control`
       },
-      { path: 'users', component: AdminUsersComponent, title: $localize`Users` }
+      {
+        path: 'users',
+        component: AdminUsersComponent,
+        title: $localize`Users`
+      },
+      {
+        path: 'platforms',
+        component: AdminPlatformComponent,
+        title: $localize`Platforms`
+      }
     ],
     component: AdminPageComponent,
     path: ''

@@ -1,0 +1,14 @@
+:host {
+  display: block;
+
+  .platforms {
+    overflow-x: auto;
+  }
+
+  .fab-container {
+    position: fixed;
+    right: 2rem;
+    bottom: 4rem;
+    z-index: 999;
+  }
+}
