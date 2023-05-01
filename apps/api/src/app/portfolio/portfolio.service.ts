@@ -492,13 +492,10 @@ export class PortfolioService {
         symbol: position.symbol
       };
     });
-    const symbols = currentPositions.positions.map(
-      (position) => position.symbol
-    );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes(dataGatheringItems),
-      this.symbolProfileService.getSymbolProfilesBySymbols(symbols)
+      this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
     ]);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
@@ -986,11 +983,13 @@ export class PortfolioService {
       };
     });
 
-    const symbols = positions.map((position) => position.symbol);
-
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes(dataGatheringItem),
-      this.symbolProfileService.getSymbolProfilesBySymbols(symbols)
+      this.symbolProfileService.getSymbolProfiles(
+        positions.map(({ dataSource, symbol }) => {
+          return { dataSource, symbol };
+        })
+      )
     ]);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
