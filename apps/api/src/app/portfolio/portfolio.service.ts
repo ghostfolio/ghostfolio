@@ -583,7 +583,7 @@ export class PortfolioService {
       }
     }
 
-    const accounts = await this.getValueOfAccounts({
+    const { accounts, platforms } = await this.getValueOfAccountsAndPlatforms({
       filters,
       orders,
       portfolioItemsNow,
@@ -641,6 +641,7 @@ export class PortfolioService {
     return {
       accounts,
       holdings,
+      platforms,
       summary,
       filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
       filteredValueInPercentage: summary.netWorth
@@ -1171,7 +1172,7 @@ export class PortfolioService {
       portfolioItemsNow[position.symbol] = position;
     }
 
-    const accounts = await this.getValueOfAccounts({
+    const { accounts } = await this.getValueOfAccountsAndPlatforms({
       orders,
       portfolioItemsNow,
       userCurrency,
@@ -1691,7 +1692,7 @@ export class PortfolioService {
     };
   }
 
-  private async getValueOfAccounts({
+  private async getValueOfAccountsAndPlatforms({
     filters = [],
     orders,
     portfolioItemsNow,
@@ -1715,6 +1716,7 @@ export class PortfolioService {
     });
 
     const accounts: PortfolioDetails['accounts'] = {};
+    const platforms: PortfolioDetails['platforms'] = {};
 
     let currentAccounts: (Account & {
       Order?: Order[];
@@ -1767,6 +1769,26 @@ export class PortfolioService {
         )
       };
 
+      if (platforms[account.Platform?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
+        platforms[account.Platform?.id || UNKNOWN_KEY].valueInBaseCurrency +=
+          this.exchangeRateDataService.toCurrency(
+            account.balance,
+            account.currency,
+            userCurrency
+          );
+      } else {
+        platforms[account.Platform?.id || UNKNOWN_KEY] = {
+          balance: account.balance,
+          currency: account.currency,
+          name: account.Platform?.name,
+          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+            account.balance,
+            account.currency,
+            userCurrency
+          )
+        };
+      }
+
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
@@ -1789,10 +1811,26 @@ export class PortfolioService {
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
+
+        if (
+          platforms[order.Account?.Platform?.id || UNKNOWN_KEY]
+            ?.valueInBaseCurrency
+        ) {
+          platforms[
+            order.Account?.Platform?.id || UNKNOWN_KEY
+          ].valueInBaseCurrency += currentValueOfSymbolInBaseCurrency;
+        } else {
+          platforms[order.Account?.Platform?.id || UNKNOWN_KEY] = {
+            balance: 0,
+            currency: order.Account?.currency,
+            name: account.Platform?.name,
+            valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
+          };
+        }
       }
     }
 
-    return accounts;
+    return { accounts, platforms };
   }
 
   private async getUserId(aImpersonationId: string, aUserId: string) {

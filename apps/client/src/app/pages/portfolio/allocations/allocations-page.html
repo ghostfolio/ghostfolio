@@ -38,18 +38,18 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>By Account</mat-card-title>
+          <mat-card-title class="text-truncate" i18n
+            >By Platform</mat-card-title
+          >
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            cursor="pointer"
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['id']"
             [locale]="user?.settings?.locale"
-            [positions]="accounts"
-            (proportionChartClicked)="onAccountChartClicked($event)"
+            [positions]="platforms"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
@@ -250,6 +250,25 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n>By Account</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            cursor="pointer"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['id']"
+            [locale]="user?.settings?.locale"
+            [positions]="accounts"
+            (proportionChartClicked)="onAccountChartClicked($event)"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
