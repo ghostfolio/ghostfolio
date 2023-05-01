@@ -10,6 +10,7 @@ export interface PortfolioDetails {
       currency: string;
       name: string;
       valueInBaseCurrency: number;
+      valueInPercentage?: number;
     };
   };
   filteredValueInBaseCurrency?: number;
