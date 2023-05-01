@@ -8,13 +8,12 @@ import {
 import { MatSort } from '@angular/material/sort';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-
+import { get } from 'lodash';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
-
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Platform, Platform as PlatformModel } from '@prisma/client';
 import { Subject, takeUntil } from 'rxjs';
@@ -144,6 +143,8 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
       .subscribe((platforms) => {
         this.platforms = platforms;
         this.dataSource = new MatTableDataSource(platforms);
+        this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = get;
         this.changeDetectorRef.markForCheck();
       });
   }
