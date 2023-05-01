@@ -52,7 +52,7 @@ export class PlatformController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   public async updatePlatform(
-    @Param(':id') id: string,
+    @Param('id') id: string,
     @Body() data: UpdatePlatformDto
   ) {
     if (
@@ -87,7 +87,7 @@ export class PlatformController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  public async deletePlatform(@Param(':id') id: string) {
+  public async deletePlatform(@Param('id') id: string) {
     if (
       !hasPermission(this.request.user.permissions, permissions.deletePlatform)
     ) {
@@ -96,7 +96,7 @@ export class PlatformController {
         StatusCodes.FORBIDDEN
       );
     }
-
+    console.log('id', id);
     const originalPlatform = await this.platformService.getPlatform({
       id
     });
