@@ -56,12 +56,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['platformId'] && params['platformDetailDialog']) {
-          // this.openAccountDetailDialog(params['accountId']);
-        } else if (
-          params['createDialog'] &&
-          this.hasPermissionToCreatePlatform
-        ) {
+        if (params['createDialog'] && this.hasPermissionToCreatePlatform) {
           this.openCreatePlatformDialog();
         } else if (params['editDialog']) {
           if (this.platforms) {
