@@ -27,7 +27,10 @@ export const permissions = {
   updateAuthDevice: 'updateAuthDevice',
   updateOrder: 'updateOrder',
   updateUserSettings: 'updateUserSettings',
-  updateViewMode: 'updateViewMode'
+  updateViewMode: 'updateViewMode',
+  createPlatform: 'createPlatform',
+  deletePlatform: 'deletePlatform',
+  updatePlatform: 'updatePlatform'
 };
 
 export function getPermissions(aRole: Role): string[] {
@@ -47,7 +50,10 @@ export function getPermissions(aRole: Role): string[] {
         permissions.updateAuthDevice,
         permissions.updateOrder,
         permissions.updateUserSettings,
-        permissions.updateViewMode
+        permissions.updateViewMode,
+        permissions.createPlatform,
+        permissions.deletePlatform,
+        permissions.updatePlatform
       ];
 
     case 'DEMO':
