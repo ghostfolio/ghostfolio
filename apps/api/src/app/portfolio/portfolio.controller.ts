@@ -136,9 +136,8 @@ export class PortfolioController {
           portfolioPosition.value / totalValue;
       }
 
-      for (const [name, { current, original }] of Object.entries(accounts)) {
-        accounts[name].current = current / totalValue;
-        accounts[name].original = original / totalInvestment;
+      for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
+        accounts[name].valueInPercentage = valueInBaseCurrency / totalValue;
       }
     }
 

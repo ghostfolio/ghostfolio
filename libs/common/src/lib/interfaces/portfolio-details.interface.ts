@@ -8,9 +8,9 @@ export interface PortfolioDetails {
     [id: string]: {
       balance: number;
       currency: string;
-      current: number;
       name: string;
-      original: number;
+      valueInBaseCurrency: number;
+      valueInPercentage?: number;
     };
   };
   filteredValueInBaseCurrency?: number;

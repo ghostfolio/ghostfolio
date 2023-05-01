@@ -7,12 +7,9 @@ import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfol
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
-import { AccountClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/initial-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
-import { CurrencyClusterRiskBaseCurrencyInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-initial-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
-import { CurrencyClusterRiskInitialInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/initial-investment';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -149,7 +146,8 @@ export class PortfolioService {
         }
       }
 
-      const valueInBaseCurrency = details.accounts[account.id]?.current ?? 0;
+      const valueInBaseCurrency =
+        details.accounts[account.id]?.valueInBaseCurrency ?? 0;
 
       const result = {
         ...account,
@@ -618,9 +616,8 @@ export class PortfolioService {
       accounts[UNKNOWN_KEY] = {
         balance: 0,
         currency: userCurrency,
-        current: emergencyFundInCash,
         name: UNKNOWN_KEY,
-        original: emergencyFundInCash
+        valueInBaseCurrency: emergencyFundInCash
       };
 
       holdings[userCurrency] = {
@@ -1185,10 +1182,6 @@ export class PortfolioService {
       rules: {
         accountClusterRisk: await this.rulesService.evaluate(
           [
-            new AccountClusterRiskInitialInvestment(
-              this.exchangeRateDataService,
-              accounts
-            ),
             new AccountClusterRiskCurrentInvestment(
               this.exchangeRateDataService,
               accounts
@@ -1202,15 +1195,7 @@ export class PortfolioService {
         ),
         currencyClusterRisk: await this.rulesService.evaluate(
           [
-            new CurrencyClusterRiskBaseCurrencyInitialInvestment(
-              this.exchangeRateDataService,
-              positions
-            ),
             new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-              this.exchangeRateDataService,
-              positions
-            ),
-            new CurrencyClusterRiskInitialInvestment(
               this.exchangeRateDataService,
               positions
             ),
@@ -1774,13 +1759,8 @@ export class PortfolioService {
       accounts[account.id] = {
         balance: account.balance,
         currency: account.currency,
-        current: this.exchangeRateDataService.toCurrency(
-          account.balance,
-          account.currency,
-          userCurrency
-        ),
         name: account.name,
-        original: this.exchangeRateDataService.toCurrency(
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
           userCurrency
@@ -1793,30 +1773,20 @@ export class PortfolioService {
           (portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ??
             order.unitPrice ??
             0);
-        let originalValueOfSymbolInBaseCurrency =
-          this.exchangeRateDataService.toCurrency(
-            order.quantity * order.unitPrice,
-            order.SymbolProfile.currency,
-            userCurrency
-          );
 
         if (order.type === 'SELL') {
           currentValueOfSymbolInBaseCurrency *= -1;
-          originalValueOfSymbolInBaseCurrency *= -1;
         }
 
-        if (accounts[order.Account?.id || UNKNOWN_KEY]?.current) {
-          accounts[order.Account?.id || UNKNOWN_KEY].current +=
+        if (accounts[order.Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
+          accounts[order.Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
             currentValueOfSymbolInBaseCurrency;
-          accounts[order.Account?.id || UNKNOWN_KEY].original +=
-            originalValueOfSymbolInBaseCurrency;
         } else {
           accounts[order.Account?.id || UNKNOWN_KEY] = {
             balance: 0,
             currency: order.Account?.currency,
-            current: currentValueOfSymbolInBaseCurrency,
             name: account.name,
-            original: originalValueOfSymbolInBaseCurrency
+            valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
       }

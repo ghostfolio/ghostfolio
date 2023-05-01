@@ -10,7 +10,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     private positions: TimelinePosition[]
   ) {
     super(exchangeRateDataService, {
-      name: 'Current Investment'
+      name: 'Investment'
     });
   }
 

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Deprecated the use of the environment variable `BASE_CURRENCY`
+- Cleaned up initial values from the _X-ray_ section
 
 ## 1.263.0 - 2023-04-30
 
