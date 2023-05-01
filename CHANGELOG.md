@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced the allocations by platform chart on the allocations page
+
 ### Changed
 
 - Deprecated the use of the environment variable `BASE_CURRENCY`

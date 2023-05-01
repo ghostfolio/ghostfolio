@@ -91,6 +91,7 @@ export class PortfolioController {
       filteredValueInPercentage,
       hasErrors,
       holdings,
+      platforms,
       summary,
       totalValueInBaseCurrency
     } = await this.portfolioService.getDetails({
@@ -139,6 +140,10 @@ export class PortfolioController {
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
         accounts[name].valueInPercentage = valueInBaseCurrency / totalValue;
       }
+
+      for (const [name, { valueInBaseCurrency }] of Object.entries(platforms)) {
+        platforms[name].valueInPercentage = valueInBaseCurrency / totalValue;
+      }
     }
 
     if (
@@ -181,6 +186,7 @@ export class PortfolioController {
       filteredValueInPercentage,
       hasError,
       holdings,
+      platforms,
       totalValueInBaseCurrency,
       summary: portfolioSummary
     };

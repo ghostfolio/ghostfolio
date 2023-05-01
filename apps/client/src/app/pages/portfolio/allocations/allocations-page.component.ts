@@ -20,7 +20,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import { Account, AssetClass, DataSource } from '@prisma/client';
+import { Account, AssetClass, DataSource, Platform } from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -55,6 +55,12 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     [key in Market]: { name: string; value: number };
   };
   public placeholder = '';
+  public platforms: {
+    [id: string]: Pick<Platform, 'name'> & {
+      id: string;
+      value: number;
+    };
+  };
   public portfolioDetails: PortfolioDetails;
   public positions: {
     [symbol: string]: Pick<
@@ -230,6 +236,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: undefined
       }
     };
+    this.platforms = {};
     this.positions = {};
     this.sectors = {
       [UNKNOWN_KEY]: {
@@ -368,6 +375,25 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: isNumber(position.value)
           ? position.value
           : position.valueInPercentage
+      };
+    }
+
+    for (const [
+      id,
+      { name, valueInBaseCurrency, valueInPercentage }
+    ] of Object.entries(this.portfolioDetails.platforms)) {
+      let value = 0;
+
+      if (this.hasImpersonationId) {
+        value = valueInPercentage;
+      } else {
+        value = valueInBaseCurrency;
+      }
+
+      this.platforms[id] = {
+        id,
+        name,
+        value
       };
     }
 
