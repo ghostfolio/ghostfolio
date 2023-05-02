@@ -7,7 +7,7 @@ describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null, null);
+    currentRateService = new CurrentRateService(null, null, null, null);
   });
 
   describe('annualized performance percentage', () => {

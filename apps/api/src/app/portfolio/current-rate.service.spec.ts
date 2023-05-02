@@ -6,6 +6,7 @@ import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 
 jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
   return {
@@ -89,6 +90,7 @@ describe('CurrentRateService', () => {
   let exchangeRateDataService: ExchangeRateDataService;
   let marketDataService: MarketDataService;
   let propertyService: PropertyService;
+  let dataGatheringService: DataGatheringService;
 
   beforeAll(async () => {
     propertyService = new PropertyService(null);
@@ -109,10 +111,21 @@ describe('CurrentRateService', () => {
     );
     marketDataService = new MarketDataService(null);
 
+    dataGatheringService = new DataGatheringService(
+      null,
+      null,
+      dataProviderService,
+      exchangeRateDataService,
+      marketDataService,
+      null,
+      null
+    );
+
     await exchangeRateDataService.initialize();
 
     currentRateService = new CurrentRateService(
       dataProviderService,
+      dataGatheringService,
       exchangeRateDataService,
       marketDataService
     );
