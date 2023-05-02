@@ -70,12 +70,12 @@ export class CurrentRateService {
                   symbol: dataGatheringItem.symbol
                 });
               }
-	            if (result.length == 1) {
-                // getValues result of size 1 ("today only") means historical data is not
-		             // synchronized.  Queue up sync so that a refresh would pull more historical data.
-                this.dataGatheringService.gather7Days(); 
-              }
-
+            }
+            if (result.length == 1) {
+              // getValues result of size 1 ("today only") means historical data is not
+              // synchronized.  Queue up sync so that a refresh would pull more historical data.
+              this.dataGatheringService.gather7Days();
+            }
             return result;
           })
       );
