@@ -10,11 +10,13 @@ import { flatten, isEmpty, uniqBy } from 'lodash';
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 
 @Injectable()
 export class CurrentRateService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
+    private readonly dataGatheringService: DataGatheringService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService
   ) {}
@@ -68,6 +70,10 @@ export class CurrentRateService {
                   symbol: dataGatheringItem.symbol
                 });
               }
+	      if (result.length == 1) {
+                // getValues result of size 1 ("today only") means historical data is not
+		// synchromized.  Queue up sync so that a refresh would pull more historical data.
+                this.dataGatheringService.gather7Days(); 
             }
 
             return result;
