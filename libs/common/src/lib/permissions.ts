@@ -6,11 +6,13 @@ export const permissions = {
   createAccess: 'createAccess',
   createAccount: 'createAccount',
   createOrder: 'createOrder',
+  createPlatform: 'createPlatform',
   createUserAccount: 'createUserAccount',
   deleteAccess: 'deleteAccess',
   deleteAccount: 'deleteAcccount',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
+  deletePlatform: 'deletePlatform',
   deleteUser: 'deleteUser',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
   enableImport: 'enableImport',
@@ -26,11 +28,9 @@ export const permissions = {
   updateAccount: 'updateAccount',
   updateAuthDevice: 'updateAuthDevice',
   updateOrder: 'updateOrder',
+  updatePlatform: 'updatePlatform',
   updateUserSettings: 'updateUserSettings',
-  updateViewMode: 'updateViewMode',
-  createPlatform: 'createPlatform',
-  deletePlatform: 'deletePlatform',
-  updatePlatform: 'updatePlatform'
+  updateViewMode: 'updateViewMode'
 };
 
 export function getPermissions(aRole: Role): string[] {
@@ -41,19 +41,19 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createAccess,
         permissions.createAccount,
         permissions.createOrder,
+        permissions.createPlatform,
         permissions.deleteAccess,
         permissions.deleteAccount,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
+        permissions.deletePlatform,
         permissions.deleteUser,
         permissions.updateAccount,
         permissions.updateAuthDevice,
         permissions.updateOrder,
+        permissions.updatePlatform,
         permissions.updateUserSettings,
-        permissions.updateViewMode,
-        permissions.createPlatform,
-        permissions.deletePlatform,
-        permissions.updatePlatform
+        permissions.updateViewMode
       ];
 
     case 'DEMO':

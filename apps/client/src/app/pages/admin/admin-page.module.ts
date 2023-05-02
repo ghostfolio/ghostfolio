@@ -20,8 +20,8 @@ import { AdminPageComponent } from './admin-page.component';
     GfAdminJobsModule,
     GfAdminMarketDataModule,
     GfAdminOverviewModule,
-    GfAdminUsersModule,
     GfAdminPlatformModule,
+    GfAdminUsersModule,
     MatTabsModule
   ],
   providers: [CacheService],

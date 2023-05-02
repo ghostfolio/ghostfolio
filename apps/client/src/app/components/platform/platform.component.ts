@@ -11,16 +11,14 @@ import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.
 import { get } from 'lodash';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Platform, Platform as PlatformModel } from '@prisma/client';
 import { Subject, takeUntil } from 'rxjs';
 import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 
 @Component({
   selector: 'gf-platform-overview',
@@ -36,22 +34,19 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   public deviceType: string;
   public hasPermissionToCreatePlatform: boolean;
   public hasPermissionToDeletePlatform: boolean;
-  public hasImpersonationId: boolean;
-  public user: User;
 
   public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private dataService: DataService,
     private changeDetectorRef: ChangeDetectorRef,
-    private userService: UserService,
+    private adminService: AdminService,
     private deviceService: DeviceDetectorService,
-    private impersonationStorageService: ImpersonationStorageService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private userService: UserService
   ) {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -75,25 +70,18 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-      });
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
-          this.user = state.user;
+          const user = state.user;
 
           this.hasPermissionToCreatePlatform = hasPermission(
-            this.user.permissions,
+            user.permissions,
             permissions.createPlatform
           );
-          this.hasPermissionToCreatePlatform = hasPermission(
-            this.user.permissions,
+          this.hasPermissionToDeletePlatform = hasPermission(
+            user.permissions,
             permissions.deletePlatform
           );
 
@@ -116,7 +104,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   public deletePlatform(aId: string) {
-    this.dataService
+    this.adminService
       .deletePlatform(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({
@@ -132,7 +120,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   private fetchPlatforms() {
-    this.dataService
+    this.adminService
       .fetchPlatforms()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((platforms) => {
@@ -164,7 +152,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
         const platform: CreatePlatformDto = data?.platform;
 
         if (platform) {
-          this.dataService
+          this.adminService
             .postPlatform(platform)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
@@ -187,9 +175,9 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(CreateOrUpdatePlatformDialog, {
       data: {
         platform: {
-          id: id,
-          name: name,
-          url: url
+          id,
+          name,
+          url
         }
       },
 
@@ -204,7 +192,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
         const platform: UpdatePlatformDto = data?.platform;
 
         if (platform) {
-          this.dataService
+          this.adminService
             .putPlatform(platform)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({

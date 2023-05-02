@@ -7,19 +7,19 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platform-dialog/create-or-update-platform-dialog.module';
 import { MatMenuModule } from '@angular/material/menu';
-import { GfSymbolIconModule } from '../symbol-icon/symbol-icon.module';
+import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 
 @NgModule({
   declarations: [AdminPlatformComponent],
   imports: [
     CommonModule,
-    RouterModule,
-    MatButtonModule,
     GfSymbolIconModule,
+    GfCreateOrUpdatePlatformDialogModule,
+    MatButtonModule,
+    MatMenuModule,
     MatSortModule,
     MatTableModule,
-    MatMenuModule,
-    GfCreateOrUpdatePlatformDialogModule
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

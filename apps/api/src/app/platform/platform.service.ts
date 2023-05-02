@@ -24,11 +24,13 @@ export class PlatformService {
     });
   }
 
-  public async updatePlatform(params: {
-    where: Prisma.PlatformWhereUniqueInput;
+  public async updatePlatform({
+    data,
+    where
+  }: {
     data: Prisma.PlatformUpdateInput;
+    where: Prisma.PlatformWhereUniqueInput;
   }): Promise<Platform> {
-    const { data, where } = params;
     return this.prismaService.platform.update({
       data,
       where

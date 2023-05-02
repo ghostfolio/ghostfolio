@@ -64,10 +64,10 @@ import { PlatformModule } from './platform/platform.module';
     InfoModule,
     LogoModule,
     OrderModule,
+    PlatformModule,
     PortfolioModule,
     PrismaModule,
     RedisCacheModule,
-    PlatformModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       serveStaticOptions: {

@@ -23,7 +23,7 @@ import { UpdatePlatformDto } from './update-platform.dto';
 @Controller('platform')
 export class PlatformController {
   public constructor(
-    private platformService: PlatformService,
+    private readonly platformService: PlatformService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -96,7 +96,7 @@ export class PlatformController {
         StatusCodes.FORBIDDEN
       );
     }
-    console.log('id', id);
+
     const originalPlatform = await this.platformService.getPlatform({
       id
     });

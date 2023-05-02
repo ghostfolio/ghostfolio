@@ -1,9 +1,8 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class UpdatePlatformDto {
-  @IsOptional()
   @IsString()
-  id?: string;
+  id: string;
 
   @IsString()
   name: string;

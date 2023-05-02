@@ -1,4 +1,4 @@
-<form #addPlatformtForm="ngForm" class="d-flex flex-column h-100">
+<form #addPlatformForm="ngForm" class="d-flex flex-column h-100">
   <h1 *ngIf="data.platform.id" i18n mat-dialog-title>Update platform</h1>
   <h1 *ngIf="!data.platform.id" i18n mat-dialog-title>Add platform</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
@@ -20,7 +20,7 @@
     <button
       color="primary"
       mat-flat-button
-      [disabled]="!addPlatformtForm.form.valid"
+      [disabled]="!addPlatformForm.form.valid"
       [mat-dialog-close]="data"
     >
       <ng-container i18n>Save</ng-container>

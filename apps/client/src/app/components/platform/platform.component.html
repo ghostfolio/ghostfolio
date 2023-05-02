@@ -42,7 +42,7 @@
               [tooltip]="element.name"
               [url]="element.url"
             ></gf-symbol-icon>
-            <span>{{ element.name }} </span>
+            <span>{{ element.name }}</span>
           </td></ng-container
         >
 
@@ -87,7 +87,6 @@
               </button>
             </mat-menu>
           </td>
-          <td *matFooterCellDef class="px-1" mat-footer-cell></td>
         </ng-container>
 
         <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
@@ -96,14 +95,7 @@
     </div>
   </div>
 
-  <div
-    *ngIf="
-      !hasImpersonationId &&
-      hasPermissionToCreatePlatform &&
-      !user.settings.isRestrictedView
-    "
-    class="fab-container"
-  >
+  <div *ngIf="hasPermissionToCreatePlatform" class="fab-container">
     <a
       class="align-items-center d-flex justify-content-center"
       color="primary"
