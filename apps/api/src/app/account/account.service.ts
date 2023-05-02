@@ -172,4 +172,32 @@ export class AccountService {
       where
     });
   }
+
+  public async updateAccountBalance(
+    accountId: string,
+    userId: string,
+    currency: string,
+    amount: number
+  ): Promise<Account> {
+    const account = await this.account({
+      id_userId: {
+        id: accountId,
+        userId
+      }
+    });
+
+    const data: Prisma.AccountUpdateInput = {
+      balance: account.balance + amount
+    };
+    const where: Prisma.AccountWhereUniqueInput = {
+      id_userId: {
+        id: accountId,
+        userId
+      }
+    };
+    return this.prismaService.account.update({
+      data,
+      where
+    });
+  }
 }

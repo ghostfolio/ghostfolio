@@ -74,6 +74,7 @@ export class OrderService {
       symbol?: string;
       tags?: Tag[];
       userId: string;
+      updateAccountBalance: boolean;
     }
   ): Promise<Order> {
     let Account;
@@ -137,6 +138,8 @@ export class OrderService {
       ]);
     }
 
+    const originalData = Object.assign({}, data);
+
     delete data.accountId;
     delete data.assetClass;
     delete data.assetSubClass;
@@ -150,10 +153,11 @@ export class OrderService {
     delete data.symbol;
     delete data.tags;
     delete data.userId;
+    delete data.updateAccountBalance;
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    return this.prismaService.order.create({
+    const order = await this.prismaService.order.create({
       data: {
         ...orderData,
         Account,
@@ -165,6 +169,23 @@ export class OrderService {
         }
       }
     });
+
+    if (originalData.updateAccountBalance) {
+      let amount = data.unitPrice * data.quantity + data.fee;
+
+      if (data.type === 'BUY') {
+        amount = amount * -1;
+      }
+
+      await this.accountService.updateAccountBalance(
+        originalData.accountId,
+        originalData.userId,
+        originalData.currency,
+        amount
+      );
+    }
+
+    return order;
   }
 
   public async deleteOrder(

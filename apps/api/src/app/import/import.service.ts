@@ -303,7 +303,8 @@ export class ImportService {
               }
             }
           },
-          User: { connect: { id: userId } }
+          User: { connect: { id: userId } },
+          updateAccountBalance: false
         });
       }
 

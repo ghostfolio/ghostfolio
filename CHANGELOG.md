@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the missing platform name in the allocations by platform chart on the allocations page
 
+### Added
+
+- Introduced the option to update cash balance of account when adding one activity
+
 ## 1.264.0 - 2023-05-01
 
 ### Added
