@@ -70,11 +70,11 @@ export class CurrentRateService {
                   symbol: dataGatheringItem.symbol
                 });
               }
-	      if (result.length == 1) {
+	            if (result.length == 1) {
                 // getValues result of size 1 ("today only") means historical data is not
-		// synchromized.  Queue up sync so that a refresh would pull more historical data.
+		             // synchronized.  Queue up sync so that a refresh would pull more historical data.
                 this.dataGatheringService.gather7Days(); 
-            }
+              }
 
             return result;
           })
