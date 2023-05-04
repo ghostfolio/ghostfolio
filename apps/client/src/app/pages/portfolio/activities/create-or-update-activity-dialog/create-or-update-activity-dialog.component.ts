@@ -298,6 +298,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+          this.activityForm.controls['updateAccountBalance'].disable();
+          this.activityForm.controls['updateAccountBalance'].setValue(false);
         } else {
           this.activityForm.controls['accountId'].setValidators(
             Validators.required
@@ -315,6 +317,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+          this.activityForm.controls['updateAccountBalance'].enable();
         }
 
         this.changeDetectorRef.markForCheck();

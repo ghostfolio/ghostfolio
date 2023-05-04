@@ -173,31 +173,44 @@ export class AccountService {
     });
   }
 
-  public async updateAccountBalance(
-    accountId: string,
-    userId: string,
-    currency: string,
-    amount: number
-  ): Promise<Account> {
-    const account = await this.account({
+  public async updateAccountBalance({
+    accountId,
+    amount,
+    currency,
+    date,
+    userId
+  }: {
+    accountId: string;
+    amount: number;
+    currency: string;
+    date: Date;
+    userId: string;
+  }): Promise<Account> {
+    const { balance, currency: currencyOfAccount } = await this.account({
       id_userId: {
-        id: accountId,
-        userId
+        userId,
+        id: accountId
       }
     });
 
-    const data: Prisma.AccountUpdateInput = {
-      balance: account.balance + amount
-    };
-    const where: Prisma.AccountWhereUniqueInput = {
-      id_userId: {
-        id: accountId,
-        userId
-      }
-    };
+    const amountInCurrencyOfAccount =
+      await this.exchangeRateDataService.toCurrencyAtDate(
+        amount,
+        currency,
+        currencyOfAccount,
+        date
+      );
+
     return this.prismaService.account.update({
-      data,
-      where
+      data: {
+        balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber()
+      },
+      where: {
+        id_userId: {
+          userId,
+          id: accountId
+        }
+      }
     });
   }
 }
