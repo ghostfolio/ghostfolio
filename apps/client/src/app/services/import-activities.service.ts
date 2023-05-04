@@ -135,6 +135,7 @@ export class ImportActivitiesService {
       type,
       unitPrice,
       currency: SymbolProfile.currency,
+      dataSource: SymbolProfile.dataSource,
       date: date.toString(),
       symbol: SymbolProfile.symbol
     };
