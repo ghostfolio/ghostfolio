@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `class-transformer` from version `0.3.2` to `0.5.1`
 - Upgraded `class-validator` from version `0.13.1` to `0.14.0`
 
+### Fixed
+
+- Added the missing `dataSource` attribute to the activities import
+
 ## 1.265.0 - 2023-05-01
 
 ### Changed
