@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Introduced the option to update the cash balance of an account when adding a activity
+- Introduced the option to update the cash balance of an account when adding an activity
 
 ## 1.265.0 - 2023-05-01
 
