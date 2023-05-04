@@ -136,10 +136,10 @@ export class ImportActivitiesService {
       quantity,
       type,
       unitPrice,
+      updateAccountBalance,
       currency: SymbolProfile.currency,
       date: date.toString(),
-      symbol: SymbolProfile.symbol,
-      updateAccountBalance
+      symbol: SymbolProfile.symbol
     };
   }
 
