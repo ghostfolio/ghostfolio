@@ -185,7 +185,7 @@ export class AccountService {
     currency: string;
     date: Date;
     userId: string;
-  }): Promise<Account> {
+  }) {
     const { balance, currency: currencyOfAccount } = await this.account({
       id_userId: {
         userId,
@@ -201,16 +201,18 @@ export class AccountService {
         date
       );
 
-    return this.prismaService.account.update({
-      data: {
-        balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber()
-      },
-      where: {
-        id_userId: {
-          userId,
-          id: accountId
+    if (amountInCurrencyOfAccount) {
+      await this.prismaService.account.update({
+        data: {
+          balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber()
+        },
+        where: {
+          id_userId: {
+            userId,
+            id: accountId
+          }
         }
-      }
-    });
+      });
+    }
   }
 }
