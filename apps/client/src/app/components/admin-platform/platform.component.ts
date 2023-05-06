@@ -22,16 +22,17 @@ import { Subject, takeUntil } from 'rxjs';
 import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
 
 @Component({
-  selector: 'gf-platform-overview',
-  styleUrls: ['./platform.component.scss'],
-  templateUrl: './platform.component.html'
+  host: { class: 'page' },
+  selector: 'gf-admin-platform',
+  styleUrls: ['./admin-platform.component.scss'],
+  templateUrl: './admin-platform.component.html'
 })
 export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
   public deviceType: string;
-  public displayedColumns = ['name', 'url', 'actions'];
+  public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public hasPermissionToCreatePlatform: boolean;
   public hasPermissionToDeletePlatform: boolean;
   public platforms: PlatformModel[];
