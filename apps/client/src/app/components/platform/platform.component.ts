@@ -28,20 +28,18 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
-  public displayedColumns = ['id', 'name', 'url', 'actions'];
-
-  public platforms: PlatformModel[];
+  public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
   public deviceType: string;
+  public displayedColumns = ['id', 'name', 'url', 'actions'];
   public hasPermissionToCreatePlatform: boolean;
   public hasPermissionToDeletePlatform: boolean;
-
-  public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
+  public platforms: PlatformModel[];
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     private adminService: AdminService,
+    private changeDetectorRef: ChangeDetectorRef,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -92,17 +90,6 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     this.fetchPlatforms();
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
-  public onUpdatePlatform(aPlatform: PlatformModel) {
-    this.router.navigate([], {
-      queryParams: { platformId: aPlatform.id, editDialog: true }
-    });
-  }
-
   public deletePlatform(aId: string) {
     this.adminService
       .deletePlatform(aId)
@@ -119,6 +106,17 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
       });
   }
 
+  public onUpdatePlatform(aPlatform: PlatformModel) {
+    this.router.navigate([], {
+      queryParams: { platformId: aPlatform.id, editDialog: true }
+    });
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   private fetchPlatforms() {
     this.adminService
       .fetchPlatforms()
@@ -128,6 +126,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource(platforms);
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = get;
+
         this.changeDetectorRef.markForCheck();
       });
   }

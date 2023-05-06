@@ -13,8 +13,8 @@ import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/sy
   declarations: [AdminPlatformComponent],
   imports: [
     CommonModule,
-    GfSymbolIconModule,
     GfCreateOrUpdatePlatformDialogModule,
+    GfSymbolIconModule,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,
