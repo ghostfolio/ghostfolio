@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Added a fallback to use `quoteSummary(symbol)` if `quote(symbols)` fails in the _Yahoo Finance_ service
 - Added the missing `dataSource` attribute to the activities import
 
 ## 1.265.0 - 2023-05-01
