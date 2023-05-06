@@ -1,13 +1,14 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { AdminPlatformComponent } from './platform.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platform-dialog/create-or-update-platform-dialog.module';
-import { MatMenuModule } from '@angular/material/menu';
+import { RouterModule } from '@angular/router';
 import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
+
+import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platform-dialog/create-or-update-platform-dialog.module';
+import { AdminPlatformComponent } from './platform.component';
 
 @NgModule({
   declarations: [AdminPlatformComponent],

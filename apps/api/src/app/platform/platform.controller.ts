@@ -1,3 +1,5 @@
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -10,14 +12,13 @@ import {
   Put,
   UseGuards
 } from '@nestjs/common';
-import { PlatformService } from './platform.service';
+import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Platform } from '@prisma/client';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
 import { CreatePlatformDto } from './create-platform.dto';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { RequestWithUser } from '@ghostfolio/common/types';
-import { REQUEST } from '@nestjs/core';
-import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { PlatformService } from './platform.service';
 import { UpdatePlatformDto } from './update-platform.dto';
 
 @Controller('platform')
