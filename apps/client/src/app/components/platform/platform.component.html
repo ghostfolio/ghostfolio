@@ -5,27 +5,10 @@
         class="gf-table w-100"
         mat-table
         matSort
-        matSortActive="id"
+        matSortActive="name"
         matSortDirection="asc"
         [dataSource]="dataSource"
       >
-        <ng-container matColumnDef="id">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="id"
-          >
-            <ng-container i18n>Id</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            <span class="d-none d-sm-inline-block">{{ element.id }}</span>
-            <span class="d-inline-block d-sm-none">{{
-              (element.id | slice : 0 : 5) + '...'
-            }}</span>
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="name">
           <th
             *matHeaderCellDef
@@ -81,7 +64,7 @@
                 <ion-icon class="mr-2" name="create-outline"></ion-icon>
                 <span i18n>Edit</span>
               </button>
-              <button mat-menu-item (click)="deletePlatform(element.id)">
+              <button mat-menu-item (click)="onDeletePlatform(element.id)">
                 <ion-icon class="mr-2" name="trash-outline"></ion-icon>
                 <span i18n>Delete</span>
               </button>

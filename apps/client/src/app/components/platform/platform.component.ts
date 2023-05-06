@@ -30,7 +30,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
 
   public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
   public deviceType: string;
-  public displayedColumns = ['id', 'name', 'url', 'actions'];
+  public displayedColumns = ['name', 'url', 'actions'];
   public hasPermissionToCreatePlatform: boolean;
   public hasPermissionToDeletePlatform: boolean;
   public platforms: PlatformModel[];
@@ -90,7 +90,28 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     this.fetchPlatforms();
   }
 
-  public deletePlatform(aId: string) {
+  public onDeletePlatform(aId: string) {
+    const confirmation = confirm(
+      $localize`Do you really want to delete this platform?`
+    );
+
+    if (confirmation) {
+      this.deletePlatform(aId);
+    }
+  }
+
+  public onUpdatePlatform(aPlatform: PlatformModel) {
+    this.router.navigate([], {
+      queryParams: { platformId: aPlatform.id, editDialog: true }
+    });
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private deletePlatform(aId: string) {
     this.adminService
       .deletePlatform(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -104,17 +125,6 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
           this.fetchPlatforms();
         }
       });
-  }
-
-  public onUpdatePlatform(aPlatform: PlatformModel) {
-    this.router.navigate([], {
-      queryParams: { platformId: aPlatform.id, editDialog: true }
-    });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private fetchPlatforms() {
