@@ -59,7 +59,8 @@ export class ImportActivitiesService {
         quantity: this.parseQuantity({ content, index, item }),
         symbol: this.parseSymbol({ content, index, item }),
         type: this.parseType({ content, index, item }),
-        unitPrice: this.parseUnitPrice({ content, index, item })
+        unitPrice: this.parseUnitPrice({ content, index, item }),
+        updateAccountBalance: false
       });
     }
 
@@ -126,7 +127,8 @@ export class ImportActivitiesService {
     quantity,
     SymbolProfile,
     type,
-    unitPrice
+    unitPrice,
+    updateAccountBalance
   }: Activity): CreateOrderDto {
     return {
       accountId,
@@ -134,6 +136,7 @@ export class ImportActivitiesService {
       quantity,
       type,
       unitPrice,
+      updateAccountBalance,
       currency: SymbolProfile.currency,
       date: date.toString(),
       symbol: SymbolProfile.symbol

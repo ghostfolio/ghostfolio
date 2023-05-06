@@ -9,7 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Introduced the option to update the cash balance of an account when adding an activity
 - Added support for the management of platforms in the admin control panel
+
+### Changed
+
+- Upgraded `class-transformer` from version `0.3.2` to `0.5.1`
+- Upgraded `class-validator` from version `0.13.1` to `0.14.0`
+- Upgraded `prisma` from version `4.12.0` to `4.13.0`
 
 ## 1.265.0 - 2023-05-01
 
