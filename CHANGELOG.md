@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced the option to update the cash balance of an account when adding an activity
+
 ### Changed
 
 - Upgraded `class-transformer` from version `0.3.2` to `0.5.1`
