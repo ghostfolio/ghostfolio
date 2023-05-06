@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <table
+        class="gf-table w-100"
+        mat-table
+        matSort
+        matSortActive="name"
+        matSortDirection="asc"
+        [dataSource]="dataSource"
+      >
+        <ng-container matColumnDef="name">
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="name"
+          >
+            <ng-container i18n>Name</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            <gf-symbol-icon
+              *ngIf="element.url"
+              class="d-inline mr-1"
+              [tooltip]="element.name"
+              [url]="element.url"
+            ></gf-symbol-icon>
+            <span>{{ element.name }}</span>
+          </td></ng-container
+        >
+
+        <ng-container matColumnDef="url">
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="url"
+          >
+            <ng-container i18n>Url</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            {{ element.url }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th
+            *matHeaderCellDef
+            class="px-1 text-center"
+            i18n
+            mat-header-cell
+          ></th>
+          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+            <button
+              class="mx-1 no-min-width px-2"
+              mat-button
+              [matMenuTriggerFor]="platformMenu"
+              (click)="$event.stopPropagation()"
+            >
+              <ion-icon name="ellipsis-vertical"></ion-icon>
+            </button>
+            <mat-menu #platformMenu="matMenu" xPosition="before">
+              <button mat-menu-item (click)="onUpdatePlatform(element)">
+                <ion-icon class="mr-2" name="create-outline"></ion-icon>
+                <span i18n>Edit</span>
+              </button>
+              <button mat-menu-item (click)="onDeletePlatform(element.id)">
+                <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                <span i18n>Delete</span>
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+    </div>
+  </div>
+
+  <div *ngIf="hasPermissionToCreatePlatform" class="fab-container">
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [queryParams]="{ createDialog: true }"
+      [routerLink]="[]"
+    >
+      <ion-icon name="add-outline" size="large"></ion-icon>
+    </a>
+  </div>
+</div>

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Introduced the option to update the cash balance of an account when adding an activity
+- Added support for the management of platforms in the admin control panel
 
 ### Changed
 

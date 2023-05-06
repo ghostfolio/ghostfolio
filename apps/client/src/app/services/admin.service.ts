@@ -2,6 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -10,7 +12,7 @@ import {
   EnhancedSymbolProfile,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
@@ -35,6 +37,10 @@ export class AdminService {
     return this.http.delete<void>('/api/v1/admin/queue/job', {
       params
     });
+  }
+
+  public deletePlatform(aId: string) {
+    return this.http.delete<void>(`/api/v1/platform/${aId}`);
   }
 
   public deleteProfileData({ dataSource, symbol }: UniqueAsset) {
@@ -72,6 +78,10 @@ export class AdminService {
     return this.http.get<AdminJobs>('/api/v1/admin/queue/job', {
       params
     });
+  }
+
+  public fetchPlatforms() {
+    return this.http.get<Platform[]>('/api/v1/platform');
   }
 
   public gather7Days() {
@@ -138,6 +148,10 @@ export class AdminService {
     );
   }
 
+  public postPlatform(aPlatform: CreatePlatformDto) {
+    return this.http.post<Platform>(`/api/v1/platform`, aPlatform);
+  }
+
   public putMarketData({
     dataSource,
     date,
@@ -155,5 +169,12 @@ export class AdminService {
     )}`;
 
     return this.http.put<MarketData>(url, marketData);
+  }
+
+  public putPlatform(aPlatform: UpdatePlatformDto) {
+    return this.http.put<Platform>(
+      `/api/v1/platform/${aPlatform.id}`,
+      aPlatform
+    );
   }
 }

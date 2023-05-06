@@ -5,6 +5,7 @@ import { GfAdminJobsModule } from '@ghostfolio/client/components/admin-jobs/admi
 import { GfAdminMarketDataModule } from '@ghostfolio/client/components/admin-market-data/admin-market-data.module';
 import { GfAdminOverviewModule } from '@ghostfolio/client/components/admin-overview/admin-overview.module';
 import { GfAdminUsersModule } from '@ghostfolio/client/components/admin-users/admin-users.module';
+import { GfAdminPlatformModule } from '@ghostfolio/client/components/platform/platform.module';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 
 import { AdminPageRoutingModule } from './admin-page-routing.module';
@@ -19,6 +20,7 @@ import { AdminPageComponent } from './admin-page.component';
     GfAdminJobsModule,
     GfAdminMarketDataModule,
     GfAdminOverviewModule,
+    GfAdminPlatformModule,
     GfAdminUsersModule,
     MatTabsModule
   ],

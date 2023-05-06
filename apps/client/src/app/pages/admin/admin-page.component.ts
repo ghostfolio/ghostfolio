@@ -32,6 +32,11 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       },
       { iconName: 'people-outline', label: $localize`Users`, path: 'users' },
       {
+        iconName: 'briefcase-outline',
+        label: $localize`Platforms`,
+        path: 'platforms'
+      },
+      {
         iconName: 'server-outline',
         label: $localize`Market Data`,
         path: 'market-data'
