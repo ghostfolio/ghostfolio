@@ -85,11 +85,21 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <mat-checkbox
+          *ngIf="!element.isDuplicate"
           class="mt-2"
           color="primary"
           [checked]="selectedRows.isSelected(element)"
           (change)="$event ? selectedRows.toggle(element) : null"
           (click)="$event.stopPropagation()"
+        ></mat-checkbox>
+        <mat-checkbox
+          *ngIf="element.isDuplicate"
+          class="mt-2"
+          color="primary"
+          [checked]="false"
+          [disabled]="true"
+          (change)="(null)"
+          (click)="(null)"
         ></mat-checkbox>
       </td>
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>

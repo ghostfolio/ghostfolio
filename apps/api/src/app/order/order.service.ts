@@ -310,7 +310,8 @@ export class OrderService {
             value,
             order.SymbolProfile.currency,
             userCurrency
-          )
+          ),
+          isDuplicate: false
         };
       });
   }

@@ -8,4 +8,5 @@ export interface Activity extends OrderWithAccount {
   feeInBaseCurrency: number;
   value: number;
   valueInBaseCurrency: number;
+  isDuplicate: boolean;
 }
