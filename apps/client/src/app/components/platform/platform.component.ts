@@ -5,20 +5,21 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
-import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
-import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { get } from 'lodash';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Platform, Platform as PlatformModel } from '@prisma/client';
-import { Subject, takeUntil } from 'rxjs';
-import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
-import { MatDialog } from '@angular/material/dialog';
+import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { Subject, takeUntil } from 'rxjs';
+
+import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
 
 @Component({
   selector: 'gf-platform-overview',
