@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `class-validator` from version `0.13.1` to `0.14.0`
 - Upgraded `prisma` from version `4.12.0` to `4.13.0`
 
+### Fixed
+
+- Added the missing `dataSource` attribute to the activities import
+
 ## 1.265.0 - 2023-05-01
 
 ### Changed

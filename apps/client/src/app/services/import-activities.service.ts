@@ -138,6 +138,7 @@ export class ImportActivitiesService {
       unitPrice,
       updateAccountBalance,
       currency: SymbolProfile.currency,
+      dataSource: SymbolProfile.dataSource,
       date: date.toString(),
       symbol: SymbolProfile.symbol
     };
