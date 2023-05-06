@@ -6,15 +6,53 @@ import { Platform, Prisma } from '@prisma/client';
 export class PlatformService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async getPlatforms(): Promise<Platform[]> {
-    return this.prismaService.platform.findMany();
-  }
-
   public async getPlatform(
     platformWhereUniqueInput: Prisma.PlatformWhereUniqueInput
   ): Promise<Platform> {
     return this.prismaService.platform.findUnique({
       where: platformWhereUniqueInput
+    });
+  }
+
+  public async getPlatforms({
+    cursor,
+    orderBy,
+    skip,
+    take,
+    where
+  }: {
+    cursor?: Prisma.PlatformWhereUniqueInput;
+    orderBy?: Prisma.PlatformOrderByWithRelationInput;
+    skip?: number;
+    take?: number;
+    where?: Prisma.PlatformWhereInput;
+  } = {}) {
+    return this.prismaService.platform.findMany({
+      cursor,
+      orderBy,
+      skip,
+      take,
+      where
+    });
+  }
+
+  public async getPlatformsWithAccountCount() {
+    const platformsWithAccountCount =
+      await this.prismaService.platform.findMany({
+        include: {
+          _count: {
+            select: { Account: true }
+          }
+        }
+      });
+
+    return platformsWithAccountCount.map(({ _count, id, name, url }) => {
+      return {
+        id,
+        name,
+        url,
+        accountCount: _count.Account
+      };
     });
   }
 

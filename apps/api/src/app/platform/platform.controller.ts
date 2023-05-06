@@ -30,8 +30,8 @@ export class PlatformController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
-  public async getPlatforms(): Promise<Platform[]> {
-    return this.platformService.getPlatforms();
+  public async getPlatforms() {
+    return this.platformService.getPlatformsWithAccountCount();
   }
 
   @Post()
