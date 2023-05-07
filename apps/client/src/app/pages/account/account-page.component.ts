@@ -189,9 +189,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
       .pipe(
         switchMap(({ sessionId }: { sessionId: string }) => {
-          return this.stripeService.redirectToCheckout({
-            sessionId
-          });
+          return this.stripeService.redirectToCheckout({ sessionId });
+        }),
+        catchError((error) => {
+          alert(error.message);
+          throw error;
         })
       )
       .subscribe((result) => {
