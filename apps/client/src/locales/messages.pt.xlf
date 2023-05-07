@@ -141,12 +141,12 @@
           <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
+          <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
@@ -253,8 +253,8 @@
           <context context-type="linenumber">224</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
@@ -273,8 +273,8 @@
           <context context-type="linenumber">163</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
@@ -449,7 +449,7 @@
           <context context-type="linenumber">173</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
         <context-group purpose="location">
@@ -485,7 +485,7 @@
           <context context-type="linenumber">180</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
@@ -796,6 +796,10 @@
       <trans-unit id="4fe84c1d0eef5726c017f64c691145db7a61f879" datatype="html">
         <source>Accounts</source>
         <target state="new">Accounts</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">20</context>
@@ -3261,20 +3265,12 @@
           <context context-type="linenumber">254,256</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="0a1599a93629a8861a77d932cdd3bb518b38da3d" datatype="html">
+      <trans-unit id="280c5b1f5b5b748fbbb37bf7a12c37f41539c1ff" datatype="html">
         <source> Are you an ambitious investor who needs the full picture? </source>
         <target state="new"> Are you an ambitious investor who needs the full picture? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">9,11</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9acb9343578075b93d3276a60f2a0bc8f89cccd2" datatype="html">
-        <source> By upgrading to Ghostfolio Premium, you will get these additional features: </source>
-        <target state="new"> By upgrading to Ghostfolio Premium, you will get these additional features: </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">12,14</context>
+          <context context-type="linenumber">15,17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cb10143b41a58e68b0e5e8de3ab8aeb570fdaf88" datatype="html">
@@ -3282,7 +3278,7 @@
         <target state="new">Portfolio Summary</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
@@ -3298,7 +3294,7 @@
         <target state="new">Performance Benchmarks</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
@@ -3314,7 +3310,7 @@
         <target state="new">FIRE Calculator</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
@@ -3330,7 +3326,7 @@
         <target state="new">and more Features...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
@@ -3346,7 +3342,7 @@
         <target state="new">Skip</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6dcab4069ec74eb21b38bd9f9678dc957c99618c" datatype="html">
@@ -3354,7 +3350,7 @@
         <target state="new">Upgrade Plan</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
@@ -3502,7 +3498,7 @@
         <target state="new">Portfolio Allocations</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
@@ -3622,7 +3618,7 @@
         <target state="new">Professional Data Provider</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">41</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
@@ -3705,7 +3701,7 @@
         <source>Update platform</source>
         <target state="new">Update platform</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
@@ -3713,7 +3709,7 @@
         <source>Add platform</source>
         <target state="new">Add platform</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
@@ -3721,20 +3717,20 @@
         <source>Url</source>
         <target state="new">Url</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/create-or-update-platform-dialog/create-or-update-platform-dialog.html</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7214871309640504920" datatype="html">
         <source>Do you really want to delete this platform?</source>
         <target state="new">Do you really want to delete this platform?</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/platform/platform.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="sourcefile">apps/client/src/app/components/admin-platform/platform.component.ts</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7966917302907632321" datatype="html">
@@ -3763,6 +3759,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="dff74da4ffb45a2fd54f31f9db9da66f7012a702" datatype="html">
+        <source> Upgrade to Ghostfolio Premium today and gain access to exclusive features to enhance your investment experience: </source>
+        <target state="new"> Upgrade to Ghostfolio Premium today and gain access to exclusive features to enhance your investment experience: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
+          <context context-type="linenumber">18,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8b17e00983a474a52d16bd139e180303703f01ff" datatype="html">
+        <source> Get the tools to effectively manage your finances and refine your personal investment strategy. </source>
+        <target state="new"> Get the tools to effectively manage your finances and refine your personal investment strategy. </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
+          <context context-type="linenumber">48,51</context>
         </context-group>
       </trans-unit>
     </body>
