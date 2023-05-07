@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the management of platforms in the admin control panel
+- Improved the style of the interstitial for the subscription
 - Improved the language localization for German (`de`)
 
 ## 1.266.0 - 2023-05-06
