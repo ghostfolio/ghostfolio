@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for the _Stripe_ checkout to the pricing page
+
 ### Changed
 
 - Improved the management of platforms in the admin control panel
