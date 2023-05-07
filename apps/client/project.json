@@ -195,7 +195,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/client/jest.config.ts",
         "passWithNoTests": true
