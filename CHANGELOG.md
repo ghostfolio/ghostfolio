@@ -7,15 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `depends_on` and `healthcheck` for the _Postgres_ and _Redis_ services to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
+
+## Unreleased
+
 ### Changed
 
 - Improved the management of platforms in the admin control panel
 - Improved the style of the interstitial for the subscription
 - Improved the language localization for German (`de`)
-
-### Fixed
-
-- Fixed an issue while starting services by adding `depends_on` and `healthcheck` for _Postgres_ and _Redis_ services to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
 
 ## 1.266.0 - 2023-05-06
 
