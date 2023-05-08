@@ -300,6 +300,7 @@ export class OrderService {
 
         return {
           ...order,
+          isDuplicate: false,
           value,
           feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
             order.fee,
@@ -310,8 +311,7 @@ export class OrderService {
             value,
             order.SymbolProfile.currency,
             userCurrency
-          ),
-          isDuplicate: false
+          )
         };
       });
   }

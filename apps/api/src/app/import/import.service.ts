@@ -334,6 +334,7 @@ export class ImportService {
         )
       });
     }
+
     return activities;
   }
 
