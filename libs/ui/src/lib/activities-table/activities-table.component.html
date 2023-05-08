@@ -76,7 +76,6 @@
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef class="px-1" mat-header-cell>
         <mat-checkbox
-          class="mt-2"
           color="primary"
           [checked]="selectedRows.hasValue() && areAllRowsSelected()"
           [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
@@ -85,7 +84,6 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <mat-checkbox
-          class="mt-2"
           color="primary"
           [checked]="
             element.isDuplicate ? false : selectedRows.isSelected(element)

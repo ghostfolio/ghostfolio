@@ -65,7 +65,3 @@ export class CreateOrderDto {
   @IsNumber()
   unitPrice: number;
 }
-
-export class OrderResponseDto extends CreateOrderDto {
-  isDuplicate: boolean;
-}

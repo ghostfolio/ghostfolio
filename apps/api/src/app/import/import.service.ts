@@ -1,9 +1,6 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
-import {
-  CreateOrderDto,
-  OrderResponseDto
-} from '@ghostfolio/api/app/order/create-order.dto';
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
@@ -208,14 +205,14 @@ export class ImportService {
       userId
     });
 
-    const activitiesDtoWithDuplication = await this.markActivitiesAsDuplicates({
+    const activitiesMarkedAsDuplicates = await this.markActivitiesAsDuplicates({
       activitiesDto,
       userId
     });
 
     const accounts = (await this.accountService.getAccounts(userId)).map(
-      (account) => {
-        return { id: account.id, name: account.name };
+      ({ id, name }) => {
+        return { id, name };
       }
     );
 
@@ -230,17 +227,14 @@ export class ImportService {
     for (const {
       accountId,
       comment,
-      currency,
-      dataSource,
-      date: dateString,
+      date,
       fee,
       isDuplicate,
       quantity,
-      symbol,
+      SymbolProfile: assetProfile,
       type,
       unitPrice
-    } of activitiesDtoWithDuplication) {
-      const date = parseISO(<string>(<unknown>dateString));
+    } of activitiesMarkedAsDuplicates) {
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -266,23 +260,23 @@ export class ImportService {
           id: uuidv4(),
           isDraft: isAfter(date, endOfToday()),
           SymbolProfile: {
-            currency,
-            dataSource,
-            symbol,
-            assetClass: null,
-            assetSubClass: null,
-            comment: null,
-            countries: null,
-            createdAt: undefined,
-            id: undefined,
-            isin: null,
-            name: null,
-            scraperConfiguration: null,
-            sectors: null,
-            symbolMapping: null,
-            updatedAt: undefined,
-            url: null,
-            ...assetProfiles[symbol]
+            assetClass: assetProfile.assetClass,
+            assetSubClass: assetProfile.assetSubClass,
+            comment: assetProfile.comment,
+            countries: assetProfile.countries,
+            createdAt: assetProfile.createdAt,
+            currency: assetProfile.currency,
+            dataSource: assetProfile.dataSource,
+            id: assetProfile.id,
+            isin: assetProfile.isin,
+            name: assetProfile.name,
+            scraperConfiguration: assetProfile.scraperConfiguration,
+            sectors: assetProfile.sectors,
+            symbol: assetProfile.currency,
+            symbolMapping: assetProfile.symbolMapping,
+            updatedAt: assetProfile.updatedAt,
+            url: assetProfile.url,
+            ...assetProfiles[assetProfile.symbol]
           },
           Account: validatedAccount,
           symbolProfileId: undefined,
@@ -305,14 +299,14 @@ export class ImportService {
           SymbolProfile: {
             connectOrCreate: {
               create: {
-                currency,
-                dataSource,
-                symbol
+                currency: assetProfile.currency,
+                dataSource: assetProfile.dataSource,
+                symbol: assetProfile.symbol
               },
               where: {
                 dataSource_symbol: {
-                  dataSource,
-                  symbol
+                  dataSource: assetProfile.dataSource,
+                  symbol: assetProfile.symbol
                 }
               }
             }
@@ -330,73 +324,17 @@ export class ImportService {
         value,
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee,
-          currency,
+          assetProfile.currency,
           userCurrency
         ),
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
-          currency,
+          assetProfile.currency,
           userCurrency
         )
       });
     }
     return activities;
-  }
-
-  private async markActivitiesAsDuplicates({
-    activitiesDto,
-    userId
-  }: {
-    activitiesDto: Partial<CreateOrderDto>[];
-    userId: string;
-  }): Promise<Partial<OrderResponseDto>[]> {
-    const existingActivities = await this.orderService.orders({
-      include: { SymbolProfile: true },
-      orderBy: { date: 'desc' },
-      where: { userId }
-    });
-
-    const activitiesDtoWithDuplication: Partial<OrderResponseDto>[] = [];
-
-    for (const activitiesDtoEntry of activitiesDto) {
-      const {
-        currency,
-        dataSource,
-        date,
-        fee,
-        quantity,
-        symbol,
-        type,
-        unitPrice
-      } = activitiesDtoEntry;
-
-      const isDuplicate = existingActivities.find((activity) => {
-        return (
-          activity.SymbolProfile.currency === currency &&
-          activity.SymbolProfile.dataSource === dataSource &&
-          isSameDay(activity.date, parseISO(<string>(<unknown>date))) &&
-          activity.fee === fee &&
-          activity.quantity === quantity &&
-          activity.SymbolProfile.symbol === symbol &&
-          activity.type === type &&
-          activity.unitPrice === unitPrice
-        );
-      });
-
-      if (isDuplicate) {
-        activitiesDtoWithDuplication.push({
-          ...activitiesDtoEntry,
-          isDuplicate: true
-        });
-      } else {
-        activitiesDtoWithDuplication.push({
-          ...activitiesDtoEntry,
-          isDuplicate: false
-        });
-      }
-    }
-
-    return activitiesDtoWithDuplication;
   }
 
   private isUniqueAccount(accounts: AccountWithPlatform[]) {
@@ -407,6 +345,78 @@ export class ImportService {
     }
 
     return uniqueAccountIds.size === 1;
+  }
+
+  private async markActivitiesAsDuplicates({
+    activitiesDto,
+    userId
+  }: {
+    activitiesDto: Partial<CreateOrderDto>[];
+    userId: string;
+  }): Promise<Partial<Activity>[]> {
+    const existingActivities = await this.orderService.orders({
+      include: { SymbolProfile: true },
+      orderBy: { date: 'desc' },
+      where: { userId }
+    });
+
+    return activitiesDto.map(
+      ({
+        accountId,
+        comment,
+        currency,
+        dataSource,
+        date: dateString,
+        fee,
+        quantity,
+        symbol,
+        type,
+        unitPrice
+      }) => {
+        const date = parseISO(<string>(<unknown>dateString));
+        const isDuplicate = existingActivities.some((activity) => {
+          return (
+            activity.SymbolProfile.currency === currency &&
+            activity.SymbolProfile.dataSource === dataSource &&
+            isSameDay(activity.date, date) &&
+            activity.fee === fee &&
+            activity.quantity === quantity &&
+            activity.SymbolProfile.symbol === symbol &&
+            activity.type === type &&
+            activity.unitPrice === unitPrice
+          );
+        });
+
+        return {
+          accountId,
+          comment,
+          date,
+          fee,
+          isDuplicate,
+          quantity,
+          type,
+          unitPrice,
+          SymbolProfile: {
+            currency,
+            dataSource,
+            symbol,
+            assetClass: null,
+            assetSubClass: null,
+            comment: null,
+            countries: null,
+            createdAt: undefined,
+            id: undefined,
+            isin: null,
+            name: null,
+            scraperConfiguration: null,
+            sectors: null,
+            symbolMapping: null,
+            updatedAt: undefined,
+            url: null
+          }
+        };
+      }
+    );
   }
 
   private async validateActivities({
