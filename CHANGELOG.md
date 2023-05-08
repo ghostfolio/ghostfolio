@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for the _Stripe_ checkout to the pricing page
 
+### Added
+
+- Added `depends_on` and `healthcheck` for the _Postgres_ and _Redis_ services to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
+
+## Unreleased
+
 ### Changed
 
 - Improved the management of platforms in the admin control panel
