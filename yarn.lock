@@ -5471,7 +5471,7 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
-"@types/tough-cookie@*":
+"@types/tough-cookie@*", "@types/tough-cookie@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.2.tgz#6286b4c7228d58ab7866d19716f3696e03a09397"
   integrity sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==
@@ -18427,14 +18427,16 @@ y18n@^5.0.5:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
-yahoo-finance2@2.3.10:
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.3.10.tgz#39f0eb1c0e85bffa9514bf0ab8e1ca7f39889927"
-  integrity sha512-ZLzKdW5gy0nSXXn6S8yY9qQMrSWOl2qzPORbZaF4PQqlk7K9n3bF5FZnsqA+K559qUW/BfJtF3EMJWbKD6q7lA==
+yahoo-finance2@2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.4.1.tgz#2ccd422e33228fc34d42e919b0d2fdd8d3f76bbf"
+  integrity sha512-jl5oHr25RC24nOmoIiDqjnc/Iiy3MZAB+dIPCyUR+o5uz72xHfTZDM9tPeheggmlAGV+KftPP6smZ6L6lNgkSQ==
   dependencies:
+    "@types/tough-cookie" "^4.0.2"
     ajv "8.10.0"
     ajv-formats "2.1.1"
     node-fetch "^2.6.1"
+    tough-cookie "^4.1.2"
 
 yallist@^3.0.2:
   version "3.1.1"
