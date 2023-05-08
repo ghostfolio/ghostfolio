@@ -139,7 +139,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       unitPriceInCustomCurrency: [
         this.data.activity?.unitPrice,
         Validators.required
-      ]
+      ],
+      updateAccountBalance: [false]
     });
 
     this.activityForm.valueChanges
@@ -297,6 +298,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+          this.activityForm.controls['updateAccountBalance'].disable();
+          this.activityForm.controls['updateAccountBalance'].setValue(false);
         } else {
           this.activityForm.controls['accountId'].setValidators(
             Validators.required
@@ -314,6 +317,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+          this.activityForm.controls['updateAccountBalance'].enable();
         }
 
         this.changeDetectorRef.markForCheck();
@@ -411,7 +415,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           : this.activityForm.controls['searchSymbol'].value.symbol,
       tags: this.activityForm.controls['tags'].value,
       type: this.activityForm.controls['type'].value,
-      unitPrice: this.activityForm.controls['unitPrice'].value
+      unitPrice: this.activityForm.controls['unitPrice'].value,
+      updateAccountBalance:
+        this.activityForm.controls['updateAccountBalance'].value
     };
 
     if (this.data.activity.id) {

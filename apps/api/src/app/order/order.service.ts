@@ -73,6 +73,7 @@ export class OrderService {
       dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
+      updateAccountBalance?: boolean;
       userId: string;
     }
   ): Promise<Order> {
@@ -89,12 +90,16 @@ export class OrderService {
       };
     }
 
+    const accountId = data.accountId;
+    let currency = data.currency;
     const tags = data.tags ?? [];
+    const updateAccountBalance = data.updateAccountBalance ?? false;
+    const userId = data.userId;
 
     if (data.type === 'ITEM') {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
-      const currency = data.SymbolProfile.connectOrCreate.create.currency;
+      currency = data.SymbolProfile.connectOrCreate.create.currency;
       const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
@@ -149,11 +154,12 @@ export class OrderService {
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;
+    delete data.updateAccountBalance;
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    return this.prismaService.order.create({
+    const order = await this.prismaService.order.create({
       data: {
         ...orderData,
         Account,
@@ -165,6 +171,27 @@ export class OrderService {
         }
       }
     });
+
+    if (updateAccountBalance === true) {
+      let amount = new Big(data.unitPrice)
+        .mul(data.quantity)
+        .plus(data.fee)
+        .toNumber();
+
+      if (data.type === 'BUY') {
+        amount = new Big(amount).mul(-1).toNumber();
+      }
+
+      await this.accountService.updateAccountBalance({
+        accountId,
+        amount,
+        currency,
+        userId,
+        date: data.date as Date
+      });
+    }
+
+    return order;
   }
 
   public async deleteOrder(

@@ -172,4 +172,47 @@ export class AccountService {
       where
     });
   }
+
+  public async updateAccountBalance({
+    accountId,
+    amount,
+    currency,
+    date,
+    userId
+  }: {
+    accountId: string;
+    amount: number;
+    currency: string;
+    date: Date;
+    userId: string;
+  }) {
+    const { balance, currency: currencyOfAccount } = await this.account({
+      id_userId: {
+        userId,
+        id: accountId
+      }
+    });
+
+    const amountInCurrencyOfAccount =
+      await this.exchangeRateDataService.toCurrencyAtDate(
+        amount,
+        currency,
+        currencyOfAccount,
+        date
+      );
+
+    if (amountInCurrencyOfAccount) {
+      await this.prismaService.account.update({
+        data: {
+          balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber()
+        },
+        where: {
+          id_userId: {
+            userId,
+            id: accountId
+          }
+        }
+      });
+    }
+  }
 }

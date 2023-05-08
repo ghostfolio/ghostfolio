@@ -3,10 +3,10 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { PlatformService } from '@ghostfolio/api/services/platform/platform.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { parseDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -131,7 +131,7 @@ export class ImportService {
             }
           }
         }),
-        this.platformService.get()
+        this.platformService.getPlatforms()
       ]);
 
       for (const account of accountsDto) {
@@ -311,6 +311,7 @@ export class ImportService {
               }
             }
           },
+          updateAccountBalance: false,
           User: { connect: { id: userId } }
         });
       }

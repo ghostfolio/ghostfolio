@@ -3,6 +3,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -24,6 +25,7 @@ import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog
     GfValueModule,
     MatAutocompleteModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,

@@ -336,7 +336,7 @@
                 *ngIf="user?.subscription?.type === 'Basic'"
                 class="mt-3 text-center"
               >
-                <a color="primary" mat-flat-button [routerLink]="['/account']">
+                <button color="primary" mat-flat-button (click)="onCheckout()">
                   <ng-container
                     *ngIf="user.subscription.offer === 'default'"
                     i18n
@@ -347,7 +347,7 @@
                     i18n
                     >Renew Plan</ng-container
                   >
-                </a>
+                </button>
                 <p class="m-0 text-muted">
                   <small i18n>One-time payment, no auto-renewal.</small>
                 </p>

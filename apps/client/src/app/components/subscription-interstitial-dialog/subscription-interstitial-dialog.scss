@@ -5,7 +5,21 @@
     max-height: unset;
 
     ion-icon[name='checkmark-circle-outline'] {
-      color: rgba(var(--palette-accent-500), 1);
+      color: rgba(var(--palette-primary-500), 1);
+    }
+
+    .intro-container {
+      .intro-inner-container {
+        aspect-ratio: 16 / 9;
+        max-height: 18rem;
+
+        .intro {
+          background-image: url('/assets/intro.jpg');
+          background-position: top left;
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import {
   DATA_GATHERING_QUEUE,
   GATHER_ASSET_PROFILE_PROCESS,
@@ -7,7 +8,6 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';

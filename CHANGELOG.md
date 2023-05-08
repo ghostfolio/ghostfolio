@@ -5,13 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.267.0 - 2023-05-07
+
+### Added
+
+- Added support for the _Stripe_ checkout to the pricing page
+
+### Added
+
+- Added `depends_on` and `healthcheck` for the _Postgres_ and _Redis_ services to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
+
 ## Unreleased
+
+### Changed
+
+- Improved the management of platforms in the admin control panel
+- Improved the style of the interstitial for the subscription
+- Improved the language localization for German (`de`)
+- Upgraded `Nx` from version `15.9.2` to `16.0.3`
+
+## 1.266.0 - 2023-05-06
+
+### Added
+
+- Introduced the option to update the cash balance of an account when adding an activity
+- Added support for the management of platforms in the admin control panel
+- Added _DEV Community_ to the _As seen in_ section on the landing page
 
 ### Changed
 
 - Upgraded `class-transformer` from version `0.3.2` to `0.5.1`
 - Upgraded `class-validator` from version `0.13.1` to `0.14.0`
 - Upgraded `prisma` from version `4.12.0` to `4.13.0`
+
+### Fixed
+
+- Added a fallback to use `quoteSummary(symbol)` if `quote(symbols)` fails in the _Yahoo Finance_ service
+- Added the missing `dataSource` attribute to the activities import
 
 ## 1.265.0 - 2023-05-01
 
