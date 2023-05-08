@@ -6,6 +6,7 @@ export interface Activities {
 
 export interface Activity extends OrderWithAccount {
   feeInBaseCurrency: number;
+  isDuplicate: boolean;
   updateAccountBalance?: boolean;
   value: number;
   valueInBaseCurrency: number;

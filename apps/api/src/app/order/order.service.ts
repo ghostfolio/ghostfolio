@@ -333,6 +333,7 @@ export class OrderService {
             order.SymbolProfile.currency,
             userCurrency
           ),
+          isDuplicate: false,
           valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
             value,
             order.SymbolProfile.currency,

@@ -177,7 +177,9 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
 
   public onClickActivity(activity: Activity) {
     if (this.showCheckbox) {
-      this.selectedRows.toggle(activity);
+      if (!activity.isDuplicate) {
+        this.selectedRows.toggle(activity);
+      }
     } else if (
       this.hasPermissionToOpenDetails &&
       !activity.isDraft &&
