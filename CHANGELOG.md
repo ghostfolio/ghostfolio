@@ -7,21 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `depends_on` and `healthcheck` for the _Postgres_ and _Redis_ services to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
+
 ### Changed
 
 - Improved the preview step of the activities import by unchecking duplicates
+- Upgraded `yahoo-finance2` from version `2.3.10` to `2.4.1`
 
 ## 1.267.0 - 2023-05-07
 
 ### Added
 
 - Added support for the _Stripe_ checkout to the pricing page
-
-### Added
-
-- Added `depends_on` and `healthcheck` for the _Postgres_ and _Redis_ services to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
-
-## Unreleased
 
 ### Changed
 
