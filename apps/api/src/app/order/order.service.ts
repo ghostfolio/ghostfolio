@@ -327,13 +327,13 @@ export class OrderService {
 
         return {
           ...order,
-          isDuplicate: false,
           value,
           feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
             order.fee,
             order.SymbolProfile.currency,
             userCurrency
           ),
+          isDuplicate: false,
           valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
             value,
             order.SymbolProfile.currency,
