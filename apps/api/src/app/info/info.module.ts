@@ -1,4 +1,5 @@
 import { BenchmarkModule } from '@ghostfolio/api/app/benchmark/benchmark.module';
+import { PlatformModule } from '@ghostfolio/api/app/platform/platform.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
@@ -26,6 +27,7 @@ import { InfoService } from './info.service';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '30 days' }
     }),
+    PlatformModule,
     PrismaModule,
     PropertyModule,
     RedisCacheModule,

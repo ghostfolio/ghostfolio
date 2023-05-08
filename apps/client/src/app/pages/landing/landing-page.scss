@@ -49,6 +49,10 @@
       filter: grayscale(1);
     }
 
+    &.logo-dev-community {
+      mask-image: url('/assets/images/logo-dev-community.svg');
+    }
+
     &.logo-openstartup {
       background-image: url('/assets/images/logo-openstartup.png');
       background-position: center;
@@ -123,6 +127,7 @@
   .logo {
     &.logo-agplv3,
     &.logo-alternative-to,
+    &.logo-dev-community,
     &.logo-privacy-tools,
     &.logo-reddit,
     &.logo-sackgeld,

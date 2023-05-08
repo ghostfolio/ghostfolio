@@ -166,7 +166,7 @@ export class UserService {
         this.subscriptionService.getSubscription(Subscription);
 
       if (
-        Analytics?.activityCount % 25 === 0 &&
+        Analytics?.activityCount % 20 === 0 &&
         user.subscription?.type === 'Basic'
       ) {
         currentPermissions.push(permissions.enableSubscriptionInterstitial);

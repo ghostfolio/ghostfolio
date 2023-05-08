@@ -14,6 +14,7 @@ import { DataSource, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { addDays, format, isSameDay } from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
+import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -175,7 +176,23 @@ export class YahooFinanceService implements DataProviderInterface {
     try {
       const response: { [symbol: string]: IDataProviderResponse } = {};
 
-      const quotes = await yahooFinance.quote(yahooFinanceSymbols);
+      let quotes: Pick<
+        Quote,
+        'currency' | 'marketState' | 'regularMarketPrice' | 'symbol'
+      >[] = [];
+
+      try {
+        quotes = await yahooFinance.quote(yahooFinanceSymbols);
+      } catch (error) {
+        Logger.error(error, 'YahooFinanceService');
+
+        Logger.warn(
+          'Fallback to yahooFinance.quoteSummary()',
+          'YahooFinanceService'
+        );
+
+        quotes = await this.getQuotesWithQuoteSummary(yahooFinanceSymbols);
+      }
 
       for (const quote of quotes) {
         // Convert symbols back
@@ -357,5 +374,27 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return value;
+  }
+
+  private async getQuotesWithQuoteSummary(aYahooFinanceSymbols: string[]) {
+    const quoteSummaryPromises = aYahooFinanceSymbols.map((symbol) => {
+      return yahooFinance.quoteSummary(symbol).catch(() => {
+        Logger.error(
+          `Could not get quote summary for ${symbol}`,
+          'YahooFinanceService'
+        );
+        return null;
+      });
+    });
+
+    const quoteSummaryItems = await Promise.all(quoteSummaryPromises);
+
+    return quoteSummaryItems
+      .filter((item) => {
+        return item !== null;
+      })
+      .map(({ price }) => {
+        return price;
+      });
   }
 }

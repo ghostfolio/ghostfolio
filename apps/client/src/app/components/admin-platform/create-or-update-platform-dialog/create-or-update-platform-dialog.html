@@ -1,0 +1,29 @@
+<form #addPlatformForm="ngForm" class="d-flex flex-column h-100">
+  <h1 *ngIf="data.platform.id" i18n mat-dialog-title>Update platform</h1>
+  <h1 *ngIf="!data.platform.id" i18n mat-dialog-title>Add platform</h1>
+  <div class="flex-grow-1 py-3" mat-dialog-content>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Name</mat-label>
+        <input matInput name="name" required [(ngModel)]="data.platform.name" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Url</mat-label>
+        <input matInput name="url" required [(ngModel)]="data.platform.url" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="justify-content-end" mat-dialog-actions>
+    <button i18n mat-button (click)="onCancel()">Cancel</button>
+    <button
+      color="primary"
+      mat-flat-button
+      [disabled]="!addPlatformForm.form.valid"
+      [mat-dialog-close]="data"
+    >
+      <ng-container i18n>Save</ng-container>
+    </button>
+  </div>
+</form>

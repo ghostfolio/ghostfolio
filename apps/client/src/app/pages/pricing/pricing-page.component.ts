@@ -3,8 +3,9 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
+import { StripeService } from 'ngx-stripe';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
@@ -15,6 +16,7 @@ import { takeUntil } from 'rxjs/operators';
 export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency: string;
   public coupon: number;
+  public couponId: string;
   public importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
   );
@@ -26,6 +28,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   );
   public isLoggedIn: boolean;
   public price: number;
+  public priceId: string;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -33,6 +36,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private stripeService: StripeService,
     private userService: UserService
   ) {}
 
@@ -50,9 +54,31 @@ export class PricingPageComponent implements OnDestroy, OnInit {
           this.user = state.user;
 
           this.coupon = subscriptions?.[this.user?.subscription?.offer]?.coupon;
+          this.couponId =
+            subscriptions?.[this.user.subscription.offer]?.couponId;
           this.price = subscriptions?.[this.user?.subscription?.offer]?.price;
+          this.priceId = subscriptions?.[this.user.subscription.offer]?.priceId;
 
           this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+
+  public onCheckout() {
+    this.dataService
+      .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
+      .pipe(
+        switchMap(({ sessionId }: { sessionId: string }) => {
+          return this.stripeService.redirectToCheckout({ sessionId });
+        }),
+        catchError((error) => {
+          alert(error.message);
+          throw error;
+        })
+      )
+      .subscribe((result) => {
+        if (result.error) {
+          alert(result.error.message);
         }
       });
   }

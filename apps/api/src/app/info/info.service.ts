@@ -1,4 +1,5 @@
 import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
+import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -38,6 +39,7 @@ export class InfoService {
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
+    private readonly platformService: PlatformService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
@@ -47,9 +49,12 @@ export class InfoService {
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
     let isReadOnlyMode: boolean;
-    const platforms = await this.prismaService.platform.findMany({
-      orderBy: { name: 'asc' },
-      select: { id: true, name: true }
+    const platforms = (
+      await this.platformService.getPlatforms({
+        orderBy: { name: 'asc' }
+      })
+    ).map(({ id, name }) => {
+      return { id, name };
     });
     let systemMessage: string;
 
