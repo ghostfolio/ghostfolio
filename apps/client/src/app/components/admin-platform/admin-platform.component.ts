@@ -22,7 +22,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-admin-platform',
   styleUrls: ['./admin-platform.component.scss'],
   templateUrl: './admin-platform.component.html'
