@@ -794,16 +794,6 @@ export class PortfolioService {
       let maxPrice = Math.max(orders[0].unitPrice, marketPrice);
       let minPrice = Math.min(orders[0].unitPrice, marketPrice);
 
-      if (!historicalData?.[aSymbol]?.[firstBuyDate]) {
-        // Add historical entry for buy date, if no historical data available
-        historicalDataArray.push({
-          averagePrice: orders[0].unitPrice,
-          date: firstBuyDate,
-          marketPrice: orders[0].unitPrice,
-          quantity: orders[0].quantity
-        });
-      }
-
       if (historicalData[aSymbol]) {
         let j = -1;
         for (const [date, { marketPrice }] of Object.entries(
@@ -815,11 +805,16 @@ export class PortfolioService {
           ) {
             j++;
           }
+
           let currentAveragePrice = 0;
           let currentQuantity = 0;
+
           const currentSymbol = transactionPoints[j].items.find(
-            (item) => item.symbol === aSymbol
+            ({ symbol }) => {
+              return symbol === aSymbol;
+            }
           );
+
           if (currentSymbol) {
             currentAveragePrice = currentSymbol.quantity.eq(0)
               ? 0
@@ -829,14 +824,25 @@ export class PortfolioService {
 
           historicalDataArray.push({
             date,
-            marketPrice,
             averagePrice: currentAveragePrice,
+            marketPrice:
+              historicalDataArray.length > 0
+                ? marketPrice
+                : currentAveragePrice,
             quantity: currentQuantity
           });
 
           maxPrice = Math.max(marketPrice ?? 0, maxPrice);
           minPrice = Math.min(marketPrice ?? Number.MAX_SAFE_INTEGER, minPrice);
         }
+      } else {
+        // Add historical entry for buy date, if no historical data available
+        historicalDataArray.push({
+          averagePrice: orders[0].unitPrice,
+          date: firstBuyDate,
+          marketPrice: orders[0].unitPrice,
+          quantity: orders[0].quantity
+        });
       }
 
       return {
