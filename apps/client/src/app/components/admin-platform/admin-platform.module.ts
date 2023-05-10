@@ -12,6 +12,7 @@ import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platfor
 
 @NgModule({
   declarations: [AdminPlatformComponent],
+  exports: [AdminPlatformComponent],
   imports: [
     CommonModule,
     GfCreateOrUpdatePlatformDialogModule,
