@@ -45,6 +45,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() showCheckbox = false;
   @Input() showFooter = true;
   @Input() showNameColumn = true;
+  @Input() isAnyActivityDuplicate = false;
 
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
