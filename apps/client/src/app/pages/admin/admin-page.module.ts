@@ -4,7 +4,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { GfAdminJobsModule } from '@ghostfolio/client/components/admin-jobs/admin-jobs.module';
 import { GfAdminMarketDataModule } from '@ghostfolio/client/components/admin-market-data/admin-market-data.module';
 import { GfAdminOverviewModule } from '@ghostfolio/client/components/admin-overview/admin-overview.module';
-import { GfAdminPlatformModule } from '@ghostfolio/client/components/admin-platform/admin-platform.module';
+import { GfAdminSettingsModule } from '@ghostfolio/client/components/admin-settings/admin-settings.module';
 import { GfAdminUsersModule } from '@ghostfolio/client/components/admin-users/admin-users.module';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 
@@ -20,7 +20,7 @@ import { AdminPageComponent } from './admin-page.component';
     GfAdminJobsModule,
     GfAdminMarketDataModule,
     GfAdminOverviewModule,
-    GfAdminPlatformModule,
+    GfAdminSettingsModule,
     GfAdminUsersModule,
     MatTabsModule
   ],

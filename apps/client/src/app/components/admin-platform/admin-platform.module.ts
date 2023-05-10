@@ -7,11 +7,12 @@ import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 
+import { AdminPlatformComponent } from './admin-platform.component';
 import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platform-dialog/create-or-update-platform-dialog.module';
-import { AdminPlatformComponent } from './platform.component';
 
 @NgModule({
   declarations: [AdminPlatformComponent],
+  exports: [AdminPlatformComponent],
   imports: [
     CommonModule,
     GfCreateOrUpdatePlatformDialogModule,

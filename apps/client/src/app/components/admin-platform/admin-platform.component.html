@@ -1,6 +1,17 @@
 <div class="container">
   <div class="row">
     <div class="col">
+      <div class="d-flex justify-content-end">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [queryParams]="{ createPlatformDialog: true }"
+          [routerLink]="[]"
+        >
+          Add Platform
+        </a>
+      </div>
       <table
         class="gf-table w-100"
         mat-table
@@ -90,17 +101,5 @@
         <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
       </table>
     </div>
-  </div>
-
-  <div *ngIf="hasPermissionToCreatePlatform" class="fab-container">
-    <a
-      class="align-items-center d-flex justify-content-center"
-      color="primary"
-      mat-fab
-      [queryParams]="{ createDialog: true }"
-      [routerLink]="[]"
-    >
-      <ion-icon name="add-outline" size="large"></ion-icon>
-    </a>
   </div>
 </div>
