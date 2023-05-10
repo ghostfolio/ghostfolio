@@ -1,7 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'page' },
   selector: 'gf-admin-settings',
   styleUrls: ['./admin-settings.component.scss'],

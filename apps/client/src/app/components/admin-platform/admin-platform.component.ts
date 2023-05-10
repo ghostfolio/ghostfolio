@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -13,8 +14,7 @@ import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Platform, Platform as PlatformModel } from '@prisma/client';
+import { Platform } from '@prisma/client';
 import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,6 +22,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-admin-platform',
   styleUrls: ['./admin-platform.component.scss'],
   templateUrl: './admin-platform.component.html'
@@ -32,9 +33,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
   public deviceType: string;
   public displayedColumns = ['name', 'url', 'accounts', 'actions'];
-  public hasPermissionToCreatePlatform: boolean;
-  public hasPermissionToDeletePlatform: boolean;
-  public platforms: PlatformModel[];
+  public platforms: Platform[];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -50,9 +49,9 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
-        if (params['createDialog'] && this.hasPermissionToCreatePlatform) {
+        if (params['createPlatformDialog']) {
           this.openCreatePlatformDialog();
-        } else if (params['editDialog']) {
+        } else if (params['editPlatformDialog']) {
           if (this.platforms) {
             const platform = this.platforms.find(({ id }) => {
               return id === params['platformId'];
@@ -69,25 +68,6 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          const user = state.user;
-
-          this.hasPermissionToCreatePlatform = hasPermission(
-            user.permissions,
-            permissions.createPlatform
-          );
-          this.hasPermissionToDeletePlatform = hasPermission(
-            user.permissions,
-            permissions.deletePlatform
-          );
-
-          this.changeDetectorRef.markForCheck();
-        }
-      });
-
     this.fetchPlatforms();
   }
 
@@ -101,9 +81,9 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onUpdatePlatform(aPlatform: PlatformModel) {
+  public onUpdatePlatform({ id }: Platform) {
     this.router.navigate([], {
-      queryParams: { platformId: aPlatform.id, editDialog: true }
+      queryParams: { editPlatformDialog: true, platformId: id }
     });
   }
 

@@ -5,9 +5,9 @@ import { Subject } from 'rxjs';
 import { CreateOrUpdatePlatformDialogParams } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   selector: 'gf-create-or-update-platform-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-platform-dialog.scss'],
   templateUrl: 'create-or-update-platform-dialog.html'
 })
