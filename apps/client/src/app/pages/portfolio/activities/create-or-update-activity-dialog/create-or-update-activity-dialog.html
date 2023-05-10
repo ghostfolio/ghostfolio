@@ -18,8 +18,12 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div>
-      <mat-form-field appearance="outline" class="mb-1 without-hint w-100">
+    <div [ngClass]="{'mb-3': data.activity.id}">
+      <mat-form-field
+        appearance="outline"
+        class="w-100"
+        [ngClass]="{'without-hint': !data.activity.id}"
+      >
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
           <mat-option
@@ -32,10 +36,10 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3">
-      <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n
-        >Update Cash Balance</mat-checkbox
-      >
+    <div class="mb-3" [ngClass]="{'d-none': data.activity.id}">
+      <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n>
+        Update Cash Balance
+      </mat-checkbox>
     </div>
     <div
       class="mb-3"
