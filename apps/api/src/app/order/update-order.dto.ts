@@ -67,8 +67,4 @@ export class UpdateOrderDto {
 
   @IsNumber()
   unitPrice: number;
-
-  @IsBoolean()
-  @IsOptional()
-  updateAccountBalance: boolean;
 }

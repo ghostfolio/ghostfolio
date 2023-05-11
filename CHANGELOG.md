@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the market price on the first buy date in the chart of the position detail dialog
 - Restructured the admin control panel with a new settings tab
 
+### Fixed
+
+- Fixed an error that occurred while editing an activity caused by the cash balance update
+
 ## 1.268.0 - 2023-05-08
 
 ### Added

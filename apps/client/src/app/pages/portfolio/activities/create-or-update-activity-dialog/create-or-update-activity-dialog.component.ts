@@ -415,13 +415,14 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           : this.activityForm.controls['searchSymbol'].value.symbol,
       tags: this.activityForm.controls['tags'].value,
       type: this.activityForm.controls['type'].value,
-      unitPrice: this.activityForm.controls['unitPrice'].value,
-      updateAccountBalance:
-        this.activityForm.controls['updateAccountBalance'].value
+      unitPrice: this.activityForm.controls['unitPrice'].value
     };
 
     if (this.data.activity.id) {
       (activity as UpdateOrderDto).id = this.data.activity.id;
+    } else {
+      (activity as CreateOrderDto).updateAccountBalance =
+        this.activityForm.controls['updateAccountBalance'].value;
     }
 
     this.dialogRef.close({ activity });
