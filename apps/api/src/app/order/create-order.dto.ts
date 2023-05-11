@@ -68,5 +68,5 @@ export class CreateOrderDto {
 
   @IsBoolean()
   @IsOptional()
-  updateAccountBalance: boolean;
+  updateAccountBalance?: boolean;
 }
