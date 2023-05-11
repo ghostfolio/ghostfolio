@@ -3,6 +3,7 @@ import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cr
 import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
 import { CoinGeckoService } from '@ghostfolio/api/services/data-provider/coingecko/coingecko.service';
 import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider/eod-historical-data/eod-historical-data.service';
+import { FinancialModelingPrepService } from '@ghostfolio/api/services/data-provider/financial-modeling-prep/financial-modeling-prep.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
@@ -32,6 +33,7 @@ import { DataProviderService } from './data-provider.service';
     CoinGeckoService,
     DataProviderService,
     EodHistoricalDataService,
+    FinancialModelingPrepService,
     GoogleSheetsService,
     ManualService,
     RapidApiService,
@@ -41,6 +43,7 @@ import { DataProviderService } from './data-provider.service';
         AlphaVantageService,
         CoinGeckoService,
         EodHistoricalDataService,
+        FinancialModelingPrepService,
         GoogleSheetsService,
         ManualService,
         RapidApiService,
@@ -51,6 +54,7 @@ import { DataProviderService } from './data-provider.service';
         alphaVantageService,
         coinGeckoService,
         eodHistoricalDataService,
+        financialModelingPrepService,
         googleSheetsService,
         manualService,
         rapidApiService,
@@ -59,6 +63,7 @@ import { DataProviderService } from './data-provider.service';
         alphaVantageService,
         coinGeckoService,
         eodHistoricalDataService,
+        financialModelingPrepService,
         googleSheetsService,
         manualService,
         rapidApiService,
