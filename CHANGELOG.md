@@ -5,16 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### Fixed
-
-- Fixed the error that was occuring when updating an activity and also hide the update cash balance in edit mode
-
 ## Unreleased
 
 ### Changed
 
 - Improved the market price on the first buy date in the chart of the position detail dialog
 - Restructured the admin control panel with a new settings tab
+
+### Fixed
+
+- Fixed an error that occurred while editing an activity caused by the cash balance update
 
 ## 1.268.0 - 2023-05-08
 
