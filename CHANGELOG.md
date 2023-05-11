@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `FINANCIAL_MODELING_PREP` as a new data source type
+
 ### Changed
 
 - Improved the market price on the first buy date in the chart of the position detail dialog
