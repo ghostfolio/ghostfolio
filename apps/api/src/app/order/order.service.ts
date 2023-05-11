@@ -354,7 +354,6 @@ export class OrderService {
       dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
-      updateAccountBalance?: boolean;
     };
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
@@ -395,7 +394,6 @@ export class OrderService {
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;
-    delete data.updateAccountBalance;
 
     // Remove existing tags
     await this.prismaService.order.update({
