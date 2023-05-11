@@ -399,7 +399,10 @@ export class DataProviderService {
   }
 
   private isPremiumDataSource(aDataSource: DataSource) {
-    const premiumDataSources: DataSource[] = [DataSource.EOD_HISTORICAL_DATA];
+    const premiumDataSources: DataSource[] = [
+      DataSource.EOD_HISTORICAL_DATA,
+      DataSource.FINANCIAL_MODELING_PREP
+    ];
     return premiumDataSources.includes(aDataSource);
   }
 }
