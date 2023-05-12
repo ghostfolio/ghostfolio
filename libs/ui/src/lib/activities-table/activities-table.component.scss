@@ -40,6 +40,10 @@
           &.sell {
             color: var(--orange);
           }
+
+          &.drip {
+            color: var(--cyan);
+          }
         }
       }
     }
