@@ -238,6 +238,7 @@ enum Type {
   DIVIDEND
   ITEM
   SELL
+  DRIP
 }
 
 enum ViewMode {
