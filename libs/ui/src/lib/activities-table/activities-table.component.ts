@@ -45,7 +45,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() showCheckbox = false;
   @Input() showFooter = true;
   @Input() showNameColumn = true;
-  @Input() isAnyActivityDuplicate = false;
 
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
@@ -77,6 +76,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   public selectedRows = new SelectionModel<Activity>(true, []);
   public totalFees: number;
   public totalValue: number;
+  public isAnyActivityDuplicate: boolean = false;
 
   private readonly SEARCH_STRING_SEPARATOR = ',';
   private unsubscribeSubject = new Subject<void>();
@@ -98,6 +98,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
           this.selectedActivities.emit(selectedRows.source.selected);
         });
     }
+
+    this.activities.some(({ isDuplicate }) => {
+      if (isDuplicate) {
+        this.isAnyActivityDuplicate = true;
+        return;
+      }
+    });
   }
 
   public areAllRowsSelected() {

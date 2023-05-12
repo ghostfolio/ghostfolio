@@ -36,7 +36,6 @@ export class ImportActivitiesDialog implements OnDestroy {
   public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
   public uniqueAssetForm: FormGroup;
-  public isAnyActivityDuplicate: boolean = false;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -229,12 +228,6 @@ export class ImportActivitiesDialog implements OnDestroy {
           this.isFileSelected = true;
           this.snackBar.dismiss();
           this.changeDetectorRef.markForCheck();
-          this.activities.some((activity) => {
-            if (activity.isDuplicate) {
-              this.isAnyActivityDuplicate = true;
-              return;
-            }
-          });
         }
       };
     };
