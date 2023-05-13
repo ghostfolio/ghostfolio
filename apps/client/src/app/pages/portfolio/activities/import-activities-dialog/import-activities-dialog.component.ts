@@ -235,8 +235,10 @@ export class ImportActivitiesDialog implements OnDestroy {
     input.click();
   }
 
-  public updateSelection(data: Activity[]) {
-    this.selectedActivities = data;
+  public updateSelection(activities: Activity[]) {
+    this.selectedActivities = activities.filter(({ isDuplicate }) => {
+      return !isDuplicate;
+    });
   }
 
   public ngOnDestroy() {

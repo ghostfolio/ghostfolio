@@ -77,7 +77,12 @@
       <th *matHeaderCellDef class="px-1" mat-header-cell>
         <mat-checkbox
           color="primary"
-          [checked]="selectedRows.hasValue() && areAllRowsSelected()"
+          [checked]="
+            areAllRowsSelected() &&
+            !hasDuplicateActivity &&
+            selectedRows.hasValue()
+          "
+          [disabled]="hasDuplicateActivity"
           [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
           (change)="$event ? toggleAllRows() : null"
         ></mat-checkbox>

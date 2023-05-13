@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `FINANCIAL_MODELING_PREP` as a new data source type
 
+### Fixed
+
+- Improved the _Select all_ activities checkbox state after importing activities including a duplicate
+
+## Unreleased
+
 ### Changed
 
 - Improved the market price on the first buy date in the chart of the position detail dialog
