@@ -2,32 +2,33 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Jest File",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/@nrwl/cli/bin/nx",
       "args": [
         "test",
         "--codeCoverage=false",
         "--testFile=${workspaceFolder}/apps/api/src/app/portfolio/portfolio-calculator-novn-buy-and-sell.spec.ts"
       ],
+      "console": "internalConsole",
       "cwd": "${workspaceFolder}",
-      "console": "internalConsole"
+      "name": "Debug Jest",
+      "program": "${workspaceFolder}/node_modules/@nrwl/cli/bin/nx",
+      "request": "launch",
+      "type": "node"
     },
     {
-      "envFile": "${workspaceFolder}/.env",
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/apps/api/src/main.ts",
-      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
-      "outFiles": ["${workspaceFolder}/dist/apps/api/**/*.js"],
       "autoAttachChildProcesses": true,
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/apps/api",
+      "envFile": "${workspaceFolder}/.env",
+      "name": "Debug API",
+      "outFiles": ["${workspaceFolder}/dist/apps/api/**/*.js"],
+      "program": "${workspaceFolder}/apps/api/src/main.ts",
+      "request": "launch",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
       "skipFiles": [
         "${workspaceFolder}/node_modules/**/*.js",
         "<node_internals>/**/*.js"
       ],
-      "console": "integratedTerminal"
+      "type": "node"
     }
   ]
 }
