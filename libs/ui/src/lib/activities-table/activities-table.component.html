@@ -78,11 +78,11 @@
         <mat-checkbox
           color="primary"
           [checked]="
-            selectedRows.hasValue() &&
             areAllRowsSelected() &&
-            !isAnyActivityDuplicate
+            !hasDuplicateActivity &&
+            selectedRows.hasValue()
           "
-          [disabled]="isAnyActivityDuplicate"
+          [disabled]="hasDuplicateActivity"
           [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
           (change)="$event ? toggleAllRows() : null"
         ></mat-checkbox>

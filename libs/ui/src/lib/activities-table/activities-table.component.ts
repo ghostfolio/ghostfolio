@@ -66,6 +66,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   public endOfToday = endOfToday();
   public filters$ = new Subject<Filter[]>();
   public hasDrafts = false;
+  public hasDuplicateActivity = false;
   public isAfter = isAfter;
   public isLoading = true;
   public isUUID = isUUID;
@@ -76,7 +77,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   public selectedRows = new SelectionModel<Activity>(true, []);
   public totalFees: number;
   public totalValue: number;
-  public isAnyActivityDuplicate: boolean = false;
 
   private readonly SEARCH_STRING_SEPARATOR = ',';
   private unsubscribeSubject = new Subject<void>();
@@ -99,11 +99,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
         });
     }
 
-    this.activities.some(({ isDuplicate }) => {
-      if (isDuplicate) {
-        this.isAnyActivityDuplicate = true;
-        return;
-      }
+    this.hasDuplicateActivity = this.activities.some(({ isDuplicate }) => {
+      return isDuplicate;
     });
   }
 
