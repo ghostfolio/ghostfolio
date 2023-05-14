@@ -7,6 +7,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
+  PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
@@ -291,6 +292,7 @@ export class InfoService {
     const gitHubContributors = await this.countGitHubContributors();
     const gitHubStargazers = await this.countGitHubStargazers();
     const slackCommunityUsers = await this.countSlackCommunityUsers();
+    const uptime = await this.getUptime();
 
     statistics = {
       activeUsers1d,
@@ -299,7 +301,8 @@ export class InfoService {
       gitHubContributors,
       gitHubStargazers,
       newUsers30d,
-      slackCommunityUsers
+      slackCommunityUsers,
+      uptime
     };
 
     await this.redisCacheService.set(
@@ -322,5 +325,34 @@ export class InfoService {
     })) ?? { value: '{}' };
 
     return JSON.parse(stripeConfig.value);
+  }
+
+  private async getUptime(): Promise<number> {
+    {
+      try {
+        const monitorId = (await this.propertyService.getByKey(
+          PROPERTY_BETTER_UPTIME_MONITOR_ID
+        )) as string;
+
+        const get = bent(
+          `https://betteruptime.com/api/v2/${monitorId}/398104/sla`,
+          'GET',
+          'json',
+          200,
+          {
+            Authorization: `Bearer ${this.configurationService.get(
+              'BETTER_UPTIME_API_KEY'
+            )}`
+          }
+        );
+
+        const { data } = await get();
+        return data.attributes.availability / 100;
+      } catch (error) {
+        Logger.error(error, 'InfoService');
+
+        return undefined;
+      }
+    }
   }
 }

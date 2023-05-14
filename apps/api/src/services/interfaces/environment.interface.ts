@@ -4,6 +4,7 @@ export interface Environment extends CleanedEnvAccessors {
   ACCESS_TOKEN_SALT: string;
   ALPHA_VANTAGE_API_KEY: string;
   BASE_CURRENCY: string;
+  BETTER_UPTIME_API_KEY: string;
   CACHE_TTL: number;
   DATA_SOURCE_EXCHANGE_RATES: string;
   DATA_SOURCE_IMPORT: string;

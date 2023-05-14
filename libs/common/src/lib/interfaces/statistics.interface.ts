@@ -6,4 +6,5 @@ export interface Statistics {
   gitHubStargazers: number;
   newUsers30d: number;
   slackCommunityUsers: string;
+  uptime: number;
 }
