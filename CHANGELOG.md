@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a connection timeout to the environment variable `DATABASE_URL`
+- Introduced the _Open Startup_ (`/open`) page with aggregated key metrics including uptime
 
 ### Fixed
 
