@@ -14,13 +14,23 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import {
+  Filter,
+  InfoItem,
+  UniqueAsset,
+  User
+} from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetSubClass, DataSource } from '@prisma/client';
+import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  switchMap,
+  take,
+  takeUntil
+} from 'rxjs/operators';
 
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
@@ -51,6 +61,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       type: 'ASSET_SUB_CLASS'
     };
   });
+  public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;
   public dataSource: MatTableDataSource<AdminMarketDataItem> =
@@ -116,6 +127,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
+    this.benchmarks = this.dataService.getInfo().benchmarks;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.filters$
@@ -141,6 +153,13 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public isBenchmark({ dataSource, symbol }: UniqueAsset) {
+    return this.benchmarks.some(
+      (benchmark) =>
+        benchmark.dataSource === dataSource && benchmark.symbol === symbol
+    );
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
@@ -184,6 +203,21 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
+  }
+
+  public onSetBenchmark(benchmark: UniqueAsset) {
+    this.dataService
+      .postBenchmark(benchmark)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((_) => {
+        this.dataService
+          .fetchInfo()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((info: InfoItem) => {
+            this.benchmarks = info.benchmarks;
+            (window as any) = info;
+          });
+      });
   }
 
   public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {

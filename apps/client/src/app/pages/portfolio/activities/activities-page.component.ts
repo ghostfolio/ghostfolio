@@ -81,7 +81,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { globalPermissions } = this.dataService.fetchInfo();
+    const { globalPermissions } = this.dataService.getInfo();
 
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 

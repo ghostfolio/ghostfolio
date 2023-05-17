@@ -15,7 +15,7 @@ export class BlogPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(private dataService: DataService) {
-    const info = this.dataService.fetchInfo();
+    const info = this.dataService.getInfo();
 
     this.hasPermissionForSubscription = hasPermission(
       info?.globalPermissions,
