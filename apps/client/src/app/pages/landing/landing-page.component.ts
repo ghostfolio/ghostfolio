@@ -73,7 +73,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
       demoAuthToken,
       globalPermissions,
       statistics
-    } = this.dataService.fetchInfo();
+    } = this.dataService.getInfo();
 
     for (const country of countriesOfSubscribers) {
       this.countriesOfSubscribersMap[country] = {

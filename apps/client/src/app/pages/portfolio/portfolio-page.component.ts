@@ -34,7 +34,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    this.info = this.dataService.fetchInfo();
+    this.info = this.dataService.getInfo();
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))

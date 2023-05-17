@@ -42,7 +42,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {
-    this.info = this.dataService.fetchInfo();
+    this.info = this.dataService.getInfo();
 
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,

@@ -157,6 +157,13 @@
               </button>
               <button
                 mat-menu-item
+                [disabled]="isBenchmark({dataSource: element.dataSource, symbol: element.symbol})"
+                (click)="onSetBenchmark({dataSource: element.dataSource, symbol: element.symbol})"
+              >
+                <ng-container i18n>Set as Benchmark</ng-container>
+              </button>
+              <button
+                mat-menu-item
                 [disabled]="element.activitiesCount !== 0"
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >

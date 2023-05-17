@@ -35,7 +35,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
-    this.info = this.dataService.fetchInfo();
+    this.info = this.dataService.getInfo();
 
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,

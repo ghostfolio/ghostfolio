@@ -30,7 +30,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   ) {}
 
   ngOnInit() {
-    const { currencies, platforms } = this.dataService.fetchInfo();
+    const { currencies, platforms } = this.dataService.getInfo();
 
     this.currencies = currencies;
     this.platforms = platforms;

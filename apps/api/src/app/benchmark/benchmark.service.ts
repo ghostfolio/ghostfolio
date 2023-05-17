@@ -11,6 +11,7 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   BenchmarkMarketDataDetails,
+  BenchmarkProperty,
   BenchmarkResponse,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -19,6 +20,9 @@ import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format } from 'date-fns';
 import ms from 'ms';
+import { uniqBy } from 'lodash';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { NotFoundError } from '@ghostfolio/common/exceptions';
 
 @Injectable()
 export class BenchmarkService {
@@ -27,6 +31,7 @@ export class BenchmarkService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
+    private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -202,6 +207,43 @@ export class BenchmarkService {
     }
 
     return response;
+  }
+
+  public async addBenchmark({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+    const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+      where: {
+        dataSource,
+        symbol
+      }
+    });
+
+    if (!symbolProfile) {
+      throw new NotFoundError('Symbol profile not found');
+    }
+
+    const benchmarks =
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as BenchmarkProperty[]) ?? [];
+
+    benchmarks.push({ symbolProfileId: symbolProfile.id } as BenchmarkProperty);
+
+    const newBenchmarks = uniqBy(benchmarks, 'symbolProfileId');
+
+    await this.propertyService.put({
+      key: PROPERTY_BENCHMARKS,
+      value: JSON.stringify(newBenchmarks)
+    });
+
+    return {
+      dataSource,
+      symbol,
+      id: symbolProfile.id,
+      name: symbolProfile.name
+    };
   }
 
   private getMarketCondition(aPerformanceInPercent: number) {
