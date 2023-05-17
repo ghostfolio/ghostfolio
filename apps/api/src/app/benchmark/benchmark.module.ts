@@ -9,6 +9,7 @@ import { Module } from '@nestjs/common';
 
 import { BenchmarkController } from './benchmark.controller';
 import { BenchmarkService } from './benchmark.service';
+import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 
 @Module({
   controllers: [BenchmarkController],
@@ -20,7 +21,8 @@ import { BenchmarkService } from './benchmark.service';
     PropertyModule,
     RedisCacheModule,
     SymbolModule,
-    SymbolProfileModule
+    SymbolProfileModule,
+    PrismaModule
   ],
   providers: [BenchmarkService]
 })

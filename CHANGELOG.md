@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- POST api to add benchmarks
+- Ability to add symbol as benchmark from Market Data
+
 ### Fixed
 
 - Improved the _Select all_ activities checkbox state after importing activities including a duplicate

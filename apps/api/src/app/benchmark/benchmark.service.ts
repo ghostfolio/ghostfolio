@@ -12,13 +12,17 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
-  UniqueAsset
+  UniqueAsset,
+  BenchmarkProperty
 } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format } from 'date-fns';
 import ms from 'ms';
+import { uniqBy } from 'lodash';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { NotFoundError } from '@ghostfolio/common/exceptions';
 
 @Injectable()
 export class BenchmarkService {
@@ -30,7 +34,8 @@ export class BenchmarkService {
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly symbolProfileService: SymbolProfileService,
-    private readonly symbolService: SymbolService
+    private readonly symbolService: SymbolService,
+    private readonly prismaService: PrismaService
   ) {}
 
   public calculateChangeInPercentage(baseValue: number, currentValue: number) {
@@ -202,6 +207,40 @@ export class BenchmarkService {
     }
 
     return response;
+  }
+
+  public async addBenchmark({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+    const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+      where: {
+        AND: [{ dataSource: dataSource }, { symbol: symbol }]
+      }
+    });
+
+    if (!symbolProfile) throw new NotFoundError('Symbol profile not found');
+
+    const benchmarks =
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as BenchmarkProperty[]) ?? [];
+
+    benchmarks.push({ symbolProfileId: symbolProfile.id } as BenchmarkProperty);
+
+    const newBenchmarks = uniqBy(benchmarks, 'symbolProfileId');
+
+    await this.propertyService.put({
+      key: PROPERTY_BENCHMARKS,
+      value: JSON.stringify(newBenchmarks)
+    });
+
+    return {
+      dataSource,
+      id: symbolProfile.id,
+      name: symbolProfile.name,
+      symbol
+    };
   }
 
   private getMarketCondition(aPerformanceInPercent: number) {

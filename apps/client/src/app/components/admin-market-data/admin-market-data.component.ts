@@ -17,7 +17,7 @@ import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetSubClass, DataSource } from '@prisma/client';
+import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -74,6 +74,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public isLoading = false;
   public placeholder = '';
   public user: User;
+  public benchmarks: Partial<SymbolProfile>[];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -117,6 +118,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.benchmarks = this.dataService.fetchInfo().benchmarks;
 
     this.filters$
       .pipe(
@@ -186,6 +188,18 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
+  public onSetBenchmark(benchmark: UniqueAsset) {
+    this.dataService
+      .postBenchmark(benchmark)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((benchmarkProfile) => {
+        this.benchmarks.push(benchmarkProfile);
+        (window as any).info.benchmarks = this.benchmarks.sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
+      });
+  }
+
   public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
@@ -206,6 +220,13 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private isBenchmark({ dataSource, symbol }: UniqueAsset) {
+    return this.benchmarks.some(
+      (benchmark) =>
+        benchmark.dataSource === dataSource && benchmark.symbol === symbol
+    );
   }
 
   private openAssetProfileDialog({

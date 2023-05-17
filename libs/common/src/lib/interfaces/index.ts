@@ -8,6 +8,7 @@ import {
   AdminMarketDataItem
 } from './admin-market-data.interface';
 import { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
+import { BenchmarkProperty } from './benchmark-property.interface';
 import { Benchmark } from './benchmark.interface';
 import { Coupon } from './coupon.interface';
 import { DataProviderInfo } from './data-provider-info.interface';
@@ -53,6 +54,7 @@ export {
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
+  BenchmarkProperty,
   Coupon,
   DataProviderInfo,
   EnhancedSymbolProfile,

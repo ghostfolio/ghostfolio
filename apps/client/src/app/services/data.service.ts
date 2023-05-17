@@ -177,6 +177,10 @@ export class DataService {
     );
   }
 
+  public postBenchmark(benchmark: UniqueAsset) {
+    return this.http.post(`/api/v1/benchmark`, benchmark);
+  }
+
   public fetchBenchmarks() {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
   }
