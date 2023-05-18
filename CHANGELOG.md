@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the mobile layout of the portfolio summary tab on the home page
 - Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `4.13.0` to `4.14.1`
 
 ### Fixed
 
