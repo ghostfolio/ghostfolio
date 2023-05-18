@@ -116,19 +116,28 @@ export class InfoService {
       globalPermissions.push(permissions.createUserAccount);
     }
 
+    const [benchmarks, demoAuthToken, statistics, subscriptions, tags] =
+      await Promise.all([
+        this.benchmarkService.getBenchmarkAssetProfiles(),
+        this.getDemoAuthToken(),
+        this.getStatistics(),
+        this.getSubscriptions(),
+        this.tagService.get()
+      ]);
+
     return {
       ...info,
+      benchmarks,
+      demoAuthToken,
       globalPermissions,
       isReadOnlyMode,
       platforms,
+      statistics,
+      subscriptions,
       systemMessage,
+      tags,
       baseCurrency: this.configurationService.get('BASE_CURRENCY'),
-      benchmarks: await this.benchmarkService.getBenchmarkAssetProfiles(),
-      currencies: this.exchangeRateDataService.getCurrencies(),
-      demoAuthToken: await this.getDemoAuthToken(),
-      statistics: await this.getStatistics(),
-      subscriptions: await this.getSubscriptions(),
-      tags: await this.tagService.get()
+      currencies: this.exchangeRateDataService.getCurrencies()
     };
   }
 
@@ -335,7 +344,7 @@ export class InfoService {
         )) as string;
 
         const get = bent(
-          `https://betteruptime.com/api/v2/${monitorId}/398104/sla`,
+          `https://betteruptime.com/api/v2/monitors/${monitorId}/sla`,
           'GET',
           'json',
           200,
