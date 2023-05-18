@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved the _Select all_ activities checkbox state after importing activities including a duplicate
+- Fixed the _Storybook_ setup
 
 ## 1.269.0 - 2023-05-11
 
