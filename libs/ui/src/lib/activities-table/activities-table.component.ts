@@ -98,10 +98,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
           this.selectedActivities.emit(selectedRows.source.selected);
         });
     }
-
-    this.hasDuplicateActivity = this.activities.some(({ isDuplicate }) => {
-      return isDuplicate;
-    });
   }
 
   public areAllRowsSelected() {
@@ -170,6 +166,12 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
       this.dataSource.sortingDataAccessor = get;
 
       this.updateFilters();
+
+      this.hasDuplicateActivity = this.activities.some(({ isDuplicate }) => {
+        return isDuplicate;
+      });
+    } else {
+      this.hasDuplicateActivity = false;
     }
   }
 
