@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: OpenPageComponent,
     path: '',
-    title: $localize`Open Startup`
+    title: 'Open Startup'
   }
 ];
 
