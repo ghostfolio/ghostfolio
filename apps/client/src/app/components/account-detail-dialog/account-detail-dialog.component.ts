@@ -13,7 +13,9 @@ import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
+import { isNumber } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -28,6 +30,9 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
 })
 export class AccountDetailDialog implements OnDestroy, OnInit {
   public accountType: string;
+  public balance: number;
+  public currency: string;
+  public equity: number;
   public name: string;
   public orders: OrderWithAccount[];
   public platformName: string;
@@ -58,14 +63,33 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ accountType, name, Platform, valueInBaseCurrency }) => {
-        this.accountType = translate(accountType);
-        this.name = name;
-        this.platformName = Platform?.name ?? '-';
-        this.valueInBaseCurrency = valueInBaseCurrency;
+      .subscribe(
+        ({
+          accountType,
+          balance,
+          currency,
+          name,
+          Platform,
+          value,
+          valueInBaseCurrency
+        }) => {
+          this.accountType = translate(accountType);
+          this.balance = balance;
+          this.currency = currency;
 
-        this.changeDetectorRef.markForCheck();
-      });
+          if (isNumber(balance) && isNumber(value)) {
+            this.equity = new Big(value).minus(balance).toNumber();
+          } else {
+            this.equity = null;
+          }
+
+          this.name = name;
+          this.platformName = Platform?.name ?? '-';
+          this.valueInBaseCurrency = valueInBaseCurrency;
+
+          this.changeDetectorRef.markForCheck();
+        }
+      );
 
     this.dataService
       .fetchActivities({
