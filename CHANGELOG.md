@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a connection timeout to the environment variable `DATABASE_URL`
+
 ### Fixed
 
 - Improved the _Select all_ activities checkbox state after importing activities including a duplicate
@@ -820,12 +824,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a division by zero error in the cash positions calculation
 
 ## 1.213.0 - 14.11.2022
-
-### Added
-
-- Added a connection timeout to the environment variable `DATABASE_URL`
-
-## Unreleased
 
 ### Added
 
