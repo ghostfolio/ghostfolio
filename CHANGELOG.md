@@ -823,6 +823,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a connection timeout to the environment variable `DATABASE_URL`
+
+## Unreleased
+
+### Added
+
 - Added an indicator for excluded accounts in the accounts table
 - Added a blog post: _Black Friday 2022_
 
