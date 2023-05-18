@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { environment } from '@ghostfolio/api/environments/environment';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { User } from '@ghostfolio/common/interfaces';
 import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { environment } from '../../../environments/environment';
 
 @Component({
   host: { class: 'page' },
@@ -16,6 +16,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './about-page.html'
 })
 export class AboutPageComponent implements OnDestroy, OnInit {
+  public defaultLanguageCode = DEFAULT_LANGUAGE_CODE;
   public hasPermissionForBlog: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;

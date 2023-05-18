@@ -167,6 +167,11 @@ const routes: Routes = [
       )
   },
   {
+    path: 'open',
+    loadChildren: () =>
+      import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
+  },
+  {
     path: 'p',
     loadChildren: () =>
       import('./pages/public/public-page.module').then(

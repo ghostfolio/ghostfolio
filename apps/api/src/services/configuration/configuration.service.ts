@@ -15,6 +15,7 @@ export class ConfigurationService {
         choices: ['AUD', 'CAD', 'CNY', 'EUR', 'GBP', 'JPY', 'RUB', 'USD'],
         default: 'USD'
       }),
+      BETTER_UPTIME_API_KEY: str({ default: '' }),
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
