@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { environment } from '@ghostfolio/api/environments/environment';
+import { environment } from '@ghostfolio/client/../environments/environment';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
