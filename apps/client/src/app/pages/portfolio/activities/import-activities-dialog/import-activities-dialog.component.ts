@@ -19,6 +19,11 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
+enum FileStatus {
+  SELECT = 0,
+  UPLOADED
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-import-activities-dialog',
@@ -36,6 +41,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
   public uniqueAssetForm: FormGroup;
+  public fileStatus: FileStatus = FileStatus.SELECT;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -228,6 +234,7 @@ export class ImportActivitiesDialog implements OnDestroy {
           this.isFileSelected = true;
           this.snackBar.dismiss();
           this.changeDetectorRef.markForCheck();
+          this.fileStatus = FileStatus.UPLOADED;
         }
       };
     };

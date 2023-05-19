@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+import { MatStepperModule } from '@angular/material/stepper';
 
 import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
@@ -25,6 +26,7 @@ import { ImportActivitiesDialog } from './import-activities-dialog.component';
     MatExpansionModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatStepperModule,
     ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -17,4 +17,16 @@
       }
     }
   }
+
+  .mat-stepper-horizontal {
+    margin-top: 8px;
+  }
+
+  .mat-mdc-form-field {
+    margin-top: 16px;
+  }
+
+  ::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+  }
 }
