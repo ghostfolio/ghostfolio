@@ -35,6 +35,8 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
     @Body() importData: ImportDataDto,
     @Query('dryRun') isDryRun?: boolean
