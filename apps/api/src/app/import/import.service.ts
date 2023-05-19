@@ -74,8 +74,25 @@ export class ImportService {
 
         const value = new Big(quantity).mul(marketPrice).toNumber();
 
+        const isDuplicate = orders.some((activity) => {
+          return (
+            activity.SymbolProfile.currency === assetProfile.currency &&
+            activity.SymbolProfile.dataSource === assetProfile.dataSource &&
+            isSameDay(activity.date, parseDate(dateString)) &&
+            activity.quantity === quantity &&
+            activity.SymbolProfile.symbol === assetProfile.symbol &&
+            activity.type === 'DIVIDEND' &&
+            activity.unitPrice === marketPrice
+          );
+        });
+
+        const error: ActivityError = isDuplicate
+          ? { code: 'IS_DUPLICATE' }
+          : undefined;
+
         return {
           Account,
+          error,
           quantity,
           value,
           accountId: Account?.id,
@@ -83,7 +100,6 @@ export class ImportService {
           comment: undefined,
           createdAt: undefined,
           date: parseDate(dateString),
-          // TODO: Add evaluated error state
           fee: 0,
           feeInBaseCurrency: 0,
           id: assetProfile.id,
@@ -208,7 +224,7 @@ export class ImportService {
       userId
     });
 
-    const activitiesMarkedAsDuplicates = await this.markActivitiesAsDuplicates({
+    const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
       userId
     });
@@ -237,7 +253,7 @@ export class ImportService {
       SymbolProfile: assetProfile,
       type,
       unitPrice
-    } of activitiesMarkedAsDuplicates) {
+    } of activitiesExtendedWithErrors) {
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -342,17 +358,7 @@ export class ImportService {
     return activities;
   }
 
-  private isUniqueAccount(accounts: AccountWithPlatform[]) {
-    const uniqueAccountIds = new Set<string>();
-
-    for (const account of accounts) {
-      uniqueAccountIds.add(account.id);
-    }
-
-    return uniqueAccountIds.size === 1;
-  }
-
-  private async markActivitiesAsDuplicates({
+  private async extendActivitiesWithErrors({
     activitiesDto,
     userId
   }: {
@@ -426,6 +432,16 @@ export class ImportService {
         };
       }
     );
+  }
+
+  private isUniqueAccount(accounts: AccountWithPlatform[]) {
+    const uniqueAccountIds = new Set<string>();
+
+    for (const account of accounts) {
+      uniqueAccountIds.add(account.id);
+    }
+
+    return uniqueAccountIds.size === 1;
   }
 
   private async validateActivities({
