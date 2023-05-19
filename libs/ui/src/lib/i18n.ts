@@ -11,6 +11,7 @@ const locales = {
   EMERGENCY_FUND: $localize`Emergency Fund`,
   GRANT: $localize`Grant`,
   HIGHER_RISK: $localize`Higher Risk`,
+  IMPORT_ACTIVITY_ERROR_IS_DUPLICATE: $localize`This activity already exists.`,
   LOWER_RISK: $localize`Lower Risk`,
   OTHER: $localize`Other`,
   RETIREMENT_PROVISION: $localize`Retirement Provision`,

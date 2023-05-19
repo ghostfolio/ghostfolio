@@ -19,6 +19,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import Big from 'big.js';
 import { isUUID } from 'class-validator';
 import { endOfToday, format, isAfter } from 'date-fns';
@@ -66,7 +67,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   public endOfToday = endOfToday();
   public filters$ = new Subject<Filter[]>();
   public hasDrafts = false;
-  public hasDuplicateActivity = false;
+  public hasErrors = false;
   public isAfter = isAfter;
   public isLoading = true;
   public isUUID = isUUID;
@@ -109,6 +110,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnChanges() {
     this.displayedColumns = [
       'select',
+      'importStatus',
       'count',
       'date',
       'type',
@@ -130,7 +132,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
       });
     } else {
       this.displayedColumns = this.displayedColumns.filter((column) => {
-        return column !== 'select';
+        return column !== 'importStatus' && column !== 'select';
       });
     }
 
@@ -143,6 +145,20 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
     this.defaultDateFormat = getDateFormatString(this.locale);
 
     if (this.activities) {
+      this.activities = this.activities.map((activity) => {
+        return {
+          ...activity,
+          error: activity.error
+            ? {
+                ...activity.error,
+                message: translate(
+                  `IMPORT_ACTIVITY_ERROR_${activity.error.code}`
+                )
+              }
+            : undefined
+        };
+      });
+
       this.allFilters = this.getSearchableFieldValues(this.activities);
 
       this.dataSource = new MatTableDataSource(this.activities);
@@ -167,11 +183,11 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
 
       this.updateFilters();
 
-      this.hasDuplicateActivity = this.activities.some(({ isDuplicate }) => {
-        return isDuplicate;
+      this.hasErrors = this.activities.some(({ error }) => {
+        return !!error;
       });
     } else {
-      this.hasDuplicateActivity = false;
+      this.hasErrors = false;
     }
   }
 
@@ -184,7 +200,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
 
   public onClickActivity(activity: Activity) {
     if (this.showCheckbox) {
-      if (!activity.isDuplicate) {
+      if (!activity.error) {
         this.selectedRows.toggle(activity);
       }
     } else if (
