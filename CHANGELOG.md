@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the cash balance and the value of equity to the account detail dialog
+- Added a check for duplicates to the preview step of the import dividends dialog
 - Added an error message for duplicates to the preview step of the activities import
 - Added a connection timeout to the environment variable `DATABASE_URL`
 - Introduced the _Open Startup_ (`/open`) page with aggregated key metrics including uptime
