@@ -5,9 +5,14 @@ export interface Activities {
 }
 
 export interface Activity extends OrderWithAccount {
+  error?: ActivityError;
   feeInBaseCurrency: number;
-  isDuplicate: boolean;
   updateAccountBalance?: boolean;
   value: number;
   valueInBaseCurrency: number;
+}
+
+export interface ActivityError {
+  code: 'IS_DUPLICATE';
+  message?: string;
 }

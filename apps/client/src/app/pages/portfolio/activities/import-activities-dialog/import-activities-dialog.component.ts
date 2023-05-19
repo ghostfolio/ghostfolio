@@ -236,8 +236,8 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   public updateSelection(activities: Activity[]) {
-    this.selectedActivities = activities.filter(({ isDuplicate }) => {
-      return !isDuplicate;
+    this.selectedActivities = activities.filter(({ error }) => {
+      return !error;
     });
   }
 

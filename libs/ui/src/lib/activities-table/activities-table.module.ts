@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
@@ -32,6 +33,7 @@ import { ActivitiesTableComponent } from './activities-table.component';
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
+    MatTooltipModule,
     NgxSkeletonLoaderModule,
     RouterModule
   ],

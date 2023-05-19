@@ -1,7 +1,10 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  Activity,
+  ActivityError
+} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
@@ -80,11 +83,11 @@ export class ImportService {
           comment: undefined,
           createdAt: undefined,
           date: parseDate(dateString),
+          // TODO: Add evaluated error state
           fee: 0,
           feeInBaseCurrency: 0,
           id: assetProfile.id,
           isDraft: false,
-          isDuplicate: false, // TODO: Use evaluated state
           SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
           symbolProfileId: assetProfile.id,
           type: 'DIVIDEND',
@@ -228,8 +231,8 @@ export class ImportService {
       accountId,
       comment,
       date,
+      error,
       fee,
-      isDuplicate,
       quantity,
       SymbolProfile: assetProfile,
       type,
@@ -283,7 +286,7 @@ export class ImportService {
           updatedAt: new Date()
         };
       } else {
-        if (isDuplicate) {
+        if (error) {
           continue;
         }
 
@@ -321,7 +324,7 @@ export class ImportService {
       //@ts-ignore
       activities.push({
         ...order,
-        isDuplicate,
+        error,
         value,
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee,
@@ -389,12 +392,16 @@ export class ImportService {
           );
         });
 
+        const error: ActivityError = isDuplicate
+          ? { code: 'IS_DUPLICATE' }
+          : undefined;
+
         return {
           accountId,
           comment,
           date,
+          error,
           fee,
-          isDuplicate,
           quantity,
           type,
           unitPrice,

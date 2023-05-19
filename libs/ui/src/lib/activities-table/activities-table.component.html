@@ -78,11 +78,9 @@
         <mat-checkbox
           color="primary"
           [checked]="
-            areAllRowsSelected() &&
-            !hasDuplicateActivity &&
-            selectedRows.hasValue()
+            areAllRowsSelected() && !hasErrors && selectedRows.hasValue()
           "
-          [disabled]="hasDuplicateActivity"
+          [disabled]="hasErrors"
           [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
           (change)="$event ? toggleAllRows() : null"
         ></mat-checkbox>
@@ -90,13 +88,28 @@
       <td *matCellDef="let element" class="px-1" mat-cell>
         <mat-checkbox
           color="primary"
-          [checked]="
-            element.isDuplicate ? false : selectedRows.isSelected(element)
-          "
-          [disabled]="element.isDuplicate"
+          [checked]="element.error ? false : selectedRows.isSelected(element)"
+          [disabled]="element.error"
           (change)="$event ? selectedRows.toggle(element) : null"
           (click)="$event.stopPropagation()"
         ></mat-checkbox>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+    </ng-container>
+
+    <ng-container matColumnDef="importStatus">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <ng-container i18n></ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div
+          *ngIf="element.error"
+          class="d-flex"
+          matTooltipPosition="above"
+          [matTooltip]="element.error.message"
+        >
+          <ion-icon class="text-danger" name="alert-circle-outline"></ion-icon>
+        </div>
       </td>
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
@@ -125,6 +138,7 @@
         mat-footer-cell
       ></td>
     </ng-container>
+
     <ng-container matColumnDef="date">
       <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
         <ng-container i18n>Date</ng-container>
