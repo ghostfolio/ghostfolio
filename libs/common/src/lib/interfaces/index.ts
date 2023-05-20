@@ -37,6 +37,8 @@ import { ImportResponse } from './responses/import-response.interface';
 import { OAuthResponse } from './responses/oauth-response.interface';
 import { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import { ScraperConfiguration } from './scraper-configuration.interface';
+import { Statistics } from './statistics.interface';
+import { Subscription } from './subscription.interface';
 import { TimelinePosition } from './timeline-position.interface';
 import { UniqueAsset } from './unique-asset.interface';
 import { UserSettings } from './user-settings.interface';
@@ -80,6 +82,8 @@ export {
   Position,
   ResponseError,
   ScraperConfiguration,
+  Statistics,
+  Subscription,
   TimelinePosition,
   UniqueAsset,
   User,
