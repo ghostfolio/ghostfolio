@@ -5,11 +5,13 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import bent from 'bent';
+import { format, isAfter, isBefore, isSameDay } from 'date-fns';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
@@ -61,9 +63,42 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    return {
-      [aSymbol]: {}
-    };
+    try {
+      const get = bent(
+        `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`,
+        'GET',
+        'json',
+        200
+      );
+      const { historical } = await get();
+
+      const result: {
+        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      } = {
+        [aSymbol]: {}
+      };
+
+      for (const { close, date } of historical) {
+        if (
+          (isSameDay(parseDate(date), from) ||
+            isAfter(parseDate(date), from)) &&
+          isBefore(parseDate(date), to)
+        ) {
+          result[aSymbol][date] = {
+            marketPrice: close
+          };
+        }
+      }
+
+      return result;
+    } catch (error) {
+      throw new Error(
+        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
+    }
   }
 
   public getName(): DataSource {
@@ -109,7 +144,32 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }
 
   public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    return { items: [] };
+    let items: LookupItem[] = [];
+
+    try {
+      const get = bent(
+        `${this.URL}/search?query=${aQuery}&apikey=${this.apiKey}`,
+        'GET',
+        'json',
+        200
+      );
+      const result = await get();
+
+      items = result.map(({ currency, name, symbol }) => {
+        return {
+          // TODO: Add assetClass
+          // TODO: Add assetSubClass
+          currency,
+          name,
+          symbol,
+          dataSource: this.getName()
+        };
+      });
+    } catch (error) {
+      Logger.error(error, 'FinancialModelingPrepService');
+    }
+
+    return { items };
   }
 
   private getDataProviderInfo(): DataProviderInfo {

@@ -138,8 +138,7 @@ export class YahooFinanceService implements DataProviderInterface {
           marketPrice: this.getConvertedValue({
             symbol: aSymbol,
             value: historicalItem.close
-          }),
-          performance: historicalItem.open - historicalItem.close
+          })
         };
       }
 
