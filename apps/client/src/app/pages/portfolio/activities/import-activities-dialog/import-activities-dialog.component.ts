@@ -16,13 +16,11 @@ import { Position } from '@ghostfolio/common/interfaces';
 import { AssetClass } from '@prisma/client';
 import { isArray, sortBy } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
+import { ImportStep } from './enums/enums';
 
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
-
-enum FileStatus {
-  SELECT = 0,
-  UPLOADED
-}
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,12 +34,12 @@ export class ImportActivitiesDialog implements OnDestroy {
   public details: any[] = [];
   public errorMessages: string[] = [];
   public holdings: Position[] = [];
+  public importStep: ImportStep = ImportStep.UPLOAD_FILE;
   public isFileSelected = false;
   public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
   public uniqueAssetForm: FormGroup;
-  public fileStatus: FileStatus = FileStatus.SELECT;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -148,6 +146,16 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.isFileSelected = false;
   }
 
+  public onImportStepChange(event: StepperSelectionEvent) {
+    if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
+      this.importStep = ImportStep.UPLOAD_FILE;
+      this.isFileSelected = false;
+    } else if (event.selectedIndex === ImportStep.SELECT_ACTIVITIES) {
+      this.importStep = ImportStep.SELECT_ACTIVITIES;
+      this.isFileSelected = true;
+    }
+  }
+
   public onSelectFile() {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
@@ -232,9 +240,9 @@ export class ImportActivitiesDialog implements OnDestroy {
           });
         } finally {
           this.isFileSelected = true;
+          this.importStep = ImportStep.SELECT_ACTIVITIES;
           this.snackBar.dismiss();
           this.changeDetectorRef.markForCheck();
-          this.fileStatus = FileStatus.UPLOADED;
         }
       };
     };

@@ -4,14 +4,23 @@
   [title]="errorMessages.length === 0 ?  'Import Activities' : 'Import Activities Error'"
   (closeButtonClicked)="onCancel()"
 ></gf-dialog-header>
-<link
-  href="https://fonts.googleapis.com/icon?family=Material+Icons"
-  rel="stylesheet"
-/>
 
 <div class="flex-grow-1 py-3" mat-dialog-content>
-  <mat-stepper #stepper [linear]="true" [selectedIndex]="fileStatus">
-    <mat-step editable="false" label="Select File">
+  <mat-stepper
+    [linear]="true"
+    [selectedIndex]="importStep"
+    (selectionChange)="onImportStepChange($event)"
+  >
+    <ng-template matStepperIcon="done">
+      <ion-icon name="checkmark-outline"></ion-icon>
+    </ng-template>
+    <ng-template matStepperIcon="edit">
+      <ion-icon name="pencil-outline"></ion-icon>
+    </ng-template>
+    <mat-step
+      label="Select File"
+      [completed]="isFileSelected || activities.length !== 0"
+    >
       <ng-container *ngIf="!isFileSelected">
         <ng-container *ngIf="mode === 'DIVIDEND'; else selectFile">
           <form [formGroup]="uniqueAssetForm" (ngSubmit)="onLoadDividends()">
@@ -68,56 +77,55 @@
         </ng-template>
       </ng-container>
     </mat-step>
-    <mat-step editable="false" label="Select Activities">
-      <ng-container *ngIf="isFileSelected">
-        <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
-          <gf-activities-table
-            [activities]="activities"
-            [baseCurrency]="data?.user?.settings?.baseCurrency"
-            [deviceType]="data?.deviceType"
-            [hasPermissionToCreateActivity]="false"
-            [hasPermissionToExportActivities]="false"
-            [hasPermissionToFilter]="false"
-            [hasPermissionToOpenDetails]="false"
-            [locale]="data?.user?.settings?.locale"
-            [pageSize]="maxSafeInteger"
-            [showActions]="false"
-            [showCheckbox]="true"
-            [showFooter]="false"
-            [showSymbolColumn]="false"
-            (selectedActivities)="updateSelection($event)"
-          ></gf-activities-table>
-        </ng-container>
-        <ng-template #errorMessage>
-          <mat-accordion displayMode="flat">
-            <mat-expansion-panel
-              *ngFor="let message of errorMessages; let i = index"
-              [disabled]="!details[i]"
-            >
-              <mat-expansion-panel-header class="pl-1">
-                <mat-panel-title>
-                  <div class="d-flex">
-                    <div class="align-items-center d-flex mr-2">
-                      <ion-icon name="warning-outline"></ion-icon>
-                    </div>
-                    <div>{{ message }}</div>
-                  </div>
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <pre
-                *ngIf="details[i]"
-                class="m-0"
-              ><code>{{ details[i] | json }}</code></pre>
-            </mat-expansion-panel>
-          </mat-accordion>
-          <div class="mt-2">
-            <button mat-button (click)="onReset()">
-              <ion-icon class="mr-2" name="arrow-back-outline"></ion-icon>
-              <span i18n>Back</span>
-            </button>
-          </div>
-        </ng-template>
+
+    <mat-step label="Select Activities">
+      <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
+        <gf-activities-table
+          [activities]="activities"
+          [baseCurrency]="data?.user?.settings?.baseCurrency"
+          [deviceType]="data?.deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="false"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="data?.user?.settings?.locale"
+          [pageSize]="maxSafeInteger"
+          [showActions]="false"
+          [showCheckbox]="true"
+          [showFooter]="false"
+          [showSymbolColumn]="false"
+          (selectedActivities)="updateSelection($event)"
+        ></gf-activities-table>
       </ng-container>
+      <ng-template #errorMessage>
+        <mat-accordion displayMode="flat">
+          <mat-expansion-panel
+            *ngFor="let message of errorMessages; let i = index"
+            [disabled]="!details[i]"
+          >
+            <mat-expansion-panel-header class="pl-1">
+              <mat-panel-title>
+                <div class="d-flex">
+                  <div class="align-items-center d-flex mr-2">
+                    <ion-icon name="warning-outline"></ion-icon>
+                  </div>
+                  <div>{{ message }}</div>
+                </div>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <pre
+              *ngIf="details[i]"
+              class="m-0"
+            ><code>{{ details[i] | json }}</code></pre>
+          </mat-expansion-panel>
+        </mat-accordion>
+        <div class="mt-2">
+          <button mat-button (click)="onReset()">
+            <ion-icon class="mr-2" name="arrow-back-outline"></ion-icon>
+            <span i18n>Back</span>
+          </button>
+        </div>
+      </ng-template>
     </mat-step>
   </mat-stepper>
 </div>
