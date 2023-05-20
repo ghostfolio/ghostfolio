@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the local number formatting in the value component
 
+### Fixed
+
+- Fixed the vertical alignment in the toggle component
+
 ## 1.270.1 - 2023-05-19
 
 ### Added
