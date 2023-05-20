@@ -94,6 +94,13 @@ export class FrontendMiddleware implements NestMiddleware {
     ) {
       featureGraphicPath = 'assets/images/blog/1000-stars-on-github.jpg';
       title = `Ghostfolio reaches 1’000 Stars on GitHub - ${title}`;
+    } else if (
+      request.path.startsWith(
+        '/en/blog/2023/05/unlock-your-financial-potential-with-ghostfolio'
+      )
+    ) {
+      featureGraphicPath = 'assets/images/blog/20230520.jpg';
+      title = `Unlock your Financial Potential with Ghostfolio - ${title}`;
     }
 
     if (
