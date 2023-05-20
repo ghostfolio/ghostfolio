@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the local number formatting in the value component
 - Changed the uptime to the last 90 days on the _Open Startup_ (`/open`) page
 
 ### Fixed
