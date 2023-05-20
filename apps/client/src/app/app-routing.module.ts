@@ -138,6 +138,13 @@ const routes: Routes = [
       ).then((m) => m.ThousandStarsOnGitHubPageModule)
   },
   {
+    path: 'blog/2023/05/unlock-your-financial-potential-with-ghostfolio',
+    loadChildren: () =>
+      import(
+        './pages/blog/2023/05/unlock-your-financial-potential-with-ghostfolio/unlock-your-financial-potential-with-ghostfolio-page.module'
+      ).then((m) => m.UnlockYourFinancialPotentialWithGhostfolioPageModule)
+  },
+  {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
