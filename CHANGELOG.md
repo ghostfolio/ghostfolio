@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the historical data and search functionality for the `FINANCIAL_MODELING_PREP` data source type
 
+### Changed
+
+- Improved the local number formatting in the value component
+
 ### Fixed
 
 - Fixed the vertical alignment in the toggle component

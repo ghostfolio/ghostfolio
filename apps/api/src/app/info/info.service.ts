@@ -20,9 +20,11 @@ import {
   encodeDataSource,
   extractNumberFromString
 } from '@ghostfolio/common/helper';
-import { InfoItem } from '@ghostfolio/common/interfaces';
-import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
-import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
+import {
+  InfoItem,
+  Statistics,
+  Subscription
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionOffer } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
