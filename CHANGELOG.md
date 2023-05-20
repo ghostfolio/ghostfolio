@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Changed the uptime to the last 90 days on the _Open Startup_ (`/open`) page
+
 ### Fixed
 
 - Fixed the vertical alignment in the toggle component
