@@ -6,12 +6,26 @@
         <p>
           Ghostfolio is a lightweight wealth management application for
           individuals to keep track of stocks, ETFs or cryptocurrencies and make
-          solid, data-driven investment decisions. We share aggregated
-          <a href="https://ghostfol.io/{{ defaultLanguageCode }}/open"
+          solid, data-driven investment decisions. The source code is fully
+          available as
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >open source software</a
+          >
+          (OSS) under the
+          <a
+            href="https://www.gnu.org/licenses/agpl-3.0.html"
+            title="GNU Affero General Public License"
+            >AGPL-3.0 license</a
+          >
+          and we share aggregated
+          <a
+            href="https://ghostfol.io/{{ defaultLanguageCode }}/open"
+            title="Open Startup"
             >key metrics</a
           >
-          of our platform’s performance and the source code is fully available
-          as open source software (OSS). The project has been initiated by
+          of the platform’s performance. The project has been initiated by
           <a href="https://dotsilver.ch" title="Website of Thomas Kaul"
             >Thomas Kaul</a
           >
@@ -130,6 +144,7 @@
               <gf-value
                 size="large"
                 subLabel="(Last 24 hours)"
+                [locale]="user?.settings?.locale"
                 [value]="statistics?.activeUsers1d ?? '-'"
                 >Active Users</gf-value
               >
@@ -138,6 +153,7 @@
               <gf-value
                 size="large"
                 subLabel="(Last 30 days)"
+                [locale]="user?.settings?.locale"
                 [value]="statistics?.newUsers30d ?? '-'"
                 >New Users</gf-value
               >
@@ -146,6 +162,7 @@
               <gf-value
                 size="large"
                 subLabel="(Last 30 days)"
+                [locale]="user?.settings?.locale"
                 [value]="statistics?.activeUsers30d ?? '-'"
                 >Active Users</gf-value
               >
@@ -154,6 +171,7 @@
               <a class="d-block" href="https://ghostfolio.slack.com">
                 <gf-value
                   size="large"
+                  [locale]="user?.settings?.locale"
                   [value]="statistics?.slackCommunityUsers ?? '-'"
                   >Users in Slack community</gf-value
                 >
@@ -166,6 +184,7 @@
               >
                 <gf-value
                   size="large"
+                  [locale]="user?.settings?.locale"
                   [value]="statistics?.gitHubContributors ?? '-'"
                   >Contributors on GitHub</gf-value
                 >
@@ -178,6 +197,7 @@
               >
                 <gf-value
                   size="large"
+                  [locale]="user?.settings?.locale"
                   [value]="statistics?.gitHubStargazers ?? '-'"
                   >Stars on GitHub</gf-value
                 >

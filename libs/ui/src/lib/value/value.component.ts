@@ -21,7 +21,7 @@ export class ValueComponent implements OnChanges {
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() locale = getLocale();
+  @Input() locale: string | undefined;
   @Input() position = '';
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
@@ -92,7 +92,7 @@ export class ValueComponent implements OnChanges {
             });
           } catch {}
         } else {
-          this.formattedValue = this.value?.toString();
+          this.formattedValue = this.value?.toLocaleString(this.locale);
         }
 
         if (this.isAbsolute) {
@@ -128,6 +128,11 @@ export class ValueComponent implements OnChanges {
     this.formattedValue = '';
     this.isNumber = false;
     this.isString = false;
+
+    if (!this.locale) {
+      this.locale = getLocale();
+    }
+
     this.useAbsoluteValue = false;
   }
 }
