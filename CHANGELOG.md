@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the historical data and search functionality for the `FINANCIAL_MODELING_PREP` data source type
 
+### Fixed
+
+- Fixed the vertical alignment in the toggle component
+
 ## 1.270.1 - 2023-05-19
 
 ### Added
