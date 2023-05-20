@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the historical data and search functionality for the `FINANCIAL_MODELING_PREP` data source type
+- Added a blog post: _Unlock your Financial Potential with Ghostfolio_
 
 ### Changed
 
