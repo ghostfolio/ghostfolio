@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the breadcrumb navigation style in the blog post pages for mobile
+- Upgraded `ionicons` from version `6.1.2` to `7.1.0`
 
 ## 1.271.0 - 2023-05-20
 
