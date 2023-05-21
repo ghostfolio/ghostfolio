@@ -327,10 +327,13 @@ ngx-skeleton-loader {
 
 .breadcrumb {
   background-color: unset;
+  flex-wrap: nowrap;
   padding: unset;
 }
 
 .breadcrumb-item {
+  flex-wrap: nowrap;
+
   &.active {
     color: unset;
   }
