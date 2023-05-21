@@ -10,17 +10,13 @@
     #stepper
     [animationDuration]="0"
     [linear]="true"
+    [orientation]="stepperOrientation"
     [selectedIndex]="importStep"
     (selectionChange)="onImportStepChange($event)"
   >
-    <ng-template matStepperIcon="done">
-      <ion-icon name="checkmark-outline"></ion-icon>
-    </ng-template>
-    <ng-template matStepperIcon="edit">
-      <ion-icon name="pencil-outline"></ion-icon>
-    </ng-template>
-    <mat-step label="Select File">
-      <ng-container *ngIf="!isFileSelected">
+    <mat-step [completed]="importStep === 0" [selected]="importStep === 0">
+      <ng-template i18n matStepLabel>Select File</ng-template>
+      <ng-container>
         <ng-container *ngIf="mode === 'DIVIDEND'; else selectFile">
           <form
             class="mt-3"
@@ -81,7 +77,8 @@
       </ng-container>
     </mat-step>
 
-    <mat-step label="Select Activities">
+    <mat-step [completed]="importStep === 1" [selected]="importStep === 1">
+      <ng-template i18n matStepLabel>Select Activities</ng-template>
       <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
         <gf-activities-table
           [activities]="activities"
@@ -99,6 +96,18 @@
           [showSymbolColumn]="false"
           (selectedActivities)="updateSelection($event)"
         ></gf-activities-table>
+        <div class="d-flex justify-content-end mt-3">
+          <button i18n mat-button (click)="onCancel()">Cancel</button>
+          <button
+            class="ml-1"
+            color="primary"
+            mat-flat-button
+            [disabled]="!selectedActivities?.length"
+            (click)="onImportActivities()"
+          >
+            <ng-container i18n>Import</ng-container>
+          </button>
+        </div>
       </ng-container>
       <ng-template #errorMessage>
         <mat-accordion displayMode="flat">
@@ -131,18 +140,6 @@
       </ng-template>
     </mat-step>
   </mat-stepper>
-</div>
-
-<div *ngIf="isFileSelected" class="justify-content-end" mat-dialog-actions>
-  <button i18n mat-button (click)="onCancel()">Cancel</button>
-  <button
-    color="primary"
-    mat-flat-button
-    [disabled]="!selectedActivities?.length"
-    (click)="onImportActivities()"
-  >
-    <ng-container i18n>Import</ng-container>
-  </button>
 </div>
 
 <gf-dialog-footer

@@ -19,8 +19,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { ImportStep } from './enums/enums';
 
 import { ImportActivitiesDialogParams } from './interfaces/interfaces';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import {
+  StepperOrientation,
+  StepperSelectionEvent
+} from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,13 +36,14 @@ export class ImportActivitiesDialog implements OnDestroy {
   public accounts: CreateAccountDto[] = [];
   public activities: Activity[] = [];
   public details: any[] = [];
+  public deviceType: string;
   public errorMessages: string[] = [];
   public holdings: Position[] = [];
   public importStep: ImportStep = ImportStep.UPLOAD_FILE;
-  public isFileSelected = false;
   public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
+  public stepperOrientation: StepperOrientation;
   public uniqueAssetForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
@@ -47,6 +52,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ImportActivitiesDialog>,
     private importActivitiesService: ImportActivitiesService,
@@ -54,6 +60,10 @@ export class ImportActivitiesDialog implements OnDestroy {
   ) {}
 
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.stepperOrientation =
+      this.deviceType === 'mobile' ? 'vertical' : 'horizontal';
+
     this.uniqueAssetForm = this.formBuilder.group({
       uniqueAsset: [undefined, Validators.required]
     });
@@ -134,7 +144,6 @@ export class ImportActivitiesDialog implements OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities }) => {
         this.activities = activities;
-        this.isFileSelected = true;
 
         aStepper.next();
 
@@ -146,7 +155,6 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
-    this.isFileSelected = false;
 
     aStepper.reset();
   }
@@ -154,10 +162,8 @@ export class ImportActivitiesDialog implements OnDestroy {
   public onImportStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
       this.importStep = ImportStep.UPLOAD_FILE;
-      this.isFileSelected = false;
     } else if (event.selectedIndex === ImportStep.SELECT_ACTIVITIES) {
       this.importStep = ImportStep.SELECT_ACTIVITIES;
-      this.isFileSelected = true;
     }
   }
 
@@ -244,7 +250,6 @@ export class ImportActivitiesDialog implements OnDestroy {
             error: { error: { message: ['Unexpected format'] } }
           });
         } finally {
-          this.isFileSelected = true;
           this.importStep = ImportStep.SELECT_ACTIVITIES;
           this.snackBar.dismiss();
 

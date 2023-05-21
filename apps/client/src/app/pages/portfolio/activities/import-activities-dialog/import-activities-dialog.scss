@@ -5,6 +5,16 @@
     color: rgba(var(--palette-primary-500), 1);
   }
 
+  mat-stepper {
+    ::ng-deep {
+      .mat-step-header {
+        &[aria-selected='false'] {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
   .mat-expansion-panel {
     background: none;
     box-shadow: none;
