@@ -5,8 +5,10 @@
   (closeButtonClicked)="onCancel()"
 ></gf-dialog-header>
 
-<div class="flex-grow-1 py-3" mat-dialog-content>
+<div class="flex-grow-1" mat-dialog-content>
   <mat-stepper
+    #stepper
+    [animationDuration]="0"
     [linear]="true"
     [selectedIndex]="importStep"
     (selectionChange)="onImportStepChange($event)"
@@ -17,13 +19,14 @@
     <ng-template matStepperIcon="edit">
       <ion-icon name="pencil-outline"></ion-icon>
     </ng-template>
-    <mat-step
-      label="Select File"
-      [completed]="isFileSelected || activities.length !== 0"
-    >
+    <mat-step label="Select File">
       <ng-container *ngIf="!isFileSelected">
         <ng-container *ngIf="mode === 'DIVIDEND'; else selectFile">
-          <form [formGroup]="uniqueAssetForm" (ngSubmit)="onLoadDividends()">
+          <form
+            class="mt-3"
+            [formGroup]="uniqueAssetForm"
+            (ngSubmit)="onLoadDividends(stepper)"
+          >
             <mat-form-field appearance="outline" class="w-100">
               <mat-label i18n>Holding</mat-label>
               <mat-select formControlName="uniqueAsset">
@@ -34,7 +37,7 @@
                 >
               </mat-select>
             </mat-form-field>
-            <div class="d-flex justify-content-center flex-column">
+            <div class="d-flex flex-column justify-content-center">
               <button
                 color="primary"
                 mat-flat-button
@@ -47,12 +50,12 @@
           </form>
         </ng-container>
         <ng-template #selectFile>
-          <div class="d-flex justify-content-center flex-column">
+          <div class="d-flex flex-column justify-content-center mt-3">
             <button
               class="py-4"
               color="primary"
               mat-stroked-button
-              (click)="onSelectFile()"
+              (click)="onSelectFile(stepper)"
             >
               <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
               <span i18n>Choose File</span>
@@ -120,7 +123,7 @@
           </mat-expansion-panel>
         </mat-accordion>
         <div class="mt-2">
-          <button mat-button (click)="onReset()">
+          <button mat-button (click)="onReset(stepper)">
             <ion-icon class="mr-2" name="arrow-back-outline"></ion-icon>
             <span i18n>Back</span>
           </button>

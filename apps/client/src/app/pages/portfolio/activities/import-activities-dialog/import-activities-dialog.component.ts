@@ -120,7 +120,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
   }
 
-  public onLoadDividends() {
+  public onLoadDividends(aStepper: MatStepper) {
     this.uniqueAssetForm.controls['uniqueAsset'].disable();
 
     const { dataSource, symbol } =
@@ -136,14 +136,19 @@ export class ImportActivitiesDialog implements OnDestroy {
         this.activities = activities;
         this.isFileSelected = true;
 
+        aStepper.next();
+
         this.changeDetectorRef.markForCheck();
       });
   }
 
-  public onReset() {
+  public onReset(aStepper: MatStepper) {
     this.details = [];
     this.errorMessages = [];
+    this.importStep = ImportStep.SELECT_ACTIVITIES;
     this.isFileSelected = false;
+
+    aStepper.reset();
   }
 
   public onImportStepChange(event: StepperSelectionEvent) {
@@ -156,7 +161,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
   }
 
-  public onSelectFile() {
+  public onSelectFile(aStepper: MatStepper) {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
@@ -242,6 +247,9 @@ export class ImportActivitiesDialog implements OnDestroy {
           this.isFileSelected = true;
           this.importStep = ImportStep.SELECT_ACTIVITIES;
           this.snackBar.dismiss();
+
+          aStepper.next();
+
           this.changeDetectorRef.markForCheck();
         }
       };
