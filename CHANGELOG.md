@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the breadcrumb navigation style in the blog post pages for mobile
 - Improved the error handling in the delete user endpoint
+- Improved the style of the _Changelog & License_ button on the about page
 
 ## 1.271.0 - 2023-05-20
 
