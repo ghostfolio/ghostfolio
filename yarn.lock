@@ -11221,10 +11221,10 @@ invert-kv@^2.0.0:
   resolved "https://registry.yarnpkg.com/invert-kv/-/invert-kv-2.0.0.tgz#7393f5afa59ec9ff5f67a27620d11c226e3eec02"
   integrity sha512-wPVv/y/QQ/Uiirj/vh3oP+1Ww+AWehmi1g5fFWGPF6IpCBCDVrhgHRMvrLfdYcwDh3QJbGXDW4JAuzxElLSqKA==
 
-ionicons@6.1.2:
-  version "6.1.2"
-  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-6.1.2.tgz#805ed1ce272b653ac07a85f83514e5afa2c9677d"
-  integrity sha512-EL3jjlUzjPo8h2PfI+BUEjVMF9weSfLAFriNlk9pHFMTJq+7G12sAJBZ3AnRN8nTWA2pOS279PvFIWS3hbat+w==
+ionicons@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-7.1.0.tgz#25daa91345acedcb0f4fb7da670f5aff2e1f266a"
+  integrity sha512-iE4GuEdEHARJpp0sWL7WJZCzNCf5VxpNRhAjW0fLnZPnNL5qZOJUcfup2Z2Ty7Jk8Q5hacrHfGEB1lCwOdXqGg==
   dependencies:
     "@stencil/core" "^2.18.0"
 
