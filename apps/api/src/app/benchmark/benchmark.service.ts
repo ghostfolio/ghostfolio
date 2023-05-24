@@ -2,6 +2,7 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -21,8 +22,6 @@ import Big from 'big.js';
 import { format } from 'date-fns';
 import ms from 'ms';
 import { uniqBy } from 'lodash';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { NotFoundError } from '@ghostfolio/common/exceptions';
 
 @Injectable()
 export class BenchmarkService {
@@ -221,21 +220,21 @@ export class BenchmarkService {
     });
 
     if (!symbolProfile) {
-      throw new NotFoundError('Symbol profile not found');
+      return;
     }
 
-    const benchmarks =
+    let benchmarks =
       ((await this.propertyService.getByKey(
         PROPERTY_BENCHMARKS
       )) as BenchmarkProperty[]) ?? [];
 
     benchmarks.push({ symbolProfileId: symbolProfile.id } as BenchmarkProperty);
 
-    const newBenchmarks = uniqBy(benchmarks, 'symbolProfileId');
+    benchmarks = uniqBy(benchmarks, 'symbolProfileId');
 
     await this.propertyService.put({
       key: PROPERTY_BENCHMARKS,
-      value: JSON.stringify(newBenchmarks)
+      value: JSON.stringify(benchmarks)
     });
 
     return {

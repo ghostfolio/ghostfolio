@@ -14,23 +14,13 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
-import {
-  Filter,
-  InfoItem,
-  UniqueAsset,
-  User
-} from '@ghostfolio/common/interfaces';
+import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import {
-  distinctUntilChanged,
-  switchMap,
-  take,
-  takeUntil
-} from 'rxjs/operators';
+import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
@@ -155,13 +145,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       });
   }
 
-  public isBenchmark({ dataSource, symbol }: UniqueAsset) {
-    return this.benchmarks.some(
-      (benchmark) =>
-        benchmark.dataSource === dataSource && benchmark.symbol === symbol
-    );
-  }
-
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .deleteProfileData({ dataSource, symbol })
@@ -201,13 +184,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
-  }
-
-  public onSetBenchmark(benchmark: UniqueAsset) {
-    this.dataService
-      .postBenchmark(benchmark)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
