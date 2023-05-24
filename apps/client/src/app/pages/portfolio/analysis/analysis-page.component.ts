@@ -73,7 +73,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    const { benchmarks } = this.dataService.getInfo();
+    const { benchmarks } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
 
     route.queryParams

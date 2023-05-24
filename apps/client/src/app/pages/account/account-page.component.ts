@@ -85,7 +85,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     public webAuthnService: WebAuthnService
   ) {
     const { baseCurrency, currencies, globalPermissions, subscriptions } =
-      this.dataService.getInfo();
+      this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
     this.currencies = currencies;

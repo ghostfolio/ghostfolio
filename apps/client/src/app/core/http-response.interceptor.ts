@@ -35,7 +35,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
     private snackBar: MatSnackBar,
     private webAuthnService: WebAuthnService
   ) {
-    this.info = this.dataService.getInfo();
+    this.info = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,

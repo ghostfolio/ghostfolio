@@ -64,7 +64,7 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlSegments = urlSegmentGroup.segments;
         this.currentRoute = urlSegments[0].path;
 
-        this.info = this.dataService.getInfo();
+        this.info = this.dataService.fetchInfo();
 
         if (this.deviceType === 'mobile') {
           setTimeout(() => {

@@ -20,7 +20,7 @@ export class DemoPageComponent implements OnDestroy {
     private router: Router,
     private tokenStorageService: TokenStorageService
   ) {
-    this.info = this.dataService.getInfo();
+    this.info = this.dataService.fetchInfo();
   }
 
   public ngOnInit() {

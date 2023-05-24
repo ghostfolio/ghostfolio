@@ -21,7 +21,7 @@ export class OpenPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    const { statistics } = this.dataService.getInfo();
+    const { statistics } = this.dataService.fetchInfo();
 
     this.statistics = statistics;
   }

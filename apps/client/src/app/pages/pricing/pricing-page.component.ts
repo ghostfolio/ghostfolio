@@ -41,7 +41,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    const { baseCurrency, subscriptions } = this.dataService.getInfo();
+    const { baseCurrency, subscriptions } = this.dataService.fetchInfo();
     this.baseCurrency = baseCurrency;
 
     this.coupon = subscriptions?.default?.coupon;

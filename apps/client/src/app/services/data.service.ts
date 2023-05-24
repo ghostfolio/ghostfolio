@@ -43,7 +43,7 @@ import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -193,21 +193,18 @@ export class DataService {
     });
   }
 
-  public fetchInfo(): Observable<InfoItem> {
+  public fetchInfo(): InfoItem {
+    const info = cloneDeep((window as any).info);
     const utmSource = <'ios' | 'trusted-web-activity'>(
       window.localStorage.getItem('utm_source')
     );
 
-    return this.http.get<InfoItem>('/api/v1/info').pipe(
-      take(1),
-      map((info: InfoItem) => {
-        info.globalPermissions = filterGlobalPermissions(
-          info.globalPermissions,
-          utmSource
-        );
-        return info;
-      })
+    info.globalPermissions = filterGlobalPermissions(
+      info.globalPermissions,
+      utmSource
     );
+
+    return info;
   }
 
   public fetchInvestments({
@@ -392,20 +389,6 @@ export class DataService {
           return data;
         })
       );
-  }
-
-  public getInfo(): InfoItem {
-    const info = cloneDeep((window as any).info);
-    const utmSource = <'ios' | 'trusted-web-activity'>(
-      window.localStorage.getItem('utm_source')
-    );
-
-    info.globalPermissions = filterGlobalPermissions(
-      info.globalPermissions,
-      utmSource
-    );
-
-    return info;
   }
 
   public loginAnonymous(accessToken: string) {

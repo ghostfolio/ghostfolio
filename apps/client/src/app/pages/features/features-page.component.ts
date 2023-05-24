@@ -23,7 +23,7 @@ export class FeaturesPageComponent implements OnDestroy {
     private dataService: DataService,
     private userService: UserService
   ) {
-    this.info = this.dataService.getInfo();
+    this.info = this.dataService.fetchInfo();
   }
 
   public ngOnInit() {

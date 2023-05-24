@@ -37,7 +37,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    this.info = this.dataService.getInfo();
+    this.info = this.dataService.fetchInfo();
     this.isLoading = true;
 
     this.userService.stateChanged

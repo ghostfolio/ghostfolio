@@ -127,7 +127,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.benchmarks = this.dataService.getInfo().benchmarks;
+    this.benchmarks = this.dataService.fetchInfo().benchmarks;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.filters$
@@ -209,15 +209,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     this.dataService
       .postBenchmark(benchmark)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((_) => {
-        this.dataService
-          .fetchInfo()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((info: InfoItem) => {
-            this.benchmarks = info.benchmarks;
-            (window as any) = info;
-          });
-      });
+      .subscribe(() => {});
   }
 
   public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {

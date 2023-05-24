@@ -31,7 +31,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    const { globalPermissions, statistics } = this.dataService.getInfo();
+    const { globalPermissions, statistics } = this.dataService.fetchInfo();
 
     this.hasPermissionForBlog = hasPermission(
       globalPermissions,

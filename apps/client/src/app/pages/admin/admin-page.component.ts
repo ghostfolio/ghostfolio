@@ -18,7 +18,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(private dataService: DataService) {
-    const { systemMessage } = this.dataService.getInfo();
+    const { systemMessage } = this.dataService.fetchInfo();
 
     this.hasMessage = !!systemMessage;
   }

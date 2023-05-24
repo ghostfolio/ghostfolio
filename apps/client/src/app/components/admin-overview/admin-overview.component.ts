@@ -50,7 +50,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    this.info = this.dataService.getInfo();
+    this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))

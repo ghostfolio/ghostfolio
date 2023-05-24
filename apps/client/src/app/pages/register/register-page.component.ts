@@ -39,13 +39,13 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     private tokenStorageService: TokenStorageService,
     private userService: UserService
   ) {
-    this.info = this.dataService.getInfo();
+    this.info = this.dataService.fetchInfo();
 
     this.tokenStorageService.signOut();
   }
 
   public ngOnInit() {
-    const { demoAuthToken, globalPermissions } = this.dataService.getInfo();
+    const { demoAuthToken, globalPermissions } = this.dataService.fetchInfo();
 
     this.demoAuthToken = demoAuthToken;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
