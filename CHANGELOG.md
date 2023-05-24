@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Decreased the density of the `@angular/material` tables
 - Improved the breadcrumb navigation style in the blog post pages for mobile
 - Improved the style of the _Changelog & License_ button on the about page
 - Upgraded `ionicons` from version `6.1.2` to `7.1.0`
@@ -271,7 +272,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the slide toggles to checkboxes on the account page
 - Changed the slide toggles to checkboxes in the admin control panel
-- Decreased the density of the theme
+- Increased the density of the theme
 - Migrated the style of various components to `@angular/material` `15` (mdc)
 - Upgraded `@angular/cdk` and `@angular/material` from version `15.2.5` to `15.2.6`
 - Upgraded `bull` from version `4.10.2` to `4.10.4`
