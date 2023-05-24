@@ -405,6 +405,10 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
   }
 
+  public postBenchmark(benchmark: UniqueAsset) {
+    return this.http.post(`/api/v1/benchmark`, benchmark);
+  }
+
   public postOrder(aOrder: CreateOrderDto) {
     return this.http.post<OrderModel>(`/api/v1/order`, aOrder);
   }

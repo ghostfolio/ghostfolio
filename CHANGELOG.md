@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to set an asset profile as a benchmark
+
 ### Changed
 
 - Decreased the density of the `@angular/material` tables
