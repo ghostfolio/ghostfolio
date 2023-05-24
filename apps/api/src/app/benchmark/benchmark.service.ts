@@ -120,9 +120,9 @@ export class BenchmarkService {
 
   public async getBenchmarkAssetProfiles(): Promise<Partial<SymbolProfile>[]> {
     const symbolProfileIds: string[] = (
-      ((await this.propertyService.getByKey(PROPERTY_BENCHMARKS)) as {
-        symbolProfileId: string;
-      }[]) ?? []
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as BenchmarkProperty[]) ?? []
     ).map(({ symbolProfileId }) => {
       return symbolProfileId;
     });
@@ -228,7 +228,7 @@ export class BenchmarkService {
         PROPERTY_BENCHMARKS
       )) as BenchmarkProperty[]) ?? [];
 
-    benchmarks.push({ symbolProfileId: symbolProfile.id } as BenchmarkProperty);
+    benchmarks.push({ symbolProfileId: symbolProfile.id });
 
     benchmarks = uniqBy(benchmarks, 'symbolProfileId');
 
