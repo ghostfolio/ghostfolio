@@ -17,7 +17,7 @@ import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
+import { AssetSubClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -51,7 +51,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       type: 'ASSET_SUB_CLASS'
     };
   });
-  public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;
   public dataSource: MatTableDataSource<AdminMarketDataItem> =
@@ -117,7 +116,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.benchmarks = this.dataService.fetchInfo().benchmarks;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.filters$
