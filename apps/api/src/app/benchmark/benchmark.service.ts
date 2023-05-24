@@ -212,14 +212,14 @@ export class BenchmarkService {
     dataSource,
     symbol
   }: UniqueAsset): Promise<Partial<SymbolProfile>> {
-    const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+    const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,
         symbol
       }
     });
 
-    if (!symbolProfile) {
+    if (!assetProfile) {
       return;
     }
 
@@ -228,7 +228,7 @@ export class BenchmarkService {
         PROPERTY_BENCHMARKS
       )) as BenchmarkProperty[]) ?? [];
 
-    benchmarks.push({ symbolProfileId: symbolProfile.id });
+    benchmarks.push({ symbolProfileId: assetProfile.id });
 
     benchmarks = uniqBy(benchmarks, 'symbolProfileId');
 
@@ -240,8 +240,8 @@ export class BenchmarkService {
     return {
       dataSource,
       symbol,
-      id: symbolProfile.id,
-      name: symbolProfile.name
+      id: assetProfile.id,
+      name: assetProfile.name
     };
   }
 
