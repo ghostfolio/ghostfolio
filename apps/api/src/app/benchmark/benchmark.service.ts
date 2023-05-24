@@ -20,8 +20,8 @@ import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format } from 'date-fns';
-import ms from 'ms';
 import { uniqBy } from 'lodash';
+import ms from 'ms';
 
 @Injectable()
 export class BenchmarkService {
