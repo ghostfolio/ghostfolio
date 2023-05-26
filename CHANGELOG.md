@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Decreased the density of the `@angular/material` tables
+- Improved the portfolio proportion chart component by supporting case insensitive names
 - Improved the breadcrumb navigation style in the blog post pages for mobile
 - Improved the error handling in the delete user endpoint
 - Improved the style of the _Changelog & License_ button on the about page
