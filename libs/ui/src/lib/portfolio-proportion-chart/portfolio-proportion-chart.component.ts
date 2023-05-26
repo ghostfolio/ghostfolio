@@ -149,7 +149,7 @@ export class PortfolioProportionChartComponent
           );
         } else {
           chartData[UNKNOWN_KEY] = {
-            name: this.positions[symbol][this.keys[1]],
+            name: this.positions[symbol].name,
             subCategory: this.keys[1]
               ? { [this.keys[1]]: { value: new Big(0) } }
               : undefined,
