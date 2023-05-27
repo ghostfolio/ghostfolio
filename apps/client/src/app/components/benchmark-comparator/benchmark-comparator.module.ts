@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
 import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -16,7 +17,8 @@ import { BenchmarkComparatorComponent } from './benchmark-comparator.component';
     GfPremiumIndicatorModule,
     MatSelectModule,
     NgxSkeletonLoaderModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ]
 })
 export class GfBenchmarkComparatorModule {}
