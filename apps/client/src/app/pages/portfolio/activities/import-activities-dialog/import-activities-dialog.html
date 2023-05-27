@@ -81,6 +81,7 @@
       <ng-template i18n matStepLabel>Select Activities</ng-template>
       <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
         <gf-activities-table
+          *ngIf="importStep === 1"
           [activities]="activities"
           [baseCurrency]="data?.user?.settings?.baseCurrency"
           [deviceType]="data?.deviceType"
@@ -97,7 +98,9 @@
           (selectedActivities)="updateSelection($event)"
         ></gf-activities-table>
         <div class="d-flex justify-content-end mt-3">
-          <button i18n mat-button (click)="onCancel()">Cancel</button>
+          <button i18n mat-button (click)="onImportCancel(stepper)">
+            Cancel
+          </button>
           <button
             class="ml-1"
             color="primary"

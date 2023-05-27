@@ -101,6 +101,10 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
+  public onImportCancel(aStepper: MatStepper) {
+    aStepper.previous();
+  }
+
   public async onImportActivities() {
     try {
       this.snackBar.open('⏳ ' + $localize`Importing data...`);
