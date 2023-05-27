@@ -73,19 +73,6 @@
             </div>
           </div>
           <div
-            *ngIf="info?.benchmarks?.length > 0"
-            class="align-items-start d-flex my-3"
-          >
-            <div class="w-50" i18n>Benchmarks</div>
-            <div class="w-50">
-              <table>
-                <tr *ngFor="let benchmark of info.benchmarks">
-                  <td class="pl-1">{{ benchmark.symbol }}</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-          <div
             *ngIf="info?.tags?.length > 0"
             class="align-items-start d-flex my-3"
           >
