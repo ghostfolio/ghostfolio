@@ -5,25 +5,27 @@ import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strate
 import { ModulePreloadService } from './core/module-preload.service';
 
 const routes: Routes = [
-  {
-    path: 'about',
+  ...['about', 'ueber-uns'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
-  },
-  {
-    path: 'about/changelog',
+  })),
+  ...['about/changelog', 'ueber-uns/changelog'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/about/changelog/changelog-page.module').then(
         (m) => m.ChangelogPageModule
       )
-  },
-  {
-    path: 'about/privacy-policy',
-    loadChildren: () =>
-      import('./pages/about/privacy-policy/privacy-policy-page.module').then(
-        (m) => m.PrivacyPolicyPageModule
-      )
-  },
+  })),
+  ...['about/privacy-policy', 'ueber-uns/datenschutzbestimmungen'].map(
+    (path) => ({
+      path,
+      loadChildren: () =>
+        import('./pages/about/privacy-policy/privacy-policy-page.module').then(
+          (m) => m.PrivacyPolicyPageModule
+        )
+    })
+  ),
   {
     path: 'account',
     loadChildren: () =>
@@ -48,11 +50,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
   },
-  {
-    path: 'blog',
+  ...['blog'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
-  },
+  })),
   {
     path: 'blog/2021/07/hallo-ghostfolio',
     loadChildren: () =>
@@ -149,30 +151,30 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
   },
-  {
-    path: 'faq',
+  ...['faq', 'haeufig-gestellte-fragen'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
-  },
-  {
-    path: 'features',
+  })),
+  ...['features'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/features/features-page.module').then(
         (m) => m.FeaturesPageModule
       )
-  },
+  })),
   {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
-  {
-    path: 'markets',
+  ...['markets', 'maerkte'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(
         (m) => m.MarketsPageModule
       )
-  },
+  })),
   {
     path: 'open',
     loadChildren: () =>
@@ -192,27 +194,27 @@ const routes: Routes = [
         (m) => m.PortfolioPageModule
       )
   },
-  {
-    path: 'pricing',
+  ...['pricing', 'preise'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule
       )
-  },
-  {
-    path: 'register',
+  })),
+  ...['register', 'registrierung'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/register/register-page.module').then(
         (m) => m.RegisterPageModule
       )
-  },
-  {
-    path: 'resources',
+  })),
+  ...['resources', 'ressourcen'].map((path) => ({
+    path,
     loadChildren: () =>
       import('./pages/resources/resources-page.module').then(
         (m) => m.ResourcesPageModule
       )
-  },
+  })),
   {
     path: 'start',
     loadChildren: () =>
