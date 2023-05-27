@@ -23,6 +23,7 @@ import {
   parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
 import { SymbolProfile } from '@prisma/client';
 import {
@@ -59,6 +60,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @ViewChild('chartCanvas') chartCanvas;
 
   public chart: Chart<'line'>;
+  public hasPermissionToAccessAdminControl: boolean;
 
   public constructor() {
     Chart.register(
@@ -76,6 +78,11 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
+    this.hasPermissionToAccessAdminControl = hasPermission(
+      this.user?.permissions,
+      permissions.accessAdminControl
+    );
+
     if (this.performanceDataItems) {
       this.initialize();
     }
