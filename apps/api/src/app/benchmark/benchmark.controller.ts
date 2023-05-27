@@ -1,6 +1,6 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
-import {
+import type {
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   UniqueAsset
