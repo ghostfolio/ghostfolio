@@ -10,6 +10,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a stepper to the activities import dialog
+- Added a link to manage the benchmarks to the benchmark comparator
+- Added support for localized routes
+
+## 1.272.0 - 2023-05-26
+
+### Added
+
+- Added support to set an asset profile as a benchmark
+
+### Changed
+
+- Decreased the density of the `@angular/material` tables
+- Improved the portfolio proportion chart component by supporting case insensitive names
+- Improved the breadcrumb navigation style in the blog post pages for mobile
+- Improved the error handling in the delete user endpoint
+- Improved the style of the _Changelog & License_ button on the about page
+- Upgraded `ionicons` from version `6.1.2` to `7.1.0`
+
+## 1.271.0 - 2023-05-20
+
+### Added
+
+- Added the historical data and search functionality for the `FINANCIAL_MODELING_PREP` data source type
+- Added a blog post: _Unlock your Financial Potential with Ghostfolio_
+
+### Changed
+
+- Improved the local number formatting in the value component
+- Changed the uptime to the last 90 days on the _Open Startup_ (`/open`) page
+
+### Fixed
+
+- Fixed the vertical alignment in the toggle component
 
 ## 1.270.1 - 2023-05-19
 
@@ -253,7 +286,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the slide toggles to checkboxes on the account page
 - Changed the slide toggles to checkboxes in the admin control panel
-- Decreased the density of the theme
+- Increased the density of the theme
 - Migrated the style of various components to `@angular/material` `15` (mdc)
 - Upgraded `@angular/cdk` and `@angular/material` from version `15.2.5` to `15.2.6`
 - Upgraded `bull` from version `4.10.2` to `4.10.4`

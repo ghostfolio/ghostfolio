@@ -145,18 +145,6 @@
             <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
               <button
                 mat-menu-item
-                (click)="onGatherSymbol({dataSource: element.dataSource, symbol: element.symbol})"
-              >
-                <ng-container i18n>Gather Historical Data</ng-container>
-              </button>
-              <button
-                mat-menu-item
-                (click)="onGatherProfileDataBySymbol({dataSource: element.dataSource, symbol: element.symbol})"
-              >
-                <ng-container i18n>Gather Profile Data</ng-container>
-              </button>
-              <button
-                mat-menu-item
                 [disabled]="element.activitiesCount !== 0"
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >

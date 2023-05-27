@@ -17,19 +17,22 @@ import {
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
+  DATE_FORMAT,
   encodeDataSource,
   extractNumberFromString
 } from '@ghostfolio/common/helper';
-import { InfoItem } from '@ghostfolio/common/interfaces';
-import { Statistics } from '@ghostfolio/common/interfaces/statistics.interface';
-import { Subscription } from '@ghostfolio/common/interfaces/subscription.interface';
+import {
+  InfoItem,
+  Statistics,
+  Subscription
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionOffer } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bent from 'bent';
 import * as cheerio from 'cheerio';
-import { subDays } from 'date-fns';
+import { format, subDays } from 'date-fns';
 
 @Injectable()
 export class InfoService {
@@ -344,7 +347,10 @@ export class InfoService {
         )) as string;
 
         const get = bent(
-          `https://betteruptime.com/api/v2/monitors/${monitorId}/sla`,
+          `https://betteruptime.com/api/v2/monitors/${monitorId}/sla?from=${format(
+            subDays(new Date(), 90),
+            DATE_FORMAT
+          )}&to${format(new Date(), DATE_FORMAT)}`,
           'GET',
           'json',
           200,

@@ -13,7 +13,6 @@
       appearance="outline"
       class="w-100 without-hint"
       color="accent"
-      [hidden]="benchmarks?.length === 0"
     >
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
@@ -27,6 +26,12 @@
           *ngFor="let symbolProfile of benchmarks"
           [value]="symbolProfile.id"
           >{{ symbolProfile.name }}</mat-option
+        >
+        <mat-option
+          *ngIf="hasPermissionToAccessAdminControl"
+          i18n
+          [routerLink]="['/admin', 'market-data']"
+          >Manage Benchmarks</mat-option
         >
       </mat-select>
     </mat-form-field>

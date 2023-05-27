@@ -23,7 +23,6 @@ export interface IOrder {
 
 export interface IDataProviderHistoricalResponse {
   marketPrice: number;
-  performance?: number;
 }
 
 export interface IDataProviderResponse {

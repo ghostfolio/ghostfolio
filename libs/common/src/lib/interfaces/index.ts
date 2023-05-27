@@ -1,46 +1,49 @@
-import { Access } from './access.interface';
-import { Accounts } from './accounts.interface';
-import { AdminData } from './admin-data.interface';
-import { AdminJobs } from './admin-jobs.interface';
-import { AdminMarketDataDetails } from './admin-market-data-details.interface';
-import {
+import type { Access } from './access.interface';
+import type { Accounts } from './accounts.interface';
+import type { AdminData } from './admin-data.interface';
+import type { AdminJobs } from './admin-jobs.interface';
+import type { AdminMarketDataDetails } from './admin-market-data-details.interface';
+import type {
   AdminMarketData,
   AdminMarketDataItem
 } from './admin-market-data.interface';
-import { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
-import { Benchmark } from './benchmark.interface';
-import { Coupon } from './coupon.interface';
-import { DataProviderInfo } from './data-provider-info.interface';
-import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
-import { Export } from './export.interface';
-import { FilterGroup } from './filter-group.interface';
-import { Filter } from './filter.interface';
-import { HistoricalDataItem } from './historical-data-item.interface';
-import { InfoItem } from './info-item.interface';
-import { LineChartItem } from './line-chart-item.interface';
-import { PortfolioChart } from './portfolio-chart.interface';
-import { PortfolioDetails } from './portfolio-details.interface';
-import { PortfolioDividends } from './portfolio-dividends.interface';
-import { PortfolioInvestments } from './portfolio-investments.interface';
-import { PortfolioItem } from './portfolio-item.interface';
-import { PortfolioOverview } from './portfolio-overview.interface';
-import { PortfolioPerformance } from './portfolio-performance.interface';
-import { PortfolioPosition } from './portfolio-position.interface';
-import { PortfolioPublicDetails } from './portfolio-public-details.interface';
-import { PortfolioReportRule } from './portfolio-report-rule.interface';
-import { PortfolioReport } from './portfolio-report.interface';
-import { PortfolioSummary } from './portfolio-summary.interface';
-import { Position } from './position.interface';
-import { BenchmarkResponse } from './responses/benchmark-response.interface';
-import { ResponseError } from './responses/errors.interface';
-import { ImportResponse } from './responses/import-response.interface';
-import { OAuthResponse } from './responses/oauth-response.interface';
-import { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
-import { ScraperConfiguration } from './scraper-configuration.interface';
-import { TimelinePosition } from './timeline-position.interface';
-import { UniqueAsset } from './unique-asset.interface';
-import { UserSettings } from './user-settings.interface';
-import { User } from './user.interface';
+import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
+import type { BenchmarkProperty } from './benchmark-property.interface';
+import type { Benchmark } from './benchmark.interface';
+import type { Coupon } from './coupon.interface';
+import type { DataProviderInfo } from './data-provider-info.interface';
+import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
+import type { Export } from './export.interface';
+import type { FilterGroup } from './filter-group.interface';
+import type { Filter } from './filter.interface';
+import type { HistoricalDataItem } from './historical-data-item.interface';
+import type { InfoItem } from './info-item.interface';
+import type { LineChartItem } from './line-chart-item.interface';
+import type { PortfolioChart } from './portfolio-chart.interface';
+import type { PortfolioDetails } from './portfolio-details.interface';
+import type { PortfolioDividends } from './portfolio-dividends.interface';
+import type { PortfolioInvestments } from './portfolio-investments.interface';
+import type { PortfolioItem } from './portfolio-item.interface';
+import type { PortfolioOverview } from './portfolio-overview.interface';
+import type { PortfolioPerformance } from './portfolio-performance.interface';
+import type { PortfolioPosition } from './portfolio-position.interface';
+import type { PortfolioPublicDetails } from './portfolio-public-details.interface';
+import type { PortfolioReportRule } from './portfolio-report-rule.interface';
+import type { PortfolioReport } from './portfolio-report.interface';
+import type { PortfolioSummary } from './portfolio-summary.interface';
+import type { Position } from './position.interface';
+import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type { ResponseError } from './responses/errors.interface';
+import type { ImportResponse } from './responses/import-response.interface';
+import type { OAuthResponse } from './responses/oauth-response.interface';
+import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
+import type { ScraperConfiguration } from './scraper-configuration.interface';
+import type { Statistics } from './statistics.interface';
+import type { Subscription } from './subscription.interface';
+import type { TimelinePosition } from './timeline-position.interface';
+import type { UniqueAsset } from './unique-asset.interface';
+import type { UserSettings } from './user-settings.interface';
+import type { User } from './user.interface';
 
 export {
   Access,
@@ -52,6 +55,7 @@ export {
   AdminMarketDataItem,
   Benchmark,
   BenchmarkMarketDataDetails,
+  BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
   DataProviderInfo,
@@ -80,6 +84,8 @@ export {
   Position,
   ResponseError,
   ScraperConfiguration,
+  Statistics,
+  Subscription,
   TimelinePosition,
   UniqueAsset,
   User,

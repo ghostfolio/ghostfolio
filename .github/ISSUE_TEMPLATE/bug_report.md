@@ -36,6 +36,9 @@ The Issue tracker is **ONLY** used for reporting bugs. New features should be di
 
 <!-- Please complete the following information -->
 
+- [ ] Cloud
+- [ ] Self-hosted
+
 - Ghostfolio Version X.Y.Z
 - Browser
 - OS
