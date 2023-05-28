@@ -1,4 +1,8 @@
 import {
+  StepperOrientation,
+  StepperSelectionEvent
+} from '@angular/cdk/stepper';
+import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -8,6 +12,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatStepper } from '@angular/material/stepper';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -15,16 +20,11 @@ import { ImportActivitiesService } from '@ghostfolio/client/services/import-acti
 import { Position } from '@ghostfolio/common/interfaces';
 import { AssetClass } from '@prisma/client';
 import { isArray, sortBy } from 'lodash';
-import { Subject, takeUntil } from 'rxjs';
-import { ImportStep } from './enums/enums';
-
-import { ImportActivitiesDialogParams } from './interfaces/interfaces';
-import {
-  StepperOrientation,
-  StepperSelectionEvent
-} from '@angular/cdk/stepper';
-import { MatStepper } from '@angular/material/stepper';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { Subject, takeUntil } from 'rxjs';
+
+import { ImportStep } from './enums/import-step';
+import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,10 +101,6 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
-  public onImportCancel(aStepper: MatStepper) {
-    aStepper.previous();
-  }
-
   public async onImportActivities() {
     try {
       this.snackBar.open('⏳ ' + $localize`Importing data...`);
@@ -159,6 +155,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
+    this.uniqueAssetForm.controls['uniqueAsset'].enable();
 
     aStepper.reset();
   }
