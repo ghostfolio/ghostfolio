@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: FaqPageComponent,
     path: '',
-    title: $localize`FAQ`
+    title: $localize`Frequently Asked Questions (FAQ)`
   }
 ];
 

@@ -5,7 +5,7 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>https://ghostfol.io</loc>
+    <loc>https://ghostfol.io/de</loc>
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -54,6 +54,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/de/ueber-uns/changelog</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/en</loc>
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -113,10 +117,6 @@
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/en/demo</loc>
-    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
-  </url>
-  <url>
     <loc>https://ghostfol.io/en/faq</loc>
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
@@ -142,6 +142,54 @@
   </url>
   <url>
     <loc>https://ghostfol.io/en/resources</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/funcionalidades</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/mercados</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/open</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/precios</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/preguntas-mas-frecuentes</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/recursos</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/registro</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/sobre</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/sobre/changelog</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/es/sobre/politica-de-privacidad</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/fr</loc>
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -185,6 +233,10 @@
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/it</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/it/domande-piu-frequenti</loc>
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
@@ -222,6 +274,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/it/risorse</loc>
+    <lastmod>2023-05-27T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/nl</loc>
     <lastmod>2023-05-27T00:00:00+00:00</lastmod>
   </url>
   <url>

@@ -11,6 +11,7 @@ const routes: Routes = [
     'a-propos',
     'informazioni-su',
     'over',
+    'sobre',
     'ueber-uns'
   ].map((path) => ({
     path,
@@ -23,6 +24,7 @@ const routes: Routes = [
     'a-propos/changelog',
     'informazioni-su/changelog',
     'over/changelog',
+    'sobre/changelog',
     'ueber-uns/changelog'
   ].map((path) => ({
     path,
@@ -37,6 +39,7 @@ const routes: Routes = [
     'a-propos/politique-de-confidentialite',
     'informazioni-su/informativa-sulla-privacy',
     'over/privacybeleid',
+    'sobre/politica-de-privacidad',
     'ueber-uns/datenschutzbestimmungen'
   ].map((path) => ({
     path,
@@ -176,6 +179,7 @@ const routes: Routes = [
     'domande-piu-frequenti',
     'foire-aux-questions',
     'haeufig-gestellte-fragen',
+    'preguntas-mas-frecuentes',
     'vaak-gestelde-vragen'
   ].map((path) => ({
     path,
@@ -186,6 +190,7 @@ const routes: Routes = [
     'features',
     /////
     'fonctionnalites',
+    'funcionalidades',
     'funzionalita',
     'kenmerken'
   ].map((path) => ({
@@ -206,6 +211,7 @@ const routes: Routes = [
     'maerkte',
     'marches',
     'markten',
+    'mercados',
     'mercati'
   ].map((path) => ({
     path,
@@ -236,6 +242,7 @@ const routes: Routes = [
   ...[
     'pricing',
     /////
+    'precios',
     'preise',
     'prezzi',
     'prijzen',
@@ -253,7 +260,8 @@ const routes: Routes = [
     'enregistrement',
     'iscrizione',
     'registratie',
-    'registrierung'
+    'registrierung',
+    'registro'
   ].map((path) => ({
     path,
     loadChildren: () =>
@@ -265,6 +273,7 @@ const routes: Routes = [
     'resources',
     /////
     'bronnen',
+    'recursos',
     'ressourcen',
     'ressources',
     'risorse'

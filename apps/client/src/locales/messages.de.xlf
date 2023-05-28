@@ -1706,7 +1706,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2806917038528218276" datatype="html">
-        <source>FAQ</source>
+        <source>Frequently Asked Questions (FAQ)</source>
         <target state="translated">Häufig gestellte Fragen (FAQ)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/faq-page-routing.module.ts</context>
