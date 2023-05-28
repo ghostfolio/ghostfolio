@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a link to manage the benchmarks to the benchmark comparator
 - Added support for localized routes
 
+### Fixed
+
+- Fixed an issue in the data source transformation
+
 ## 1.272.0 - 2023-05-26
 
 ### Added
