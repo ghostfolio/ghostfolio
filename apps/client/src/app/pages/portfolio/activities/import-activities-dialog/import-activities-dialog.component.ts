@@ -130,6 +130,14 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
   }
 
+  public onImportStepChange(event: StepperSelectionEvent) {
+    if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
+      this.importStep = ImportStep.UPLOAD_FILE;
+    } else if (event.selectedIndex === ImportStep.SELECT_ACTIVITIES) {
+      this.importStep = ImportStep.SELECT_ACTIVITIES;
+    }
+  }
+
   public onLoadDividends(aStepper: MatStepper) {
     this.uniqueAssetForm.controls['uniqueAsset'].disable();
 
@@ -158,14 +166,6 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.uniqueAssetForm.controls['uniqueAsset'].enable();
 
     aStepper.reset();
-  }
-
-  public onImportStepChange(event: StepperSelectionEvent) {
-    if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
-      this.importStep = ImportStep.UPLOAD_FILE;
-    } else if (event.selectedIndex === ImportStep.SELECT_ACTIVITIES) {
-      this.importStep = ImportStep.SELECT_ACTIVITIES;
-    }
   }
 
   public onSelectFile(aStepper: MatStepper) {
