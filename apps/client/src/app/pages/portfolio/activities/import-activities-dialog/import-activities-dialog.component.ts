@@ -37,6 +37,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public activities: Activity[] = [];
   public details: any[] = [];
   public deviceType: string;
+  public dialogTitle = $localize`Import Activities`;
   public errorMessages: string[] = [];
   public holdings: Position[] = [];
   public importStep: ImportStep = ImportStep.UPLOAD_FILE;
@@ -72,6 +73,7 @@ export class ImportActivitiesDialog implements OnDestroy {
       this.data?.activityTypes?.length === 1 &&
       this.data?.activityTypes?.[0] === 'DIVIDEND'
     ) {
+      this.dialogTitle = $localize`Import Dividends`;
       this.mode = 'DIVIDEND';
       this.uniqueAssetForm.controls['uniqueAsset'].disable();
 

@@ -1,7 +1,7 @@
 <gf-dialog-header
   mat-dialog-title
   [deviceType]="data.deviceType"
-  [title]="errorMessages.length === 0 ?  'Import Activities' : 'Import Activities Error'"
+  [title]="dialogTitle"
   (closeButtonClicked)="onCancel()"
 ></gf-dialog-header>
 
@@ -15,7 +15,14 @@
     (selectionChange)="onImportStepChange($event)"
   >
     <mat-step [completed]="importStep === 0" [selected]="importStep === 0">
-      <ng-template i18n matStepLabel>Select File</ng-template>
+      <ng-template matStepLabel>
+        <ng-container *ngIf="mode === 'DIVIDEND'" i18n
+          >Select Holding</ng-container
+        >
+        <ng-container *ngIf="mode !== 'DIVIDEND'" i18n
+          >Select File</ng-container
+        >
+      </ng-template>
       <div class="pt-3">
         <ng-container *ngIf="mode === 'DIVIDEND'; else selectFile">
           <form
@@ -27,9 +34,16 @@
               <mat-select formControlName="uniqueAsset">
                 <mat-option
                   *ngFor="let holding of holdings"
+                  class="line-height-1"
                   [value]="{dataSource: holding.dataSource, symbol: holding.symbol}"
-                  >{{ holding.name }}</mat-option
                 >
+                  <span><b>{{ holding.name }}</b></span>
+                  <br />
+                  <small class="text-muted"
+                    >{{ holding.symbol | gfSymbol }} · {{ holding.currency
+                    }}</small
+                  >
+                </mat-option>
               </mat-select>
             </mat-form-field>
             <div class="d-flex flex-column justify-content-center">
@@ -77,7 +91,14 @@
     </mat-step>
 
     <mat-step [completed]="importStep === 1" [selected]="importStep === 1">
-      <ng-template i18n matStepLabel>Select Activities</ng-template>
+      <ng-template matStepLabel>
+        <ng-container *ngIf="mode === 'DIVIDEND'" i18n
+          >Select Dividends</ng-container
+        >
+        <ng-container *ngIf="mode !== 'DIVIDEND'" i18n
+          >Select Activities</ng-container
+        >
+      </ng-template>
       <div class="pt-3">
         <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
           <gf-activities-table
