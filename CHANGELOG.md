@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a stepper to the activities import dialog
 - Added a link to manage the benchmarks to the benchmark comparator
 - Added support for localized routes
 
