@@ -5,27 +5,46 @@ import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strate
 import { ModulePreloadService } from './core/module-preload.service';
 
 const routes: Routes = [
-  ...['about', 'ueber-uns'].map((path) => ({
+  ...[
+    'about',
+    /////
+    'a-propos',
+    'informazioni-su',
+    'over',
+    'ueber-uns'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   })),
-  ...['about/changelog', 'ueber-uns/changelog'].map((path) => ({
+  ...[
+    'about/changelog',
+    /////
+    'a-propos/changelog',
+    'informazioni-su/changelog',
+    'over/changelog',
+    'ueber-uns/changelog'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/about/changelog/changelog-page.module').then(
         (m) => m.ChangelogPageModule
       )
   })),
-  ...['about/privacy-policy', 'ueber-uns/datenschutzbestimmungen'].map(
-    (path) => ({
-      path,
-      loadChildren: () =>
-        import('./pages/about/privacy-policy/privacy-policy-page.module').then(
-          (m) => m.PrivacyPolicyPageModule
-        )
-    })
-  ),
+  ...[
+    'about/privacy-policy',
+    /////
+    'a-propos/politique-de-confidentialite',
+    'informazioni-su/informativa-sulla-privacy',
+    'over/privacybeleid',
+    'ueber-uns/datenschutzbestimmungen'
+  ].map((path) => ({
+    path,
+    loadChildren: () =>
+      import('./pages/about/privacy-policy/privacy-policy-page.module').then(
+        (m) => m.PrivacyPolicyPageModule
+      )
+  })),
   {
     path: 'account',
     loadChildren: () =>
@@ -151,12 +170,25 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
   },
-  ...['faq', 'haeufig-gestellte-fragen'].map((path) => ({
+  ...[
+    'faq',
+    /////
+    'domande-piu-frequenti',
+    'foire-aux-questions',
+    'haeufig-gestellte-fragen',
+    'vaak-gestelde-vragen'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
   })),
-  ...['features'].map((path) => ({
+  ...[
+    'features',
+    /////
+    'fonctionnalites',
+    'funzionalita',
+    'kenmerken'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/features/features-page.module').then(
@@ -168,7 +200,14 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
-  ...['markets', 'maerkte'].map((path) => ({
+  ...[
+    'markets',
+    /////
+    'maerkte',
+    'marches',
+    'markten',
+    'mercati'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(
@@ -194,21 +233,42 @@ const routes: Routes = [
         (m) => m.PortfolioPageModule
       )
   },
-  ...['pricing', 'preise'].map((path) => ({
+  ...[
+    'pricing',
+    /////
+    'preise',
+    'prezzi',
+    'prijzen',
+    'prix'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule
       )
   })),
-  ...['register', 'registrierung'].map((path) => ({
+  ...[
+    'register',
+    /////
+    'enregistrement',
+    'iscrizione',
+    'registratie',
+    'registrierung'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/register/register-page.module').then(
         (m) => m.RegisterPageModule
       )
   })),
-  ...['resources', 'ressourcen'].map((path) => ({
+  ...[
+    'resources',
+    /////
+    'bronnen',
+    'ressourcen',
+    'ressources',
+    'risorse'
+  ].map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/resources/resources-page.module').then(
