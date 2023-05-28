@@ -15,7 +15,11 @@ export function capitalize(aString: string) {
 }
 
 export function decodeDataSource(encodedDataSource: string) {
-  return Buffer.from(encodedDataSource, 'hex').toString();
+  if (encodedDataSource) {
+    return Buffer.from(encodedDataSource, 'hex').toString();
+  }
+
+  return undefined;
 }
 
 export function downloadAsFile({
