@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the activities import dialog
+- Improved the language localization for German (`de`)
 
 ## 1.273.0 - 2023-05-28
 
