@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for localized routes in Spanish (`es`)
 
+### Changed
+
+- Improved the activities import dialog
+
 ## 1.273.0 - 2023-05-28
 
 ### Added

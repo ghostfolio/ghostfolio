@@ -13,7 +13,7 @@
     (click)="onImport()"
   >
     <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
-    <span i18n>Import Activities...</span>
+    <ng-container i18n>Import Activities</ng-container>...
   </button>
   <button
     *ngIf="hasPermissionToExportActivities"
@@ -31,7 +31,7 @@
       (click)="onImportDividends()"
     >
       <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
-      <span i18n>Import Dividends...</span>
+      <ng-container i18n>Import Dividends</ng-container>...
     </button>
     <button
       *ngIf="hasPermissionToExportActivities"
@@ -463,7 +463,7 @@
             (click)="onImport()"
           >
             <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
-            <span i18n>Import Activities...</span>
+            <ng-container i18n>Import Activities</ng-container>...
           </button>
           <button
             *ngIf="hasPermissionToCreateActivity"
@@ -472,7 +472,7 @@
             (click)="onImportDividends()"
           >
             <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
-            <span i18n>Import Dividends...</span>
+            <ng-container i18n>Import Dividends</ng-container>...
           </button>
           <button
             *ngIf="hasPermissionToExportActivities"
