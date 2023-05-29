@@ -59,6 +59,19 @@ export class LandingPageComponent implements OnDestroy, OnInit {
       country: 'Germany 🇩🇪',
       quote:
         'Super slim app with a great user interface. On top of that, it’s open source.'
+    },
+    {
+      author: 'Sal',
+      country: 'Canada 🇨🇦',
+      quote:
+        'Ghostfolio is one of the best tools I have used for tracking my investments. I intend to spread the word to all my friends.'
+    },
+    {
+      author: 'Thomas',
+      country: 'Creator of Ghostfolio, Switzerland 🇨🇭',
+      quote:
+        'My investment strategy has become more structured through the daily use of Ghostfolio.',
+      url: 'https://dotsilver.ch'
     }
   ];
 
