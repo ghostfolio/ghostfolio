@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { GfLogoModule } from '@ghostfolio/ui/logo';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
@@ -40,6 +41,7 @@ export function NgxStripeFactory(): string {
     BrowserAnimationsModule,
     BrowserModule,
     GfHeaderModule,
+    GfLogoModule,
     GfSubscriptionInterstitialDialogModule,
     HttpClientModule,
     MarkdownModule.forRoot(),

@@ -4,6 +4,11 @@
   display: block;
   min-height: 100vh;
 
+  footer {
+    background-color: rgba(var(--palette-foreground-text), 0.05);
+    font-size: 90%;
+  }
+
   main {
     min-height: 100vh;
     padding-top: 5rem;
@@ -25,14 +30,13 @@
       }
     }
   }
-
-  .footer {
-    height: 5rem;
-    line-height: 1;
-  }
 }
 
 :host-context(.is-dark-theme) {
+  footer {
+    background-color: rgba(var(--palette-foreground-text-dark), 0.05);
+  }
+
   main {
     .info-message-container {
       .info-message {

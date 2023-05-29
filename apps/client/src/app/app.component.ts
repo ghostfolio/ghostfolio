@@ -32,6 +32,8 @@ export class AppComponent implements OnDestroy, OnInit {
   public currentRoute: string;
   public currentYear = new Date().getFullYear();
   public deviceType: string;
+  public hasPermissionForBlog: boolean;
+  public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public pageTitle: string;
   public user: User;
@@ -55,6 +57,17 @@ export class AppComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForBlog = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableBlog
+    );
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -63,8 +76,6 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
         const urlSegments = urlSegmentGroup.segments;
         this.currentRoute = urlSegments[0].path;
-
-        this.info = this.dataService.fetchInfo();
 
         if (this.deviceType === 'mobile') {
           setTimeout(() => {
