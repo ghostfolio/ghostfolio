@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the testimonial section on the landing page
+- Added localized meta descriptions
 - Added support for localized routes in Spanish (`es`)
 
 ### Changed

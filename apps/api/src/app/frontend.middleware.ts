@@ -19,6 +19,9 @@ export class FrontendMiddleware implements NestMiddleware {
   public indexHtmlNl = '';
   public indexHtmlPt = '';
 
+  private static readonly DEFAULT_DESCRIPTION =
+    'Ghostfolio is a personal finance dashboard to keep track of your assets like stocks, ETFs or cryptocurrencies across multiple platforms.';
+
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
@@ -116,6 +119,8 @@ export class FrontendMiddleware implements NestMiddleware {
           currentDate,
           featureGraphicPath,
           title,
+          description:
+            'Mit dem Finanz-Dashboard Ghostfolio können Sie Ihr Vermögen in Form von Aktien, ETFs oder Kryptowährungen verteilt über mehrere Finanzinstitute überwachen.',
           languageCode: 'de',
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
@@ -127,6 +132,8 @@ export class FrontendMiddleware implements NestMiddleware {
           currentDate,
           featureGraphicPath,
           title,
+          description:
+            'Ghostfolio es un dashboard de finanzas personales para hacer un seguimiento de tus activos como acciones, ETFs o criptodivisas a través de múltiples plataformas.',
           languageCode: 'es',
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
@@ -135,7 +142,11 @@ export class FrontendMiddleware implements NestMiddleware {
     } else if (request.path === '/fr' || request.path.startsWith('/fr/')) {
       response.send(
         this.interpolate(this.indexHtmlFr, {
+          currentDate,
           featureGraphicPath,
+          title,
+          description:
+            'Ghostfolio est un dashboard de finances personnelles qui permet de suivre vos actifs comme les actions, les ETF ou les crypto-monnaies sur plusieurs plateformes.',
           languageCode: 'fr',
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
@@ -147,6 +158,8 @@ export class FrontendMiddleware implements NestMiddleware {
           currentDate,
           featureGraphicPath,
           title,
+          description:
+            'Ghostfolio è un dashboard di finanza personale per tenere traccia delle vostre attività come azioni, ETF o criptovalute su più piattaforme.',
           languageCode: 'it',
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
@@ -158,6 +171,8 @@ export class FrontendMiddleware implements NestMiddleware {
           currentDate,
           featureGraphicPath,
           title,
+          description:
+            'Ghostfolio is een persoonlijk financieel dashboard om uw activa zoals aandelen, ETF’s of cryptocurrencies over meerdere platforms bij te houden.',
           languageCode: 'nl',
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
@@ -166,7 +181,11 @@ export class FrontendMiddleware implements NestMiddleware {
     } else if (request.path === '/pt' || request.path.startsWith('/pt/')) {
       response.send(
         this.interpolate(this.indexHtmlPt, {
+          currentDate,
           featureGraphicPath,
+          title,
+          description:
+            'Ghostfolio é um dashboard de finanças pessoais para acompanhar os seus activos como acções, ETFs ou criptomoedas em múltiplas plataformas.',
           languageCode: 'pt',
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
@@ -178,6 +197,7 @@ export class FrontendMiddleware implements NestMiddleware {
           currentDate,
           featureGraphicPath,
           title,
+          description: FrontendMiddleware.DEFAULT_DESCRIPTION,
           languageCode: DEFAULT_LANGUAGE_CODE,
           path: request.path,
           rootUrl: this.configurationService.get('ROOT_URL')
