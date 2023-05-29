@@ -44,19 +44,106 @@
 </main>
 
 <footer
-  *ngIf="currentRoute === 'start'"
-  class="footer d-flex justify-content-center w-100"
+  *ngIf="
+    (currentRoute === 'blog' ||
+      currentRoute === 'features' ||
+      currentRoute === 'markets' ||
+      currentRoute === 'pricing' ||
+      currentRoute === 'resources' ||
+      currentRoute === 'register' ||
+      currentRoute === 'start') &&
+    deviceType !== 'mobile'
+  "
+  class="d-flex justify-content-center py-4 w-100"
 >
-  <div class="container text-center">
-    <div>
-      © 2021 - {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
-      {{ version }}
+  <div class="container">
+    <div class="mb-3 row">
+      <div class="col-sm">
+        <a [routerLink]="['/']"><gf-logo /></a>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2" i18n>Personal Finance</div>
+        <ul class="list-unstyled">
+          <li><a i18n [routerLink]="['/markets']">Markets</a></li>
+          <li><a i18n [routerLink]="['/resources']">Resources</a></li>
+        </ul>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2">Ghostfolio</div>
+        <ul class="list-unstyled">
+          <li><a i18n [routerLink]="['/about']">About</a></li>
+          <li *ngIf="hasPermissionForBlog">
+            <a i18n [routerLink]="['/blog']">Blog</a>
+          </li>
+          <li>
+            <a i18n [routerLink]="['/about', 'changelog']"
+              >Changelog & License</a
+            >
+          </li>
+          <li><a i18n [routerLink]="['/features']">Features</a></li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="['/faq']">Frequently Asked Questions (FAQ)</a>
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a [routerLink]="['/open']">Open Startup</a>
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="['/pricing']">Pricing</a>
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="['/about', 'privacy-policy']"
+              >Privacy Policy</a
+            >
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a href="https://status.ghostfol.io" title="Ghostfolio Status"
+              >Status</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2" i18n>Community</div>
+        <ul class="list-unstyled">
+          <li>
+            <a
+              href="https://github.com/ghostfolio/ghostfolio"
+              title="Find Ghostfolio on GitHub"
+              >GitHub</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://ghostfolio.slack.com"
+              title="Join the Ghostfolio Slack channel"
+              >Slack</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://twitter.com/ghostfolio_"
+              title="Follow Ghostfolio on Twitter"
+              >Twitter</a
+            >
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="py-2 text-muted">
-      <small i18n
-        >The risk of loss in trading can be substantial. It is not advisable to
-        invest money you may need in the short term.</small
-      >
+
+    <div class="row text-center">
+      <div class="col">
+        © 2021 - {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
+        {{ version }}
+      </div>
+    </div>
+
+    <div class="row text-center text-muted">
+      <div class="col">
+        <small i18n
+          >The risk of loss in trading can be substantial. It is not advisable
+          to invest money you may need in the short term.</small
+        >
+      </div>
     </div>
   </div>
 </footer>
