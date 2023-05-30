@@ -13,11 +13,11 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ccb2a809018b32a96c813ae69126ce05976109ce" datatype="html">
+      <trans-unit id="2ca05295d27e46c262b233252d1b19c27d95d07f" datatype="html">
         <source>The risk of loss in trading can be substantial. It is not advisable to invest money you may need in the short term.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
-          <context context-type="linenumber">57,58</context>
+          <context context-type="linenumber">143,144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b6192ee60a5e0e40874f4d02fbaaa584a0f1541e" datatype="html">
@@ -678,6 +678,10 @@
       <trans-unit id="452ef1b96854fe05618303ee601f8fed3b866c9f" datatype="html">
         <source>Resources</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
@@ -693,6 +697,10 @@
       <trans-unit id="b051eeff3ae30cba4fbd1885ebb58fc22fb0d587" datatype="html">
         <source>Pricing</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
@@ -707,6 +715,10 @@
       </trans-unit>
       <trans-unit id="004b222ff9ef9dd4771b777950ca1d0e4cd4348a" datatype="html">
         <source>About</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">91</context>
@@ -740,12 +752,20 @@
       <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html">
         <source>Features</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d3ad0babadabfa3e3b7f51637651822f3e56a7b1" datatype="html">
         <source>Markets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">277</context>
@@ -1176,12 +1196,20 @@
       <trans-unit id="b8d10cd55fae4e4ad4f87d28e18251694f159bf7" datatype="html">
         <source>Privacy Policy</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/privacy-policy/privacy-policy-page.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="013acfd8797bf5ade4a15c71fa24178f913c4cae" datatype="html">
         <source>Blog</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/2021/07/hallo-ghostfolio/hallo-ghostfolio-page.html</context>
           <context context-type="linenumber">203</context>
@@ -2702,6 +2730,10 @@
       <trans-unit id="ec2d3a89b366d1ca80be056e9e71f0165ae75c7b" datatype="html">
         <source>Community</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">144</context>
         </context-group>
@@ -3481,6 +3513,27 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">466</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="047bbaa6688d60d0b0e5ca230d076450bdbf1e60" datatype="html">
+        <source>Changelog &amp; License</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="41d338980f469b334618a07e799b4aa40fcf4834" datatype="html">
+        <source>Personal Finance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6992d42edf46c12a4a9ecb3b7a46761a967c8ee1" datatype="html">
+        <source>Frequently Asked Questions (FAQ)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
     </body>
