@@ -186,28 +186,42 @@ export class ExchangeRateDataService {
         factor = marketData?.marketPrice;
       } else {
         // Calculate indirectly via base currency
-        try {
-          const [
-            { marketPrice: marketPriceBaseCurrencyFromCurrency },
-            { marketPrice: marketPriceBaseCurrencyToCurrency }
-          ] = await Promise.all([
-            this.marketDataService.get({
-              dataSource,
-              date: aDate,
-              symbol: `${this.baseCurrency}${aFromCurrency}`
-            }),
-            this.marketDataService.get({
-              dataSource,
-              date: aDate,
-              symbol: `${this.baseCurrency}${aToCurrency}`
-            })
-          ]);
 
-          // Calculate the opposite direction
-          factor =
-            (1 / marketPriceBaseCurrencyFromCurrency) *
-            marketPriceBaseCurrencyToCurrency;
+        let marketPriceBaseCurrencyFromCurrency: number;
+        let marketPriceBaseCurrencyToCurrency: number;
+
+        try {
+          if (this.baseCurrency === aFromCurrency) {
+            marketPriceBaseCurrencyFromCurrency = 1;
+          } else {
+            marketPriceBaseCurrencyFromCurrency = (
+              await this.marketDataService.get({
+                dataSource,
+                date: aDate,
+                symbol: `${this.baseCurrency}${aFromCurrency}`
+              })
+            )?.marketPrice;
+          }
         } catch {}
+
+        try {
+          if (this.baseCurrency === aToCurrency) {
+            marketPriceBaseCurrencyToCurrency = 1;
+          } else {
+            marketPriceBaseCurrencyToCurrency = (
+              await this.marketDataService.get({
+                dataSource,
+                date: aDate,
+                symbol: `${this.baseCurrency}${aToCurrency}`
+              })
+            )?.marketPrice;
+          }
+        } catch {}
+
+        // Calculate the opposite direction
+        factor =
+          (1 / marketPriceBaseCurrencyFromCurrency) *
+          marketPriceBaseCurrencyToCurrency;
       }
     }
 

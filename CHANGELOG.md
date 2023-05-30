@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed the exchange rate service for a specific date (indirect calculation via base currency) used in activities with a manual currency
+
 ## 1.274.0 - 2023-05-29
 
 ### Added
