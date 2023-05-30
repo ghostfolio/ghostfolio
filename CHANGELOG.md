@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the footer navigation by the localized Ghostfolio versions
 - Improved the language localization for German (`de`)
 
 ### Fixed
