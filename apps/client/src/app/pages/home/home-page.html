@@ -3,15 +3,17 @@
 </mat-tab-nav-panel>
 
 <nav mat-align-tabs="center" mat-tab-nav-bar [tabPanel]="tabPanel">
-  <a
-    #rla="routerLinkActive"
-    *ngFor="let tab of tabs"
-    mat-tab-link
-    routerLinkActive
-    [active]="rla.isActive"
-    [routerLink]="tab.path"
-  >
-    <ion-icon size="large" [name]="tab.iconName"></ion-icon>
-    <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
-  </a>
+  <ng-container *ngFor="let tab of tabs">
+    <a
+      #rla="routerLinkActive"
+      class="px-3"
+      mat-tab-link
+      routerLinkActive
+      [active]="rla.isActive"
+      [routerLink]="tab.path"
+    >
+      <ion-icon size="large" [name]="tab.iconName"></ion-icon>
+      <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
+    </a>
+  </ng-container>
 </nav>
