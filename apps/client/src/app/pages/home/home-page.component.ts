@@ -25,7 +25,12 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public hasMessage: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public info: InfoItem;
-  public tabs: { iconName: string; label: string; path: string }[] = [];
+  public tabs: {
+    iconName: string;
+    label: string;
+    path: string;
+    showCondition?: boolean;
+  }[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

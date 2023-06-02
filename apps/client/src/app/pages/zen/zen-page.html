@@ -6,6 +6,7 @@
   <ng-container *ngFor="let tab of tabs">
     <a
       #rla="routerLinkActive"
+      *ngIf="tab.showCondition !== false"
       class="px-3"
       mat-tab-link
       routerLinkActive

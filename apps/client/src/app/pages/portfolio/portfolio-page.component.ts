@@ -24,7 +24,12 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
 
   public hasMessage: boolean;
   public info: InfoItem;
-  public tabs: { iconName: string; label: string; path: string }[] = [];
+  public tabs: {
+    iconName: string;
+    label: string;
+    path: string;
+    showCondition?: boolean;
+  }[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
