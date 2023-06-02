@@ -21,7 +21,7 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
   public tabs: {
     iconName: string;
     label: string;
-    path: string;
+    path: string[];
     showCondition?: boolean;
   }[] = [];
   public user: User;
@@ -42,12 +42,12 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Overview`,
-              path: 'overview'
+              path: ['/zen']
             },
             {
               iconName: 'wallet-outline',
               label: $localize`Holdings`,
-              path: 'holdings'
+              path: ['/zen', 'holdings']
             }
           ];
           this.user = state.user;

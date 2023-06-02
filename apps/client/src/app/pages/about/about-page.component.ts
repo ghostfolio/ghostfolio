@@ -27,7 +27,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
   public tabs: {
     iconName: string;
     label: string;
-    path: string;
+    path: string[];
     showCondition?: boolean;
   }[] = [];
   public user: User;
@@ -54,17 +54,17 @@ export class AboutPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'reader-outline',
               label: $localize`About`,
-              path: 'overview'
+              path: ['/about']
             },
             {
               iconName: 'sparkles-outline',
               label: $localize`Changelog & License`,
-              path: 'changelog'
+              path: ['/about', 'changelog']
             },
             {
               iconName: 'shield-checkmark-outline',
               label: $localize`Privacy Policy`,
-              path: 'privacy-policy',
+              path: ['/about', 'privacy-policy'],
               showCondition: this.hasPermissionForSubscription
             }
           ];

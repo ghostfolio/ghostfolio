@@ -16,7 +16,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
   public tabs: {
     iconName: string;
     label: string;
-    path: string;
+    path: string[];
     showCondition?: boolean;
   }[] = [];
 
@@ -33,20 +33,28 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`Overview`,
-        path: 'overview'
+        path: ['/admin']
       },
       {
         iconName: 'settings-outline',
         label: $localize`Settings`,
-        path: 'settings'
+        path: ['/admin', 'settings']
       },
       {
         iconName: 'server-outline',
         label: $localize`Market Data`,
-        path: 'market-data'
+        path: ['/admin', 'market-data']
       },
-      { iconName: 'flash-outline', label: $localize`Jobs`, path: 'jobs' },
-      { iconName: 'people-outline', label: $localize`Users`, path: 'users' }
+      {
+        iconName: 'flash-outline',
+        label: $localize`Jobs`,
+        path: ['/admin', 'jobs']
+      },
+      {
+        iconName: 'people-outline',
+        label: $localize`Users`,
+        path: ['/admin', 'users']
+      }
     ];
   }
 

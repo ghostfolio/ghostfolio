@@ -8,9 +8,8 @@ const routes: Routes = [
   {
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'analysis', pathMatch: 'full' },
       {
-        path: 'analysis',
+        path: '',
         loadChildren: () =>
           import('./analysis/analysis-page.module').then(
             (m) => m.AnalysisPageModule

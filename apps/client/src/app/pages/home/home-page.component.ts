@@ -28,7 +28,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public tabs: {
     iconName: string;
     label: string;
-    path: string;
+    path: string[];
     showCondition?: boolean;
   }[] = [];
   public user: User;
@@ -50,17 +50,17 @@ export class HomePageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Overview`,
-              path: 'overview'
+              path: ['/home']
             },
             {
               iconName: 'wallet-outline',
               label: $localize`Holdings`,
-              path: 'holdings'
+              path: ['/home', 'holdings']
             },
             {
               iconName: 'reader-outline',
               label: $localize`Summary`,
-              path: 'summary'
+              path: ['/home', 'summary']
             }
           ];
           this.user = state.user;
@@ -80,7 +80,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
             this.tabs.push({
               iconName: 'newspaper-outline',
               label: $localize`Markets`,
-              path: 'market'
+              path: ['/home', 'market']
             });
           }
 

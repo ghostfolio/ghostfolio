@@ -27,7 +27,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
   public tabs: {
     iconName: string;
     label: string;
-    path: string;
+    path: string[];
     showCondition?: boolean;
   }[] = [];
   public user: User;
@@ -49,27 +49,27 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Analysis`,
-              path: 'analysis'
+              path: ['/portfolio']
             },
             {
               iconName: 'wallet-outline',
               label: $localize`Holdings`,
-              path: 'holdings'
+              path: ['/portfolio', 'holdings']
             },
             {
               iconName: 'swap-vertical-outline',
               label: $localize`Activities`,
-              path: 'activities'
+              path: ['/portfolio', 'activities']
             },
             {
               iconName: 'pie-chart-outline',
               label: $localize`Allocations`,
-              path: 'allocations'
+              path: ['/portfolio', 'allocations']
             },
             {
               iconName: 'calculator-outline',
               label: 'FIRE / X-ray',
-              path: 'fire'
+              path: ['/portfolio', 'fire']
             }
           ];
           this.user = state.user;
