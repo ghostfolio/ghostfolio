@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -18,12 +18,7 @@ import { first, takeUntil } from 'rxjs/operators';
   styleUrls: ['./zen-page.scss']
 })
 export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
-  public tabs: {
-    iconName: string;
-    label: string;
-    path: string[];
-    showCondition?: boolean;
-  }[] = [];
+  public tabs: TabConfiguration[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

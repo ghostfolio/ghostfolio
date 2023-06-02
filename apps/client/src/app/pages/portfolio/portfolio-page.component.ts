@@ -7,7 +7,11 @@ import {
 } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import {
+  InfoItem,
+  TabConfiguration,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,12 +28,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
 
   public hasMessage: boolean;
   public info: InfoItem;
-  public tabs: {
-    iconName: string;
-    label: string;
-    path: string[];
-    showCondition?: boolean;
-  }[] = [];
+  public tabs: TabConfiguration[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

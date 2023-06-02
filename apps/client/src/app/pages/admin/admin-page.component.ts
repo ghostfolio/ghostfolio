@@ -1,5 +1,6 @@
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -13,12 +14,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
   }
 
   public hasMessage: boolean;
-  public tabs: {
-    iconName: string;
-    label: string;
-    path: string[];
-    showCondition?: boolean;
-  }[] = [];
+  public tabs: TabConfiguration[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 

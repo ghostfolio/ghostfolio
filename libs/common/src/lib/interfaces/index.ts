@@ -40,6 +40,7 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { Subscription } from './subscription.interface';
+import { TabConfiguration } from './tab-configuration.interface';
 import type { TimelinePosition } from './timeline-position.interface';
 import type { UniqueAsset } from './unique-asset.interface';
 import type { UserSettings } from './user-settings.interface';
@@ -86,6 +87,7 @@ export {
   ScraperConfiguration,
   Statistics,
   Subscription,
+  TabConfiguration,
   TimelinePosition,
   UniqueAsset,
   User,
