@@ -13,7 +13,12 @@ export class AdminPageComponent implements OnDestroy, OnInit {
   }
 
   public hasMessage: boolean;
-  public tabs: { iconName: string; label: string; path: string }[] = [];
+  public tabs: {
+    iconName: string;
+    label: string;
+    path: string;
+    showCondition?: boolean;
+  }[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 

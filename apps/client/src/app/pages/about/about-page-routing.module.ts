@@ -7,6 +7,30 @@ import { AboutPageComponent } from './about-page.component';
 const routes: Routes = [
   {
     canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      {
+        path: 'overview',
+        loadChildren: () =>
+          import('./overview/about-overview-page.module').then(
+            (m) => m.AboutOverviewPageModule
+          )
+      },
+      {
+        path: 'changelog',
+        loadChildren: () =>
+          import('./changelog/changelog-page.module').then(
+            (m) => m.ChangelogPageModule
+          )
+      },
+      {
+        path: 'privacy-policy',
+        loadChildren: () =>
+          import('./privacy-policy/privacy-policy-page.module').then(
+            (m) => m.PrivacyPolicyPageModule
+          )
+      }
+    ],
     component: AboutPageComponent,
     path: '',
     title: $localize`About`
