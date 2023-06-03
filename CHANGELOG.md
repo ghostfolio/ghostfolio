@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the routes of the tabs
+- Updated the URL of the Ghostfolio Slack channel
 - Removed the _Ghostfolio in Numbers_ section from the about page
 
 ## 1.275.0 - 2023-05-30
