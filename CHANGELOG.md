@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the URL of the Ghostfolio Slack channel
 - Removed the _Ghostfolio in Numbers_ section from the about page
 
+### Fixed
+
+- Fixed an issue with the price when creating a `Subscription`
+
 ## 1.275.0 - 2023-05-30
 
 ### Changed
