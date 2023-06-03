@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the routes of the tabs
+- Enforced a stricter date format in the activities import: `dd-MM-yyyy` instead of `dd-MM-yy`
 - Updated the URL of the Ghostfolio Slack channel
 - Removed the _Ghostfolio in Numbers_ section from the about page
 
