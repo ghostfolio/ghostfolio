@@ -13,12 +13,14 @@ const locales = {
   HIGHER_RISK: $localize`Higher Risk`,
   IMPORT_ACTIVITY_ERROR_IS_DUPLICATE: $localize`This activity already exists.`,
   LOWER_RISK: $localize`Lower Risk`,
+  MONTHS: $localize`Months`,
   OTHER: $localize`Other`,
   RETIREMENT_PROVISION: $localize`Retirement Provision`,
   SATELLITE: $localize`Satellite`,
   SECURITIES: $localize`Securities`,
   SYMBOL: $localize`Symbol`,
   TAG: $localize`Tag`,
+  YEARS: $localize`Years`,
 
   // enum AssetClass
   CASH: $localize`Cash`,

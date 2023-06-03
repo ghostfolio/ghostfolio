@@ -28,6 +28,7 @@ import {
   Filter,
   HistoricalDataItem,
   PortfolioDetails,
+  PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPosition,
   PortfolioReport,
@@ -252,13 +253,15 @@ export class PortfolioService {
     dateRange,
     filters,
     groupBy,
-    impersonationId
+    impersonationId,
+    savingsRate
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     groupBy?: GroupBy;
     impersonationId: string;
-  }): Promise<InvestmentItem[]> {
+    savingsRate: number;
+  }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
@@ -276,7 +279,10 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
     if (transactionPoints.length === 0) {
-      return [];
+      return {
+        investments: [],
+        streaks: { currentStreak: 0, longestStreak: 0 }
+      };
     }
 
     let investments: InvestmentItem[];
@@ -346,9 +352,23 @@ export class PortfolioService {
       parseDate(investments[0]?.date)
     );
 
-    return investments.filter(({ date }) => {
+    investments = investments.filter(({ date }) => {
       return !isBefore(parseDate(date), startDate);
     });
+
+    let streaks: PortfolioInvestments['streaks'];
+
+    if (savingsRate) {
+      streaks = this.getStreaks({
+        investments,
+        savingsRate: groupBy === 'year' ? 12 * savingsRate : savingsRate
+      });
+    }
+
+    return {
+      investments,
+      streaks
+    };
   }
 
   public async getChart({
@@ -1510,6 +1530,28 @@ export class PortfolioService {
     return portfolioStart;
   }
 
+  private getStreaks({
+    investments,
+    savingsRate
+  }: {
+    investments: InvestmentItem[];
+    savingsRate: number;
+  }) {
+    let currentStreak = 0;
+    let longestStreak = 0;
+
+    for (const { investment } of investments) {
+      if (investment >= savingsRate) {
+        currentStreak++;
+        longestStreak = Math.max(longestStreak, currentStreak);
+      } else {
+        currentStreak = 0;
+      }
+    }
+
+    return { currentStreak, longestStreak };
+  }
+
   private async getSummary({
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
@@ -1841,13 +1883,6 @@ export class PortfolioService {
     return { accounts, platforms };
   }
 
-  private async getUserId(aImpersonationId: string, aUserId: string) {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(aImpersonationId);
-
-    return impersonationUserId || aUserId;
-  }
-
   private getTotalByType(
     orders: OrderWithAccount[],
     currency: string,
@@ -1873,5 +1908,12 @@ export class PortfolioService {
       this.request.user?.Settings?.settings.baseCurrency ??
       this.baseCurrency
     );
+  }
+
+  private async getUserId(aImpersonationId: string, aUserId: string) {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(aImpersonationId);
+
+    return impersonationUserId || aUserId;
   }
 }
