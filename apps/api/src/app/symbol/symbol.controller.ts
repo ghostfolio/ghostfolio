@@ -60,7 +60,7 @@ export class SymbolController {
   public async getSymbolData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string,
-    @Query('includeHistoricalData') includeHistoricalData?: number
+    @Query('includeHistoricalData') includeHistoricalData = 0
   ): Promise<SymbolItem> {
     if (!DataSource[dataSource]) {
       throw new HttpException(
