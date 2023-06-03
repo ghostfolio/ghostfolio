@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added tabs to the about page
+- Added the `changefreq` attribute to the sitemap
 
 ### Changed
 
