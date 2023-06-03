@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,12 +24,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
 
   public hasMessage: boolean;
   public hasPermissionForSubscription: boolean;
-  public tabs: {
-    iconName: string;
-    label: string;
-    path: string;
-    showCondition?: boolean;
-  }[] = [];
+  public tabs: TabConfiguration[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -54,17 +49,17 @@ export class AboutPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'reader-outline',
               label: $localize`About`,
-              path: 'overview'
+              path: ['/about']
             },
             {
               iconName: 'sparkles-outline',
               label: $localize`Changelog & License`,
-              path: 'changelog'
+              path: ['/about', 'changelog']
             },
             {
               iconName: 'shield-checkmark-outline',
               label: $localize`Privacy Policy`,
-              path: 'privacy-policy',
+              path: ['/about', 'privacy-policy'],
               showCondition: this.hasPermissionForSubscription
             }
           ];

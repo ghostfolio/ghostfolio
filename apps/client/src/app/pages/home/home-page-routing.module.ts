@@ -12,9 +12,8 @@ const routes: Routes = [
   {
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
       {
-        path: 'overview',
+        path: '',
         component: HomeOverviewComponent
       },
       {

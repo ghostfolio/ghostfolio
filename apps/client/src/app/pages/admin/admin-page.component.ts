@@ -1,5 +1,6 @@
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -13,12 +14,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
   }
 
   public hasMessage: boolean;
-  public tabs: {
-    iconName: string;
-    label: string;
-    path: string;
-    showCondition?: boolean;
-  }[] = [];
+  public tabs: TabConfiguration[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -33,20 +29,28 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`Overview`,
-        path: 'overview'
+        path: ['/admin']
       },
       {
         iconName: 'settings-outline',
         label: $localize`Settings`,
-        path: 'settings'
+        path: ['/admin', 'settings']
       },
       {
         iconName: 'server-outline',
         label: $localize`Market Data`,
-        path: 'market-data'
+        path: ['/admin', 'market-data']
       },
-      { iconName: 'flash-outline', label: $localize`Jobs`, path: 'jobs' },
-      { iconName: 'people-outline', label: $localize`Users`, path: 'users' }
+      {
+        iconName: 'flash-outline',
+        label: $localize`Jobs`,
+        path: ['/admin', 'jobs']
+      },
+      {
+        iconName: 'people-outline',
+        label: $localize`Users`,
+        path: ['/admin', 'users']
+      }
     ];
   }
 

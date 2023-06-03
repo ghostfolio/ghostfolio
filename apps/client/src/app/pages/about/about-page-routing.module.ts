@@ -8,9 +8,8 @@ const routes: Routes = [
   {
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
       {
-        path: 'overview',
+        path: '',
         loadChildren: () =>
           import('./overview/about-overview-page.module').then(
             (m) => m.AboutOverviewPageModule

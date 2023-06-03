@@ -13,17 +13,16 @@ const routes: Routes = [
   {
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      {
+        path: '',
+        component: AdminOverviewComponent,
+        title: $localize`Admin Control`
+      },
       { path: 'jobs', component: AdminJobsComponent, title: $localize`Jobs` },
       {
         path: 'market-data',
         component: AdminMarketDataComponent,
         title: $localize`Market Data`
-      },
-      {
-        path: 'overview',
-        component: AdminOverviewComponent,
-        title: $localize`Admin Control`
       },
       {
         path: 'settings',
