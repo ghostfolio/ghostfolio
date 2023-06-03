@@ -1,10 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import {
-  DEFAULT_LANGUAGE_CODE,
-  PROPERTY_STRIPE_CONFIG
-} from '@ghostfolio/common/config';
-import { Subscription as SubscriptionInterface } from '@ghostfolio/common/interfaces';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 import { Injectable, Logger } from '@nestjs/common';
@@ -101,19 +97,8 @@ export class SubscriptionService {
         aCheckoutSessionId
       );
 
-      let subscriptions: SubscriptionInterface[] = [];
-
-      const stripeConfig = (await this.prismaService.property.findUnique({
-        where: { key: PROPERTY_STRIPE_CONFIG }
-      })) ?? { value: '{}' };
-
-      subscriptions = [JSON.parse(stripeConfig.value)];
-
-      const coupon = subscriptions[0]?.coupon ?? 0;
-      const price = subscriptions[0]?.price ?? 0;
-
       await this.createSubscription({
-        price: price - coupon,
+        price: session.amount_total / 100,
         userId: session.client_reference_id
       });
 
