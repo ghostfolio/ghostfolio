@@ -60,9 +60,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public placeholder = '';
   public portfolioEvolutionDataLabel = $localize`Deposit`;
   public streaks: PortfolioInvestments['streaks'];
-  public subLabelCurrentStreak: string;
-  public subLabelLongestStreak: string;
   public top3: Position[];
+  public unitCurrentStreak: string;
+  public unitLongestStreak: string;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -249,14 +249,22 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .subscribe(({ investments, streaks }) => {
         this.investmentsByGroup = investments;
         this.streaks = streaks;
-        this.subLabelCurrentStreak =
+        this.unitCurrentStreak =
           this.mode === 'year'
-            ? `(${translate('YEARS')})`
-            : `(${translate('MONTHS')})`;
-        this.subLabelLongestStreak =
+            ? this.streaks.currentStreak === 1
+              ? translate('YEAR')
+              : translate('YEARS')
+            : this.streaks.currentStreak === 1
+            ? translate('MONTH')
+            : translate('MONTHS');
+        this.unitLongestStreak =
           this.mode === 'year'
-            ? `(${translate('YEARS')})`
-            : `(${translate('MONTHS')})`;
+            ? this.streaks.longestStreak === 1
+              ? translate('YEAR')
+              : translate('YEARS')
+            : this.streaks.longestStreak === 1
+            ? translate('MONTH')
+            : translate('MONTHS');
 
         this.changeDetectorRef.markForCheck();
       });

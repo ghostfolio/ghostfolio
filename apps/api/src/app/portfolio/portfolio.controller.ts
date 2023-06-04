@@ -280,7 +280,10 @@ export class PortfolioController {
         investment: item.investment / maxInvestment
       }));
 
-      streaks = nullifyValuesInObject(streaks, ['current', 'longest']);
+      streaks = nullifyValuesInObject(streaks, [
+        'currentStreak',
+        'longestStreak'
+      ]);
     }
 
     if (
@@ -291,7 +294,10 @@ export class PortfolioController {
         return nullifyValuesInObject(item, ['investment']);
       });
 
-      streaks = nullifyValuesInObject(streaks, ['current', 'longest']);
+      streaks = nullifyValuesInObject(streaks, [
+        'currentStreak',
+        'longestStreak'
+      ]);
     }
 
     return { investments, streaks };
