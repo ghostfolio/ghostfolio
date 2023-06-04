@@ -10,6 +10,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   Filter,
   HistoricalDataItem,
+  PortfolioInvestments,
   Position,
   User
 } from '@ghostfolio/common/interfaces';
@@ -58,7 +59,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public placeholder = '';
   public portfolioEvolutionDataLabel = $localize`Deposit`;
+  public streaks: PortfolioInvestments['streaks'];
   public top3: Position[];
+  public unitCurrentStreak: string;
+  public unitLongestStreak: string;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -242,8 +246,25 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ investments }) => {
+      .subscribe(({ investments, streaks }) => {
         this.investmentsByGroup = investments;
+        this.streaks = streaks;
+        this.unitCurrentStreak =
+          this.mode === 'year'
+            ? this.streaks.currentStreak === 1
+              ? translate('YEAR')
+              : translate('YEARS')
+            : this.streaks.currentStreak === 1
+            ? translate('MONTH')
+            : translate('MONTHS');
+        this.unitLongestStreak =
+          this.mode === 'year'
+            ? this.streaks.longestStreak === 1
+              ? translate('YEAR')
+              : translate('YEARS')
+            : this.streaks.longestStreak === 1
+            ? translate('MONTH')
+            : translate('MONTHS');
 
         this.changeDetectorRef.markForCheck();
       });

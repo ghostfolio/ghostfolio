@@ -258,11 +258,12 @@ export class PortfolioController {
       filterByTags
     });
 
-    let investments = await this.portfolioService.getInvestments({
+    let { investments, streaks } = await this.portfolioService.getInvestments({
       dateRange,
       filters,
       groupBy,
-      impersonationId
+      impersonationId,
+      savingsRate: this.request.user?.Settings?.settings.savingsRate
     });
 
     if (
@@ -278,6 +279,11 @@ export class PortfolioController {
         date: item.date,
         investment: item.investment / maxInvestment
       }));
+
+      streaks = nullifyValuesInObject(streaks, [
+        'currentStreak',
+        'longestStreak'
+      ]);
     }
 
     if (
@@ -287,9 +293,14 @@ export class PortfolioController {
       investments = investments.map((item) => {
         return nullifyValuesInObject(item, ['investment']);
       });
+
+      streaks = nullifyValuesInObject(streaks, [
+        'currentStreak',
+        'longestStreak'
+      ]);
     }
 
-    return { investments };
+    return { investments, streaks };
   }
 
   @Get('performance')

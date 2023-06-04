@@ -544,7 +544,7 @@ export class PortfolioCalculator {
       return [];
     }
 
-    const investments = [];
+    const investments: { date: string; investment: Big }[] = [];
     let currentDate: Date;
     let investmentByGroup = new Big(0);
 
@@ -554,13 +554,11 @@ export class PortfolioCalculator {
         (groupBy === 'year' || isSameMonth(parseDate(order.date), currentDate))
       ) {
         // Same group: Add up investments
-
         investmentByGroup = investmentByGroup.plus(
           order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
         );
       } else {
         // New group: Store previous group and reset
-
         if (currentDate) {
           investments.push({
             date: format(
@@ -595,7 +593,39 @@ export class PortfolioCalculator {
       }
     }
 
-    return investments;
+    // Fill in the missing dates with investment = 0
+    const startDate = parseDate(first(this.orders).date);
+    const endDate = parseDate(last(this.orders).date);
+
+    const allDates: string[] = [];
+    currentDate = startDate;
+
+    while (currentDate <= endDate) {
+      allDates.push(
+        format(
+          set(currentDate, {
+            date: 1,
+            month: groupBy === 'year' ? 0 : currentDate.getMonth()
+          }),
+          DATE_FORMAT
+        )
+      );
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+
+    for (const date of allDates) {
+      const existingInvestment = investments.find((investment) => {
+        return investment.date === date;
+      });
+
+      if (!existingInvestment) {
+        investments.push({ date, investment: new Big(0) });
+      }
+    }
+
+    return sortBy(investments, (investment) => {
+      return investment.date;
+    });
   }
 
   public async calculateTimeline(

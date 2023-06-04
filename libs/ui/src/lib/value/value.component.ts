@@ -26,6 +26,7 @@ export class ValueComponent implements OnChanges {
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel = '';
+  @Input() unit = '';
   @Input() value: number | string = '';
 
   public absoluteValue = 0;

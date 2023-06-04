@@ -177,6 +177,26 @@
           (change)="onChangeGroupBy($event.value)"
         ></gf-toggle>
       </div>
+      <div *ngIf="streaks" class="row">
+        <div class="col-md-6 col-xs-12 my-2">
+          <gf-value
+            i18n
+            size="large"
+            [unit]="unitCurrentStreak"
+            [value]="streaks?.currentStreak"
+            >Current Streak</gf-value
+          >
+        </div>
+        <div class="col-md-6 col-xs-12 my-2">
+          <gf-value
+            i18n
+            size="large"
+            [unit]="unitLongestStreak"
+            [value]="streaks?.longestStreak"
+            >Longest Streak</gf-value
+          >
+        </div>
+      </div>
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
