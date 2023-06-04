@@ -15,7 +15,6 @@ import { isNumber } from 'lodash';
 })
 export class ValueComponent implements OnChanges {
   @Input() colorizeSign = false;
-  @Input() currency = '';
   @Input() icon = '';
   @Input() isAbsolute = false;
   @Input() isCurrency = false;
@@ -47,7 +46,7 @@ export class ValueComponent implements OnChanges {
         this.absoluteValue = Math.abs(<number>this.value);
 
         if (this.colorizeSign) {
-          if (this.currency || this.isCurrency) {
+          if (this.isCurrency) {
             try {
               this.formattedValue = this.absoluteValue.toLocaleString(
                 this.locale,
@@ -68,6 +67,13 @@ export class ValueComponent implements OnChanges {
               );
             } catch {}
           }
+        } else if (this.isCurrency) {
+          try {
+            this.formattedValue = this.value?.toLocaleString(this.locale, {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            });
+          } catch {}
         } else if (this.isPercent) {
           try {
             this.formattedValue = (this.value * 100).toLocaleString(
@@ -77,13 +83,6 @@ export class ValueComponent implements OnChanges {
                 minimumFractionDigits: 2
               }
             );
-          } catch {}
-        } else if (this.currency || this.isCurrency) {
-          try {
-            this.formattedValue = this.value?.toLocaleString(this.locale, {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            });
           } catch {}
         } else if (this.precision || this.precision === 0) {
           try {

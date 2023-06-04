@@ -32,15 +32,9 @@
             {{ formattedValue }}
           </ng-container>
         </div>
-        <small *ngIf="currency && size === 'medium'" class="ml-1">
-          {{ currency }}
-        </small>
         <small *ngIf="unit && size === 'medium'" class="ml-1">
           {{ unit }}
         </small>
-        <div *ngIf="currency && size !== 'medium'" class="ml-1">
-          {{ currency }}
-        </div>
         <div *ngIf="unit && size !== 'medium'" class="ml-1">
           {{ unit }}
         </div>

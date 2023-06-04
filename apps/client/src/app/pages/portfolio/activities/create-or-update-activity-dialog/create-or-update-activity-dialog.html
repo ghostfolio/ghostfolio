@@ -302,8 +302,9 @@
   <div class="d-flex" mat-dialog-actions>
     <gf-value
       class="flex-grow-1"
-      [currency]="activityForm.controls['currency']?.value ?? data.user?.settings?.baseCurrency"
+      [isCurrency]="true"
       [locale]="data.user?.settings?.locale"
+      [unit]="activityForm.controls['currency']?.value ?? data.user?.settings?.baseCurrency"
       [value]="total"
     ></gf-value>
     <div>
