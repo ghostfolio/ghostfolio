@@ -8,216 +8,238 @@
       <gf-logo [label]="pageTitle"></gf-logo>
     </a>
     <span class="spacer"></span>
-    <a
-      class="d-none d-sm-block"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'home' || currentRoute === 'zen',
-        'text-decoration-underline':
-          currentRoute === 'home' || currentRoute === 'zen'
-      }"
-      [routerLink]="['/']"
-      >Overview</a
-    >
-    <a
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'portfolio',
-        'text-decoration-underline': currentRoute === 'portfolio'
-      }"
-      [routerLink]="['/portfolio']"
-      >Portfolio</a
-    >
-    <a
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'accounts',
-        'text-decoration-underline': currentRoute === 'accounts'
-      }"
-      [routerLink]="['/accounts']"
-      >Accounts</a
-    >
-    <a
-      *ngIf="hasPermissionToAccessAdminControl"
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'admin',
-        'text-decoration-underline': currentRoute === 'admin'
-      }"
-      [routerLink]="['/admin']"
-      >Admin Control</a
-    >
-    <a
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'resources',
-        'text-decoration-underline': currentRoute === 'resources'
-      }"
-      [routerLink]="['/resources']"
-      >Resources</a
-    >
-    <a
-      *ngIf="
-        hasPermissionForSubscription && user?.subscription?.type === 'Basic'
-      "
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'pricing',
-        'text-decoration-underline': currentRoute === 'pricing'
-      }"
-      [routerLink]="['/pricing']"
-      >Pricing</a
-    >
-    <a
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'about',
-        'text-decoration-underline': currentRoute === 'about'
-      }"
-      [routerLink]="['/about']"
-      >About</a
-    >
-    <button
-      class="no-min-width px-1"
-      mat-flat-button
-      [matMenuTriggerFor]="accountMenu"
-      (menuClosed)="onMenuClosed()"
-      (menuOpened)="onMenuOpened()"
-    >
-      <ion-icon
-        class="d-none d-sm-block"
-        name="person-circle-outline"
-        size="large"
-      ></ion-icon>
-      <ion-icon
-        class="d-block d-sm-none"
-        size="large"
-        [name]="isMenuOpen ? 'close-outline' : 'menu-outline'"
-      ></ion-icon>
-    </button>
-    <mat-menu #accountMenu="matMenu" xPosition="before">
-      <ng-container *ngIf="user?.access?.length > 0">
-        <button mat-menu-item (click)="impersonateAccount(null)">
-          <ion-icon
-            *ngIf="user?.access?.length > 0"
-            class="mr-2"
-            [name]="
-              impersonationId
-                ? 'radio-button-off-outline'
-                : 'radio-button-on-outline'
-            "
-          ></ion-icon>
-          <span i18n>Me</span>
-        </button>
-        <button
-          *ngFor="let accessItem of user?.access"
-          mat-menu-item
-          (click)="impersonateAccount(accessItem.id)"
+    <ul class="alig-items-center d-flex list-inline m-0">
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold':
+              currentRoute === 'home' || currentRoute === 'zen',
+            'text-decoration-underline':
+              currentRoute === 'home' || currentRoute === 'zen'
+          }"
+          [routerLink]="['/']"
+          >Overview</a
         >
-          <ion-icon
-            class="mr-2"
-            name="square-outline"
-            [name]="
-              accessItem.id === impersonationId
-                ? 'radio-button-on-outline'
-                : 'radio-button-off-outline'
-            "
-          ></ion-icon>
-          <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
-          <span *ngIf="!accessItem.alias" i18n>User</span>
-        </button>
-        <hr class="m-0" />
-      </ng-container>
-      <a
-        class="d-flex d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{
-          'font-weight-bold': currentRoute === 'home' || currentRoute === 'zen'
-        }"
-        [routerLink]="['/']"
-        >Overview</a
-      >
-      <a
-        class="d-flex d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{
-          'font-weight-bold': currentRoute === 'portfolio'
-        }"
-        [routerLink]="['/portfolio']"
-        >Portfolio</a
-      >
-      <a
-        class="d-flex d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
-        [routerLink]="['/accounts']"
-        >Accounts</a
-      >
-      <a
-        i18n
-        mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
-        [routerLink]="['/account']"
-        >My Ghostfolio</a
-      >
-      <a
-        *ngIf="hasPermissionToAccessAdminControl"
-        class="d-flex d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
-        [routerLink]="['/admin']"
-        >Admin Control</a
-      >
-      <hr class="m-0" />
-      <a
-        class="d-flex d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{
-          'font-weight-bold': currentRoute === 'resources'
-        }"
-        [routerLink]="['/resources']"
-        >Resources</a
-      >
-      <a
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'portfolio',
+            'text-decoration-underline': currentRoute === 'portfolio'
+          }"
+          [routerLink]="['/portfolio']"
+          >Portfolio</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'accounts',
+            'text-decoration-underline': currentRoute === 'accounts'
+          }"
+          [routerLink]="['/accounts']"
+          >Accounts</a
+        >
+      </li>
+      <li *ngIf="hasPermissionToAccessAdminControl" class="list-inline-item">
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'admin',
+            'text-decoration-underline': currentRoute === 'admin'
+          }"
+          [routerLink]="['/admin']"
+          >Admin Control</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'resources',
+            'text-decoration-underline': currentRoute === 'resources'
+          }"
+          [routerLink]="['/resources']"
+          >Resources</a
+        >
+      </li>
+      <li
         *ngIf="
           hasPermissionForSubscription && user?.subscription?.type === 'Basic'
         "
-        class="d-flex d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute === 'pricing' }"
-        [routerLink]="['/pricing']"
-        >Pricing</a
+        class="list-inline-item"
       >
-      <a
-        class="d-flex d-sm-none"
-        i18n
-        mat-menu-item
-        [ngClass]="{ 'font-weight-bold': currentRoute === 'about' }"
-        [routerLink]="['/about']"
-        >About Ghostfolio</a
-      >
-      <hr class="d-flex d-sm-none m-0" />
-      <button mat-menu-item (click)="onSignOut()">Logout</button>
-    </mat-menu>
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'pricing',
+            'text-decoration-underline': currentRoute === 'pricing'
+          }"
+          [routerLink]="['/pricing']"
+          >Pricing</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'about',
+            'text-decoration-underline': currentRoute === 'about'
+          }"
+          [routerLink]="['/about']"
+          >About</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <button
+          class="no-min-width px-1"
+          mat-flat-button
+          [matMenuTriggerFor]="accountMenu"
+          (menuClosed)="onMenuClosed()"
+          (menuOpened)="onMenuOpened()"
+        >
+          <ion-icon
+            class="d-none d-sm-block"
+            name="person-circle-outline"
+            size="large"
+          ></ion-icon>
+          <ion-icon
+            class="d-block d-sm-none"
+            size="large"
+            [name]="isMenuOpen ? 'close-outline' : 'menu-outline'"
+          ></ion-icon>
+        </button>
+        <mat-menu #accountMenu="matMenu" xPosition="before">
+          <ng-container *ngIf="user?.access?.length > 0">
+            <button mat-menu-item (click)="impersonateAccount(null)">
+              <ion-icon
+                *ngIf="user?.access?.length > 0"
+                class="mr-2"
+                [name]="
+                  impersonationId
+                    ? 'radio-button-off-outline'
+                    : 'radio-button-on-outline'
+                "
+              ></ion-icon>
+              <span i18n>Me</span>
+            </button>
+            <button
+              *ngFor="let accessItem of user?.access"
+              mat-menu-item
+              (click)="impersonateAccount(accessItem.id)"
+            >
+              <ion-icon
+                class="mr-2"
+                name="square-outline"
+                [name]="
+                  accessItem.id === impersonationId
+                    ? 'radio-button-on-outline'
+                    : 'radio-button-off-outline'
+                "
+              ></ion-icon>
+              <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
+              <span *ngIf="!accessItem.alias" i18n>User</span>
+            </button>
+            <hr class="m-0" />
+          </ng-container>
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{
+              'font-weight-bold':
+                currentRoute === 'home' || currentRoute === 'zen'
+            }"
+            [routerLink]="['/']"
+            >Overview</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{
+              'font-weight-bold': currentRoute === 'portfolio'
+            }"
+            [routerLink]="['/portfolio']"
+            >Portfolio</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
+            [routerLink]="['/accounts']"
+            >Accounts</a
+          >
+          <a
+            i18n
+            mat-menu-item
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
+            [routerLink]="['/account']"
+            >My Ghostfolio</a
+          >
+          <a
+            *ngIf="hasPermissionToAccessAdminControl"
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
+            [routerLink]="['/admin']"
+            >Admin Control</a
+          >
+          <hr class="m-0" />
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{
+              'font-weight-bold': currentRoute === 'resources'
+            }"
+            [routerLink]="['/resources']"
+            >Resources</a
+          >
+          <a
+            *ngIf="
+              hasPermissionForSubscription &&
+              user?.subscription?.type === 'Basic'
+            "
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'pricing' }"
+            [routerLink]="['/pricing']"
+            >Pricing</a
+          >
+          <a
+            class="d-flex d-sm-none"
+            i18n
+            mat-menu-item
+            [ngClass]="{ 'font-weight-bold': currentRoute === 'about' }"
+            [routerLink]="['/about']"
+            >About Ghostfolio</a
+          >
+          <hr class="d-flex d-sm-none m-0" />
+          <button mat-menu-item (click)="onSignOut()">Logout</button>
+        </mat-menu>
+      </li>
+    </ul>
   </ng-container>
   <ng-container *ngIf="user === null">
     <a
@@ -231,67 +253,86 @@
       ></gf-logo>
     </a>
     <span class="spacer"></span>
-    <a
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'features',
-        'text-decoration-underline': currentRoute === 'features'
-      }"
-      [routerLink]="['/features']"
-      >Features</a
-    >
-    <a
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'about',
-        'text-decoration-underline': currentRoute === 'about'
-      }"
-      [routerLink]="['/about']"
-      >About</a
-    >
-    <a
-      *ngIf="hasPermissionForSubscription"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'pricing',
-        'text-decoration-underline': currentRoute === 'pricing'
-      }"
-      [routerLink]="['/pricing']"
-      >Pricing</a
-    >
-    <a
-      *ngIf="hasPermissionToAccessFearAndGreedIndex"
-      class="d-none d-sm-block mx-1"
-      i18n
-      mat-flat-button
-      [ngClass]="{
-        'font-weight-bold': currentRoute === 'markets',
-        'text-decoration-underline': currentRoute === 'markets'
-      }"
-      [routerLink]="['/markets']"
-      >Markets</a
-    >
-    <a
-      class="d-none d-sm-block no-min-width"
-      href="https://github.com/ghostfolio/ghostfolio"
-      mat-icon-button
-      ><ion-icon name="logo-github"></ion-icon
-    ></a>
-    <button class="mx-1" mat-flat-button (click)="openLoginDialog()">
-      <ng-container i18n>Sign in</ng-container>
-    </button>
-    <a
-      *ngIf="currentRoute !== 'register' && hasPermissionToCreateUser"
-      class="d-none d-sm-block"
-      color="primary"
-      mat-flat-button
-      [routerLink]="['/register']"
-      ><ng-container i18n>Get started</ng-container>
-    </a>
+    <ul class="alig-items-center d-flex list-inline m-0">
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'features',
+            'text-decoration-underline': currentRoute === 'features'
+          }"
+          [routerLink]="['/features']"
+          >Features</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'about',
+            'text-decoration-underline': currentRoute === 'about'
+          }"
+          [routerLink]="['/about']"
+          >About</a
+        >
+      </li>
+      <li *ngIf="hasPermissionForSubscription" class="list-inline-item">
+        <a
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'pricing',
+            'text-decoration-underline': currentRoute === 'pricing'
+          }"
+          [routerLink]="['/pricing']"
+          >Pricing</a
+        >
+      </li>
+      <li
+        *ngIf="hasPermissionToAccessFearAndGreedIndex"
+        class="list-inline-item"
+      >
+        <a
+          class="d-none d-sm-block mx-1"
+          i18n
+          mat-flat-button
+          [ngClass]="{
+            'font-weight-bold': currentRoute === 'markets',
+            'text-decoration-underline': currentRoute === 'markets'
+          }"
+          [routerLink]="['/markets']"
+          >Markets</a
+        >
+      </li>
+      <li class="list-inline-item">
+        <a
+          class="d-none d-sm-block no-min-width p-1"
+          href="https://github.com/ghostfolio/ghostfolio"
+          mat-flat-button
+          ><ion-icon name="logo-github"></ion-icon
+        ></a>
+      </li>
+      <li class="list-inline-item">
+        <button class="mx-1" mat-flat-button (click)="openLoginDialog()">
+          <ng-container i18n>Sign in</ng-container>
+        </button>
+      </li>
+      <li
+        *ngIf="currentRoute !== 'register' && hasPermissionToCreateUser"
+        class="list-inline-item"
+      >
+        <a
+          class="d-none d-sm-block"
+          color="primary"
+          mat-flat-button
+          [routerLink]="['/register']"
+          ><ng-container i18n>Get started</ng-container>
+        </a>
+      </li>
+    </ul>
   </ng-container>
 </mat-toolbar>
