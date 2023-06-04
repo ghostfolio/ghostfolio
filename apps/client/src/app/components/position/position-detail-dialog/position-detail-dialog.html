@@ -12,8 +12,9 @@
       <div class="col-12 d-flex justify-content-center mb-3">
         <gf-value
           size="large"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="value"
         ></gf-value>
       </div>
@@ -40,8 +41,9 @@
           i18n
           size="medium"
           [colorizeSign]="true"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="netPerformance"
           >Change</gf-value
         >
@@ -61,8 +63,9 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="SymbolProfile?.currency"
           [value]="averagePrice"
           >Average Unit Price</gf-value
         >
@@ -71,8 +74,9 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="SymbolProfile?.currency"
           [value]="marketPrice"
           >Market Price</gf-value
         >
@@ -81,9 +85,10 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
           [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [unit]="SymbolProfile?.currency"
           [value]="minPrice"
           >Minimum Price</gf-value
         >
@@ -92,9 +97,10 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
           [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [unit]="SymbolProfile?.currency"
           [value]="maxPrice"
           >Maximum Price</gf-value
         >
@@ -113,8 +119,9 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="investment"
           >Investment</gf-value
         >
@@ -123,8 +130,9 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="dividendInBaseCurrency"
           >Dividend</gf-value
         >
@@ -133,8 +141,9 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="feeInBaseCurrency"
           >Fees</gf-value
         >

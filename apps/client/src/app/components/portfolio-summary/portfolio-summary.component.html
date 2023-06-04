@@ -13,8 +13,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalBuy"
       ></gf-value>
     </div>
@@ -24,8 +25,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalSell"
       ></gf-value>
     </div>
@@ -38,8 +40,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.committedFunds"
       ></gf-value>
     </div>
@@ -49,8 +52,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentGrossPerformance"
       ></gf-value>
     </div>
@@ -79,8 +83,9 @@
       <span *ngIf="summary?.fees || summary?.fees === 0" class="mr-1">-</span>
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.fees"
       ></gf-value>
     </div>
@@ -93,8 +98,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentNetPerformance"
       ></gf-value>
     </div>
@@ -121,8 +127,9 @@
       <gf-value
         class="justify-content-end"
         position="end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentValue"
       ></gf-value>
     </div>
@@ -132,8 +139,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.items"
       ></gf-value>
     </div>
@@ -152,8 +160,9 @@
       ></ion-icon>
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund"
       ></gf-value>
     </div>
@@ -163,8 +172,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.cash"
       ></gf-value>
     </div>
@@ -174,8 +184,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.excludedAccountsAndActivities"
       ></gf-value>
     </div>
@@ -188,8 +199,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.netWorth"
       ></gf-value>
     </div>
@@ -217,8 +229,9 @@
     <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.dividend"
       ></gf-value>
     </div>

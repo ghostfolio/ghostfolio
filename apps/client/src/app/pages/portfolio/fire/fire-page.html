@@ -59,8 +59,9 @@
       <span class="font-weight-bold"
         ><gf-value
           class="d-inline-block"
-          [currency]="user?.settings?.baseCurrency"
+          [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [unit]="user?.settings?.baseCurrency"
           [value]="withdrawalRatePerYear?.toNumber()"
         ></gf-value>
         per year</span
@@ -69,8 +70,9 @@
       <span class="font-weight-bold"
         ><gf-value
           class="d-inline-block"
-          [currency]="user?.settings?.baseCurrency"
+          [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [unit]="user?.settings?.baseCurrency"
           [value]="withdrawalRatePerMonth?.toNumber()"
         ></gf-value>
         per month</span
@@ -78,8 +80,9 @@
       <span class="font-weight-bold"
         ><gf-value
           class="d-inline-block"
-          [currency]="user?.settings?.baseCurrency"
+          [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [unit]="user?.settings?.baseCurrency"
           [value]="fireWealth?.toNumber()"
         ></gf-value
       ></span>
