@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for a unit in the value component
 - Added a default value for the `includeHistoricalData` attribute in the symbol data endpoint
 
+### Fixed
+
+- Fixed an issue with the date format parsing in the activities import
+
 ## 1.276.0 - 2023-06-03
 
 ### Added
