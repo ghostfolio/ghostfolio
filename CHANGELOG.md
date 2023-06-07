@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the investment streaks to the analysis page
 - Added support for a unit in the value component
+- Added a semantic list structure to the header navigation
 - Added a default value for the `includeHistoricalData` attribute in the symbol data endpoint
 
 ## 1.276.0 - 2023-06-03
