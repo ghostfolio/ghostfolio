@@ -223,16 +223,16 @@ export class ImportActivitiesService {
 
     for (const key of ImportActivitiesService.DATE_KEYS) {
       if (item[key]) {
-        if (isMatch(item[key], 'dd-MM-yyyy') && item[key].length === '10') {
+        if (isMatch(item[key], 'dd-MM-yyyy') && item[key].length === 10) {
           // Check length to only match yyyy (and not yy)
           date = parse(item[key], 'dd-MM-yyyy', new Date()).toISOString();
         } else if (
           isMatch(item[key], 'dd/MM/yyyy') &&
-          item[key].length === '10'
+          item[key].length === 10
         ) {
           // Check length to only match yyyy (and not yy)
           date = parse(item[key], 'dd/MM/yyyy', new Date()).toISOString();
-        } else if (isMatch(item[key], 'yyyyMMdd') && item[key].length === '8') {
+        } else if (isMatch(item[key], 'yyyyMMdd') && item[key].length === 8) {
           // Check length to only match yyyy (and not yy)
           date = parse(item[key], 'yyyyMMdd', new Date()).toISOString();
         } else {
