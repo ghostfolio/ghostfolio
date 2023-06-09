@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Changelog
+## Unreleased
 
 ### Changed
 
 - Extended the clone functionality of a transaction by the quantity
+- Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 
 ## 1.277.0 - 2023-06-07
 
