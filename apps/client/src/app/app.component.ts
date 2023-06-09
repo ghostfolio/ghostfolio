@@ -34,6 +34,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionForBlog: boolean;
   public hasPermissionForSubscription: boolean;
+  public hasPermissionToAccessFearAndGreedIndex: boolean;
   public info: InfoItem;
   public pageTitle: string;
   public user: User;
@@ -67,6 +68,11 @@ export class AppComponent implements OnDestroy, OnInit {
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,
       permissions.enableSubscription
+    );
+
+    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableFearAndGreedIndex
     );
 
     this.router.events
