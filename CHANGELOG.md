@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the clone functionality of a transaction by the quantity
+- Changed the direction of the ellipsis icon in various tables
 - Refreshed the cryptocurrencies list
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 
