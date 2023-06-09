@@ -92,7 +92,7 @@ export class PortfolioCalculator {
         let investment = new Big(0);
 
         if (newQuantity.gt(0)) {
-          if (order.type === 'BUY') {
+          if (order.type === 'BUY' || order.type === 'DRIP') {
             investment = oldAccumulatedSymbol.investment.plus(
               order.quantity.mul(unitPrice)
             );
@@ -931,6 +931,7 @@ export class PortfolioCalculator {
 
     switch (type) {
       case 'BUY':
+      case 'DRIP':
         factor = 1;
         break;
       case 'SELL':
@@ -1156,7 +1157,7 @@ export class PortfolioCalculator {
       }
 
       const transactionInvestment =
-        order.type === 'BUY'
+        order.type === 'BUY' || order.type === 'DRIP'
           ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
           : totalUnits.gt(0)
           ? totalInvestment

@@ -224,7 +224,7 @@ export class PortfolioService {
     const activities = await this.orderService.getOrders({
       filters,
       userId,
-      types: ['DIVIDEND'],
+      types: ['DIVIDEND', 'DRIP'],
       userCurrency: this.request.user.Settings.settings.baseCurrency
     });
 
@@ -730,7 +730,9 @@ export class PortfolioService {
       .filter((order) => {
         tags = tags.concat(order.tags);
 
-        return order.type === 'BUY' || order.type === 'SELL';
+        return (
+          order.type === 'BUY' || order.type === 'SELL' || order.type === 'DRIP'
+        );
       })
       .map((order) => ({
         currency: order.SymbolProfile.currency,
@@ -1665,7 +1667,7 @@ export class PortfolioService {
       committedFunds: committedFunds.toNumber(),
       emergencyFund: emergencyFund.toNumber(),
       ordersCount: activities.filter(({ type }) => {
-        return type === 'BUY' || type === 'SELL';
+        return type === 'BUY' || type === 'SELL' || type === 'DRIP';
       }).length
     };
   }
@@ -1694,7 +1696,7 @@ export class PortfolioService {
       userCurrency,
       userId,
       withExcludedAccounts,
-      types: ['BUY', 'SELL']
+      types: ['BUY', 'SELL', 'DRIP']
     });
 
     if (orders.length <= 0) {

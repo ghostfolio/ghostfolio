@@ -162,11 +162,16 @@
             buy: element.type === 'BUY',
             dividend: element.type === 'DIVIDEND',
             item: element.type === 'ITEM',
-            sell: element.type === 'SELL'
+            sell: element.type === 'SELL',
+            drip: element.type === 'DRIP'
           }"
         >
           <ion-icon
-            *ngIf="element.type === 'BUY' || element.type === 'DIVIDEND'"
+            *ngIf="
+              element.type === 'BUY' ||
+              element.type === 'DIVIDEND' ||
+              element.type === 'DRIP'
+            "
             name="arrow-up-circle-outline"
           ></ion-icon>
           <ion-icon
