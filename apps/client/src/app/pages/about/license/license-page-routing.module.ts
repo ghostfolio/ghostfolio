@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
-import { ChangelogPageComponent } from './changelog-page.component';
+import { LicensePageComponent } from './license-page.component';
 
 const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: ChangelogPageComponent,
+    component: LicensePageComponent,
     path: '',
-    title: $localize`Changelog`
+    title: $localize`License`
   }
 ];
 
@@ -17,4 +17,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ChangelogPageRoutingModule {}
+export class LicensePageRoutingModule {}

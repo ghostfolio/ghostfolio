@@ -22,6 +22,21 @@ const routes: Routes = [
             (m) => m.ChangelogPageModule
           )
       },
+      ...[
+        'license',
+        /////
+        'licence',
+        'licencia',
+        'licentie',
+        'lizenz',
+        'licenza'
+      ].map((path) => ({
+        path,
+        loadChildren: () =>
+          import('./license/license-page.module').then(
+            (m) => m.LicensePageModule
+          )
+      })),
       {
         path: 'privacy-policy',
         loadChildren: () =>

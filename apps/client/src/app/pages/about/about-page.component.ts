@@ -53,8 +53,13 @@ export class AboutPageComponent implements OnDestroy, OnInit {
             },
             {
               iconName: 'sparkles-outline',
-              label: $localize`Changelog & License`,
+              label: $localize`Changelog`,
               path: ['/about', 'changelog']
+            },
+            {
+              iconName: 'ribbon-outline',
+              label: $localize`License`,
+              path: ['/about', 'license']
             },
             {
               iconName: 'shield-checkmark-outline',
