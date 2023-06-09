@@ -291,7 +291,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
               date: new Date(),
               id: null,
               fee: 0,
-              quantity: null,
               type: aActivity?.type ?? 'BUY',
               unitPrice: null
             },
