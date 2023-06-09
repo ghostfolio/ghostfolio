@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the clone functionality of a transaction by the quantity
+- Displayed the link to the markets overview in the footer based on a permission
 
 ## 1.277.0 - 2023-06-07
 
