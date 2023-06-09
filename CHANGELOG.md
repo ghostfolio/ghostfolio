@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the clone functionality of a transaction by the quantity
 - Displayed the link to the markets overview in the footer based on a permission
+- Refreshed the cryptocurrencies list
 - Upgraded `Node.js` from version `16` to `18` (`Dockerfile`)
 
 ## 1.277.0 - 2023-06-07
