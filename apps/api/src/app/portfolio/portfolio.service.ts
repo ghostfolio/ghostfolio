@@ -1302,12 +1302,11 @@ export class PortfolioService {
   }: {
     activities: OrderWithAccount[];
     date?: Date;
-
     userCurrency: string;
   }) {
     return activities
       .filter((activity) => {
-        // Filter out all activities before given date and type dividend
+        // Filter out all activities before given date (drafts) and type dividend
         return (
           isBefore(date, new Date(activity.date)) &&
           activity.type === TypeOfOrder.DIVIDEND
@@ -1431,7 +1430,7 @@ export class PortfolioService {
   }) {
     return activities
       .filter((activity) => {
-        // Filter out all activities before given date
+        // Filter out all activities before given date (drafts)
         return isBefore(date, new Date(activity.date));
       })
       .map(({ fee, SymbolProfile }) => {
@@ -1481,7 +1480,7 @@ export class PortfolioService {
   private getItems(activities: OrderWithAccount[], date = new Date(0)) {
     return activities
       .filter((activity) => {
-        // Filter out all orders before given date and type item
+        // Filter out all activities before given date (drafts) and type item
         return (
           isBefore(date, new Date(activity.date)) &&
           activity.type === TypeOfOrder.ITEM
