@@ -1478,19 +1478,37 @@ export class PortfolioService {
     };
   }
 
-  private getItems(orders: OrderWithAccount[], date = new Date(0)) {
-    return orders
-      .filter((order) => {
+  private getItems(activities: OrderWithAccount[], date = new Date(0)) {
+    return activities
+      .filter((activity) => {
         // Filter out all orders before given date and type item
         return (
-          isBefore(date, new Date(order.date)) &&
-          order.type === TypeOfOrder.ITEM
+          isBefore(date, new Date(activity.date)) &&
+          activity.type === TypeOfOrder.ITEM
         );
       })
-      .map((order) => {
+      .map(({ quantity, SymbolProfile, unitPrice }) => {
         return this.exchangeRateDataService.toCurrency(
-          new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.SymbolProfile.currency,
+          new Big(quantity).mul(unitPrice).toNumber(),
+          SymbolProfile.currency,
+          this.request.user.Settings.settings.baseCurrency
+        );
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      );
+  }
+
+  private getLiabilities(activities: OrderWithAccount[]) {
+    return activities
+      .filter(({ type }) => {
+        return type === TypeOfOrder.LIABILITY;
+      })
+      .map(({ quantity, SymbolProfile, unitPrice }) => {
+        return this.exchangeRateDataService.toCurrency(
+          new Big(quantity).mul(unitPrice).toNumber(),
+          SymbolProfile.currency,
           this.request.user.Settings.settings.baseCurrency
         );
       })
@@ -1601,6 +1619,7 @@ export class PortfolioService {
     const fees = this.getFees({ activities, userCurrency }).toNumber();
     const firstOrderDate = activities[0]?.date;
     const items = this.getItems(activities).toNumber();
+    const liabilities = this.getLiabilities(activities).toNumber();
 
     const totalBuy = this.getTotalByType(activities, userCurrency, 'BUY');
     const totalSell = this.getTotalByType(activities, userCurrency, 'SELL');
@@ -1633,6 +1652,7 @@ export class PortfolioService {
       .plus(performanceInformation.performance.currentValue)
       .plus(items)
       .plus(excludedAccountsAndActivities)
+      .minus(liabilities)
       .toNumber();
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
@@ -1659,6 +1679,7 @@ export class PortfolioService {
       fees,
       firstOrderDate,
       items,
+      liabilities,
       netWorth,
       totalBuy,
       totalSell,

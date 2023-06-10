@@ -96,7 +96,7 @@ export class OrderService {
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (data.type === 'ITEM') {
+    if (data.type === 'ITEM' || data.type === 'LIABILITY') {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
       currency = data.SymbolProfile.connectOrCreate.create.currency;
@@ -129,7 +129,10 @@ export class OrderService {
       }
     });
 
-    const isDraft = isAfter(data.date as Date, endOfToday());
+    const isDraft =
+      data.type === 'LIABILITY'
+        ? false
+        : isAfter(data.date as Date, endOfToday());
 
     if (!isDraft) {
       // Gather symbol data of order in the background, if not draft
@@ -320,7 +323,11 @@ export class OrderService {
       })
     )
       .filter((order) => {
-        return withExcludedAccounts || order.Account?.isExcluded === false;
+        return (
+          withExcludedAccounts ||
+          !order.Account ||
+          order.Account?.isExcluded === false
+        );
       })
       .map((order) => {
         const value = new Big(order.quantity).mul(order.unitPrice).toNumber();

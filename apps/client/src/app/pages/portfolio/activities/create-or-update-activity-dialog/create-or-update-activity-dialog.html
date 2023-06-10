@@ -14,6 +14,7 @@
           <mat-option i18n value="BUY">Buy</mat-option>
           <mat-option i18n value="DIVIDEND">Dividend</mat-option>
           <mat-option i18n value="ITEM">Item</mat-option>
+          <mat-option i18n value="LIABILITY">Liability</mat-option>
           <mat-option i18n value="SELL">Sell</mat-option>
         </mat-select>
       </mat-form-field>
@@ -116,7 +117,10 @@
         <mat-datepicker #date disabled="false"></mat-datepicker>
       </mat-form-field>
     </div>
-    <div class="mb-3">
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+    >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
         <input formControlName="quantity" matInput type="number" />
@@ -130,6 +134,7 @@
               >Dividend</ng-container
             >
             <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
+            <ng-container *ngSwitchCase="'LIABILITY'" i18n>Value</ng-container>
             <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
           </ng-container>
         </mat-label>
@@ -177,6 +182,7 @@
               >Dividend</ng-container
             >
             <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
+            <ng-container *ngSwitchCase="'LIABILITY'" i18n>Value</ng-container>
             <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
           </ng-container>
         </mat-label>
@@ -186,7 +192,10 @@
         >
       </mat-form-field>
     </div>
-    <div class="mb-3">
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+    >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
         <input formControlName="feeInCustomCurrency" matInput type="number" />

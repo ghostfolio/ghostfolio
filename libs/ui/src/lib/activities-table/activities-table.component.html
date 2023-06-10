@@ -162,6 +162,7 @@
             buy: element.type === 'BUY',
             dividend: element.type === 'DIVIDEND',
             item: element.type === 'ITEM',
+            liability: element.type === 'LIABILITY',
             sell: element.type === 'SELL'
           }"
         >
@@ -172,6 +173,10 @@
           <ion-icon
             *ngIf="element.type === 'ITEM'"
             name="cube-outline"
+          ></ion-icon>
+          <ion-icon
+            *ngIf="element.type === 'LIABILITY'"
+            name="flame-outline"
           ></ion-icon>
           <ion-icon
             *ngIf="element.type === 'SELL'"
@@ -538,7 +543,10 @@
       mat-row
       [ngClass]="{
         'cursor-pointer':
-          hasPermissionToOpenDetails && !row.isDraft && row.type !== 'ITEM'
+          hasPermissionToOpenDetails &&
+          !row.isDraft &&
+          row.type !== 'ITEM' &&
+          row.type !== 'LIABILITY'
       }"
       (click)="onClickActivity(row)"
     ></tr>

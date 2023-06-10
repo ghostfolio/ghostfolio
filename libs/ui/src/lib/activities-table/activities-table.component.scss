@@ -37,6 +37,10 @@
             color: var(--purple);
           }
 
+          &.liability {
+            color: var(--red);
+          }
+
           &.sell {
             color: var(--orange);
           }
