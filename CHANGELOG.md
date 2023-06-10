@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Supported a note for accounts
+
 ### Changed
 
 - Improved the language localization for French (`fr`)
