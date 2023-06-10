@@ -202,7 +202,7 @@ export class ImportService {
 
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
-        if (activity.type === 'ITEM') {
+        if (activity.type === 'ITEM' || activity.type === 'LIABILITY') {
           activity.dataSource = DataSource.MANUAL;
         } else {
           activity.dataSource =

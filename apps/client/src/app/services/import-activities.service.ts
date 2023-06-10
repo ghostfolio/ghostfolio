@@ -342,6 +342,8 @@ export class ImportActivitiesService {
             return Type.DIVIDEND;
           case 'item':
             return Type.ITEM;
+          case 'liability':
+            return Type.LIABILITY;
           case 'sell':
             return Type.SELL;
           default:
