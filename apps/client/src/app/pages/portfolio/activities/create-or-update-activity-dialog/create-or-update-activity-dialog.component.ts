@@ -300,6 +300,33 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
           this.activityForm.controls['updateAccountBalance'].disable();
           this.activityForm.controls['updateAccountBalance'].setValue(false);
+        } else if (type === 'LIABILITY') {
+          this.activityForm.controls['accountId'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['accountId'].updateValueAndValidity();
+          this.activityForm.controls['currency'].setValue(
+            this.data.user.settings.baseCurrency
+          );
+          this.activityForm.controls['currencyOfFee'].setValue(
+            this.data.user.settings.baseCurrency
+          );
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(
+            this.data.user.settings.baseCurrency
+          );
+          this.activityForm.controls['dataSource'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['dataSource'].updateValueAndValidity();
+          this.activityForm.controls['name'].setValidators(Validators.required);
+          this.activityForm.controls['name'].updateValueAndValidity();
+          this.activityForm.controls['quantity'].setValue(1);
+          this.activityForm.controls['searchSymbol'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+          this.activityForm.controls['updateAccountBalance'].disable();
+          this.activityForm.controls['updateAccountBalance'].setValue(false);
         } else {
           this.activityForm.controls['accountId'].setValidators(
             Validators.required
