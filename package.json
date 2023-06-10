@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "1.277.0",
+  "version": "1.278.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "scripts": {
@@ -198,7 +198,7 @@
     "typescript": "4.9.5"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "importSort": {
     ".ts": {

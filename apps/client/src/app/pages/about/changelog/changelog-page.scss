@@ -2,35 +2,33 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  .mat-mdc-card {
-    &.changelog {
-      ::ng-deep {
-        a {
-          color: rgba(var(--palette-primary-500), 1);
-          font-weight: 500;
+  .changelog {
+    ::ng-deep {
+      a {
+        color: rgba(var(--palette-primary-500), 1);
+        font-weight: 500;
 
-          &:hover {
-            color: rgba(var(--palette-primary-300), 1);
+        &:hover {
+          color: rgba(var(--palette-primary-300), 1);
+        }
+      }
+
+      markdown {
+        h1,
+        p {
+          display: none;
+        }
+
+        h2 {
+          font-size: 18px;
+
+          &:not(:first-of-type) {
+            margin-top: 2rem;
           }
         }
 
-        markdown {
-          h1,
-          p {
-            display: none;
-          }
-
-          h2 {
-            font-size: 18px;
-
-            &:not(:first-of-type) {
-              margin-top: 2rem;
-            }
-          }
-
-          h3 {
-            font-size: 15px;
-          }
+        h3 {
+          font-size: 15px;
         }
       }
     }

@@ -66,7 +66,9 @@
       <div class="col-sm">
         <div class="h6 mt-2" i18n>Personal Finance</div>
         <ul class="list-unstyled">
-          <li><a i18n [routerLink]="['/markets']">Markets</a></li>
+          <li *ngIf="hasPermissionToAccessFearAndGreedIndex">
+            <a i18n [routerLink]="['/markets']">Markets</a>
+          </li>
           <li><a i18n [routerLink]="['/resources']">Resources</a></li>
         </ul>
       </div>
@@ -78,13 +80,14 @@
             <a i18n [routerLink]="['/blog']">Blog</a>
           </li>
           <li>
-            <a i18n [routerLink]="['/about', 'changelog']"
-              >Changelog & License</a
-            >
+            <a i18n [routerLink]="['/about', 'changelog']">Changelog</a>
           </li>
           <li><a i18n [routerLink]="['/features']">Features</a></li>
           <li *ngIf="hasPermissionForSubscription">
             <a i18n [routerLink]="['/faq']">Frequently Asked Questions (FAQ)</a>
+          </li>
+          <li>
+            <a i18n [routerLink]="['/about', 'license']">License</a>
           </li>
           <li *ngIf="hasPermissionForSubscription">
             <a [routerLink]="['/open']">Open Startup</a>
