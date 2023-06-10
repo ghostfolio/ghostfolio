@@ -206,7 +206,8 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
     } else if (
       this.hasPermissionToOpenDetails &&
       !activity.isDraft &&
-      activity.type !== 'ITEM'
+      activity.type !== 'ITEM' &&
+      activity.type !== 'LIABILITY'
     ) {
       this.onOpenPositionDialog({
         dataSource: activity.SymbolProfile.dataSource,

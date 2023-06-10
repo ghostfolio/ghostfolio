@@ -204,7 +204,7 @@ export class OrderService {
       where
     });
 
-    if (order.type === 'ITEM') {
+    if (order.type === 'ITEM' || order.type === 'LIABILITY') {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -375,7 +375,7 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (data.type === 'ITEM') {
+    if (data.type === 'ITEM' || data.type === 'LIABILITY') {
       delete data.SymbolProfile.connect;
     } else {
       delete data.SymbolProfile.update;
