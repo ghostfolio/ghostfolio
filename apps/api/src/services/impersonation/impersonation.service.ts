@@ -12,22 +12,36 @@ export class ImpersonationService {
   ) {}
 
   public async validateImpersonationId(aId = '') {
-    const accessObject = await this.prismaService.access.findFirst({
-      where: {
-        GranteeUser: { id: this.request.user.id },
-        id: aId
-      }
-    });
+    if (this.request.user) {
+      const accessObject = await this.prismaService.access.findFirst({
+        where: {
+          GranteeUser: { id: this.request.user.id },
+          id: aId
+        }
+      });
 
-    if (accessObject?.userId) {
-      return accessObject?.userId;
-    } else if (
-      hasPermission(
-        this.request.user.permissions,
-        permissions.impersonateAllUsers
-      )
-    ) {
-      return aId;
+      if (accessObject?.userId) {
+        return accessObject.userId;
+      } else if (
+        hasPermission(
+          this.request.user.permissions,
+          permissions.impersonateAllUsers
+        )
+      ) {
+        return aId;
+      }
+    } else {
+      // Public access
+      const accessObject = await this.prismaService.access.findFirst({
+        where: {
+          GranteeUser: null,
+          User: { id: aId }
+        }
+      });
+
+      if (accessObject?.userId) {
+        return accessObject.userId;
+      }
     }
 
     return null;
