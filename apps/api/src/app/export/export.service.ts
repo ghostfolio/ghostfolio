@@ -21,6 +21,7 @@ export class ExportService {
       select: {
         accountType: true,
         balance: true,
+        comment: true,
         currency: true,
         id: true,
         isExcluded: true,

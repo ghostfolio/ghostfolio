@@ -58,7 +58,8 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
       'balance',
       'value',
       'currency',
-      'valueInBaseCurrency'
+      'valueInBaseCurrency',
+      'comment'
     ];
 
     if (this.showActions) {
@@ -90,6 +91,10 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     this.router.navigate([], {
       queryParams: { accountId, accountDetailDialog: true }
     });
+  }
+
+  public onOpenComment(aComment: string) {
+    alert(aComment);
   }
 
   public onUpdateAccount(aAccount: AccountModel) {

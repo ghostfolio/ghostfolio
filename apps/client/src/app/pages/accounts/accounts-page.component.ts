@@ -153,6 +153,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   public openUpdateAccountDialog({
     accountType,
     balance,
+    comment,
     currency,
     id,
     isExcluded,
@@ -164,6 +165,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
         account: {
           accountType,
           balance,
+          comment,
           currency,
           id,
           isExcluded,
@@ -232,6 +234,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
         account: {
           accountType: AccountType.SECURITIES,
           balance: 0,
+          comment: null,
           currency: this.user?.settings?.baseCurrency,
           isExcluded: false,
           name: null,
