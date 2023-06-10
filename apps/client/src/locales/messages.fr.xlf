@@ -3614,7 +3614,7 @@
       </trans-unit>
       <trans-unit id="f15e6e0a8fb2412d0fc8c40bc2946ccac969f491" datatype="html">
         <source>Oops! Could not get the historical exchange rate from</source>
-        <target state="translated">Oups ! Nous n'avons pas pu obtenir le  taux de change historique à partir de</target>
+        <target state="translated">Oups ! Nous n'avons pas pu obtenir le taux de change historique à partir de</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">155</context>
