@@ -100,7 +100,7 @@ export class PortfolioProportionChartComponent
     };
 
     Object.keys(this.positions).forEach((symbol) => {
-      if (this.positions[symbol][this.keys[0]].toUpperCase()) {
+      if (this.positions[symbol][this.keys[0]]?.toUpperCase()) {
         if (chartData[this.positions[symbol][this.keys[0]].toUpperCase()]) {
           chartData[this.positions[symbol][this.keys[0]].toUpperCase()].value =
             chartData[

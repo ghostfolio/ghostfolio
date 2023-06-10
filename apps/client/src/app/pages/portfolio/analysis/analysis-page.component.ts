@@ -251,18 +251,18 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.streaks = streaks;
         this.unitCurrentStreak =
           this.mode === 'year'
-            ? this.streaks.currentStreak === 1
+            ? this.streaks?.currentStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
-            : this.streaks.currentStreak === 1
+            : this.streaks?.currentStreak === 1
             ? translate('MONTH')
             : translate('MONTHS');
         this.unitLongestStreak =
           this.mode === 'year'
-            ? this.streaks.longestStreak === 1
+            ? this.streaks?.longestStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
-            : this.streaks.longestStreak === 1
+            : this.streaks?.longestStreak === 1
             ? translate('MONTH')
             : translate('MONTHS');
 
