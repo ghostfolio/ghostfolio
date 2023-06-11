@@ -16,9 +16,11 @@ export function hasNotDefinedValuesInObject(aObject: Object): boolean {
 export function nullifyValuesInObject<T>(aObject: T, keys: string[]): T {
   const object = cloneDeep(aObject);
 
-  keys.forEach((key) => {
-    object[key] = null;
-  });
+  if (object) {
+    keys.forEach((key) => {
+      object[key] = null;
+    });
+  }
 
   return object;
 }

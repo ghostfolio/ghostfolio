@@ -23,6 +23,7 @@ model Access {
 model Account {
   accountType AccountType @default(SECURITIES)
   balance     Float       @default(0)
+  comment     String?
   createdAt   DateTime    @default(now())
   currency    String?
   id          String      @default(uuid())
@@ -237,6 +238,7 @@ enum Type {
   BUY
   DIVIDEND
   ITEM
+  LIABILITY
   SELL
 }
 

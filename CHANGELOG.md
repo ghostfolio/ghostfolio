@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.280.1 - 2023-06-10
+
+### Added
+
+- Added support for liabilities
+
+## 1.279.0 - 2023-06-10
+
+### Added
+
+- Supported a note for accounts
+
+### Changed
+
+- Improved the language localization for French (`fr`)
+
+### Fixed
+
+- Fixed an issue with the value nullification related to the investment streaks
+- Fixed an issue in the public page related to the impersonation service
+
 ## 1.278.0 - 2023-06-09
 
 ### Changed

@@ -162,6 +162,7 @@ export class PortfolioController {
         'excludedAccountsAndActivities',
         'fees',
         'items',
+        'liabilities',
         'netWorth',
         'totalBuy',
         'totalSell'
