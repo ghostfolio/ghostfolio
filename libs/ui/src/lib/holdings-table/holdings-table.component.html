@@ -92,7 +92,8 @@
         mat-header-cell
         mat-sort-header
       >
-        <ng-container i18n>Allocation</ng-container>
+        <span class="d-none d-sm-block" i18n>Allocation</span>
+        <span class="d-block d-sm-none" title="Allocation">%</span>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex justify-content-end">
@@ -108,17 +109,14 @@
     <ng-container matColumnDef="performance">
       <th
         *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1 justify-content-end"
+        class="px-1 justify-content-end"
         mat-header-cell
         mat-sort-header="netPerformancePercent"
       >
-        <ng-container i18n>Performance</ng-container>
+        <span class="d-none d-sm-block" i18n>Performance</span>
+        <span class="d-block d-sm-none" title="Performance">±</span>
       </th>
-      <td
-        *matCellDef="let element"
-        class="d-none d-lg-table-cell px-1"
-        mat-cell
-      >
+      <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex justify-content-end">
           <gf-value
             [colorizeSign]="true"

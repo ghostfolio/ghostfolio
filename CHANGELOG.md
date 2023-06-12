@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extracted the symbol search to a dedicated component
 - Upgraded `prisma` from version `4.14.1` to `4.15.0`
+- Improved holdings table on mobile view
 
 ## 1.280.1 - 2023-06-10
 
