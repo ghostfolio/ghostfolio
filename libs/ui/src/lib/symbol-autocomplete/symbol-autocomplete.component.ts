@@ -84,13 +84,21 @@ export class SymbolAutocompleteComponent
       .pipe(
         debounceTime(400),
         distinctUntilChanged(),
-        filter((query) => isString(query) && query.length > 1),
-        tap(() => (this.isLoading = true)),
-        switchMap((query: string) => this.dataService.fetchSymbols(query))
+        filter((query) => {
+          return isString(query) && query.length > 1;
+        }),
+        tap(() => {
+          this.isLoading = true;
+          this.changeDetectorRef.markForCheck();
+        }),
+        switchMap((query: string) => {
+          return this.dataService.fetchSymbols(query);
+        })
       )
       .subscribe((filteredLookupItems) => {
-        this.isLoading = false;
         this.filteredLookupItems = filteredLookupItems;
+        this.isLoading = false;
+
         this.changeDetectorRef.markForCheck();
       });
   }

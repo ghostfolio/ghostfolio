@@ -5,14 +5,17 @@
   [formControl]="control"
   [matAutocomplete]="symbolAutocomplete"
 />
+<mat-spinner
+  *ngIf="isLoading"
+  class="position-absolute"
+  matSuffix
+  [diameter]="20"
+></mat-spinner>
 <mat-autocomplete
   #symbolAutocomplete="matAutocomplete"
   [displayWith]="displayFn"
   (optionSelected)="onUpdateSymbol($event)"
 >
-  <mat-option *ngIf="isLoading">
-    <mat-spinner diameter="50"></mat-spinner>
-  </mat-option>
   <ng-container *ngIf="!isLoading">
     <mat-option
       *ngFor="let lookupItem of filteredLookupItems"
@@ -29,4 +32,3 @@
     </mat-option>
   </ng-container>
 </mat-autocomplete>
-<!--<mat-spinner *ngIf="isLoading" matSuffix [diameter]="20"></mat-spinner>-->

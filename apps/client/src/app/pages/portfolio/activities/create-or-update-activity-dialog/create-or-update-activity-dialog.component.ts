@@ -238,19 +238,19 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.activityForm.controls['searchSymbol'].valueChanges.subscribe(
-      (value) => {
-        if (!this.activityForm.controls['searchSymbol'].invalid) {
-          this.activityForm.controls['dataSource'].setValue(
-            this.activityForm.controls['searchSymbol'].value.dataSource
-          );
-          this.updateSymbol();
-        } else {
-          this.data.activity.SymbolProfile = null;
-        }
-        this.changeDetectorRef.markForCheck();
+    this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
+      if (this.activityForm.controls['searchSymbol'].invalid) {
+        this.data.activity.SymbolProfile = null;
+      } else {
+        this.activityForm.controls['dataSource'].setValue(
+          this.activityForm.controls['searchSymbol'].value.dataSource
+        );
+
+        this.updateSymbol();
       }
-    );
+
+      this.changeDetectorRef.markForCheck();
+    });
 
     this.filteredTagsObservable = this.activityForm.controls[
       'tags'
