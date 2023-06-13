@@ -5,12 +5,7 @@
   [formControl]="control"
   [matAutocomplete]="symbolAutocomplete"
 />
-<mat-spinner
-  *ngIf="isLoading"
-  class="position-absolute"
-  matSuffix
-  [diameter]="20"
-></mat-spinner>
+
 <mat-autocomplete
   #symbolAutocomplete="matAutocomplete"
   [displayWith]="displayFn"
@@ -32,3 +27,8 @@
     </mat-option>
   </ng-container>
 </mat-autocomplete>
+<mat-spinner
+  *ngIf="isLoading"
+  class="position-absolute"
+  [diameter]="20"
+></mat-spinner>
