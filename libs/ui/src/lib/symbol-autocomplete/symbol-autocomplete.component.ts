@@ -73,7 +73,7 @@ export class SymbolAutocompleteComponent
     this.controlType = 'symbol-autocomplete';
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     super.required = this.ngControl.control?.hasValidator(Validators.required);
 
     if (this.disabled) {
@@ -107,21 +107,21 @@ export class SymbolAutocompleteComponent
     return aLookupItem?.symbol ?? '';
   }
 
-  public get empty(): boolean {
+  public get empty() {
     return this.input?.empty;
   }
 
-  public focus(): void {
+  public focus() {
     this.input.focus();
   }
 
-  public isValueInOptions(value: string): boolean {
+  public isValueInOptions(value: string) {
     return this.filteredLookupItems.some((item) => {
       return item.symbol === value;
     });
   }
 
-  public ngDoCheck(): void {
+  public ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
       this.validateSelection();
@@ -142,7 +142,7 @@ export class SymbolAutocompleteComponent
     super.value = value;
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     super.ngOnDestroy();
 
     this.unsubscribeSubject.next();
