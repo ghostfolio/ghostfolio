@@ -567,7 +567,7 @@
       </trans-unit>
       <trans-unit id="ced0954194f098201837bb03b32441e4991b5193" datatype="html">
         <source>Activity Count</source>
-        <target state="translated">Contagem de Atividades</target>
+        <target state="translated">Número de Atividades</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">17</context>
@@ -651,7 +651,7 @@
       </trans-unit>
       <trans-unit id="6470890277760887814" datatype="html">
         <source>Do you really want to flush the cache?</source>
-        <target state="new">Do you really want to flush the cache?</target>
+        <target state="translated">Deseja realmente limpar a cache?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">154</context>
@@ -659,7 +659,7 @@
       </trans-unit>
       <trans-unit id="2712770700065625080" datatype="html">
         <source>Please set your system message:</source>
-        <target state="new">Please set your system message:</target>
+        <target state="translated">Por favor, defina a sua mensagem do sistema:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">184</context>
@@ -667,7 +667,7 @@
       </trans-unit>
       <trans-unit id="ec03f5c28b327fc7ecfc4b20a0a7cf14a75843ff" datatype="html">
         <source>User Count</source>
-        <target state="new">User Count</target>
+        <target state="translated">Número de Utilizadores</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">7</context>
@@ -675,7 +675,7 @@
       </trans-unit>
       <trans-unit id="3d8c331538eaf700fe92e2dc953be28d66f9b9dd" datatype="html">
         <source>per User</source>
-        <target state="new">per User</target>
+        <target state="translated">por Utilizador</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">26</context>
@@ -683,7 +683,7 @@
       </trans-unit>
       <trans-unit id="37ff0697aa81b2777250c483d2ce1ebdaa5ab042" datatype="html">
         <source>Exchange Rates</source>
-        <target state="new">Exchange Rates</target>
+        <target state="translated">Taxas de Câmbio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">31</context>
@@ -691,7 +691,7 @@
       </trans-unit>
       <trans-unit id="4567a660a7f67e254bbf13219906843e34d9f807" datatype="html">
         <source>Add Currency</source>
-        <target state="new">Add Currency</target>
+        <target state="translated">Adicionar Moeda</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">70</context>
@@ -699,7 +699,7 @@
       </trans-unit>
       <trans-unit id="860e5f056b59410ec8db65cb53955505c6931752" datatype="html">
         <source>System Message</source>
-        <target state="new">System Message</target>
+        <target state="translated">Mensagem de Sistema</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">109</context>
@@ -723,7 +723,7 @@
       </trans-unit>
       <trans-unit id="e698b03c34b459b1b006d7f0473a49b9fcf5dfc1" datatype="html">
         <source>Coupons</source>
-        <target state="new">Coupons</target>
+        <target state="translated">Cupões</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">139</context>
@@ -731,7 +731,7 @@
       </trans-unit>
       <trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source>
-        <target state="new">Add</target>
+        <target state="translated">Adicionar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">181</context>
@@ -739,7 +739,7 @@
       </trans-unit>
       <trans-unit id="e799e6b926557f0098f41888cdf8df868eff3d47" datatype="html">
         <source>Housekeeping</source>
-        <target state="new">Housekeeping</target>
+        <target state="translated">Manutenção</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">188</context>
@@ -747,7 +747,7 @@
       </trans-unit>
       <trans-unit id="c7ac907e52a7ce2ac70b1786eb5f403ce306ce1f" datatype="html">
         <source>Flush Cache</source>
-        <target state="new">Flush Cache</target>
+        <target state="translated">Limpar Cache</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">192</context>
@@ -1831,7 +1831,7 @@
       </trans-unit>
       <trans-unit id="68baf7bff1f9242d0f6e4c0952dafefa6553cecd" datatype="html">
         <source>Base Currency</source>
-        <target state="new">Base Currency</target>
+        <target state="translated">Moeda Base</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">103</context>
@@ -1839,7 +1839,7 @@
       </trans-unit>
       <trans-unit id="fe46ccaae902ce974e2441abe752399288298619" datatype="html">
         <source>Language</source>
-        <target state="new">Language</target>
+        <target state="translated">Língua</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">127</context>
@@ -1847,7 +1847,7 @@
       </trans-unit>
       <trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source>
-        <target state="new">Users</target>
+        <target state="translated">Utilizadores</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">35</context>
@@ -1859,7 +1859,7 @@
       </trans-unit>
       <trans-unit id="6b939b00e8481ed8aa8a24d8add7a209d7116759" datatype="html">
         <source>Locale</source>
-        <target state="new">Locale</target>
+        <target state="translated">Localidade</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">169</context>
@@ -1867,7 +1867,7 @@
       </trans-unit>
       <trans-unit id="4402006eb2c97591dd8c87a5bd8f721fe9e4dc00" datatype="html">
         <source>Date and number format</source>
-        <target state="new">Date and number format</target>
+        <target state="translated">Formato de números e datas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">171</context>
@@ -1875,7 +1875,7 @@
       </trans-unit>
       <trans-unit id="b5dc65493e3e15fbe15b7d9c17f7626321d82e76" datatype="html">
         <source>Zen Mode</source>
-        <target state="new">Zen Mode</target>
+        <target state="translated">Modo Zen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">223</context>
@@ -1883,7 +1883,7 @@
       </trans-unit>
       <trans-unit id="bbe41ac2ea4a6c00ea941a41b33105048f8e9f13" datatype="html">
         <source>Appearance</source>
-        <target state="new">Appearance</target>
+        <target state="translated">Aparência</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">197</context>
@@ -1891,7 +1891,7 @@
       </trans-unit>
       <trans-unit id="5fb13fb4a8447e59cdf05dc196ade39c02a6f8aa" datatype="html">
         <source>Auto</source>
-        <target state="new">Auto</target>
+        <target state="translated">Auto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/account/account-page.html</context>
           <context context-type="linenumber">212</context>
@@ -1979,7 +1979,7 @@
       </trans-unit>
       <trans-unit id="4eb2164d8ef5d328ef6bc1e66da011218bac968f" datatype="html">
         <source>Add account</source>
-        <target state="new">Adicionar conta</target>
+        <target state="translated">Adicionar conta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">3</context>
@@ -1987,7 +1987,7 @@
       </trans-unit>
       <trans-unit id="311828ec96f91f6f530219b07d5531a8aa507d64" datatype="html">
         <source>Cash</source>
-        <target state="new">Cash</target>
+        <target state="translated">Dinheiro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">15</context>
@@ -1995,7 +1995,7 @@
       </trans-unit>
       <trans-unit id="d1c96243913efd867279d7f58145f5ac7365bda4" datatype="html">
         <source>Securities</source>
-        <target state="new">Securities</target>
+        <target state="translated">Títulos (Valores Mobiliários)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">16</context>
@@ -2179,7 +2179,7 @@
       </trans-unit>
       <trans-unit id="3229595422546554334" datatype="html">
         <source>Jobs</source>
-        <target state="new">Jobs</target>
+        <target state="translated">Tarefas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">21</context>
@@ -3803,7 +3803,7 @@
       </trans-unit>
       <trans-unit id="e587f3aaad8881a0b7732fb3e86df8a4c91f25d2" datatype="html">
         <source> Add Platform </source>
-        <target state="new"> Add Platform </target>
+        <target state="translated"> Adicionar Plataforma </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
           <context context-type="linenumber">11,13</context>
@@ -3811,7 +3811,7 @@
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
-        <target state="new">Settings</target>
+        <target state="translated">Definições</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">30</context>
