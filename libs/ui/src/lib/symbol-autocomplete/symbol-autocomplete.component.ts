@@ -17,6 +17,7 @@ import {
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { isString } from 'lodash';
 import { Observable, Subject, of, tap } from 'rxjs';
 import {
@@ -26,16 +27,15 @@ import {
   switchMap
 } from 'rxjs/operators';
 
-import { DataService } from '../../../../../apps/client/src/app/services/data.service';
-import { AbstractMatFormField } from '../abstract-mat-form-field';
+import { AbstractMatFormField } from './abstract-mat-form-field';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.aria-describedBy]': 'describedBy',
     '[id]': 'id'
   },
   selector: 'gf-symbol-autocomplete',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./symbol-autocomplete.component.scss'],
   templateUrl: 'symbol-autocomplete.component.html',
   providers: [
@@ -49,17 +49,19 @@ export class SymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
   implements OnInit, OnDestroy
 {
+  @Input() public isLoading = false;
+
+  @ViewChild(MatInput, { static: false }) private input: MatInput;
+
+  @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
+
   public control = new FormControl();
-  filteredLookupItemsObservable: Observable<LookupItem[]> = of([]);
   public filteredLookupItems: LookupItem[] = [];
-  @Input()
-  public isLoading: boolean = false;
-  @ViewChild('symbolAutocomplete') symbolAutocomplete: MatAutocomplete;
-  @ViewChild(MatInput, { static: false })
-  private input: MatInput;
+  public filteredLookupItemsObservable: Observable<LookupItem[]> = of([]);
+
   private unsubscribeSubject = new Subject<void>();
 
-  constructor(
+  public constructor(
     public readonly _elementRef: ElementRef,
     public readonly _focusMonitor: FocusMonitor,
     public readonly changeDetectorRef: ChangeDetectorRef,
@@ -69,15 +71,6 @@ export class SymbolAutocompleteComponent
     super(_elementRef, _focusMonitor, ngControl);
 
     this.controlType = 'symbol-autocomplete';
-  }
-
-  public set value(value: LookupItem) {
-    this.control.setValue(value);
-    super.value = value;
-  }
-
-  public get empty(): boolean {
-    return this.input?.empty;
   }
 
   public ngOnInit(): void {
@@ -102,10 +95,22 @@ export class SymbolAutocompleteComponent
       });
   }
 
-  public ngOnDestroy(): void {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-    super.ngOnDestroy();
+  public displayFn(aLookupItem: LookupItem) {
+    return aLookupItem?.symbol ?? '';
+  }
+
+  public get empty(): boolean {
+    return this.input?.empty;
+  }
+
+  public focus(): void {
+    this.input.focus();
+  }
+
+  public isValueInOptions(value: string): boolean {
+    return this.filteredLookupItems.some((item) => {
+      return item.symbol === value;
+    });
   }
 
   public ngDoCheck(): void {
@@ -117,14 +122,6 @@ export class SymbolAutocompleteComponent
     }
   }
 
-  public focus(): void {
-    this.input.focus();
-  }
-
-  public displayFn(aLookupItem: LookupItem) {
-    return aLookupItem?.symbol ?? '';
-  }
-
   public onUpdateSymbol(event: MatAutocompleteSelectedEvent) {
     super.value = {
       dataSource: event.option.value.dataSource,
@@ -132,8 +129,16 @@ export class SymbolAutocompleteComponent
     } as LookupItem;
   }
 
-  public isValueInOptions(value: string): boolean {
-    return this.filteredLookupItems.some((item) => item.symbol === value);
+  public set value(value: LookupItem) {
+    this.control.setValue(value);
+    super.value = value;
+  }
+
+  public ngOnDestroy(): void {
+    super.ngOnDestroy();
+
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 
   private validateRequired() {

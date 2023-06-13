@@ -6,7 +6,6 @@ import {
   ElementRef,
   HostBinding,
   HostListener,
-  Injector,
   Input,
   OnDestroy
 } from '@angular/core';
@@ -18,20 +17,23 @@ import { Subject } from 'rxjs';
   template: ''
 })
 export abstract class AbstractMatFormField<T>
-  implements DoCheck, OnDestroy, ControlValueAccessor, MatFormFieldControl<T>
+  implements ControlValueAccessor, DoCheck, MatFormFieldControl<T>, OnDestroy
 {
-  private static nextId: number = 0;
   @HostBinding()
-  public id: string = `${this.controlType}-${AbstractMatFormField.nextId++}`;
-  @HostBinding('attr.aria-describedBy')
-  public describedBy: string = '';
-  public focused = false;
+  public id = `${this.controlType}-${AbstractMatFormField.nextId++}`;
+
+  @HostBinding('attr.aria-describedBy') public describedBy = '';
+
   public readonly autofilled: boolean;
   public errorState: boolean;
+  public focused = false;
   public readonly stateChanges = new Subject<void>();
   public readonly userAriaDescribedBy: string;
+
   protected onChange?: (value: T) => void;
   protected onTouched?: () => void;
+
+  private static nextId: number = 0;
 
   protected constructor(
     protected _elementRef: ElementRef,
@@ -69,6 +71,7 @@ export abstract class AbstractMatFormField<T>
 
   public set value(value: T) {
     this._value = value;
+
     if (this.onChange) {
       this.onChange(value);
     }
@@ -108,6 +111,7 @@ export abstract class AbstractMatFormField<T>
     if (this.ngControl && this.ngControl.disabled !== null) {
       return this.ngControl.disabled;
     }
+
     return this._disabled;
   }
 
@@ -120,6 +124,8 @@ export abstract class AbstractMatFormField<T>
       this.stateChanges.next();
     }
   }
+
+  public abstract focus(): void;
 
   public get shouldLabelFloat(): boolean {
     return this.focused || !this.empty;
@@ -145,22 +151,22 @@ export abstract class AbstractMatFormField<T>
     this.onTouched = fn;
   }
 
-  public writeValue(value: T): void {
-    this.value = value;
-  }
-
   public setDescribedByIds(ids: string[]): void {
     this.describedBy = ids.join(' ');
   }
 
-  public abstract focus(): void;
+  public writeValue(value: T): void {
+    this.value = value;
+  }
 
   @HostListener('focusout')
-  onBlur() {
+  public onBlur() {
     this.focused = false;
+
     if (this.onTouched) {
       this.onTouched();
     }
+
     this.stateChanges.next();
   }
 

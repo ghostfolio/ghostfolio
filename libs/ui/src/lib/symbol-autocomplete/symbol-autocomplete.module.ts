@@ -23,4 +23,4 @@ import { SymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete/
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfSymbolAutoCompleteModule {}
+export class GfSymbolAutocompleteModule {}

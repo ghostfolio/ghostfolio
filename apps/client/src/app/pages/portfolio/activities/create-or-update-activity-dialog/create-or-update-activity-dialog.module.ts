@@ -11,9 +11,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { GfSymbolAutoCompleteModule } from '@ghostfolio/ui/symbol-autocomplete/symbol-autocomplete.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfSymbolAutocompleteModule } from '@ghostfolio/ui/symbol-autocomplete/symbol-autocomplete.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
+
 import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog.component';
 
 @NgModule({
@@ -21,7 +22,7 @@ import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog
   imports: [
     CommonModule,
     FormsModule,
-    GfSymbolAutoCompleteModule,
+    GfSymbolAutocompleteModule,
     GfSymbolModule,
     GfValueModule,
     MatAutocompleteModule,
