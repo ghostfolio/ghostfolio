@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center">Features</h3>
+      <h3 class="d-none d-sm-block mb-3 text-center" i18n>Features</h3>
       <div class="mb-4">
         <p>
           Check out the numerous features of <strong>Ghostfolio</strong> to
@@ -13,7 +13,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Stocks</h4>
+                <h4 i18n>Stocks</h4>
                 <p class="m-0">Keep track of your stock purchases and sales.</p>
               </div>
             </mat-card-content>
@@ -23,7 +23,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>ETFs</h4>
+                <h4 i18n>ETFs</h4>
                 <p class="m-0">
                   Are you into ETFs (Exchange Traded Funds)? Track your ETF
                   investments.
@@ -36,7 +36,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Bonds</h4>
+                <h4 i18n>Bonds</h4>
                 <p class="m-0">
                   Manage your investment in bonds and other assets with fixed
                   income.
@@ -49,7 +49,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Cryptocurrencies</h4>
+                <h4 i18n>Cryptocurrencies</h4>
                 <p class="m-0">
                   Keep track of your Bitcoin and Altcoin holdings.
                 </p>
@@ -61,7 +61,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Dividend</h4>
+                <h4 i18n>Dividend</h4>
                 <p class="m-0">
                   Are you building a dividend portfolio? Track your dividend in
                   Ghostfolio.
@@ -74,7 +74,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">Wealth Items</h4>
+                <h4 class="align-items-center d-flex" i18n>Wealth Items</h4>
                 <p class="m-0">
                   Track all your treasuries, be it your luxury watch or rare
                   trading cards.
@@ -87,7 +87,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">Emergency Fund</h4>
+                <h4 class="align-items-center d-flex" i18n>Emergency Fund</h4>
                 <p class="m-0">
                   Define your emergency fund you are comfortable with for
                   difficult times.
@@ -100,7 +100,22 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">Import and Export</h4>
+                <h4 class="align-items-center d-flex" i18n>Liabilities</h4>
+                <p class="m-0">
+                  Manage your financial liabilities, such as your student loan,
+                  to stay ahead of your financial obligations.
+                </p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-xs-12 col-md-4 mb-3">
+          <mat-card appearance="outlined" class="d-flex flex-column h-100">
+            <mat-card-content>
+              <div class="flex-grow-1">
+                <h4 class="align-items-center d-flex" i18n>
+                  Import and Export
+                </h4>
                 <p class="m-0">Import and export your investment activities.</p>
               </div>
             </mat-card-content>
@@ -110,7 +125,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Multi-Accounts</h4>
+                <h4 i18n>Multi-Accounts</h4>
                 <p class="m-0">
                   Keep an eye on all your accounts across multiple platforms
                   (multi-banking).
@@ -124,7 +139,7 @@
             <mat-card-content>
               <div class="flex-grow-1">
                 <h4 class="align-items-center d-flex">
-                  <span>Portfolio Calculations</span>
+                  <span i18n>Portfolio Calculations</span>
                   <gf-premium-indicator
                     *ngIf="hasPermissionForSubscription"
                     class="ml-1"
@@ -144,7 +159,7 @@
             <mat-card-content>
               <div class="flex-grow-1">
                 <h4 class="align-items-center d-flex">
-                  <span>Portfolio Allocations</span>
+                  <span i18n>Portfolio Allocations</span>
                   <gf-premium-indicator
                     *ngIf="hasPermissionForSubscription"
                     class="ml-1"
@@ -162,7 +177,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">Dark Mode</h4>
+                <h4 class="align-items-center d-flex" i18n>Dark Mode</h4>
                 <p class="m-0">
                   Ghostfolio automatically switches to a dark color theme based
                   on your operating system's preferences.
@@ -175,7 +190,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">Zen Mode</h4>
+                <h4 class="align-items-center d-flex" i18n>Zen Mode</h4>
                 <p class="m-0">
                   Keep calm and activate Zen Mode if the markets are going
                   crazy.
@@ -192,7 +207,7 @@
             <mat-card-content>
               <div class="flex-grow-1">
                 <h4 class="align-items-center d-flex">
-                  <span>Market Mood</span>
+                  <span i18n>Market Mood</span>
                   <gf-premium-indicator class="ml-1"></gf-premium-indicator>
                 </h4>
                 <p class="m-0">
@@ -210,7 +225,7 @@
             <mat-card-content>
               <div class="flex-grow-1">
                 <h4 class="align-items-center d-flex">
-                  <span>Static Analysis</span>
+                  <span i18n>Static Analysis</span>
                   <gf-premium-indicator
                     *ngIf="hasPermissionForSubscription"
                     class="ml-1"
@@ -228,7 +243,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Multi-Language</h4>
+                <h4 i18n>Multi-Language</h4>
                 <p class="m-0">
                   Use Ghostfolio in multiple languages: English, Dutch, French,
                   German, Italian<ng-container *ngIf="false"
@@ -244,7 +259,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Community</h4>
+                <h4 i18n>Community</h4>
                 <p class="m-0">
                   Join the Ghostfolio
                   <a
@@ -263,7 +278,7 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4>Open Source Software</h4>
+                <h4 i18n>Open Source Software</h4>
                 <p class="m-0">
                   The source code is fully available as
                   <a
@@ -282,9 +297,9 @@
   </div>
   <div *ngIf="!user" class="row">
     <div class="col mt-3 text-center">
-      <a color="primary" mat-flat-button [routerLink]="['/register']">
-        Get Started
-      </a>
+      <a color="primary" i18n mat-flat-button [routerLink]="['/register']"
+        >Get Started</a
+      >
     </div>
   </div>
 </div>
