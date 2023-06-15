@@ -55,8 +55,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public currencies: string[] = [];
   public currentMarketPrice = null;
   public defaultDateFormat: string;
-  public filteredLookupItems: LookupItem[] = [];
-  public filteredLookupItemsObservable: Observable<LookupItem[]> = of([]);
   public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
   public platforms: { id: string; name: string }[];
@@ -120,10 +118,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       name: [this.data.activity?.SymbolProfile?.name, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
       searchSymbol: [
-        {
-          dataSource: this.data.activity?.SymbolProfile?.dataSource,
-          symbol: this.data.activity?.SymbolProfile?.symbol
-        },
+        !!this.data.activity?.SymbolProfile
+          ? {
+              dataSource: this.data.activity?.SymbolProfile?.dataSource,
+              symbol: this.data.activity?.SymbolProfile?.symbol
+            }
+          : null,
         Validators.required
       ],
       tags: [
@@ -238,28 +238,19 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.filteredLookupItemsObservable = this.activityForm.controls[
-      'searchSymbol'
-    ].valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((query: string) => {
-        if (isString(query) && query.length > 1) {
-          const filteredLookupItemsObservable =
-            this.dataService.fetchSymbols(query);
+    this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
+      if (this.activityForm.controls['searchSymbol'].invalid) {
+        this.data.activity.SymbolProfile = null;
+      } else {
+        this.activityForm.controls['dataSource'].setValue(
+          this.activityForm.controls['searchSymbol'].value.dataSource
+        );
 
-          filteredLookupItemsObservable
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe((filteredLookupItems) => {
-              this.filteredLookupItems = filteredLookupItems;
-            });
+        this.updateSymbol();
+      }
 
-          return filteredLookupItemsObservable;
-        }
-
-        return [];
-      })
-    );
+      this.changeDetectorRef.markForCheck();
+    });
 
     this.filteredTagsObservable = this.activityForm.controls[
       'tags'
@@ -393,25 +384,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.tagInput.nativeElement.value = '';
   }
 
-  public onBlurSymbol() {
-    const currentLookupItem = this.filteredLookupItems.find((lookupItem) => {
-      return (
-        lookupItem.symbol ===
-        this.activityForm.controls['searchSymbol'].value.symbol
-      );
-    });
-
-    if (currentLookupItem) {
-      this.updateSymbol(currentLookupItem.symbol);
-    } else {
-      this.activityForm.controls['searchSymbol'].setErrors({ incorrect: true });
-
-      this.data.activity.SymbolProfile = null;
-    }
-
-    this.changeDetectorRef.markForCheck();
-  }
-
   public onCancel() {
     this.dialogRef.close();
   }
@@ -455,13 +427,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.dialogRef.close({ activity });
   }
 
-  public onUpdateSymbol(event: MatAutocompleteSelectedEvent) {
-    this.activityForm.controls['dataSource'].setValue(
-      event.option.value.dataSource
-    );
-    this.updateSymbol(event.option.value.symbol);
-  }
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
@@ -477,12 +442,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     });
   }
 
-  private updateSymbol(symbol: string) {
+  private updateSymbol() {
     this.isLoading = true;
-
-    this.activityForm.controls['searchSymbol'].setErrors(null);
-    this.activityForm.controls['searchSymbol'].setValue({ symbol });
-
     this.changeDetectorRef.markForCheck();
 
     this.dataService

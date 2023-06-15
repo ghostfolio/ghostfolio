@@ -48,34 +48,10 @@
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name, symbol or ISIN</mat-label>
-        <input
-          autocapitalize="off"
-          autocomplete="off"
-          autocorrect="off"
+        <gf-symbol-autocomplete
           formControlName="searchSymbol"
-          matInput
-          [matAutocomplete]="symbolAutocomplete"
-          (blur)="onBlurSymbol()"
+          [isLoading]="isLoading"
         />
-        <mat-autocomplete
-          #symbolAutocomplete="matAutocomplete"
-          [displayWith]="displayFn"
-          (optionSelected)="onUpdateSymbol($event)"
-        >
-          <mat-option
-            *ngFor="let lookupItem of filteredLookupItemsObservable | async"
-            class="line-height-1"
-            [value]="lookupItem"
-          >
-            <span><b>{{ lookupItem.name }}</b></span>
-            <br />
-            <small class="text-muted"
-              >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency
-              }}</small
-            >
-          </mat-option>
-        </mat-autocomplete>
-        <mat-spinner *ngIf="isLoading" matSuffix [diameter]="20"></mat-spinner>
       </mat-form-field>
     </div>
     <div

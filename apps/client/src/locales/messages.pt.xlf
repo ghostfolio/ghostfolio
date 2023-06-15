@@ -3243,7 +3243,7 @@
       </trans-unit>
       <trans-unit id="2963674907100579427" datatype="html">
         <source>Higher Risk</source>
-        <target state="new">Risco mais Elevado</target>
+        <target state="translated">Risco mais Elevado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">13</context>
@@ -3251,7 +3251,7 @@
       </trans-unit>
       <trans-unit id="4152514811781104574" datatype="html">
         <source>Lower Risk</source>
-        <target state="new">Risco menos Elevado</target>
+        <target state="translated">Risco menos Elevado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">15</context>
