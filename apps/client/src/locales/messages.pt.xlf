@@ -3591,7 +3591,7 @@
       </trans-unit>
       <trans-unit id="3298117765569632011" datatype="html">
         <source>Switch to Ghostfolio Premium or Ghostfolio Open Source easily</source>
-        <target state="translated">Mude para o Ghostfolio Premium ou Ghostfolio Open Source facilmente<</target>
+        <target state="translated">Mude para o Ghostfolio Premium ou Ghostfolio Open Source facilmente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">8</context>
