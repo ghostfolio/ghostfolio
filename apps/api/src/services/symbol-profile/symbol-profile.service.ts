@@ -15,6 +15,12 @@ import { continents, countries } from 'countries-list';
 export class SymbolProfileService {
   public constructor(private readonly prismaService: PrismaService) {}
 
+  public async add(
+    assetProfile: Prisma.SymbolProfileCreateInput
+  ): Promise<SymbolProfile | never> {
+    return this.prismaService.symbolProfile.create({ data: assetProfile });
+  }
+
   public async delete({ dataSource, symbol }: UniqueAsset) {
     return this.prismaService.symbolProfile.delete({
       where: { dataSource_symbol: { dataSource, symbol } }

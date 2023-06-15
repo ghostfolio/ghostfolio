@@ -24,6 +24,8 @@ import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
+import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
+import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -99,6 +101,8 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
             dataSource: params['dataSource'],
             symbol: params['symbol']
           });
+        } else if (params['createAssetProfileDialog']) {
+          this.openCreateAssetProfileDialog();
         }
       });
 
@@ -237,6 +241,57 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
+      });
+  }
+
+  private openCreateAssetProfileDialog() {
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        this.user = user;
+        const dialogRef = this.dialog.open(CreateAssetProfileDialog, {
+          autoFocus: false,
+          data: <CreateAssetProfileDialogParams>{
+            deviceType: this.deviceType,
+            locale: this.user?.settings?.locale
+          },
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((data: any) => {
+            const dataSource = data?.dataSource;
+            const symbol = data?.symbol;
+
+            if (dataSource && symbol) {
+              this.adminService
+                .addAssetProfile({ dataSource, symbol })
+                .pipe(
+                  takeUntil(this.unsubscribeSubject),
+                  switchMap(() => {
+                    this.isLoading = true;
+                    this.changeDetectorRef.markForCheck();
+
+                    return this.dataService.fetchAdminMarketData({
+                      filters: this.activeFilters
+                    });
+                  }),
+                  takeUntil(this.unsubscribeSubject)
+                )
+                .subscribe(({ marketData }) => {
+                  this.dataSource = new MatTableDataSource(marketData);
+                  this.dataSource.sort = this.sort;
+
+                  this.isLoading = false;
+                  this.changeDetectorRef.markForCheck();
+                });
+            }
+
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });

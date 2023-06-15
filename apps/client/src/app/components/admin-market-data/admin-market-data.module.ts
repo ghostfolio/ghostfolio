@@ -8,6 +8,8 @@ import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activ
 
 import { AdminMarketDataComponent } from './admin-market-data.component';
 import { GfAssetProfileDialogModule } from './asset-profile-dialog/asset-profile-dialog.module';
+import { GfCreateAssetProfileDialogModule } from './create-asset-profile-dialog/create-asset-profile-dialog.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [AdminMarketDataComponent],
@@ -15,10 +17,12 @@ import { GfAssetProfileDialogModule } from './asset-profile-dialog/asset-profile
     CommonModule,
     GfActivitiesFilterModule,
     GfAssetProfileDialogModule,
+    GfCreateAssetProfileDialogModule,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,
-    MatTableModule
+    MatTableModule,
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

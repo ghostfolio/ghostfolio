@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extracted the symbol search to a dedicated component
 - Improved the column headers in the holdings table for mobile
 - Upgraded `prisma` from version `4.14.1` to `4.15.0`
+- Added ability to add Asset Profile from Admin Market data
 
 ## 1.280.1 - 2023-06-10
 

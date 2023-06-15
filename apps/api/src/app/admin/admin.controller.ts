@@ -26,17 +26,19 @@ import {
   Post,
   Put,
   Query,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 
 @Controller('admin')
 export class AdminController {
@@ -326,6 +328,28 @@ export class AdminController {
         }
       }
     });
+  }
+
+  @Post('profile-data/:dataSource/:symbol')
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseGuards(AuthGuard('jwt'))
+  public async addProfileData(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<SymbolProfile | never> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.addAssetProfile({ dataSource, symbol });
   }
 
   @Delete('profile-data/:dataSource/:symbol')
