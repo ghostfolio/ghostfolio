@@ -18,36 +18,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   })),
-  ...[
-    'about/changelog',
-    /////
-    'a-propos/changelog',
-    'informazioni-su/changelog',
-    'over/changelog',
-    'sobre/changelog',
-    'ueber-uns/changelog'
-  ].map((path) => ({
-    path,
-    loadChildren: () =>
-      import('./pages/about/changelog/changelog-page.module').then(
-        (m) => m.ChangelogPageModule
-      )
-  })),
-  ...[
-    'about/privacy-policy',
-    /////
-    'a-propos/politique-de-confidentialite',
-    'informazioni-su/informativa-sulla-privacy',
-    'over/privacybeleid',
-    'sobre/politica-de-privacidad',
-    'ueber-uns/datenschutzbestimmungen'
-  ].map((path) => ({
-    path,
-    loadChildren: () =>
-      import('./pages/about/privacy-policy/privacy-policy-page.module').then(
-        (m) => m.PrivacyPolicyPageModule
-      )
-  })),
   {
     path: 'account',
     loadChildren: () =>
@@ -179,6 +149,7 @@ const routes: Routes = [
     'domande-piu-frequenti',
     'foire-aux-questions',
     'haeufig-gestellte-fragen',
+    'perguntas-mais-frequentes',
     'preguntas-mas-frecuentes',
     'vaak-gestelde-vragen'
   ].map((path) => ({
@@ -243,6 +214,7 @@ const routes: Routes = [
     'pricing',
     /////
     'precios',
+    'precos',
     'preise',
     'prezzi',
     'prijzen',
@@ -259,6 +231,7 @@ const routes: Routes = [
     /////
     'enregistrement',
     'iscrizione',
+    'registo',
     'registratie',
     'registrierung',
     'registro'
