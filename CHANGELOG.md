@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the feature overview page by liabilities
+- Set up the language localization for Português (`pt`)
 
 ### Changed
 
@@ -811,7 +812,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for the dividend timeline grouped by year
 - Added support for the investment timeline grouped by year
 - Set up the language localization for Français (`fr`)
-- Set up the language localization for Português (`pt`)
 
 ### Changed
 
