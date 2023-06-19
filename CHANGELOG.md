@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added an icon to the external links in the footer navigation
+- Added the ability to add an asset profile in the admin control panel
 
 ### Changed
 

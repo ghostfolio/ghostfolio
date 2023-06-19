@@ -1,5 +1,6 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -14,8 +15,8 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { Injectable } from '@nestjs/common';
-import { AssetSubClass, Prisma, Property } from '@prisma/client';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { AssetSubClass, Prisma, Property, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
 
@@ -25,6 +26,7 @@ export class AdminService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
@@ -33,6 +35,38 @@ export class AdminService {
     private readonly symbolProfileService: SymbolProfileService
   ) {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  }
+
+  public async addAssetProfile({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<SymbolProfile | never> {
+    try {
+      const assetProfiles = await this.dataProviderService.getAssetProfiles([
+        { dataSource, symbol }
+      ]);
+
+      if (!assetProfiles[symbol]?.currency) {
+        throw new BadRequestException(
+          `Asset profile not found for ${symbol} (${dataSource})`
+        );
+      }
+
+      return await this.symbolProfileService.add(
+        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
+      );
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new BadRequestException(
+          `Asset profile of ${symbol} (${dataSource}) already exists`
+        );
+      }
+
+      throw error;
+    }
   }
 
   public async deleteProfileData({ dataSource, symbol }: UniqueAsset) {

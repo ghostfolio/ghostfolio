@@ -23,6 +23,13 @@ import { Observable, map } from 'rxjs';
 export class AdminService {
   public constructor(private http: HttpClient) {}
 
+  public addAssetProfile({ dataSource, symbol }: UniqueAsset) {
+    return this.http.post<void>(
+      `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
+      null
+    );
+  }
+
   public deleteJob(aId: string) {
     return this.http.delete<void>(`/api/v1/admin/queue/job/${aId}`);
   }
