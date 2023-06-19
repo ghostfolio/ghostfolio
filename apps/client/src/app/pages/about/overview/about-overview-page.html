@@ -19,9 +19,11 @@
             title="GNU Affero General Public License"
             >AGPL-3.0 license</a
           >
-          and we share aggregated
-          <a title="Open Startup" [routerLink]="['/open']">key metrics</a>
-          of the platform’s performance. The project has been initiated by
+          <ng-container *ngIf="hasPermissionForStatistics">
+            and we share aggregated
+            <a title="Open Startup" [routerLink]="['/open']">key metrics</a>
+            of the platform’s performance</ng-container
+          >. The project has been initiated by
           <a href="https://dotsilver.ch" title="Website of Thomas Kaul"
             >Thomas Kaul</a
           >

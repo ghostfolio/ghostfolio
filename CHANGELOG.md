@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the use of permissions on the about page
+- Harmonized the use of permissions on the landing page
 - Improved the language localization for German (`de`)
 - Improved the language localization for Portuguese (`pt`)
 

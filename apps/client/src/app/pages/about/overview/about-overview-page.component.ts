@@ -15,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForBlog: boolean;
+  public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
   public user: User;
@@ -32,6 +33,11 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
     this.hasPermissionForBlog = hasPermission(
       globalPermissions,
       permissions.enableBlog
+    );
+
+    this.hasPermissionForStatistics = hasPermission(
+      globalPermissions,
+      permissions.enableStatistics
     );
 
     this.hasPermissionForSubscription = hasPermission(

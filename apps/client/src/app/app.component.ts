@@ -33,6 +33,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public currentYear = new Date().getFullYear();
   public deviceType: string;
   public hasPermissionForBlog: boolean;
+  public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public info: InfoItem;
@@ -68,6 +69,11 @@ export class AppComponent implements OnDestroy, OnInit {
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,
       permissions.enableSubscription
+    );
+
+    this.hasPermissionForStatistics = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableStatistics
     );
 
     this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
