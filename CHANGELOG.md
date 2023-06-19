@@ -7,8 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an icon to the external links in the footer navigation
+
 ### Changed
 
+- Harmonized the use of permissions on the about page
+- Harmonized the use of permissions on the landing page
+- Improved the language localization for German (`de`)
+- Improved the language localization for Portuguese (`pt`)
 - Updated the binary targets of `linux-arm64-openssl` for `prisma`
 
 ## 1.281.0 - 2023-06-17
@@ -16,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the feature overview page by liabilities
-- Set up the language localization for Português (`pt`)
+- Set up the language localization for Portuguese (`pt`)
 
 ### Changed
 

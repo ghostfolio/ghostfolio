@@ -44,14 +44,13 @@
 
   <div *ngIf="hasPermissionForStatistics" class="row mb-5">
     <div
-      *ngIf="hasPermissionForSubscription"
       class="col-md-4 d-flex my-1"
       [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
-        [routerLink]="['/about']"
+        [routerLink]="['/open']"
       >
         <gf-value
           icon="people-outline"
@@ -62,31 +61,13 @@
       </a>
     </div>
     <div
-      *ngIf="!hasPermissionForSubscription"
-      class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
-    >
-      <a
-        class="d-block"
-        title="Ghostfolio in Numbers: Contributors on GitHub"
-        [routerLink]="['/about']"
-      >
-        <gf-value
-          icon="people-outline"
-          size="large"
-          [value]="statistics?.gitHubContributors ?? '-'"
-          >Contributors on GitHub</gf-value
-        >
-      </a>
-    </div>
-    <div
       class="col-md-4 d-flex my-1"
       [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Stars on GitHub"
-        [routerLink]="['/about']"
+        [routerLink]="['/open']"
       >
         <gf-value
           icon="star-outline"
@@ -103,7 +84,7 @@
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Pulls on Docker Hub"
-        [routerLink]="['/about']"
+        [routerLink]="['/open']"
       >
         <gf-value
           icon="cloud-download-outline"
