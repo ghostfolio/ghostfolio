@@ -331,8 +331,8 @@ export class AdminController {
   }
 
   @Post('profile-data/:dataSource/:symbol')
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async addProfileData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
