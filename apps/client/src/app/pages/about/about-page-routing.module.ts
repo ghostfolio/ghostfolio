@@ -25,6 +25,7 @@ const routes: Routes = [
       ...[
         'license',
         /////
+        'licenca',
         'licence',
         'licencia',
         'licentie',
@@ -37,13 +38,22 @@ const routes: Routes = [
             (m) => m.LicensePageModule
           )
       })),
-      {
-        path: 'privacy-policy',
+      ...[
+        'privacy-policy',
+        /////
+        'datenschutzbestimmungen',
+        'informativa-sulla-privacy',
+        'politique-de-confidentialite',
+        'politica-de-privacidad',
+        'politica-de-privacidade',
+        'privacybeleid'
+      ].map((path) => ({
+        path,
         loadChildren: () =>
           import('./privacy-policy/privacy-policy-page.module').then(
             (m) => m.PrivacyPolicyPageModule
           )
-      }
+      }))
     ],
     component: AboutPageComponent,
     path: '',
