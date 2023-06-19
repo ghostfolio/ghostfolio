@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an icon to the external links in the footer navigation
+
 ### Changed
 
 - Improved the language localization for German (`de`)
