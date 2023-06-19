@@ -11,12 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an icon to the external links in the footer navigation
 
+### Changed
+
+- Improved the language localization for German (`de`)
+- Improved the language localization for Portuguese (`pt`)
+
 ## 1.281.0 - 2023-06-17
 
 ### Added
 
 - Extended the feature overview page by liabilities
-- Set up the language localization for Português (`pt`)
+- Set up the language localization for Portuguese (`pt`)
 
 ### Changed
 
