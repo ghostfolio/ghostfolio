@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Harmonized the use of permissions on the landing page
 - Improved the language localization for German (`de`)
 - Improved the language localization for Portuguese (`pt`)
+- Updated the binary targets of `linux-arm64-openssl` for `prisma`
 
 ## 1.281.0 - 2023-06-17
 
