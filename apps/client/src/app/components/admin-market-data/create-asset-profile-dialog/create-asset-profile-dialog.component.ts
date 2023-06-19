@@ -16,9 +16,9 @@ import {
   Validators
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AdminMarketDataItem } from '@ghostfolio/common/interfaces';
 import { CreateAssetProfileDialogParams } from '@ghostfolio/client/components/admin-market-data/create-asset-profile-dialog/interfaces/interfaces';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { AdminMarketDataItem } from '@ghostfolio/common/interfaces';
 
 @Component({
   host: { class: 'h-100' },

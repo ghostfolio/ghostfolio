@@ -1,5 +1,6 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -18,7 +19,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { AssetSubClass, Prisma, Property, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 
 @Injectable()
 export class AdminService {

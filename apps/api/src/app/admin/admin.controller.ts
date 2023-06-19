@@ -1,3 +1,4 @@
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
@@ -38,7 +39,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
-import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 
 @Controller('admin')
 export class AdminController {
