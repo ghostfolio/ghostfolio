@@ -9,12 +9,6 @@
     <mat-form-field appearance="outline" class="w-100">
       <mat-label i18n>Name, symbol or ISIN</mat-label>
       <gf-symbol-autocomplete formControlName="searchSymbol" />
-      <mat-error
-        *ngIf="createAssetProfileForm.controls['searchSymbol'].hasError('isSymbolExists')"
-        i18n
-      >
-        Asset profile already present
-      </mat-error>
     </mat-form-field>
   </div>
   <div class="d-flex justify-content-end" mat-dialog-actions>

@@ -7,24 +7,19 @@ import {
   OnInit
 } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormControl,
   FormGroup,
-  ValidationErrors,
-  ValidatorFn,
   Validators
 } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CreateAssetProfileDialogParams } from '@ghostfolio/client/components/admin-market-data/create-asset-profile-dialog/interfaces/interfaces';
+import { MatDialogRef } from '@angular/material/dialog';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { AdminMarketDataItem } from '@ghostfolio/common/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   selector: 'gf-create-asset-profile-dialog',
-  templateUrl: 'create-asset-profile-dialog.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: 'create-asset-profile-dialog.html'
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
@@ -36,15 +31,17 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     public readonly formBuilder: FormBuilder
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.createAssetProfileForm = this.formBuilder.group({
       searchSymbol: new FormControl(null, [Validators.required])
     });
   }
 
-  ngOnDestroy(): void {}
+  public onCancel() {
+    this.dialogRef.close();
+  }
 
-  onSubmit() {
+  public onSubmit() {
     this.dialogRef.close({
       dataSource:
         this.createAssetProfileForm.controls['searchSymbol'].value.dataSource,
@@ -52,7 +49,5 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     });
   }
 
-  onCancel() {
-    this.dialogRef.close();
-  }
+  public ngOnDestroy() {}
 }

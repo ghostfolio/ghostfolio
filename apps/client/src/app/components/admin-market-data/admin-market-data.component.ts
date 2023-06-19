@@ -252,6 +252,7 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((user) => {
         this.user = user;
+
         const dialogRef = this.dialog.open(CreateAssetProfileDialog, {
           autoFocus: false,
           data: <CreateAssetProfileDialogParams>{
@@ -264,15 +265,11 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((data: any) => {
-            const dataSource = data?.dataSource;
-            const symbol = data?.symbol;
-
+          .subscribe(({ dataSource, symbol }) => {
             if (dataSource && symbol) {
               this.adminService
                 .addAssetProfile({ dataSource, symbol })
                 .pipe(
-                  takeUntil(this.unsubscribeSubject),
                   switchMap(() => {
                     this.isLoading = true;
                     this.changeDetectorRef.markForCheck();
@@ -286,8 +283,8 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
                 .subscribe(({ marketData }) => {
                   this.dataSource = new MatTableDataSource(marketData);
                   this.dataSource.sort = this.sort;
-
                   this.isLoading = false;
+
                   this.changeDetectorRef.markForCheck();
                 });
             }

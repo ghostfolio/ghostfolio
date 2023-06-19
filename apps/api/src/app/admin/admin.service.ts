@@ -42,18 +42,18 @@ export class AdminService {
     symbol
   }: UniqueAsset): Promise<SymbolProfile | never> {
     try {
-      const assetProfile = await this.dataProviderService.getAssetProfiles([
+      const assetProfiles = await this.dataProviderService.getAssetProfiles([
         { dataSource, symbol }
       ]);
 
-      if (!assetProfile[symbol].currency) {
+      if (!assetProfiles[symbol]?.currency) {
         throw new BadRequestException(
           `Asset profile not found for ${symbol} (${dataSource})`
         );
       }
 
       return await this.symbolProfileService.add(
-        assetProfile[symbol] as Prisma.SymbolProfileCreateInput
+        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
       );
     } catch (error) {
       if (
