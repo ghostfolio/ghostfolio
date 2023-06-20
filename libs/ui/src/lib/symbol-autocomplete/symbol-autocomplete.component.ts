@@ -18,8 +18,9 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { translate } from '@ghostfolio/ui/i18n';
 import { isString } from 'lodash';
-import { Observable, Subject, of, tap } from 'rxjs';
+import { Subject, tap } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -56,8 +57,8 @@ export class SymbolAutocompleteComponent
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
   public control = new FormControl();
-  public filteredLookupItems: LookupItem[] = [];
-  public filteredLookupItemsObservable: Observable<LookupItem[]> = of([]);
+  public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
+    [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -89,6 +90,7 @@ export class SymbolAutocompleteComponent
         }),
         tap(() => {
           this.isLoading = true;
+
           this.changeDetectorRef.markForCheck();
         }),
         switchMap((query: string) => {
@@ -96,7 +98,13 @@ export class SymbolAutocompleteComponent
         })
       )
       .subscribe((filteredLookupItems) => {
-        this.filteredLookupItems = filteredLookupItems;
+        this.filteredLookupItems = filteredLookupItems.map((lookupItem) => {
+          return {
+            ...lookupItem,
+            assetSubClassString: translate(lookupItem.assetSubClass)
+          };
+        });
+
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();

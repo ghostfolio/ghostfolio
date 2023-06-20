@@ -22,7 +22,10 @@
       >
       <br />
       <small class="text-muted"
-        >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency }}</small
+        >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency
+        }}<ng-container *ngIf="lookupItem.assetSubClass">
+          · {{ lookupItem.assetSubClassString }}</ng-container
+        ></small
       >
     </mat-option>
   </ng-container>
