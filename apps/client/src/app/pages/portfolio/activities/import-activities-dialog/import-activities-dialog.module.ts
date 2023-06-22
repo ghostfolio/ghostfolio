@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
@@ -27,6 +28,7 @@ import { ImportActivitiesDialog } from './import-activities-dialog.component';
     MatDialogModule,
     MatExpansionModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatStepperModule,
     ReactiveFormsModule

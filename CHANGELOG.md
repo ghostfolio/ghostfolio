@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a loading indicator to the import dividends dialog
+
+### Changed
+
+- Improved the selected item of the holding selector in the import dividends dialog
 - Extended the symbol search component by asset sub classes
 
 ## 1.282.0 - 2023-06-19

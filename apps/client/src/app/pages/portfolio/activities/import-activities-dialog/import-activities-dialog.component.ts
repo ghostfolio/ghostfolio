@@ -41,6 +41,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public errorMessages: string[] = [];
   public holdings: Position[] = [];
   public importStep: ImportStep = ImportStep.UPLOAD_FILE;
+  public isLoading = false;
   public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
@@ -73,6 +74,8 @@ export class ImportActivitiesDialog implements OnDestroy {
       this.data?.activityTypes?.length === 1 &&
       this.data?.activityTypes?.[0] === 'DIVIDEND'
     ) {
+      this.isLoading = true;
+
       this.dialogTitle = $localize`Import Dividends`;
       this.mode = 'DIVIDEND';
       this.uniqueAssetForm.controls['uniqueAsset'].disable();
@@ -93,6 +96,8 @@ export class ImportActivitiesDialog implements OnDestroy {
             return name.toLowerCase();
           });
           this.uniqueAssetForm.controls['uniqueAsset'].enable();
+
+          this.isLoading = false;
 
           this.changeDetectorRef.markForCheck();
         });

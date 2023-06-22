@@ -32,10 +32,14 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label i18n>Holding</mat-label>
               <mat-select formControlName="uniqueAsset">
+                <mat-select-trigger
+                  >{{ uniqueAssetForm.controls['uniqueAsset']?.value?.name
+                  }}</mat-select-trigger
+                >
                 <mat-option
                   *ngFor="let holding of holdings"
                   class="line-height-1"
-                  [value]="{dataSource: holding.dataSource, symbol: holding.symbol}"
+                  [value]="{ dataSource: holding.dataSource, name: holding.name, symbol: holding.symbol }"
                 >
                   <span><b>{{ holding.name }}</b></span>
                   <br />
@@ -45,6 +49,11 @@
                   >
                 </mat-option>
               </mat-select>
+              <mat-spinner
+                *ngIf="isLoading"
+                class="position-absolute"
+                [diameter]="20"
+              ></mat-spinner>
             </mat-form-field>
             <div class="d-flex flex-column justify-content-center">
               <button
