@@ -132,7 +132,9 @@ export class SymbolAutocompleteComponent
   public ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
-      this.validateSelection();
+      if (this.control.touched) {
+        this.validateSelection();
+      }
       this.errorState = this.ngControl.invalid && this.ngControl.touched;
       this.stateChanges.next();
     }
