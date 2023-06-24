@@ -1,3 +1,4 @@
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.module';
 import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
@@ -26,6 +27,7 @@ import { DataProviderService } from './data-provider.service';
     MarketDataModule,
     PrismaModule,
     PropertyModule,
+    RedisCacheModule,
     SymbolProfileModule
   ],
   providers: [

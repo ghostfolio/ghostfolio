@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
@@ -11,6 +12,10 @@ export class RedisCacheService {
 
   public async get(key: string): Promise<string> {
     return await this.cache.get(key);
+  }
+
+  public getQuoteKey({ dataSource, symbol }: UniqueAsset) {
+    return `quote-${dataSource}-${symbol}`;
   }
 
   public async remove(key: string) {

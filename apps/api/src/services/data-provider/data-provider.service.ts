@@ -1,3 +1,4 @@
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
@@ -27,7 +28,8 @@ export class DataProviderService {
     private readonly dataProviderInterfaces: DataProviderInterface[],
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
-    private readonly propertyService: PropertyService
+    private readonly propertyService: PropertyService,
+    private readonly redisCacheService: RedisCacheService
   ) {
     this.initialize();
   }
@@ -235,9 +237,43 @@ export class DataProviderService {
     } = {};
     const startTimeTotal = performance.now();
 
-    const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
+    // Get items from cache
+    const itemsToFetch: IDataGatheringItem[] = [];
 
-    const promises = [];
+    for (const { dataSource, symbol } of items) {
+      const quoteString = await this.redisCacheService.get(
+        this.redisCacheService.getQuoteKey({ dataSource, symbol })
+      );
+
+      if (quoteString) {
+        try {
+          const cachedDataProviderResponse = JSON.parse(quoteString);
+          response[symbol] = cachedDataProviderResponse;
+        } catch {}
+      }
+
+      if (!quoteString) {
+        itemsToFetch.push({ dataSource, symbol });
+      }
+    }
+
+    const numberOfItemsInCache = Object.keys(response)?.length;
+
+    if (numberOfItemsInCache) {
+      Logger.debug(
+        `Fetched ${numberOfItemsInCache} quote${
+          numberOfItemsInCache > 1 ? 's' : ''
+        } from cache in ${((performance.now() - startTimeTotal) / 1000).toFixed(
+          3
+        )} seconds`
+      );
+    }
+
+    const itemsGroupedByDataSource = groupBy(itemsToFetch, ({ dataSource }) => {
+      return dataSource;
+    });
+
+    const promises: Promise<any>[] = [];
 
     for (const [dataSource, dataGatheringItems] of Object.entries(
       itemsGroupedByDataSource
@@ -271,6 +307,15 @@ export class DataProviderService {
               result
             )) {
               response[symbol] = dataProviderResponse;
+
+              this.redisCacheService.set(
+                this.redisCacheService.getQuoteKey({
+                  dataSource: DataSource[dataSource],
+                  symbol
+                }),
+                JSON.stringify(dataProviderResponse),
+                this.configurationService.get('CACHE_QUOTES_TTL')
+              );
             }
 
             Logger.debug(
@@ -283,7 +328,7 @@ export class DataProviderService {
             );
 
             try {
-              await this.marketDataService.updateMany({
+              this.marketDataService.updateMany({
                 data: Object.keys(response)
                   .filter((symbol) => {
                     return (
