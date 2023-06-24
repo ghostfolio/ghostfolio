@@ -39,7 +39,7 @@ async function bootstrap() {
     helmet({
       contentSecurityPolicy: {
         directives: {
-          scriptSrc: ["'self'", "'unsafe-inline'"], // Allow inline scripts
+          scriptSrc: ["'self'", "'unsafe-inline'", 'https://js.stripe.com'], // Allow inline scripts
           scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
           styleSrc: ["'self'", "'unsafe-inline'"] // Allow inline styles
         }
