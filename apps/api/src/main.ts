@@ -35,7 +35,15 @@ async function bootstrap() {
   // Support 10mb csv/json files for importing activities
   app.use(bodyParser.json({ limit: '10mb' }));
 
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          scriptSrc: ["'self'", "'unsafe-inline'"] // Allow inline scripts / styles
+        }
+      }
+    })
+  );
 
   const BASE_CURRENCY = configService.get<string>('BASE_CURRENCY');
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
