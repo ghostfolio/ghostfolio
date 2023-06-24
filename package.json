@@ -105,6 +105,7 @@
     "date-fns": "2.29.3",
     "envalid": "7.3.1",
     "google-spreadsheet": "3.2.0",
+    "helmet": "7.0.0",
     "http-status-codes": "2.2.0",
     "ionicons": "7.1.0",
     "lodash": "4.17.21",

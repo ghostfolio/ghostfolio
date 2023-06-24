@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the caching for current market prices
 - Added a loading indicator to the import dividends dialog
+- Set up the `helmet` middleware to protect the app from web vulnerabilities by setting HTTP headers
 
 ### Changed
 
@@ -1118,7 +1119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to change the appearance (dark mode) in user settings
 - Added the total amount chart to the investment timeline
-- Setup the `prettier` plugin `prettier-plugin-organize-attributes`
+- Set up the `prettier` plugin `prettier-plugin-organize-attributes`
 
 ### Changed
 
