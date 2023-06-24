@@ -8,7 +8,10 @@
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <mat-form-field appearance="outline" class="w-100">
       <mat-label i18n>Name, symbol or ISIN</mat-label>
-      <gf-symbol-autocomplete formControlName="searchSymbol" />
+      <gf-symbol-autocomplete
+        formControlName="searchSymbol"
+        [includeIndices]="true"
+      />
     </mat-form-field>
   </div>
   <div class="d-flex justify-content-end" mat-dialog-actions>

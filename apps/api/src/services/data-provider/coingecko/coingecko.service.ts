@@ -164,16 +164,17 @@ export class CoinGeckoService implements DataProviderInterface {
     return 'bitcoin';
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async search({
+    includeIndices,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
     let items: LookupItem[] = [];
 
     try {
-      const get = bent(
-        `${this.URL}/search?query=${aQuery}`,
-        'GET',
-        'json',
-        200
-      );
+      const get = bent(`${this.URL}/search?query=${query}`, 'GET', 'json', 200);
       const { coins } = await get();
 
       items = coins.map(({ id: symbol, name }) => {

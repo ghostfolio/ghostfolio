@@ -143,12 +143,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return 'AAPL';
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async search({
+    includeIndices,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
     let items: LookupItem[] = [];
 
     try {
       const get = bent(
-        `${this.URL}/search?query=${aQuery}&apikey=${this.apiKey}`,
+        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
         'GET',
         'json',
         200

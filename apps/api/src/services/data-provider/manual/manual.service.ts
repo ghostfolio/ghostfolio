@@ -171,7 +171,13 @@ export class ManualService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async search({
+    includeIndices,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
     let items = await this.prismaService.symbolProfile.findMany({
       select: {
         assetClass: true,
@@ -187,14 +193,14 @@ export class ManualService implements DataProviderInterface {
             dataSource: this.getName(),
             name: {
               mode: 'insensitive',
-              startsWith: aQuery
+              startsWith: query
             }
           },
           {
             dataSource: this.getName(),
             symbol: {
               mode: 'insensitive',
-              startsWith: aQuery
+              startsWith: query
             }
           }
         ]

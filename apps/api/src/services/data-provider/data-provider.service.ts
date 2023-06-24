@@ -367,9 +367,11 @@ export class DataProviderService {
   }
 
   public async search({
+    includeIndices,
     query,
     user
   }: {
+    includeIndices: boolean;
     query: string;
     user: UserWithSettings;
   }): Promise<{ items: LookupItem[] }> {
@@ -392,7 +394,12 @@ export class DataProviderService {
     }
 
     for (const dataSource of dataSources) {
-      promises.push(this.getDataProvider(DataSource[dataSource]).search(query));
+      promises.push(
+        this.getDataProvider(DataSource[dataSource]).search({
+          includeIndices,
+          query
+        })
+      );
     }
 
     const searchResults = await Promise.all(promises);

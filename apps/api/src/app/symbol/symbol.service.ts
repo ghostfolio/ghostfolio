@@ -81,9 +81,11 @@ export class SymbolService {
   }
 
   public async lookup({
+    includeIndices,
     query,
     user
   }: {
+    includeIndices: boolean;
     query: string;
     user: UserWithSettings;
   }): Promise<{ items: LookupItem[] }> {
@@ -95,6 +97,7 @@ export class SymbolService {
 
     try {
       const { items } = await this.dataProviderService.search({
+        includeIndices,
         query,
         user
       });

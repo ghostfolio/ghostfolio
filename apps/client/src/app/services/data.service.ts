@@ -261,9 +261,17 @@ export class DataService {
     });
   }
 
-  public fetchSymbols(aQuery: string) {
+  public fetchSymbols({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }) {
     return this.http
-      .get<{ items: LookupItem[] }>(`/api/v1/symbol/lookup?query=${aQuery}`)
+      .get<{ items: LookupItem[] }>(
+        `/api/v1/symbol/lookup?query=${query}&includeIndices=${includeIndices}`
+      )
       .pipe(
         map((respose) => {
           return respose.items;

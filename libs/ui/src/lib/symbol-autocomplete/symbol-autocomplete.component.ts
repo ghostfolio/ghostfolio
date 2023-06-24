@@ -51,6 +51,7 @@ export class SymbolAutocompleteComponent
   implements OnInit, OnDestroy
 {
   @Input() public isLoading = false;
+  @Input() private includeIndices = false;
 
   @ViewChild(MatInput, { static: false }) private input: MatInput;
 
@@ -94,7 +95,10 @@ export class SymbolAutocompleteComponent
           this.changeDetectorRef.markForCheck();
         }),
         switchMap((query: string) => {
-          return this.dataService.fetchSymbols(query);
+          return this.dataService.fetchSymbols({
+            includeIndices: this.includeIndices,
+            query
+          });
         })
       )
       .subscribe((filteredLookupItems) => {

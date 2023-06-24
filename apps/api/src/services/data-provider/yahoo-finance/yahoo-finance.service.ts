@@ -275,11 +275,21 @@ export class YahooFinanceService implements DataProviderInterface {
     return 'AAPL';
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async search({
+    includeIndices,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
     const items: LookupItem[] = [];
 
     try {
-      const searchResult = await yahooFinance.search(aQuery);
+      const quoteTypes = ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'];
+      if (includeIndices) {
+        quoteTypes.push('INDEX');
+      }
+      const searchResult = await yahooFinance.search(query);
 
       const quotes = searchResult.quotes
         .filter((quote) => {
@@ -295,7 +305,7 @@ export class YahooFinanceService implements DataProviderInterface {
                   this.baseCurrency
                 )
               )) ||
-            ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'].includes(quoteType)
+            quoteTypes.includes(quoteType)
           );
         })
         .filter(({ quoteType, symbol }) => {
