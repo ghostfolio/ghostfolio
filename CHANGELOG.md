@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the caching for current market prices
 - Added a loading indicator to the import dividends dialog
 
 ### Changed
