@@ -1,7 +1,9 @@
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import * as bodyParser from 'body-parser';
+import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -10,11 +12,12 @@ async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
 
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: environment.production
       ? ['error', 'log', 'warn']
       : ['debug', 'error', 'log', 'verbose', 'warn']
   });
+
   app.enableCors();
   app.enableVersioning({
     defaultVersion: '1',
@@ -31,6 +34,8 @@ async function bootstrap() {
 
   // Support 10mb csv/json files for importing activities
   app.use(bodyParser.json({ limit: '10mb' }));
+
+  app.use(helmet());
 
   const BASE_CURRENCY = configService.get<string>('BASE_CURRENCY');
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
