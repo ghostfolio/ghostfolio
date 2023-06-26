@@ -37,6 +37,7 @@
           type="number"
           [(ngModel)]="data.account.balance"
         />
+        <span class="ml-2" matTextSuffix>{{ data.account.currency }}</span>
       </mat-form-field>
     </div>
     <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
