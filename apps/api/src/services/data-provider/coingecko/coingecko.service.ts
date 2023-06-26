@@ -165,7 +165,7 @@ export class CoinGeckoService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices,
+    includeIndices = false,
     query
   }: {
     includeIndices?: boolean;

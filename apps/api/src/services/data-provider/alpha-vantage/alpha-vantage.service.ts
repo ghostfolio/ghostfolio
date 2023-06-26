@@ -115,7 +115,7 @@ export class AlphaVantageService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices,
+    includeIndices = false,
     query
   }: {
     includeIndices?: boolean;

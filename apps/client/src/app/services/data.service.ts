@@ -268,10 +268,14 @@ export class DataService {
     includeIndices?: boolean;
     query: string;
   }) {
+    let params = new HttpParams().set('query', query);
+
+    if (includeIndices) {
+      params = params.append('includeIndices', includeIndices);
+    }
+
     return this.http
-      .get<{ items: LookupItem[] }>(
-        `/api/v1/symbol/lookup?query=${query}&includeIndices=${includeIndices}`
-      )
+      .get<{ items: LookupItem[] }>('/api/v1/symbol/lookup', { params })
       .pipe(
         map((respose) => {
           return respose.items;

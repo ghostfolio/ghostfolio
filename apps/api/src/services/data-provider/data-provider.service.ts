@@ -367,11 +367,11 @@ export class DataProviderService {
   }
 
   public async search({
-    includeIndices,
+    includeIndices = false,
     query,
     user
   }: {
-    includeIndices: boolean;
+    includeIndices?: boolean;
     query: string;
     user: UserWithSettings;
   }): Promise<{ items: LookupItem[] }> {

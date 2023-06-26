@@ -41,7 +41,7 @@ export class SymbolController {
   ): Promise<{ items: LookupItem[] }> {
     try {
       return this.symbolService.lookup({
-        includeIndices: includeIndices,
+        includeIndices,
         query: query.toLowerCase(),
         user: this.request.user
       });

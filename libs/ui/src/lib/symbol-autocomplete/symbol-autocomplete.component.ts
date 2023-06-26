@@ -50,8 +50,8 @@ export class SymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
   implements OnInit, OnDestroy
 {
-  @Input() public isLoading = false;
   @Input() private includeIndices = false;
+  @Input() public isLoading = false;
 
   @ViewChild(MatInput, { static: false }) private input: MatInput;
 
@@ -96,8 +96,8 @@ export class SymbolAutocompleteComponent
         }),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({
-            includeIndices: this.includeIndices,
-            query
+            query,
+            includeIndices: this.includeIndices
           });
         })
       )
@@ -136,9 +136,11 @@ export class SymbolAutocompleteComponent
   public ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
+
       if (this.control.touched) {
         this.validateSelection();
       }
+
       this.errorState = this.ngControl.invalid && this.ngControl.touched;
       this.stateChanges.next();
     }

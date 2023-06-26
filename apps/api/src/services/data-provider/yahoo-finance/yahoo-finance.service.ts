@@ -276,7 +276,7 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices,
+    includeIndices = false,
     query
   }: {
     includeIndices?: boolean;
@@ -286,9 +286,11 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const quoteTypes = ['EQUITY', 'ETF', 'FUTURE', 'MUTUALFUND'];
+
       if (includeIndices) {
         quoteTypes.push('INDEX');
       }
+
       const searchResult = await yahooFinance.search(query);
 
       const quotes = searchResult.quotes

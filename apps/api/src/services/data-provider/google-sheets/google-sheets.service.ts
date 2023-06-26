@@ -154,7 +154,7 @@ export class GoogleSheetsService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices,
+    includeIndices = false,
     query
   }: {
     includeIndices?: boolean;
