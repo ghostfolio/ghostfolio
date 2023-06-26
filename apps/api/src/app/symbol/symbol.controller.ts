@@ -36,10 +36,12 @@ export class SymbolController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
-    @Query() { query = '' }
+    @Query('includeIndices') includeIndices: boolean = false,
+    @Query('query') query = ''
   ): Promise<{ items: LookupItem[] }> {
     try {
       return this.symbolService.lookup({
+        includeIndices,
         query: query.toLowerCase(),
         user: this.request.user
       });

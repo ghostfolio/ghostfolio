@@ -156,7 +156,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
             return !symbol.endsWith('.FOREX');
           })
           .map((symbol) => {
-            return this.search(symbol);
+            return this.search({ query: symbol });
           })
       );
 
@@ -219,8 +219,14 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return 'AAPL.US';
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    const searchResult = await this.getSearchResult(aQuery);
+  public async search({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
+    const searchResult = await this.getSearchResult(query);
 
     return {
       items: searchResult
