@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue with the clone functionality of a transaction caused by the symbol search component
 
-## 1.283.2 - 2023-06-24
+## 1.283.5 - 2023-06-25
 
 ### Added
 

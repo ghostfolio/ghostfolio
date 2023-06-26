@@ -35,17 +35,20 @@ async function bootstrap() {
   // Support 10mb csv/json files for importing activities
   app.use(bodyParser.json({ limit: '10mb' }));
 
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          scriptSrc: ["'self'", "'unsafe-inline'"], // Allow inline scripts
-          scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
-          styleSrc: ["'self'", "'unsafe-inline'"] // Allow inline styles
+  if (configService.get<string>('ENABLE_FEATURE_SUBSCRIPTION') === 'true') {
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            frameSrc: ["'self'", 'https://js.stripe.com'], // Allow loading frames from Stripe
+            scriptSrc: ["'self'", "'unsafe-inline'", 'https://js.stripe.com'], // Allow inline scripts and scripts from Stripe
+            scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
+            styleSrc: ["'self'", "'unsafe-inline'"] // Allow inline styles
+          }
         }
-      }
-    })
-  );
+      })
+    );
+  }
 
   const BASE_CURRENCY = configService.get<string>('BASE_CURRENCY');
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
