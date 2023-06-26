@@ -42,5 +42,11 @@ export interface DataProviderInterface {
 
   getTestSymbol(): string;
 
-  search(aQuery: string): Promise<{ items: LookupItem[] }>;
+  search({
+    includeIndices,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }>;
 }

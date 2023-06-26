@@ -153,7 +153,13 @@ export class GoogleSheetsService implements DataProviderInterface {
     return 'INDEXSP:.INX';
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async search({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
     const items = await this.prismaService.symbolProfile.findMany({
       select: {
         assetClass: true,
@@ -169,14 +175,14 @@ export class GoogleSheetsService implements DataProviderInterface {
             dataSource: this.getName(),
             name: {
               mode: 'insensitive',
-              startsWith: aQuery
+              startsWith: query
             }
           },
           {
             dataSource: this.getName(),
             symbol: {
               mode: 'insensitive',
-              startsWith: aQuery
+              startsWith: query
             }
           }
         ]

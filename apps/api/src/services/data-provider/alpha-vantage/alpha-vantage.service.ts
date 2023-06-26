@@ -114,8 +114,14 @@ export class AlphaVantageService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    const result = await this.alphaVantage.data.search(aQuery);
+  public async search({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
+    const result = await this.alphaVantage.data.search(query);
 
     return {
       items: result?.bestMatches?.map((bestMatch) => {

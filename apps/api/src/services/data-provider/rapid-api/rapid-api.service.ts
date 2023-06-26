@@ -117,7 +117,13 @@ export class RapidApiService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async search({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
 
