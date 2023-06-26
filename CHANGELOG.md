@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added the ability to add an index for benchmarks as an asset profile in the admin control panel
+
+### Fixed
+
+- Fixed an issue with the clone functionality of a transaction caused by the symbol search component
+
 ## 1.283.2 - 2023-06-24
 
 ### Added
@@ -17,7 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the selected item of the holding selector in the import dividends dialog
 - Extended the symbol search component by asset sub classes
-- Add ability to search INDEX symbols
 
 ## 1.282.0 - 2023-06-19
 
