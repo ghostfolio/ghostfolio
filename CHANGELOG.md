@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the ability to add an index for benchmarks as an asset profile in the admin control panel
 
+### Changed
+
+- Upgraded the _Internet Identity_ dependencies from version `0.15.1` to `0.15.7`
+
 ### Fixed
 
 - Fixed an issue with the clone functionality of a transaction caused by the symbol search component
