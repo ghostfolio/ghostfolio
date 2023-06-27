@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the currency to the cash balance in the create or update account dialog
 - Added the ability to add an index for benchmarks as an asset profile in the admin control panel
 
 ### Fixed
