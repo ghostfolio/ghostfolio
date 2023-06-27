@@ -45,7 +45,8 @@ async function bootstrap() {
             scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
             styleSrc: ["'self'", "'unsafe-inline'"] // Allow inline styles
           }
-        }
+        },
+        crossOriginOpenerPolicy: false // Disable Cross-Origin-Opener-Policy header (for Internet Identity)
       })
     );
   }
