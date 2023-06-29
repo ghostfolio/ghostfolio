@@ -3,6 +3,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/da
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
+  DEFAULT_PAGE_SIZE,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
@@ -247,7 +248,9 @@ export class AdminController {
   @Get('market-data')
   @UseGuards(AuthGuard('jwt'))
   public async getMarketData(
-    @Query('assetSubClasses') filterByAssetSubClasses?: string
+    @Query('assetSubClasses') filterByAssetSubClasses?: string,
+    @Query('skip') skip?: number,
+    @Query('take') take?: number
   ): Promise<AdminMarketData> {
     if (
       !hasPermission(
@@ -272,7 +275,11 @@ export class AdminController {
       })
     ];
 
-    return this.adminService.getMarketData(filters);
+    return this.adminService.getMarketData({
+      filters,
+      skip: isNaN(skip) ? undefined : skip,
+      take: isNaN(take) ? undefined : take
+    });
   }
 
   @Get('market-data/:dataSource/:symbol')

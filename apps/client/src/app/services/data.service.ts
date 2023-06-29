@@ -18,8 +18,6 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
   Accounts,
-  AdminData,
-  AdminMarketData,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
@@ -50,6 +48,67 @@ import { map } from 'rxjs/operators';
 })
 export class DataService {
   public constructor(private http: HttpClient) {}
+
+  public buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
+    let params = new HttpParams();
+
+    if (filters?.length > 0) {
+      const {
+        ACCOUNT: filtersByAccount,
+        ASSET_CLASS: filtersByAssetClass,
+        ASSET_SUB_CLASS: filtersByAssetSubClass,
+        TAG: filtersByTag
+      } = groupBy(filters, (filter) => {
+        return filter.type;
+      });
+
+      if (filtersByAccount) {
+        params = params.append(
+          'accounts',
+          filtersByAccount
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetClass) {
+        params = params.append(
+          'assetClasses',
+          filtersByAssetClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetSubClass) {
+        params = params.append(
+          'assetSubClasses',
+          filtersByAssetSubClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByTag) {
+        params = params.append(
+          'tags',
+          filtersByTag
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+    }
+
+    return params;
+  }
 
   public createCheckoutSession({
     couponId,
@@ -90,16 +149,6 @@ export class DataService {
           return { activities };
         })
       );
-  }
-
-  public fetchAdminData() {
-    return this.http.get<AdminData>('/api/v1/admin');
-  }
-
-  public fetchAdminMarketData({ filters }: { filters?: Filter[] }) {
-    return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
-      params: this.buildFiltersAsQueryParams({ filters })
-    });
   }
 
   public fetchDividends({
@@ -449,66 +498,5 @@ export class DataService {
     return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
     });
-  }
-
-  private buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
-    let params = new HttpParams();
-
-    if (filters?.length > 0) {
-      const {
-        ACCOUNT: filtersByAccount,
-        ASSET_CLASS: filtersByAssetClass,
-        ASSET_SUB_CLASS: filtersByAssetSubClass,
-        TAG: filtersByTag
-      } = groupBy(filters, (filter) => {
-        return filter.type;
-      });
-
-      if (filtersByAccount) {
-        params = params.append(
-          'accounts',
-          filtersByAccount
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByAssetClass) {
-        params = params.append(
-          'assetClasses',
-          filtersByAssetClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByAssetSubClass) {
-        params = params.append(
-          'assetSubClasses',
-          filtersByAssetSubClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByTag) {
-        params = params.append(
-          'tags',
-          filtersByTag
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-    }
-
-    return params;
   }
 }

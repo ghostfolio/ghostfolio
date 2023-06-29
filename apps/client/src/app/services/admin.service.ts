@@ -7,21 +7,28 @@ import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  AdminData,
   AdminJobs,
+  AdminMarketData,
   AdminMarketDataDetails,
   EnhancedSymbolProfile,
+  Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  public constructor(private http: HttpClient) {}
+  public constructor(
+    private dataService: DataService,
+    private http: HttpClient
+  ) {}
 
   public addAssetProfile({ dataSource, symbol }: UniqueAsset) {
     return this.http.post<void>(
@@ -54,6 +61,32 @@ export class AdminService {
     return this.http.delete<void>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`
     );
+  }
+
+  public fetchAdminData() {
+    return this.http.get<AdminData>('/api/v1/admin');
+  }
+
+  public fetchAdminMarketData({
+    filters,
+    skip,
+    take
+  }: {
+    filters?: Filter[];
+    skip?: number;
+    take: number;
+  }) {
+    let params = this.dataService.buildFiltersAsQueryParams({ filters });
+
+    if (skip) {
+      params = params.append('skip', skip);
+    }
+
+    params = params.append('take', take);
+
+    return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
+      params
+    });
   }
 
   public fetchAdminMarketDataBySymbol({

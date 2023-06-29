@@ -562,7 +562,6 @@
 </div>
 
 <mat-paginator
-  showFirstLastButtons="true"
   [ngClass]="{
     'd-none':
       isLoading ||
@@ -570,6 +569,7 @@
       dataSource.data.length <= pageSize
   }"
   [pageSize]="pageSize"
+  [showFirstLastButtons]="true"
   (page)="onChangePage($event)"
 ></mat-paginator>
 
