@@ -103,13 +103,19 @@ export class AdminService {
 
   public async getMarketData({
     filters,
+    sortColumn,
+    sortDirection,
     skip,
     take = DEFAULT_PAGE_SIZE
   }: {
     filters?: Filter[];
     skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
     take?: number;
   }): Promise<AdminMarketData> {
+    let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
+      [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
 
     const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
@@ -128,12 +134,16 @@ export class AdminService {
       where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
     }
 
+    if (sortColumn) {
+      orderBy = [{ [sortColumn]: sortDirection }];
+    }
+
     const [assetProfiles, count] = await Promise.all([
       this.prismaService.symbolProfile.findMany({
+        orderBy,
         skip,
         take,
         where,
-        orderBy: [{ symbol: 'asc' }],
         select: {
           _count: {
             select: { Order: true }

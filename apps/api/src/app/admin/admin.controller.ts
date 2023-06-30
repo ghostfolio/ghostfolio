@@ -33,7 +33,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
+import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -250,6 +250,8 @@ export class AdminController {
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
     @Query('skip') skip?: number,
+    @Query('sortColumn') sortColumn?: string,
+    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('take') take?: number
   ): Promise<AdminMarketData> {
     if (
@@ -277,6 +279,8 @@ export class AdminController {
 
     return this.adminService.getMarketData({
       filters,
+      sortColumn,
+      sortDirection,
       skip: isNaN(skip) ? undefined : skip,
       take: isNaN(take) ? undefined : take
     });

@@ -15,7 +15,7 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { DataSource, MarketData, Platform } from '@prisma/client';
+import { DataSource, MarketData, Platform, Prisma } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
@@ -70,16 +70,28 @@ export class AdminService {
   public fetchAdminMarketData({
     filters,
     skip,
+    sortColumn,
+    sortDirection,
     take
   }: {
     filters?: Filter[];
     skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
     take: number;
   }) {
     let params = this.dataService.buildFiltersAsQueryParams({ filters });
 
     if (skip) {
       params = params.append('skip', skip);
+    }
+
+    if (sortColumn) {
+      params = params.append('sortColumn', sortColumn);
+    }
+
+    if (sortDirection) {
+      params = params.append('sortDirection', sortDirection);
     }
 
     params = params.append('take', take);

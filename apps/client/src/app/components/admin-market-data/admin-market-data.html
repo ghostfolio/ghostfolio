@@ -29,7 +29,7 @@
         </ng-container>
 
         <ng-container matColumnDef="dataSource">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Data Source</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
@@ -38,7 +38,7 @@
         </ng-container>
 
         <ng-container matColumnDef="assetClass">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Asset Class</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
@@ -47,7 +47,7 @@
         </ng-container>
 
         <ng-container matColumnDef="assetSubClass">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Asset Sub Class</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>

@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -7,7 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
@@ -16,7 +17,7 @@ import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetSubClass, DataSource } from '@prisma/client';
+import { AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -34,7 +35,9 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
   styleUrls: ['./admin-market-data.scss'],
   templateUrl: './admin-market-data.html'
 })
-export class AdminMarketDataComponent implements OnDestroy, OnInit {
+export class AdminMarketDataComponent
+  implements AfterViewInit, OnDestroy, OnInit
+{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -130,12 +133,30 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
       });
   }
 
+  public ngAfterViewInit() {
+    this.sort.sortChange.subscribe(
+      ({ active: sortColumn, direction }: Sort) => {
+        this.paginator.pageIndex = 0;
+
+        this.loadData({
+          sortColumn,
+          sortDirection: <Prisma.SortOrder>direction,
+          pageIndex: this.paginator.pageIndex
+        });
+      }
+    );
+  }
+
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 
   public onChangePage(page: PageEvent) {
-    this.loadData(page.pageIndex);
+    this.loadData({
+      pageIndex: page.pageIndex,
+      sortColumn: this.sort.active,
+      sortDirection: <Prisma.SortOrder>this.sort.direction
+    });
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
@@ -203,10 +224,20 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private loadData(aPageIndex = 0) {
+  private loadData(
+    {
+      pageIndex,
+      sortColumn,
+      sortDirection
+    }: {
+      pageIndex: number;
+      sortColumn?: string;
+      sortDirection?: Prisma.SortOrder;
+    } = { pageIndex: 0 }
+  ) {
     this.isLoading = true;
 
-    if (aPageIndex === 0 && this.paginator) {
+    if (pageIndex === 0 && this.paginator) {
       this.paginator.pageIndex = 0;
     }
 
@@ -215,8 +246,10 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
 
     this.adminService
       .fetchAdminMarketData({
+        sortColumn,
+        sortDirection,
         filters: this.activeFilters,
-        skip: aPageIndex * this.pageSize,
+        skip: pageIndex * this.pageSize,
         take: this.pageSize
       })
       .pipe(takeUntil(this.unsubscribeSubject))
