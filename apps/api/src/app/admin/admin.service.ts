@@ -136,6 +136,14 @@ export class AdminService {
 
     if (sortColumn) {
       orderBy = [{ [sortColumn]: sortDirection }];
+
+      if (sortColumn === 'activitiesCount') {
+        orderBy = {
+          Order: {
+            _count: sortDirection
+          }
+        };
+      }
     }
 
     const [assetProfiles, count] = await Promise.all([

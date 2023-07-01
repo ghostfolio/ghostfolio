@@ -65,7 +65,7 @@
         </ng-container>
 
         <ng-container matColumnDef="activitiesCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
+          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Activities Count</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
@@ -168,7 +168,7 @@
         [ngClass]="{
           'd-none':
             (isLoading && totalItems === 0) ||
-            dataSource.data.length === 0
+            totalItems <= pageSize
         }"
         [pageSize]="pageSize"
         [showFirstLastButtons]="true"
