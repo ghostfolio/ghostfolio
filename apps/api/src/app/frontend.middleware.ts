@@ -104,6 +104,11 @@ export class FrontendMiddleware implements NestMiddleware {
     ) {
       featureGraphicPath = 'assets/images/blog/20230520.jpg';
       title = `Unlock your Financial Potential with Ghostfolio - ${title}`;
+    } else if (
+      request.path.startsWith('/en/blog/2023/07/exploring-the-path-to-fire')
+    ) {
+      featureGraphicPath = 'assets/images/blog/20230701.jpg';
+      title = `Exploring the Path to FIRE - ${title}`;
     }
 
     if (
