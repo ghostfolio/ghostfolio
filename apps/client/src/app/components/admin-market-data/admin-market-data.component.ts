@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -7,17 +8,16 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetSubClass, DataSource } from '@prisma/client';
+import { AssetSubClass, DataSource, Prisma } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -26,6 +26,8 @@ import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
 import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +35,10 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
   styleUrls: ['./admin-market-data.scss'],
   templateUrl: './admin-market-data.html'
 })
-export class AdminMarketDataComponent implements OnDestroy, OnInit {
+export class AdminMarketDataComponent
+  implements AfterViewInit, OnDestroy, OnInit
+{
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   public activeFilters: Filter[] = [];
@@ -75,6 +80,8 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public filters$ = new Subject<Filter[]>();
   public isLoading = false;
   public placeholder = '';
+  public pageSize = DEFAULT_PAGE_SIZE;
+  public totalItems = 0;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -82,7 +89,6 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -117,34 +123,40 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
           );
         }
       });
+
+    this.filters$
+      .pipe(distinctUntilChanged(), takeUntil(this.unsubscribeSubject))
+      .subscribe((filters) => {
+        this.activeFilters = filters;
+
+        this.loadData();
+      });
+  }
+
+  public ngAfterViewInit() {
+    this.sort.sortChange.subscribe(
+      ({ active: sortColumn, direction }: Sort) => {
+        this.paginator.pageIndex = 0;
+
+        this.loadData({
+          sortColumn,
+          sortDirection: <Prisma.SortOrder>direction,
+          pageIndex: this.paginator.pageIndex
+        });
+      }
+    );
   }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
 
-    this.filters$
-      .pipe(
-        distinctUntilChanged(),
-        switchMap((filters) => {
-          this.isLoading = true;
-          this.activeFilters = filters;
-          this.placeholder =
-            this.activeFilters.length <= 0 ? $localize`Filter by...` : '';
-
-          return this.dataService.fetchAdminMarketData({
-            filters: this.activeFilters
-          });
-        }),
-        takeUntil(this.unsubscribeSubject)
-      )
-      .subscribe(({ marketData }) => {
-        this.dataSource = new MatTableDataSource(marketData);
-        this.dataSource.sort = this.sort;
-
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
+  public onChangePage(page: PageEvent) {
+    this.loadData({
+      pageIndex: page.pageIndex,
+      sortColumn: this.sort.active,
+      sortDirection: <Prisma.SortOrder>this.sort.direction
+    });
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
@@ -212,6 +224,47 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
+  private loadData(
+    {
+      pageIndex,
+      sortColumn,
+      sortDirection
+    }: {
+      pageIndex: number;
+      sortColumn?: string;
+      sortDirection?: Prisma.SortOrder;
+    } = { pageIndex: 0 }
+  ) {
+    this.isLoading = true;
+
+    if (pageIndex === 0 && this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
+
+    this.placeholder =
+      this.activeFilters.length <= 0 ? $localize`Filter by...` : '';
+
+    this.adminService
+      .fetchAdminMarketData({
+        sortColumn,
+        sortDirection,
+        filters: this.activeFilters,
+        skip: pageIndex * this.pageSize,
+        take: this.pageSize
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ count, marketData }) => {
+        this.totalItems = count;
+
+        this.dataSource = new MatTableDataSource(marketData);
+        this.dataSource.sort = this.sort;
+
+        this.isLoading = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private openAssetProfileDialog({
     dataSource,
     symbol
@@ -274,8 +327,9 @@ export class AdminMarketDataComponent implements OnDestroy, OnInit {
                     this.isLoading = true;
                     this.changeDetectorRef.markForCheck();
 
-                    return this.dataService.fetchAdminMarketData({
-                      filters: this.activeFilters
+                    return this.adminService.fetchAdminMarketData({
+                      filters: this.activeFilters,
+                      take: this.pageSize
                     });
                   }),
                   takeUntil(this.unsubscribeSubject)

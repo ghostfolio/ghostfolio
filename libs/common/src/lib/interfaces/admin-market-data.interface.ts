@@ -1,6 +1,7 @@
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
 export interface AdminMarketData {
+  count: number;
   marketData: AdminMarketDataItem[];
 }
 

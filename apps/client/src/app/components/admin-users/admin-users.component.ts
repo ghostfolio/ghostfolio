@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -30,6 +31,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private impersonationStorageService: ImpersonationStorageService,
@@ -112,7 +114,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   }
 
   private fetchAdminData() {
-    this.dataService
+    this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ users }) => {
