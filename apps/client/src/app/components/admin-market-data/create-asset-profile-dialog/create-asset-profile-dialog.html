@@ -4,7 +4,7 @@
   (keyup.enter)="createAssetProfileForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  <h1 i18n mat-dialog-title>Create Asset Profile</h1>
+  <h1 i18n mat-dialog-title>Add Asset Profile</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <mat-form-field appearance="outline" class="w-100">
       <mat-label i18n>Name, symbol or ISIN</mat-label>
@@ -22,7 +22,7 @@
       type="submit"
       [disabled]="!createAssetProfileForm.valid"
     >
-      <ng-container i18n>Create</ng-container>
+      <ng-container i18n>Save</ng-container>
     </button>
   </div>
 </form>

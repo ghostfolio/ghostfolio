@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the asset profile details dialog in the admin control panel by the scraper configuration
+- Improved the language localization for German (`de`)
 
 ## 1.284.0 - 2023-06-27
 
