@@ -139,6 +139,13 @@ const routes: Routes = [
       ).then((m) => m.UnlockYourFinancialPotentialWithGhostfolioPageModule)
   },
   {
+    path: 'blog/2023/07/exploring-the-path-to-fire',
+    loadChildren: () =>
+      import(
+        './pages/blog/2023/07/exploring-the-path-to-fire/exploring-the-path-to-fire-page.module'
+      ).then((m) => m.ExploringThePathToFirePageModule)
+  },
+  {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
