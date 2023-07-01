@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added pagination to the historical market data table of the admin control panel
+- Added the attribute `headers` to the scraper configuration
+
+### Changed
+
+- Extended the asset profile details dialog in the admin control panel by the scraper configuration
 
 ## 1.284.0 - 2023-06-27
 
