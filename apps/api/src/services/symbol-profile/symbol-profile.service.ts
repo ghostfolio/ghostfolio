@@ -96,11 +96,12 @@ export class SymbolProfileService {
   public updateSymbolProfile({
     comment,
     dataSource,
+    scraperConfiguration,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     return this.prismaService.symbolProfile.update({
-      data: { comment, symbolMapping },
+      data: { comment, scraperConfiguration, symbolMapping },
       where: { dataSource_symbol: { dataSource, symbol } }
     });
   }
@@ -195,6 +196,8 @@ export class SymbolProfileService {
     if (scraperConfiguration) {
       return {
         defaultMarketPrice: scraperConfiguration.defaultMarketPrice as number,
+        headers:
+          scraperConfiguration.headers as ScraperConfiguration['headers'],
         selector: scraperConfiguration.selector as string,
         url: scraperConfiguration.url as string
       };

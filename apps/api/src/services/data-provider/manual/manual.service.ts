@@ -67,8 +67,12 @@ export class ManualService implements DataProviderInterface {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [{ symbol, dataSource: this.getName() }]
       );
-      const { defaultMarketPrice, selector, url } =
-        symbolProfile.scraperConfiguration ?? {};
+      const {
+        defaultMarketPrice,
+        headers = {},
+        selector,
+        url
+      } = symbolProfile.scraperConfiguration ?? {};
 
       if (defaultMarketPrice) {
         const historical: {
@@ -91,7 +95,7 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const get = bent(url, 'GET', 'string', 200, {});
+      const get = bent(url, 'GET', 'string', 200, headers);
 
       const html = await get();
       const $ = cheerio.load(html);

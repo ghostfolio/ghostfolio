@@ -13,6 +13,7 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   AdminMarketDataDetails,
+  ScraperConfiguration,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -34,6 +35,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfile: AdminMarketDataDetails['assetProfile'];
   public assetProfileForm = this.formBuilder.group({
     comment: '',
+    scraperConfiguration: '',
     symbolMapping: ''
   });
   public assetSubClass: string;
@@ -103,6 +105,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
         this.assetProfileForm.setValue({
           comment: this.assetProfile?.comment ?? '',
+          scraperConfiguration: JSON.stringify(
+            this.assetProfile?.scraperConfiguration ?? {}
+          ),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
         });
 
@@ -148,7 +153,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onSubmit() {
+    let scraperConfiguration = {};
     let symbolMapping = {};
+
+    try {
+      scraperConfiguration = JSON.parse(
+        this.assetProfileForm.controls['scraperConfiguration'].value
+      );
+    } catch {}
 
     try {
       symbolMapping = JSON.parse(
@@ -157,6 +169,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     const assetProfileData: UpdateAssetProfileDto = {
+      scraperConfiguration,
       symbolMapping,
       comment: this.assetProfileForm.controls['comment'].value ?? null
     };
