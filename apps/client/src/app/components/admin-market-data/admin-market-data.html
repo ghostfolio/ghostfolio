@@ -56,7 +56,7 @@
         </ng-container>
 
         <ng-container matColumnDef="date">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>First Activity</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
@@ -74,7 +74,7 @@
         </ng-container>
 
         <ng-container matColumnDef="marketDataItemCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>Historical Data</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
@@ -83,7 +83,7 @@
         </ng-container>
 
         <ng-container matColumnDef="sectorsCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>Sectors Count</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
@@ -92,7 +92,7 @@
         </ng-container>
 
         <ng-container matColumnDef="countriesCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>Countries Count</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
@@ -162,6 +162,28 @@
           (click)="onOpenAssetProfileDialog({ dataSource: row.dataSource, symbol: row.symbol })"
         ></tr>
       </table>
+
+      <mat-paginator
+        [length]="totalItems"
+        [ngClass]="{
+          'd-none':
+            (isLoading && totalItems === 0) ||
+            totalItems <= pageSize
+        }"
+        [pageSize]="pageSize"
+        [showFirstLastButtons]="true"
+        (page)="onChangePage($event)"
+      ></mat-paginator>
+
+      <ngx-skeleton-loader
+        *ngIf="isLoading && totalItems === 0"
+        animation="pulse"
+        class="px-4 py-3"
+        [theme]="{
+          height: '1.5rem',
+          width: '100%'
+        }"
+      ></ngx-skeleton-loader>
     </div>
   </div>
 

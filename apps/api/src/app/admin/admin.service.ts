@@ -6,12 +6,14 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_PAGE_SIZE,
+  PROPERTY_CURRENCIES
+} from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
-  AdminMarketDataItem,
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -99,7 +101,21 @@ export class AdminService {
     };
   }
 
-  public async getMarketData(filters?: Filter[]): Promise<AdminMarketData> {
+  public async getMarketData({
+    filters,
+    sortColumn,
+    sortDirection,
+    skip,
+    take = DEFAULT_PAGE_SIZE
+  }: {
+    filters?: Filter[];
+    skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
+    take?: number;
+  }): Promise<AdminMarketData> {
+    let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
+      [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
 
     const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
@@ -109,42 +125,33 @@ export class AdminService {
       }
     );
 
-    const marketData = await this.prismaService.marketData.groupBy({
+    const marketDataItems = await this.prismaService.marketData.groupBy({
       _count: true,
       by: ['dataSource', 'symbol']
     });
 
-    let currencyPairsToGather: AdminMarketDataItem[] = [];
-
     if (filtersByAssetSubClass) {
       where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
-    } else {
-      currencyPairsToGather = this.exchangeRateDataService
-        .getCurrencyPairs()
-        .map(({ dataSource, symbol }) => {
-          const marketDataItemCount =
-            marketData.find((marketDataItem) => {
-              return (
-                marketDataItem.dataSource === dataSource &&
-                marketDataItem.symbol === symbol
-              );
-            })?._count ?? 0;
-
-          return {
-            dataSource,
-            marketDataItemCount,
-            symbol,
-            assetClass: 'CASH',
-            countriesCount: 0,
-            sectorsCount: 0
-          };
-        });
     }
 
-    const symbolProfilesToGather: AdminMarketDataItem[] = (
-      await this.prismaService.symbolProfile.findMany({
+    if (sortColumn) {
+      orderBy = [{ [sortColumn]: sortDirection }];
+
+      if (sortColumn === 'activitiesCount') {
+        orderBy = {
+          Order: {
+            _count: sortDirection
+          }
+        };
+      }
+    }
+
+    const [assetProfiles, count] = await Promise.all([
+      this.prismaService.symbolProfile.findMany({
+        orderBy,
+        skip,
+        take,
         where,
-        orderBy: [{ symbol: 'asc' }],
         select: {
           _count: {
             select: { Order: true }
@@ -163,38 +170,48 @@ export class AdminService {
           sectors: true,
           symbol: true
         }
-      })
-    ).map((symbolProfile) => {
-      const countriesCount = symbolProfile.countries
-        ? Object.keys(symbolProfile.countries).length
-        : 0;
-      const marketDataItemCount =
-        marketData.find((marketDataItem) => {
-          return (
-            marketDataItem.dataSource === symbolProfile.dataSource &&
-            marketDataItem.symbol === symbolProfile.symbol
-          );
-        })?._count ?? 0;
-      const sectorsCount = symbolProfile.sectors
-        ? Object.keys(symbolProfile.sectors).length
-        : 0;
-
-      return {
-        countriesCount,
-        marketDataItemCount,
-        sectorsCount,
-        activitiesCount: symbolProfile._count.Order,
-        assetClass: symbolProfile.assetClass,
-        assetSubClass: symbolProfile.assetSubClass,
-        comment: symbolProfile.comment,
-        dataSource: symbolProfile.dataSource,
-        date: symbolProfile.Order?.[0]?.date,
-        symbol: symbolProfile.symbol
-      };
-    });
+      }),
+      this.prismaService.symbolProfile.count({ where })
+    ]);
 
     return {
-      marketData: [...currencyPairsToGather, ...symbolProfilesToGather]
+      count,
+      marketData: assetProfiles.map(
+        ({
+          _count,
+          assetClass,
+          assetSubClass,
+          comment,
+          countries,
+          dataSource,
+          Order,
+          sectors,
+          symbol
+        }) => {
+          const countriesCount = countries ? Object.keys(countries).length : 0;
+          const marketDataItemCount =
+            marketDataItems.find((marketDataItem) => {
+              return (
+                marketDataItem.dataSource === dataSource &&
+                marketDataItem.symbol === symbol
+              );
+            })?._count ?? 0;
+          const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+
+          return {
+            assetClass,
+            assetSubClass,
+            comment,
+            countriesCount,
+            dataSource,
+            symbol,
+            marketDataItemCount,
+            sectorsCount,
+            activitiesCount: _count.Order,
+            date: Order?.[0]?.date
+          };
+        }
+      )
     };
   }
 
