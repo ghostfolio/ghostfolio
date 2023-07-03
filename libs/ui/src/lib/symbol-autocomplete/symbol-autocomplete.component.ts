@@ -9,7 +9,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormControl, NgControl, Validators } from '@angular/forms';
+import { FormControl, NgControl } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent
@@ -25,7 +25,8 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
-  switchMap
+  switchMap,
+  takeUntil
 } from 'rxjs/operators';
 
 import { AbstractMatFormField } from './abstract-mat-form-field';
@@ -80,11 +81,13 @@ export class SymbolAutocompleteComponent
       this.control.disable();
     }
 
-    this.control.valueChanges.subscribe((_) => {
-      if (super.value) {
-        super.value.dataSource = null;
-      }
-    });
+    this.control.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        if (super.value) {
+          super.value.dataSource = null;
+        }
+      });
 
     this.control.valueChanges
       .pipe(
@@ -93,6 +96,7 @@ export class SymbolAutocompleteComponent
         filter((query) => {
           return isString(query) && query.length > 1;
         }),
+        takeUntil(this.unsubscribeSubject),
         tap(() => {
           this.isLoading = true;
 
