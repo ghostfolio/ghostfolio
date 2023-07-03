@@ -76,11 +76,15 @@ export class SymbolAutocompleteComponent
   }
 
   public ngOnInit() {
-    super.required = this.ngControl.control?.hasValidator(Validators.required);
-
     if (this.disabled) {
       this.control.disable();
     }
+
+    this.control.valueChanges.subscribe((_) => {
+      if (super.value) {
+        super.value.dataSource = null;
+      }
+    });
 
     this.control.valueChanges
       .pipe(
@@ -136,11 +140,6 @@ export class SymbolAutocompleteComponent
   public ngDoCheck() {
     if (this.ngControl) {
       this.validateRequired();
-
-      if (this.control.touched) {
-        this.validateSelection();
-      }
-
       this.errorState = this.ngControl.invalid && this.ngControl.touched;
       this.stateChanges.next();
     }
@@ -170,15 +169,6 @@ export class SymbolAutocompleteComponent
       ? !super.value?.dataSource || !super.value?.symbol
       : false;
     if (requiredCheck) {
-      this.ngControl.control.setErrors({ invalidData: true });
-    }
-  }
-
-  private validateSelection() {
-    const error =
-      !this.isValueInOptions(this.input?.value) ||
-      this.input?.value !== super.value?.symbol;
-    if (error) {
       this.ngControl.control.setErrors({ invalidData: true });
     }
   }

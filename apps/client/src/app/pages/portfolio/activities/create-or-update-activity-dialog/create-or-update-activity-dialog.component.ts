@@ -241,7 +241,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
       if (this.activityForm.controls['searchSymbol'].invalid) {
         this.data.activity.SymbolProfile = null;
-      } else {
+      } else if (
+        !['ITEM', 'LIABILITY'].includes(
+          this.activityForm.controls['type'].value
+        )
+      ) {
         this.activityForm.controls['dataSource'].setValue(
           this.activityForm.controls['searchSymbol'].value.dataSource
         );
