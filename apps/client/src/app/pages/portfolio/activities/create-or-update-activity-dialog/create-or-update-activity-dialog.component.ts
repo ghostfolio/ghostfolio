@@ -241,7 +241,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
       if (this.activityForm.controls['searchSymbol'].invalid) {
         this.data.activity.SymbolProfile = null;
-      } else {
+      } else if (
+        ['BUY', 'DIVIDEND', 'SELL'].includes(
+          this.activityForm.controls['type'].value
+        )
+      ) {
         this.activityForm.controls['dataSource'].setValue(
           this.activityForm.controls['searchSymbol'].value.dataSource
         );
@@ -408,8 +412,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       fee: this.activityForm.controls['fee'].value,
       quantity: this.activityForm.controls['quantity'].value,
       symbol:
-        this.activityForm.controls['searchSymbol'].value.symbol === undefined ||
-        isUUID(this.activityForm.controls['searchSymbol'].value.symbol)
+        this.activityForm.controls['searchSymbol'].value?.symbol ===
+          undefined ||
+        isUUID(this.activityForm.controls['searchSymbol'].value?.symbol)
           ? this.activityForm.controls['name'].value
           : this.activityForm.controls['searchSymbol'].value.symbol,
       tags: this.activityForm.controls['tags'].value,

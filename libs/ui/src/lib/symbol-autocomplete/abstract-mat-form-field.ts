@@ -9,7 +9,7 @@ import {
   Input,
   OnDestroy
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
@@ -96,7 +96,10 @@ export abstract class AbstractMatFormField<T>
   public _required: boolean = false;
 
   public get required() {
-    return this._required;
+    return (
+      this._required ||
+      this.ngControl.control?.hasValidator(Validators.required)
+    );
   }
 
   @Input()
