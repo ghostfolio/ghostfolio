@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored the blog articles to standalone components
 
+## 1.286.0 - 2023-07-03
+
+### Fixed
+
+- Fixed the creation of (wealth) items and liabilities
+
 ## 1.285.0 - 2023-07-01
 
 ### Added
