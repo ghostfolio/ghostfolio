@@ -10,6 +10,7 @@ import type {
 import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
+import { Comparison } from './comparison';
 import type { Coupon } from './coupon.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
@@ -58,6 +59,7 @@ export {
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
   BenchmarkResponse,
+  Comparison,
   Coupon,
   DataProviderInfo,
   EnhancedSymbolProfile,

@@ -45,7 +45,8 @@
 
 <footer
   *ngIf="
-    (currentRoute === 'blog' ||
+    (currentRoute === 'alternatives' ||
+      currentRoute === 'blog' ||
       currentRoute === 'faq' ||
       currentRoute === 'features' ||
       currentRoute === 'markets' ||
@@ -70,6 +71,7 @@
             <a i18n [routerLink]="['/markets']">Markets</a>
           </li>
           <li><a i18n [routerLink]="['/resources']">Resources</a></li>
+          <li><a i18n [routerLink]="['/alternatives']">Alternatives</a></li>
         </ul>
       </div>
       <div class="col-sm">

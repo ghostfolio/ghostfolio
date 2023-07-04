@@ -37,6 +37,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
+  ...['alternatives'].map((path) => ({
+    path,
+    loadChildren: () =>
+      import('./pages/alternatives/alternatives-page.module').then(
+        (m) => m.AlternativesPageModule
+      )
+  })),
   {
     path: 'auth',
     loadChildren: () =>

@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="mb-5 row">
+    <div class="col">
+      <h3 class="d-none d-sm-block mb-3 text-center" i18n>Alternatives</h3>
+      <mat-card
+        *ngFor="let product of products"
+        appearance="outlined"
+        class="mb-3"
+      >
+        <mat-card-content>
+          <div class="container p-0">
+            <div class="flex-nowrap no-gutters row">
+              <a
+                class="d-flex overflow-hidden w-100"
+                [routerLink]="['/alternatives', product.key]"
+              >
+                <div class="flex-grow-1 overflow-hidden">
+                  <div class="h6 m-0 text-truncate">
+                    Ghostfolio: The open source alternative to {{ product.name
+                    }}
+                  </div>
+                </div>
+                <div class="align-items-center d-flex">
+                  <ion-icon
+                    class="chevron text-muted"
+                    name="chevron-forward-outline"
+                    size="small"
+                  ></ion-icon>
+                </div>
+              </a>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

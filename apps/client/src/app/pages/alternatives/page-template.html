@@ -1,0 +1,151 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <article>
+        <div class="mb-4 text-center">
+          <h1 class="mb-1">
+            Ghostfolio: The open source alternative to {{ product2.name }}
+          </h1>
+        </div>
+        <section class="mb-4">
+          <p>
+            Are you looking for an open source alternative to {{ product2.name
+            }}? Compare Ghostfolio to {{ product2.name }} using the table below.
+          </p>
+        </section>
+        <section class="mb-4">
+          <table class="gf-table w-100">
+            <thead>
+              <tr class="mat-mdc-header-row">
+                <th class="mat-mdc-header-cell px-1 py-2"></th>
+                <th class="mat-mdc-header-cell px-1 py-2">Ghostfolio</th>
+                <th class="mat-mdc-header-cell px-1 py-2">
+                  {{ product2.name }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2"></td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1.slogan }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product2.slogan }}</td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>Founded</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1.founded }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product2.founded }}</td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>Origin</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1.origin }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product2.origin }}</td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>Region</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1.region }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product2.region }}</td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>Available in</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1.languages }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product2.languages }}</td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>
+                  Open Source Software
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product1.isOpenSource === true"
+                    >✅</ng-container
+                  ><ng-container *ngIf="product1.isOpenSource === false"
+                    >❌</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product2.isOpenSource === true"
+                    >✅</ng-container
+                  ><ng-container *ngIf="product2.isOpenSource === false"
+                    >❌</ng-container
+                  >
+                </td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>Free Plan</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product1.hasFreePlan === true"
+                    >✅</ng-container
+                  ><ng-container *ngIf="product1.hasFreePlan === false"
+                    >❌</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product2.hasFreePlan === true"
+                    >✅</ng-container
+                  ><ng-container *ngIf="product2.hasFreePlan === false"
+                    >❌</ng-container
+                  >
+                </td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>Pricing</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1.pricing }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product2.pricing }}</td>
+              </tr>
+              <tr *ngIf="product1.note || product2.note" class="mat-mdc-row">
+                <td class="mat-mdc-cell px-1 py-2" i18n>Notes</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product1.note }}</td>
+                <td class="mat-mdc-cell px-1 py-2">{{ product2.note }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <section class="mb-4 py-3">
+          <h2 class="h4 mb-0 text-center">
+            Would you like to <strong>refine</strong> your
+            <strong>personal investment strategy</strong>?
+          </h2>
+          <p class="lead mb-2 text-center" i18n>
+            Ghostfolio empowers you to keep track of your wealth.
+          </p>
+          <div class="text-center">
+            <a color="primary" href="https://ghostfol.io" mat-flat-button>
+              Get Started
+            </a>
+          </div>
+        </section>
+        <section class="mb-4">
+          <ul class="list-inline">
+            <li class="list-inline-item">
+              <span class="badge badge-light">App</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">{{ product2.name }}</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">{{ product2.name }}</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Open Source</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Personal Finance</span>
+            </li>
+          </ul>
+        </section>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a i18n [routerLink]="['/alternatives']">Alternatives</a>
+            </li>
+            <li
+              aria-current="page"
+              class="active breadcrumb-item text-truncate"
+            >
+              {{ product2.name }}
+            </li>
+          </ol>
+        </nav>
+      </article>
+    </div>
+  </div>
+</div>
