@@ -118,12 +118,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   private initialize() {
     this.isLoading = true;
-    const benchmarkPrices = [];
     const labels: string[] = [];
     const marketPrices = [];
 
-    this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
+    this.historicalDataItems?.forEach((historicalDataItem) => {
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
@@ -151,7 +149,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
         {
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 1,
-          data: benchmarkPrices,
+          data: [],
           fill: false,
           label: this.benchmarkLabel,
           pointRadius: 0
@@ -167,6 +165,20 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
         }
       ]
     };
+
+    this.historicalDataItems?.forEach((historicalDataItem, index) => {
+      data.datasets[0].data.push(this.benchmarkDataItems?.[index]?.value);
+      if (this.benchmarkDataItems?.[index]?.value === null) {
+        data.datasets.unshift({
+          borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
+          borderWidth: 1,
+          data: Array(data.datasets[0].data.length).fill(null),
+          fill: false,
+          label: this.benchmarkLabel,
+          pointRadius: 0
+        });
+      }
+    });
 
     if (this.chartCanvas) {
       if (this.chart) {

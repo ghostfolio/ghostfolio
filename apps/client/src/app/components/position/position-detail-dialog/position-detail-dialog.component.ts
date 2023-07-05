@@ -113,10 +113,17 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.grossPerformancePercent = grossPerformancePercent;
           this.historicalDataItems = historicalData.map(
             (historicalDataItem) => {
-              this.benchmarkDataItems.push({
-                date: historicalDataItem.date,
-                value: historicalDataItem.averagePrice
-              });
+              if (historicalDataItem.averagePrice) {
+                this.benchmarkDataItems.push({
+                  date: historicalDataItem.date,
+                  value: historicalDataItem.averagePrice
+                });
+              } else {
+                this.benchmarkDataItems.push({
+                  date: historicalDataItem.date,
+                  value: null
+                });
+              }
 
               return {
                 date: historicalDataItem.date,
