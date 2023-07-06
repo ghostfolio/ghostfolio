@@ -1,4 +1,5 @@
 import { Product } from '@ghostfolio/common/interfaces';
+import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybePageComponent } from './products/maybe-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
@@ -14,9 +15,19 @@ export const products: Product[] = [
       'English, Dutch, French, German, Italian, Portuguese and Spanish',
     name: 'Ghostfolio',
     origin: 'Switzerland',
-    pricing: 'Starting from $19 / year',
+    pricingPerYear: '$19',
     region: 'Global',
     slogan: 'Open Source Wealth Management'
+  },
+  {
+    component: KuberaPageComponent,
+    hasFreePlan: false,
+    isOpenSource: false,
+    key: 'kubera',
+    name: 'Kubera®',
+    origin: 'USA',
+    pricingPerYear: '$150',
+    slogan: 'The Time Machine for your Net Worth'
   },
   {
     component: MaybePageComponent,
@@ -27,7 +38,7 @@ export const products: Product[] = [
     name: 'Maybe Finance',
     note: 'Sunset in 2023',
     origin: 'USA',
-    pricing: 'Starting from $145 / year',
+    pricingPerYear: '$145',
     region: 'USA',
     slogan: 'Your financial future, in your control'
   },
@@ -39,7 +50,7 @@ export const products: Product[] = [
     key: 'parqet',
     name: 'Parqet',
     origin: 'Germany',
-    pricing: 'Starting from €88 / year',
+    pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
   },

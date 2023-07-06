@@ -8,7 +8,7 @@ export interface Product {
   name: string;
   note?: string;
   origin?: string;
-  pricing?: string;
+  pricingPerYear?: string;
   region?: string;
   slogan?: string;
 }

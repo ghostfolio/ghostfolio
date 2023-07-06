@@ -1,7 +1,9 @@
 <div class="container">
   <div class="mb-5 row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center" i18n>Alternatives</h3>
+      <h3 class="d-none d-sm-block mb-3 text-center" i18n>
+        Open Source Alternatives to various Personal Finance Tools
+      </h3>
       <mat-card
         *ngFor="let product of products"
         appearance="outlined"
@@ -12,7 +14,7 @@
             <div class="flex-nowrap no-gutters row">
               <a
                 class="d-flex overflow-hidden w-100"
-                [routerLink]="['/alternatives', product.key]"
+                [routerLink]="['/alternatives', 'open-source-alternative-to-' + product.key]"
               >
                 <div class="flex-grow-1 overflow-hidden">
                   <div class="h6 m-0 text-truncate">

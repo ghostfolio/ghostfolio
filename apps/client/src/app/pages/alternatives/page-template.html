@@ -88,8 +88,18 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-1 py-2" i18n>Pricing</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.pricing }}</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product2.pricing }}</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product2.pricingPerYear"
+                    >Starting from {{ product1.pricingPerYear }} /
+                    year</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product2.pricingPerYear"
+                    >Starting from {{ product2.pricingPerYear }} /
+                    year</ng-container
+                  >
+                </td>
               </tr>
               <tr *ngIf="product1.note || product2.note" class="mat-mdc-row">
                 <td class="mat-mdc-cell px-1 py-2" i18n>Notes</td>
