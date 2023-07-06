@@ -76,6 +76,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'parqet',
     name: 'Parqet',
+    note: 'Originally named as Tresor One',
     origin: 'Germany',
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',

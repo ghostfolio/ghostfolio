@@ -26,32 +26,34 @@
             </thead>
             <tbody>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2"></td>
+                <td class="mat-mdc-cell px-3 py-2 text-right"></td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product1.slogan }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.slogan }}</td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>Founded</td>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Founded</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product1.founded }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.founded }}</td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>Origin</td>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Origin</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product1.origin }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.origin }}</td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>Region</td>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Region</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product1.region }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.region }}</td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>Available in</td>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
+                  Available in
+                </td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product1.languages }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.languages }}</td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
                   Open Source Software
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
@@ -70,7 +72,9 @@
                 </td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>Free Plan</td>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
+                  Free Plan
+                </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   <ng-container *ngIf="product1.hasFreePlan === true"
                     >✅</ng-container
@@ -87,7 +91,7 @@
                 </td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>Pricing</td>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Pricing</td>
                 <td class="mat-mdc-cell px-1 py-2">
                   Starting from {{ product1.pricingPerYear }} / year
                 </td>
@@ -99,7 +103,7 @@
                 </td>
               </tr>
               <tr *ngIf="product1.note || product2.note" class="mat-mdc-row">
-                <td class="mat-mdc-cell px-1 py-2" i18n>Notes</td>
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Notes</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product1.note }}</td>
                 <td class="mat-mdc-cell px-1 py-2">{{ product2.note }}</td>
               </tr>
