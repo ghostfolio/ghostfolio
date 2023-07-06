@@ -3,6 +3,9 @@ import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybePageComponent } from './products/maybe-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { UtlunaPageComponent } from './products/utluna-page.component';
+import { AltooPageComponent } from './products/altoo-page.component';
+import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
 
 export const products: Product[] = [
   {
@@ -18,6 +21,14 @@ export const products: Product[] = [
     pricingPerYear: '$19',
     region: 'Global',
     slogan: 'Open Source Wealth Management'
+  },
+  {
+    component: AltooPageComponent,
+    isOpenSource: false,
+    key: 'altoo',
+    name: 'Altoo-Wealth-Plattform',
+    origin: 'Switzerland',
+    slogan: 'Simplicity for Complex Wealth'
   },
   {
     component: KuberaPageComponent,
@@ -53,6 +64,27 @@ export const products: Product[] = [
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
+  },
+  {
+    component: SimplePortfolioPageComponent,
+    hasFreePlan: true,
+    isOpenSource: false,
+    key: 'simple-portfolio',
+    name: 'Simple Portfolio',
+    origin: 'Czech Republic',
+    pricingPerYear: '€80',
+    slogan: 'Stock Portfolio Tracker'
+  },
+  {
+    component: UtlunaPageComponent,
+    hasFreePlan: true,
+    isOpenSource: false,
+    key: 'utluna',
+    languages: 'English, French, German',
+    name: 'Utluna',
+    origin: 'Switzerland',
+    pricingPerYear: '$300',
+    slogan: 'Your Portfolio. Revealed.'
   },
   {
     component: YeekateePageComponent,
