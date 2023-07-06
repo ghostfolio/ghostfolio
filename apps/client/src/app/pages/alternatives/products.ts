@@ -1,6 +1,7 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { GetquinPageComponent } from './products/getquin-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybePageComponent } from './products/maybe-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
@@ -25,6 +26,7 @@ export const products: Product[] = [
   },
   {
     component: AltooPageComponent,
+    founded: 2017,
     isOpenSource: false,
     key: 'altoo',
     name: 'Altoo-Wealth-Plattform',
@@ -32,7 +34,20 @@ export const products: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    component: GetquinPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    isOpenSource: false,
+    languages: 'English, German',
+    key: 'getquin',
+    name: 'getquin',
+    origin: 'Germany',
+    pricingPerYear: '€48',
+    slogan: 'Portfolio Tracker, Analysis & Community'
+  },
+  {
     component: KuberaPageComponent,
+    founded: 2019,
     hasFreePlan: false,
     isOpenSource: false,
     key: 'kubera',
