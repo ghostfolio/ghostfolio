@@ -1,11 +1,12 @@
 import { Product } from '@ghostfolio/common/interfaces';
+
+import { AltooPageComponent } from './products/altoo-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybePageComponent } from './products/maybe-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
-import { YeekateePageComponent } from './products/yeekatee-page.component';
-import { UtlunaPageComponent } from './products/utluna-page.component';
-import { AltooPageComponent } from './products/altoo-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
+import { UtlunaPageComponent } from './products/utluna-page.component';
+import { YeekateePageComponent } from './products/yeekatee-page.component';
 
 export const products: Product[] = [
   {
