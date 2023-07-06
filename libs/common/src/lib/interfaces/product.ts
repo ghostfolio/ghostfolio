@@ -1,4 +1,5 @@
-export interface Comparison {
+export interface Product {
+  component: any;
   founded?: number;
   hasFreePlan?: boolean;
   isOpenSource: boolean;

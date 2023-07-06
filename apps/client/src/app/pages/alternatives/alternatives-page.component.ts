@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { data } from './data';
+import { products } from './products';
 
 @Component({
   host: { class: 'page' },
@@ -10,7 +10,7 @@ import { data } from './data';
   templateUrl: './alternatives-page.html'
 })
 export class AlternativesPageComponent implements OnDestroy {
-  public products = data.filter(({ key }) => {
+  public products = products.filter(({ key }) => {
     return key !== 'ghostfolio';
   });
 

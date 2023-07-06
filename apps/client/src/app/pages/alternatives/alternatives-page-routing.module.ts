@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
 import { AlternativesPageComponent } from './alternatives-page.component';
-import { data } from './data';
+import { products } from './products';
 
 const routes: Routes = [
   {
@@ -12,14 +12,27 @@ const routes: Routes = [
     path: '',
     title: $localize`Alternatives`
   },
-  {
+  ...products
+    .filter(({ key }) => {
+      return key !== 'ghostfolio';
+    })
+    .map(({ component, key, name }) => {
+      return {
+        canActivate: [AuthGuard],
+        path: key,
+        loadComponent: () =>
+          import(`./products/${key}-page.component`).then(() => component),
+        title: `Open Source Alternative to ${name}`
+      };
+    })
+  /*{
     canActivate: [AuthGuard],
     path: 'maybe',
     loadComponent: () =>
       import('./products/maybe-page.component').then(
         (c) => c.MaybePageComponent
       ),
-    title: data.find(({ key }) => key === 'maybe').name
+    title: products.find(({ key }) => key === 'maybe').name
   },
   {
     canActivate: [AuthGuard],
@@ -28,7 +41,7 @@ const routes: Routes = [
       import('./products/parqet-page.component').then(
         (c) => c.ParqetPageComponent
       ),
-    title: data.find(({ key }) => key === 'parqet').name
+    title: products.find(({ key }) => key === 'parqet').name
   },
   {
     canActivate: [AuthGuard],
@@ -37,8 +50,8 @@ const routes: Routes = [
       import('./products/yeekatee-page.component').then(
         (c) => c.YeekateePageComponent
       ),
-    title: data.find(({ key }) => key === 'yeekatee').name
-  }
+    title: products.find(({ key }) => key === 'yeekatee').name
+  }*/
 ];
 
 @NgModule({

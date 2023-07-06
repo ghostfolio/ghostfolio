@@ -1,7 +1,11 @@
-import { Comparison } from '@ghostfolio/common/interfaces';
+import { Product } from '@ghostfolio/common/interfaces';
+import { MaybePageComponent } from './products/maybe-page.component';
+import { ParqetPageComponent } from './products/parqet-page.component';
+import { YeekateePageComponent } from './products/yeekatee-page.component';
 
-export const data: Comparison[] = [
+export const products: Product[] = [
   {
+    component: undefined,
     founded: 2021,
     hasFreePlan: true,
     isOpenSource: true,
@@ -15,6 +19,7 @@ export const data: Comparison[] = [
     slogan: 'Open Source Wealth Management'
   },
   {
+    component: MaybePageComponent,
     founded: 2021,
     isOpenSource: false,
     key: 'maybe',
@@ -27,21 +32,25 @@ export const data: Comparison[] = [
     slogan: 'Your financial future, in your control'
   },
   {
+    component: ParqetPageComponent,
+    founded: 2020,
     hasFreePlan: true,
     isOpenSource: false,
     key: 'parqet',
     name: 'Parqet',
     origin: 'Germany',
-    region: 'DACH',
+    pricing: 'Starting from €88 / year',
+    region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
+    component: YeekateePageComponent,
     founded: 2021,
     isOpenSource: false,
     key: 'yeekatee',
     name: 'yeekatee',
     origin: 'Switzerland',
-    region: 'CH',
+    region: 'Switzerland',
     slogan: 'Connect. Share. Invest.'
   }
 ];

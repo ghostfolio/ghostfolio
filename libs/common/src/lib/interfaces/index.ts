@@ -10,7 +10,6 @@ import type {
 import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
-import { Comparison } from './comparison';
 import type { Coupon } from './coupon.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
@@ -33,6 +32,7 @@ import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioReport } from './portfolio-report.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
+import type { Product } from './product';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
@@ -59,7 +59,6 @@ export {
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
   BenchmarkResponse,
-  Comparison,
   Coupon,
   DataProviderInfo,
   EnhancedSymbolProfile,
@@ -85,6 +84,7 @@ export {
   PortfolioReportRule,
   PortfolioSummary,
   Position,
+  Product,
   ResponseError,
   ScraperConfiguration,
   Statistics,
