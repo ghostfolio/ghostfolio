@@ -7,7 +7,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
-import { Filter } from '@ghostfolio/common/interfaces';
+import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import {
@@ -305,7 +305,7 @@ export class OrderService {
       });
     }
 
-    return (
+    let orders = (
       await this.orders({
         where,
         include: {
@@ -347,6 +347,23 @@ export class OrderService {
           )
         };
       });
+
+    let ordersAssets: UniqueAsset[] = orders.map((order) => {
+      return {
+        dataSource: order.SymbolProfile.dataSource,
+        symbol: order.SymbolProfile.symbol,
+      };
+    });
+
+    let symbolProfiles = await this.symbolProfileService.getSymbolProfiles(ordersAssets);
+
+    return orders.map((order) => {
+      let symbolProfileWithOverride = symbolProfiles.find(symbolProfile => symbolProfile.symbol === order.SymbolProfile.symbol);
+      if (symbolProfileWithOverride.name) {
+        order.SymbolProfile.name = symbolProfileWithOverride.name;
+      }
+      return order;
+    });
   }
 
   public async updateOrder({
