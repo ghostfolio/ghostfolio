@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
-import { AlternativesPageComponent } from './alternatives-page.component';
+import { PersonalFinanceToolsPageComponent } from './personal-finance-tools-page.component';
 import { products } from './products';
 
 const routes: Routes = [
   {
     canActivate: [AuthGuard],
-    component: AlternativesPageComponent,
+    component: PersonalFinanceToolsPageComponent,
     path: '',
-    title: $localize`Alternatives`
+    title: $localize`Personal Finance Tools`
   },
   ...products
     .filter(({ key }) => {
@@ -31,4 +31,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AlternativesPageRoutingModule {}
+export class PersonalFinanceToolsPageRoutingModule {}

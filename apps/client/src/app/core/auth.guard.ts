@@ -17,7 +17,6 @@ export class AuthGuard implements CanActivate {
     '/about',
     '/about/changelog',
     '/about/privacy-policy',
-    '/alternatives',
     '/blog',
     '/de/blog',
     '/demo',
@@ -27,6 +26,7 @@ export class AuthGuard implements CanActivate {
     '/markets',
     '/open',
     '/p',
+    '/personal-finance-tools',
     '/pricing',
     '/register',
     '/resources'

@@ -4,7 +4,8 @@
       <article>
         <div class="mb-4 text-center">
           <h1 class="mb-1">
-            Ghostfolio: The open source alternative to {{ product2.name }}
+            <strong>Ghostfolio</strong>: The Open Source Alternative to
+            <strong>{{ product2.name }}</strong>
           </h1>
         </div>
         <section class="mb-4">
@@ -130,7 +131,7 @@
               <span class="badge badge-light">App</span>
             </li>
             <li class="list-inline-item">
-              <span class="badge badge-light">{{ product2.name }}</span>
+              <span class="badge badge-light">{{ product1.name }}</span>
             </li>
             <li class="list-inline-item">
               <span class="badge badge-light">{{ product2.name }}</span>
@@ -141,12 +142,20 @@
             <li class="list-inline-item">
               <span class="badge badge-light">Personal Finance</span>
             </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Software</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Tool</span>
+            </li>
           </ul>
         </section>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a i18n [routerLink]="['/alternatives']">Alternatives</a>
+              <a i18n i18n [routerLink]="['/personal-finance-tools']"
+                >Personal Finance Tools</a
+              >
             </li>
             <li
               aria-current="page"

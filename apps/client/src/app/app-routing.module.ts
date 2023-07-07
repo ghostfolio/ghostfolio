@@ -37,13 +37,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
-  ...['alternatives'].map((path) => ({
-    path,
-    loadChildren: () =>
-      import('./pages/alternatives/alternatives-page.module').then(
-        (m) => m.AlternativesPageModule
-      )
-  })),
   {
     path: 'auth',
     loadChildren: () =>
@@ -119,6 +112,13 @@ const routes: Routes = [
         (m) => m.PublicPageModule
       )
   },
+  ...['personal-finance-tools'].map((path) => ({
+    path,
+    loadChildren: () =>
+      import(
+        './pages/personal-finance-tools/personal-finance-tools-page.module'
+      ).then((m) => m.PersonalFinanceToolsPageModule)
+  })),
   {
     path: 'portfolio',
     loadChildren: () =>

@@ -5,11 +5,11 @@ import { products } from './products';
 
 @Component({
   host: { class: 'page' },
-  selector: 'gf-alternatives-page',
-  styleUrls: ['./alternatives-page.scss'],
-  templateUrl: './alternatives-page.html'
+  selector: 'gf-personal-finance-tools-page',
+  styleUrls: ['./personal-finance-tools-page.scss'],
+  templateUrl: './personal-finance-tools-page.html'
 })
-export class AlternativesPageComponent implements OnDestroy {
+export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public products = products.filter(({ key }) => {
     return key !== 'ghostfolio';
   });

@@ -45,12 +45,12 @@
 
 <footer
   *ngIf="
-    (currentRoute === 'alternatives' ||
-      currentRoute === 'blog' ||
+    (currentRoute === 'blog' ||
       currentRoute === 'faq' ||
       currentRoute === 'features' ||
       currentRoute === 'markets' ||
       currentRoute === 'open' ||
+      currentRoute === 'personal-finance-tools' ||
       currentRoute === 'pricing' ||
       currentRoute === 'resources' ||
       currentRoute === 'register' ||
@@ -70,8 +70,8 @@
           <li *ngIf="hasPermissionToAccessFearAndGreedIndex">
             <a i18n [routerLink]="['/markets']">Markets</a>
           </li>
+          <li><a i18n [routerLink]="['/personal-finance-tools']">Tools</a></li>
           <li><a i18n [routerLink]="['/resources']">Resources</a></li>
-          <li><a i18n [routerLink]="['/alternatives']">Alternatives</a></li>
         </ul>
       </div>
       <div class="col-sm">
