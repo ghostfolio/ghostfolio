@@ -3027,7 +3027,7 @@
       </trans-unit>
       <trans-unit id="6268646680388419543" datatype="html">
         <source>Emergency Fund</source>
-        <target state="translated">Fonds d'Urgence</target>
+        <target state="translated">Fonds d&apos;Urgence</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">11</context>
@@ -4111,7 +4111,7 @@
       </trans-unit>
       <trans-unit id="c91f71109b9775b54ddfa333cab4a2b20a07c60d" datatype="html">
         <source> Import and Export </source>
-        <target state="translated"> Importer et Exporter</target>
+        <target state="translated"> Importer et Exporter </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">116,118</context>
