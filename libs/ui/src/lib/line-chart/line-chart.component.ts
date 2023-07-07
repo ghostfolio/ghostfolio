@@ -168,7 +168,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
       data.datasets[0].data.push(this.benchmarkDataItems?.[index]?.value);
-      if (this.benchmarkDataItems?.[index]?.value === null) {
+      if (
+        this.benchmarkDataItems?.[index]?.value === null &&
+        data.datasets[0].data.some((value) => value !== null)
+      ) {
         data.datasets.unshift({
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 1,
