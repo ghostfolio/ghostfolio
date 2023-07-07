@@ -6,6 +6,7 @@ import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
+import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 
@@ -98,6 +99,18 @@ export const products: Product[] = [
     origin: 'Czech Republic',
     pricingPerYear: '€80',
     slogan: 'Stock Portfolio Tracker'
+  },
+  {
+    component: SnowballAnalyticsPageComponent,
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'snowball-analytics',
+    name: 'Snowball Analytics',
+    origin: 'France',
+    pricingPerYear: '$80',
+    slogan: 'Simple and powerful portfolio tracker'
   },
   {
     component: UtlunaPageComponent,
