@@ -10,6 +10,7 @@ import { products } from '../products';
   imports: [CommonModule, MatButtonModule, RouterModule],
   selector: 'gf-maybe-finance-page',
   standalone: true,
+  styleUrls: ['../page-template.scss'],
   templateUrl: '../page-template.html'
 })
 export class MaybeFinancePageComponent {

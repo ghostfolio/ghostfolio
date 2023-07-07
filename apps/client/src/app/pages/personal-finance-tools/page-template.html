@@ -11,7 +11,26 @@
         <section class="mb-4">
           <p>
             Are you looking for an open source alternative to {{ product2.name
-            }}? Compare Ghostfolio to {{ product2.name }} using the table below.
+            }}? <a [routerLink]="['/about']">Ghostfolio</a> is a powerful
+            portfolio management tool that provides individuals with a
+            comprehensive platform to track, analyze, and optimize their
+            investments. Whether you are an experienced investor or just
+            starting out, Ghostfolio offers an intuitive user interface and a
+            <a [routerLink]="['/features']">wide range of functionalities</a>
+            to help you make informed decisions and take control of your
+            financial future.
+          </p>
+          <p>
+            Ghostfolio is open source software (OSS) where a community of
+            developers, contributors, and enthusiasts collaborate to enhance its
+            capabilities, security, and user experience.
+          </p>
+          <p>
+            Let’s dive deeper into the detailed comparison table below to gain a
+            comprehensive understanding of how Ghostfolio compares to {{
+            product2.name }}. We will explore various aspects such as features,
+            data privacy, pricing, and more, allowing you to make a
+            well-informed choice for your needs.
           </p>
         </section>
         <section class="mb-4">
@@ -74,6 +93,27 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
+                  Self-Hosting
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product1.hasSelfHostingAbility === true"
+                    >✅</ng-container
+                  ><ng-container
+                    *ngIf="product1.hasSelfHostingAbility === false"
+                    >❌</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product2.hasSelfHostingAbility === true"
+                    >✅</ng-container
+                  ><ng-container
+                    *ngIf="product2.hasSelfHostingAbility === false"
+                    >❌</ng-container
+                  >
+                </td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
                   Free Plan
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
@@ -113,11 +153,12 @@
         </section>
         <section class="mb-4 py-3">
           <h2 class="h4 mb-0 text-center">
-            Would you like to <strong>refine</strong> your
-            <strong>personal investment strategy</strong>?
+            Ready to take your <strong>investments</strong> to the
+            <strong>next level</strong>?
           </h2>
           <p class="lead mb-2 text-center" i18n>
-            Ghostfolio empowers you to keep track of your wealth.
+            Effortlessly track, analyze, and visualize your wealth with
+            Ghostfolio.
           </p>
           <div class="text-center">
             <a color="primary" href="https://ghostfol.io" mat-flat-button>
@@ -126,10 +167,19 @@
           </div>
         </section>
         <section class="mb-4">
+          <small>
+            Please note that the information provided is based on our
+            independent research and analysis. This website is not affiliated
+            with {{ product2.name }} or any other product mentioned in the
+            comparison. As the landscape of personal finance tools evolves, it
+            is essential to verify any specific details or changes directly from
+            the respective product page. Data needs a refresh? Help us maintain
+            accurate data on
+            <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
+          </small>
+        </section>
+        <section class="mb-4">
           <ul class="list-inline">
-            <li class="list-inline-item">
-              <span class="badge badge-light">App</span>
-            </li>
             <li class="list-inline-item">
               <span class="badge badge-light">{{ product1.name }}</span>
             </li>
@@ -137,16 +187,52 @@
               <span class="badge badge-light">{{ product2.name }}</span>
             </li>
             <li class="list-inline-item">
+              <span class="badge badge-light">Alternative</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">App</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Community</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Fintech</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Investment</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Investor</span>
+            </li>
+            <li class="list-inline-item">
               <span class="badge badge-light">Open Source</span>
             </li>
             <li class="list-inline-item">
+              <span class="badge badge-light">OSS</span>
+            </li>
+            <li class="list-inline-item">
               <span class="badge badge-light">Personal Finance</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Privacy</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Portfolio</span>
             </li>
             <li class="list-inline-item">
               <span class="badge badge-light">Software</span>
             </li>
             <li class="list-inline-item">
               <span class="badge badge-light">Tool</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">User Experience</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Wealth</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">Wealth Management</span>
             </li>
           </ul>
         </section>
@@ -165,11 +251,6 @@
             </li>
           </ol>
         </nav>
-        <section class="m-4 text-center">
-          <small class="text-muted"
-            >This website is not affiliated with {{ product2.name }}.</small
-          >
-        </section>
       </article>
     </div>
   </div>

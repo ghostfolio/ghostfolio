@@ -2,6 +2,7 @@ export interface Product {
   component: any;
   founded?: number;
   hasFreePlan?: boolean;
+  hasSelfHostingAbility?: boolean;
   isOpenSource: boolean;
   key: string;
   languages?: string;

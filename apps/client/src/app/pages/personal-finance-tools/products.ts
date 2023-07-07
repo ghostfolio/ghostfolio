@@ -14,6 +14,7 @@ export const products: Product[] = [
     component: undefined,
     founded: 2021,
     hasFreePlan: true,
+    hasSelfHostingAbility: true,
     isOpenSource: true,
     key: 'ghostfolio',
     languages:
@@ -27,6 +28,7 @@ export const products: Product[] = [
   {
     component: AltooPageComponent,
     founded: 2017,
+    hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'altoo',
     name: 'Altoo-Wealth-Plattform',
@@ -37,6 +39,7 @@ export const products: Product[] = [
     component: GetquinPageComponent,
     founded: 2020,
     hasFreePlan: true,
+    hasSelfHostingAbility: false,
     isOpenSource: false,
     languages: 'English, German',
     key: 'getquin',
@@ -49,6 +52,7 @@ export const products: Product[] = [
     component: KuberaPageComponent,
     founded: 2019,
     hasFreePlan: false,
+    hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'kubera',
     name: 'Kubera®',
@@ -59,6 +63,7 @@ export const products: Product[] = [
   {
     component: MaybeFinancePageComponent,
     founded: 2021,
+    hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'maybe-finance',
     languages: 'English',
@@ -72,6 +77,7 @@ export const products: Product[] = [
   {
     component: ParqetPageComponent,
     founded: 2020,
+    hasSelfHostingAbility: false,
     hasFreePlan: true,
     isOpenSource: false,
     key: 'parqet',
@@ -85,6 +91,7 @@ export const products: Product[] = [
   {
     component: SimplePortfolioPageComponent,
     hasFreePlan: true,
+    hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'simple-portfolio',
     name: 'Simple Portfolio',
@@ -95,6 +102,7 @@ export const products: Product[] = [
   {
     component: UtlunaPageComponent,
     hasFreePlan: true,
+    hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'utluna',
     languages: 'English, French, German',
@@ -106,6 +114,7 @@ export const products: Product[] = [
   {
     component: YeekateePageComponent,
     founded: 2021,
+    hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'yeekatee',
     name: 'yeekatee',

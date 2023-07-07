@@ -10,6 +10,7 @@ import { products } from '../products';
   imports: [CommonModule, MatButtonModule, RouterModule],
   selector: 'gf-simple-portfolio-page',
   standalone: true,
+  styleUrls: ['../page-template.scss'],
   templateUrl: '../page-template.html'
 })
 export class SimplePortfolioPageComponent {
