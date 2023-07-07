@@ -25,33 +25,6 @@ const routes: Routes = [
         title: `Open Source Alternative to ${name}`
       };
     })
-  /*{
-    canActivate: [AuthGuard],
-    path: 'maybe',
-    loadComponent: () =>
-      import('./products/maybe-page.component').then(
-        (c) => c.MaybePageComponent
-      ),
-    title: products.find(({ key }) => key === 'maybe').name
-  },
-  {
-    canActivate: [AuthGuard],
-    path: 'parqet',
-    loadComponent: () =>
-      import('./products/parqet-page.component').then(
-        (c) => c.ParqetPageComponent
-      ),
-    title: products.find(({ key }) => key === 'parqet').name
-  },
-  {
-    canActivate: [AuthGuard],
-    path: 'yeekatee',
-    loadComponent: () =>
-      import('./products/yeekatee-page.component').then(
-        (c) => c.YeekateePageComponent
-      ),
-    title: products.find(({ key }) => key === 'yeekatee').name
-  }*/
 ];
 
 @NgModule({
