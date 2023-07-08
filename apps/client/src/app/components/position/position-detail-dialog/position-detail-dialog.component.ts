@@ -215,6 +215,15 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
             this.benchmarkDataItems[0].value = this.averagePrice;
           }
 
+          this.benchmarkDataItems = this.benchmarkDataItems.map(
+            ({ date, value }) => {
+              return {
+                date,
+                value: value === 0 ? null : value
+              };
+            }
+          );
+
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
           } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
