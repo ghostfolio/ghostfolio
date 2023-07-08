@@ -77,18 +77,18 @@
                   Open Source Software
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product1.isOpenSource === true"
-                    >✅</ng-container
-                  ><ng-container *ngIf="product1.isOpenSource === false"
-                    >❌</ng-container
+                  <ng-container *ngIf="product1.isOpenSource === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product1.isOpenSource === false" i18n
+                    >❌ No</ng-container
                   >
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.isOpenSource === true"
-                    >✅</ng-container
-                  ><ng-container *ngIf="product2.isOpenSource === false"
-                    >❌</ng-container
-                  >
+                  <ng-container *ngIf="product2.isOpenSource === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product2.isOpenSource === false" i18n
+                    >❌ No
+                  </ng-container>
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -96,19 +96,25 @@
                   Self-Hosting
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product1.hasSelfHostingAbility === true"
-                    >✅</ng-container
+                  <ng-container
+                    *ngIf="product1.hasSelfHostingAbility === true"
+                    i18n
+                    >✅ Yes</ng-container
                   ><ng-container
                     *ngIf="product1.hasSelfHostingAbility === false"
-                    >❌</ng-container
+                    i18n
+                    >❌ No</ng-container
                   >
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.hasSelfHostingAbility === true"
-                    >✅</ng-container
+                  <ng-container
+                    *ngIf="product2.hasSelfHostingAbility === true"
+                    i18n
+                    >✅ Yes</ng-container
                   ><ng-container
                     *ngIf="product2.hasSelfHostingAbility === false"
-                    >❌</ng-container
+                    i18n
+                    >❌ No</ng-container
                   >
                 </td>
               </tr>
@@ -117,17 +123,17 @@
                   Free Plan
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product1.hasFreePlan === true"
-                    >✅</ng-container
-                  ><ng-container *ngIf="product1.hasFreePlan === false"
-                    >❌</ng-container
+                  <ng-container *ngIf="product1.hasFreePlan === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product1.hasFreePlan === false" i18n
+                    >❌ No</ng-container
                   >
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.hasFreePlan === true"
-                    >✅</ng-container
-                  ><ng-container *ngIf="product2.hasFreePlan === false"
-                    >❌</ng-container
+                  <ng-container *ngIf="product2.hasFreePlan === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product2.hasFreePlan === false" i18n
+                    >❌ No</ng-container
                   >
                 </td>
               </tr>
