@@ -2,8 +2,19 @@
   <div class="mb-5 row">
     <div class="col">
       <h3 class="d-none d-sm-block mb-3 text-center" i18n>
-        Open Source Alternatives to various Personal Finance Tools
+        Discover Open Source Alternatives for Personal Finance Tools
       </h3>
+      <p>
+        This overview page features a curated collection of personal finance
+        tools compared to the open source alternative Ghostfolio. If you value
+        transparency, data privacy, and community collaboration, Ghostfolio
+        provides an excellent opportunity to take control of your financial
+        management.
+      </p>
+      <p>
+        Explore the links below to compare a variety of personal finance tools
+        with Ghostfolio.
+      </p>
       <mat-card
         *ngFor="let product of products"
         appearance="outlined"
@@ -15,7 +26,7 @@
               <a
                 class="d-flex overflow-hidden w-100"
                 title="Compare Ghostfolio to {{ product.name }}"
-                [routerLink]="['/personal-finance-tools', 'open-source-alternative-to-' + product.key]"
+                [routerLink]="['/resources', 'personal-finance-tools', 'open-source-alternative-to-' + product.key]"
               >
                 <div class="flex-grow-1 overflow-hidden">
                   <div class="h6 m-0 text-truncate">

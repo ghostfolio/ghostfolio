@@ -112,13 +112,6 @@ const routes: Routes = [
         (m) => m.PublicPageModule
       )
   },
-  ...['personal-finance-tools'].map((path) => ({
-    path,
-    loadChildren: () =>
-      import(
-        './pages/personal-finance-tools/personal-finance-tools-page.module'
-      ).then((m) => m.PersonalFinanceToolsPageModule)
-  })),
   {
     path: 'portfolio',
     loadChildren: () =>

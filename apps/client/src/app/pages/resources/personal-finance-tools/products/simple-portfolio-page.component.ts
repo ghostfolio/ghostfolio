@@ -8,17 +8,17 @@ import { products } from '../products';
 @Component({
   host: { class: 'page' },
   imports: [CommonModule, MatButtonModule, RouterModule],
-  selector: 'gf-parqet-page',
+  selector: 'gf-simple-portfolio-page',
   standalone: true,
-  styleUrls: ['../page-template.scss'],
-  templateUrl: '../page-template.html'
+  styleUrls: ['../product-page-template.scss'],
+  templateUrl: '../product-page-template.html'
 })
-export class ParqetPageComponent {
+export class SimplePortfolioPageComponent {
   public product1 = products.find(({ key }) => {
     return key === 'ghostfolio';
   });
 
   public product2 = products.find(({ key }) => {
-    return key === 'parqet';
+    return key === 'simple-portfolio';
   });
 }

@@ -8,17 +8,17 @@ import { products } from '../products';
 @Component({
   host: { class: 'page' },
   imports: [CommonModule, MatButtonModule, RouterModule],
-  selector: 'gf-kubera-page',
+  selector: 'gf-getquin-page',
   standalone: true,
-  styleUrls: ['../page-template.scss'],
-  templateUrl: '../page-template.html'
+  styleUrls: ['../product-page-template.scss'],
+  templateUrl: '../product-page-template.html'
 })
-export class KuberaPageComponent {
+export class GetquinPageComponent {
   public product1 = products.find(({ key }) => {
     return key === 'ghostfolio';
   });
 
   public product2 = products.find(({ key }) => {
-    return key === 'kubera';
+    return key === 'getquin';
   });
 }

@@ -8,17 +8,17 @@ import { products } from '../products';
 @Component({
   host: { class: 'page' },
   imports: [CommonModule, MatButtonModule, RouterModule],
-  selector: 'gf-yeekatee-page',
+  selector: 'gf-maybe-finance-page',
   standalone: true,
-  styleUrls: ['../page-template.scss'],
-  templateUrl: '../page-template.html'
+  styleUrls: ['../product-page-template.scss'],
+  templateUrl: '../product-page-template.html'
 })
-export class YeekateePageComponent {
+export class MaybeFinancePageComponent {
   public product1 = products.find(({ key }) => {
     return key === 'ghostfolio';
   });
 
   public product2 = products.find(({ key }) => {
-    return key === 'yeekatee';
+    return key === 'maybe-finance';
   });
 }

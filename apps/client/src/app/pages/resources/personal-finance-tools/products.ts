@@ -32,7 +32,7 @@ export const products: Product[] = [
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'altoo',
-    name: 'Altoo-Wealth-Plattform',
+    name: 'Altoo Wealth Platform',
     origin: 'Switzerland',
     slogan: 'Simplicity for Complex Wealth'
   },
