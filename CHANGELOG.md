@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Hid the average buy price in the position detail chart if there is no holding
 - Improved the language localization for French (`fr`)
 - Refactored the blog articles to standalone components
 
