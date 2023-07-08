@@ -7,6 +7,7 @@ import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
+import { PortseidoPageComponent } from './products/portseido-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
@@ -22,8 +23,7 @@ export const products: Product[] = [
     hasSelfHostingAbility: true,
     isOpenSource: true,
     key: 'ghostfolio',
-    languages:
-      'English, Dutch, French, German, Italian, Portuguese and Spanish',
+    languages: 'English, Dutch, French, German, Italian, Portuguese, Spanish',
     name: 'Ghostfolio',
     origin: 'Switzerland',
     pricingPerYear: '$19',
@@ -116,6 +116,19 @@ export const products: Product[] = [
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
+  },
+  {
+    component: PortseidoPageComponent,
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'portseido',
+    languages: 'English, Dutch, French, German',
+    name: 'Portseido',
+    origin: 'Thailand',
+    pricingPerYear: '$96',
+    slogan: 'Portfolio Performance and Dividend Tracker'
   },
   {
     component: SeekingAlphaPageComponent,
