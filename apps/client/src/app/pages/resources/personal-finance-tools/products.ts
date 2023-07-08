@@ -3,6 +3,7 @@ import { Product } from '@ghostfolio/common/interfaces';
 import { AltooPageComponent } from './products/altoo-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
+import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
@@ -63,6 +64,18 @@ export const products: Product[] = [
     origin: 'Germany',
     pricingPerYear: '€48',
     slogan: 'Portfolio Tracker, Analysis & Community'
+  },
+  {
+    component: JustEtfPageComponent,
+    founded: 2011,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'justetf',
+    name: 'justETF',
+    origin: 'Germany',
+    pricingPerYear: '€119',
+    slogan: 'ETF portfolios made simple'
   },
   {
     component: KuberaPageComponent,
