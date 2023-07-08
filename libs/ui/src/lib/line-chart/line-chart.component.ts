@@ -123,7 +123,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     const marketPrices = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value || null);
+      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
