@@ -1,17 +1,17 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
+import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
+import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
 import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
-import { FolisharePageComponent } from './products/folishare-page.component';
-import { SharesightPageComponent } from './products/sharesight-page.component';
-import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 
 export const products: Product[] = [
   {
