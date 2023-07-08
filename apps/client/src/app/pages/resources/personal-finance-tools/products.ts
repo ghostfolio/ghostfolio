@@ -9,6 +9,7 @@ import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.c
 import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { FolisharePageComponent } from './products/folishare-page.component';
 
 export const products: Product[] = [
   {
@@ -37,13 +38,25 @@ export const products: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    component: FolisharePageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'folishare',
+    languages: 'English, German',
+    name: 'folishare',
+    origin: 'Austria',
+    pricingPerYear: '$65',
+    slogan: 'Take control over your investments'
+  },
+  {
     component: GetquinPageComponent,
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     isOpenSource: false,
-    languages: 'English, German',
     key: 'getquin',
+    languages: 'English, German',
     name: 'getquin',
     origin: 'Germany',
     pricingPerYear: '€48',
