@@ -10,6 +10,7 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
+import { SharesightPageComponent } from './products/sharesight-page.component';
 
 export const products: Product[] = [
   {
@@ -101,6 +102,19 @@ export const products: Product[] = [
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
+  },
+  {
+    component: SharesightPageComponent,
+    founded: 2007,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'sharesight',
+    name: 'Sharesight',
+    origin: 'New Zealand',
+    pricingPerYear: '$135',
+    region: 'Global',
+    slogan: 'Stock Portfolio Tracker'
   },
   {
     component: SimplePortfolioPageComponent,
