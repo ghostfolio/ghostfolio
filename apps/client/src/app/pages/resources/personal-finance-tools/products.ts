@@ -11,6 +11,7 @@ import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
+import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 
 export const products: Product[] = [
   {
@@ -71,7 +72,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'kubera',
     name: 'Kubera®',
-    origin: 'USA',
+    origin: 'United States',
     pricingPerYear: '$150',
     slogan: 'The Time Machine for your Net Worth'
   },
@@ -84,9 +85,9 @@ export const products: Product[] = [
     languages: 'English',
     name: 'Maybe Finance',
     note: 'Sunset in 2023',
-    origin: 'USA',
+    origin: 'United States',
     pricingPerYear: '$145',
-    region: 'USA',
+    region: 'United States',
     slogan: 'Your financial future, in your control'
   },
   {
@@ -102,6 +103,18 @@ export const products: Product[] = [
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
+  },
+  {
+    component: SeekingAlphaPageComponent,
+    founded: 2004,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'seeking-alpha',
+    name: 'Seeking Alpha',
+    origin: 'United States',
+    pricingPerYear: '$239',
+    slogan: 'Stock Market Analysis & Tools for Investors'
   },
   {
     component: SharesightPageComponent,
