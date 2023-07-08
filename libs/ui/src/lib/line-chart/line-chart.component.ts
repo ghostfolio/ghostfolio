@@ -123,7 +123,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
     const marketPrices = [];
 
     this.historicalDataItems?.forEach((historicalDataItem, index) => {
-      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value);
+      benchmarkPrices.push(this.benchmarkDataItems?.[index]?.value || null);
       labels.push(historicalDataItem.date);
       marketPrices.push(historicalDataItem.value);
     });
@@ -154,7 +154,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
           data: benchmarkPrices,
           fill: false,
           label: this.benchmarkLabel,
-          pointRadius: 0
+          pointRadius: 0,
+          spanGaps: false
         },
         {
           backgroundColor: gradient,
