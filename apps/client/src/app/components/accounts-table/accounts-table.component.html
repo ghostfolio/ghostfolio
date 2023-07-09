@@ -5,10 +5,23 @@
       class="d-none d-lg-table-cell px-1"
       mat-header-cell
     ></th>
-    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell (click)="onToggleExcluded(element); $event.stopPropagation()">
+    <td
+      *matCellDef="let element"
+      class="d-none d-lg-table-cell px-1"
+      mat-cell
+      (click)="onToggleExcluded(element); $event.stopPropagation()"
+    >
       <div class="d-flex justify-content-center">
-        <ion-icon *ngIf="element.isExcluded" id="isExcluded-icon" name="eye-off-outline"></ion-icon>
-        <ion-icon *ngIf="!element.isExcluded" id="isNotExcluded-icon" name="eye-outline"></ion-icon>
+        <ion-icon
+          *ngIf="element.isExcluded"
+          id="isExcluded-icon"
+          name="eye-off-outline"
+        ></ion-icon>
+        <ion-icon
+          *ngIf="!element.isExcluded"
+          id="isNotExcluded-icon"
+          name="eye-outline"
+        ></ion-icon>
       </div>
     </td>
     <td
