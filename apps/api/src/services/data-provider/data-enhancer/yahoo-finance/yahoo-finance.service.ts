@@ -135,6 +135,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     let name = longName;
 
     if (name) {
+      name = name.replace('&amp;', '&');
+
       name = name.replace('Amundi Index Solutions - ', '');
       name = name.replace('iShares ETF (CH) - ', '');
       name = name.replace('iShares III Public Limited Company - ', '');
