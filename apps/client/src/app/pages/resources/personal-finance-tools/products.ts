@@ -13,6 +13,7 @@ import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.compone
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
 import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
+import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 
@@ -190,6 +191,17 @@ export const products: Product[] = [
     origin: 'France',
     pricingPerYear: '$80',
     slogan: 'Simple and powerful portfolio tracker'
+  },
+  {
+    component: SumioPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'sumio',
+    name: 'Sumio',
+    origin: 'Czech Republic',
+    pricingPerYear: '$19.99',
+    slogan: 'Sum up and build your wealth.'
   },
   {
     component: UtlunaPageComponent,
