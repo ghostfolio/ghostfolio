@@ -19,6 +19,7 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
 
 export const products: Product[] = [
   {
@@ -181,6 +182,18 @@ export const products: Product[] = [
     origin: 'Thailand',
     pricingPerYear: '$96',
     slogan: 'Portfolio Performance and Dividend Tracker'
+  },
+  {
+    component: ProjectionLabPageComponent,
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: true,
+    isOpenSource: false,
+    key: 'projectionlab',
+    name: 'ProjectionLab',
+    origin: 'United States',
+    pricingPerYear: '$108',
+    slogan: 'Build Financial Plans You Love.'
   },
   {
     component: SeekingAlphaPageComponent,
