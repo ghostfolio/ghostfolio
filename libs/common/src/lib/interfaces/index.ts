@@ -32,6 +32,7 @@ import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioReport } from './portfolio-report.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
+import type { Product } from './product';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
@@ -83,6 +84,7 @@ export {
   PortfolioReportRule,
   PortfolioSummary,
   Position,
+  Product,
   ResponseError,
   ScraperConfiguration,
   Statistics,

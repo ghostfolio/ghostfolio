@@ -10,7 +10,14 @@ const routes: Routes = [
     component: ResourcesPageComponent,
     path: '',
     title: $localize`Resources`
-  }
+  },
+  ...['personal-finance-tools'].map((path) => ({
+    path,
+    loadChildren: () =>
+      import(
+        './personal-finance-tools/personal-finance-tools-page.module'
+      ).then((m) => m.PersonalFinanceToolsPageModule)
+  }))
 ];
 
 @NgModule({
