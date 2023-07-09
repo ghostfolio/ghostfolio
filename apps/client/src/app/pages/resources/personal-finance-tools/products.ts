@@ -7,6 +7,7 @@ import { GetquinPageComponent } from './products/getquin-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
+import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
@@ -118,6 +119,16 @@ export const products: Product[] = [
     slogan: 'Your financial future, in your control'
   },
   {
+    component: MonsePageComponent,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'monse',
+    name: 'Monse',
+    pricingPerYear: '$60',
+    slogan: 'Gain financial control and keep your data private.'
+  },
+  {
     component: ParqetPageComponent,
     founded: 2020,
     hasSelfHostingAbility: false,
@@ -200,7 +211,7 @@ export const products: Product[] = [
     key: 'sumio',
     name: 'Sumio',
     origin: 'Czech Republic',
-    pricingPerYear: '$19.99',
+    pricingPerYear: '$20',
     slogan: 'Sum up and build your wealth.'
   },
   {
