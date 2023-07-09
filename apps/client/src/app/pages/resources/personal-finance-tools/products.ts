@@ -1,6 +1,7 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
@@ -43,6 +44,19 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: 'Switzerland',
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: DivvyDiaryPageComponent,
+    founded: 2019,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'divvydiary',
+    languages: 'English, German',
+    name: 'DivvyDiary',
+    origin: 'Germany',
+    pricingPerYear: '€65',
+    slogan: 'Your personal Dividend Calendar'
   },
   {
     component: ExirioPageComponent,
