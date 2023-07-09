@@ -144,6 +144,32 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onToggleExcluded(aAccount: AccountModel) {
+    let account: UpdateAccountDto = {
+      accountType: aAccount.accountType,
+      balance: aAccount.balance,
+      comment: aAccount.comment,
+      currency: aAccount.currency,
+      id: aAccount.id,
+      isExcluded: !(aAccount.isExcluded),
+      name: aAccount.name,
+      platformId: aAccount.platformId
+    }
+    this.dataService
+      .putAccount(account)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.userService
+            .get(true)
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe();
+
+          this.fetchAccounts();
+        }
+      });
+  }
+
   public onUpdateAccount(aAccount: AccountModel) {
     this.router.navigate([], {
       queryParams: { accountId: aAccount.id, editDialog: true }
