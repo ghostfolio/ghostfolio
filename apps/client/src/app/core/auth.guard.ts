@@ -26,7 +26,6 @@ export class AuthGuard implements CanActivate {
     '/markets',
     '/open',
     '/p',
-    '/personal-finance-tools',
     '/pricing',
     '/register',
     '/resources'
