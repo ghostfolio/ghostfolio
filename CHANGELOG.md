@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for French (`fr`)
 - Refactored the blog articles to standalone components
 
+### Fixed
+
+- Fixed the sorting by currency in the activities table
+
 ## 1.286.0 - 2023-07-03
 
 ### Fixed
