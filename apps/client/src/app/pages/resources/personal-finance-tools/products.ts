@@ -1,6 +1,7 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { ExirioPageComponent } from './products/exirio-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
@@ -39,6 +40,18 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: 'Switzerland',
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: ExirioPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'exirio',
+    name: 'Exirio',
+    origin: 'United States',
+    pricingPerYear: '$100',
+    slogan: 'All your wealth, in one place.'
   },
   {
     component: FolisharePageComponent,
