@@ -151,10 +151,10 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       comment: aAccount.comment,
       currency: aAccount.currency,
       id: aAccount.id,
-      isExcluded: !(aAccount.isExcluded),
+      isExcluded: !aAccount.isExcluded,
       name: aAccount.name,
       platformId: aAccount.platformId
-    }
+    };
     this.dataService
       .putAccount(account)
       .pipe(takeUntil(this.unsubscribeSubject))
