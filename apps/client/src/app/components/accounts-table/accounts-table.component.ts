@@ -33,6 +33,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() transactionCount: number;
 
   @Output() accountDeleted = new EventEmitter<string>();
+  @Output() accountToggleExcluded = new EventEmitter<AccountModel>();
   @Output() accountToUpdate = new EventEmitter<AccountModel>();
 
   @ViewChild(MatSort) sort: MatSort;
@@ -85,6 +86,10 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     if (confirmation) {
       this.accountDeleted.emit(aId);
     }
+  }
+
+  public onToggleExcluded(aAccount: AccountModel) {
+    this.accountToggleExcluded.emit(aAccount);
   }
 
   public onOpenAccountDetailDialog(accountId: string) {

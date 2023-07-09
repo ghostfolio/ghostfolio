@@ -4,6 +4,15 @@
   display: block;
 
   .mat-mdc-table {
+    #isExcluded-icon {
+      font-size: 125%;
+    }
+
+    #isNotExcluded-icon {
+      font-size: 125%;
+      color: gray;
+    }
+
     th {
       ::ng-deep {
         .mat-sort-header-container {

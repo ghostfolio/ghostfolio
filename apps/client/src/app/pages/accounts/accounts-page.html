@@ -13,6 +13,7 @@
           [totalValueInBaseCurrency]="totalValueInBaseCurrency"
           [transactionCount]="transactionCount"
           (accountDeleted)="onDeleteAccount($event)"
+          (accountToggleExcluded)="onToggleExcluded($event)"
           (accountToUpdate)="onUpdateAccount($event)"
         ></gf-accounts-table>
       </div>
