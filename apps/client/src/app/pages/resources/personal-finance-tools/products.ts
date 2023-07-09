@@ -9,6 +9,7 @@ import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
+import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
@@ -26,7 +27,7 @@ export const products: Product[] = [
     hasSelfHostingAbility: true,
     isOpenSource: true,
     key: 'ghostfolio',
-    languages: 'English, Dutch, French, German, Italian, Portuguese, Spanish',
+    languages: 'Dutch, English, French, German, Italian, Portuguese, Spanish',
     name: 'Ghostfolio',
     origin: 'Switzerland',
     pricingPerYear: '$19',
@@ -143,13 +144,25 @@ export const products: Product[] = [
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
+    component: PortfolioDividendTrackerPageComponent,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'portfolio-dividend-tracker',
+    languages: 'English, Dutch',
+    name: 'Portfolio Dividend Tracker',
+    origin: 'Netherlands',
+    pricingPerYear: '€60',
+    slogan: 'Manage all your portfolios'
+  },
+  {
     component: PortseidoPageComponent,
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'portseido',
-    languages: 'English, Dutch, French, German',
+    languages: 'Dutch, English, French, German',
     name: 'Portseido',
     origin: 'Thailand',
     pricingPerYear: '$96',
