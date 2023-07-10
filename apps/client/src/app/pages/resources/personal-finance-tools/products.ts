@@ -5,6 +5,7 @@ import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
+import { GoSpatzPageComponent } from './products/gospatz-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
@@ -95,6 +96,16 @@ export const products: Product[] = [
     origin: 'Germany',
     pricingPerYear: '€48',
     slogan: 'Portfolio Tracker, Analysis & Community'
+  },
+  {
+    component: GoSpatzPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'gospatz',
+    name: 'goSPATZ',
+    origin: 'Germany',
+    slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
     component: JustEtfPageComponent,
