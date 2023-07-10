@@ -12,8 +12,10 @@ import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
+import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
+import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
@@ -21,7 +23,6 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
-import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
 
 export const products: Product[] = [
   {
@@ -181,6 +182,16 @@ export const products: Product[] = [
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
+  },
+  {
+    component: PlannixPageComponent,
+    founded: 2023,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'plannix',
+    name: 'Plannix',
+    origin: 'Italy',
+    slogan: 'Your Personal Finance Hub'
   },
   {
     component: PortfolioDividendTrackerPageComponent,
