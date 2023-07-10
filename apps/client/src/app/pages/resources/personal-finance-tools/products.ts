@@ -1,6 +1,7 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
@@ -46,6 +47,18 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: 'Switzerland',
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: CopilotMoneyPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'copilot-money',
+    name: 'Copilot Money',
+    origin: 'United States',
+    pricingPerYear: '$70',
+    slogan: 'Do money better with Copilot'
   },
   {
     component: DivvyDiaryPageComponent,
