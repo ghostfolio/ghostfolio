@@ -23,6 +23,7 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { DeltaPageComponent } from './products/delta-page.component';
 
 export const products: Product[] = [
   {
@@ -60,6 +61,18 @@ export const products: Product[] = [
     origin: 'United States',
     pricingPerYear: '$70',
     slogan: 'Do money better with Copilot'
+  },
+  {
+    component: DeltaPageComponent,
+    founded: 2017,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'delta',
+    name: 'Delta Investment Tracker',
+    note: 'Acquired by eToro',
+    origin: 'Belgium',
+    slogan: 'The app to track all your investments. Make smart moves only.'
   },
   {
     component: DivvyDiaryPageComponent,
