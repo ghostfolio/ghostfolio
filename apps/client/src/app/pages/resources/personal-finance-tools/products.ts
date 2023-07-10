@@ -1,17 +1,21 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
+import { GoSpatzPageComponent } from './products/gospatz-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
+import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
+import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
@@ -19,7 +23,7 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
-import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
+import { DeltaPageComponent } from './products/delta-page.component';
 
 export const products: Product[] = [
   {
@@ -45,6 +49,30 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: 'Switzerland',
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: CopilotMoneyPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'copilot-money',
+    name: 'Copilot Money',
+    origin: 'United States',
+    pricingPerYear: '$70',
+    slogan: 'Do money better with Copilot'
+  },
+  {
+    component: DeltaPageComponent,
+    founded: 2017,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'delta',
+    name: 'Delta Investment Tracker',
+    note: 'Acquired by eToro',
+    origin: 'Belgium',
+    slogan: 'The app to track all your investments. Make smart moves only.'
   },
   {
     component: DivvyDiaryPageComponent,
@@ -95,6 +123,16 @@ export const products: Product[] = [
     origin: 'Germany',
     pricingPerYear: '€48',
     slogan: 'Portfolio Tracker, Analysis & Community'
+  },
+  {
+    component: GoSpatzPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'gospatz',
+    name: 'goSPATZ',
+    origin: 'Germany',
+    slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
     component: JustEtfPageComponent,
@@ -157,6 +195,16 @@ export const products: Product[] = [
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
+  },
+  {
+    component: PlannixPageComponent,
+    founded: 2023,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'plannix',
+    name: 'Plannix',
+    origin: 'Italy',
+    slogan: 'Your Personal Finance Hub'
   },
   {
     component: PortfolioDividendTrackerPageComponent,
