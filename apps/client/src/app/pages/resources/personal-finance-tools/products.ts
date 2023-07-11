@@ -2,6 +2,7 @@ import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
+import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
@@ -23,7 +24,6 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
-import { DeltaPageComponent } from './products/delta-page.component';
 
 export const products: Product[] = [
   {
