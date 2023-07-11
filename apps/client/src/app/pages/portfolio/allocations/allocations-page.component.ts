@@ -139,6 +139,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               ? $localize`Filter by account or tag...`
               : '';
 
+          this.initialize();
+
           return this.dataService.fetchPortfolioDetails({
             filters: this.activeFilters
           });
@@ -146,6 +148,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe((portfolioDetails) => {
+        this.initialize();
+
         this.portfolioDetails = portfolioDetails;
 
         this.initializeAnalysisData();
@@ -237,6 +241,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
     };
     this.platforms = {};
+    this.portfolioDetails = {
+      accounts: {},
+      filteredValueInPercentage: 0,
+      holdings: {},
+      platforms: {},
+      summary: undefined
+    };
     this.positions = {};
     this.sectors = {
       [UNKNOWN_KEY]: {
@@ -254,8 +265,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   }
 
   public initializeAnalysisData() {
-    this.initialize();
-
     for (const [
       id,
       { name, valueInBaseCurrency, valueInPercentage }
