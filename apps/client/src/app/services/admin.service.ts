@@ -19,6 +19,7 @@ import { DataSource, MarketData, Platform, Prisma } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
+
 import { DataService } from './data.service';
 
 @Injectable({
