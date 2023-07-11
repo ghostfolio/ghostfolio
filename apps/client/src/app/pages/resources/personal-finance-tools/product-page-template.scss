@@ -10,8 +10,16 @@
       color: rgba(var(--palette-primary-300), 1);
     }
   }
+
+  .call-to-action {
+    background-color: rgba(var(--palette-foreground-text), 0.02);
+  }
 }
 
 :host-context(.is-dark-theme) {
   color: rgb(var(--light-primary-text));
+
+  .call-to-action {
+    background-color: rgba(var(--palette-foreground-text-dark), 0.02);
+  }
 }

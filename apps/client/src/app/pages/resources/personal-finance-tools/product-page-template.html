@@ -21,9 +21,15 @@
             financial future.
           </p>
           <p>
-            Ghostfolio is open source software (OSS) where a community of
-            developers, contributors, and enthusiasts collaborate to enhance its
-            capabilities, security, and user experience.
+            Ghostfolio is an open source software (OSS), providing a
+            cost-effective alternative to {{ product2.name }} making it
+            particularly suitable for individuals on a tight budget, such as
+            those
+            <a href="../en/blog/2023/07/exploring-the-path-to-fire"
+              >pursuing Financial Independence, Retire Early (FIRE)</a
+            >. By leveraging the collective efforts of a community of developers
+            and personal finance enthusiasts, Ghostfolio continuously enhances
+            its capabilities, security, and user experience.
           </p>
           <p>
             Let’s dive deeper into the detailed comparison table below to gain a
@@ -69,8 +75,18 @@
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
                   Available in
                 </td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.languages }}</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product2.languages }}</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container
+                    *ngFor="let language of product1.languages; last as isLast"
+                    >{{ language }}{{ isLast ? '' : ', ' }}</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container
+                    *ngFor="let language of product2.languages; last as isLast"
+                    >{{ language }}{{ isLast ? '' : ', ' }}</ng-container
+                  >
+                </td>
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
@@ -120,6 +136,25 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
+                  Use anonymously
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product1.useAnonymously === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product1.useAnonymously === false" i18n
+                    >❌ No</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product2.useAnonymously === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product2.useAnonymously === false" i18n
+                    >❌ No</ng-container
+                  >
+                </td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
                   Free Plan
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
@@ -157,7 +192,19 @@
             </tbody>
           </table>
         </section>
-        <section class="mb-4 py-3">
+        <section class="mb-4">
+          <p>
+            Please note that the information provided is based on our
+            independent research and analysis. This website is not affiliated
+            with {{ product2.name }} or any other product mentioned in the
+            comparison. As the landscape of personal finance tools evolves, it
+            is essential to verify any specific details or changes directly from
+            the respective product page. Data needs a refresh? Help us maintain
+            accurate data on
+            <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
+          </p>
+        </section>
+        <section class="call-to-action mb-4 py-3 rounded">
           <h2 class="h4 mb-0 text-center">
             Ready to take your <strong>investments</strong> to the
             <strong>next level</strong>?
@@ -171,18 +218,6 @@
               Get Started
             </a>
           </div>
-        </section>
-        <section class="mb-4">
-          <small>
-            Please note that the information provided is based on our
-            independent research and analysis. This website is not affiliated
-            with {{ product2.name }} or any other product mentioned in the
-            comparison. As the landscape of personal finance tools evolves, it
-            is essential to verify any specific details or changes directly from
-            the respective product page. Data needs a refresh? Help us maintain
-            accurate data on
-            <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
-          </small>
         </section>
         <section class="mb-4">
           <ul class="list-inline">
