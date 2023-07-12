@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the loading state during filtering on the allocations page
 - Beautified the names with ampersand (`&amp;`) in the asset profile
+- Improved the language localization for German (`de`)
 
 ## 1.287.0 - 2023-07-09
 
