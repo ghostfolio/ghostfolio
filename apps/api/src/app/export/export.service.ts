@@ -1,5 +1,5 @@
 import { environment } from '@ghostfolio/api/environments/environment';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Export } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 
@@ -14,6 +14,23 @@ export class ExportService {
     activityIds?: string[];
     userId: string;
   }): Promise<Export> {
+    const accounts = await this.prismaService.account.findMany({
+      orderBy: {
+        name: 'asc'
+      },
+      select: {
+        accountType: true,
+        balance: true,
+        comment: true,
+        currency: true,
+        id: true,
+        isExcluded: true,
+        name: true,
+        platformId: true
+      },
+      where: { userId }
+    });
+
     let activities = await this.prismaService.order.findMany({
       orderBy: { date: 'desc' },
       select: {
@@ -38,6 +55,7 @@ export class ExportService {
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
+      accounts,
       activities: activities.map(
         ({
           accountId,

@@ -1,5 +1,5 @@
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
@@ -171,5 +171,48 @@ export class AccountService {
       data,
       where
     });
+  }
+
+  public async updateAccountBalance({
+    accountId,
+    amount,
+    currency,
+    date,
+    userId
+  }: {
+    accountId: string;
+    amount: number;
+    currency: string;
+    date: Date;
+    userId: string;
+  }) {
+    const { balance, currency: currencyOfAccount } = await this.account({
+      id_userId: {
+        userId,
+        id: accountId
+      }
+    });
+
+    const amountInCurrencyOfAccount =
+      await this.exchangeRateDataService.toCurrencyAtDate(
+        amount,
+        currency,
+        currencyOfAccount,
+        date
+      );
+
+    if (amountInCurrencyOfAccount) {
+      await this.prismaService.account.update({
+        data: {
+          balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber()
+        },
+        where: {
+          id_userId: {
+            userId,
+            id: accountId
+          }
+        }
+      });
+    }
   }
 }

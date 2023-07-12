@@ -1,5 +1,5 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PortfolioDetails, UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Rule } from '../../rule';
@@ -19,13 +19,13 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
 
     if (accounts.length === 1) {
       return {
-        evaluation: `All your investment is managed by a single account`,
+        evaluation: `Your net worth is managed by a single account`,
         value: false
       };
     }
 
     return {
-      evaluation: `Your investment is managed by ${accounts.length} accounts`,
+      evaluation: `Your net worth is managed by ${accounts.length} accounts`,
       value: true
     };
   }

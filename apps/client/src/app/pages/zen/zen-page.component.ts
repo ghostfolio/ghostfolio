@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 
@@ -18,7 +18,7 @@ import { first, takeUntil } from 'rxjs/operators';
   styleUrls: ['./zen-page.scss']
 })
 export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
-  public tabs: { iconName: string; path: string }[] = [];
+  public tabs: TabConfiguration[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -34,8 +34,16 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.tabs = [
-            { iconName: 'analytics-outline', path: 'overview' },
-            { iconName: 'wallet-outline', path: 'holdings' }
+            {
+              iconName: 'analytics-outline',
+              label: $localize`Overview`,
+              path: ['/zen']
+            },
+            {
+              iconName: 'wallet-outline',
+              label: $localize`Holdings`,
+              path: ['/zen', 'holdings']
+            }
           ];
           this.user = state.user;
 

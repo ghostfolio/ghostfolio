@@ -5,12 +5,15 @@ import { ScraperConfiguration } from './scraper-configuration.interface';
 import { Sector } from './sector.interface';
 
 export interface EnhancedSymbolProfile {
+  activitiesCount: number;
   assetClass: AssetClass;
   assetSubClass: AssetSubClass;
+  comment: string | null;
   countries: Country[];
   createdAt: Date;
   currency: string | null;
   dataSource: DataSource;
+  dateOfFirstActivity?: Date;
   id: string;
   name: string | null;
   scraperConfiguration?: ScraperConfiguration | null;

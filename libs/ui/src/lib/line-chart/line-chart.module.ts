@@ -7,7 +7,6 @@ import { LineChartComponent } from './line-chart.component';
 @NgModule({
   declarations: [LineChartComponent],
   exports: [LineChartComponent],
-  imports: [CommonModule, NgxSkeletonLoaderModule],
-  providers: []
+  imports: [CommonModule, NgxSkeletonLoaderModule]
 })
 export class GfLineChartModule {}

@@ -1,8 +1,13 @@
-@import '~apps/client/src/styles/ghostfolio-style';
+@import 'apps/client/src/styles/ghostfolio-style';
 
 :host {
   display: block;
   min-height: 100vh;
+
+  footer {
+    background-color: rgba(var(--palette-foreground-text), 0.05);
+    font-size: 90%;
+  }
 
   main {
     min-height: 100vh;
@@ -13,9 +18,10 @@
       margin-top: -0.5rem;
 
       .info-message {
-        background-color: rgba(0, 0, 0, $alpha-hover);
+        background-color: rgba(var(--palette-foreground-text), 0.05);
         border-radius: 2rem;
         font-size: 80%;
+        max-width: 100%;
 
         .a {
           color: rgba(var(--palette-primary-500), 1);
@@ -24,9 +30,18 @@
       }
     }
   }
+}
 
-  .footer {
-    height: 5rem;
-    line-height: 1;
+:host-context(.is-dark-theme) {
+  footer {
+    background-color: rgba(var(--palette-foreground-text-dark), 0.05);
+  }
+
+  main {
+    .info-message-container {
+      .info-message {
+        background-color: rgba(var(--palette-foreground-text-dark), 0.05);
+      }
+    }
   }
 }

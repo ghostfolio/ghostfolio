@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Role } from '@prisma/client';
-import { format } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -21,10 +21,10 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-to
   templateUrl: './register-page.html'
 })
 export class RegisterPageComponent implements OnDestroy, OnInit {
-  public currentYear = format(new Date(), 'yyyy');
   public demoAuthToken: string;
   public deviceType: string;
   public hasPermissionForSocialLogin: boolean;
+  public hasPermissionToCreateUser: boolean;
   public historicalDataItems: LineChartItem[];
   public info: InfoItem;
 
@@ -36,7 +36,8 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private internetIdentityService: InternetIdentityService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
 
@@ -51,6 +52,10 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     this.hasPermissionForSocialLogin = hasPermission(
       globalPermissions,
       permissions.enableSocialLogin
+    );
+    this.hasPermissionToCreateUser = hasPermission(
+      globalPermissions,
+      permissions.createUserAccount
     );
   }
 

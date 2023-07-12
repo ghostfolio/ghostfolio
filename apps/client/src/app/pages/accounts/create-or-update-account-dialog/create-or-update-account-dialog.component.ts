@@ -5,9 +5,9 @@ import {
   OnDestroy
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { Subject } from 'rxjs';
 
-import { DataService } from '../../../services/data.service';
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 
 @Component({
@@ -36,7 +36,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.platforms = platforms;
   }
 
-  public onCancel(): void {
+  public onCancel() {
     this.dialogRef.close();
   }
 

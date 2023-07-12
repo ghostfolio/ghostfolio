@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3" i18n>Allocations</h3>
+      <h3 class="d-none d-sm-block mb-3 text-center" i18n>Allocations</h3>
       <gf-activities-filter
         [allFilters]="allFilters"
         [isLoading]="isLoading"
@@ -12,7 +12,7 @@
   </div>
   <div class="row">
     <div class="col">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="mb-2 overflow-hidden w-100">
           <mat-card-title class="m-0 text-truncate" i18n
             >Proportion of Net Worth</mat-card-title
@@ -36,32 +36,26 @@
   </div>
   <div class="proportion-charts row">
     <div class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>By Account</mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
+          <mat-card-title class="text-truncate" i18n
+            >By Platform</mat-card-title
+          >
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
-            cursor="pointer"
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
             [keys]="['id']"
             [locale]="user?.settings?.locale"
-            [positions]="accounts"
-            (proportionChartClicked)="onAccountChartClicked($event)"
+            [positions]="platforms"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
             ><span i18n>By Currency</span>
@@ -70,12 +64,6 @@
               class="ml-1"
             ></gf-premium-indicator
           ></mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
@@ -90,7 +78,7 @@
       </mat-card>
     </div>
     <div class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
             ><span i18n>By Asset Class</span
@@ -99,12 +87,6 @@
               class="ml-1"
             ></gf-premium-indicator
           ></mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
@@ -119,17 +101,11 @@
       </mat-card>
     </div>
     <div class="col-md-12 allocations-by-symbol">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate">
             <ng-container i18n>By Holding</ng-container></mat-card-title
           >
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
@@ -148,7 +124,7 @@
       </mat-card>
     </div>
     <div class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
             ><span i18n>By Sector</span
@@ -157,12 +133,6 @@
               class="ml-1"
             ></gf-premium-indicator
           ></mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
@@ -178,7 +148,7 @@
       </mat-card>
     </div>
     <div class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
             ><span i18n>By Continent</span
@@ -187,12 +157,6 @@
               class="ml-1"
             ></gf-premium-indicator
           ></mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
@@ -207,7 +171,7 @@
       </mat-card>
     </div>
     <div class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
             ><span i18n>By Country</span
@@ -216,12 +180,6 @@
               class="ml-1"
             ></gf-premium-indicator
           ></mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
@@ -239,7 +197,7 @@
   </div>
   <div class="row world-map-chart">
     <div class="col-lg">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
             ><span i18n>Regions</span
@@ -248,19 +206,16 @@
               class="ml-1"
             ></gf-premium-indicator
           ></mat-card-title>
-          <gf-toggle
-            [defaultValue]="period"
-            [isLoading]="false"
-            [options]="periodOptions"
-            (change)="onChangePeriod($event.value)"
-          ></gf-toggle>
         </mat-card-header>
         <mat-card-content>
-          <gf-world-map-chart
-            [baseCurrency]="user?.settings?.baseCurrency"
-            [countries]="countries"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-          ></gf-world-map-chart>
+          <div class="world-map-chart-container">
+            <gf-world-map-chart
+              [countries]="countries"
+              [format]="worldMapChartFormat"
+              [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+              [locale]="user?.settings?.locale"
+            ></gf-world-map-chart>
+          </div>
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
@@ -290,6 +245,50 @@
               >
             </div>
           </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="text-truncate" i18n>By Account</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            cursor="pointer"
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['id']"
+            [locale]="user?.settings?.locale"
+            [positions]="accounts"
+            (proportionChartClicked)="onAccountChartClicked($event)"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By ETF Provider</span
+            ><gf-premium-indicator
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1"
+            ></gf-premium-indicator
+          ></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['etfProvider']"
+            [locale]="user?.settings?.locale"
+            [positions]="positions"
+          ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
     </div>

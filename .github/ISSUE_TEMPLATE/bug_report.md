@@ -6,7 +6,7 @@ labels: ''
 assignees: ''
 ---
 
-The Issue tracker is **ONLY** used for reporting bugs. New features should be discussed on our [Slack channel](https://ghostfolio.slack.com) or in [Discussions](https://github.com/ghostfolio/ghostfolio/discussions).
+The Issue tracker is **ONLY** used for reporting bugs. New features should be discussed in our [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) community or in [Discussions](https://github.com/ghostfolio/ghostfolio/discussions).
 
 **Bug Description**
 
@@ -36,6 +36,7 @@ The Issue tracker is **ONLY** used for reporting bugs. New features should be di
 
 <!-- Please complete the following information -->
 
+- Cloud or Self-hosted
 - Ghostfolio Version X.Y.Z
 - Browser
 - OS

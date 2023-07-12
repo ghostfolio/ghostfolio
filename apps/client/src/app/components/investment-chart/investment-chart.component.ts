@@ -11,7 +11,8 @@ import {
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
-  getVerticalHoverLinePlugin
+  getVerticalHoverLinePlugin,
+  transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
@@ -19,8 +20,7 @@ import {
   getBackgroundColor,
   getDateFormatString,
   getTextColor,
-  parseDate,
-  transformTickToAbbreviation
+  parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
@@ -29,6 +29,7 @@ import {
   BarController,
   BarElement,
   Chart,
+  ChartData,
   LineController,
   LineElement,
   LinearScale,
@@ -38,6 +39,7 @@ import {
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
+import { last } from 'lodash';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -47,6 +49,7 @@ import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];
+  @Input() benchmarkDataLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() daysInMarket: number;
@@ -60,8 +63,9 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public chart: Chart<any>;
-  private data: InvestmentItem[];
+  public chart: Chart<'bar' | 'line'>;
+  private investments: InvestmentItem[];
+  private values: LineChartItem[];
 
   public constructor() {
     Chart.register(
@@ -92,34 +96,54 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
 
   private initialize() {
     // Create a clone
-    this.data = this.benchmarkDataItems.map((item) => Object.assign({}, item));
+    this.investments = this.benchmarkDataItems.map((item) =>
+      Object.assign({}, item)
+    );
+    this.values = this.historicalDataItems.map((item) =>
+      Object.assign({}, item)
+    );
 
-    if (!this.groupBy && this.data?.length > 0) {
+    if (!this.groupBy && this.investments?.length > 0) {
+      let date: string;
+
       if (this.range === 'max') {
         // Extend chart by 5% of days in market (before)
-        const firstItem = this.data[0];
-        this.data.unshift({
-          ...firstItem,
-          date: format(
-            subDays(parseISO(firstItem.date), this.daysInMarket * 0.05 || 90),
-            DATE_FORMAT
+        date = format(
+          subDays(
+            parseISO(this.investments[0].date),
+            this.daysInMarket * 0.05 || 90
           ),
+          DATE_FORMAT
+        );
+        this.investments.unshift({
+          date,
           investment: 0
+        });
+        this.values.unshift({
+          date,
+          value: 0
         });
       }
 
       // Extend chart by 5% of days in market (after)
-      const lastItem = this.data[this.data.length - 1];
-      this.data.push({
-        ...lastItem,
-        date: format(
-          addDays(parseDate(lastItem.date), this.daysInMarket * 0.05 || 90),
-          DATE_FORMAT
-        )
+      date = format(
+        addDays(
+          parseDate(last(this.investments).date),
+          this.daysInMarket * 0.05 || 90
+        ),
+        DATE_FORMAT
+      );
+      this.investments.push({
+        date,
+        investment: last(this.investments).investment
+      });
+      this.values.push({
+        date,
+        value: last(this.values).value
       });
     }
 
-    const data = {
+    const chartData: ChartData<'line'> = {
       labels: this.historicalDataItems.map(({ date }) => {
         return parseDate(date);
       }),
@@ -128,13 +152,13 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: this.groupBy ? 0 : 1,
-          data: this.data.map(({ date, investment }) => {
+          data: this.investments.map(({ date, investment }) => {
             return {
-              x: parseDate(date),
+              x: parseDate(date).getTime(),
               y: this.isInPercent ? investment * 100 : investment
             };
           }),
-          label: $localize`Deposit`,
+          label: this.benchmarkDataLabel,
           segment: {
             borderColor: (context: unknown) =>
               this.isInFuture(
@@ -148,29 +172,54 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         {
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.historicalDataItems.map(({ date, value }) => {
+          data: this.values.map(({ date, value }) => {
             return {
-              x: parseDate(date),
+              x: parseDate(date).getTime(),
               y: this.isInPercent ? value * 100 : value
             };
           }),
           fill: false,
           label: $localize`Total Amount`,
-          pointRadius: 0
+          pointRadius: 0,
+          segment: {
+            borderColor: (context: unknown) =>
+              this.isInFuture(
+                context,
+                `rgba(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b}, 0.67)`
+              ),
+            borderDash: (context: unknown) => this.isInFuture(context, [2, 2])
+          }
         }
       ]
     };
 
     if (this.chartCanvas) {
       if (this.chart) {
-        this.chart.data = data;
+        this.chart.data = chartData;
         this.chart.options.plugins.tooltip = <unknown>(
           this.getTooltipPluginConfiguration()
         );
+        this.chart.options.scales.x.min = this.daysInMarket
+          ? subDays(
+              new Date().setHours(0, 0, 0, 0),
+              this.daysInMarket
+            ).toISOString()
+          : undefined;
+
+        if (
+          this.savingsRate &&
+          // @ts-ignore
+          this.chart.options.plugins.annotation.annotations.savingsRate
+        ) {
+          // @ts-ignore
+          this.chart.options.plugins.annotation.annotations.savingsRate.value =
+            this.savingsRate;
+        }
+
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
-          data,
+          data: chartData,
           options: {
             animation: false,
             elements: {
@@ -230,13 +279,18 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             responsive: true,
             scales: {
               x: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  width: this.groupBy ? 0 : 1
+                },
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  borderWidth: this.groupBy ? 0 : 1,
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
+                min: this.daysInMarket
+                  ? subDays(new Date(), this.daysInMarket).toISOString()
+                  : undefined,
+                suggestedMax: new Date().toISOString(),
                 type: 'time',
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
@@ -244,12 +298,22 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 }
               },
               y: {
+                border: {
+                  display: false
+                },
                 display: !this.isInPercent,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false,
-                  drawBorder: false
+                  color: ({ scale, tick }) => {
+                    if (
+                      tick.value === 0 ||
+                      tick.value === scale.max ||
+                      tick.value === scale.min
+                    ) {
+                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
+                    }
+
+                    return 'transparent';
+                  }
                 },
                 position: 'right',
                 ticks: {
@@ -277,6 +341,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       ...getTooltipOptions({
         colorScheme: this.colorScheme,
         currency: this.isInPercent ? undefined : this.currency,
+        groupBy: this.groupBy,
         locale: this.isInPercent ? undefined : this.locale,
         unit: this.isInPercent ? '%' : undefined
       }),

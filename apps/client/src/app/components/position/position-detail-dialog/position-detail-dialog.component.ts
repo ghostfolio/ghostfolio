@@ -10,10 +10,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
+  DataProviderInfo,
   EnhancedSymbolProfile,
   LineChartItem
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
@@ -29,11 +31,16 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./position-detail-dialog.component.scss']
 })
 export class PositionDetailDialog implements OnDestroy, OnInit {
+  public assetClass: string;
+  public assetSubClass: string;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
   public countries: {
     [code: string]: { name: string; value: number };
   };
+  public dataProviderInfo: DataProviderInfo;
+  public dividendInBaseCurrency: number;
+  public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public grossPerformance: number;
   public grossPerformancePercent: number;
@@ -75,6 +82,9 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       .subscribe(
         ({
           averagePrice,
+          dataProviderInfo,
+          dividendInBaseCurrency,
+          feeInBaseCurrency,
           firstBuyDate,
           grossPerformance,
           grossPerformancePercent,
@@ -95,7 +105,9 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
-          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
+          this.dataProviderInfo = dataProviderInfo;
+          this.dividendInBaseCurrency = dividendInBaseCurrency;
+          this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;
           this.grossPerformancePercent = grossPerformancePercent;
@@ -108,7 +120,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
 
               return {
                 date: historicalDataItem.date,
-                value: historicalDataItem.value
+                value: historicalDataItem.marketPrice
               };
             }
           );
@@ -120,11 +132,25 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.netPerformancePercent = netPerformancePercent;
           this.orders = orders;
           this.quantity = quantity;
+          this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
-          this.tags = tags;
+          this.tags = tags.map(({ id, name }) => {
+            return {
+              id,
+              name: translate(name)
+            };
+          });
           this.transactionCount = transactionCount;
           this.value = value;
+
+          if (SymbolProfile?.assetClass) {
+            this.assetClass = translate(SymbolProfile?.assetClass);
+          }
+
+          if (SymbolProfile?.assetSubClass) {
+            this.assetSubClass = translate(SymbolProfile?.assetSubClass);
+          }
 
           if (SymbolProfile?.countries?.length > 0) {
             for (const country of SymbolProfile.countries) {
@@ -188,6 +214,15 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
           }
+
+          this.benchmarkDataItems = this.benchmarkDataItems.map(
+            ({ date, value }) => {
+              return {
+                date,
+                value: value === 0 ? null : value
+              };
+            }
+          );
 
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;

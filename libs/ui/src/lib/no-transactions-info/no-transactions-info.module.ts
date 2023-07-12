@@ -10,7 +10,6 @@ import { NoTransactionsInfoComponent } from './no-transactions-info.component';
   declarations: [NoTransactionsInfoComponent],
   exports: [NoTransactionsInfoComponent],
   imports: [CommonModule, GfLogoModule, MatButtonModule, RouterModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfNoTransactionsInfoModule {}

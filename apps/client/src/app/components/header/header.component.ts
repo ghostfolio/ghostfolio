@@ -30,6 +30,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
 export class HeaderComponent implements OnChanges {
   @Input() currentRoute: string;
   @Input() info: InfoItem;
+  @Input() pageTitle: string;
   @Input() user: User;
 
   @Output() signOut = new EventEmitter<void>();
@@ -38,6 +39,7 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
+  public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
   public isMenuOpen: boolean;
 
@@ -54,8 +56,8 @@ export class HeaderComponent implements OnChanges {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((id) => {
-        this.impersonationId = id;
+      .subscribe((impersonationId) => {
+        this.impersonationId = impersonationId;
       });
   }
 
@@ -78,6 +80,11 @@ export class HeaderComponent implements OnChanges {
     this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
       this.info?.globalPermissions,
       permissions.enableFearAndGreedIndex
+    );
+
+    this.hasPermissionToCreateUser = hasPermission(
+      this.info?.globalPermissions,
+      permissions.createUserAccount
     );
   }
 

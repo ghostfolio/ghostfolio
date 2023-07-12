@@ -1,23 +1,7 @@
 :host {
   display: block;
 
-  .mat-dialog-content {
+  .mat-mdc-dialog-content {
     max-height: unset;
-
-    .mat-form-field-appearance-outline {
-      ::ng-deep {
-        .mat-form-field-suffix {
-          top: -0.3rem;
-        }
-
-        .mat-form-field-wrapper {
-          padding-bottom: 0;
-        }
-      }
-
-      ion-icon {
-        font-size: 130%;
-      }
-    }
   }
 }

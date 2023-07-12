@@ -11,6 +11,18 @@ export interface DataProviderInterface {
 
   getAssetProfile(aSymbol: string): Promise<Partial<SymbolProfile>>;
 
+  getDividends({
+    from,
+    granularity,
+    symbol,
+    to
+  }: {
+    from: Date;
+    granularity: Granularity;
+    symbol: string;
+    to: Date;
+  }): Promise<{ [date: string]: IDataProviderHistoricalResponse }>;
+
   getHistorical(
     aSymbol: string,
     aGranularity: Granularity,
@@ -28,5 +40,13 @@ export interface DataProviderInterface {
     aSymbols: string[]
   ): Promise<{ [symbol: string]: IDataProviderResponse }>;
 
-  search(aQuery: string): Promise<{ items: LookupItem[] }>;
+  getTestSymbol(): string;
+
+  search({
+    includeIndices,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }>;
 }

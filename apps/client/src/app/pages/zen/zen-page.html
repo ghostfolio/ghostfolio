@@ -1,14 +1,21 @@
-<router-outlet></router-outlet>
+<mat-tab-nav-panel #tabPanel class="flex-grow-1 overflow-auto">
+  <router-outlet></router-outlet>
+</mat-tab-nav-panel>
 
-<nav mat-align-tabs="center" mat-tab-nav-bar>
-  <a
-    *ngFor="let tab of tabs"
-    #rla="routerLinkActive"
-    mat-tab-link
-    routerLinkActive
-    [active]="rla.isActive"
-    [routerLink]="tab.path"
-  >
-    <ion-icon size="large" [name]="tab.iconName"></ion-icon>
-  </a>
+<nav mat-align-tabs="center" mat-tab-nav-bar [tabPanel]="tabPanel">
+  <ng-container *ngFor="let tab of tabs">
+    <a
+      #rla="routerLinkActive"
+      *ngIf="tab.showCondition !== false"
+      class="px-3"
+      mat-tab-link
+      routerLinkActive
+      [active]="rla.isActive"
+      [routerLink]="tab.path"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <ion-icon size="large" [name]="tab.iconName"></ion-icon>
+      <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
+    </a>
+  </ng-container>
 </nav>

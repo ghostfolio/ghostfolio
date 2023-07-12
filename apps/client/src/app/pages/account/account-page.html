@@ -1,12 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3" i18n>Account</h3>
+      <h3 class="mb-3 text-center" i18n>Account</h3>
     </div>
   </div>
   <div *ngIf="user?.settings" class="mb-5 row">
     <div class="col">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-content>
           <div
             *ngIf="hasPermissionToUpdateUserSettings && user?.subscription"
@@ -24,17 +24,26 @@
                 ></gf-premium-indicator>
               </div>
               <div *ngIf="user?.subscription?.type === 'Premium'">
-                Valid until {{ user?.subscription?.expiresAt | date:
-                defaultDateFormat }}
+                <ng-container i18n>Valid until</ng-container> {{
+                user?.subscription?.expiresAt | date: defaultDateFormat }}
               </div>
               <div *ngIf="user?.subscription?.type === 'Basic'">
                 <ng-container *ngIf="hasPermissionForSubscription">
                   <button
                     color="primary"
                     mat-flat-button
-                    (click)="onCheckout(priceId)"
+                    (click)="onCheckout()"
                   >
-                    <ng-container i18n>Upgrade</ng-container>
+                    <ng-container
+                      *ngIf="user.subscription.offer === 'default'"
+                      i18n
+                      >Upgrade</ng-container
+                    >
+                    <ng-container
+                      *ngIf="user.subscription.offer === 'renewal'"
+                      i18n
+                      >Renew</ng-container
+                    >
                   </button>
                   <div *ngIf="price" class="mt-1">
                     <ng-container *ngIf="coupon"
@@ -74,17 +83,17 @@
             <div class="pr-1 w-50">
               <div i18n>Presenter View</div>
               <div class="hint-text text-muted" i18n>
-                Hides sensitive values such as absolute performances and
-                quantities.
+                Protection for sensitive information like absolute performances
+                and quantity values
               </div>
             </div>
             <div class="pl-1 w-50">
-              <mat-slide-toggle
+              <mat-checkbox
                 color="primary"
                 [checked]="user.settings.isRestrictedView"
                 [disabled]="!hasPermissionToUpdateUserSettings"
                 (change)="onRestrictedViewChange($event)"
-              ></mat-slide-toggle>
+              ></mat-checkbox>
             </div>
           </div>
           <div class="d-flex mt-4 py-1">
@@ -96,7 +105,7 @@
                 <div class="pl-1 w-50">
                   <mat-form-field
                     appearance="outline"
-                    class="compact-with-outline w-100 without-hint"
+                    class="w-100 without-hint"
                   >
                     <mat-select
                       name="baseCurrency"
@@ -116,12 +125,11 @@
               <div class="align-items-center d-flex mb-2">
                 <div class="pr-1 w-50">
                   <div i18n>Language</div>
-                  <div class="hint-text text-muted" i18n>Beta</div>
                 </div>
                 <div class="pl-1 w-50">
                   <mat-form-field
                     appearance="outline"
-                    class="compact-with-outline w-100 without-hint"
+                    class="w-100 without-hint"
                   >
                     <mat-select
                       name="language"
@@ -132,9 +140,26 @@
                       <mat-option [value]="null"></mat-option>
                       <mat-option value="de">Deutsch</mat-option>
                       <mat-option value="en">English</mat-option>
-                      <mat-option value="es">Español</mat-option>
-                      <mat-option value="it">Italiano</mat-option>
-                      <mat-option value="nl">Nederlands</mat-option>
+                      <mat-option value="es"
+                        >Español (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
+                      <mat-option value="fr"
+                        >Français (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
+                      <mat-option value="it"
+                        >Italiano (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
+                      <mat-option value="nl"
+                        >Nederlands (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
+                      <mat-option value="pt"
+                        >Português (<ng-container i18n>Community</ng-container
+                        >)</mat-option
+                      >
                     </mat-select>
                   </mat-form-field>
                 </div>
@@ -149,7 +174,7 @@
                 <div class="pl-1 w-50">
                   <mat-form-field
                     appearance="outline"
-                    class="compact-with-outline w-100 without-hint"
+                    class="w-100 without-hint"
                   >
                     <mat-select
                       name="locale"
@@ -167,29 +192,6 @@
                   </mat-form-field>
                 </div>
               </div>
-              <div class="d-flex mb-2">
-                <div class="align-items-center d-flex pr-1 pt-1 w-50">
-                  <ng-container i18n>View Mode</ng-container>
-                </div>
-                <div class="pl-1 w-50">
-                  <div class="align-items-center d-flex overflow-hidden">
-                    <mat-form-field
-                      appearance="outline"
-                      class="compact-with-outline w-100 without-hint"
-                    >
-                      <mat-select
-                        name="viewMode"
-                        [disabled]="!hasPermissionToUpdateViewMode"
-                        [value]="user.settings.viewMode"
-                        (selectionChange)="onChangeUserSetting('viewMode', $event.value)"
-                      >
-                        <mat-option value="DEFAULT">Default</mat-option>
-                        <mat-option value="ZEN">Zen</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
               <div class="d-flex">
                 <div class="align-items-center d-flex pr-1 pt-1 w-50">
                   <ng-container i18n>Appearance</ng-container>
@@ -197,7 +199,7 @@
                 <div class="pl-1 w-50">
                   <mat-form-field
                     appearance="outline"
-                    class="compact-with-outline w-100 without-hint"
+                    class="w-100 without-hint"
                   >
                     <mat-select
                       class="with-placeholder-as-option"
@@ -216,15 +218,31 @@
               </div>
             </form>
           </div>
+          <div class="d-flex mt-4 py-1">
+            <div class="pr-1 w-50">
+              <div i18n>Zen Mode</div>
+              <div class="hint-text text-muted" i18n>
+                Distraction-free experience for turbulent times
+              </div>
+            </div>
+            <div class="pl-1 w-50">
+              <mat-checkbox
+                color="primary"
+                [checked]="user.settings.viewMode === 'ZEN'"
+                [disabled]="!hasPermissionToUpdateViewMode"
+                (change)="onViewModeChange($event)"
+              ></mat-checkbox>
+            </div>
+          </div>
           <div class="align-items-center d-flex mt-4 py-1">
             <div class="pr-1 w-50" i18n>Sign in with fingerprint</div>
             <div class="pl-1 w-50">
-              <mat-slide-toggle
+              <mat-checkbox
                 #toggleSignInWithFingerprintEnabledElement
                 color="primary"
                 [disabled]="!hasPermissionToUpdateUserSettings"
                 (change)="onSignInWithFingerprintChange($event)"
-              ></mat-slide-toggle>
+              ></mat-checkbox>
             </div>
           </div>
           <div
@@ -233,19 +251,22 @@
           >
             <div class="pr-1 w-50">
               <div i18n>Experimental Features</div>
+              <div class="hint-text text-muted" i18n>
+                Sneak peek at upcoming functionality
+              </div>
             </div>
             <div class="pl-1 w-50">
-              <mat-slide-toggle
+              <mat-checkbox
                 color="primary"
                 [checked]="user.settings.isExperimentalFeatures"
                 [disabled]="!hasPermissionToUpdateUserSettings"
                 (change)="onExperimentalFeaturesChange($event)"
-              ></mat-slide-toggle>
+              ></mat-checkbox>
             </div>
           </div>
           <div class="align-items-center d-flex mt-4 py-1">
             <div class="pr-1 w-50" i18n>User ID</div>
-            <div class="pl-1 w-50">{{ user?.id }}</div>
+            <div class="pl-1 text-monospace w-50">{{ user?.id }}</div>
           </div>
         </mat-card-content>
       </mat-card>

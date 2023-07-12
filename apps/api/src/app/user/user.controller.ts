@@ -1,6 +1,4 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_IS_READ_ONLY_MODE } from '@ghostfolio/common/config';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -31,7 +29,6 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
     private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
@@ -69,23 +66,20 @@ export class UserController {
 
   @Post()
   public async signupUser(): Promise<UserItem> {
-    if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
-      const isReadOnlyMode = (await this.propertyService.getByKey(
-        PROPERTY_IS_READ_ONLY_MODE
-      )) as boolean;
+    const isUserSignupEnabled =
+      await this.propertyService.isUserSignupEnabled();
 
-      if (isReadOnlyMode) {
-        throw new HttpException(
-          getReasonPhrase(StatusCodes.FORBIDDEN),
-          StatusCodes.FORBIDDEN
-        );
-      }
+    if (!isUserSignupEnabled) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
     }
 
     const hasAdmin = await this.userService.hasAdmin();
 
     const { accessToken, id, role } = await this.userService.createUser({
-      role: hasAdmin ? 'USER' : 'ADMIN'
+      data: { role: hasAdmin ? 'USER' : 'ADMIN' }
     });
 
     return {

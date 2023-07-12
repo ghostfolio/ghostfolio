@@ -5,13 +5,13 @@ import { Country } from './country.interface';
 import { Sector } from './sector.interface';
 
 export interface PortfolioPosition {
-  allocationCurrent: number;
-  allocationInvestment: number;
+  allocationInPercentage: number;
   assetClass?: AssetClass;
-  assetSubClass?: AssetSubClass | 'CASH' | 'EMERGENCY_FUND';
+  assetSubClass?: AssetSubClass | 'CASH';
   countries: Country[];
   currency: string;
   dataSource: DataSource;
+  dateOfFirstActivity: Date;
   exchange?: string;
   grossPerformance: number;
   grossPerformancePercent: number;
@@ -30,5 +30,6 @@ export interface PortfolioPosition {
   symbol: string;
   type?: string;
   url?: string;
-  value: number;
+  value?: number;
+  valueInPercentage?: number;
 }

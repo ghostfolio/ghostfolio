@@ -4,15 +4,6 @@
 
   gf-access-table {
     overflow-x: auto;
-
-    table {
-      min-width: 100%;
-
-      .mat-row,
-      .mat-header-row {
-        width: 100%;
-      }
-    }
   }
 
   .fab-container {
@@ -25,14 +16,6 @@
   .hint-text {
     font-size: 90%;
     line-height: 1.2;
-  }
-
-  .mat-form-field {
-    ::ng-deep {
-      .mat-form-field-wrapper {
-        padding-bottom: 0;
-      }
-    }
   }
 }
 

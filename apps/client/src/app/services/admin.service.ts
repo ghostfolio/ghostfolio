@@ -1,23 +1,42 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  AdminData,
   AdminJobs,
+  AdminMarketData,
   AdminMarketDataDetails,
+  EnhancedSymbolProfile,
+  Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData, Platform, Prisma } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
+
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
-  public constructor(private http: HttpClient) {}
+  public constructor(
+    private dataService: DataService,
+    private http: HttpClient
+  ) {}
+
+  public addAssetProfile({ dataSource, symbol }: UniqueAsset) {
+    return this.http.post<void>(
+      `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
+      null
+    );
+  }
 
   public deleteJob(aId: string) {
     return this.http.delete<void>(`/api/v1/admin/queue/job/${aId}`);
@@ -35,10 +54,52 @@ export class AdminService {
     });
   }
 
+  public deletePlatform(aId: string) {
+    return this.http.delete<void>(`/api/v1/platform/${aId}`);
+  }
+
   public deleteProfileData({ dataSource, symbol }: UniqueAsset) {
     return this.http.delete<void>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`
     );
+  }
+
+  public fetchAdminData() {
+    return this.http.get<AdminData>('/api/v1/admin');
+  }
+
+  public fetchAdminMarketData({
+    filters,
+    skip,
+    sortColumn,
+    sortDirection,
+    take
+  }: {
+    filters?: Filter[];
+    skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
+    take: number;
+  }) {
+    let params = this.dataService.buildFiltersAsQueryParams({ filters });
+
+    if (skip) {
+      params = params.append('skip', skip);
+    }
+
+    if (sortColumn) {
+      params = params.append('sortColumn', sortColumn);
+    }
+
+    if (sortDirection) {
+      params = params.append('sortDirection', sortDirection);
+    }
+
+    params = params.append('take', take);
+
+    return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
+      params
+    });
   }
 
   public fetchAdminMarketDataBySymbol({
@@ -70,6 +131,10 @@ export class AdminService {
     return this.http.get<AdminJobs>('/api/v1/admin/queue/job', {
       params
     });
+  }
+
+  public fetchPlatforms() {
+    return this.http.get<Platform[]>('/api/v1/platform');
   }
 
   public gather7Days() {
@@ -124,6 +189,23 @@ export class AdminService {
     return this.http.get<IDataProviderHistoricalResponse>(url);
   }
 
+  public patchAssetProfile({
+    comment,
+    dataSource,
+    scraperConfiguration,
+    symbol,
+    symbolMapping
+  }: UniqueAsset & UpdateAssetProfileDto) {
+    return this.http.patch<EnhancedSymbolProfile>(
+      `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
+      { comment, scraperConfiguration, symbolMapping }
+    );
+  }
+
+  public postPlatform(aPlatform: CreatePlatformDto) {
+    return this.http.post<Platform>(`/api/v1/platform`, aPlatform);
+  }
+
   public putMarketData({
     dataSource,
     date,
@@ -141,5 +223,12 @@ export class AdminService {
     )}`;
 
     return this.http.put<MarketData>(url, marketData);
+  }
+
+  public putPlatform(aPlatform: UpdatePlatformDto) {
+    return this.http.put<Platform>(
+      `/api/v1/platform/${aPlatform.id}`,
+      aPlatform
+    );
   }
 }

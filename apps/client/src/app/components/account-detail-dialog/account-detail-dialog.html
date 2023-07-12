@@ -12,14 +12,37 @@
       <div class="col-12 d-flex justify-content-center mb-3">
         <gf-value
           size="large"
-          [currency]="user?.settings?.baseCurrency"
+          [isCurrency]="true"
           [locale]="user?.settings?.locale"
+          [unit]="user?.settings?.baseCurrency"
           [value]="valueInBaseCurrency"
         ></gf-value>
       </div>
     </div>
 
     <div class="row">
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [unit]="currency"
+          [value]="balance"
+          >Cash Balance</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [unit]="currency"
+          [value]="equity"
+          >Equity</gf-value
+        >
+      </div>
       <div class="col-6 mb-3">
         <gf-value i18n size="medium" [value]="accountType"
           >Account Type</gf-value
@@ -30,7 +53,7 @@
       </div>
     </div>
 
-    <div *ngIf="orders?.length > 0" class="row">
+    <div class="row" [ngClass]="{ 'd-none': !orders?.length }">
       <div class="col mb-3">
         <div class="h5 mb-0" i18n>Activities</div>
         <gf-activities-table
@@ -38,9 +61,8 @@
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!hasImpersonationId"
+          [hasPermissionToExportActivities]="true"
           [hasPermissionToFilter]="false"
-          [hasPermissionToImportActivities]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
           [showActions]="false"

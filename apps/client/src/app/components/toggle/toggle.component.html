@@ -1,11 +1,13 @@
 <mat-radio-group
-  class="text-nowrap"
+  class="d-block text-nowrap"
   [formControl]="option"
   (change)="onValueChange()"
 >
   <mat-radio-button
     *ngFor="let option of options"
+    class="d-inline-flex"
     [disabled]="isLoading"
+    [ngClass]="{ 'cursor-pointer': !isLoading }"
     [value]="option.value"
     >{{ option.label }}</mat-radio-button
   >

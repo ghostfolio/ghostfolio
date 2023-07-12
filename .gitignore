@@ -5,6 +5,7 @@
 /tmp
 
 # dependencies
+/.yarn
 /node_modules
 
 # IDEs and editors
@@ -24,6 +25,7 @@
 
 # misc
 /.angular/cache
+.env
 .env.prod
 /.sass-cache
 /connect.lock

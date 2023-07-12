@@ -1,18 +1,16 @@
-@import '~apps/client/src/styles/ghostfolio-style';
+@import 'apps/client/src/styles/ghostfolio-style';
 
 :host {
   display: block;
 
   .button-container {
-    .mat-stroked-button {
+    .mat-mdc-outlined-button {
       background-color: var(--light-background);
     }
   }
 
-  .downloads {
-    img {
-      height: 2.5rem;
-    }
+  .customer-map-container {
+    aspect-ratio: 16 / 9;
   }
 
   .intro {
@@ -51,6 +49,10 @@
       filter: grayscale(1);
     }
 
+    &.logo-dev-community {
+      mask-image: url('/assets/images/logo-dev-community.svg');
+    }
+
     &.logo-openstartup {
       background-image: url('/assets/images/logo-openstartup.png');
       background-position: center;
@@ -69,6 +71,24 @@
       background-repeat: no-repeat;
       background-size: contain;
       filter: grayscale(1);
+    }
+
+    &.logo-reddit {
+      mask-image: url('/assets/images/logo-reddit.svg');
+      max-height: 1rem;
+    }
+
+    &.logo-sackgeld {
+      mask-image: url('/assets/images/logo-sackgeld.png');
+    }
+
+    &.logo-sourceforge {
+      mask-image: url('/assets/images/logo-sourceforge.svg');
+    }
+
+    &.logo-umbrel {
+      mask-image: url('/assets/images/logo-umbrel.svg');
+      max-height: 1.5rem;
     }
 
     &.logo-unraid {
@@ -99,7 +119,7 @@
 
 :host-context(.is-dark-theme) {
   .button-container {
-    .mat-stroked-button {
+    .mat-mdc-outlined-button {
       background-color: var(--dark-background);
     }
   }
@@ -107,16 +127,19 @@
   .logo {
     &.logo-agplv3,
     &.logo-alternative-to,
+    &.logo-dev-community,
     &.logo-privacy-tools,
+    &.logo-reddit,
+    &.logo-sackgeld,
+    &.logo-sourceforge,
+    &.logo-umbrel,
     &.logo-unraid {
       background-color: rgba(var(--light-primary-text));
     }
   }
 
   .outro-inner-container {
-    div {
-      background-image: url('/assets/intro-dark.jpg') !important;
-    }
+    display: none;
   }
 
   .video {

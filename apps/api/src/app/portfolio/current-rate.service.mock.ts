@@ -2,6 +2,7 @@ import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
+import { GetValuesObject } from './interfaces/get-values-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 function mockGetValue(symbol: string, date: Date) {
@@ -48,8 +49,9 @@ export const CurrentRateServiceMock = {
   getValues: ({
     dataGatheringItems,
     dateQuery
-  }: GetValuesParams): Promise<GetValueObject[]> => {
-    const result: GetValueObject[] = [];
+  }: GetValuesParams): Promise<GetValuesObject> => {
+    const values: GetValueObject[] = [];
+
     if (dateQuery.lt) {
       for (
         let date = resetHours(dateQuery.gte);
@@ -57,7 +59,7 @@ export const CurrentRateServiceMock = {
         date = addDays(date, 1)
       ) {
         for (const dataGatheringItem of dataGatheringItems) {
-          result.push({
+          values.push({
             date,
             marketPriceInBaseCurrency: mockGetValue(
               dataGatheringItem.symbol,
@@ -70,7 +72,7 @@ export const CurrentRateServiceMock = {
     } else {
       for (const date of dateQuery.in) {
         for (const dataGatheringItem of dataGatheringItems) {
-          result.push({
+          values.push({
             date,
             marketPriceInBaseCurrency: mockGetValue(
               dataGatheringItem.symbol,
@@ -81,6 +83,7 @@ export const CurrentRateServiceMock = {
         }
       }
     }
-    return Promise.resolve(result);
+
+    return Promise.resolve({ values, dataProviderInfos: [], errors: [] });
   }
 };

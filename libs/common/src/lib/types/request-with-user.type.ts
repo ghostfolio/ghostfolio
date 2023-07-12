@@ -1,3 +1,3 @@
-import { UserWithSettings } from '@ghostfolio/common/interfaces';
+import { UserWithSettings } from '@ghostfolio/common/types';
 
 export type RequestWithUser = Request & { user: UserWithSettings };

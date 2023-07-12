@@ -8,6 +8,7 @@ import {
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsISO8601,
   IsNumber,
@@ -64,4 +65,8 @@ export class CreateOrderDto {
 
   @IsNumber()
   unitPrice: number;
+
+  @IsBoolean()
+  @IsOptional()
+  updateAccountBalance?: boolean;
 }

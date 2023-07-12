@@ -1,31 +1,33 @@
 <div class="container p-0">
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Time in Market</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Time in Market</div>
+    <div class="justify-content-end">
       <gf-value class="justify-content-end" [value]="timeInMarket"></gf-value>
     </div>
   </div>
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Buy</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Buy</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalBuy"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Sell</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Sell</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalSell"
       ></gf-value>
     </div>
@@ -33,31 +35,33 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Investment</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Investment</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.committedFunds"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Absolute Gross Performance</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Absolute Gross Performance</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentGrossPerformance"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1 ml-3" i18n>Gross Performance (TWR)</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 ml-3 text-truncate" i18n>Gross Performance</div>
+    <div class="flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
         position="end"
@@ -70,8 +74,8 @@
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>
       Fees for {{ summary?.ordersCount }} {summary?.ordersCount, plural, =1
       {transaction} other {transactions}}
     </div>
@@ -79,8 +83,9 @@
       <span *ngIf="summary?.fees || summary?.fees === 0" class="mr-1">-</span>
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.fees"
       ></gf-value>
     </div>
@@ -88,20 +93,21 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Absolute Net Performance</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Absolute Net Performance</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentNetPerformance"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1 ml-3" i18n>Net Performance (TWR)</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate ml-3" i18n>Net Performance</div>
+    <div class="flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
         position="end"
@@ -115,31 +121,33 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Total Assets</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Total Assets</div>
+    <div class="flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
         position="end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentValue"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Valuables</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Valuables</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.items"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Emergency Fund</div>
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Emergency Fund</div>
     <div
       class="align-items-center d-flex justify-content-end"
       [ngClass]="{ 'cursor-pointer': hasPermissionToUpdateUserSettings }"
@@ -152,30 +160,33 @@
       ></ion-icon>
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Buying Power</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Buying Power</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.cash"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Excluded from Analysis</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Excluded from Analysis</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.excludedAccountsAndActivities"
       ></gf-value>
     </div>
@@ -183,20 +194,43 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1 font-weight-bold" i18n>Net Worth</div>
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Liabilities</div>
     <div class="d-flex justify-content-end">
+      <span
+        *ngIf="summary?.liabilities || summary?.liabilities === 0"
+        class="mr-1"
+        >-</span
+      >
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
+        [value]="isLoading ? undefined : summary?.liabilities"
+      ></gf-value>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col"><hr /></div>
+  </div>
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 font-weight-bold text-truncate" i18n>Net Worth</div>
+    <div class="justify-content-end">
+      <gf-value
+        class="justify-content-end"
+        [isCurrency]="true"
+        [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.netWorth"
       ></gf-value>
     </div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1 ml-3" i18n>Annualized Performance</div>
-    <div class="d-flex flex-column flex-wrap justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 ml-3 text-truncate" i18n>
+      Annualized Performance
+    </div>
+    <div class="flex-column flex-wrap justify-content-end">
       <gf-value
         class="justify-content-end"
         position="end"
@@ -210,13 +244,14 @@
   <div class="row">
     <div class="col"><hr /></div>
   </div>
-  <div class="row px-3 py-1">
-    <div class="d-flex flex-grow-1" i18n>Dividend</div>
-    <div class="d-flex justify-content-end">
+  <div class="flex-nowrap px-3 py-1 row">
+    <div class="flex-grow-1 text-truncate" i18n>Dividend</div>
+    <div class="justify-content-end">
       <gf-value
         class="justify-content-end"
-        [currency]="baseCurrency"
+        [isCurrency]="true"
         [locale]="locale"
+        [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.dividend"
       ></gf-value>
     </div>

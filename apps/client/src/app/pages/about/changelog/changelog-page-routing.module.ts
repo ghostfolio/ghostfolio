@@ -9,7 +9,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: ChangelogPageComponent,
     path: '',
-    title: $localize`Changelog & License`
+    title: $localize`Changelog`
   }
 ];
 

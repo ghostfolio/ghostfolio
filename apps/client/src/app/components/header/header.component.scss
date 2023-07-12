@@ -1,4 +1,4 @@
-@import '~apps/client/src/styles/ghostfolio-style';
+@import 'apps/client/src/styles/ghostfolio-style';
 
 :host {
   display: block;
@@ -11,7 +11,9 @@
       flex: 1 1 auto;
     }
 
-    .mat-flat-button {
+    .mdc-button {
+      height: unset;
+
       &:not(.mat-primary) {
         background-color: transparent;
         text-decoration-color: rgba(var(--palette-primary-500), 1) !important;

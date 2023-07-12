@@ -1,16 +1,25 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ImportResponse } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   Inject,
   Logger,
+  Param,
   Post,
-  UseGuards
+  Query,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ImportDataDto } from './import-data.dto';
@@ -26,8 +35,19 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  public async import(@Body() importData: ImportDataDto): Promise<void> {
-    if (!this.configurationService.get('ENABLE_FEATURE_IMPORT')) {
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async import(
+    @Body() importData: ImportDataDto,
+    @Query('dryRun') isDryRun?: boolean
+  ): Promise<ImportResponse> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.createAccount
+      ) ||
+      !hasPermission(this.request.user.permissions, permissions.createOrder)
+    ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -45,12 +65,19 @@ export class ImportController {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }
 
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
     try {
-      return await this.importService.import({
+      const activities = await this.importService.import({
+        isDryRun,
         maxActivitiesToImport,
-        activities: importData.activities,
+        userCurrency,
+        accountsDto: importData.accounts ?? [],
+        activitiesDto: importData.activities,
         userId: this.request.user.id
       });
+
+      return { activities };
     } catch (error) {
       Logger.error(error, ImportController);
 
@@ -62,5 +89,24 @@ export class ImportController {
         StatusCodes.BAD_REQUEST
       );
     }
+  }
+
+  @Get('dividends/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async gatherDividends(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<ImportResponse> {
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    const activities = await this.importService.getDividends({
+      dataSource,
+      symbol,
+      userCurrency
+    });
+
+    return { activities };
   }
 }

@@ -1,9 +1,10 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   MAX_CHART_ITEMS,
   PROPERTY_BENCHMARKS
@@ -11,6 +12,7 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   BenchmarkMarketDataDetails,
+  BenchmarkProperty,
   BenchmarkResponse,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -18,6 +20,7 @@ import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format } from 'date-fns';
+import { uniqBy } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
@@ -27,6 +30,7 @@ export class BenchmarkService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
+    private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -116,9 +120,9 @@ export class BenchmarkService {
 
   public async getBenchmarkAssetProfiles(): Promise<Partial<SymbolProfile>[]> {
     const symbolProfileIds: string[] = (
-      ((await this.propertyService.getByKey(PROPERTY_BENCHMARKS)) as {
-        symbolProfileId: string;
-      }[]) ?? []
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as BenchmarkProperty[]) ?? []
     ).map(({ symbolProfileId }) => {
       return symbolProfileId;
     });
@@ -202,6 +206,43 @@ export class BenchmarkService {
     }
 
     return response;
+  }
+
+  public async addBenchmark({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+    const assetProfile = await this.prismaService.symbolProfile.findFirst({
+      where: {
+        dataSource,
+        symbol
+      }
+    });
+
+    if (!assetProfile) {
+      return;
+    }
+
+    let benchmarks =
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as BenchmarkProperty[]) ?? [];
+
+    benchmarks.push({ symbolProfileId: assetProfile.id });
+
+    benchmarks = uniqBy(benchmarks, 'symbolProfileId');
+
+    await this.propertyService.put({
+      key: PROPERTY_BENCHMARKS,
+      value: JSON.stringify(benchmarks)
+    });
+
+    return {
+      dataSource,
+      symbol,
+      id: assetProfile.id,
+      name: assetProfile.name
+    };
   }
 
   private getMarketCondition(aPerformanceInPercent: number) {

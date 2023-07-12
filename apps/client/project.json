@@ -1,4 +1,5 @@
 {
+  "name": "client",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "generators": {
@@ -44,6 +45,11 @@
             "output": "./../"
           },
           {
+            "glob": "site.webmanifest",
+            "input": "apps/client/src/assets",
+            "output": "./../"
+          },
+          {
             "glob": "**/*",
             "input": "node_modules/ionicons/dist/ionicons",
             "output": "./../ionicons"
@@ -59,14 +65,19 @@
             "output": "./../assets/"
           }
         ],
-        "styles": ["apps/client/src/styles.scss"],
+        "styles": [
+          "apps/client/src/styles/theme.scss",
+          "apps/client/src/styles.scss"
+        ],
         "scripts": ["node_modules/marked/marked.min.js"],
         "vendorChunk": true,
         "extractLicenses": false,
         "buildOptimizer": false,
         "sourceMap": true,
         "optimization": false,
-        "namedChunks": true
+        "namedChunks": true,
+        "serviceWorker": true,
+        "ngswConfigPath": "apps/client/ngsw-config.json"
       },
       "configurations": {
         "development-de": {
@@ -81,6 +92,10 @@
           "baseHref": "/es/",
           "localize": ["es"]
         },
+        "development-fr": {
+          "baseHref": "/fr/",
+          "localize": ["fr"]
+        },
         "development-it": {
           "baseHref": "/it/",
           "localize": ["it"]
@@ -88,6 +103,10 @@
         "development-nl": {
           "baseHref": "/nl/",
           "localize": ["nl"]
+        },
+        "development-pt": {
+          "baseHref": "/pt/",
+          "localize": ["pt"]
         },
         "production": {
           "fileReplacements": [
@@ -136,11 +155,17 @@
         "development-es": {
           "browserTarget": "client:build:development-es"
         },
+        "development-fr": {
+          "browserTarget": "client:build:development-fr"
+        },
         "development-it": {
           "browserTarget": "client:build:development-it"
         },
         "development-nl": {
           "browserTarget": "client:build:development-nl"
+        },
+        "development-pt": {
+          "browserTarget": "client:build:development-pt"
         },
         "production": {
           "browserTarget": "client:build:production"
@@ -156,8 +181,10 @@
         "targetFiles": [
           "messages.de.xlf",
           "messages.es.xlf",
+          "messages.fr.xlf",
           "messages.it.xlf",
-          "messages.nl.xlf"
+          "messages.nl.xlf",
+          "messages.pt.xlf"
         ]
       }
     },
@@ -168,7 +195,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "options": {
         "jestConfig": "apps/client/jest.config.ts",
         "passWithNoTests": true
@@ -186,6 +213,10 @@
         "baseHref": "/es/",
         "translation": "apps/client/src/locales/messages.es.xlf"
       },
+      "fr": {
+        "baseHref": "/fr/",
+        "translation": "apps/client/src/locales/messages.fr.xlf"
+      },
       "it": {
         "baseHref": "/it/",
         "translation": "apps/client/src/locales/messages.it.xlf"
@@ -193,6 +224,10 @@
       "nl": {
         "baseHref": "/nl/",
         "translation": "apps/client/src/locales/messages.nl.xlf"
+      },
+      "pt": {
+        "baseHref": "/pt/",
+        "translation": "apps/client/src/locales/messages.pt.xlf"
       }
     },
     "sourceLocale": "en"

@@ -66,7 +66,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public chart: Chart;
+  public chart: Chart<'line'>;
   public isLoading = true;
 
   private readonly ANIMATION_DURATION = 1200;
@@ -154,7 +154,8 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
           data: benchmarkPrices,
           fill: false,
           label: this.benchmarkLabel,
-          pointRadius: 0
+          pointRadius: 0,
+          spanGaps: false
         },
         {
           backgroundColor: gradient,
@@ -212,10 +213,11 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             },
             scales: {
               x: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+                },
                 display: this.showXAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 time: {
@@ -225,11 +227,24 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
                 type: 'time'
               },
               y: {
+                border: {
+                  width: 0
+                },
                 display: this.showYAxis,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false
+                  color: ({ scale, tick }) => {
+                    if (
+                      tick.value === 0 ||
+                      tick.value === scale.max ||
+                      tick.value === scale.min ||
+                      tick.value === this.yMax ||
+                      tick.value === this.yMin
+                    ) {
+                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
+                    }
+
+                    return 'transparent';
+                  }
                 },
                 max: this.yMax,
                 min: this.yMin,

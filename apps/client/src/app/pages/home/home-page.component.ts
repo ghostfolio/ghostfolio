@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,8 +24,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
 
   public hasMessage: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
-  public info: InfoItem;
-  public tabs: { iconName: string; path: string }[] = [];
+  public tabs: TabConfiguration[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -35,16 +34,39 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private userService: UserService
   ) {
-    this.info = this.dataService.fetchInfo();
+    const { globalPermissions, systemMessage } = this.dataService.fetchInfo();
+
+    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
+      globalPermissions,
+      permissions.enableFearAndGreedIndex
+    );
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.tabs = [
-            { iconName: 'analytics-outline', path: 'overview' },
-            { iconName: 'wallet-outline', path: 'holdings' },
-            { iconName: 'reader-outline', path: 'summary' }
+            {
+              iconName: 'analytics-outline',
+              label: $localize`Overview`,
+              path: ['/home']
+            },
+            {
+              iconName: 'wallet-outline',
+              label: $localize`Holdings`,
+              path: ['/home', 'holdings']
+            },
+            {
+              iconName: 'reader-outline',
+              label: $localize`Summary`,
+              path: ['/home', 'summary']
+            },
+            {
+              iconName: 'newspaper-outline',
+              label: $localize`Markets`,
+              path: ['/home', 'market'],
+              showCondition: this.hasPermissionToAccessFearAndGreedIndex
+            }
           ];
           this.user = state.user;
 
@@ -52,16 +74,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
             hasPermission(
               this.user?.permissions,
               permissions.createUserAccount
-            ) || !!this.info.systemMessage;
-
-          this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-            this.info?.globalPermissions,
-            permissions.enableFearAndGreedIndex
-          );
-
-          if (this.hasPermissionToAccessFearAndGreedIndex) {
-            this.tabs.push({ iconName: 'newspaper-outline', path: 'market' });
-          }
+            ) || !!systemMessage;
 
           this.changeDetectorRef.markForCheck();
         }

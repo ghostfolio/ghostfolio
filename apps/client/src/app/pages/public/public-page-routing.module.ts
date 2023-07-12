@@ -8,8 +8,7 @@ const routes: Routes = [
   {
     canActivate: [AuthGuard],
     component: PublicPageComponent,
-    path: ':id',
-    title: $localize`Portfolio`
+    path: ':id'
   }
 ];
 

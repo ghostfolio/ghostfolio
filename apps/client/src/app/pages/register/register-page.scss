@@ -2,7 +2,7 @@
   display: block;
 
   .button-container {
-    .mat-stroked-button {
+    .mat-mdc-outlined-button {
       background-color: var(--light-background);
     }
   }
@@ -26,14 +26,12 @@
 
 :host-context(.is-dark-theme) {
   .button-container {
-    .mat-stroked-button {
+    .mat-mdc-outlined-button {
       background-color: var(--dark-background);
     }
   }
 
   .intro-container {
-    .intro {
-      background-image: url('/assets/intro-dark.jpg') !important;
-    }
+    display: none;
   }
 }

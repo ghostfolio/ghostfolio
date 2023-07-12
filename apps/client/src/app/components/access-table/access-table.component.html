@@ -47,7 +47,7 @@
         [matMenuTriggerFor]="transactionMenu"
         (click)="$event.stopPropagation()"
       >
-        <ion-icon name="ellipsis-vertical"></ion-icon>
+        <ion-icon name="ellipsis-horizontal"></ion-icon>
       </button>
       <mat-menu #transactionMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="onDeleteAccess(element.id)">
@@ -57,6 +57,6 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 </table>

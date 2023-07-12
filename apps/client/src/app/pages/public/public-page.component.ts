@@ -9,6 +9,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
 import { StatusCodes } from 'http-status-codes';
+import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -131,7 +132,7 @@ export class PublicPageComponent implements OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioPublicDetails.holdings
     )) {
-      const value = position.allocationCurrent;
+      const value = position.allocationInPercentage;
 
       this.positions[symbol] = {
         value,
@@ -198,7 +199,9 @@ export class PublicPageComponent implements OnInit {
       this.symbols[prettifySymbol(symbol)] = {
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: position.value
+        value: isNumber(position.value)
+          ? position.value
+          : position.valueInPercentage
       };
     }
 

@@ -1,4 +1,4 @@
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { DataProviderInfo, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
 import {
   Account,
@@ -23,11 +23,11 @@ export interface IOrder {
 
 export interface IDataProviderHistoricalResponse {
   marketPrice: number;
-  performance?: number;
 }
 
 export interface IDataProviderResponse {
   currency: string;
+  dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
   marketPrice: number;
   marketState: MarketState;

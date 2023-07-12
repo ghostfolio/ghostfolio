@@ -1,19 +1,17 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { environment } from '@ghostfolio/api/environments/environment';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
-import {
-  User as IUser,
-  UserSettings,
-  UserWithSettings
-} from '@ghostfolio/common/interfaces';
+import { User as IUser, UserSettings } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
+import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { sortBy } from 'lodash';
@@ -97,6 +95,7 @@ export class UserService {
     const {
       accessToken,
       Account,
+      Analytics,
       authChallenge,
       createdAt,
       id,
@@ -107,7 +106,12 @@ export class UserService {
       thirdPartyId,
       updatedAt
     } = await this.prismaService.user.findUnique({
-      include: { Account: true, Settings: true, Subscription: true },
+      include: {
+        Account: true,
+        Analytics: true,
+        Settings: true,
+        Subscription: true
+      },
       where: userWhereUniqueInput
     });
 
@@ -121,7 +125,8 @@ export class UserService {
       role,
       Settings,
       thirdPartyId,
-      updatedAt
+      updatedAt,
+      activityCount: Analytics?.activityCount
     };
 
     if (user?.Settings) {
@@ -154,15 +159,22 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
+    let currentPermissions = getPermissions(user.role);
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);
-    }
 
-    let currentPermissions = getPermissions(user.role);
+      if (
+        Analytics?.activityCount % 10 === 0 &&
+        user.subscription?.type === 'Basic'
+      ) {
+        currentPermissions.push(permissions.enableSubscriptionInterstitial);
+      }
 
-    if (user.subscription?.type === 'Premium') {
-      currentPermissions.push(permissions.reportDataGlitch);
+      if (user.subscription?.type === 'Premium') {
+        currentPermissions.push(permissions.reportDataGlitch);
+      }
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
@@ -183,6 +195,10 @@ export class UserService {
           );
         });
       }
+    }
+
+    if (!environment.production && role === 'ADMIN') {
+      currentPermissions.push(permissions.impersonateAllUsers);
     }
 
     user.Account = sortBy(user.Account, (account) => {
@@ -217,7 +233,11 @@ export class UserService {
     return hash.digest('hex');
   }
 
-  public async createUser(data: Prisma.UserCreateInput): Promise<User> {
+  public async createUser({
+    data
+  }: {
+    data: Prisma.UserCreateInput;
+  }): Promise<User> {
     if (!data?.provider) {
       data.provider = 'ANONYMOUS';
     }
@@ -241,6 +261,14 @@ export class UserService {
         }
       }
     });
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      await this.prismaService.analytics.create({
+        data: {
+          User: { connect: { id: user.id } }
+        }
+      });
+    }
 
     if (data.provider === 'ANONYMOUS') {
       const accessToken = this.createAccessToken(
@@ -276,21 +304,29 @@ export class UserService {
   }
 
   public async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    await this.prismaService.access.deleteMany({
-      where: { OR: [{ granteeUserId: where.id }, { userId: where.id }] }
-    });
+    try {
+      await this.prismaService.access.deleteMany({
+        where: { OR: [{ granteeUserId: where.id }, { userId: where.id }] }
+      });
+    } catch {}
 
-    await this.prismaService.account.deleteMany({
-      where: { userId: where.id }
-    });
+    try {
+      await this.prismaService.account.deleteMany({
+        where: { userId: where.id }
+      });
+    } catch {}
 
-    await this.prismaService.analytics.delete({
-      where: { userId: where.id }
-    });
+    try {
+      await this.prismaService.analytics.delete({
+        where: { userId: where.id }
+      });
+    } catch {}
 
-    await this.prismaService.order.deleteMany({
-      where: { userId: where.id }
-    });
+    try {
+      await this.prismaService.order.deleteMany({
+        where: { userId: where.id }
+      });
+    } catch {}
 
     try {
       await this.prismaService.settings.delete({

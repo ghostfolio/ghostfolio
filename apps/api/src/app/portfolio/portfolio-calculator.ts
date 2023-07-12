@@ -1,7 +1,12 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  ResponseError,
+  TimelinePosition
+} from '@ghostfolio/common/interfaces';
+import { GroupBy } from '@ghostfolio/common/types';
 import { Logger } from '@nestjs/common';
 import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
@@ -19,9 +24,10 @@ import {
   isSameYear,
   max,
   min,
-  set
+  set,
+  subDays
 } from 'date-fns';
-import { first, flatten, isNumber, last, sortBy } from 'lodash';
+import { first, flatten, isNumber, last, sortBy, uniq } from 'lodash';
 
 import { CurrentRateService } from './current-rate.service';
 import { CurrentPositions } from './interfaces/current-positions.interface';
@@ -44,6 +50,7 @@ export class PortfolioCalculator {
 
   private currency: string;
   private currentRateService: CurrentRateService;
+  private dataProviderInfos: DataProviderInfo[];
   private orders: PortfolioOrder[];
   private transactionPoints: TransactionPoint[];
 
@@ -176,10 +183,10 @@ export class PortfolioCalculator {
         return isBefore(parseDate(transactionPoint.date), end);
       }) ?? [];
 
-    const firstIndex = transactionPointsBeforeEndDate.length;
+    const currencies: { [symbol: string]: string } = {};
     const dates: Date[] = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
-    const currencies: { [symbol: string]: string } = {};
+    const firstIndex = transactionPointsBeforeEndDate.length;
 
     let day = start;
 
@@ -201,14 +208,17 @@ export class PortfolioCalculator {
       symbols[item.symbol] = true;
     }
 
-    const marketSymbols = await this.currentRateService.getValues({
-      currencies,
-      dataGatheringItems,
-      dateQuery: {
-        in: dates
-      },
-      userCurrency: this.currency
-    });
+    const { dataProviderInfos, values: marketSymbols } =
+      await this.currentRateService.getValues({
+        currencies,
+        dataGatheringItems,
+        dateQuery: {
+          in: dates
+        },
+        userCurrency: this.currency
+      });
+
+    this.dataProviderInfos = dataProviderInfos;
 
     const marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
@@ -226,19 +236,31 @@ export class PortfolioCalculator {
       }
     }
 
-    const netPerformanceValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
+    const valuesByDate: {
+      [date: string]: {
+        maxTotalInvestmentValue: Big;
+        totalCurrentValue: Big;
+        totalInvestmentValue: Big;
+        totalNetPerformanceValue: Big;
+      };
     } = {};
 
-    const investmentValuesBySymbol: {
-      [symbol: string]: { [date: string]: Big };
+    const valuesBySymbol: {
+      [symbol: string]: {
+        currentValues: { [date: string]: Big };
+        investmentValues: { [date: string]: Big };
+        maxInvestmentValues: { [date: string]: Big };
+        netPerformanceValues: { [date: string]: Big };
+      };
     } = {};
-
-    const totalNetPerformanceValues: { [date: string]: Big } = {};
-    const totalInvestmentValues: { [date: string]: Big } = {};
 
     for (const symbol of Object.keys(symbols)) {
-      const { netPerformanceValues, investmentValues } = this.getSymbolMetrics({
+      const {
+        currentValues,
+        investmentValues,
+        maxInvestmentValues,
+        netPerformanceValues
+      } = this.getSymbolMetrics({
         end,
         marketSymbolMap,
         start,
@@ -247,50 +269,67 @@ export class PortfolioCalculator {
         isChartMode: true
       });
 
-      netPerformanceValuesBySymbol[symbol] = netPerformanceValues;
-      investmentValuesBySymbol[symbol] = investmentValues;
+      valuesBySymbol[symbol] = {
+        currentValues,
+        investmentValues,
+        maxInvestmentValues,
+        netPerformanceValues
+      };
     }
 
     for (const currentDate of dates) {
       const dateString = format(currentDate, DATE_FORMAT);
 
-      for (const symbol of Object.keys(netPerformanceValuesBySymbol)) {
-        totalNetPerformanceValues[dateString] =
-          totalNetPerformanceValues[dateString] ?? new Big(0);
+      for (const symbol of Object.keys(valuesBySymbol)) {
+        const symbolValues = valuesBySymbol[symbol];
 
-        if (netPerformanceValuesBySymbol[symbol]?.[dateString]) {
-          totalNetPerformanceValues[dateString] = totalNetPerformanceValues[
-            dateString
-          ].add(netPerformanceValuesBySymbol[symbol][dateString]);
-        }
+        const currentValue =
+          symbolValues.currentValues?.[dateString] ?? new Big(0);
+        const investmentValue =
+          symbolValues.investmentValues?.[dateString] ?? new Big(0);
+        const maxInvestmentValue =
+          symbolValues.maxInvestmentValues?.[dateString] ?? new Big(0);
+        const netPerformanceValue =
+          symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
 
-        totalInvestmentValues[dateString] =
-          totalInvestmentValues[dateString] ?? new Big(0);
-
-        if (investmentValuesBySymbol[symbol]?.[dateString]) {
-          totalInvestmentValues[dateString] = totalInvestmentValues[
-            dateString
-          ].add(investmentValuesBySymbol[symbol][dateString]);
-        }
+        valuesByDate[dateString] = {
+          totalCurrentValue: (
+            valuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
+          ).add(currentValue),
+          totalInvestmentValue: (
+            valuesByDate[dateString]?.totalInvestmentValue ?? new Big(0)
+          ).add(investmentValue),
+          maxTotalInvestmentValue: (
+            valuesByDate[dateString]?.maxTotalInvestmentValue ?? new Big(0)
+          ).add(maxInvestmentValue),
+          totalNetPerformanceValue: (
+            valuesByDate[dateString]?.totalNetPerformanceValue ?? new Big(0)
+          ).add(netPerformanceValue)
+        };
       }
     }
 
-    return Object.keys(totalNetPerformanceValues).map((date) => {
-      const netPerformanceInPercentage = totalInvestmentValues[date].eq(0)
+    return Object.entries(valuesByDate).map(([date, values]) => {
+      const {
+        maxTotalInvestmentValue,
+        totalCurrentValue,
+        totalInvestmentValue,
+        totalNetPerformanceValue
+      } = values;
+
+      const netPerformanceInPercentage = maxTotalInvestmentValue.eq(0)
         ? 0
-        : totalNetPerformanceValues[date]
-            .div(totalInvestmentValues[date])
+        : totalNetPerformanceValue
+            .div(maxTotalInvestmentValue)
             .mul(100)
             .toNumber();
 
       return {
         date,
         netPerformanceInPercentage,
-        netPerformance: totalNetPerformanceValues[date].toNumber(),
-        totalInvestment: totalInvestmentValues[date].toNumber(),
-        value: totalInvestmentValues[date]
-          .plus(totalNetPerformanceValues[date])
-          .toNumber()
+        netPerformance: totalNetPerformanceValue.toNumber(),
+        totalInvestment: totalInvestmentValue.toNumber(),
+        value: totalCurrentValue.toNumber()
       };
     });
   }
@@ -322,7 +361,7 @@ export class PortfolioCalculator {
 
     let firstTransactionPoint: TransactionPoint = null;
     let firstIndex = transactionPointsBeforeEndDate.length;
-    const dates = [];
+    let dates = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
     const currencies: { [symbol: string]: string } = {};
 
@@ -351,7 +390,30 @@ export class PortfolioCalculator {
 
     dates.push(resetHours(end));
 
-    const marketSymbols = await this.currentRateService.getValues({
+    // Add dates of last week for fallback
+    dates.push(subDays(resetHours(new Date()), 7));
+    dates.push(subDays(resetHours(new Date()), 6));
+    dates.push(subDays(resetHours(new Date()), 5));
+    dates.push(subDays(resetHours(new Date()), 4));
+    dates.push(subDays(resetHours(new Date()), 3));
+    dates.push(subDays(resetHours(new Date()), 2));
+    dates.push(subDays(resetHours(new Date()), 1));
+    dates.push(resetHours(new Date()));
+
+    dates = uniq(
+      dates.map((date) => {
+        return date.getTime();
+      })
+    ).map((timestamp) => {
+      return new Date(timestamp);
+    });
+    dates.sort((a, b) => a.getTime() - b.getTime());
+
+    const {
+      dataProviderInfos,
+      errors: currentRateErrors,
+      values: marketSymbols
+    } = await this.currentRateService.getValues({
       currencies,
       dataGatheringItems,
       dateQuery: {
@@ -359,6 +421,8 @@ export class PortfolioCalculator {
       },
       userCurrency: this.currency
     });
+
+    this.dataProviderInfos = dataProviderInfos;
 
     const marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
@@ -414,6 +478,7 @@ export class PortfolioCalculator {
           : item.investment.div(item.quantity),
         currency: item.currency,
         dataSource: item.dataSource,
+        fee: item.fee,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? grossPerformance ?? null : null,
         grossPerformancePercentage: !hasErrors
@@ -430,7 +495,13 @@ export class PortfolioCalculator {
         transactionCount: item.transactionCount
       });
 
-      if (hasErrors) {
+      if (
+        (hasErrors ||
+          currentRateErrors.find(({ dataSource, symbol }) => {
+            return dataSource === item.dataSource && symbol === item.symbol;
+          })) &&
+        item.investment.gt(0)
+      ) {
         errors.push({ dataSource: item.dataSource, symbol: item.symbol });
       }
     }
@@ -443,6 +514,10 @@ export class PortfolioCalculator {
       positions,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
+  }
+
+  public getDataProviderInfos() {
+    return this.dataProviderInfos;
   }
 
   public getInvestments(): { date: string; investment: Big }[] {
@@ -462,51 +537,95 @@ export class PortfolioCalculator {
     });
   }
 
-  public getInvestmentsByMonth(): { date: string; investment: Big }[] {
+  public getInvestmentsByGroup(
+    groupBy: GroupBy
+  ): { date: string; investment: Big }[] {
     if (this.orders.length === 0) {
       return [];
     }
 
-    const investments = [];
+    const investments: { date: string; investment: Big }[] = [];
     let currentDate: Date;
-    let investmentByMonth = new Big(0);
+    let investmentByGroup = new Big(0);
 
     for (const [index, order] of this.orders.entries()) {
       if (
-        isSameMonth(parseDate(order.date), currentDate) &&
-        isSameYear(parseDate(order.date), currentDate)
+        isSameYear(parseDate(order.date), currentDate) &&
+        (groupBy === 'year' || isSameMonth(parseDate(order.date), currentDate))
       ) {
-        // Same month: Add up investments
-
-        investmentByMonth = investmentByMonth.plus(
+        // Same group: Add up investments
+        investmentByGroup = investmentByGroup.plus(
           order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
         );
       } else {
-        // New month: Store previous month and reset
-
+        // New group: Store previous group and reset
         if (currentDate) {
           investments.push({
-            date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
-            investment: investmentByMonth
+            date: format(
+              set(currentDate, {
+                date: 1,
+                month: groupBy === 'year' ? 0 : currentDate.getMonth()
+              }),
+              DATE_FORMAT
+            ),
+            investment: investmentByGroup
           });
         }
 
         currentDate = parseDate(order.date);
-        investmentByMonth = order.quantity
+        investmentByGroup = order.quantity
           .mul(order.unitPrice)
           .mul(this.getFactor(order.type));
       }
 
       if (index === this.orders.length - 1) {
-        // Store current month (latest order)
+        // Store current group (latest order)
         investments.push({
-          date: format(set(currentDate, { date: 1 }), DATE_FORMAT),
-          investment: investmentByMonth
+          date: format(
+            set(currentDate, {
+              date: 1,
+              month: groupBy === 'year' ? 0 : currentDate.getMonth()
+            }),
+            DATE_FORMAT
+          ),
+          investment: investmentByGroup
         });
       }
     }
 
-    return investments;
+    // Fill in the missing dates with investment = 0
+    const startDate = parseDate(first(this.orders).date);
+    const endDate = parseDate(last(this.orders).date);
+
+    const allDates: string[] = [];
+    currentDate = startDate;
+
+    while (currentDate <= endDate) {
+      allDates.push(
+        format(
+          set(currentDate, {
+            date: 1,
+            month: groupBy === 'year' ? 0 : currentDate.getMonth()
+          }),
+          DATE_FORMAT
+        )
+      );
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+
+    for (const date of allDates) {
+      const existingInvestment = investments.find((investment) => {
+        return investment.date === date;
+      });
+
+      if (!existingInvestment) {
+        investments.push({ date, investment: new Big(0) });
+      }
+    }
+
+    return sortBy(investments, (investment) => {
+      return investment.date;
+    });
   }
 
   public async calculateTimeline(
@@ -662,7 +781,7 @@ export class PortfolioCalculator {
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
-          `Missing initial value for symbol ${currentPosition.symbol} at ${currentPosition.firstBuyDate}`,
+          `Missing historical market data for symbol ${currentPosition.symbol}`,
           'PortfolioCalculator'
         );
         hasErrors = true;
@@ -716,7 +835,7 @@ export class PortfolioCalculator {
       let marketSymbols: GetValueObject[] = [];
       if (dataGatheringItems.length > 0) {
         try {
-          marketSymbols = await this.currentRateService.getValues({
+          const { values } = await this.currentRateService.getValues({
             currencies,
             dataGatheringItems,
             dateQuery: {
@@ -725,6 +844,7 @@ export class PortfolioCalculator {
             },
             userCurrency: this.currency
           });
+          marketSymbols = values;
         } catch (error) {
           Logger.error(
             `Failed to fetch info for date ${startDate} with exception`,
@@ -858,12 +978,16 @@ export class PortfolioCalculator {
 
     if (orders.length <= 0) {
       return {
+        currentValues: {},
+        grossPerformance: new Big(0),
+        grossPerformancePercentage: new Big(0),
         hasErrors: false,
         initialValue: new Big(0),
+        investmentValues: {},
+        maxInvestmentValues: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0)
+        netPerformanceValues: {}
       };
     }
 
@@ -898,14 +1022,12 @@ export class PortfolioCalculator {
     let grossPerformanceFromSells = new Big(0);
     let initialValue: Big;
     let investmentAtStartDate: Big;
+    const currentValues: { [date: string]: Big } = {};
     const investmentValues: { [date: string]: Big } = {};
+    const maxInvestmentValues: { [date: string]: Big } = {};
     let lastAveragePrice = new Big(0);
-    // let lastTransactionInvestment = new Big(0);
-    // let lastValueOfInvestmentBeforeTransaction = new Big(0);
     let maxTotalInvestment = new Big(0);
     const netPerformanceValues: { [date: string]: Big } = {};
-    // let timeWeightedGrossPerformancePercentage = new Big(1);
-    // let timeWeightedNetPerformancePercentage = new Big(1);
     let totalInvestment = new Big(0);
     let totalInvestmentWithGrossPerformanceFromSell = new Big(0);
     let totalUnits = new Big(0);
@@ -1036,10 +1158,12 @@ export class PortfolioCalculator {
       const transactionInvestment =
         order.type === 'BUY'
           ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
-          : totalInvestment
+          : totalUnits.gt(0)
+          ? totalInvestment
               .div(totalUnits)
               .mul(order.quantity)
-              .mul(this.getFactor(order.type));
+              .mul(this.getFactor(order.type))
+          : new Big(0);
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log('totalInvestment', totalInvestment.toNumber());
@@ -1109,54 +1233,7 @@ export class PortfolioCalculator {
         .minus(totalInvestment)
         .plus(grossPerformanceFromSells);
 
-      // if (
-      //   i > indexOfStartOrder &&
-      //   !lastValueOfInvestmentBeforeTransaction
-      //     .plus(lastTransactionInvestment)
-      //     .eq(0)
-      // ) {
-      // const grossHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-      //   .minus(
-      //     lastValueOfInvestmentBeforeTransaction.plus(
-      //       lastTransactionInvestment
-      //     )
-      //   )
-      //   .div(
-      //     lastValueOfInvestmentBeforeTransaction.plus(
-      //       lastTransactionInvestment
-      //     )
-      //   );
-
-      // timeWeightedGrossPerformancePercentage =
-      //   timeWeightedGrossPerformancePercentage.mul(
-      //     new Big(1).plus(grossHoldingPeriodReturn)
-      //   );
-
-      // const netHoldingPeriodReturn = valueOfInvestmentBeforeTransaction
-      //   .minus(fees.minus(feesAtStartDate))
-      //   .minus(
-      //     lastValueOfInvestmentBeforeTransaction.plus(
-      //       lastTransactionInvestment
-      //     )
-      //   )
-      //   .div(
-      //     lastValueOfInvestmentBeforeTransaction.plus(
-      //       lastTransactionInvestment
-      //     )
-      //   );
-
-      // timeWeightedNetPerformancePercentage =
-      //   timeWeightedNetPerformancePercentage.mul(
-      //     new Big(1).plus(netHoldingPeriodReturn)
-      //   );
-      // }
-
       grossPerformance = newGrossPerformance;
-
-      // lastTransactionInvestment = transactionInvestment;
-
-      // lastValueOfInvestmentBeforeTransaction =
-      //   valueOfInvestmentBeforeTransaction;
 
       if (order.itemType === 'start') {
         feesAtStartDate = fees;
@@ -1164,11 +1241,13 @@ export class PortfolioCalculator {
       }
 
       if (isChartMode && i > indexOfStartOrder) {
+        currentValues[order.date] = valueOfInvestment;
         netPerformanceValues[order.date] = grossPerformance
           .minus(grossPerformanceAtStartDate)
           .minus(fees.minus(feesAtStartDate));
 
-        investmentValues[order.date] = maxTotalInvestment;
+        investmentValues[order.date] = totalInvestment;
+        maxInvestmentValues[order.date] = maxTotalInvestment;
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -1183,12 +1262,6 @@ export class PortfolioCalculator {
         break;
       }
     }
-
-    // timeWeightedGrossPerformancePercentage =
-    //   timeWeightedGrossPerformancePercentage.minus(1);
-
-    // timeWeightedNetPerformancePercentage =
-    //   timeWeightedNetPerformancePercentage.minus(1);
 
     const totalGrossPerformance = grossPerformance.minus(
       grossPerformanceAtStartDate
@@ -1253,6 +1326,7 @@ export class PortfolioCalculator {
         Average price: ${averagePriceAtStartDate.toFixed(
           2
         )} -> ${averagePriceAtEndDate.toFixed(2)}
+        Total investment: ${totalInvestment.toFixed(2)}
         Max. total investment: ${maxTotalInvestment.toFixed(2)}
         Gross performance: ${totalGrossPerformance.toFixed(
           2
@@ -1265,14 +1339,16 @@ export class PortfolioCalculator {
     }
 
     return {
-      initialValue,
+      currentValues,
       grossPerformancePercentage,
+      initialValue,
       investmentValues,
+      maxInvestmentValues,
       netPerformancePercentage,
       netPerformanceValues,
+      grossPerformance: totalGrossPerformance,
       hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
-      netPerformance: totalNetPerformance,
-      grossPerformance: totalGrossPerformance
+      netPerformance: totalNetPerformance
     };
   }
 

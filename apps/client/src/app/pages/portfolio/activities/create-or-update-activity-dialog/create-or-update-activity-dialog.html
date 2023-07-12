@@ -1,0 +1,307 @@
+<form
+  class="d-flex flex-column h-100"
+  [formGroup]="activityForm"
+  (keyup.enter)="activityForm.valid && onSubmit()"
+  (ngSubmit)="onSubmit()"
+>
+  <h1 *ngIf="data.activity.id" i18n mat-dialog-title>Update activity</h1>
+  <h1 *ngIf="!data.activity.id" i18n mat-dialog-title>Add activity</h1>
+  <div class="flex-grow-1 py-3" mat-dialog-content>
+    <div class="mb-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Type</mat-label>
+        <mat-select formControlName="type">
+          <mat-option i18n value="BUY">Buy</mat-option>
+          <mat-option i18n value="DIVIDEND">Dividend</mat-option>
+          <mat-option i18n value="ITEM">Item</mat-option>
+          <mat-option i18n value="LIABILITY">Liability</mat-option>
+          <mat-option i18n value="SELL">Sell</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div [ngClass]="{'mb-3': data.activity.id}">
+      <mat-form-field
+        appearance="outline"
+        class="w-100"
+        [ngClass]="{'mb-1 without-hint': !data.activity.id}"
+      >
+        <mat-label i18n>Account</mat-label>
+        <mat-select formControlName="accountId">
+          <mat-option
+            *ngIf="!activityForm.controls['accountId'].hasValidator(Validators.required)"
+            [value]="null"
+          ></mat-option>
+          <mat-option *ngFor="let account of data.accounts" [value]="account.id"
+            >{{ account.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="mb-3" [ngClass]="{'d-none': data.activity.id}">
+      <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n
+        >Update Cash Balance</mat-checkbox
+      >
+    </div>
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': !activityForm.controls['searchSymbol'].hasValidator(Validators.required) }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Name, symbol or ISIN</mat-label>
+        <gf-symbol-autocomplete
+          formControlName="searchSymbol"
+          [isLoading]="isLoading"
+        />
+      </mat-form-field>
+    </div>
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': !activityForm.controls['name'].hasValidator(Validators.required) }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Name</mat-label>
+        <input formControlName="name" matInput />
+      </mat-form-field>
+    </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Currency</mat-label>
+        <mat-select formControlName="currency">
+          <mat-option *ngFor="let currency of currencies" [value]="currency"
+            >{{ currency }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Data Source</mat-label>
+        <input formControlName="dataSource" matInput />
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Date</mat-label>
+        <input formControlName="date" matInput [matDatepicker]="date" />
+        <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
+          <ion-icon
+            class="text-muted"
+            matDatepickerToggleIcon
+            name="calendar-clear-outline"
+          ></ion-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #date disabled="false"></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Quantity</mat-label>
+        <input formControlName="quantity" matInput type="number" />
+      </mat-form-field>
+    </div>
+    <div class="align-items-start d-flex mb-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label
+          ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
+            <ng-container *ngSwitchCase="'DIVIDEND'" i18n
+              >Dividend</ng-container
+            >
+            <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
+            <ng-container *ngSwitchCase="'LIABILITY'" i18n>Value</ng-container>
+            <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
+          </ng-container>
+        </mat-label>
+        <input
+          formControlName="unitPriceInCustomCurrency"
+          matInput
+          type="number"
+        />
+        <div
+          class="ml-2"
+          matTextSuffix
+          [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
+        >
+          <mat-select formControlName="currencyOfUnitPrice">
+            <mat-option *ngFor="let currency of currencies" [value]="currency">
+              {{ currency }}
+            </mat-option>
+          </mat-select>
+        </div>
+        <mat-error
+          *ngIf="activityForm.controls['unitPriceInCustomCurrency'].hasError('invalid')"
+          ><ng-container i18n
+            >Oops! Could not get the historical exchange rate from</ng-container
+          >
+          {{ activityForm.controls['date']?.value | date: defaultDateFormat
+          }}</mat-error
+        >
+      </mat-form-field>
+      <button
+        *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
+        class="ml-2 mt-1 no-min-width"
+        mat-button
+        title="Apply current market price"
+        type="button"
+        (click)="applyCurrentMarketPrice()"
+      >
+        <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+      </button>
+    </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label
+          ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
+            <ng-container *ngSwitchCase="'DIVIDEND'" i18n
+              >Dividend</ng-container
+            >
+            <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
+            <ng-container *ngSwitchCase="'LIABILITY'" i18n>Value</ng-container>
+            <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
+          </ng-container>
+        </mat-label>
+        <input formControlName="unitPrice" matInput type="number" />
+        <span class="ml-2" matTextSuffix
+          >{{ activityForm.controls['currency'].value }}</span
+        >
+      </mat-form-field>
+    </div>
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Fee</mat-label>
+        <input formControlName="feeInCustomCurrency" matInput type="number" />
+        <div
+          class="ml-2"
+          matTextSuffix
+          [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
+        >
+          <mat-select formControlName="currencyOfFee">
+            <mat-option *ngFor="let currency of currencies" [value]="currency">
+              {{ currency }}
+            </mat-option>
+          </mat-select>
+        </div>
+        <mat-error
+          *ngIf="activityForm.controls['feeInCustomCurrency'].hasError('invalid')"
+          ><ng-container i18n
+            >Oops! Could not get the historical exchange rate from</ng-container
+          >
+          {{ activityForm.controls['date']?.value | date: defaultDateFormat
+          }}</mat-error
+        >
+      </mat-form-field>
+    </div>
+    <div class="d-none">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Fee</mat-label>
+        <input formControlName="fee" matInput type="number" />
+        <span class="ml-2" matTextSuffix
+          >{{ activityForm.controls['currency'].value }}</span
+        >
+      </mat-form-field>
+    </div>
+    <div class="mb-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Note</mat-label>
+        <textarea
+          cdkAutosizeMinRows="2"
+          cdkTextareaAutosize
+          formControlName="comment"
+          matInput
+          (keyup.enter)="$event.stopPropagation()"
+        ></textarea>
+      </mat-form-field>
+    </div>
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Asset Class</mat-label>
+        <mat-select formControlName="assetClass">
+          <mat-option [value]="null"></mat-option>
+          <mat-option
+            *ngFor="let assetClass of assetClasses"
+            [value]="assetClass.id"
+            >{{ assetClass.label }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+    >
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Asset Sub Class</mat-label>
+        <mat-select formControlName="assetSubClass">
+          <mat-option [value]="null"></mat-option>
+          <mat-option
+            *ngFor="let assetSubClass of assetSubClasses"
+            [value]="assetSubClass.id"
+            >{{ assetSubClass.label }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="mb-3" [ngClass]="{ 'd-none': tags?.length < 1 }">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Tags</mat-label>
+        <mat-chip-grid #tagsChipList>
+          <mat-chip-row
+            *ngFor="let tag of activityForm.controls['tags']?.value"
+            matChipRemove
+            [removable]="true"
+            (removed)="onRemoveTag(tag)"
+          >
+            {{ tag.name }}
+            <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
+          </mat-chip-row>
+          <input
+            #tagInput
+            name="close-outline"
+            [matAutocomplete]="autocompleteTags"
+            [matChipInputFor]="tagsChipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          />
+        </mat-chip-grid>
+        <mat-autocomplete
+          #autocompleteTags="matAutocomplete"
+          (optionSelected)="onAddTag($event)"
+        >
+          <mat-option
+            *ngFor="let tag of filteredTagsObservable | async"
+            [value]="tag.id"
+          >
+            {{ tag.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="d-flex" mat-dialog-actions>
+    <gf-value
+      class="flex-grow-1"
+      [isCurrency]="true"
+      [locale]="data.user?.settings?.locale"
+      [unit]="activityForm.controls['currency']?.value ?? data.user?.settings?.baseCurrency"
+      [value]="total"
+    ></gf-value>
+    <div>
+      <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
+      <button
+        color="primary"
+        mat-flat-button
+        type="submit"
+        [disabled]="!activityForm.valid"
+      >
+        <ng-container i18n>Save</ng-container>
+      </button>
+    </div>
+  </div>
+</form>

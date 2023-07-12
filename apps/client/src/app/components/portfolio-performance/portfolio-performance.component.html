@@ -3,14 +3,14 @@
     <div
       class="flex-grow-1 status text-muted text-right"
       [title]="
-        hasError && !isLoading
+        errors?.length > 0 && !isLoading
           ? 'Sorry! Our data provider partner is experiencing the hiccups.'
           : ''
       "
       (click)="errors?.length > 0 && onShowErrors()"
     >
       <ion-icon
-        *ngIf="hasError && !isLoading"
+        *ngIf="errors?.length > 0 && !isLoading"
         name="alert-circle-outline"
       ></ion-icon>
     </div>

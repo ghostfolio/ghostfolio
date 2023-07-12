@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 
 @Component({
   host: { class: 'page' },
+  imports: [MatButtonModule, RouterModule],
   selector: 'gf-hallo-ghostfolio-page',
-  styleUrls: ['./hallo-ghostfolio-page.scss'],
+  standalone: true,
   templateUrl: './hallo-ghostfolio-page.html'
 })
 export class HalloGhostfolioPageComponent {}

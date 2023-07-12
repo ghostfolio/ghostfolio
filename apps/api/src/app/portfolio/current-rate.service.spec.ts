@@ -1,12 +1,13 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
-import { GetValueObject } from './interfaces/get-value-object.interface';
+import { GetValuesObject } from './interfaces/get-values-object.interface';
 
-jest.mock('@ghostfolio/api/services/market-data.service', () => {
+jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
   return {
     MarketDataService: jest.fn().mockImplementation(() => {
       return {
@@ -17,7 +18,8 @@ jest.mock('@ghostfolio/api/services/market-data.service', () => {
             createdAt: date,
             dataSource: DataSource.YAHOO,
             id: 'aefcbe3a-ee10-4c4f-9f2d-8ffad7b05584',
-            marketPrice: 1847.839966
+            marketPrice: 1847.839966,
+            state: 'CLOSE'
           });
         },
         getRange: ({
@@ -36,6 +38,7 @@ jest.mock('@ghostfolio/api/services/market-data.service', () => {
               date: dateRangeStart,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902,
+              state: 'CLOSE',
               symbol: symbols[0]
             },
             {
@@ -44,6 +47,7 @@ jest.mock('@ghostfolio/api/services/market-data.service', () => {
               date: dateRangeEnd,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966,
+              state: 'CLOSE',
               symbol: symbols[0]
             }
           ]);
@@ -53,14 +57,27 @@ jest.mock('@ghostfolio/api/services/market-data.service', () => {
   };
 });
 
-jest.mock('@ghostfolio/api/services/exchange-rate-data.service', () => {
+jest.mock(
+  '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service',
+  () => {
+    return {
+      ExchangeRateDataService: jest.fn().mockImplementation(() => {
+        return {
+          initialize: () => Promise.resolve(),
+          toCurrency: (value: number) => {
+            return 1 * value;
+          }
+        };
+      })
+    };
+  }
+);
+
+jest.mock('@ghostfolio/api/services/property/property.service', () => {
   return {
-    ExchangeRateDataService: jest.fn().mockImplementation(() => {
+    PropertyService: jest.fn().mockImplementation(() => {
       return {
-        initialize: () => Promise.resolve(),
-        toCurrency: (value: number) => {
-          return 1 * value;
-        }
+        getByKey: (key: string) => Promise.resolve({})
       };
     })
   };
@@ -71,10 +88,21 @@ describe('CurrentRateService', () => {
   let dataProviderService: DataProviderService;
   let exchangeRateDataService: ExchangeRateDataService;
   let marketDataService: MarketDataService;
+  let propertyService: PropertyService;
 
   beforeAll(async () => {
-    dataProviderService = new DataProviderService(null, [], null);
+    propertyService = new PropertyService(null);
+
+    dataProviderService = new DataProviderService(
+      null,
+      [],
+      null,
+      null,
+      propertyService,
+      null
+    );
     exchangeRateDataService = new ExchangeRateDataService(
+      null,
       null,
       null,
       null,
@@ -102,17 +130,16 @@ describe('CurrentRateService', () => {
         },
         userCurrency: 'CHF'
       })
-    ).toMatchObject<GetValueObject[]>([
-      {
-        date: undefined,
-        marketPriceInBaseCurrency: 1841.823902,
-        symbol: 'AMZN'
-      },
-      {
-        date: undefined,
-        marketPriceInBaseCurrency: 1847.839966,
-        symbol: 'AMZN'
-      }
-    ]);
+    ).toMatchObject<GetValuesObject>({
+      dataProviderInfos: [],
+      errors: [],
+      values: [
+        {
+          date: undefined,
+          marketPriceInBaseCurrency: 1841.823902,
+          symbol: 'AMZN'
+        }
+      ]
+    });
   });
 });

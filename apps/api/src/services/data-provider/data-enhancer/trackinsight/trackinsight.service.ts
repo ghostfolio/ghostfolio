@@ -1,13 +1,15 @@
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
+import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import bent from 'bent';
 
 const getJSON = bent('json');
 
+@Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private static baseUrl = 'https://data.trackinsight.com/holdings';
+  private static baseUrl = 'https://data.trackinsight.com';
   private static countries = require('countries-list/dist/countries.json');
   private static countriesMapping = {
     'Russian Federation': 'Russia'
@@ -32,17 +34,29 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const result = await getJSON(
-      `${TrackinsightDataEnhancerService.baseUrl}/${symbol}.json`
+    const profile = await getJSON(
+      `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${symbol}.json`
+    ).catch(() => {
+      return {};
+    });
+
+    const isin = profile.isin?.split(';')?.[0];
+
+    if (isin) {
+      response.isin = isin;
+    }
+
+    const holdings = await getJSON(
+      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`
     ).catch(() => {
       return getJSON(
-        `${TrackinsightDataEnhancerService.baseUrl}/${
-          symbol.split('.')[0]
+        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
+          symbol.split('.')?.[0]
         }.json`
       );
     });
 
-    if (result.weight < 0.95) {
+    if (holdings?.weight < 0.95) {
       // Skip if data is inaccurate
       return response;
     }
@@ -52,7 +66,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       (response.countries as unknown as Country[]).length === 0
     ) {
       response.countries = [];
-      for (const [name, value] of Object.entries<any>(result.countries)) {
+      for (const [name, value] of Object.entries<any>(
+        holdings?.countries ?? {}
+      )) {
         let countryCode: string;
 
         for (const [key, country] of Object.entries<any>(
@@ -80,7 +96,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       (response.sectors as unknown as Sector[]).length === 0
     ) {
       response.sectors = [];
-      for (const [name, value] of Object.entries<any>(result.sectors)) {
+      for (const [name, value] of Object.entries<any>(
+        holdings?.sectors ?? {}
+      )) {
         response.sectors.push({
           name: TrackinsightDataEnhancerService.sectorsMapping[name] ?? name,
           weight: value.weight

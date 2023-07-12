@@ -5,11 +5,8 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  MatSlideToggle,
-  MatSlideToggleChange
-} from '@angular/material/slide-toggle';
 import {
   MatSnackBar,
   MatSnackBarRef,
@@ -39,7 +36,7 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
 })
 export class AccountPageComponent implements OnDestroy, OnInit {
   @ViewChild('toggleSignInWithFingerprintEnabledElement')
-  signInWithFingerprintElement: MatSlideToggle;
+  signInWithFingerprintElement: MatCheckbox;
 
   public accesses: Access[];
   public appearancePlaceholder = $localize`Auto`;
@@ -55,7 +52,17 @@ export class AccountPageComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public language = document.documentElement.lang;
-  public locales = ['de', 'de-CH', 'en-GB', 'en-US', 'es', 'it', 'nl'];
+  public locales = [
+    'de',
+    'de-CH',
+    'en-GB',
+    'en-US',
+    'es',
+    'fr',
+    'it',
+    'nl',
+    'pt'
+  ];
   public price: number;
   public priceId: string;
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
@@ -81,8 +88,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
-    this.coupon = subscriptions?.[0]?.coupon;
-    this.couponId = subscriptions?.[0]?.couponId;
     this.currencies = currencies;
 
     this.hasPermissionForSubscription = hasPermission(
@@ -94,9 +99,6 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       globalPermissions,
       permissions.deleteAccess
     );
-
-    this.price = subscriptions?.[0]?.price;
-    this.priceId = subscriptions?.[0]?.priceId;
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -130,6 +132,12 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
           this.locales.push(this.user.settings.locale);
           this.locales = uniq(this.locales.sort());
+
+          this.coupon = subscriptions?.[this.user.subscription.offer]?.coupon;
+          this.couponId =
+            subscriptions?.[this.user.subscription.offer]?.couponId;
+          this.price = subscriptions?.[this.user.subscription.offer]?.price;
+          this.priceId = subscriptions?.[this.user.subscription.offer]?.priceId;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -181,9 +189,11 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
       .pipe(
         switchMap(({ sessionId }: { sessionId: string }) => {
-          return this.stripeService.redirectToCheckout({
-            sessionId
-          });
+          return this.stripeService.redirectToCheckout({ sessionId });
+        }),
+        catchError((error) => {
+          alert(error.message);
+          throw error;
         })
       )
       .subscribe((result) => {
@@ -204,7 +214,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
+  public onExperimentalFeaturesChange(aEvent: MatCheckboxChange) {
     this.dataService
       .putUserSetting({ isExperimentalFeatures: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -269,7 +279,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
+  public onRestrictedViewChange(aEvent: MatCheckboxChange) {
     this.dataService
       .putUserSetting({ isRestrictedView: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -287,7 +297,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
+  public onSignInWithFingerprintChange(aEvent: MatCheckboxChange) {
     if (aEvent.checked) {
       this.registerDevice();
     } else {
@@ -301,6 +311,24 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         this.update();
       }
     }
+  }
+
+  public onViewModeChange(aEvent: MatCheckboxChange) {
+    this.dataService
+      .putUserSetting({ viewMode: aEvent.checked === true ? 'ZEN' : 'DEFAULT' })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
   }
 
   public ngOnDestroy() {

@@ -1,0 +1,35 @@
+:host {
+  display: block;
+
+  a {
+    color: rgba(var(--palette-primary-500), 1);
+  }
+
+  mat-stepper {
+    ::ng-deep {
+      .mat-step-header {
+        &[aria-selected='false'] {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+  .mat-expansion-panel {
+    background: none;
+    box-shadow: none;
+
+    .mat-expansion-panel-header {
+      color: inherit;
+
+      &[aria-disabled='true'] {
+        cursor: default;
+      }
+    }
+  }
+
+  .mat-mdc-progress-spinner {
+    right: 1.5rem;
+    top: calc(50% - 10px);
+  }
+}

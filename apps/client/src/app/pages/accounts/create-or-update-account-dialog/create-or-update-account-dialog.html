@@ -1,7 +1,7 @@
 <form #addAccountForm="ngForm" class="d-flex flex-column h-100">
   <h1 *ngIf="data.account.id" i18n mat-dialog-title>Update account</h1>
   <h1 *ngIf="!data.account.id" i18n mat-dialog-title>Add account</h1>
-  <div class="flex-grow-1" mat-dialog-content>
+  <div class="flex-grow-1 py-3" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
@@ -37,9 +37,10 @@
           type="number"
           [(ngModel)]="data.account.balance"
         />
+        <span class="ml-2" matTextSuffix>{{ data.account.currency }}</span>
       </mat-form-field>
     </div>
-    <div>
+    <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
         <mat-select name="platformId" [(value)]="data.account.platformId">
@@ -48,6 +49,19 @@
             >{{ platform.name }}</mat-option
           >
         </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Note</mat-label>
+        <textarea
+          cdkAutosizeMinRows="2"
+          cdkTextareaAutosize
+          matInput
+          name="comment"
+          [(ngModel)]="data.account.comment"
+          (keyup.enter)="$event.stopPropagation()"
+        ></textarea>
       </mat-form-field>
     </div>
     <div class="mb-3 px-2">

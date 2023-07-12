@@ -5,7 +5,7 @@
   "npmScope": "ghostfolio",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "nx-cloud",
       "options": {
         "accessToken": "Mjg0ZGQ2YjAtNGI4NS00NmYwLThhOWEtMWZmNmQzODM4YzU4fHJlYWQ=",
         "cacheableOperations": [
@@ -21,17 +21,17 @@
   },
   "defaultProject": "api",
   "generators": {
-    "@nrwl/angular:application": {
+    "@nx/angular:application": {
       "linter": "eslint",
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
-    "@nrwl/angular:library": {
+    "@nx/angular:library": {
       "linter": "eslint",
       "unitTestRunner": "jest"
     },
-    "@nrwl/nest": {},
-    "@nrwl/angular:component": {}
+    "@nx/angular:component": {},
+    "@nx/nest": {}
   },
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
@@ -46,7 +46,12 @@
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
     },
     "build-storybook": {
-      "inputs": ["default", "^production", "{workspaceRoot}/.storybook/**/*"]
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/.storybook/**/*",
+        "!{projectRoot}/.storybook/**/*"
+      ]
     }
   },
   "namedInputs": {

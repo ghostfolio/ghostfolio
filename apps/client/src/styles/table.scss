@@ -9,6 +9,30 @@
     }
   }
 
+  .mat-mdc-footer-row {
+    .mat-mdc-footer-cell {
+      border-top: 1px solid
+        rgba(
+          var(--palette-foreground-divider),
+          var(--palette-foreground-divider-alpha)
+        );
+    }
+  }
+
+  .mat-mdc-row {
+    &:nth-child(even) {
+      background-color: rgba(var(--palette-foreground-base), 0.02);
+    }
+
+    &:hover {
+      background-color: rgba(var(--palette-foreground-base), 0.05) !important;
+    }
+
+    .mat-mdc-cell {
+      background: none;
+    }
+  }
+
   .mat-row {
     &:nth-child(even) {
       background-color: rgba(var(--palette-foreground-base), 0.02);
@@ -20,6 +44,32 @@
   }
 
   @if $darkTheme {
+    .mat-mdc-footer-row {
+      .mat-mdc-footer-cell {
+        border-top-color: rgba(
+          var(--palette-foreground-divider-dark),
+          var(--palette-foreground-divider-dark-alpha)
+        );
+      }
+    }
+
+    .mat-mdc-row {
+      &:nth-child(even) {
+        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+      }
+
+      &:hover {
+        background-color: rgba(
+          var(--palette-foreground-base-dark),
+          0.05
+        ) !important;
+      }
+
+      .mat-mdc-cell {
+        background: none;
+      }
+    }
+
     .mat-row {
       &:nth-child(even) {
         background-color: rgba(var(--palette-foreground-base-dark), 0.02);

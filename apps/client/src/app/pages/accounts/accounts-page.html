@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-flex justify-content-center mb-3" i18n>Accounts</h3>
+      <h3 class="d-none d-sm-block mb-3 text-center" i18n>Accounts</h3>
       <div class="accounts">
         <gf-accounts-table
           [accounts]="accounts"
@@ -27,8 +27,8 @@
       class="align-items-center d-flex justify-content-center"
       color="primary"
       mat-fab
-      [routerLink]="[]"
       [queryParams]="{ createDialog: true }"
+      [routerLink]="[]"
     >
       <ion-icon name="add-outline" size="large"></ion-icon>
     </a>

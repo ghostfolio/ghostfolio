@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 
 @Component({
   host: { class: 'page' },
+  imports: [MatButtonModule, RouterModule],
   selector: 'gf-ghostfolio-meets-internet-identity-page',
-  styleUrls: ['./ghostfolio-meets-internet-identity-page.scss'],
+  standalone: true,
   templateUrl: './ghostfolio-meets-internet-identity-page.html'
 })
 export class GhostfolioMeetsInternetIdentityPageComponent {}

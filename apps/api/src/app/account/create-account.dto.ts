@@ -1,4 +1,5 @@
 import { AccountType } from '@prisma/client';
+import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsBoolean,
   IsNumber,
@@ -6,6 +7,7 @@ import {
   IsString,
   ValidateIf
 } from 'class-validator';
+import { isString } from 'lodash';
 
 export class CreateAccountDto {
   @IsString()
@@ -14,8 +16,19 @@ export class CreateAccountDto {
   @IsNumber()
   balance: number;
 
+  @IsOptional()
+  @IsString()
+  @Transform(({ value }: TransformFnParams) =>
+    isString(value) ? value.trim() : value
+  )
+  comment?: string;
+
   @IsString()
   currency: string;
+
+  @IsOptional()
+  @IsString()
+  id?: string;
 
   @IsBoolean()
   @IsOptional()

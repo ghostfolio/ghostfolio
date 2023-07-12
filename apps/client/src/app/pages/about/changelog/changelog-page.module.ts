@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { MatCardModule } from '@angular/material/card';
 import { MarkdownModule } from 'ngx-markdown';
 
 import { ChangelogPageRoutingModule } from './changelog-page-routing.module';
@@ -11,8 +10,7 @@ import { ChangelogPageComponent } from './changelog-page.component';
   imports: [
     ChangelogPageRoutingModule,
     CommonModule,
-    MarkdownModule.forChild(),
-    MatCardModule
+    MarkdownModule.forChild()
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

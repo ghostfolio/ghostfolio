@@ -2,8 +2,8 @@
   color: rgb(var(--dark-primary-text));
   display: block;
 
-  .mat-card {
-    &.changelog {
+  .changelog {
+    ::ng-deep {
       a {
         color: rgba(var(--palette-primary-500), 1);
         font-weight: 500;
@@ -12,27 +12,23 @@
           color: rgba(var(--palette-primary-300), 1);
         }
       }
-    }
 
-    &.changelog {
-      ::ng-deep {
-        markdown {
-          h1,
-          p {
-            display: none;
+      markdown {
+        h1,
+        p {
+          display: none;
+        }
+
+        h2 {
+          font-size: 18px;
+
+          &:not(:first-of-type) {
+            margin-top: 2rem;
           }
+        }
 
-          h2 {
-            font-size: 18px;
-
-            &:not(:first-of-type) {
-              margin-top: 2rem;
-            }
-          }
-
-          h3 {
-            font-size: 15px;
-          }
+        h3 {
+          font-size: 15px;
         }
       }
     }

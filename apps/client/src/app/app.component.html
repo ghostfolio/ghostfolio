@@ -3,6 +3,7 @@
     class="position-fixed w-100"
     [currentRoute]="currentRoute"
     [info]="info"
+    [pageTitle]="pageTitle"
     [user]="user"
     (signOut)="onSignOut()"
   ></gf-header>
@@ -30,7 +31,8 @@
         >
         <div
           *ngIf="!canCreateAccount && info?.systemMessage && user"
-          class="d-inline-block info-message px-3 py-2"
+          class="cursor-pointer d-inline-block info-message px-3 py-2 text-truncate"
+          (click)="onShowSystemMessage()"
         >
           {{ info.systemMessage }}
         </div>
@@ -42,19 +44,143 @@
 </main>
 
 <footer
-  *ngIf="currentRoute === 'start'"
-  class="footer d-flex justify-content-center w-100"
+  *ngIf="
+    (currentRoute === 'blog' ||
+      currentRoute === 'faq' ||
+      currentRoute === 'features' ||
+      currentRoute === 'markets' ||
+      currentRoute === 'open' ||
+      currentRoute === 'pricing' ||
+      currentRoute === 'resources' ||
+      currentRoute === 'register' ||
+      currentRoute === 'start') &&
+    deviceType !== 'mobile'
+  "
+  class="d-flex justify-content-center py-4 w-100"
 >
-  <div class="container text-center">
-    <div>
-      © {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
-      {{ version }}
+  <div class="container">
+    <div class="mb-3 row">
+      <div class="col-sm">
+        <a [routerLink]="['/']"><gf-logo /></a>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2" i18n>Personal Finance</div>
+        <ul class="list-unstyled">
+          <li *ngIf="hasPermissionToAccessFearAndGreedIndex">
+            <a i18n [routerLink]="['/markets']">Markets</a>
+          </li>
+          <li><a i18n [routerLink]="['/resources']">Resources</a></li>
+        </ul>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2">Ghostfolio</div>
+        <ul class="list-unstyled">
+          <li><a i18n [routerLink]="['/about']">About</a></li>
+          <li *ngIf="hasPermissionForBlog">
+            <a i18n [routerLink]="['/blog']">Blog</a>
+          </li>
+          <li>
+            <a i18n [routerLink]="['/about', 'changelog']">Changelog</a>
+          </li>
+          <li><a i18n [routerLink]="['/features']">Features</a></li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="['/faq']">Frequently Asked Questions (FAQ)</a>
+          </li>
+          <li>
+            <a i18n [routerLink]="['/about', 'license']">License</a>
+          </li>
+          <li *ngIf="hasPermissionForStatistics">
+            <a [routerLink]="['/open']">Open Startup</a>
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="['/pricing']">Pricing</a>
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="['/about', 'privacy-policy']"
+              >Privacy Policy</a
+            >
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a
+              class="align-items-baseline d-flex"
+              href="https://status.ghostfol.io"
+              target="_blank"
+              title="Ghostfolio Status"
+              >Status<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2" i18n>Community</div>
+        <ul class="list-unstyled">
+          <li>
+            <a
+              class="align-items-baseline d-flex"
+              href="https://github.com/ghostfolio/ghostfolio"
+              target="_blank"
+              title="Find Ghostfolio on GitHub"
+              >GitHub<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+          <li>
+            <a
+              class="align-items-baseline d-flex"
+              href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+              target="_blank"
+              title="Join the Ghostfolio Slack community"
+              >Slack<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+          <li>
+            <a
+              class="align-items-baseline d-flex"
+              href="https://twitter.com/ghostfolio_"
+              target="_blank"
+              title="Follow Ghostfolio on Twitter"
+              >Twitter<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+          <li>&nbsp;</li>
+          <li>
+            <a href="../de" title="Ghostfolio in Deutsch">Deutsch</a>
+          </li>
+          <li>
+            <a href="../en" title="Ghostfolio in English">English</a>
+          </li>
+          <li>
+            <a href="../es" title="Ghostfolio in Español">Español</a>
+          </li>
+          <li>
+            <a href="../fr" title="Ghostfolio en Français">Français</a>
+          </li>
+          <li>
+            <a href="../it" title="Ghostfolio in Italiano">Italiano</a>
+          </li>
+          <li>
+            <a href="../nl" title="Ghostfolio in Nederlands">Nederlands</a>
+          </li>
+          <li>
+            <a href="../pt" title="Ghostfolio in Português">Português</a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <div class="py-2 text-muted">
-      <small i18n
-        >The risk of loss in trading can be substantial. It is not advisable to
-        invest money you may need in the short term.</small
-      >
+
+    <div class="row text-center">
+      <div class="col">
+        © 2021 - {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
+        {{ version }}
+      </div>
+    </div>
+
+    <div class="row text-center text-muted">
+      <div class="col">
+        <small i18n
+          >The risk of loss in trading can be substantial. It is not advisable
+          to invest money you may need in the short term.</small
+        >
+      </div>
     </div>
   </div>
 </footer>

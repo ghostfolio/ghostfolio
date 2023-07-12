@@ -6,9 +6,11 @@ export interface PortfolioPublicDetails {
   holdings: {
     [symbol: string]: Pick<
       PortfolioPosition,
-      | 'allocationCurrent'
+      | 'allocationInPercentage'
       | 'countries'
       | 'currency'
+      | 'dataSource'
+      | 'dateOfFirstActivity'
       | 'markets'
       | 'name'
       | 'netPerformancePercent'
@@ -16,6 +18,7 @@ export interface PortfolioPublicDetails {
       | 'symbol'
       | 'url'
       | 'value'
+      | 'valueInPercentage'
     >;
   };
 }

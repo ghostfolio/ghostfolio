@@ -1,5 +1,5 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Rule } from '../../rule';
@@ -11,7 +11,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     private fees: number
   ) {
     super(exchangeRateDataService, {
-      name: 'Initial Investment'
+      name: 'Investment'
     });
   }
 

@@ -1,7 +1,9 @@
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
+  DEFAULT_PAGE_SIZE,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
@@ -9,6 +11,7 @@ import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
+  EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -21,18 +24,21 @@ import {
   HttpException,
   Inject,
   Param,
+  Patch,
   Post,
   Put,
   Query,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
 import { isDate } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
+import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
@@ -97,16 +103,21 @@ export class AdminController {
 
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringService.addJobToQueue(
-        GATHER_ASSET_PROFILE_PROCESS,
-        {
-          dataSource,
-          symbol
-        },
-        GATHER_ASSET_PROFILE_PROCESS_OPTIONS
-      );
-    }
+    await this.dataGatheringService.addJobsToQueue(
+      uniqueAssets.map(({ dataSource, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            symbol
+          },
+          name: GATHER_ASSET_PROFILE_PROCESS,
+          opts: {
+            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            jobId: `${dataSource}-${symbol}`
+          }
+        };
+      })
+    );
 
     this.dataGatheringService.gatherMax();
   }
@@ -128,16 +139,21 @@ export class AdminController {
 
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
-    for (const { dataSource, symbol } of uniqueAssets) {
-      await this.dataGatheringService.addJobToQueue(
-        GATHER_ASSET_PROFILE_PROCESS,
-        {
-          dataSource,
-          symbol
-        },
-        GATHER_ASSET_PROFILE_PROCESS_OPTIONS
-      );
-    }
+    await this.dataGatheringService.addJobsToQueue(
+      uniqueAssets.map(({ dataSource, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            symbol
+          },
+          name: GATHER_ASSET_PROFILE_PROCESS,
+          opts: {
+            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            jobId: `${dataSource}-${symbol}`
+          }
+        };
+      })
+    );
   }
 
   @Post('gather/profile-data/:dataSource/:symbol')
@@ -158,14 +174,17 @@ export class AdminController {
       );
     }
 
-    await this.dataGatheringService.addJobToQueue(
-      GATHER_ASSET_PROFILE_PROCESS,
-      {
+    await this.dataGatheringService.addJobToQueue({
+      data: {
         dataSource,
         symbol
       },
-      GATHER_ASSET_PROFILE_PROCESS_OPTIONS
-    );
+      name: GATHER_ASSET_PROFILE_PROCESS,
+      opts: {
+        ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+        jobId: `${dataSource}-${symbol}`
+      }
+    });
   }
 
   @Post('gather/:dataSource/:symbol')
@@ -229,7 +248,11 @@ export class AdminController {
   @Get('market-data')
   @UseGuards(AuthGuard('jwt'))
   public async getMarketData(
-    @Query('assetSubClasses') filterByAssetSubClasses?: string
+    @Query('assetSubClasses') filterByAssetSubClasses?: string,
+    @Query('skip') skip?: number,
+    @Query('sortColumn') sortColumn?: string,
+    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
+    @Query('take') take?: number
   ): Promise<AdminMarketData> {
     if (
       !hasPermission(
@@ -254,7 +277,13 @@ export class AdminController {
       })
     ];
 
-    return this.adminService.getMarketData(filters);
+    return this.adminService.getMarketData({
+      filters,
+      sortColumn,
+      sortDirection,
+      skip: isNaN(skip) ? undefined : skip,
+      take: isNaN(take) ? undefined : take
+    });
   }
 
   @Get('market-data/:dataSource/:symbol')
@@ -301,14 +330,37 @@ export class AdminController {
     const date = new Date(dateString);
 
     return this.marketDataService.updateMarketData({
-      data: { ...data, dataSource },
+      data: { marketPrice: data.marketPrice, state: 'CLOSE' },
       where: {
-        date_symbol: {
+        dataSource_date_symbol: {
+          dataSource,
           date,
           symbol
         }
       }
     });
+  }
+
+  @Post('profile-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  public async addProfileData(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<SymbolProfile | never> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.addAssetProfile({ dataSource, symbol });
   }
 
   @Delete('profile-data/:dataSource/:symbol')
@@ -330,6 +382,32 @@ export class AdminController {
     }
 
     return this.adminService.deleteProfileData({ dataSource, symbol });
+  }
+
+  @Patch('profile-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async patchAssetProfileData(
+    @Body() assetProfileData: UpdateAssetProfileDto,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<EnhancedSymbolProfile> {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.adminService.patchAssetProfileData({
+      ...assetProfileData,
+      dataSource,
+      symbol
+    });
   }
 
   @Put('settings/:key')

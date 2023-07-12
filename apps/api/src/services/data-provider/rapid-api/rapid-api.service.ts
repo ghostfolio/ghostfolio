@@ -1,24 +1,22 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getToday, getYesterday } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import bent from 'bent';
-import { format, subMonths, subWeeks, subYears } from 'date-fns';
+import { format } from 'date-fns';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
   public constructor(
-    private readonly configurationService: ConfigurationService,
-    private readonly prismaService: PrismaService
+    private readonly configurationService: ConfigurationService
   ) {}
 
   public canHandle(symbol: string) {
@@ -29,8 +27,23 @@ export class RapidApiService implements DataProviderInterface {
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
     return {
-      dataSource: this.getName()
+      dataSource: this.getName(),
+      symbol: aSymbol
     };
+  }
+
+  public async getDividends({
+    from,
+    granularity = 'day',
+    symbol,
+    to
+  }: {
+    from: Date;
+    granularity: Granularity;
+    symbol: string;
+    to: Date;
+  }) {
+    return {};
   }
 
   public async getHistorical(
@@ -46,41 +59,6 @@ export class RapidApiService implements DataProviderInterface {
 
       if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
-
-        try {
-          // Rebuild historical data
-          // TODO: can be removed after all data from the last year has been gathered
-          // (introduced on 27.03.2021)
-
-          await this.prismaService.marketData.create({
-            data: {
-              symbol,
-              dataSource: this.getName(),
-              date: subWeeks(getToday(), 1),
-              marketPrice: fgi.oneWeekAgo.value
-            }
-          });
-
-          await this.prismaService.marketData.create({
-            data: {
-              symbol,
-              dataSource: this.getName(),
-              date: subMonths(getToday(), 1),
-              marketPrice: fgi.oneMonthAgo.value
-            }
-          });
-
-          await this.prismaService.marketData.create({
-            data: {
-              symbol,
-              dataSource: this.getName(),
-              date: subYears(getToday(), 1),
-              marketPrice: fgi.oneYearAgo.value
-            }
-          });
-
-          ///////////////////////////////////////////////////////////////////////////
-        } catch {}
 
         return {
           [ghostfolioFearAndGreedIndexSymbol]: {
@@ -135,7 +113,17 @@ export class RapidApiService implements DataProviderInterface {
     return {};
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public getTestSymbol() {
+    return undefined;
+  }
+
+  public async search({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
 

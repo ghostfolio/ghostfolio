@@ -18,11 +18,12 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Market, ToggleOption } from '@ghostfolio/common/types';
+import { Market } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import { Account, AssetClass, DataSource } from '@prisma/client';
+import { Account, AssetClass, DataSource, Platform } from '@prisma/client';
+import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -53,12 +54,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public markets: {
     [key in Market]: { name: string; value: number };
   };
-  public period = 'current';
-  public periodOptions: ToggleOption[] = [
-    { label: $localize`Initial`, value: 'original' },
-    { label: $localize`Current`, value: 'current' }
-  ];
   public placeholder = '';
+  public platforms: {
+    [id: string]: Pick<Platform, 'name'> & {
+      id: string;
+      value: number;
+    };
+  };
   public portfolioDetails: PortfolioDetails;
   public positions: {
     [symbol: string]: Pick<
@@ -69,9 +71,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       | 'exchange'
       | 'name'
       | 'value'
-    >;
+    > & { etfProvider: string };
   };
-  public routeQueryParams: Subscription;
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -85,6 +86,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   };
 
   public user: User;
+  public worldMapChartFormat: string;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -98,7 +100,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    this.routeQueryParams = route.queryParams
+    route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['accountId'] && params['accountDetailDialog']) {
@@ -122,8 +124,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((aId) => {
-        this.hasImpersonationId = !!aId;
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
       });
 
     this.filters$
@@ -137,6 +139,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               ? $localize`Filter by account or tag...`
               : '';
 
+          this.initialize();
+
           return this.dataService.fetchPortfolioDetails({
             filters: this.activeFilters
           });
@@ -144,9 +148,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe((portfolioDetails) => {
+        this.initialize();
+
         this.portfolioDetails = portfolioDetails;
 
-        this.initializeAnalysisData(this.period);
+        this.initializeAnalysisData();
 
         this.isLoading = false;
 
@@ -183,7 +189,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
             return {
               id,
-              label: name,
+              label: translate(name),
               type: 'TAG'
             };
           });
@@ -194,9 +200,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             ...tagFilters
           ];
 
+          this.worldMapChartFormat =
+            this.hasImpersonationId || this.user.settings.isRestrictedView
+              ? `{0}%`
+              : `{0} ${this.user?.settings?.baseCurrency}`;
+
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.initialize();
   }
 
   public initialize() {
@@ -216,16 +229,24 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.markets = {
       developedMarkets: {
         name: 'developedMarkets',
-        value: 0
+        value: undefined
       },
       emergingMarkets: {
         name: 'emergingMarkets',
-        value: 0
+        value: undefined
       },
       otherMarkets: {
         name: 'otherMarkets',
-        value: 0
+        value: undefined
       }
+    };
+    this.platforms = {};
+    this.portfolioDetails = {
+      accounts: {},
+      filteredValueInPercentage: 0,
+      holdings: {},
+      platforms: {},
+      summary: undefined
     };
     this.positions = {};
     this.sectors = {
@@ -243,16 +264,23 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
   }
 
-  public initializeAnalysisData(aPeriod: string) {
-    this.initialize();
+  public initializeAnalysisData() {
+    for (const [
+      id,
+      { name, valueInBaseCurrency, valueInPercentage }
+    ] of Object.entries(this.portfolioDetails.accounts)) {
+      let value = 0;
 
-    for (const [id, { current, name, original }] of Object.entries(
-      this.portfolioDetails.accounts
-    )) {
+      if (this.hasImpersonationId) {
+        value = valueInPercentage;
+      } else {
+        value = valueInBaseCurrency;
+      }
+
       this.accounts[id] = {
         id,
         name,
-        value: aPeriod === 'original' ? original : current
+        value
       };
     }
 
@@ -261,18 +289,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     )) {
       let value = 0;
 
-      if (aPeriod === 'original') {
-        if (this.hasImpersonationId) {
-          value = position.allocationInvestment;
-        } else {
-          value = position.investment;
-        }
+      if (this.hasImpersonationId) {
+        value = position.allocationInPercentage;
       } else {
-        if (this.hasImpersonationId) {
-          value = position.allocationCurrent;
-        } else {
-          value = position.value;
-        }
+        value = position.value;
       }
 
       this.positions[symbol] = {
@@ -280,6 +300,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         assetClass: position.assetClass,
         assetSubClass: position.assetSubClass,
         currency: position.currency,
+        etfProvider: this.extractEtfProvider({
+          assetSubClass: position.assetSubClass,
+          name: position.name
+        }),
         exchange: position.exchange,
         name: position.name
       };
@@ -288,15 +312,22 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
+          if (!this.markets.developedMarkets.value) {
+            this.markets.developedMarkets.value = 0;
+          }
+          if (!this.markets.emergingMarkets.value) {
+            this.markets.emergingMarkets.value = 0;
+          }
+          if (!this.markets.otherMarkets.value) {
+            this.markets.otherMarkets.value = 0;
+          }
+
           this.markets.developedMarkets.value +=
-            position.markets.developedMarkets *
-            (aPeriod === 'original' ? position.investment : position.value);
+            position.markets.developedMarkets * position.value;
           this.markets.emergingMarkets.value +=
-            position.markets.emergingMarkets *
-            (aPeriod === 'original' ? position.investment : position.value);
+            position.markets.emergingMarkets * position.value;
           this.markets.otherMarkets.value +=
-            position.markets.otherMarkets *
-            (aPeriod === 'original' ? position.investment : position.value);
+            position.markets.otherMarkets * position.value;
 
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
@@ -306,11 +337,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             } else {
               this.continents[continent] = {
                 name: continent,
-                value:
-                  weight *
-                  (aPeriod === 'original'
-                    ? this.portfolioDetails.holdings[symbol].investment
-                    : this.portfolioDetails.holdings[symbol].value)
+                value: weight * this.portfolioDetails.holdings[symbol].value
               };
             }
 
@@ -319,24 +346,16 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             } else {
               this.countries[code] = {
                 name,
-                value:
-                  weight *
-                  (aPeriod === 'original'
-                    ? this.portfolioDetails.holdings[symbol].investment
-                    : this.portfolioDetails.holdings[symbol].value)
+                value: weight * this.portfolioDetails.holdings[symbol].value
               };
             }
           }
         } else {
           this.continents[UNKNOWN_KEY].value +=
-            aPeriod === 'original'
-              ? this.portfolioDetails.holdings[symbol].investment
-              : this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].value;
 
           this.countries[UNKNOWN_KEY].value +=
-            aPeriod === 'original'
-              ? this.portfolioDetails.holdings[symbol].investment
-              : this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].value;
         }
 
         if (position.sectors.length > 0) {
@@ -348,19 +367,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             } else {
               this.sectors[name] = {
                 name,
-                value:
-                  weight *
-                  (aPeriod === 'original'
-                    ? this.portfolioDetails.holdings[symbol].investment
-                    : this.portfolioDetails.holdings[symbol].value)
+                value: weight * this.portfolioDetails.holdings[symbol].value
               };
             }
           }
         } else {
           this.sectors[UNKNOWN_KEY].value +=
-            aPeriod === 'original'
-              ? this.portfolioDetails.holdings[symbol].investment
-              : this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].value;
         }
       }
 
@@ -368,7 +381,28 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         dataSource: position.dataSource,
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: aPeriod === 'original' ? position.investment : position.value
+        value: isNumber(position.value)
+          ? position.value
+          : position.valueInPercentage
+      };
+    }
+
+    for (const [
+      id,
+      { name, valueInBaseCurrency, valueInPercentage }
+    ] of Object.entries(this.portfolioDetails.platforms)) {
+      let value = 0;
+
+      if (this.hasImpersonationId) {
+        value = valueInPercentage;
+      } else {
+        value = valueInBaseCurrency;
+      }
+
+      this.platforms[id] = {
+        id,
+        name,
+        value
       };
     }
 
@@ -386,17 +420,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   }
 
   public onAccountChartClicked({ symbol }: UniqueAsset) {
-    if (symbol) {
+    if (symbol && symbol !== UNKNOWN_KEY) {
       this.router.navigate([], {
         queryParams: { accountId: symbol, accountDetailDialog: true }
       });
     }
-  }
-
-  public onChangePeriod(aValue: string) {
-    this.period = aValue;
-
-    this.initializeAnalysisData(this.period);
   }
 
   public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
@@ -471,5 +499,20 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });
+  }
+
+  private extractEtfProvider({
+    assetSubClass,
+    name
+  }: {
+    assetSubClass: PortfolioPosition['assetSubClass'];
+    name: string;
+  }) {
+    if (assetSubClass === 'ETF') {
+      const [firstWord] = name.split(' ');
+      return firstWord;
+    }
+
+    return UNKNOWN_KEY;
   }
 }

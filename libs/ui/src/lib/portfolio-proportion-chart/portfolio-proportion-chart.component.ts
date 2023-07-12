@@ -55,7 +55,7 @@ export class PortfolioProportionChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart;
+  public chart: Chart<'pie'>;
   public isLoading = true;
 
   private readonly OTHER_KEY = 'OTHER';
@@ -100,38 +100,42 @@ export class PortfolioProportionChartComponent
     };
 
     Object.keys(this.positions).forEach((symbol) => {
-      if (this.positions[symbol][this.keys[0]]) {
-        if (chartData[this.positions[symbol][this.keys[0]]]) {
-          chartData[this.positions[symbol][this.keys[0]]].value = chartData[
-            this.positions[symbol][this.keys[0]]
-          ].value.plus(this.positions[symbol].value);
+      if (this.positions[symbol][this.keys[0]]?.toUpperCase()) {
+        if (chartData[this.positions[symbol][this.keys[0]].toUpperCase()]) {
+          chartData[this.positions[symbol][this.keys[0]].toUpperCase()].value =
+            chartData[
+              this.positions[symbol][this.keys[0]].toUpperCase()
+            ].value.plus(this.positions[symbol].value);
 
           if (
-            chartData[this.positions[symbol][this.keys[0]]].subCategory[
-              this.positions[symbol][this.keys[1]]
-            ]
+            chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
+              .subCategory[this.positions[symbol][this.keys[1]]]
           ) {
-            chartData[this.positions[symbol][this.keys[0]]].subCategory[
-              this.positions[symbol][this.keys[1]]
-            ].value = chartData[
-              this.positions[symbol][this.keys[0]]
-            ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
-              this.positions[symbol].value
-            );
+            chartData[
+              this.positions[symbol][this.keys[0]].toUpperCase()
+            ].subCategory[this.positions[symbol][this.keys[1]]].value =
+              chartData[
+                this.positions[symbol][this.keys[0]].toUpperCase()
+              ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
+                this.positions[symbol].value
+              );
           } else {
-            chartData[this.positions[symbol][this.keys[0]]].subCategory[
-              this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
-            ] = { value: new Big(this.positions[symbol].value) };
+            chartData[
+              this.positions[symbol][this.keys[0]].toUpperCase()
+            ].subCategory[this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY] =
+              { value: new Big(this.positions[symbol].value) };
           }
         } else {
-          chartData[this.positions[symbol][this.keys[0]]] = {
-            name: this.positions[symbol].name,
+          chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
+            name: this.positions[symbol][this.keys[0]],
             subCategory: {},
             value: new Big(this.positions[symbol].value ?? 0)
           };
 
           if (this.positions[symbol][this.keys[1]]) {
-            chartData[this.positions[symbol][this.keys[0]]].subCategory = {
+            chartData[
+              this.positions[symbol][this.keys[0]].toUpperCase()
+            ].subCategory = {
               [this.positions[symbol][this.keys[1]]]: {
                 value: new Big(this.positions[symbol].value)
               }
@@ -232,8 +236,8 @@ export class PortfolioProportionChartComponent
       }
     ];
 
-    let labels = chartDataSorted.map(([label]) => {
-      return label;
+    let labels = chartDataSorted.map(([symbol, { name }]) => {
+      return name;
     });
 
     if (this.keys[1]) {
@@ -394,6 +398,9 @@ export class PortfolioProportionChartComponent
               })} ${this.baseCurrency} (${percentage.toFixed(2)}%)`
             ];
           }
+        },
+        title: () => {
+          return '';
         }
       }
     };

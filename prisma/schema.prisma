@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = []
-  binaryTargets   = ["debian-openssl-1.1.x", "linux-arm64-openssl-1.1.x", "native"]
+  binaryTargets   = ["debian-openssl-1.1.x", "linux-arm64-openssl-3.0.x", "native"]
 }
 
 datasource db {
@@ -23,6 +23,7 @@ model Access {
 model Account {
   accountType AccountType @default(SECURITIES)
   balance     Float       @default(0)
+  comment     String?
   createdAt   DateTime    @default(now())
   currency    String?
   id          String      @default(uuid())
@@ -41,6 +42,7 @@ model Account {
 
 model Analytics {
   activityCount Int      @default(0)
+  country       String?
   updatedAt     DateTime @updatedAt
   userId        String   @id
   User          User     @relation(fields: [userId], references: [id])
@@ -58,14 +60,15 @@ model AuthDevice {
 }
 
 model MarketData {
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime        @default(now())
   dataSource  DataSource
   date        DateTime
-  id          String     @id @default(uuid())
-  symbol      String
+  id          String          @id @default(uuid())
   marketPrice Float
+  state       MarketDataState @default(CLOSE)
+  symbol      String
 
-  @@unique([date, symbol])
+  @@unique([dataSource, date, symbol])
   @@index([symbol])
 }
 
@@ -104,19 +107,21 @@ model Property {
 
 model Settings {
   settings  Json?
-  updatedAt DateTime  @updatedAt
-  userId    String    @id
-  User      User      @relation(fields: [userId], references: [id])
+  updatedAt DateTime @updatedAt
+  userId    String   @id
+  User      User     @relation(fields: [userId], references: [id])
 }
 
 model SymbolProfile {
   assetClass             AssetClass?
   assetSubClass          AssetSubClass?
+  comment                String?
   countries              Json?
   createdAt              DateTime                @default(now())
   currency               String
   dataSource             DataSource
   id                     String                  @id @default(uuid())
+  isin                   String?
   name                   String?
   updatedAt              DateTime                @updatedAt
   scraperConfiguration   Json?
@@ -146,6 +151,7 @@ model Subscription {
   createdAt DateTime @default(now())
   expiresAt DateTime
   id        String   @id @default(uuid())
+  price     Float?
   updatedAt DateTime @updatedAt
   userId    String
   User      User     @relation(fields: [userId], references: [id])
@@ -202,18 +208,18 @@ enum AssetSubClass {
 
 enum DataSource {
   ALPHA_VANTAGE
+  COINGECKO
   EOD_HISTORICAL_DATA
-  GHOSTFOLIO
+  FINANCIAL_MODELING_PREP
   GOOGLE_SHEETS
   MANUAL
-  RAKUTEN
   RAPID_API
   YAHOO
 }
 
-enum ViewMode {
-  DEFAULT
-  ZEN
+enum MarketDataState {
+  CLOSE
+  INTRADAY
 }
 
 enum Provider {
@@ -232,5 +238,11 @@ enum Type {
   BUY
   DIVIDEND
   ITEM
+  LIABILITY
   SELL
+}
+
+enum ViewMode {
+  DEFAULT
+  ZEN
 }

@@ -1,0 +1,37 @@
+<input
+  autocapitalize="off"
+  autocomplete="off"
+  matInput
+  [formControl]="control"
+  [matAutocomplete]="symbolAutocomplete"
+/>
+
+<mat-autocomplete
+  #symbolAutocomplete="matAutocomplete"
+  [displayWith]="displayFn"
+  (optionSelected)="onUpdateSymbol($event)"
+>
+  <ng-container *ngIf="!isLoading">
+    <mat-option
+      *ngFor="let lookupItem of filteredLookupItems"
+      class="line-height-1"
+      [value]="lookupItem"
+    >
+      <span
+        ><b>{{ lookupItem.name }}</b></span
+      >
+      <br />
+      <small class="text-muted"
+        >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency
+        }}<ng-container *ngIf="lookupItem.assetSubClass">
+          · {{ lookupItem.assetSubClassString }}</ng-container
+        ></small
+      >
+    </mat-option>
+  </ng-container>
+</mat-autocomplete>
+<mat-spinner
+  *ngIf="isLoading"
+  class="position-absolute"
+  [diameter]="20"
+></mat-spinner>

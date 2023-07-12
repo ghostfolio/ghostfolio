@@ -1,6 +1,19 @@
 User-agent: *
 Allow: /
+Disallow: /de/about/*
+Disallow: /de/faq
+Disallow: /de/markets
+Disallow: /de/portfolio/*
+Disallow: /de/pricing
+Disallow: /de/register
+Disallow: /de/resources
+Disallow: /de/ueber-uns/datenschutzbestimmungen
 Disallow: /en/about/privacy-policy
 Disallow: /en/p/*
+Disallow: /en/portfolio/*
+Disallow: /portfolio/*
+Disallow: /pricing/*
+Disallow: /register/*
+Disallow: /resources/*
 
 Sitemap: https://ghostfol.io/sitemap.xml
