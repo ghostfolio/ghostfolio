@@ -702,6 +702,7 @@ export class PortfolioService {
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
+        stakeRewards: undefined,
         feeInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -730,7 +731,11 @@ export class PortfolioService {
       .filter((order) => {
         tags = tags.concat(order.tags);
 
-        return order.type === 'BUY' || order.type === 'SELL';
+        return (
+          order.type === 'BUY' ||
+          order.type === 'SELL' ||
+          order.type === 'STAKE'
+        );
       })
       .map((order) => ({
         currency: order.SymbolProfile.currency,
@@ -783,6 +788,16 @@ export class PortfolioService {
           })
           .map(({ valueInBaseCurrency }) => {
             return new Big(valueInBaseCurrency);
+          })
+      );
+
+      const stakeRewards = getSum(
+        orders
+          .filter(({ type }) => {
+            return type === 'STAKE';
+          })
+          .map(({ quantity }) => {
+            return new Big(quantity);
           })
       );
 
@@ -880,6 +895,7 @@ export class PortfolioService {
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+        stakeRewards: stakeRewards.toNumber(),
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee.toNumber(),
           SymbolProfile.currency,
@@ -943,6 +959,7 @@ export class PortfolioService {
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
+        stakeRewards: 0,
         feeInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -1403,7 +1420,7 @@ export class PortfolioService {
     let valueInBaseCurrencyOfEmergencyFundPositions = new Big(0);
 
     for (const order of emergencyFundOrders) {
-      if (order.type === 'BUY') {
+      if (order.type === 'BUY' || order.type === 'STAKE') {
         valueInBaseCurrencyOfEmergencyFundPositions =
           valueInBaseCurrencyOfEmergencyFundPositions.plus(
             order.valueInBaseCurrency
@@ -1714,7 +1731,7 @@ export class PortfolioService {
       userCurrency,
       userId,
       withExcludedAccounts,
-      types: ['BUY', 'SELL']
+      types: ['BUY', 'SELL', 'STAKE']
     });
 
     if (orders.length <= 0) {

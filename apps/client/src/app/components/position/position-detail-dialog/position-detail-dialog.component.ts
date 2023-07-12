@@ -40,6 +40,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   };
   public dataProviderInfo: DataProviderInfo;
   public dividendInBaseCurrency: number;
+  public stakeRewards: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public grossPerformance: number;
@@ -84,6 +85,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
+          stakeRewards,
           feeInBaseCurrency,
           firstBuyDate,
           grossPerformance,
@@ -107,6 +109,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
           this.dividendInBaseCurrency = dividendInBaseCurrency;
+          this.stakeRewards = stakeRewards;
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;

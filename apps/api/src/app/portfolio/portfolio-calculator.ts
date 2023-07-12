@@ -92,7 +92,7 @@ export class PortfolioCalculator {
         let investment = new Big(0);
 
         if (newQuantity.gt(0)) {
-          if (order.type === 'BUY') {
+          if (order.type === 'BUY' || order.type === 'STAKE') {
             investment = oldAccumulatedSymbol.investment.plus(
               order.quantity.mul(unitPrice)
             );
@@ -931,6 +931,7 @@ export class PortfolioCalculator {
 
     switch (type) {
       case 'BUY':
+      case 'STAKE':
         factor = 1;
         break;
       case 'SELL':
@@ -1087,6 +1088,20 @@ export class PortfolioCalculator {
               marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
               lastUnitPrice
           });
+        } else {
+          let orderIndex = orders.findIndex(
+            (o) => o.date === format(day, DATE_FORMAT) && o.type === 'STAKE'
+          );
+          if (orderIndex >= 0) {
+            let order = orders[orderIndex];
+            orders.splice(orderIndex, 1);
+            orders.push({
+              ...order,
+              unitPrice:
+                marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
+                lastUnitPrice
+            });
+          }
         }
 
         lastUnitPrice = last(orders).unitPrice;
@@ -1156,7 +1171,7 @@ export class PortfolioCalculator {
       }
 
       const transactionInvestment =
-        order.type === 'BUY'
+        order.type === 'BUY' || order.type === 'STAKE'
           ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
           : totalUnits.gt(0)
           ? totalInvestment

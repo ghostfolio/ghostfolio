@@ -346,6 +346,8 @@ export class ImportActivitiesService {
             return Type.LIABILITY;
           case 'sell':
             return Type.SELL;
+          case 'stake':
+            return Type.STAKE;
           default:
             break;
         }

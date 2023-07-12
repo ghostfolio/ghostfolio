@@ -13,6 +13,9 @@
         <mat-select formControlName="type">
           <mat-option i18n value="BUY">Buy</mat-option>
           <mat-option i18n value="DIVIDEND">Dividend</mat-option>
+          <mat-option i18n value="STAKE"
+            >Stake reward / Stockdividend</mat-option
+          >
           <mat-option i18n value="ITEM">Item</mat-option>
           <mat-option i18n value="LIABILITY">Liability</mat-option>
           <mat-option i18n value="SELL">Sell</mat-option>
@@ -102,7 +105,10 @@
         <input formControlName="quantity" matInput type="number" />
       </mat-form-field>
     </div>
-    <div class="align-items-start d-flex mb-3">
+    <div
+      *ngIf="activityForm.controls['type']?.value !== 'STAKE'"
+      class="align-items-start d-flex mb-3"
+    >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label
           ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
