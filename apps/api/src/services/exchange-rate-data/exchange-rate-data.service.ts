@@ -64,11 +64,11 @@ export class ExchangeRateDataService {
     if (Object.keys(result).length !== this.currencyPairs.length) {
       // Load currencies directly from data provider as a fallback
       // if historical data is not fully available
-      const quotes = await this.dataProviderService.getQuotes(
-        this.currencyPairs.map(({ dataSource, symbol }) => {
+      const quotes = await this.dataProviderService.getQuotes({
+        items: this.currencyPairs.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
         })
-      );
+      });
 
       for (const symbol of Object.keys(quotes)) {
         if (isNumber(quotes[symbol].marketPrice)) {

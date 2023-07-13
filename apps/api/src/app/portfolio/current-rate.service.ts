@@ -38,7 +38,7 @@ export class CurrentRateService {
     if (includeToday) {
       promises.push(
         this.dataProviderService
-          .getQuotes(dataGatheringItems)
+          .getQuotes({ items: dataGatheringItems })
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
             for (const dataGatheringItem of dataGatheringItems) {

@@ -504,15 +504,17 @@ export class PortfolioService {
       );
     }
 
-    const dataGatheringItems = currentPositions.positions.map((position) => {
-      return {
-        dataSource: position.dataSource,
-        symbol: position.symbol
-      };
-    });
+    const dataGatheringItems = currentPositions.positions.map(
+      ({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol
+        };
+      }
+    );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes(dataGatheringItems),
+      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
     ]);
 
@@ -897,9 +899,9 @@ export class PortfolioService {
         )
       };
     } else {
-      const currentData = await this.dataProviderService.getQuotes([
-        { dataSource: DataSource.YAHOO, symbol: aSymbol }
-      ]);
+      const currentData = await this.dataProviderService.getQuotes({
+        items: [{ dataSource: DataSource.YAHOO, symbol: aSymbol }]
+      });
       const marketPrice = currentData[aSymbol]?.marketPrice;
 
       let historicalData = await this.dataProviderService.getHistorical(
@@ -1000,15 +1002,15 @@ export class PortfolioService {
       (item) => !item.quantity.eq(0)
     );
 
-    const dataGatheringItem = positions.map((position) => {
+    const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
       return {
-        dataSource: position.dataSource,
-        symbol: position.symbol
+        dataSource,
+        symbol
       };
     });
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes(dataGatheringItem),
+      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(
         positions.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
