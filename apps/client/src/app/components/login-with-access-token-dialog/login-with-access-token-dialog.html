@@ -6,18 +6,25 @@
 
 <div class="py-3" mat-dialog-content>
   <div class="align-items-center d-flex flex-column">
-    <form id="login" class="display-contents" (ngSubmit)="onSubmit()">
+    <form class="w-100" (ngSubmit)="onLoginWithAccessToken()">
       <mat-form-field appearance="outline" class="without-hint w-100">
         <mat-label i18n>Security Token</mat-label>
         <input
           matInput
-          [type]="hide ? 'password' : 'text'"
           name="password"
+          [type]="isAccessTokenHidden ? 'password' : 'text'"
           [(ngModel)]="data.accessToken"
         />
-        <div id="hide-password" matSuffix (click)="hide = !hide">
-          <ion-icon name="{{hide ? 'eye-outline' : 'eye-off-outline'}}"></ion-icon>
-        </div>
+        <button
+          mat-button
+          matSuffix
+          type="button"
+          (click)="isAccessTokenHidden = !isAccessTokenHidden"
+        >
+          <ion-icon
+            [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
+          ></ion-icon>
+        </button>
       </mat-form-field>
     </form>
     <ng-container *ngIf="data.hasPermissionToUseSocialLogin">
