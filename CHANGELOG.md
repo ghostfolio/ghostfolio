@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added hints to the activity types in the create or edit activity dialog
+- Added queries to the historical market data table of the admin control panel
 
 ### Changed
 

@@ -95,7 +95,9 @@ export class AdminService {
       params = params.append('sortDirection', sortDirection);
     }
 
-    params = params.append('take', take);
+    if (take) {
+      params = params.append('take', take);
+    }
 
     return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
       params
