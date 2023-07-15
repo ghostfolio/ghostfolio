@@ -11,14 +11,44 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
-          <mat-option i18n value="BUY">Buy</mat-option>
-          <mat-option i18n value="DIVIDEND">Dividend</mat-option>
-          <mat-option i18n value="STAKE"
-            >Stake reward / Stockdividend</mat-option
+          <mat-select-trigger
+            >{{ typesTranslationMap[activityForm.controls['type'].value]
+            }}</mat-select-trigger
           >
-          <mat-option i18n value="ITEM">Item</mat-option>
-          <mat-option i18n value="LIABILITY">Liability</mat-option>
-          <mat-option i18n value="SELL">Sell</mat-option>
+          <mat-option class="line-height-1" value="BUY">
+            <span><b>{{ typesTranslationMap['BUY'] }}</b></span>
+            <br />
+            <small class="text-muted text-nowrap" i18n
+              >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
+            >
+          </mat-option>
+          <mat-option class="line-height-1" value="DIVIDEND">
+            <span><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span>
+          </mat-option>
+         <mat-option class="line-height-1" value="STAKE">
+            <span><b>{{ typesTranslationMap['STAKE'] }}</b></span>
+          </mat-option>
+          <mat-option class="line-height-1" value="LIABILITY">
+            <span><b>{{ typesTranslationMap['LIABILITY'] }}</b></span>
+            <br />
+            <small class="text-muted text-nowrap" i18n
+              >Mortgages, personal loans, credit cards</small
+            >
+          </mat-option>
+          <mat-option class="line-height-1" value="SELL">
+            <span><b>{{ typesTranslationMap['SELL'] }}</b></span>
+            <br />
+            <small class="text-muted text-nowrap" i18n
+              >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
+            >
+          </mat-option>
+          <mat-option class="line-height-1" value="ITEM">
+            <span><b>{{ typesTranslationMap['ITEM'] }}</b></span>
+            <br />
+            <small class="text-muted text-nowrap" i18n
+              >Luxury items, real estate, private companies</small
+            >
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>

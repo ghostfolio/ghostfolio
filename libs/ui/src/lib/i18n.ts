@@ -24,6 +24,13 @@ const locales = {
   YEAR: $localize`Year`,
   YEARS: $localize`Years`,
 
+  // Activity types
+  BUY: $localize`Buy`,
+  DIVIDEND: $localize`Dividend`,
+  ITEM: $localize`Valuable`,
+  LIABILITY: $localize`Liability`,
+  SELL: $localize`Sell`,
+
   // enum AssetClass
   CASH: $localize`Cash`,
   COMMODITY: $localize`Commodity`,
