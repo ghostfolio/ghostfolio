@@ -4860,10 +4860,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/lodash@4.14.191":
-  version "4.14.191"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
-  integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
+"@types/lodash@4.14.195":
+  version "4.14.195"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.195.tgz#bafc975b252eb6cea78882ce8a7b6bf22a6de632"
+  integrity sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==
 
 "@types/lodash@^4.14.167":
   version "4.14.194"
@@ -17558,10 +17558,10 @@ y18n@^5.0.5:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
-yahoo-finance2@2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.4.1.tgz#2ccd422e33228fc34d42e919b0d2fdd8d3f76bbf"
-  integrity sha512-jl5oHr25RC24nOmoIiDqjnc/Iiy3MZAB+dIPCyUR+o5uz72xHfTZDM9tPeheggmlAGV+KftPP6smZ6L6lNgkSQ==
+yahoo-finance2@2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.4.2.tgz#b21ae13e20e9c9cb081011fb8a2d74b5d74cf210"
+  integrity sha512-Ze9UeW3vM/4thklQMbZNpvBWXf4Eys86QV2n2L21WqHJLvF2dedzVPGJJvRrslElI5UW4ry1x8QAUVfyPQm1TA==
   dependencies:
     "@types/tough-cookie" "^4.0.2"
     ajv "8.10.0"
