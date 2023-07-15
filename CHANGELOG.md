@@ -84,6 +84,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability of the login dialog
 - Disabled the caching in the health check endpoints for data providers
 - Improved the content of the Frequently Asked Questions (FAQ) page
+- Upgraded `angular` from version `15.2.5` to `16.1.5`
+- Upgraded `nestjs` from version `9.1.4` to `10.0.5`
+- Upgraded `Nx` from version `16.0.3` to `16.5.2`
 - Upgraded `prisma` from version `4.15.0` to `4.16.2`
 
 ## 1.289.0 - 2023-07-14
