@@ -101,6 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability of the login dialog
 - Disabled the caching in the health check endpoints for data providers
 - Improved the content of the Frequently Asked Questions (FAQ) page
+- Upgraded `ng-extract-i18n-merge` from version `2.6.0` to `2.7.0`
 - Upgraded `prisma` from version `4.15.0` to `4.16.2`
 
 ## 1.289.0 - 2023-07-14
