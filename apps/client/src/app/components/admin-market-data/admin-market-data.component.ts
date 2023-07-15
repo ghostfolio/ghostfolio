@@ -51,13 +51,26 @@ export class AdminMarketDataComponent
     AssetSubClass.PRECIOUS_METAL,
     AssetSubClass.PRIVATE_EQUITY,
     AssetSubClass.STOCK
-  ].map((assetSubClass) => {
-    return {
-      id: assetSubClass,
-      label: translate(assetSubClass),
-      type: 'ASSET_SUB_CLASS'
-    };
-  });
+  ]
+    .map((assetSubClass) => {
+      return {
+        id: assetSubClass.toString(),
+        label: translate(assetSubClass),
+        type: <Filter['type']>'ASSET_SUB_CLASS'
+      };
+    })
+    .concat([
+      {
+        id: 'ETF_WITHOUT_COUNTRIES',
+        label: $localize`ETFs without Countries`,
+        type: <Filter['type']>'QUERY_ID'
+      },
+      {
+        id: 'ETF_WITHOUT_SECTORS',
+        label: $localize`ETFs without Sectors`,
+        type: <Filter['type']>'QUERY_ID'
+      }
+    ]);
   public currentDataSource: DataSource;
   public currentSymbol: string;
   public dataSource: MatTableDataSource<AdminMarketDataItem> =
@@ -236,6 +249,12 @@ export class AdminMarketDataComponent
     } = { pageIndex: 0 }
   ) {
     this.isLoading = true;
+
+    this.pageSize =
+      this.activeFilters.length === 1 &&
+      this.activeFilters[0].type === 'QUERY_ID'
+        ? undefined
+        : DEFAULT_PAGE_SIZE;
 
     if (pageIndex === 0 && this.paginator) {
       this.paginator.pageIndex = 0;

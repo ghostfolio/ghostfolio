@@ -17,6 +17,7 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+import { MarketDataQuery } from '@ghostfolio/common/types';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AssetSubClass, Prisma, Property, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
@@ -103,12 +104,14 @@ export class AdminService {
 
   public async getMarketData({
     filters,
+    queryId,
     sortColumn,
     sortDirection,
     skip,
-    take = DEFAULT_PAGE_SIZE
+    take = Number.MAX_SAFE_INTEGER
   }: {
     filters?: Filter[];
+    queryId?: MarketDataQuery;
     skip?: number;
     sortColumn?: string;
     sortDirection?: Prisma.SortOrder;
@@ -117,6 +120,13 @@ export class AdminService {
     let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
       [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
+
+    if (
+      queryId === 'ETF_WITHOUT_COUNTRIES' ||
+      queryId === 'ETF_WITHOUT_SECTORS'
+    ) {
+      filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
+    }
 
     const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
       filters,
@@ -146,7 +156,7 @@ export class AdminService {
       }
     }
 
-    const [assetProfiles, count] = await Promise.all([
+    let [assetProfiles, count] = await Promise.all([
       this.prismaService.symbolProfile.findMany({
         orderBy,
         skip,
@@ -174,44 +184,60 @@ export class AdminService {
       this.prismaService.symbolProfile.count({ where })
     ]);
 
-    return {
-      count,
-      marketData: assetProfiles.map(
-        ({
-          _count,
+    let marketData = assetProfiles.map(
+      ({
+        _count,
+        assetClass,
+        assetSubClass,
+        comment,
+        countries,
+        dataSource,
+        Order,
+        sectors,
+        symbol
+      }) => {
+        const countriesCount = countries ? Object.keys(countries).length : 0;
+        const marketDataItemCount =
+          marketDataItems.find((marketDataItem) => {
+            return (
+              marketDataItem.dataSource === dataSource &&
+              marketDataItem.symbol === symbol
+            );
+          })?._count ?? 0;
+        const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+
+        return {
           assetClass,
           assetSubClass,
           comment,
-          countries,
+          countriesCount,
           dataSource,
-          Order,
-          sectors,
-          symbol
-        }) => {
-          const countriesCount = countries ? Object.keys(countries).length : 0;
-          const marketDataItemCount =
-            marketDataItems.find((marketDataItem) => {
-              return (
-                marketDataItem.dataSource === dataSource &&
-                marketDataItem.symbol === symbol
-              );
-            })?._count ?? 0;
-          const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+          symbol,
+          marketDataItemCount,
+          sectorsCount,
+          activitiesCount: _count.Order,
+          date: Order?.[0]?.date
+        };
+      }
+    );
 
-          return {
-            assetClass,
-            assetSubClass,
-            comment,
-            countriesCount,
-            dataSource,
-            symbol,
-            marketDataItemCount,
-            sectorsCount,
-            activitiesCount: _count.Order,
-            date: Order?.[0]?.date
-          };
-        }
-      )
+    if (queryId) {
+      if (queryId === 'ETF_WITHOUT_COUNTRIES') {
+        marketData = marketData.filter(({ countriesCount }) => {
+          return countriesCount === 0;
+        });
+      } else if (queryId === 'ETF_WITHOUT_SECTORS') {
+        marketData = marketData.filter(({ sectorsCount }) => {
+          return sectorsCount === 0;
+        });
+      }
+
+      count = marketData.length;
+    }
+
+    return {
+      count,
+      marketData
     };
   }
 
