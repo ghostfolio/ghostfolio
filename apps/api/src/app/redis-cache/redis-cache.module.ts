@@ -1,6 +1,7 @@
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { CacheManagerOptions, CacheModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { CacheManagerOptions, CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
 
 import { RedisCacheService } from './redis-cache.service';

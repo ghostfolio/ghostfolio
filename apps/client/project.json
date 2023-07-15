@@ -22,12 +22,12 @@
           {
             "glob": "assetlinks.json",
             "input": "apps/client/src/assets",
-            "output": "./../.well-known"
+            "output": "{workspaceRoot}/dist/apps/client/.well-known"
           },
           {
             "glob": "CHANGELOG.md",
             "input": "",
-            "output": "./../assets"
+            "output": "{workspaceRoot}/dist/apps/client/assets"
           },
           {
             "glob": "favicon.ico",
@@ -37,32 +37,32 @@
           {
             "glob": "LICENSE",
             "input": "",
-            "output": "./../assets"
+            "output": "{workspaceRoot}/dist/apps/client/assets"
           },
           {
             "glob": "robots.txt",
             "input": "apps/client/src/assets",
-            "output": "./../"
+            "output": "{workspaceRoot}/dist/apps/client/"
           },
           {
             "glob": "site.webmanifest",
             "input": "apps/client/src/assets",
-            "output": "./../"
+            "output": "{workspaceRoot}/dist/apps/client/"
           },
           {
             "glob": "**/*",
             "input": "node_modules/ionicons/dist/ionicons",
-            "output": "./../ionicons"
+            "output": "{workspaceRoot}/dist/apps/client/ionicons"
           },
           {
             "glob": "**/*.js",
             "input": "node_modules/ionicons/dist/",
-            "output": "./../"
+            "output": "{workspaceRoot}/dist/apps/client/"
           },
           {
             "glob": "**/*",
             "input": "apps/client/src/assets",
-            "output": "./../assets/"
+            "output": "{workspaceRoot}/dist/apps/client/assets/"
           }
         ],
         "styles": [
