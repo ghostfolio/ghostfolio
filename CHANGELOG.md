@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the login dialog
 - Disabled the caching in the health check endpoints for data providers
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Upgraded `prisma` from version `4.15.0` to `4.16.2`
