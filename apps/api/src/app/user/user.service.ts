@@ -123,7 +123,7 @@ export class UserService {
       id,
       provider,
       role,
-      Settings,
+      Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
       updatedAt,
       activityCount: Analytics?.activityCount
