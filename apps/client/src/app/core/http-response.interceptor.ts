@@ -62,7 +62,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
                 undefined,
                 { duration: 6000 }
               );
-            } else {
+            } else if (!error.url.endsWith('auth/anonymous')) {
               this.snackBarRef = this.snackBar.open(
                 $localize`This feature requires a subscription.`,
                 this.hasPermissionForSubscription
