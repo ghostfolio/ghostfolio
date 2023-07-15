@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added hints to the activity types in the create or edit activity dialog
+
 ### Changed
 
 - Disabled the caching in the health check endpoints for data providers
