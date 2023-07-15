@@ -141,12 +141,15 @@
         >
       </div>
 
-      <div *ngIf="stakeRewards > 0" class="col-6 mb-3">
+      <div
+        *ngIf="stakeRewards > 0 && dividendInBaseCurrency == 0"
+        class="col-6 mb-3"
+      >
         <gf-value
           i18n
           size="medium"
           [locale]="data.locale"
-          [precision]="quantityPrecision"
+          [precision]="stakePrecision"
           [value]="stakeRewards"
           >Stake Rewards
         </gf-value>
