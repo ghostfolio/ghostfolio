@@ -3,7 +3,6 @@ import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.in
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
-  IDataGatheringItem,
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
@@ -12,6 +11,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_DATA_SOURCE_MAPPING } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
@@ -45,12 +45,15 @@ export class DataProviderService {
     const dataProvider = this.getDataProvider(dataSource);
     const symbol = dataProvider.getTestSymbol();
 
-    const quotes = await this.getQuotes([
-      {
-        dataSource,
-        symbol
-      }
-    ]);
+    const quotes = await this.getQuotes({
+      items: [
+        {
+          dataSource,
+          symbol
+        }
+      ],
+      useCache: false
+    });
 
     if (quotes[symbol]?.marketPrice > 0) {
       return true;
@@ -59,14 +62,16 @@ export class DataProviderService {
     return false;
   }
 
-  public async getAssetProfiles(items: IDataGatheringItem[]): Promise<{
+  public async getAssetProfiles(items: UniqueAsset[]): Promise<{
     [symbol: string]: Partial<SymbolProfile>;
   }> {
     const response: {
       [symbol: string]: Partial<SymbolProfile>;
     } = {};
 
-    const itemsGroupedByDataSource = groupBy(items, (item) => item.dataSource);
+    const itemsGroupedByDataSource = groupBy(items, ({ dataSource }) => {
+      return dataSource;
+    });
 
     const promises = [];
 
@@ -127,7 +132,7 @@ export class DataProviderService {
   }
 
   public async getHistorical(
-    aItems: IDataGatheringItem[],
+    aItems: UniqueAsset[],
     aGranularity: Granularity = 'month',
     from: Date,
     to: Date
@@ -155,11 +160,11 @@ export class DataProviderService {
           )}'`
         : '';
 
-    const dataSources = aItems.map((item) => {
-      return item.dataSource;
+    const dataSources = aItems.map(({ dataSource }) => {
+      return dataSource;
     });
-    const symbols = aItems.map((item) => {
-      return item.symbol;
+    const symbols = aItems.map(({ symbol }) => {
+      return symbol;
     });
 
     try {
@@ -192,7 +197,7 @@ export class DataProviderService {
   }
 
   public async getHistoricalRaw(
-    aDataGatheringItems: IDataGatheringItem[],
+    aDataGatheringItems: UniqueAsset[],
     from: Date,
     to: Date
   ): Promise<{
@@ -229,7 +234,13 @@ export class DataProviderService {
     return result;
   }
 
-  public async getQuotes(items: IDataGatheringItem[]): Promise<{
+  public async getQuotes({
+    items,
+    useCache = true
+  }: {
+    items: UniqueAsset[];
+    useCache?: boolean;
+  }): Promise<{
     [symbol: string]: IDataProviderResponse;
   }> {
     const response: {
@@ -238,23 +249,24 @@ export class DataProviderService {
     const startTimeTotal = performance.now();
 
     // Get items from cache
-    const itemsToFetch: IDataGatheringItem[] = [];
+    const itemsToFetch: UniqueAsset[] = [];
 
     for (const { dataSource, symbol } of items) {
-      const quoteString = await this.redisCacheService.get(
-        this.redisCacheService.getQuoteKey({ dataSource, symbol })
-      );
+      if (useCache) {
+        const quoteString = await this.redisCacheService.get(
+          this.redisCacheService.getQuoteKey({ dataSource, symbol })
+        );
 
-      if (quoteString) {
-        try {
-          const cachedDataProviderResponse = JSON.parse(quoteString);
-          response[symbol] = cachedDataProviderResponse;
-        } catch {}
+        if (quoteString) {
+          try {
+            const cachedDataProviderResponse = JSON.parse(quoteString);
+            response[symbol] = cachedDataProviderResponse;
+            continue;
+          } catch {}
+        }
       }
 
-      if (!quoteString) {
-        itemsToFetch.push({ dataSource, symbol });
-      }
+      itemsToFetch.push({ dataSource, symbol });
     }
 
     const numberOfItemsInCache = Object.keys(response)?.length;
