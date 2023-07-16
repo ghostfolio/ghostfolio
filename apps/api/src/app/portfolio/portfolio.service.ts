@@ -583,6 +583,7 @@ export class PortfolioService {
         quantity: item.quantity.toNumber(),
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
+        tags: item.tags,
         transactionCount: item.transactionCount,
         url: symbolProfile.url,
         value: value.toNumber()
@@ -628,7 +629,7 @@ export class PortfolioService {
       const emergencyFundInCash = emergencyFund
         .minus(
           this.getEmergencyFundPositionsValueInBaseCurrency({
-            activities: orders
+            holdings
           })
         )
         .toNumber();
@@ -656,7 +657,7 @@ export class PortfolioService {
       balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
       emergencyFundPositionsValueInBaseCurrency:
         this.getEmergencyFundPositionsValueInBaseCurrency({
-          activities: orders
+          holdings
         })
     });
 
@@ -742,6 +743,7 @@ export class PortfolioService {
         name: order.SymbolProfile?.name,
         quantity: new Big(order.quantity),
         symbol: order.SymbolProfile.symbol,
+        tags: order.tags,
         type: order.type,
         unitPrice: new Big(order.unitPrice)
       }));
@@ -1390,13 +1392,13 @@ export class PortfolioService {
   }
 
   private getEmergencyFundPositionsValueInBaseCurrency({
-    activities
+    holdings
   }: {
-    activities: Activity[];
+    holdings: PortfolioDetails['holdings'];
   }) {
-    const emergencyFundOrders = activities.filter((activity) => {
+    const emergencyFundHoldings = Object.values(holdings).filter(({ tags }) => {
       return (
-        activity.tags?.some(({ id }) => {
+        tags?.some(({ id }) => {
           return id === EMERGENCY_FUND_TAG_ID;
         }) ?? false
       );
@@ -1404,18 +1406,9 @@ export class PortfolioService {
 
     let valueInBaseCurrencyOfEmergencyFundPositions = new Big(0);
 
-    for (const order of emergencyFundOrders) {
-      if (order.type === 'BUY') {
-        valueInBaseCurrencyOfEmergencyFundPositions =
-          valueInBaseCurrencyOfEmergencyFundPositions.plus(
-            order.valueInBaseCurrency
-          );
-      } else if (order.type === 'SELL') {
-        valueInBaseCurrencyOfEmergencyFundPositions =
-          valueInBaseCurrencyOfEmergencyFundPositions.minus(
-            order.valueInBaseCurrency
-          );
-      }
+    for (const { value } of emergencyFundHoldings) {
+      valueInBaseCurrencyOfEmergencyFundPositions =
+        valueInBaseCurrencyOfEmergencyFundPositions.plus(value);
     }
 
     return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
@@ -1474,6 +1467,7 @@ export class PortfolioService {
       quantity: 0,
       sectors: [],
       symbol: currency,
+      tags: [],
       transactionCount: 0,
       value: balance
     };
@@ -1686,6 +1680,10 @@ export class PortfolioService {
       totalSell,
       committedFunds: committedFunds.toNumber(),
       emergencyFund: emergencyFund.toNumber(),
+      emergencyFundinAssets: emergencyFundPositionsValueInBaseCurrency,
+      emergencyFundInCash: emergencyFund
+        .minus(emergencyFundPositionsValueInBaseCurrency)
+        .toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
       }).length
@@ -1737,6 +1735,7 @@ export class PortfolioService {
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.SymbolProfile.symbol,
+      tags: order.tags,
       type: order.type,
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(

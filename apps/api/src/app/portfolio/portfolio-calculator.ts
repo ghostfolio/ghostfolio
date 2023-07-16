@@ -114,6 +114,7 @@ export class PortfolioCalculator {
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           quantity: newQuantity,
           symbol: order.symbol,
+          tags: order.tags,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
@@ -125,6 +126,7 @@ export class PortfolioCalculator {
           investment: unitPrice.mul(order.quantity).mul(factor),
           quantity: order.quantity.mul(factor),
           symbol: order.symbol,
+          tags: order.tags,
           transactionCount: 1
         };
       }
@@ -492,6 +494,7 @@ export class PortfolioCalculator {
           : null,
         quantity: item.quantity,
         symbol: item.symbol,
+        tags: item.tags,
         transactionCount: item.transactionCount
       });
 

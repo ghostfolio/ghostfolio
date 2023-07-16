@@ -6,6 +6,8 @@ export interface PortfolioSummary extends PortfolioPerformance {
   committedFunds: number;
   dividend: number;
   emergencyFund: number;
+  emergencyFundInCash: number;
+  emergencyFundinAssets: number;
   excludedAccountsAndActivities: number;
   fees: number;
   firstOrderDate: Date;
