@@ -415,10 +415,10 @@ export class DataService {
         map((response) => {
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
-              response.holdings[symbol].value = isNumber(
-                response.holdings[symbol].value
+              response.holdings[symbol].valueInBaseCurrency = isNumber(
+                response.holdings[symbol].valueInBaseCurrency
               )
-                ? response.holdings[symbol].value
+                ? response.holdings[symbol].valueInBaseCurrency
                 : response.holdings[symbol].valueInPercentage;
             }
           }
