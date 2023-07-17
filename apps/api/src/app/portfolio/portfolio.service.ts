@@ -1679,9 +1679,14 @@ export class PortfolioService {
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
-      emergencyFund: emergencyFund.toNumber(),
-      emergencyFundinAssets: emergencyFundPositionsValueInBaseCurrency,
-      emergencyFundInCash: emergencyFund
+      emergencyFund: {
+        assets: emergencyFundPositionsValueInBaseCurrency,
+        cash: emergencyFund
+          .minus(emergencyFundPositionsValueInBaseCurrency)
+          .toNumber(),
+        total: emergencyFund.toNumber()
+      },
+      fireWealth: new Big(performanceInformation.performance.currentValue)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
       ordersCount: activities.filter(({ type }) => {
