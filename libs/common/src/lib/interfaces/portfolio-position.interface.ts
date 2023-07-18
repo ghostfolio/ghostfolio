@@ -26,9 +26,9 @@ export interface PortfolioPosition {
   netPerformancePercent: number;
   quantity: number;
   sectors: Sector[];
-  transactionCount: number;
   symbol: string;
   tags?: Tag[];
+  transactionCount: number;
   type?: string;
   url?: string;
   value?: number;
