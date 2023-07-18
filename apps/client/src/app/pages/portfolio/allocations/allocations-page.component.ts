@@ -70,7 +70,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       | 'currency'
       | 'exchange'
       | 'name'
-      | 'value'
+      | 'valueInBaseCurrency'
     > & { etfProvider: string };
   };
   public sectors: {
@@ -292,11 +292,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       if (this.hasImpersonationId) {
         value = position.allocationInPercentage;
       } else {
-        value = position.value;
+        value = position.valueInBaseCurrency;
       }
 
       this.positions[symbol] = {
-        value,
+        valueInBaseCurrency: value,
         assetClass: position.assetClass,
         assetSubClass: position.assetSubClass,
         currency: position.currency,
@@ -323,39 +323,45 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           }
 
           this.markets.developedMarkets.value +=
-            position.markets.developedMarkets * position.value;
+            position.markets.developedMarkets * position.valueInBaseCurrency;
           this.markets.emergingMarkets.value +=
-            position.markets.emergingMarkets * position.value;
+            position.markets.emergingMarkets * position.valueInBaseCurrency;
           this.markets.otherMarkets.value +=
-            position.markets.otherMarkets * position.value;
+            position.markets.otherMarkets * position.valueInBaseCurrency;
 
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
 
             if (this.continents[continent]?.value) {
-              this.continents[continent].value += weight * position.value;
+              this.continents[continent].value +=
+                weight * position.valueInBaseCurrency;
             } else {
               this.continents[continent] = {
                 name: continent,
-                value: weight * this.portfolioDetails.holdings[symbol].value
+                value:
+                  weight *
+                  this.portfolioDetails.holdings[symbol].valueInBaseCurrency
               };
             }
 
             if (this.countries[code]?.value) {
-              this.countries[code].value += weight * position.value;
+              this.countries[code].value +=
+                weight * position.valueInBaseCurrency;
             } else {
               this.countries[code] = {
                 name,
-                value: weight * this.portfolioDetails.holdings[symbol].value
+                value:
+                  weight *
+                  this.portfolioDetails.holdings[symbol].valueInBaseCurrency
               };
             }
           }
         } else {
           this.continents[UNKNOWN_KEY].value +=
-            this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].valueInBaseCurrency;
 
           this.countries[UNKNOWN_KEY].value +=
-            this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].valueInBaseCurrency;
         }
 
         if (position.sectors.length > 0) {
@@ -363,17 +369,19 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             const { name, weight } = sector;
 
             if (this.sectors[name]?.value) {
-              this.sectors[name].value += weight * position.value;
+              this.sectors[name].value += weight * position.valueInBaseCurrency;
             } else {
               this.sectors[name] = {
                 name,
-                value: weight * this.portfolioDetails.holdings[symbol].value
+                value:
+                  weight *
+                  this.portfolioDetails.holdings[symbol].valueInBaseCurrency
               };
             }
           }
         } else {
           this.sectors[UNKNOWN_KEY].value +=
-            this.portfolioDetails.holdings[symbol].value;
+            this.portfolioDetails.holdings[symbol].valueInBaseCurrency;
         }
       }
 
@@ -381,8 +389,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         dataSource: position.dataSource,
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: isNumber(position.value)
-          ? position.value
+        value: isNumber(position.valueInBaseCurrency)
+          ? position.valueInBaseCurrency
           : position.valueInPercentage
       };
     }
