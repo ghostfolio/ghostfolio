@@ -161,10 +161,12 @@ export class PortfolioController {
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
+        'fireWealth',
         'items',
         'liabilities',
         'netWorth',
         'totalBuy',
+        'totalInvestment',
         'totalSell'
       ]);
     }

@@ -51,7 +51,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
           return;
         }
 
-        this.fireWealth = new Big(summary.currentValue);
+        this.fireWealth = new Big(summary.fireWealth);
         this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
         this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
 

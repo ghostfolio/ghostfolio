@@ -1,4 +1,4 @@
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Tag } from '@prisma/client';
 
 import { Market, MarketState } from '../types';
 import { Country } from './country.interface';
@@ -26,8 +26,9 @@ export interface PortfolioPosition {
   netPerformancePercent: number;
   quantity: number;
   sectors: Sector[];
-  transactionCount: number;
   symbol: string;
+  tags?: Tag[];
+  transactionCount: number;
   type?: string;
   url?: string;
   valueInBaseCurrency?: number;

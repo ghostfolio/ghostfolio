@@ -1,4 +1,4 @@
-import { DataSource } from '@prisma/client';
+import { DataSource, Tag } from '@prisma/client';
 import Big from 'big.js';
 
 export interface TransactionPointSymbol {
@@ -9,5 +9,6 @@ export interface TransactionPointSymbol {
   investment: Big;
   quantity: Big;
   symbol: string;
+  tags?: Tag[];
   transactionCount: number;
 }
