@@ -31,6 +31,7 @@ const locales = {
   ITEM: $localize`Valuable`,
   LIABILITY: $localize`Liability`,
   SELL: $localize`Sell`,
+  STAKE: $localize`Stake`,
 
   // enum AssetClass
   CASH: $localize`Cash`,

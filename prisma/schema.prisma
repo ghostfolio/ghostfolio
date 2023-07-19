@@ -240,6 +240,7 @@ enum Type {
   ITEM
   LIABILITY
   SELL
+  STAKE
 }
 
 enum ViewMode {
