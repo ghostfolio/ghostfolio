@@ -33,11 +33,18 @@ export class PublicPageComponent implements OnInit {
   };
   public portfolioPublicDetails: PortfolioPublicDetails;
   public positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name' | 'value'>;
+    [symbol: string]: Pick<
+      PortfolioPosition,
+      'currency' | 'name' | 'valueInBaseCurrency'
+    >;
   };
   public positionsArray: Pick<
     PortfolioPosition,
-    'currency' | 'name' | 'netPerformancePercent' | 'symbol' | 'value'
+    | 'currency'
+    | 'name'
+    | 'netPerformancePercent'
+    | 'symbol'
+    | 'valueInBaseCurrency'
   >[];
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -135,7 +142,7 @@ export class PublicPageComponent implements OnInit {
       const value = position.allocationInPercentage;
 
       this.positions[symbol] = {
-        value,
+        valueInBaseCurrency: value,
         currency: position.currency,
         name: position.name
       };
@@ -143,39 +150,44 @@ export class PublicPageComponent implements OnInit {
 
       if (position.countries.length > 0) {
         this.markets.developedMarkets.value +=
-          position.markets.developedMarkets * position.value;
+          position.markets.developedMarkets * position.valueInBaseCurrency;
         this.markets.emergingMarkets.value +=
-          position.markets.emergingMarkets * position.value;
+          position.markets.emergingMarkets * position.valueInBaseCurrency;
         this.markets.otherMarkets.value +=
-          position.markets.otherMarkets * position.value;
+          position.markets.otherMarkets * position.valueInBaseCurrency;
 
         for (const country of position.countries) {
           const { code, continent, name, weight } = country;
 
           if (this.continents[continent]?.value) {
-            this.continents[continent].value += weight * position.value;
+            this.continents[continent].value +=
+              weight * position.valueInBaseCurrency;
           } else {
             this.continents[continent] = {
               name: continent,
-              value: weight * this.portfolioPublicDetails.holdings[symbol].value
+              value:
+                weight *
+                this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency
             };
           }
 
           if (this.countries[code]?.value) {
-            this.countries[code].value += weight * position.value;
+            this.countries[code].value += weight * position.valueInBaseCurrency;
           } else {
             this.countries[code] = {
               name,
-              value: weight * this.portfolioPublicDetails.holdings[symbol].value
+              value:
+                weight *
+                this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency
             };
           }
         }
       } else {
         this.continents[UNKNOWN_KEY].value +=
-          this.portfolioPublicDetails.holdings[symbol].value;
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
 
         this.countries[UNKNOWN_KEY].value +=
-          this.portfolioPublicDetails.holdings[symbol].value;
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
       }
 
       if (position.sectors.length > 0) {
@@ -183,24 +195,26 @@ export class PublicPageComponent implements OnInit {
           const { name, weight } = sector;
 
           if (this.sectors[name]?.value) {
-            this.sectors[name].value += weight * position.value;
+            this.sectors[name].value += weight * position.valueInBaseCurrency;
           } else {
             this.sectors[name] = {
               name,
-              value: weight * this.portfolioPublicDetails.holdings[symbol].value
+              value:
+                weight *
+                this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency
             };
           }
         }
       } else {
         this.sectors[UNKNOWN_KEY].value +=
-          this.portfolioPublicDetails.holdings[symbol].value;
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
       }
 
       this.symbols[prettifySymbol(symbol)] = {
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: isNumber(position.value)
-          ? position.value
+        value: isNumber(position.valueInBaseCurrency)
+          ? position.valueInBaseCurrency
           : position.valueInPercentage
       };
     }

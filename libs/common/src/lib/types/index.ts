@@ -5,6 +5,7 @@ import type { ColorScheme } from './color-scheme.type';
 import type { DateRange } from './date-range.type';
 import type { Granularity } from './granularity.type';
 import type { GroupBy } from './group-by.type';
+import type { MarketDataQuery } from './market-data-query.type';
 import type { MarketState } from './market-state.type';
 import type { Market } from './market.type';
 import type { OrderWithAccount } from './order-with-account.type';
@@ -23,6 +24,7 @@ export type {
   Granularity,
   GroupBy,
   Market,
+  MarketDataQuery,
   MarketState,
   OrderWithAccount,
   RequestWithUser,

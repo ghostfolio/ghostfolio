@@ -10,6 +10,7 @@ import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
+import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
@@ -166,6 +167,20 @@ export const products: Product[] = [
     origin: 'United States',
     pricingPerYear: '$150',
     slogan: 'The Time Machine for your Net Worth'
+  },
+  {
+    component: MarketsShPageComponent,
+    founded: 2022,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    isOpenSource: false,
+    key: 'markets.sh',
+    languages: ['English'],
+    name: 'markets.sh',
+    origin: 'Germany',
+    pricingPerYear: '€168',
+    region: 'Global',
+    slogan: 'Track your investments'
   },
   {
     component: MaybeFinancePageComponent,

@@ -5,14 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 1.290.0 - 2023-07-16
 
 ### Added
 
 - Added hints to the activity types in the create or edit activity dialog
+- Added queries to the historical market data table of the admin control panel
 
 ### Changed
 
+- Improved the usability of the login dialog
 - Disabled the caching in the health check endpoints for data providers
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Upgraded `prisma` from version `4.15.0` to `4.16.2`

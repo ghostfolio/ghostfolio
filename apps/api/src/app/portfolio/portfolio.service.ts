@@ -569,7 +569,7 @@ export class PortfolioService {
         symbol: item.symbol,
         transactionCount: item.transactionCount,
         url: symbolProfile.url,
-        value: value.toNumber()
+        valueInBaseCurrency: value.toNumber()
       };
     }
 
@@ -701,7 +701,7 @@ export class PortfolioService {
       holdings[userCurrency] = {
         ...emergencyFundCashPositions[userCurrency],
         investment: emergencyFundInCash,
-        value: emergencyFundInCash
+        valueInBaseCurrency: emergencyFundInCash
       };
     }
     return filteredValueInBaseCurrency;
@@ -1353,7 +1353,7 @@ export class PortfolioService {
 
       if (cashPositions[account.currency]) {
         cashPositions[account.currency].investment += convertedBalance;
-        cashPositions[account.currency].value += convertedBalance;
+        cashPositions[account.currency].valueInBaseCurrency += convertedBalance;
       } else {
         cashPositions[account.currency] = this.getInitialCashPosition({
           balance: convertedBalance,
@@ -1365,7 +1365,9 @@ export class PortfolioService {
     for (const symbol of Object.keys(cashPositions)) {
       // Calculate allocations for each currency
       cashPositions[symbol].allocationInPercentage = value.gt(0)
-        ? new Big(cashPositions[symbol].value).div(value).toNumber()
+        ? new Big(cashPositions[symbol].valueInBaseCurrency)
+            .div(value)
+            .toNumber()
         : 0;
     }
 
@@ -1550,7 +1552,7 @@ export class PortfolioService {
       sectors: [],
       symbol: currency,
       transactionCount: 0,
-      value: balance
+      valueInBaseCurrency: balance
     };
   }
 

@@ -16,6 +16,8 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
   templateUrl: 'login-with-access-token-dialog.html'
 })
 export class LoginWithAccessTokenDialog {
+  public isAccessTokenHidden = true;
+
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<LoginWithAccessTokenDialog>,
@@ -36,6 +38,12 @@ export class LoginWithAccessTokenDialog {
 
   public onClose() {
     this.dialogRef.close();
+  }
+
+  public onLoginWithAccessToken() {
+    if (this.data.accessToken) {
+      this.dialogRef.close(this.data);
+    }
   }
 
   public async onLoginWithInternetIdentity() {
