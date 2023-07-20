@@ -1408,9 +1408,9 @@ export class PortfolioService {
 
     let valueInBaseCurrencyOfEmergencyFundPositions = new Big(0);
 
-    for (const { value } of emergencyFundHoldings) {
+    for (const { valueInBaseCurrency } of emergencyFundHoldings) {
       valueInBaseCurrencyOfEmergencyFundPositions =
-        valueInBaseCurrencyOfEmergencyFundPositions.plus(value);
+        valueInBaseCurrencyOfEmergencyFundPositions.plus(valueInBaseCurrency);
     }
 
     return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
