@@ -170,6 +170,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed queries to presets in the historical market data table of the admin control panel
 
+### Changed
+
+- Upgraded `prettier` from version `2.8.4` to `3.0.0`
+
 ## 1.290.0 - 2023-07-16
 
 ### Added
