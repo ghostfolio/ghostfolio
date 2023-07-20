@@ -9,6 +9,7 @@
   ],
   "attributeSort": "ASC",
   "endOfLine": "auto",
+  "plugins": ["prettier-plugin-organize-attributes"],
   "printWidth": 80,
   "singleQuote": true,
   "tabWidth": 2,
