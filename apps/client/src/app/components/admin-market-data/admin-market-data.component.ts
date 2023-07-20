@@ -63,12 +63,12 @@ export class AdminMarketDataComponent
       {
         id: 'ETF_WITHOUT_COUNTRIES',
         label: $localize`ETFs without Countries`,
-        type: <Filter['type']>'QUERY_ID'
+        type: <Filter['type']>'PRESET_ID'
       },
       {
         id: 'ETF_WITHOUT_SECTORS',
         label: $localize`ETFs without Sectors`,
-        type: <Filter['type']>'QUERY_ID'
+        type: <Filter['type']>'PRESET_ID'
       }
     ]);
   public currentDataSource: DataSource;
@@ -252,7 +252,7 @@ export class AdminMarketDataComponent
 
     this.pageSize =
       this.activeFilters.length === 1 &&
-      this.activeFilters[0].type === 'QUERY_ID'
+      this.activeFilters[0].type === 'PRESET_ID'
         ? undefined
         : DEFAULT_PAGE_SIZE;
 
