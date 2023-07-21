@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Broken down the emergency fund by cash and assets
 
+### Changed
+
+- Renamed queries to presets in the historical market data table of the admin control panel
+
 ## 1.290.0 - 2023-07-16
 
 ### Added

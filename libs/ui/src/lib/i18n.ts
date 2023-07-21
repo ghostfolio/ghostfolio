@@ -16,7 +16,7 @@ const locales = {
   MONTH: $localize`Month`,
   MONTHS: $localize`Months`,
   OTHER: $localize`Other`,
-  QUERY_ID: $localize`Query`,
+  PRESET_ID: $localize`Preset`,
   RETIREMENT_PROVISION: $localize`Retirement Provision`,
   SATELLITE: $localize`Satellite`,
   SECURITIES: $localize`Securities`,
