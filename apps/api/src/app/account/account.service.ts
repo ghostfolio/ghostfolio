@@ -2,7 +2,13 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
-import { Account, Order, Platform, Prisma } from '@prisma/client';
+import {
+  Account,
+  AccountBalance,
+  Order,
+  Platform,
+  Prisma
+} from '@prisma/client';
 import Big from 'big.js';
 import { groupBy } from 'lodash';
 
@@ -46,6 +52,7 @@ export class AccountService {
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
     (Account & {
+      balances?: AccountBalance[];
       Order?: Order[];
       Platform?: Platform;
     })[]
@@ -82,7 +89,11 @@ export class AccountService {
 
   public async getAccounts(aUserId: string) {
     const accounts = await this.accounts({
-      include: { Order: true, Platform: true },
+      include: {
+        balances: { orderBy: { createdAt: 'desc' }, take: 1 },
+        Order: true,
+        Platform: true
+      },
       orderBy: { name: 'asc' },
       where: { userId: aUserId }
     });
@@ -141,12 +152,17 @@ export class AccountService {
       };
     }
 
-    const accounts = await this.accounts({ where });
+    const accounts = await this.accounts({
+      where,
+      include: {
+        balances: { orderBy: { createdAt: 'desc' }, take: 1 }
+      }
+    });
 
     for (const account of accounts) {
       totalCashBalanceInBaseCurrency = totalCashBalanceInBaseCurrency.plus(
         this.exchangeRateDataService.toCurrency(
-          account.balance,
+          account.balances[0].value,
           account.currency,
           currency
         )
@@ -167,6 +183,18 @@ export class AccountService {
     aUserId: string
   ): Promise<Account> {
     const { data, where } = params;
+
+    await this.prismaService.accountBalance.create({
+      data: {
+        Account: {
+          connect: {
+            id_userId: where.id_userId
+          }
+        },
+        value: <any>data.balance
+      }
+    });
+
     return this.prismaService.account.update({
       data,
       where
