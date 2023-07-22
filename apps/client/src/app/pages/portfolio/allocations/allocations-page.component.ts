@@ -420,9 +420,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets.emergingMarkets.value / marketsTotal;
     this.markets.otherMarkets.value =
       this.markets.otherMarkets.value / marketsTotal;
-
-    console.log(this.positions);
-    console.log(this.symbols);
   }
 
   public onAccountChartClicked({ symbol }: UniqueAsset) {

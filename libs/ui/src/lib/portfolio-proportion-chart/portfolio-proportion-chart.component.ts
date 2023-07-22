@@ -137,7 +137,7 @@ export class PortfolioProportionChartComponent
               this.positions[symbol][this.keys[0]].toUpperCase()
             ].subCategory = {
               [this.positions[symbol][this.keys[1]]]: {
-                value: new Big(this.positions[symbol]?.value ?? 0)
+                value: new Big(this.positions[symbol].value)
               }
             };
           }
