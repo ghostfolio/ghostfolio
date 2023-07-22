@@ -57,9 +57,11 @@ export class AccountService {
       Platform?: Platform;
     })[]
   > {
-    const { include, skip, take, cursor, where, orderBy } = params;
+    const { include = {}, skip, take, cursor, where, orderBy } = params;
 
-    return this.prismaService.account.findMany({
+    include.balances = { orderBy: { createdAt: 'desc' }, take: 1 };
+
+    const accounts = await this.prismaService.account.findMany({
       cursor,
       include,
       orderBy,
@@ -67,15 +69,32 @@ export class AccountService {
       take,
       where
     });
+
+    return accounts.map((account) => {
+      return { ...account, balance: account.balances[0]?.value ?? 0 };
+    });
   }
 
   public async createAccount(
     data: Prisma.AccountCreateInput,
     aUserId: string
   ): Promise<Account> {
-    return this.prismaService.account.create({
+    const account = await this.prismaService.account.create({
       data
     });
+
+    await this.prismaService.accountBalance.create({
+      data: {
+        Account: {
+          connect: {
+            id_userId: { id: account.id, userId: aUserId }
+          }
+        },
+        value: <any>data.balance
+      }
+    });
+
+    return account;
   }
 
   public async deleteAccount(
@@ -90,7 +109,6 @@ export class AccountService {
   public async getAccounts(aUserId: string) {
     const accounts = await this.accounts({
       include: {
-        balances: { orderBy: { createdAt: 'desc' }, take: 1 },
         Order: true,
         Platform: true
       },
@@ -153,16 +171,13 @@ export class AccountService {
     }
 
     const accounts = await this.accounts({
-      where,
-      include: {
-        balances: { orderBy: { createdAt: 'desc' }, take: 1 }
-      }
+      where
     });
 
     for (const account of accounts) {
       totalCashBalanceInBaseCurrency = totalCashBalanceInBaseCurrency.plus(
         this.exchangeRateDataService.toCurrency(
-          account.balances[0].value,
+          account.balance,
           account.currency,
           currency
         )

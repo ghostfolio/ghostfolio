@@ -1810,7 +1810,6 @@ export class PortfolioService {
     } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
       currentAccounts = await this.accountService.accounts({
         include: {
-          balances: { orderBy: { createdAt: 'desc' }, take: 1 },
           Platform: true
         },
         where: { id: filters[0].id }
@@ -1846,11 +1845,11 @@ export class PortfolioService {
       ordersByAccount = ordersByAccount.concat(ordersOfTypeItemByAccount);
 
       accounts[account.id] = {
-        balance: account.balances[0].value,
+        balance: account.balance,
         currency: account.currency,
         name: account.name,
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          account.balances[0].value,
+          account.balance,
           account.currency,
           userCurrency
         )
@@ -1859,17 +1858,17 @@ export class PortfolioService {
       if (platforms[account.Platform?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
         platforms[account.Platform?.id || UNKNOWN_KEY].valueInBaseCurrency +=
           this.exchangeRateDataService.toCurrency(
-            account.balances[0].value,
+            account.balance,
             account.currency,
             userCurrency
           );
       } else {
         platforms[account.Platform?.id || UNKNOWN_KEY] = {
-          balance: account.balances[0].value,
+          balance: account.balance,
           currency: account.currency,
           name: account.Platform?.name,
           valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            account.balances[0].value,
+            account.balance,
             account.currency,
             userCurrency
           )
