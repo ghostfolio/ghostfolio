@@ -52,7 +52,6 @@ export class AccountService {
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
     (Account & {
-      balances?: AccountBalance[];
       Order?: Order[];
       Platform?: Platform;
     })[]
@@ -108,10 +107,7 @@ export class AccountService {
 
   public async getAccounts(aUserId: string) {
     const accounts = await this.accounts({
-      include: {
-        Order: true,
-        Platform: true
-      },
+      include: { Order: true, Platform: true },
       orderBy: { name: 'asc' },
       where: { userId: aUserId }
     });
@@ -170,9 +166,7 @@ export class AccountService {
       };
     }
 
-    const accounts = await this.accounts({
-      where
-    });
+    const accounts = await this.accounts({ where });
 
     for (const account of accounts) {
       totalCashBalanceInBaseCurrency = totalCashBalanceInBaseCurrency.plus(

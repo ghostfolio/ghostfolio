@@ -126,10 +126,7 @@ export class PortfolioService {
     const [accounts, details] = await Promise.all([
       this.accountService.accounts({
         where,
-        include: {
-          Order: true,
-          Platform: true
-        },
+        include: { Order: true, Platform: true },
         orderBy: { name: 'asc' }
       }),
       this.getDetails({
@@ -158,9 +155,8 @@ export class PortfolioService {
         ...account,
         transactionCount,
         valueInBaseCurrency,
-        balance: details.accounts[account.id].balance,
         balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          details.accounts[account.id].balance,
+          account.balance,
           account.currency,
           userCurrency
         ),
@@ -1800,7 +1796,6 @@ export class PortfolioService {
     const platforms: PortfolioDetails['platforms'] = {};
 
     let currentAccounts: (Account & {
-      balances?: AccountBalance[];
       Order?: Order[];
       Platform?: Platform;
     })[] = [];
@@ -1809,9 +1804,7 @@ export class PortfolioService {
       currentAccounts = await this.accountService.getAccounts(userId);
     } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
       currentAccounts = await this.accountService.accounts({
-        include: {
-          Platform: true
-        },
+        include: { Platform: true },
         where: { id: filters[0].id }
       });
     } else {
