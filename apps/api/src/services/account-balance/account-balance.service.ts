@@ -1,7 +1,6 @@
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { AccountBalance, Prisma } from '@prisma/client';
-
-import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AccountBalanceService {
