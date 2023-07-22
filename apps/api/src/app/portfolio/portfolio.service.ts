@@ -51,7 +51,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
   Account,
-  AccountBalance,
   AssetClass,
   DataSource,
   Order,
