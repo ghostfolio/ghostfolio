@@ -44,10 +44,12 @@ export class PortfolioProportionChartComponent
   @Input() maxItems?: number;
   @Input() showLabels = false;
   @Input() positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'type'> & {
+    [symbol: string]: Pick<
+      PortfolioPosition,
+      'type' | 'valueInBaseCurrency'
+    > & {
       dataSource?: DataSource;
       name: string;
-      value: number;
     };
   } = {};
 
@@ -105,7 +107,7 @@ export class PortfolioProportionChartComponent
           chartData[this.positions[symbol][this.keys[0]].toUpperCase()].value =
             chartData[
               this.positions[symbol][this.keys[0]].toUpperCase()
-            ].value.plus(this.positions[symbol].value);
+            ].value.plus(this.positions[symbol].valueInBaseCurrency);
 
           if (
             chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
@@ -117,19 +119,19 @@ export class PortfolioProportionChartComponent
               chartData[
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
-                this.positions[symbol].value
+                this.positions[symbol].valueInBaseCurrency
               );
           } else {
             chartData[
               this.positions[symbol][this.keys[0]].toUpperCase()
             ].subCategory[this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY] =
-              { value: new Big(this.positions[symbol].value) };
+              { value: new Big(this.positions[symbol].valueInBaseCurrency) };
           }
         } else {
           chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
             name: this.positions[symbol][this.keys[0]],
             subCategory: {},
-            value: new Big(this.positions[symbol].value ?? 0)
+            value: new Big(this.positions[symbol].valueInBaseCurrency ?? 0)
           };
 
           if (this.positions[symbol][this.keys[1]]) {
@@ -137,7 +139,7 @@ export class PortfolioProportionChartComponent
               this.positions[symbol][this.keys[0]].toUpperCase()
             ].subCategory = {
               [this.positions[symbol][this.keys[1]]]: {
-                value: new Big(this.positions[symbol].value)
+                value: new Big(this.positions[symbol]?.valueInBaseCurrency ?? 0)
               }
             };
           }
@@ -145,7 +147,7 @@ export class PortfolioProportionChartComponent
       } else {
         if (chartData[UNKNOWN_KEY]) {
           chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
-            this.positions[symbol].value
+            this.positions[symbol].valueInBaseCurrency
           );
         } else {
           chartData[UNKNOWN_KEY] = {
@@ -153,7 +155,7 @@ export class PortfolioProportionChartComponent
             subCategory: this.keys[1]
               ? { [this.keys[1]]: { value: new Big(0) } }
               : undefined,
-            value: new Big(this.positions[symbol].value)
+            value: new Big(this.positions[symbol].valueInBaseCurrency)
           };
         }
       }

@@ -81,7 +81,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       dataSource?: DataSource;
       name: string;
       symbol: string;
-      value: number;
+      valueInBaseCurrency: number;
     };
   };
 
@@ -259,7 +259,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
         symbol: UNKNOWN_KEY,
-        value: 0
+        valueInBaseCurrency: 0
       }
     };
   }
@@ -389,7 +389,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         dataSource: position.dataSource,
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: isNumber(position.valueInBaseCurrency)
+        valueInBaseCurrency: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
           : position.valueInPercentage
       };
