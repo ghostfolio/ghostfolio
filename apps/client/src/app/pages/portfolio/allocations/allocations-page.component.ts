@@ -65,13 +65,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public positions: {
     [symbol: string]: Pick<
       PortfolioPosition,
-      | 'assetClass'
-      | 'assetSubClass'
-      | 'currency'
-      | 'exchange'
-      | 'name'
-      | 'valueInBaseCurrency'
-    > & { etfProvider: string };
+      'assetClass' | 'assetSubClass' | 'currency' | 'exchange' | 'name'
+    > & { etfProvider: string; value: number };
   };
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -81,7 +76,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       dataSource?: DataSource;
       name: string;
       symbol: string;
-      valueInBaseCurrency: number;
+      value: number;
     };
   };
 
@@ -259,7 +254,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
         symbol: UNKNOWN_KEY,
-        valueInBaseCurrency: 0
+        value: 0
       }
     };
   }
@@ -296,7 +291,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
 
       this.positions[symbol] = {
-        valueInBaseCurrency: value,
+        value,
         assetClass: position.assetClass,
         assetSubClass: position.assetSubClass,
         currency: position.currency,
@@ -389,7 +384,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         dataSource: position.dataSource,
         name: position.name,
         symbol: prettifySymbol(symbol),
-        valueInBaseCurrency: isNumber(position.valueInBaseCurrency)
+        value: isNumber(position.valueInBaseCurrency)
           ? position.valueInBaseCurrency
           : position.valueInPercentage
       };
@@ -425,6 +420,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets.emergingMarkets.value / marketsTotal;
     this.markets.otherMarkets.value =
       this.markets.otherMarkets.value / marketsTotal;
+
+    console.log(this.positions);
+    console.log(this.symbols);
   }
 
   public onAccountChartClicked({ symbol }: UniqueAsset) {
