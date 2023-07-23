@@ -41,6 +41,17 @@ model Account {
   @@id([id, userId])
 }
 
+model AccountBalance {
+  accountId String
+  createdAt DateTime @default(now())
+  date      DateTime @default(now())
+  id        String   @id @default(uuid())
+  updatedAt DateTime @updatedAt
+  userId    String
+  value     Float
+  Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
+}
+
 model Analytics {
   activityCount Int      @default(0)
   country       String?
@@ -58,17 +69,6 @@ model AuthDevice {
   updatedAt           DateTime @updatedAt
   userId              String
   User                User     @relation(fields: [userId], references: [id])
-}
-
-model AccountBalance {
-  accountId String
-  createdAt DateTime @default(now())
-  date      DateTime @default(now())
-  id        String   @id @default(uuid())
-  updatedAt DateTime @updatedAt
-  userId    String
-  value     Float
-  Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 }
 
 model MarketData {
