@@ -65,9 +65,9 @@ model AccountBalance {
   createdAt DateTime @default(now())
   date      DateTime @default(now())
   id        String   @id @default(uuid())
-  value     Float
   updatedAt DateTime @updatedAt
   userId    String
+  value     Float
   Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 }
 
