@@ -18,10 +18,10 @@ ALTER TABLE "AccountBalance" ADD CONSTRAINT "AccountBalance_accountId_userId_fke
 INSERT INTO "AccountBalance" ("accountId", "createdAt", "date", "id", "updatedAt", "userId", "value")
 SELECT
     "id",
-    "createdAt",
-    "createdAt",
+    "updatedAt",
+    "updatedAt",
     "id",
-    "createdAt",
+    "updatedAt",
     "userId",
     "balance"
 FROM "Account";
