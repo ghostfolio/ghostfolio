@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Broken down the emergency fund by cash and assets
+- Added support for account balance time series
 
 ### Changed
 
