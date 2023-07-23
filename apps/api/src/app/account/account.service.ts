@@ -70,7 +70,11 @@ export class AccountService {
     });
 
     return accounts.map((account) => {
-      return { ...account, balance: account.balances[0]?.value ?? 0 };
+      account = { ...account, balance: account.balances[0]?.value ?? 0 };
+
+      delete account.balances;
+
+      return account;
     });
   }
 
