@@ -125,9 +125,11 @@ export class ExchangeRateDataService {
       return 0;
     }
 
-    let factor = 1;
+    let factor: number;
 
-    if (aFromCurrency !== aToCurrency) {
+    if (aFromCurrency === aToCurrency) {
+      factor = 1;
+    } else {
       if (this.exchangeRates[`${aFromCurrency}${aToCurrency}`]) {
         factor = this.exchangeRates[`${aFromCurrency}${aToCurrency}`];
       } else {
@@ -171,7 +173,9 @@ export class ExchangeRateDataService {
 
     let factor: number;
 
-    if (aFromCurrency !== aToCurrency) {
+    if (aFromCurrency === aToCurrency) {
+      factor = 1;
+    } else {
       const dataSource =
         this.dataProviderService.getDataSourceForExchangeRates();
       const symbol = `${aFromCurrency}${aToCurrency}`;
