@@ -42,7 +42,6 @@ import type {
   AccountWithValue,
   DateRange,
   GroupBy,
-  Market,
   OrderWithAccount,
   RequestWithUser,
   UserWithSettings
@@ -84,7 +83,9 @@ import {
 import { PortfolioCalculator } from './portfolio-calculator';
 import { RulesService } from './rules.service';
 
+const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
+const europeMarkets = require('../../assets/countries/europe-markets.json');
 const emergingMarkets = require('../../assets/countries/emerging-markets.json');
 
 @Injectable()
@@ -538,9 +539,17 @@ export class PortfolioService {
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
-      const markets: { [key in Market]: number } = {
+      const markets: PortfolioPosition['markets'] = {
         developedMarkets: 0,
         emergingMarkets: 0,
+        otherMarkets: 0
+      };
+      const marketsAdvanced: PortfolioPosition['marketsAdvanced'] = {
+        asiaPacific: 0,
+        emergingMarkets: 0,
+        europe: 0,
+        japan: 0,
+        northAmerica: 0,
         otherMarkets: 0
       };
 
@@ -558,10 +567,39 @@ export class PortfolioService {
             .plus(country.weight)
             .toNumber();
         }
+
+        if (country.code === 'JP') {
+          marketsAdvanced.japan = new Big(marketsAdvanced.japan)
+            .plus(country.weight)
+            .toNumber();
+        } else if (country.code === 'CA' || country.code === 'US') {
+          marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
+            .plus(country.weight)
+            .toNumber();
+        } else if (asiaPacificMarkets.includes(country.code)) {
+          marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          marketsAdvanced.emergingMarkets = new Big(
+            marketsAdvanced.emergingMarkets
+          )
+            .plus(country.weight)
+            .toNumber();
+        } else if (europeMarkets.includes(country.code)) {
+          marketsAdvanced.europe = new Big(marketsAdvanced.europe)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
       }
 
       holdings[item.symbol] = {
         markets,
+        marketsAdvanced,
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : value.div(filteredValueInBaseCurrency).toNumber(),

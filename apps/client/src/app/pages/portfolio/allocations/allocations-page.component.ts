@@ -18,7 +18,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Market } from '@ghostfolio/common/types';
+import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { Account, AssetClass, DataSource, Platform } from '@prisma/client';
 import { isNumber } from 'lodash';
@@ -53,6 +53,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public isLoading = false;
   public markets: {
     [key in Market]: { name: string; value: number };
+  };
+  public marketsAdvanced: {
+    [key in MarketAdvanced]: {
+      id: MarketAdvanced;
+      name: string;
+      value: number;
+    };
   };
   public placeholder = '';
   public platforms: {
@@ -235,6 +242,38 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: undefined
       }
     };
+    this.marketsAdvanced = {
+      asiaPacific: {
+        id: 'asiaPacific',
+        name: translate('Asia-Pacific'),
+        value: 0
+      },
+      emergingMarkets: {
+        id: 'emergingMarkets',
+        name: translate('Emerging Markets'),
+        value: 0
+      },
+      europe: {
+        id: 'europe',
+        name: translate('Europe'),
+        value: 0
+      },
+      japan: {
+        id: 'japan',
+        name: translate('Japan'),
+        value: 0
+      },
+      northAmerica: {
+        id: 'northAmerica',
+        name: translate('North America'),
+        value: 0
+      },
+      otherMarkets: {
+        id: 'otherMarkets',
+        name: translate('Other Markets'),
+        value: 0
+      }
+    };
     this.platforms = {};
     this.portfolioDetails = {
       accounts: {},
@@ -323,6 +362,19 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             position.markets.emergingMarkets * position.valueInBaseCurrency;
           this.markets.otherMarkets.value +=
             position.markets.otherMarkets * position.valueInBaseCurrency;
+
+          this.marketsAdvanced.asiaPacific.value +=
+            position.marketsAdvanced.asiaPacific * position.valueInBaseCurrency;
+          this.marketsAdvanced.emergingMarkets.value +=
+            position.marketsAdvanced.emergingMarkets *
+            position.valueInBaseCurrency;
+          this.marketsAdvanced.europe.value +=
+            position.marketsAdvanced.europe * position.valueInBaseCurrency;
+          this.marketsAdvanced.japan.value +=
+            position.marketsAdvanced.japan * position.valueInBaseCurrency;
+          this.marketsAdvanced.northAmerica.value +=
+            position.marketsAdvanced.northAmerica *
+            position.valueInBaseCurrency;
 
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
