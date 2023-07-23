@@ -93,7 +93,7 @@ export class AccountService {
             id_userId: { id: account.id, userId: aUserId }
           }
         },
-        value: <any>data.balance
+        value: data.balance
       }
     });
 
@@ -204,7 +204,7 @@ export class AccountService {
             id_userId: where.id_userId
           }
         },
-        value: <any>data.balance
+        value: <number>data.balance
       }
     });
 
