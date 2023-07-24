@@ -357,58 +357,96 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           }
 
           this.markets.developedMarkets.value +=
-            position.markets.developedMarkets * position.valueInBaseCurrency;
+            position.markets.developedMarkets *
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
           this.markets.emergingMarkets.value +=
-            position.markets.emergingMarkets * position.valueInBaseCurrency;
+            position.markets.emergingMarkets *
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
           this.markets.otherMarkets.value +=
-            position.markets.otherMarkets * position.valueInBaseCurrency;
+            position.markets.otherMarkets *
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
 
           this.marketsAdvanced.asiaPacific.value +=
-            position.marketsAdvanced.asiaPacific * position.valueInBaseCurrency;
+            position.marketsAdvanced.asiaPacific *
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
           this.marketsAdvanced.emergingMarkets.value +=
             position.marketsAdvanced.emergingMarkets *
-            position.valueInBaseCurrency;
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
           this.marketsAdvanced.europe.value +=
-            position.marketsAdvanced.europe * position.valueInBaseCurrency;
+            position.marketsAdvanced.europe *
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
           this.marketsAdvanced.japan.value +=
-            position.marketsAdvanced.japan * position.valueInBaseCurrency;
+            position.marketsAdvanced.japan *
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
           this.marketsAdvanced.northAmerica.value +=
             position.marketsAdvanced.northAmerica *
-            position.valueInBaseCurrency;
+            (isNumber(position.valueInBaseCurrency)
+              ? position.valueInBaseCurrency
+              : position.valueInPercentage);
 
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
 
             if (this.continents[continent]?.value) {
               this.continents[continent].value +=
-                weight * position.valueInBaseCurrency;
+                weight *
+                (isNumber(position.valueInBaseCurrency)
+                  ? position.valueInBaseCurrency
+                  : position.valueInPercentage);
             } else {
               this.continents[continent] = {
                 name: continent,
                 value:
                   weight *
-                  this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  (isNumber(position.valueInBaseCurrency)
+                    ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                    : this.portfolioDetails.holdings[symbol].valueInPercentage)
               };
             }
 
             if (this.countries[code]?.value) {
               this.countries[code].value +=
-                weight * position.valueInBaseCurrency;
+                weight *
+                (isNumber(position.valueInBaseCurrency)
+                  ? position.valueInBaseCurrency
+                  : position.valueInPercentage);
             } else {
               this.countries[code] = {
                 name,
                 value:
                   weight *
-                  this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  (isNumber(position.valueInBaseCurrency)
+                    ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                    : this.portfolioDetails.holdings[symbol].valueInPercentage)
               };
             }
           }
         } else {
-          this.continents[UNKNOWN_KEY].value +=
-            this.portfolioDetails.holdings[symbol].valueInBaseCurrency;
+          this.continents[UNKNOWN_KEY].value += isNumber(
+            position.valueInBaseCurrency
+          )
+            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+            : this.portfolioDetails.holdings[symbol].valueInPercentage;
 
-          this.countries[UNKNOWN_KEY].value +=
-            this.portfolioDetails.holdings[symbol].valueInBaseCurrency;
+          this.countries[UNKNOWN_KEY].value += isNumber(
+            position.valueInBaseCurrency
+          )
+            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+            : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
 
         if (position.sectors.length > 0) {
@@ -416,19 +454,28 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             const { name, weight } = sector;
 
             if (this.sectors[name]?.value) {
-              this.sectors[name].value += weight * position.valueInBaseCurrency;
+              this.sectors[name].value +=
+                weight *
+                (isNumber(position.valueInBaseCurrency)
+                  ? position.valueInBaseCurrency
+                  : position.valueInPercentage);
             } else {
               this.sectors[name] = {
                 name,
                 value:
                   weight *
-                  this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                  (isNumber(position.valueInBaseCurrency)
+                    ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+                    : this.portfolioDetails.holdings[symbol].valueInPercentage)
               };
             }
           }
         } else {
-          this.sectors[UNKNOWN_KEY].value +=
-            this.portfolioDetails.holdings[symbol].valueInBaseCurrency;
+          this.sectors[UNKNOWN_KEY].value += isNumber(
+            position.valueInBaseCurrency
+          )
+            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+            : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
       }
 

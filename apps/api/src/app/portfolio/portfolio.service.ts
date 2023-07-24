@@ -1535,7 +1535,13 @@ export class PortfolioService {
       );
   }
 
-  private getLiabilities(activities: OrderWithAccount[]) {
+  private getLiabilities({
+    activities,
+    userCurrency
+  }: {
+    activities: OrderWithAccount[];
+    userCurrency: string;
+  }) {
     return activities
       .filter(({ type }) => {
         return type === TypeOfOrder.LIABILITY;
@@ -1544,7 +1550,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           new Big(quantity).mul(unitPrice).toNumber(),
           SymbolProfile.currency,
-          this.request.user.Settings.settings.baseCurrency
+          userCurrency
         );
       })
       .reduce(
@@ -1654,7 +1660,10 @@ export class PortfolioService {
     const fees = this.getFees({ activities, userCurrency }).toNumber();
     const firstOrderDate = activities[0]?.date;
     const items = this.getItems(activities).toNumber();
-    const liabilities = this.getLiabilities(activities).toNumber();
+    const liabilities = this.getLiabilities({
+      activities,
+      userCurrency
+    }).toNumber();
 
     const totalBuy = this.getTotalByType(activities, userCurrency, 'BUY');
     const totalSell = this.getTotalByType(activities, userCurrency, 'SELL');
