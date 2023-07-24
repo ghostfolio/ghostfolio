@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set the `lastmod` dates of `sitemap.xml` dynamically
 
+## 1.292.0 - 2023-07-24
+
+### Added
+
+- Introduced the allocations by market chart on the allocations page
+
+### Changed
+
+- Upgraded `yahoo-finance2` from version `2.4.2` to `2.4.3`
+
+### Fixed
+
+- Fixed an issue in the public page
+
 ## 1.291.0 - 2023-07-23
 
 ### Added

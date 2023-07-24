@@ -5,6 +5,7 @@ import type { ColorScheme } from './color-scheme.type';
 import type { DateRange } from './date-range.type';
 import type { Granularity } from './granularity.type';
 import type { GroupBy } from './group-by.type';
+import type { MarketAdvanced } from './market-advanced.type';
 import type { MarketDataPreset } from './market-data-preset.type';
 import type { MarketState } from './market-state.type';
 import type { Market } from './market.type';
@@ -24,6 +25,7 @@ export type {
   Granularity,
   GroupBy,
   Market,
+  MarketAdvanced,
   MarketDataPreset,
   MarketState,
   OrderWithAccount,
