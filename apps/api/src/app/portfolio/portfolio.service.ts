@@ -85,8 +85,8 @@ import { RulesService } from './rules.service';
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
-const europeMarkets = require('../../assets/countries/europe-markets.json');
 const emergingMarkets = require('../../assets/countries/emerging-markets.json');
+const europeMarkets = require('../../assets/countries/europe-markets.json');
 
 @Injectable()
 export class PortfolioService {
