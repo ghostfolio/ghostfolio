@@ -174,7 +174,7 @@
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Country</span
+            ><span i18n>By Market</span
             ><gf-premium-indicator
               *ngIf="user?.subscription?.type === 'Basic'"
               class="ml-1"
@@ -186,10 +186,8 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-            [keys]="['name']"
             [locale]="user?.settings?.locale"
-            [maxItems]="10"
-            [positions]="countries"
+            [positions]="marketsAdvanced"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
@@ -250,6 +248,30 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Country</span
+            ><gf-premium-indicator
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1"
+            ></gf-premium-indicator
+          ></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['name']"
+            [locale]="user?.settings?.locale"
+            [maxItems]="10"
+            [positions]="countries"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">

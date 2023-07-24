@@ -179,6 +179,9 @@ export class PortfolioController {
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         markets: hasDetails ? portfolioPosition.markets : undefined,
+        marketsAdvanced: hasDetails
+          ? portfolioPosition.marketsAdvanced
+          : undefined,
         sectors: hasDetails ? portfolioPosition.sectors : []
       };
     }
