@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the missing values in the holdings table
+- Fixed the `no such file or directory` error caused by the missing `favicon.ico` file
 
 ## 1.292.0 - 2023-07-24
 
