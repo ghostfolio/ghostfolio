@@ -181,6 +181,46 @@ export class PortfolioController {
       }
     }
 
+    if (
+      hasDetails === false ||
+      impersonationId ||
+      this.userService.isRestrictedView(this.request.user)
+    ) {
+      portfolioSummary = nullifyValuesInObject(summary, [
+        'cash',
+        'committedFunds',
+        'currentGrossPerformance',
+        'currentNetPerformance',
+        'currentValue',
+        'dividend',
+        'emergencyFund',
+        'excludedAccountsAndActivities',
+        'fees',
+        'fireWealth',
+        'items',
+        'liabilities',
+        'netWorth',
+        'totalBuy',
+        'totalInvestment',
+        'totalSell'
+      ]);
+    }
+
+    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+      holdings[symbol] = {
+        ...portfolioPosition,
+        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
+        assetSubClass: hasDetails ? portfolioPosition.assetSubClass : undefined,
+        countries: hasDetails ? portfolioPosition.countries : [],
+        currency: hasDetails ? portfolioPosition.currency : undefined,
+        markets: hasDetails ? portfolioPosition.markets : undefined,
+        marketsAdvanced: hasDetails
+          ? portfolioPosition.marketsAdvanced
+          : undefined,
+        sectors: hasDetails ? portfolioPosition.sectors : []
+      };
+    }
+
     return {
       accounts,
       filteredValueInBaseCurrency,

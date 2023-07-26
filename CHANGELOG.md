@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.292.0 - 2023-07-24
+
+### Added
+
+- Introduced the allocations by market chart on the allocations page
+
+### Changed
+
+- Upgraded `yahoo-finance2` from version `2.4.2` to `2.4.3`
+
+### Fixed
+
+- Fixed an issue in the public page
+
+## 1.291.0 - 2023-07-23
+
+### Added
+
+- Broken down the emergency fund by cash and assets
+- Added support for account balance time series
+
+### Changed
+
+- Renamed queries to presets in the historical market data table of the admin control panel
+
 ## 1.290.0 - 2023-07-16
 
 ### Added

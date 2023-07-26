@@ -17,7 +17,7 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { MarketDataQuery } from '@ghostfolio/common/types';
+import { MarketDataPreset } from '@ghostfolio/common/types';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { AssetSubClass, Prisma, Property, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
@@ -104,14 +104,14 @@ export class AdminService {
 
   public async getMarketData({
     filters,
-    queryId,
+    presetId,
     sortColumn,
     sortDirection,
     skip,
     take = Number.MAX_SAFE_INTEGER
   }: {
     filters?: Filter[];
-    queryId?: MarketDataQuery;
+    presetId?: MarketDataPreset;
     skip?: number;
     sortColumn?: string;
     sortDirection?: Prisma.SortOrder;
@@ -122,8 +122,8 @@ export class AdminService {
     const where: Prisma.SymbolProfileWhereInput = {};
 
     if (
-      queryId === 'ETF_WITHOUT_COUNTRIES' ||
-      queryId === 'ETF_WITHOUT_SECTORS'
+      presetId === 'ETF_WITHOUT_COUNTRIES' ||
+      presetId === 'ETF_WITHOUT_SECTORS'
     ) {
       filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
     }
@@ -221,12 +221,12 @@ export class AdminService {
       }
     );
 
-    if (queryId) {
-      if (queryId === 'ETF_WITHOUT_COUNTRIES') {
+    if (presetId) {
+      if (presetId === 'ETF_WITHOUT_COUNTRIES') {
         marketData = marketData.filter(({ countriesCount }) => {
           return countriesCount === 0;
         });
-      } else if (queryId === 'ETF_WITHOUT_SECTORS') {
+      } else if (presetId === 'ETF_WITHOUT_SECTORS') {
         marketData = marketData.filter(({ sectorsCount }) => {
           return sectorsCount === 0;
         });

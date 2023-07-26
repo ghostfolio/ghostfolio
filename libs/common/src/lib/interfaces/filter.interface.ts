@@ -5,7 +5,7 @@ export interface Filter {
     | 'ACCOUNT'
     | 'ASSET_CLASS'
     | 'ASSET_SUB_CLASS'
-    | 'QUERY_ID'
+    | 'PRESET_ID'
     | 'SYMBOL'
     | 'TAG';
 }
