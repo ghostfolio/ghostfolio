@@ -88,10 +88,6 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onToggleExcluded(aAccount: AccountModel) {
-    this.accountToggleExcluded.emit(aAccount);
-  }
-
   public onOpenAccountDetailDialog(accountId: string) {
     this.router.navigate([], {
       queryParams: { accountId, accountDetailDialog: true }
@@ -100,6 +96,10 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   public onOpenComment(aComment: string) {
     alert(aComment);
+  }
+
+  public onToggleExcluded(aAccount: AccountModel) {
+    this.accountToggleExcluded.emit(aAccount);
   }
 
   public onUpdateAccount(aAccount: AccountModel) {
