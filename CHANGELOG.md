@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added error handling for the _Redis_ connections to keep the app running if the connection fails
 
+### Changed
+
+- Set the `lastmod` dates of `sitemap.xml` dynamically
+
 ### Fixed
 
 - Fixed the missing values in the holdings table
