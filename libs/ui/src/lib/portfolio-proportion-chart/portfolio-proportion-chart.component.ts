@@ -47,7 +47,6 @@ export class PortfolioProportionChartComponent
     [symbol: string]: Pick<PortfolioPosition, 'type'> & {
       dataSource?: DataSource;
       name: string;
-      valueInBaseCurrency: number;
       value: number;
     };
   } = {};
@@ -106,10 +105,9 @@ export class PortfolioProportionChartComponent
           if (chartData[this.positions[symbol][this.keys[0]].toUpperCase()]) {
             chartData[
               this.positions[symbol][this.keys[0]].toUpperCase()
-            ].value.plus(
-              this.positions[symbol].valueInBaseCurrency ??
-                this.positions[symbol].value
-            );
+            ].value = chartData[
+              this.positions[symbol][this.keys[0]].toUpperCase()
+            ].value.plus(this.positions[symbol].value);
 
             if (
               chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
@@ -117,31 +115,24 @@ export class PortfolioProportionChartComponent
             ) {
               chartData[
                 this.positions[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
-                this.positions[symbol].valueInBaseCurrency ??
+              ].subCategory[this.positions[symbol][this.keys[1]]].value =
+                chartData[
+                  this.positions[symbol][this.keys[0]].toUpperCase()
+                ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
                   this.positions[symbol].value
-              );
+                );
             } else {
               chartData[
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory[
                 this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
-              ] = {
-                value: new Big(
-                  this.positions[symbol].valueInBaseCurrency ??
-                    this.positions[symbol].value
-                )
-              };
+              ] = { value: new Big(this.positions[symbol].value) };
             }
           } else {
             chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
               name: this.positions[symbol][this.keys[0]],
               subCategory: {},
-              value: new Big(
-                this.positions[symbol].valueInBaseCurrency ??
-                  this.positions[symbol].value ??
-                  0
-              )
+              value: new Big(this.positions[symbol].value ?? 0)
             };
 
             if (this.positions[symbol][this.keys[1]]) {
@@ -149,10 +140,7 @@ export class PortfolioProportionChartComponent
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory = {
                 [this.positions[symbol][this.keys[1]]]: {
-                  value: new Big(
-                    this.positions[symbol].valueInBaseCurrency ??
-                      this.positions[symbol].value
-                  )
+                  value: new Big(this.positions[symbol].value)
                 }
               };
             }
@@ -160,8 +148,7 @@ export class PortfolioProportionChartComponent
         } else {
           if (chartData[UNKNOWN_KEY]) {
             chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
-              this.positions[symbol].valueInBaseCurrency ??
-                this.positions[symbol].value
+              this.positions[symbol].value
             );
           } else {
             chartData[UNKNOWN_KEY] = {
@@ -169,10 +156,7 @@ export class PortfolioProportionChartComponent
               subCategory: this.keys[1]
                 ? { [this.keys[1]]: { value: new Big(0) } }
                 : undefined,
-              value: new Big(
-                this.positions[symbol].valueInBaseCurrency ??
-                  this.positions[symbol].value
-              )
+              value: new Big(this.positions[symbol].value)
             };
           }
         }
@@ -360,6 +344,7 @@ export class PortfolioProportionChartComponent
 
     this.isLoading = false;
   }
+
   /**
    * Color palette, inspired by https://yeun.github.io/open-color
    */
