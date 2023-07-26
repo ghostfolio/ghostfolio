@@ -21,23 +21,35 @@ model Access {
 }
 
 model Account {
-  accountType AccountType @default(SECURITIES)
-  balance     Float       @default(0)
+  accountType AccountType      @default(SECURITIES)
+  balance     Float            @default(0)
+  balances    AccountBalance[]
   comment     String?
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime         @default(now())
   currency    String?
-  id          String      @default(uuid())
-  isDefault   Boolean     @default(false)
-  isExcluded  Boolean     @default(false)
+  id          String           @default(uuid())
+  isDefault   Boolean          @default(false)
+  isExcluded  Boolean          @default(false)
   name        String?
   platformId  String?
-  updatedAt   DateTime    @updatedAt
+  updatedAt   DateTime         @updatedAt
   userId      String
-  Platform    Platform?   @relation(fields: [platformId], references: [id])
-  User        User        @relation(fields: [userId], references: [id])
+  Platform    Platform?        @relation(fields: [platformId], references: [id])
+  User        User             @relation(fields: [userId], references: [id])
   Order       Order[]
 
   @@id([id, userId])
+}
+
+model AccountBalance {
+  accountId String
+  createdAt DateTime @default(now())
+  date      DateTime @default(now())
+  id        String   @id @default(uuid())
+  updatedAt DateTime @updatedAt
+  userId    String
+  value     Float
+  Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 }
 
 model Analytics {

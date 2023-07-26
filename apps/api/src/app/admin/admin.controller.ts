@@ -16,7 +16,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type {
-  MarketDataQuery,
+  MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
 import {
@@ -252,7 +252,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'))
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
-    @Query('queryId') queryId?: MarketDataQuery,
+    @Query('presetId') presetId?: MarketDataPreset,
     @Query('skip') skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
@@ -283,7 +283,7 @@ export class AdminController {
 
     return this.adminService.getMarketData({
       filters,
-      queryId,
+      presetId,
       sortColumn,
       sortDirection,
       skip: isNaN(skip) ? undefined : skip,

@@ -91,7 +91,7 @@ export class PortfolioProportionChartComponent
       [symbol: string]: {
         color?: string;
         name: string;
-        subCategory: { [symbol: string]: { value: Big } };
+        subCategory?: { [symbol: string]: { value: Big } };
         value: Big;
       };
     } = {};
@@ -100,10 +100,10 @@ export class PortfolioProportionChartComponent
       [UNKNOWN_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.12)`
     };
 
-    Object.keys(this.positions).forEach((symbol) => {
-      if (this.positions[symbol][this.keys[0]]?.toUpperCase()) {
-        if (chartData[this.positions[symbol][this.keys[0]].toUpperCase()]) {
-          chartData[this.positions[symbol][this.keys[0]].toUpperCase()].value =
+    if (this.keys.length > 0) {
+      Object.keys(this.positions).forEach((symbol) => {
+        if (this.positions[symbol][this.keys[0]]?.toUpperCase()) {
+          if (chartData[this.positions[symbol][this.keys[0]].toUpperCase()]) {
             chartData[
               this.positions[symbol][this.keys[0]].toUpperCase()
             ].value.plus(
@@ -111,74 +111,80 @@ export class PortfolioProportionChartComponent
                 this.positions[symbol].value
             );
 
-          if (
-            chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
-              .subCategory[this.positions[symbol][this.keys[1]]]
-          ) {
-            chartData[
-              this.positions[symbol][this.keys[0]].toUpperCase()
-            ].subCategory[this.positions[symbol][this.keys[1]]].value =
+            if (
+              chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
+                .subCategory[this.positions[symbol][this.keys[1]]]
+            ) {
               chartData[
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
                 this.positions[symbol].valueInBaseCurrency ??
                   this.positions[symbol].value
               );
-          } else {
-            chartData[
-              this.positions[symbol][this.keys[0]].toUpperCase()
-            ].subCategory[this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY] =
-              {
+            } else {
+              chartData[
+                this.positions[symbol][this.keys[0]].toUpperCase()
+              ].subCategory[
+                this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
+              ] = {
                 value: new Big(
                   this.positions[symbol].valueInBaseCurrency ??
                     this.positions[symbol].value
                 )
               };
+            }
+          } else {
+            chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
+              name: this.positions[symbol][this.keys[0]],
+              subCategory: {},
+              value: new Big(
+                this.positions[symbol].valueInBaseCurrency ??
+                  this.positions[symbol].value ??
+                  0
+              )
+            };
+
+            if (this.positions[symbol][this.keys[1]]) {
+              chartData[
+                this.positions[symbol][this.keys[0]].toUpperCase()
+              ].subCategory = {
+                [this.positions[symbol][this.keys[1]]]: {
+                  value: new Big(
+                    this.positions[symbol].valueInBaseCurrency ??
+                      this.positions[symbol].value
+                  )
+                }
+              };
+            }
           }
         } else {
-          chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
-            name: this.positions[symbol][this.keys[0]],
-            subCategory: {},
-            value: new Big(
+          if (chartData[UNKNOWN_KEY]) {
+            chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
               this.positions[symbol].valueInBaseCurrency ??
-                this.positions[symbol].value ??
-                0
-            )
-          };
-
-          if (this.positions[symbol][this.keys[1]]) {
-            chartData[
-              this.positions[symbol][this.keys[0]].toUpperCase()
-            ].subCategory = {
-              [this.positions[symbol][this.keys[1]]]: {
-                value: new Big(
-                  this.positions[symbol].valueInBaseCurrency ??
-                    this.positions[symbol].value
-                )
-              }
+                this.positions[symbol].value
+            );
+          } else {
+            chartData[UNKNOWN_KEY] = {
+              name: this.positions[symbol].name,
+              subCategory: this.keys[1]
+                ? { [this.keys[1]]: { value: new Big(0) } }
+                : undefined,
+              value: new Big(
+                this.positions[symbol].valueInBaseCurrency ??
+                  this.positions[symbol].value
+              )
             };
           }
         }
-      } else {
-        if (chartData[UNKNOWN_KEY]) {
-          chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
-            this.positions[symbol].valueInBaseCurrency ??
-              this.positions[symbol].value
-          );
-        } else {
-          chartData[UNKNOWN_KEY] = {
-            name: this.positions[symbol].name,
-            subCategory: this.keys[1]
-              ? { [this.keys[1]]: { value: new Big(0) } }
-              : undefined,
-            value: new Big(
-              this.positions[symbol].valueInBaseCurrency ??
-                this.positions[symbol].value
-            )
-          };
-        }
-      }
-    });
+      });
+    } else {
+      Object.keys(this.positions).forEach((symbol) => {
+        chartData[symbol] = {
+          name: this.positions[symbol].name,
+          value: new Big(this.positions[symbol].value)
+        };
+      });
+    }
 
     let chartDataSorted = Object.entries(chartData)
       .sort((a, b) => {
@@ -354,7 +360,6 @@ export class PortfolioProportionChartComponent
 
     this.isLoading = false;
   }
-
   /**
    * Color palette, inspired by https://yeun.github.io/open-color
    */

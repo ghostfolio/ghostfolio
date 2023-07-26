@@ -42,7 +42,6 @@ import type {
   AccountWithValue,
   DateRange,
   GroupBy,
-  Market,
   OrderWithAccount,
   RequestWithUser,
   UserWithSettings
@@ -84,8 +83,10 @@ import {
 import { PortfolioCalculator } from './portfolio-calculator';
 import { RulesService } from './rules.service';
 
+const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
 const emergingMarkets = require('../../assets/countries/emerging-markets.json');
+const europeMarkets = require('../../assets/countries/europe-markets.json');
 
 @Injectable()
 export class PortfolioService {
@@ -536,16 +537,25 @@ export class PortfolioService {
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
-      const markets: { [key in Market]: number } = {
+      const markets: PortfolioPosition['markets'] = {
         developedMarkets: 0,
         emergingMarkets: 0,
         otherMarkets: 0
       };
+      const marketsAdvanced: PortfolioPosition['marketsAdvanced'] = {
+        asiaPacific: 0,
+        emergingMarkets: 0,
+        europe: 0,
+        japan: 0,
+        northAmerica: 0,
+        otherMarkets: 0
+      };
 
-      this.calculateMarketsAllocation(symbolProfile, markets);
+      this.calculateMarketsAllocation(symbolProfile, markets, marketsAdvanced);
 
       holdings[item.symbol] = {
         markets,
+        marketsAdvanced,
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : value.div(filteredValueInBaseCurrency).toNumber(),
@@ -567,6 +577,7 @@ export class PortfolioService {
         quantity: item.quantity.toNumber(),
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
+        tags: item.tags,
         transactionCount: item.transactionCount,
         url: symbolProfile.url,
         valueInBaseCurrency: value.toNumber()
@@ -609,7 +620,7 @@ export class PortfolioService {
       balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
       emergencyFundPositionsValueInBaseCurrency:
         this.getEmergencyFundPositionsValueInBaseCurrency({
-          activities: orders
+          holdings
         })
     });
 
@@ -684,7 +695,7 @@ export class PortfolioService {
       const emergencyFundInCash = emergencyFund
         .minus(
           this.getEmergencyFundPositionsValueInBaseCurrency({
-            activities: orders
+            holdings
           })
         )
         .toNumber();
@@ -713,6 +724,14 @@ export class PortfolioService {
       developedMarkets: number;
       emergingMarkets: number;
       otherMarkets: number;
+    },
+    marketsAdvanced: {
+      asiaPacific: number;
+      emergingMarkets: number;
+      europe: number;
+      japan: number;
+      northAmerica: number;
+      otherMarkets: number;
     }
   ) {
     for (const country of symbolProfile.countries) {
@@ -726,6 +745,34 @@ export class PortfolioService {
           .toNumber();
       } else {
         markets.otherMarkets = new Big(markets.otherMarkets)
+          .plus(country.weight)
+          .toNumber();
+      }
+
+      if (country.code === 'JP') {
+        marketsAdvanced.japan = new Big(marketsAdvanced.japan)
+          .plus(country.weight)
+          .toNumber();
+      } else if (country.code === 'CA' || country.code === 'US') {
+        marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
+          .plus(country.weight)
+          .toNumber();
+      } else if (asiaPacificMarkets.includes(country.code)) {
+        marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
+          .plus(country.weight)
+          .toNumber();
+      } else if (emergingMarkets.includes(country.code)) {
+        marketsAdvanced.emergingMarkets = new Big(
+          marketsAdvanced.emergingMarkets
+        )
+          .plus(country.weight)
+          .toNumber();
+      } else if (europeMarkets.includes(country.code)) {
+        marketsAdvanced.europe = new Big(marketsAdvanced.europe)
+          .plus(country.weight)
+          .toNumber();
+      } else {
+        marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
           .plus(country.weight)
           .toNumber();
       }
@@ -805,6 +852,7 @@ export class PortfolioService {
         name: order.SymbolProfile?.name,
         quantity: new Big(order.quantity),
         symbol: order.SymbolProfile.symbol,
+        tags: order.tags,
         type: order.type,
         unitPrice: new Big(order.unitPrice)
       }));
@@ -1467,13 +1515,13 @@ export class PortfolioService {
   }
 
   private getEmergencyFundPositionsValueInBaseCurrency({
-    activities
+    holdings
   }: {
-    activities: Activity[];
+    holdings: PortfolioDetails['holdings'];
   }) {
-    const emergencyFundOrders = activities.filter((activity) => {
+    const emergencyFundHoldings = Object.values(holdings).filter(({ tags }) => {
       return (
-        activity.tags?.some(({ id }) => {
+        tags?.some(({ id }) => {
           return id === EMERGENCY_FUND_TAG_ID;
         }) ?? false
       );
@@ -1481,18 +1529,9 @@ export class PortfolioService {
 
     let valueInBaseCurrencyOfEmergencyFundPositions = new Big(0);
 
-    for (const order of emergencyFundOrders) {
-      if (order.type === 'BUY' || order.type === 'STAKE') {
-        valueInBaseCurrencyOfEmergencyFundPositions =
-          valueInBaseCurrencyOfEmergencyFundPositions.plus(
-            order.valueInBaseCurrency
-          );
-      } else if (order.type === 'SELL') {
-        valueInBaseCurrencyOfEmergencyFundPositions =
-          valueInBaseCurrencyOfEmergencyFundPositions.minus(
-            order.valueInBaseCurrency
-          );
-      }
+    for (const { valueInBaseCurrency } of emergencyFundHoldings) {
+      valueInBaseCurrencyOfEmergencyFundPositions =
+        valueInBaseCurrencyOfEmergencyFundPositions.plus(valueInBaseCurrency);
     }
 
     return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
@@ -1551,6 +1590,7 @@ export class PortfolioService {
       quantity: 0,
       sectors: [],
       symbol: currency,
+      tags: [],
       transactionCount: 0,
       valueInBaseCurrency: balance
     };
@@ -1578,7 +1618,13 @@ export class PortfolioService {
       );
   }
 
-  private getLiabilities(activities: OrderWithAccount[]) {
+  private getLiabilities({
+    activities,
+    userCurrency
+  }: {
+    activities: OrderWithAccount[];
+    userCurrency: string;
+  }) {
     return activities
       .filter(({ type }) => {
         return type === TypeOfOrder.LIABILITY;
@@ -1587,7 +1633,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           new Big(quantity).mul(unitPrice).toNumber(),
           SymbolProfile.currency,
-          this.request.user.Settings.settings.baseCurrency
+          userCurrency
         );
       })
       .reduce(
@@ -1787,7 +1833,16 @@ export class PortfolioService {
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
-      emergencyFund: emergencyFund.toNumber(),
+      emergencyFund: {
+        assets: emergencyFundPositionsValueInBaseCurrency,
+        cash: emergencyFund
+          .minus(emergencyFundPositionsValueInBaseCurrency)
+          .toNumber(),
+        total: emergencyFund.toNumber()
+      },
+      fireWealth: new Big(performanceInformation.performance.currentValue)
+        .minus(emergencyFundPositionsValueInBaseCurrency)
+        .toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
       }).length
@@ -1839,6 +1894,7 @@ export class PortfolioService {
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.SymbolProfile.symbol,
+      tags: order.tags,
       type: order.type,
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(

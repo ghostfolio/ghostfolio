@@ -33,19 +33,11 @@ export class PublicPageComponent implements OnInit {
   };
   public portfolioPublicDetails: PortfolioPublicDetails;
   public positions: {
-    [symbol: string]: Pick<
-      PortfolioPosition,
-      'currency' | 'name' | 'valueInBaseCurrency'
-    >;
+    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
+      value: number;
+    };
   };
-  public positionsArray: Pick<
-    PortfolioPosition,
-    | 'currency'
-    | 'name'
-    | 'netPerformancePercent'
-    | 'symbol'
-    | 'valueInBaseCurrency'
-  >[];
+  public positionsArray: PortfolioPublicDetails['holdings'][string][];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -142,7 +134,7 @@ export class PublicPageComponent implements OnInit {
       const value = position.allocationInPercentage;
 
       this.positions[symbol] = {
-        valueInBaseCurrency: value,
+        value,
         currency: position.currency,
         name: position.name
       };
