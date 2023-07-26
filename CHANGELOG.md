@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added error handling for the _Redis_ connections to keep the app running if the connection fails
+
 ### Fixed
 
 - Fixed the missing values in the holdings table
