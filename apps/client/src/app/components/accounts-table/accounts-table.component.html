@@ -5,23 +5,18 @@
       class="d-none d-lg-table-cell px-1"
       mat-header-cell
     ></th>
-    <td
-      *matCellDef="let element"
-      class="d-none d-lg-table-cell px-1"
-      mat-cell
-      (click)="onToggleExcluded(element); $event.stopPropagation()"
-    >
+    <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       <div class="d-flex justify-content-center">
-        <ion-icon
-          *ngIf="element.isExcluded"
-          id="isExcluded-icon"
-          name="eye-off-outline"
-        ></ion-icon>
-        <ion-icon
-          *ngIf="!element.isExcluded"
-          id="isNotExcluded-icon"
-          name="eye-outline"
-        ></ion-icon>
+        <button
+          class="mx-1 no-min-width px-2"
+          mat-button
+          (click)="onToggleExcluded(element); $event.stopPropagation()"
+        >
+          <ion-icon
+            [name]="element.isExcluded ? 'eye-off-outline' : 'eye-outline'"
+            [ngClass]="{ 'text-muted': !element.isExcluded }"
+          ></ion-icon>
+        </button>
       </div>
     </td>
     <td

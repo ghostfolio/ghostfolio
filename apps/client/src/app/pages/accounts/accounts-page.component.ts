@@ -144,19 +144,27 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onToggleExcluded(aAccount: AccountModel) {
-    let account: UpdateAccountDto = {
-      accountType: aAccount.accountType,
-      balance: aAccount.balance,
-      comment: aAccount.comment,
-      currency: aAccount.currency,
-      id: aAccount.id,
-      isExcluded: !aAccount.isExcluded,
-      name: aAccount.name,
-      platformId: aAccount.platformId
-    };
+  public onToggleExcludedAccount({
+    accountType,
+    balance,
+    comment,
+    currency,
+    id,
+    isExcluded,
+    name,
+    platformId
+  }: AccountModel) {
     this.dataService
-      .putAccount(account)
+      .putAccount({
+        accountType,
+        balance,
+        comment,
+        currency,
+        id,
+        isExcluded: !isExcluded,
+        name,
+        platformId
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({
         next: () => {
