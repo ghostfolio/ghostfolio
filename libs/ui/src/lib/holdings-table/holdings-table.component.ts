@@ -55,7 +55,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
 
     if (this.hasPermissionToShowValues) {
-      this.displayedColumns.push('value');
+      this.displayedColumns.push('valueInBaseCurrency');
     }
 
     this.displayedColumns.push('allocationInPercentage');
