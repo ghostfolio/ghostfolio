@@ -30,6 +30,11 @@
             "output": "./../assets"
           },
           {
+            "glob": "favicon.ico",
+            "input": "apps/client/src/assets",
+            "output": "./../"
+          },
+          {
             "glob": "LICENSE",
             "input": "",
             "output": "./../assets"
