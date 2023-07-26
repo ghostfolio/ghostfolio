@@ -1830,12 +1830,12 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }) {
-    const ordersOfTypeItem = await this.orderService.getOrders({
+    const ordersOfTypeItemOrLiability = await this.orderService.getOrders({
       filters,
       userCurrency,
       userId,
       withExcludedAccounts,
-      types: ['ITEM']
+      types: ['ITEM', 'LIABILITY']
     });
 
     const accounts: PortfolioDetails['accounts'] = {};
@@ -1875,7 +1875,7 @@ export class PortfolioService {
         return accountId === account.id;
       });
 
-      const ordersOfTypeItemByAccount = ordersOfTypeItem.filter(
+      const ordersOfTypeItemByAccount = ordersOfTypeItemOrLiability.filter(
         ({ accountId }) => {
           return accountId === account.id;
         }
@@ -1921,7 +1921,7 @@ export class PortfolioService {
             order.unitPrice ??
             0);
 
-        if (order.type === 'SELL') {
+        if (order.type === 'SELL' || order.type === 'LIABILITY') {
           currentValueOfSymbolInBaseCurrency *= -1;
         }
 
