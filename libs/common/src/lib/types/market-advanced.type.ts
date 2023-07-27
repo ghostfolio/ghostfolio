@@ -4,4 +4,5 @@ export type MarketAdvanced =
   | 'europe'
   | 'japan'
   | 'northAmerica'
-  | 'otherMarkets';
+  | 'otherMarkets'
+  | 'UNKNOWN';
