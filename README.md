@@ -263,7 +263,9 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 
 ## Community Projects
 
-- [ghostfolio-cli](https://github.com/DerAndereJohannes/ghostfolio-cli): Command-line interface to access your portfolio
+Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio
+
+Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ repository to get listed as well. [Learn more →](https://docs.github.com/en/articles/classifying-your-repository-with-topics)
 
 ## Contributing
 
