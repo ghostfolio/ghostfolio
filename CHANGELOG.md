@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Extended the allocations by market chart on the allocations page by unavailable data
+
 ### Fixed
 
 - Considered liabilities in the total account value calculation
