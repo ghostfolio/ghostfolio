@@ -383,13 +383,14 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private getTotalValue() {
-    let totalValue = new Big(0);
     const paginatedData = this.getPaginatedData();
-    for (const activity of paginatedData) {
-      if (isNumber(activity.valueInBaseCurrency)) {
-        if (activity.type === 'BUY' || activity.type === 'ITEM') {
-          totalValue = totalValue.plus(activity.valueInBaseCurrency);
-        } else if (activity.type === 'SELL') {
+    let totalValue = new Big(0);
+
+    for (const { type, valueInBaseCurrency } of paginatedData) {
+      if (isNumber(valueInBaseCurrency)) {
+        if (type === 'BUY' || type === 'ITEM') {
+          totalValue = totalValue.plus(valueInBaseCurrency);
+        } else if (type === 'LIABILITY' || type === 'SELL') {
           return null;
         }
       } else {
