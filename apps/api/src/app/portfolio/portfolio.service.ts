@@ -538,11 +538,13 @@ export class PortfolioService {
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
       const markets: PortfolioPosition['markets'] = {
+        [UNKNOWN_KEY]: 0,
         developedMarkets: 0,
         emergingMarkets: 0,
         otherMarkets: 0
       };
       const marketsAdvanced: PortfolioPosition['marketsAdvanced'] = {
+        [UNKNOWN_KEY]: 0,
         asiaPacific: 0,
         emergingMarkets: 0,
         europe: 0,
@@ -551,7 +553,8 @@ export class PortfolioService {
         otherMarkets: 0
       };
 
-      this.calculateMarketsAllocation(symbolProfile, markets, marketsAdvanced);
+      this.calculateMarketsAllocation(symbolProfile, markets, marketsAdvanced, value);
+
 
       holdings[item.symbol] = {
         markets,
@@ -732,50 +735,61 @@ export class PortfolioService {
       japan: number;
       northAmerica: number;
       otherMarkets: number;
-    }
+    },
+    value: Big
   ) {
-    for (const country of symbolProfile.countries) {
-      if (developedMarkets.includes(country.code)) {
-        markets.developedMarkets = new Big(markets.developedMarkets)
-          .plus(country.weight)
-          .toNumber();
-      } else if (emergingMarkets.includes(country.code)) {
-        markets.emergingMarkets = new Big(markets.emergingMarkets)
-          .plus(country.weight)
-          .toNumber();
-      } else {
-        markets.otherMarkets = new Big(markets.otherMarkets)
-          .plus(country.weight)
-          .toNumber();
-      }
+    if (symbolProfile.countries.length > 0) {
+      for (const country of symbolProfile.countries) {
+        if (developedMarkets.includes(country.code)) {
+          markets.developedMarkets = new Big(markets.developedMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          markets.emergingMarkets = new Big(markets.emergingMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          markets.otherMarkets = new Big(markets.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
 
-      if (country.code === 'JP') {
-        marketsAdvanced.japan = new Big(marketsAdvanced.japan)
-          .plus(country.weight)
-          .toNumber();
-      } else if (country.code === 'CA' || country.code === 'US') {
-        marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
-          .plus(country.weight)
-          .toNumber();
-      } else if (asiaPacificMarkets.includes(country.code)) {
-        marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
-          .plus(country.weight)
-          .toNumber();
-      } else if (emergingMarkets.includes(country.code)) {
-        marketsAdvanced.emergingMarkets = new Big(
-          marketsAdvanced.emergingMarkets
-        )
-          .plus(country.weight)
-          .toNumber();
-      } else if (europeMarkets.includes(country.code)) {
-        marketsAdvanced.europe = new Big(marketsAdvanced.europe)
-          .plus(country.weight)
-          .toNumber();
-      } else {
-        marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
-          .plus(country.weight)
-          .toNumber();
+        if (country.code === 'JP') {
+          marketsAdvanced.japan = new Big(marketsAdvanced.japan)
+            .plus(country.weight)
+            .toNumber();
+        } else if (country.code === 'CA' || country.code === 'US') {
+          marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
+            .plus(country.weight)
+            .toNumber();
+        } else if (asiaPacificMarkets.includes(country.code)) {
+          marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          marketsAdvanced.emergingMarkets = new Big(
+            marketsAdvanced.emergingMarkets
+          )
+            .plus(country.weight)
+            .toNumber();
+        } else if (europeMarkets.includes(country.code)) {
+          marketsAdvanced.europe = new Big(marketsAdvanced.europe)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
       }
+    } else {
+      markets[UNKNOWN_KEY] = new Big(markets[UNKNOWN_KEY])
+        .plus(value)
+        .toNumber();
+
+      marketsAdvanced[UNKNOWN_KEY] = new Big(marketsAdvanced[UNKNOWN_KEY])
+        .plus(value)
+        .toNumber();
     }
   }
 

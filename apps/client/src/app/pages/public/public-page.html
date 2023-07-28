@@ -84,7 +84,7 @@
             ></gf-world-map-chart>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md-3 my-2">
               <gf-value
                 i18n
                 size="large"
@@ -93,7 +93,7 @@
                 >Developed Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md-3 my-2">
               <gf-value
                 i18n
                 size="large"
@@ -102,13 +102,22 @@
                 >Emerging Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md-3 my-2">
               <gf-value
                 i18n
                 size="large"
                 [isPercent]="true"
                 [value]="markets?.otherMarkets?.value"
                 >Other Markets</gf-value
+              >
+            </div>
+            <div class="col-xs-12 col-md-3 my-2">
+              <gf-value
+                i18n
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.[UNKNOWN_KEY]?.value"
+                >No data available</gf-value
               >
             </div>
           </div>
