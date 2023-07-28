@@ -1875,13 +1875,14 @@ export class PortfolioService {
         return accountId === account.id;
       });
 
-      const ordersOfTypeItemByAccount = ordersOfTypeItemOrLiability.filter(
-        ({ accountId }) => {
+      const ordersOfTypeItemOrLiabilityByAccount =
+        ordersOfTypeItemOrLiability.filter(({ accountId }) => {
           return accountId === account.id;
-        }
-      );
+        });
 
-      ordersByAccount = ordersByAccount.concat(ordersOfTypeItemByAccount);
+      ordersByAccount = ordersByAccount.concat(
+        ordersOfTypeItemOrLiabilityByAccount
+      );
 
       accounts[account.id] = {
         balance: account.balance,
@@ -1921,7 +1922,7 @@ export class PortfolioService {
             order.unitPrice ??
             0);
 
-        if (order.type === 'SELL' || order.type === 'LIABILITY') {
+        if (order.type === 'LIABILITY' || order.type === 'SELL') {
           currentValueOfSymbolInBaseCurrency *= -1;
         }
 
