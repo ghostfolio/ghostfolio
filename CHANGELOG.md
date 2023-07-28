@@ -5,11 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## Unreleased
 
 ### Fixed
 
 - Considered liabilities in the total account value calculation
+
+## 1.293.0 - 2023-07-26
+
+### Added
+
+- Added error handling for the _Redis_ connections to keep the app running if the connection fails
+
+### Changed
+
+- Set the `lastmod` dates of `sitemap.xml` dynamically
+
+### Fixed
+
+- Fixed the missing values in the holdings table
+- Fixed the `no such file or directory` error caused by the missing `favicon.ico` file
 
 ## 1.292.0 - 2023-07-24
 
