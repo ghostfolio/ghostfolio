@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 1.294.0 - 2023-07-29
 
+### Added
+
+- Added a step by step introduction for new users
+
 ### Changed
 
 - Extended the allocations by market chart on the allocations page by unavailable data
