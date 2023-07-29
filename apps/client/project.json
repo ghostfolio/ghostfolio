@@ -32,7 +32,7 @@
           {
             "glob": "favicon.ico",
             "input": "apps/client/src/assets",
-            "output": "./../"
+            "output": "{workspaceRoot}/dist/apps/client/"
           },
           {
             "glob": "LICENSE",
