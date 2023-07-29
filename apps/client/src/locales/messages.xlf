@@ -1959,6 +1959,10 @@
       <trans-unit id="49af37bcd0c34e88ab989641e52ef92f3fb56e06" datatype="html">
         <source>Add activity</source>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
@@ -6704,11 +6708,18 @@
           <context context-type="linenumber">37,38</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="d2287142846b104ffa7938a0379a6f23848527a6" datatype="html">
-        <source> Ready to take control of your finances? Just follow these simple steps to get started with ease. </source>
+      <trans-unit id="06c1bcff740ab4b1d5283d937d22e9daf8b31933" datatype="html">
+        <source>Ready to take control of your personal finances?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
-          <context context-type="linenumber">10,13</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1bdfdbf86e61060cf785b6bd53692b47c9afec63" datatype="html">
+        <source>Setup accounts</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
     </body>

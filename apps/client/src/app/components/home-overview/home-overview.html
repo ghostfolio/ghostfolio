@@ -7,12 +7,12 @@
   >
     <div class="col introduction">
       <h4 i18n>Welcome to Ghostfolio</h4>
-      <p i18n>
-        Ready to take control of your finances? Just follow these simple steps
-        to get started with ease.
-      </p>
+      <p i18n>Ready to take control of your personal finances?</p>
       <ol class="font-weight-bold">
-        <li class="mb-2">
+        <li
+          class="mb-2"
+          [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
+        >
           <a class="d-block" [routerLink]="['/accounts']"
             ><span i18n>Setup your accounts</span><br />
             <span class="font-weight-normal" i18n
@@ -40,6 +40,24 @@
           </a>
         </li>
       </ol>
+      <div class="d-flex justify-content-center">
+        <a
+          *ngIf="user?.accounts?.length === 1"
+          color="primary"
+          mat-flat-button
+          [routerLink]="['/accounts']"
+        >
+          <ng-container i18n>Setup accounts</ng-container>
+        </a>
+        <a
+          *ngIf="user?.accounts?.length > 1"
+          color="primary"
+          mat-flat-button
+          [routerLink]="['/portfolio', 'activities']"
+        >
+          <ng-container i18n>Add activity</ng-container>
+        </a>
+      </div>
     </div>
   </div>
   <ng-template #isUserActive>

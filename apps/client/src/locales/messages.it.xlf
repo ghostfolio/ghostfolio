@@ -2142,6 +2142,10 @@
         <source>Add activity</source>
         <target state="translated">Aggiungi un&apos;attività</target>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
@@ -7094,14 +7098,6 @@
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="d2287142846b104ffa7938a0379a6f23848527a6" datatype="html">
-        <source> Ready to take control of your finances? Just follow these simple steps to get started with ease. </source>
-        <target state="new"> Ready to take control of your finances? Just follow these simple steps to get started with ease. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
-          <context context-type="linenumber">10,13</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="71c2ec88fc3953a1db6cfca218173fcf489fa803" datatype="html">
         <source>Setup your accounts</source>
         <target state="new">Setup your accounts</target>
@@ -7160,6 +7156,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="06c1bcff740ab4b1d5283d937d22e9daf8b31933" datatype="html">
+        <source>Ready to take control of your personal finances?</source>
+        <target state="new">Ready to take control of your personal finances?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1bdfdbf86e61060cf785b6bd53692b47c9afec63" datatype="html">
+        <source>Setup accounts</source>
+        <target state="new">Setup accounts</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
     </body>
