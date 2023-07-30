@@ -240,7 +240,13 @@ export class FrontendMiddleware implements NestMiddleware {
   private isFileRequest(filename: string) {
     if (filename === '/assets/LICENSE') {
       return true;
-    } else if (filename === '/sitemap.xml' || filename.includes('auth/ey')) {
+    } else if (
+      filename === '/sitemap.xml' ||
+      filename.includes('auth/ey') ||
+      filename.includes(
+        'personal-finance-tools/open-source-alternative-to-markets.sh'
+      )
+    ) {
       return false;
     }
 
