@@ -15,6 +15,10 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import {
+  STAY_SIGNED_IN,
+  SettingsStorageService
+} from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
@@ -80,6 +84,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router,
+    private settingsStorageService: SettingsStorageService,
     private stripeService: StripeService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
@@ -397,6 +402,8 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe(() => {
+        this.settingsStorageService.removeSetting(STAY_SIGNED_IN);
+
         this.update();
       });
   }
