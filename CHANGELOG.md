@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a step by step introduction for new users
 
+### Fixed
+
+- Removed the _Stay signed in_ setting on _Sign in with fingerprint_ activation
+
 ## 1.294.0 - 2023-07-29
 
 ### Changed
