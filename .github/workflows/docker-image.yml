@@ -19,7 +19,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghostfolio/ghostfolio
+          images: Stuart123456789/SD_GF
           tags: |
             type=semver,pattern={{version}}
 
