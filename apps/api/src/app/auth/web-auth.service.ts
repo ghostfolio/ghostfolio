@@ -191,7 +191,7 @@ export class WebAuthService {
         expectedOrigin: this.expectedOrigin,
         expectedRPID: this.rpID
       };
-      verification = verifyAuthenticationResponse(opts);
+      verification = await verifyAuthenticationResponse(opts);
     } catch (error) {
       Logger.error(error, 'WebAuthService');
       throw new InternalServerErrorException({ error: error.message });
