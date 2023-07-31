@@ -11,7 +11,10 @@ import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.servic
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { parseDate } from '@ghostfolio/common/helper';
+import {
+  getAssetProfileIdentifier,
+  parseDate
+} from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import {
   AccountWithPlatform,
@@ -21,6 +24,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
+import { uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -220,8 +224,7 @@ export class ImportService {
 
     const assetProfiles = await this.validateActivities({
       activitiesDto,
-      maxActivitiesToImport,
-      userId
+      maxActivitiesToImport
     });
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
@@ -295,7 +298,12 @@ export class ImportService {
             symbolMapping: assetProfile.symbolMapping,
             updatedAt: assetProfile.updatedAt,
             url: assetProfile.url,
-            ...assetProfiles[assetProfile.symbol]
+            ...assetProfiles[
+              getAssetProfileIdentifier({
+                dataSource: assetProfile.dataSource,
+                symbol: assetProfile.symbol
+              })
+            ]
           },
           Account: validatedAccount,
           symbolProfileId: undefined,
@@ -446,25 +454,30 @@ export class ImportService {
 
   private async validateActivities({
     activitiesDto,
-    maxActivitiesToImport,
-    userId
+    maxActivitiesToImport
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
     maxActivitiesToImport: number;
-    userId: string;
   }) {
     if (activitiesDto?.length > maxActivitiesToImport) {
       throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
     }
 
     const assetProfiles: {
-      [symbol: string]: Partial<SymbolProfile>;
+      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
     } = {};
+
+    const uniqueActivitiesDto = uniqBy(
+      activitiesDto,
+      ({ dataSource, symbol }) => {
+        return getAssetProfileIdentifier({ dataSource, symbol });
+      }
+    );
 
     for (const [
       index,
       { currency, dataSource, symbol }
-    ] of activitiesDto.entries()) {
+    ] of uniqueActivitiesDto.entries()) {
       if (dataSource !== 'MANUAL') {
         const assetProfile = (
           await this.dataProviderService.getAssetProfiles([
@@ -484,7 +497,8 @@ export class ImportService {
           );
         }
 
-        assetProfiles[symbol] = assetProfile;
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
+          assetProfile;
       }
     }
 

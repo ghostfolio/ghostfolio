@@ -7,6 +7,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
@@ -125,7 +126,10 @@ export class OrderService {
       name: GATHER_ASSET_PROFILE_PROCESS,
       opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: `${data.SymbolProfile.connectOrCreate.create.dataSource}-${data.SymbolProfile.connectOrCreate.create.symbol}`
+        jobId: getAssetProfileIdentifier({
+          dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
+          symbol: data.SymbolProfile.connectOrCreate.create.symbol
+        })
       }
     });
 
