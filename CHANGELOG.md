@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Optimized the import validation by reducing the list to unique asset profiles
+- Optimized the validation in the activities import by reducing the list to unique asset profiles
+- Optimized the data gathering in the activities import
 
 ## 1.295.0 - 2023-07-30
 
