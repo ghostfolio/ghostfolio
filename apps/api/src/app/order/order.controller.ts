@@ -2,6 +2,7 @@ import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -36,6 +37,7 @@ import { UpdateOrderDto } from './update-order.dto';
 export class OrderController {
   public constructor(
     private readonly apiService: ApiService,
+    private readonly dataGatheringService: DataGatheringService,
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser
@@ -123,7 +125,7 @@ export class OrderController {
       );
     }
 
-    return this.orderService.createOrder({
+    const order = await this.orderService.createOrder({
       ...data,
       date: parseISO(data.date),
       SymbolProfile: {
@@ -144,6 +146,19 @@ export class OrderController {
       User: { connect: { id: this.request.user.id } },
       userId: this.request.user.id
     });
+
+    if (!order.isDraft) {
+      // Gather symbol data in the background, if not draft
+      this.dataGatheringService.gatherSymbols([
+        {
+          dataSource: data.dataSource,
+          date: order.date,
+          symbol: data.symbol
+        }
+      ]);
+    }
+
+    return order;
   }
 
   @Put(':id')

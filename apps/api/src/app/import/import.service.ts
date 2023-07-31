@@ -8,6 +8,7 @@ import {
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -31,6 +32,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ImportService {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly orderService: OrderService,
@@ -355,12 +357,37 @@ export class ImportService {
           assetProfile.currency,
           userCurrency
         ),
+        SymbolProfile: assetProfile,
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
           assetProfile.currency,
           userCurrency
         )
       });
+    }
+
+    activities.sort((activity1, activity2) => {
+      return Number(activity1.date) - Number(activity2.date);
+    });
+
+    if (!isDryRun) {
+      // Gather symbol data in the background, if not dry run
+      const uniqueActivities = uniqBy(activities, ({ SymbolProfile }) => {
+        return getAssetProfileIdentifier({
+          dataSource: SymbolProfile.dataSource,
+          symbol: SymbolProfile.symbol
+        });
+      });
+
+      this.dataGatheringService.gatherSymbols(
+        uniqueActivities.map(({ date, SymbolProfile }) => {
+          return {
+            date,
+            dataSource: SymbolProfile.dataSource,
+            symbol: SymbolProfile.symbol
+          };
+        })
+      );
     }
 
     return activities;

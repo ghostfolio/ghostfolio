@@ -118,7 +118,7 @@ export class OrderService {
       };
     }
 
-    await this.dataGatheringService.addJobToQueue({
+    this.dataGatheringService.addJobToQueue({
       data: {
         dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
         symbol: data.SymbolProfile.connectOrCreate.create.symbol
@@ -132,22 +132,6 @@ export class OrderService {
         })
       }
     });
-
-    const isDraft =
-      data.type === 'LIABILITY'
-        ? false
-        : isAfter(data.date as Date, endOfToday());
-
-    if (!isDraft) {
-      // Gather symbol data of order in the background, if not draft
-      this.dataGatheringService.gatherSymbols([
-        {
-          dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-          date: <Date>data.date,
-          symbol: data.SymbolProfile.connectOrCreate.create.symbol
-        }
-      ]);
-    }
 
     delete data.accountId;
     delete data.assetClass;
@@ -165,6 +149,11 @@ export class OrderService {
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
+
+    const isDraft =
+      data.type === 'LIABILITY'
+        ? false
+        : isAfter(data.date as Date, endOfToday());
 
     const order = await this.prismaService.order.create({
       data: {
