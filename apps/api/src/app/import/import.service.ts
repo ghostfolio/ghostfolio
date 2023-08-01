@@ -255,10 +255,20 @@ export class ImportService {
       error,
       fee,
       quantity,
-      SymbolProfile: assetProfile,
+      SymbolProfile,
       type,
       unitPrice
     } of activitiesExtendedWithErrors) {
+      const assetProfile = assetProfiles[
+        getAssetProfileIdentifier({
+          dataSource: SymbolProfile.dataSource,
+          symbol: SymbolProfile.symbol
+        })
+      ] ?? {
+        currency: SymbolProfile.currency,
+        dataSource: SymbolProfile.dataSource,
+        symbol: SymbolProfile.symbol
+      };
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -296,16 +306,10 @@ export class ImportService {
             name: assetProfile.name,
             scraperConfiguration: assetProfile.scraperConfiguration,
             sectors: assetProfile.sectors,
-            symbol: assetProfile.currency,
+            symbol: assetProfile.symbol,
             symbolMapping: assetProfile.symbolMapping,
             updatedAt: assetProfile.updatedAt,
-            url: assetProfile.url,
-            ...assetProfiles[
-              getAssetProfileIdentifier({
-                dataSource: assetProfile.dataSource,
-                symbol: assetProfile.symbol
-              })
-            ]
+            url: assetProfile.url
           },
           Account: validatedAccount,
           symbolProfileId: undefined,
@@ -347,7 +351,6 @@ export class ImportService {
 
       const value = new Big(quantity).mul(unitPrice).toNumber();
 
-      //@ts-ignore
       activities.push({
         ...order,
         error,
@@ -357,6 +360,7 @@ export class ImportService {
           assetProfile.currency,
           userCurrency
         ),
+        //@ts-ignore
         SymbolProfile: assetProfile,
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
