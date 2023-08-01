@@ -10,7 +10,11 @@ import {
   GATHER_HISTORICAL_MARKET_DATA_PROCESS,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier,
+  resetHours
+} from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -221,7 +225,10 @@ export class DataGatheringService {
           name: GATHER_HISTORICAL_MARKET_DATA_PROCESS,
           opts: {
             ...GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
-            jobId: `${dataSource}-${symbol}-${format(date, DATE_FORMAT)}`
+            jobId: `${getAssetProfileIdentifier({
+              dataSource,
+              symbol
+            })}-${format(date, DATE_FORMAT)}`
           }
         };
       })
