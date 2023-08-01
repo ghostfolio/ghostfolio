@@ -2,6 +2,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -48,7 +49,7 @@ export class CronService {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: `${dataSource}-${symbol}`
+            jobId: getAssetProfileIdentifier({ dataSource, symbol })
           }
         };
       })

@@ -5,7 +5,7 @@ import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
 import { de, es, fr, it, nl, pt } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
-import { Benchmark } from './interfaces';
+import { Benchmark, UniqueAsset } from './interfaces';
 import { ColorScheme } from './types';
 
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
@@ -62,6 +62,10 @@ export function extractNumberFromString(aString: string): number {
   } catch {
     return undefined;
   }
+}
+
+export function getAssetProfileIdentifier({ dataSource, symbol }: UniqueAsset) {
+  return `${dataSource}-${symbol}`;
 }
 
 export function getBackgroundColor(aColorScheme: ColorScheme) {
