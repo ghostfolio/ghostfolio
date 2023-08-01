@@ -269,6 +269,23 @@ export class ImportService {
         dataSource: SymbolProfile.dataSource,
         symbol: SymbolProfile.symbol
       };
+      const {
+        assetClass,
+        assetSubClass,
+        countries,
+        createdAt,
+        currency,
+        dataSource,
+        id,
+        isin,
+        name,
+        scraperConfiguration,
+        sectors,
+        symbol,
+        symbolMapping,
+        url,
+        updatedAt
+      } = assetProfile;
       const validatedAccount = accounts.find(({ id }) => {
         return id === accountId;
       });
@@ -294,22 +311,22 @@ export class ImportService {
           id: uuidv4(),
           isDraft: isAfter(date, endOfToday()),
           SymbolProfile: {
-            assetClass: assetProfile.assetClass,
-            assetSubClass: assetProfile.assetSubClass,
-            comment: assetProfile.comment,
-            countries: assetProfile.countries,
-            createdAt: assetProfile.createdAt,
-            currency: assetProfile.currency,
-            dataSource: assetProfile.dataSource,
-            id: assetProfile.id,
-            isin: assetProfile.isin,
-            name: assetProfile.name,
-            scraperConfiguration: assetProfile.scraperConfiguration,
-            sectors: assetProfile.sectors,
-            symbol: assetProfile.symbol,
-            symbolMapping: assetProfile.symbolMapping,
-            updatedAt: assetProfile.updatedAt,
-            url: assetProfile.url
+            assetClass,
+            assetSubClass,
+            countries,
+            createdAt,
+            currency,
+            dataSource,
+            id,
+            isin,
+            name,
+            scraperConfiguration,
+            sectors,
+            symbol,
+            symbolMapping,
+            updatedAt,
+            url,
+            comment: assetProfile.comment
           },
           Account: validatedAccount,
           symbolProfileId: undefined,
@@ -332,14 +349,14 @@ export class ImportService {
           SymbolProfile: {
             connectOrCreate: {
               create: {
-                currency: assetProfile.currency,
-                dataSource: assetProfile.dataSource,
-                symbol: assetProfile.symbol
+                currency,
+                dataSource,
+                symbol
               },
               where: {
                 dataSource_symbol: {
-                  dataSource: assetProfile.dataSource,
-                  symbol: assetProfile.symbol
+                  dataSource,
+                  symbol
                 }
               }
             }
@@ -357,14 +374,14 @@ export class ImportService {
         value,
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee,
-          assetProfile.currency,
+          currency,
           userCurrency
         ),
         //@ts-ignore
         SymbolProfile: assetProfile,
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
-          assetProfile.currency,
+          currency,
           userCurrency
         )
       });
