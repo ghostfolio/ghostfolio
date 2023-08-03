@@ -11,60 +11,30 @@
   "prefix": "gf",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-base"],
       "options": {
+        "commands": [
+          {
+            "command": "cp -r apps/client/src/assets dist/apps/client"
+          },
+          {
+            "command": "cp apps/client/src/assets/assetlinks.json dist/apps/client"
+          }
+          // TODO
+        ]
+      }
+    },
+    "build-base": {
+      "executor": "@nx/angular:webpack-browser",
+      "options": {
+        "localize": true,
         "outputPath": "dist/apps/client",
         "index": "apps/client/src/index.html",
         "main": "apps/client/src/main.ts",
         "polyfills": "apps/client/src/polyfills.ts",
         "tsConfig": "apps/client/tsconfig.app.json",
-        "assets": [
-          {
-            "glob": "assetlinks.json",
-            "input": "apps/client/src/assets",
-            "output": "{workspaceRoot}/dist/apps/client/.well-known"
-          },
-          {
-            "glob": "CHANGELOG.md",
-            "input": "",
-            "output": "{workspaceRoot}/dist/apps/client/assets"
-          },
-          {
-            "glob": "favicon.ico",
-            "input": "apps/client/src/assets",
-            "output": "{workspaceRoot}/dist/apps/client/"
-          },
-          {
-            "glob": "LICENSE",
-            "input": "",
-            "output": "{workspaceRoot}/dist/apps/client/assets"
-          },
-          {
-            "glob": "robots.txt",
-            "input": "apps/client/src/assets",
-            "output": "{workspaceRoot}/dist/apps/client/"
-          },
-          {
-            "glob": "site.webmanifest",
-            "input": "apps/client/src/assets",
-            "output": "{workspaceRoot}/dist/apps/client/"
-          },
-          {
-            "glob": "**/*",
-            "input": "node_modules/ionicons/dist/ionicons",
-            "output": "{workspaceRoot}/dist/apps/client/ionicons"
-          },
-          {
-            "glob": "**/*.js",
-            "input": "node_modules/ionicons/dist/",
-            "output": "{workspaceRoot}/dist/apps/client/"
-          },
-          {
-            "glob": "**/*",
-            "input": "apps/client/src/assets",
-            "output": "{workspaceRoot}/dist/apps/client/assets/"
-          }
-        ],
+        "assets": [],
         "styles": [
           "apps/client/src/styles/theme.scss",
           "apps/client/src/styles.scss"
