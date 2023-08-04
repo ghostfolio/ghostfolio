@@ -19,9 +19,32 @@
             "command": "cp -r apps/client/src/assets dist/apps/client"
           },
           {
-            "command": "cp apps/client/src/assets/assetlinks.json dist/apps/client"
+            "command": "cp -r apps/client/src/assets/.well-known dist/apps/client"
+          },
+          {
+            "command": "cp apps/client/src/assets/favicon.ico dist/apps/client"
+          },
+          {
+            "command": "cp apps/client/src/assets/robots.txt dist/apps/client"
+          },
+          {
+            "command": "cp apps/client/src/assets/site.webmanifest dist/apps/client"
+          },
+          {
+            "command": "cp node_modules/ionicons/dist/index.js dist/apps/client"
+          },
+          {
+            "command": "cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
+          },
+          {
+            "command": "cp -r node_modules/ionicons/dist/ionicons dist/apps/client/ionicons"
+          },
+          {
+            "command": "cp CHANGELOG.md dist/apps/client/assets"
+          },
+          {
+            "command": "cp LICENSE dist/apps/client/assets"
           }
-          // TODO
         ]
       }
     },
