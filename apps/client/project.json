@@ -45,11 +45,6 @@
             "output": "./../"
           },
           {
-            "glob": "sitemap.xml",
-            "input": "apps/client/src/assets",
-            "output": "./../"
-          },
-          {
             "glob": "site.webmanifest",
             "input": "apps/client/src/assets",
             "output": "./../"
