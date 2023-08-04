@@ -110,7 +110,7 @@
       "defaultConfiguration": ""
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:webpack-dev-server",
       "options": {
         "browserTarget": "client:build",
         "proxyConfig": "apps/client/proxy.conf.json"
