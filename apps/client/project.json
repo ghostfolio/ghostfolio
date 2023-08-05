@@ -10,11 +10,13 @@
   "sourceRoot": "apps/client/src",
   "prefix": "gf",
   "targets": {
-    "build": {
+    "copy-assets": {
       "executor": "nx:run-commands",
-      "dependsOn": ["build-base"],
       "options": {
         "commands": [
+          {
+            "command": "mkdir -p dist/apps/client"
+          },
           {
             "command": "cp -r apps/client/src/assets dist/apps/client"
           },
@@ -48,7 +50,7 @@
         ]
       }
     },
-    "build-base": {
+    "build": {
       "executor": "@nx/angular:webpack-browser",
       "options": {
         "localize": true,
