@@ -74,7 +74,15 @@ import { StatusCodes } from 'http-status-codes';
     PrismaModule,
     RedisCacheModule,
     ScheduleModule.forRoot(),
+    ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
+      return ServeStaticModule.forRoot({
+        rootPath: join(__dirname, '..', 'client', languageCode),
+        serveRoot: `/${languageCode}`
+      });
+    }),
     ServeStaticModule.forRoot({
+      exclude: ['/api*'],
+      rootPath: join(__dirname, '..', 'client'),
       serveStaticOptions: {
         setHeaders: (res) => {
           if (res.req?.path === '/') {
@@ -94,9 +102,7 @@ import { StatusCodes } from 'http-status-codes';
             res.statusCode = StatusCodes.MOVED_PERMANENTLY;
           }
         }
-      },
-      rootPath: join(__dirname, '..', 'client'),
-      exclude: ['/api*']
+      }
     }),
     SubscriptionModule,
     SymbolModule,
