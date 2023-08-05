@@ -234,6 +234,16 @@ export function isCurrency(aSymbol = '') {
   return currencies[aSymbol];
 }
 
+export function interpolate(template: string, context: any) {
+  return template.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
+    const properties = objectPath.split('.');
+    return properties.reduce(
+      (previous, current) => previous?.[current],
+      context
+    );
+  });
+}
+
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);

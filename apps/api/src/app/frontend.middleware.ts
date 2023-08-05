@@ -4,7 +4,7 @@ import * as path from 'path';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, interpolate } from '@ghostfolio/common/helper';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
@@ -18,7 +18,6 @@ export class FrontendMiddleware implements NestMiddleware {
   public indexHtmlIt = '';
   public indexHtmlNl = '';
   public indexHtmlPt = '';
-  public sitemapXml = '';
 
   private static readonly DEFAULT_DESCRIPTION =
     'Ghostfolio is a personal finance dashboard to keep track of your assets like stocks, ETFs or cryptocurrencies across multiple platforms.';
@@ -53,10 +52,6 @@ export class FrontendMiddleware implements NestMiddleware {
       );
       this.indexHtmlPt = fs.readFileSync(
         this.getPathOfIndexHtmlFile('pt'),
-        'utf8'
-      );
-      this.sitemapXml = fs.readFileSync(
-        path.join(__dirname, 'assets', 'sitemap.xml'),
         'utf8'
       );
     } catch {}
@@ -123,16 +118,9 @@ export class FrontendMiddleware implements NestMiddleware {
     ) {
       // Skip
       next();
-    } else if (request.path === '/sitemap.xml') {
-      response.setHeader('content-type', 'application/xml');
-      response.send(
-        this.interpolate(this.sitemapXml, {
-          currentDate: format(getYesterday(), DATE_FORMAT)
-        })
-      );
     } else if (request.path === '/de' || request.path.startsWith('/de/')) {
       response.send(
-        this.interpolate(this.indexHtmlDe, {
+        interpolate(this.indexHtmlDe, {
           currentDate,
           featureGraphicPath,
           title,
@@ -145,7 +133,7 @@ export class FrontendMiddleware implements NestMiddleware {
       );
     } else if (request.path === '/es' || request.path.startsWith('/es/')) {
       response.send(
-        this.interpolate(this.indexHtmlEs, {
+        interpolate(this.indexHtmlEs, {
           currentDate,
           featureGraphicPath,
           title,
@@ -158,7 +146,7 @@ export class FrontendMiddleware implements NestMiddleware {
       );
     } else if (request.path === '/fr' || request.path.startsWith('/fr/')) {
       response.send(
-        this.interpolate(this.indexHtmlFr, {
+        interpolate(this.indexHtmlFr, {
           currentDate,
           featureGraphicPath,
           title,
@@ -171,7 +159,7 @@ export class FrontendMiddleware implements NestMiddleware {
       );
     } else if (request.path === '/it' || request.path.startsWith('/it/')) {
       response.send(
-        this.interpolate(this.indexHtmlIt, {
+        interpolate(this.indexHtmlIt, {
           currentDate,
           featureGraphicPath,
           title,
@@ -184,7 +172,7 @@ export class FrontendMiddleware implements NestMiddleware {
       );
     } else if (request.path === '/nl' || request.path.startsWith('/nl/')) {
       response.send(
-        this.interpolate(this.indexHtmlNl, {
+        interpolate(this.indexHtmlNl, {
           currentDate,
           featureGraphicPath,
           title,
@@ -197,7 +185,7 @@ export class FrontendMiddleware implements NestMiddleware {
       );
     } else if (request.path === '/pt' || request.path.startsWith('/pt/')) {
       response.send(
-        this.interpolate(this.indexHtmlPt, {
+        interpolate(this.indexHtmlPt, {
           currentDate,
           featureGraphicPath,
           title,
@@ -210,7 +198,7 @@ export class FrontendMiddleware implements NestMiddleware {
       );
     } else {
       response.send(
-        this.interpolate(this.indexHtmlEn, {
+        interpolate(this.indexHtmlEn, {
           currentDate,
           featureGraphicPath,
           title,
@@ -227,21 +215,10 @@ export class FrontendMiddleware implements NestMiddleware {
     return path.join(__dirname, '..', 'client', aLocale, 'index.html');
   }
 
-  private interpolate(template: string, context: any) {
-    return template.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
-      const properties = objectPath.split('.');
-      return properties.reduce(
-        (previous, current) => previous?.[current],
-        context
-      );
-    });
-  }
-
   private isFileRequest(filename: string) {
     if (filename === '/assets/LICENSE') {
       return true;
     } else if (
-      filename === '/sitemap.xml' ||
       filename.includes('auth/ey') ||
       filename.includes(
         'personal-finance-tools/open-source-alternative-to-markets.sh'
