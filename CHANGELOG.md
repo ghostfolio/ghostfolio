@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the alignment of the region percentages on the allocations page
+- Improved the alignment of the region percentages on the public page
 - Improved the redirection of the home page to the localized home page
 - Improved the language localization for German (`de`)
 - Upgraded `angular` from version `15.2.5` to `16.1.8`
