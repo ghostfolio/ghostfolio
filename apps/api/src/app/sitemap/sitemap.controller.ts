@@ -10,7 +10,7 @@ import { Controller, Get, Res, VERSION_NEUTRAL, Version } from '@nestjs/common';
 import { format } from 'date-fns';
 import { Response } from 'express';
 
-@Controller('/sitemap.xml')
+@Controller('sitemap.xml')
 export class SitemapController {
   public sitemapXml = '';
 
