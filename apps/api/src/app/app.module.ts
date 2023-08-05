@@ -35,6 +35,11 @@ import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  SUPPORTED_LANGUAGE_CODES
+} from '@ghostfolio/common/config';
+import { StatusCodes } from 'http-status-codes';
 
 @Module({
   imports: [
@@ -71,14 +76,24 @@ import { UserModule } from './user/user.module';
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       serveStaticOptions: {
-        /*etag: false // Disable etag header to fix PWA
-        setHeaders: (res, path) => {
-          if (path.includes('ngsw.json')) {
-            // Disable cache (https://stackoverflow.com/questions/22632593/how-to-disable-webpage-caching-in-expressjs-nodejs/39775595)
-            // https://gertjans.home.xs4all.nl/javascript/cache-control.html#no-cache
-            res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        setHeaders: (res) => {
+          if (res.req?.path === '/') {
+            let languageCode = DEFAULT_LANGUAGE_CODE;
+
+            try {
+              const code = res.req.headers['accept-language']
+                .split(',')[0]
+                .split('-')[0];
+
+              if (SUPPORTED_LANGUAGE_CODES.includes(code)) {
+                languageCode = code;
+              }
+            } catch {}
+
+            res.set('Location', `/${languageCode}`);
+            res.statusCode = StatusCodes.MOVED_PERMANENTLY;
           }
-        }*/
+        }
       },
       rootPath: join(__dirname, '..', 'client'),
       exclude: ['/api*']
