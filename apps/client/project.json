@@ -111,6 +111,9 @@
             "command": "cp apps/client/src/assets/favicon.ico dist/apps/client"
           },
           {
+            "command": "cp apps/client/src/assets/index.html dist/apps/client"
+          },
+          {
             "command": "cp apps/client/src/assets/robots.txt dist/apps/client"
           },
           {
