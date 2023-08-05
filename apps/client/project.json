@@ -11,60 +11,15 @@
   "prefix": "gf",
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nx/angular:webpack-browser",
       "options": {
+        "localize": true,
         "outputPath": "dist/apps/client",
         "index": "apps/client/src/index.html",
         "main": "apps/client/src/main.ts",
         "polyfills": "apps/client/src/polyfills.ts",
         "tsConfig": "apps/client/tsconfig.app.json",
-        "assets": [
-          {
-            "glob": "assetlinks.json",
-            "input": "apps/client/src/assets",
-            "output": "./../.well-known"
-          },
-          {
-            "glob": "CHANGELOG.md",
-            "input": "",
-            "output": "./../assets"
-          },
-          {
-            "glob": "favicon.ico",
-            "input": "apps/client/src/assets",
-            "output": "./../"
-          },
-          {
-            "glob": "LICENSE",
-            "input": "",
-            "output": "./../assets"
-          },
-          {
-            "glob": "robots.txt",
-            "input": "apps/client/src/assets",
-            "output": "./../"
-          },
-          {
-            "glob": "site.webmanifest",
-            "input": "apps/client/src/assets",
-            "output": "./../"
-          },
-          {
-            "glob": "**/*",
-            "input": "node_modules/ionicons/dist/ionicons",
-            "output": "./../ionicons"
-          },
-          {
-            "glob": "**/*.js",
-            "input": "node_modules/ionicons/dist/",
-            "output": "./../"
-          },
-          {
-            "glob": "**/*",
-            "input": "apps/client/src/assets",
-            "output": "./../assets/"
-          }
-        ],
+        "assets": [],
         "styles": [
           "apps/client/src/styles/theme.scss",
           "apps/client/src/styles.scss"
@@ -139,8 +94,48 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": ""
     },
+    "copy-assets": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "mkdir -p dist/apps/client"
+          },
+          {
+            "command": "cp -r apps/client/src/assets dist/apps/client"
+          },
+          {
+            "command": "cp -r apps/client/src/assets/.well-known dist/apps/client"
+          },
+          {
+            "command": "cp apps/client/src/assets/favicon.ico dist/apps/client"
+          },
+          {
+            "command": "cp apps/client/src/assets/robots.txt dist/apps/client"
+          },
+          {
+            "command": "cp apps/client/src/assets/site.webmanifest dist/apps/client"
+          },
+          {
+            "command": "cp node_modules/ionicons/dist/index.js dist/apps/client"
+          },
+          {
+            "command": "cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
+          },
+          {
+            "command": "cp -r node_modules/ionicons/dist/ionicons dist/apps/client/ionicons"
+          },
+          {
+            "command": "cp CHANGELOG.md dist/apps/client/assets"
+          },
+          {
+            "command": "cp LICENSE dist/apps/client/assets"
+          }
+        ]
+      }
+    },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:webpack-dev-server",
       "options": {
         "browserTarget": "client:build",
         "proxyConfig": "apps/client/proxy.conf.json"

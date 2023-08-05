@@ -33,4 +33,4 @@ jobs:
         run: yarn test
 
       - name: Build application
-        run: yarn build:all
+        run: yarn build:production

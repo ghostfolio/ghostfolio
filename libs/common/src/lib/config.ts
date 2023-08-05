@@ -91,4 +91,14 @@ export const QUEUE_JOB_STATUS_LIST = <JobStatus[]>[
   'waiting'
 ];
 
+export const SUPPORTED_LANGUAGE_CODES = [
+  'de',
+  'en',
+  'es',
+  'fr',
+  'it',
+  'nl',
+  'pt'
+];
+
 export const UNKNOWN_KEY = 'UNKNOWN';
