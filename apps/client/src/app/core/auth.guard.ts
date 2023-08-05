@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
@@ -12,7 +11,7 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
+export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
     '/about',
     '/about/changelog',

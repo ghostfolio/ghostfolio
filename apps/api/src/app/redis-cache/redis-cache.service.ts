@@ -1,7 +1,8 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
-import { CACHE_MANAGER, Inject, Injectable, Logger } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 import type { RedisCache } from './interfaces/redis-cache.interface';
 
@@ -35,8 +36,10 @@ export class RedisCacheService {
   }
 
   public async set(key: string, value: string, ttlInSeconds?: number) {
-    await this.cache.set(key, value, {
-      ttl: ttlInSeconds ?? this.configurationService.get('CACHE_TTL')
-    });
+    await this.cache.set(
+      key,
+      value,
+      ttlInSeconds ?? this.configurationService.get('CACHE_TTL')
+    );
   }
 }

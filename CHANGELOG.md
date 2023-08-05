@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added a `copy-assets` `Nx` target to the client build
+
+### Changed
+
+- Improved the redirection of the home page to the localized home page
+- Upgraded `angular` from version `15.2.5` to `16.1.8`
+- Upgraded `nestjs` from version `9.1.4` to `10.1.3`
+- Upgraded `Nx` from version `16.0.3` to `16.5.5`
+
 ## 1.296.0 - 2023-08-01
 
 ### Changed
