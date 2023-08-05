@@ -81,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.6.0` to `2.7.0`
 - Upgraded `Nx` from version `16.5.5` to `16.6.0`
+- Upgraded `prettier` from version `2.8.4` to `3.0.1`
 
 ### Fixed
 
@@ -169,10 +170,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Renamed queries to presets in the historical market data table of the admin control panel
-
-### Changed
-
-- Upgraded `prettier` from version `2.8.4` to `3.0.0`
 
 ## 1.290.0 - 2023-07-16
 
