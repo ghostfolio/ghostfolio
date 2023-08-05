@@ -215,7 +215,7 @@
             ></gf-world-map-chart>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-md-3 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -224,7 +224,7 @@
                 >Developed Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-3 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -233,7 +233,7 @@
                 >Emerging Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-3 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -242,7 +242,10 @@
                 >Other Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-3 my-2">
+            <div
+              *ngIf="markets?.[UNKNOWN_KEY]?.value > 0"
+              class="col-xs-12 col-md my-2"
+            >
               <gf-value
                 i18n
                 size="large"
