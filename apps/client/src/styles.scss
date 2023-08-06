@@ -253,6 +253,7 @@ body {
 
     .mat-mdc-card {
       --mdc-elevated-card-container-color: var(--dark-background);
+      --mdc-outlined-card-container-color: var(--dark-background);
     }
 
     .mat-mdc-fab {
@@ -262,7 +263,6 @@ body {
       }
     }
 
-    .mat-mdc-paginator,
     .mat-mdc-paginator {
       background-color: rgba(var(--palette-foreground-base-dark), 0.02);
     }
@@ -421,7 +421,6 @@ ngx-skeleton-loader {
   }
 }
 
-.mat-mdc-paginator,
 .mat-mdc-paginator {
   background-color: rgba(var(--palette-foreground-base-light), 0.02);
 
