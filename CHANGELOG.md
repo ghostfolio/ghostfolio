@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.6.0` to `2.7.0`
 - Upgraded `Nx` from version `16.5.5` to `16.6.0`
 
