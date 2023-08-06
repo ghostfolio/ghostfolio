@@ -11,16 +11,9 @@
   padding-bottom: constant(safe-area-inset-bottom);
 
   ::ng-deep {
-    gf-activities-page,
-    gf-allocations-page,
-    gf-analysis-page,
-    gf-holdings-page,
-    gf-fire-page {
-      flex: 1 1 auto;
-      overflow-y: auto;
-    }
-
     .mat-mdc-tab-link-container {
+      --mat-tab-header-active-focus-indicator-color: transparent;
+      --mat-tab-header-active-hover-indicator-color: transparent;
       --mdc-tab-indicator-active-indicator-color: transparent;
 
       .mat-mdc-tab-link {
