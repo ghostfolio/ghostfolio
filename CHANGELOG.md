@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `Nx` from version `16.5.5` to `16.6.0`
+
 ### Fixed
 
 - Fixed the styles of various components (card, progress, tab) after the upgrade to `@angular/material` `16`
