@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
 - Upgraded `Nx` from version `16.5.5` to `16.6.0`
 
 ## 1.297.4 - 2023-08-05
