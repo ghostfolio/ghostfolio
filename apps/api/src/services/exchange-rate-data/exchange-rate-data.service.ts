@@ -33,6 +33,16 @@ export class ExchangeRateDataService {
     return this.currencyPairs;
   }
 
+  public isCurrencyPairSupported(
+    firstCurrency: string,
+    secondCurrency: string
+  ) {
+    return (
+      this.getCurrencies().includes(firstCurrency) &&
+      this.getCurrencies().includes(secondCurrency)
+    );
+  }
+
   public async initialize() {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
     this.currencies = await this.prepareCurrencies();

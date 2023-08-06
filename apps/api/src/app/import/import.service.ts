@@ -248,7 +248,7 @@ export class ImportService {
 
     const activities: Activity[] = [];
 
-    for (const {
+    for (let {
       accountId,
       comment,
       date,
@@ -295,6 +295,28 @@ export class ImportService {
         | (Omit<OrderWithAccount, 'Account'> & {
             Account?: { id: string; name: string };
           });
+
+      if (SymbolProfile.currency !== assetProfile.currency) {
+        // We convert the unit price and fee to the asset currency if the transaction is in different currency.
+        unitPrice = await this.exchangeRateDataService.toCurrencyAtDate(
+          unitPrice,
+          SymbolProfile.currency,
+          assetProfile.currency,
+          date
+        );
+        if (unitPrice === undefined) {
+          throw new Error(
+            `No currency conversion from ${SymbolProfile.currency} to ${assetProfile.currency} for ${SymbolProfile.symbol} at ${date}`
+          );
+        }
+
+        fee = await this.exchangeRateDataService.toCurrencyAtDate(
+          fee,
+          SymbolProfile.currency,
+          assetProfile.currency,
+          date
+        );
+      }
 
       if (isDryRun) {
         order = {
@@ -539,9 +561,16 @@ export class ImportService {
           );
         }
 
-        if (assetProfile.currency !== currency) {
+        if (
+          assetProfile.currency !== currency &&
+          !this.exchangeRateDataService.isCurrencyPairSupported(
+            // We check if we can convert the currency bought in to currency of asset
+            currency,
+            assetProfile.currency
+          )
+        ) {
           throw new Error(
-            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}"`
+            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency} and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
           );
         }
 
