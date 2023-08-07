@@ -1,0 +1,19 @@
+{
+  "meta": {
+    "date": "2023-02-05T00:00:00.000Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "comment": null,
+      "fee": 0,
+      "quantity": 0,
+      "type": "BUY",
+      "unitPrice": 0,
+      "currency": "EUR",
+      "dataSource": "YAHOO",
+      "date": "1990-01-01T22:00:00.000Z",
+      "symbol": "MSFT"
+    }
+  ]
+}
