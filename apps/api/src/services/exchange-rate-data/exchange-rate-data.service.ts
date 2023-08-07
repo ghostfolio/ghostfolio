@@ -33,14 +33,13 @@ export class ExchangeRateDataService {
     return this.currencyPairs;
   }
 
-  public isCurrencyPairSupported(
-    firstCurrency: string,
-    secondCurrency: string
-  ) {
-    return (
-      this.getCurrencies().includes(firstCurrency) &&
-      this.getCurrencies().includes(secondCurrency)
-    );
+  public hasCurrencyPair(currency1: string, currency2: string) {
+    return this.currencyPairs.some(({ symbol }) => {
+      return (
+        symbol === `${currency1}${currency2}` ||
+        symbol === `${currency2}${currency1}`
+      );
+    });
   }
 
   public async initialize() {

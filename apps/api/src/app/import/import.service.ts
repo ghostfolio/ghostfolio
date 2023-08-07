@@ -13,6 +13,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  DATE_FORMAT,
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -24,7 +25,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
+import { endOfToday, format, isAfter, isSameDay, parseISO } from 'date-fns';
 import { uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -248,17 +249,20 @@ export class ImportService {
 
     const activities: Activity[] = [];
 
-    for (let {
-      accountId,
-      comment,
-      date,
-      error,
-      fee,
-      quantity,
-      SymbolProfile,
-      type,
-      unitPrice
-    } of activitiesExtendedWithErrors) {
+    for (let [
+      index,
+      {
+        accountId,
+        comment,
+        date,
+        error,
+        fee,
+        quantity,
+        SymbolProfile,
+        type,
+        unitPrice
+      }
+    ] of activitiesExtendedWithErrors.entries()) {
       const assetProfile = assetProfiles[
         getAssetProfileIdentifier({
           dataSource: SymbolProfile.dataSource,
@@ -297,16 +301,22 @@ export class ImportService {
           });
 
       if (SymbolProfile.currency !== assetProfile.currency) {
-        // We convert the unit price and fee to the asset currency if the transaction is in different currency.
+        // Convert the unit price and fee to the asset currency if the imported transaction is in a different currency
         unitPrice = await this.exchangeRateDataService.toCurrencyAtDate(
           unitPrice,
           SymbolProfile.currency,
           assetProfile.currency,
           date
         );
-        if (unitPrice === undefined) {
+
+        if (!unitPrice) {
           throw new Error(
-            `No currency conversion from ${SymbolProfile.currency} to ${assetProfile.currency} for ${SymbolProfile.symbol} at ${date}`
+            `activities.${index} historical exchange rate at ${format(
+              date,
+              DATE_FORMAT
+            )} is not available from "${SymbolProfile.currency}" to "${
+              assetProfile.currency
+            }"`
           );
         }
 
@@ -555,7 +565,7 @@ export class ImportService {
           ])
         )?.[symbol];
 
-        if (assetProfile === undefined) {
+        if (!assetProfile) {
           throw new Error(
             `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
@@ -563,14 +573,13 @@ export class ImportService {
 
         if (
           assetProfile.currency !== currency &&
-          !this.exchangeRateDataService.isCurrencyPairSupported(
-            // We check if we can convert the currency bought in to currency of asset
+          !this.exchangeRateDataService.hasCurrencyPair(
             currency,
             assetProfile.currency
           )
         ) {
           throw new Error(
-            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency} and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
+            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}" and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
           );
         }
 
