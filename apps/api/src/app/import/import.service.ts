@@ -13,6 +13,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  DATE_FORMAT,
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -24,7 +25,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { endOfToday, isAfter, isSameDay, parseISO } from 'date-fns';
+import { endOfToday, format, isAfter, isSameDay, parseISO } from 'date-fns';
 import { uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -248,17 +249,20 @@ export class ImportService {
 
     const activities: Activity[] = [];
 
-    for (const {
-      accountId,
-      comment,
-      date,
-      error,
-      fee,
-      quantity,
-      SymbolProfile,
-      type,
-      unitPrice
-    } of activitiesExtendedWithErrors) {
+    for (let [
+      index,
+      {
+        accountId,
+        comment,
+        date,
+        error,
+        fee,
+        quantity,
+        SymbolProfile,
+        type,
+        unitPrice
+      }
+    ] of activitiesExtendedWithErrors.entries()) {
       const assetProfile = assetProfiles[
         getAssetProfileIdentifier({
           dataSource: SymbolProfile.dataSource,
@@ -295,6 +299,35 @@ export class ImportService {
         | (Omit<OrderWithAccount, 'Account'> & {
             Account?: { id: string; name: string };
           });
+
+      if (SymbolProfile.currency !== assetProfile.currency) {
+        // Convert the unit price and fee to the asset currency if the imported
+        // activity is in a different currency
+        unitPrice = await this.exchangeRateDataService.toCurrencyAtDate(
+          unitPrice,
+          SymbolProfile.currency,
+          assetProfile.currency,
+          date
+        );
+
+        if (!unitPrice) {
+          throw new Error(
+            `activities.${index} historical exchange rate at ${format(
+              date,
+              DATE_FORMAT
+            )} is not available from "${SymbolProfile.currency}" to "${
+              assetProfile.currency
+            }"`
+          );
+        }
+
+        fee = await this.exchangeRateDataService.toCurrencyAtDate(
+          fee,
+          SymbolProfile.currency,
+          assetProfile.currency,
+          date
+        );
+      }
 
       if (isDryRun) {
         order = {
@@ -533,15 +566,21 @@ export class ImportService {
           ])
         )?.[symbol];
 
-        if (assetProfile === undefined) {
+        if (!assetProfile) {
           throw new Error(
             `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
         }
 
-        if (assetProfile.currency !== currency) {
+        if (
+          assetProfile.currency !== currency &&
+          !this.exchangeRateDataService.hasCurrencyPair(
+            currency,
+            assetProfile.currency
+          )
+        ) {
           throw new Error(
-            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}"`
+            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}" and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
           );
         }
 
