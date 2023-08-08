@@ -301,7 +301,8 @@ export class ImportService {
           });
 
       if (SymbolProfile.currency !== assetProfile.currency) {
-        // Convert the unit price and fee to the asset currency if the imported transaction is in a different currency
+        // Convert the unit price and fee to the asset currency if the imported
+        // activity is in a different currency
         unitPrice = await this.exchangeRateDataService.toCurrencyAtDate(
           unitPrice,
           SymbolProfile.currency,
