@@ -7,11 +7,16 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  SUPPORTED_LANGUAGE_CODES
+} from '@ghostfolio/common/config';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { StatusCodes } from 'http-status-codes';
 
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
@@ -32,14 +37,10 @@ import { OrderModule } from './order/order.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
+import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
-import {
-  DEFAULT_LANGUAGE_CODE,
-  SUPPORTED_LANGUAGE_CODES
-} from '@ghostfolio/common/config';
-import { StatusCodes } from 'http-status-codes';
 
 @Module({
   imports: [
@@ -74,7 +75,15 @@ import { StatusCodes } from 'http-status-codes';
     PrismaModule,
     RedisCacheModule,
     ScheduleModule.forRoot(),
+    ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
+      return ServeStaticModule.forRoot({
+        rootPath: join(__dirname, '..', 'client', languageCode),
+        serveRoot: `/${languageCode}`
+      });
+    }),
     ServeStaticModule.forRoot({
+      exclude: ['/api*', '/sitemap.xml'],
+      rootPath: join(__dirname, '..', 'client'),
       serveStaticOptions: {
         setHeaders: (res) => {
           if (res.req?.path === '/') {
@@ -94,10 +103,9 @@ import { StatusCodes } from 'http-status-codes';
             res.statusCode = StatusCodes.MOVED_PERMANENTLY;
           }
         }
-      },
-      rootPath: join(__dirname, '..', 'client'),
-      exclude: ['/api*']
+      }
     }),
+    SitemapModule,
     SubscriptionModule,
     SymbolModule,
     TwitterBotModule,

@@ -11,7 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Optimized the activities import by allowing a different currency than the asset's official one
 
-## 1.297.2 - 2023-08-05
+## 1.298.0 - 2023-08-06
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.6.0` to `2.7.0`
+- Upgraded `Nx` from version `16.5.5` to `16.6.0`
+
+### Fixed
+
+- Fixed the styles of various components (card, progress, tab) after the upgrade to `@angular/material` `16`
+
+## 1.297.4 - 2023-08-05
 
 ### Added
 
