@@ -4,6 +4,10 @@ generator client {
   binaryTargets   = ["debian-openssl-1.1.x", "linux-arm64-openssl-3.0.x", "native"]
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -136,6 +140,7 @@ model SymbolProfile {
   isin                   String?
   name                   String?
   updatedAt              DateTime                @updatedAt
+  /// [ScraperConfiguration]
   scraperConfiguration   Json?
   sectors                Json?
   symbol                 String
