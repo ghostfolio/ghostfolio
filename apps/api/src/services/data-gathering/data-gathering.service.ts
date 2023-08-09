@@ -4,18 +4,20 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
+  PROPERTY_BENCHMARKS
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
   resetHours
 } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { BenchmarkProperty, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -34,6 +36,7 @@ export class DataGatheringService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
+    private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
@@ -255,6 +258,10 @@ export class DataGatheringService {
       });
   }
 
+  private getEarliestDate(aStartDate: Date) {
+    return min([aStartDate, subYears(new Date(), 10)]);
+  }
+
   private async getSymbols7D(): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
@@ -321,6 +328,14 @@ export class DataGatheringService {
   }
 
   private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
+    const benchmarkAssetProfileIdMap: { [key: string]: boolean } = {};
+    (
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as BenchmarkProperty[]) ?? []
+    ).forEach(({ symbolProfileId }) => {
+      benchmarkAssetProfileIdMap[symbolProfileId] = true;
+    });
     const startDate =
       (
         await this.prismaService.order.findFirst({
@@ -334,7 +349,7 @@ export class DataGatheringService {
         return {
           dataSource,
           symbol,
-          date: min([startDate, subYears(new Date(), 10)])
+          date: this.getEarliestDate(startDate)
         };
       });
 
@@ -343,6 +358,7 @@ export class DataGatheringService {
         orderBy: [{ symbol: 'asc' }],
         select: {
           dataSource: true,
+          id: true,
           Order: {
             orderBy: [{ date: 'asc' }],
             select: { date: true },
@@ -364,9 +380,15 @@ export class DataGatheringService {
         );
       })
       .map((symbolProfile) => {
+        let date = symbolProfile.Order?.[0]?.date ?? startDate;
+
+        if (benchmarkAssetProfileIdMap[symbolProfile.id]) {
+          date = this.getEarliestDate(startDate);
+        }
+
         return {
           ...symbolProfile,
-          date: symbolProfile.Order?.[0]?.date ?? startDate
+          date
         };
       });
 
