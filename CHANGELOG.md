@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Optimized the activities import by allowing a different currency than the asset's official one
+- Added a timeout to the _EOD Historical Data_ requests
+- Migrated the requests from `bent` to `got` in the _EOD Historical Data_ service
 
 ### Fixed
 
