@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Optimized the activities import by allowing a different currency than the asset's official one
 
+### Fixed
+
+- Fixed the historical data gathering interval for asset profiles used as benchmarks having activities
+
 ## 1.298.0 - 2023-08-06
 
 ### Changed
