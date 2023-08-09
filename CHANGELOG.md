@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the editing of the emergency fund
 - Fixed the historical data gathering interval for asset profiles used as benchmarks having activities
 
 ## 1.298.0 - 2023-08-06
