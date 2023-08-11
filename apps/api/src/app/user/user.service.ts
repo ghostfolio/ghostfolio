@@ -14,6 +14,7 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
+import { differenceInDays } from 'date-fns';
 import { sortBy } from 'lodash';
 
 const crypto = require('crypto');
@@ -165,11 +166,26 @@ export class UserService {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);
 
-      if (
-        Analytics?.activityCount % 5 === 0 &&
-        user.subscription?.type === 'Basic'
-      ) {
-        currentPermissions.push(permissions.enableSubscriptionInterstitial);
+      if (user.subscription?.type === 'Basic') {
+        const daysSinceRegistration = differenceInDays(
+          new Date(),
+          user.createdAt
+        );
+        let frequency = 20;
+
+        if (daysSinceRegistration > 180) {
+          frequency = 3;
+        } else if (daysSinceRegistration > 60) {
+          frequency = 5;
+        } else if (daysSinceRegistration > 30) {
+          frequency = 10;
+        } else if (daysSinceRegistration > 15) {
+          frequency = 15;
+        }
+
+        if (Analytics?.activityCount % frequency === 1) {
+          currentPermissions.push(permissions.enableSubscriptionInterstitial);
+        }
       }
 
       if (user.subscription?.type === 'Premium') {

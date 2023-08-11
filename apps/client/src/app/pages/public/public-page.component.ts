@@ -44,6 +44,7 @@ export class PublicPageComponent implements OnInit {
   public symbols: {
     [name: string]: { name: string; symbol: string; value: number };
   };
+  public UNKNOWN_KEY = UNKNOWN_KEY;
 
   private id: string;
   private unsubscribeSubject = new Subject<void>();
@@ -99,6 +100,10 @@ export class PublicPageComponent implements OnInit {
       }
     };
     this.markets = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      },
       developedMarkets: {
         name: 'developedMarkets',
         value: 0
@@ -180,6 +185,9 @@ export class PublicPageComponent implements OnInit {
 
         this.countries[UNKNOWN_KEY].value +=
           this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
+
+        this.markets[UNKNOWN_KEY].value +=
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
       }
 
       if (position.sectors.length > 0) {
@@ -214,7 +222,8 @@ export class PublicPageComponent implements OnInit {
     const marketsTotal =
       this.markets.developedMarkets.value +
       this.markets.emergingMarkets.value +
-      this.markets.otherMarkets.value;
+      this.markets.otherMarkets.value +
+      this.markets[UNKNOWN_KEY].value;
 
     this.markets.developedMarkets.value =
       this.markets.developedMarkets.value / marketsTotal;
@@ -222,6 +231,8 @@ export class PublicPageComponent implements OnInit {
       this.markets.emergingMarkets.value / marketsTotal;
     this.markets.otherMarkets.value =
       this.markets.otherMarkets.value / marketsTotal;
+    this.markets[UNKNOWN_KEY].value =
+      this.markets[UNKNOWN_KEY].value / marketsTotal;
   }
 
   public ngOnDestroy() {

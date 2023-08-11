@@ -7,6 +7,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -116,7 +117,7 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: `${dataSource}-${symbol}`
+            jobId: getAssetProfileIdentifier({ dataSource, symbol })
           }
         };
       })
@@ -152,7 +153,7 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: `${dataSource}-${symbol}`
+            jobId: getAssetProfileIdentifier({ dataSource, symbol })
           }
         };
       })
@@ -185,7 +186,7 @@ export class AdminController {
       name: GATHER_ASSET_PROFILE_PROCESS,
       opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: `${dataSource}-${symbol}`
+        jobId: getAssetProfileIdentifier({ dataSource, symbol })
       }
     });
   }

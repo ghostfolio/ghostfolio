@@ -7,6 +7,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
@@ -117,7 +118,7 @@ export class OrderService {
       };
     }
 
-    await this.dataGatheringService.addJobToQueue({
+    this.dataGatheringService.addJobToQueue({
       data: {
         dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
         symbol: data.SymbolProfile.connectOrCreate.create.symbol
@@ -125,25 +126,12 @@ export class OrderService {
       name: GATHER_ASSET_PROFILE_PROCESS,
       opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: `${data.SymbolProfile.connectOrCreate.create.dataSource}-${data.SymbolProfile.connectOrCreate.create.symbol}`
+        jobId: getAssetProfileIdentifier({
+          dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
+          symbol: data.SymbolProfile.connectOrCreate.create.symbol
+        })
       }
     });
-
-    const isDraft =
-      data.type === 'LIABILITY'
-        ? false
-        : isAfter(data.date as Date, endOfToday());
-
-    if (!isDraft) {
-      // Gather symbol data of order in the background, if not draft
-      this.dataGatheringService.gatherSymbols([
-        {
-          dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-          date: <Date>data.date,
-          symbol: data.SymbolProfile.connectOrCreate.create.symbol
-        }
-      ]);
-    }
 
     delete data.accountId;
     delete data.assetClass;
@@ -161,6 +149,11 @@ export class OrderService {
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
+
+    const isDraft =
+      data.type === 'LIABILITY'
+        ? false
+        : isAfter(data.date as Date, endOfToday());
 
     const order = await this.prismaService.order.create({
       data: {

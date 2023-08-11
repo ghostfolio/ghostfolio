@@ -86,7 +86,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-
+  public UNKNOWN_KEY = UNKNOWN_KEY;
   public user: User;
   public worldMapChartFormat: string;
 
@@ -229,20 +229,29 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       }
     };
     this.markets = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      },
       developedMarkets: {
         name: 'developedMarkets',
-        value: undefined
+        value: 0
       },
       emergingMarkets: {
         name: 'emergingMarkets',
-        value: undefined
+        value: 0
       },
       otherMarkets: {
         name: 'otherMarkets',
-        value: undefined
+        value: 0
       }
     };
     this.marketsAdvanced = {
+      [UNKNOWN_KEY]: {
+        id: UNKNOWN_KEY,
+        name: UNKNOWN_KEY,
+        value: 0
+      },
       asiaPacific: {
         id: 'asiaPacific',
         name: translate('Asia-Pacific'),
@@ -346,16 +355,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries and sectors except for cash
 
         if (position.countries.length > 0) {
-          if (!this.markets.developedMarkets.value) {
-            this.markets.developedMarkets.value = 0;
-          }
-          if (!this.markets.emergingMarkets.value) {
-            this.markets.emergingMarkets.value = 0;
-          }
-          if (!this.markets.otherMarkets.value) {
-            this.markets.otherMarkets.value = 0;
-          }
-
           this.markets.developedMarkets.value +=
             position.markets.developedMarkets *
             (isNumber(position.valueInBaseCurrency)
@@ -447,6 +446,18 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           )
             ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
+
+          this.markets[UNKNOWN_KEY].value += isNumber(
+            position.valueInBaseCurrency
+          )
+            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+            : this.portfolioDetails.holdings[symbol].valueInPercentage;
+
+          this.marketsAdvanced[UNKNOWN_KEY].value += isNumber(
+            position.valueInBaseCurrency
+          )
+            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
+            : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
 
         if (position.sectors.length > 0) {
@@ -511,7 +522,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     const marketsTotal =
       this.markets.developedMarkets.value +
       this.markets.emergingMarkets.value +
-      this.markets.otherMarkets.value;
+      this.markets.otherMarkets.value +
+      this.markets[UNKNOWN_KEY].value;
 
     this.markets.developedMarkets.value =
       this.markets.developedMarkets.value / marketsTotal;
@@ -519,6 +531,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets.emergingMarkets.value / marketsTotal;
     this.markets.otherMarkets.value =
       this.markets.otherMarkets.value / marketsTotal;
+    this.markets[UNKNOWN_KEY].value =
+      this.markets[UNKNOWN_KEY].value / marketsTotal;
   }
 
   public onAccountChartClicked({ symbol }: UniqueAsset) {

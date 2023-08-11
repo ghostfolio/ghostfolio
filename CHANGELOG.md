@@ -5,6 +5,90 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.299.1 - 2023-08-10
+
+### Changed
+
+- Optimized the activities import by allowing a different currency than the asset's official one
+- Added a timeout to the _EOD Historical Data_ requests
+- Migrated the requests from `bent` to `got` in the _EOD Historical Data_ service
+
+### Fixed
+
+- Fixed the editing of the emergency fund
+- Fixed the historical data gathering interval for asset profiles used as benchmarks having activities
+
+## 1.298.0 - 2023-08-06
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.6.0` to `2.7.0`
+- Upgraded `Nx` from version `16.5.5` to `16.6.0`
+
+### Fixed
+
+- Fixed the styles of various components (card, progress, tab) after the upgrade to `@angular/material` `16`
+
+## 1.297.4 - 2023-08-05
+
+### Added
+
+- Added the footer to the public page
+- Added a `copy-assets` `Nx` target to the client build
+
+### Changed
+
+- Improved the alignment of the region percentages on the allocations page
+- Improved the alignment of the region percentages on the public page
+- Improved the redirection of the home page to the localized home page
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `15.2.5` to `16.1.8`
+- Upgraded `nestjs` from version `9.1.4` to `10.1.3`
+- Upgraded `Nx` from version `16.0.3` to `16.5.5`
+
+## 1.296.0 - 2023-08-01
+
+### Changed
+
+- Optimized the validation in the activities import by reducing the list to unique asset profiles
+- Optimized the data gathering in the activities import
+
+## 1.295.0 - 2023-07-30
+
+### Added
+
+- Added a step by step introduction for new users
+
+### Fixed
+
+- Removed the _Stay signed in_ setting on _Sign in with fingerprint_ activation
+
+## 1.294.0 - 2023-07-29
+
+### Changed
+
+- Extended the allocations by market chart on the allocations page by unavailable data
+
+### Fixed
+
+- Considered liabilities in the total account value calculation
+
+## 1.293.0 - 2023-07-26
+
+### Added
+
+- Added error handling for the _Redis_ connections to keep the app running if the connection fails
+
+### Changed
+
+- Set the `lastmod` dates of `sitemap.xml` dynamically
+
+### Fixed
+
+- Fixed the missing values in the holdings table
+- Fixed the `no such file or directory` error caused by the missing `favicon.ico` file
+
 ## 1.292.0 - 2023-07-24
 
 ### Added

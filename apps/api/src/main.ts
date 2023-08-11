@@ -23,7 +23,7 @@ async function bootstrap() {
     defaultVersion: '1',
     type: VersioningType.URI
   });
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', { exclude: ['sitemap.xml'] });
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,
@@ -40,6 +40,7 @@ async function bootstrap() {
       helmet({
         contentSecurityPolicy: {
           directives: {
+            connectSrc: ["'self'", 'https://js.stripe.com'], // Allow connections to Stripe
             frameSrc: ["'self'", 'https://js.stripe.com'], // Allow loading frames from Stripe
             scriptSrc: ["'self'", "'unsafe-inline'", 'https://js.stripe.com'], // Allow inline scripts and scripts from Stripe
             scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers

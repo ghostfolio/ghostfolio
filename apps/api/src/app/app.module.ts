@@ -7,11 +7,16 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  SUPPORTED_LANGUAGE_CODES
+} from '@ghostfolio/common/config';
 import { BullModule } from '@nestjs/bull';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { StatusCodes } from 'http-status-codes';
 
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
@@ -32,6 +37,7 @@ import { OrderModule } from './order/order.module';
 import { PlatformModule } from './platform/platform.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { RedisCacheModule } from './redis-cache/redis-cache.module';
+import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
@@ -69,20 +75,37 @@ import { UserModule } from './user/user.module';
     PrismaModule,
     RedisCacheModule,
     ScheduleModule.forRoot(),
-    ServeStaticModule.forRoot({
-      serveStaticOptions: {
-        /*etag: false // Disable etag header to fix PWA
-        setHeaders: (res, path) => {
-          if (path.includes('ngsw.json')) {
-            // Disable cache (https://stackoverflow.com/questions/22632593/how-to-disable-webpage-caching-in-expressjs-nodejs/39775595)
-            // https://gertjans.home.xs4all.nl/javascript/cache-control.html#no-cache
-            res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-          }
-        }*/
-      },
-      rootPath: join(__dirname, '..', 'client'),
-      exclude: ['/api*']
+    ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
+      return ServeStaticModule.forRoot({
+        rootPath: join(__dirname, '..', 'client', languageCode),
+        serveRoot: `/${languageCode}`
+      });
     }),
+    ServeStaticModule.forRoot({
+      exclude: ['/api*', '/sitemap.xml'],
+      rootPath: join(__dirname, '..', 'client'),
+      serveStaticOptions: {
+        setHeaders: (res) => {
+          if (res.req?.path === '/') {
+            let languageCode = DEFAULT_LANGUAGE_CODE;
+
+            try {
+              const code = res.req.headers['accept-language']
+                .split(',')[0]
+                .split('-')[0];
+
+              if (SUPPORTED_LANGUAGE_CODES.includes(code)) {
+                languageCode = code;
+              }
+            } catch {}
+
+            res.set('Location', `/${languageCode}`);
+            res.statusCode = StatusCodes.MOVED_PERMANENTLY;
+          }
+        }
+      }
+    }),
+    SitemapModule,
     SubscriptionModule,
     SymbolModule,
     TwitterBotModule,
