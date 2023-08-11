@@ -3,9 +3,7 @@ import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import bent from 'bent';
-
-const getJSON = bent('json');
+import got from 'got';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
@@ -34,11 +32,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const profile = await getJSON(
+    const profile = await got(
       `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${symbol}.json`
-    ).catch(() => {
-      return {};
-    });
+    )
+      .json<any>()
+      .catch(() => {
+        return {};
+      });
 
     const isin = profile.isin?.split(';')?.[0];
 
@@ -46,15 +46,17 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       response.isin = isin;
     }
 
-    const holdings = await getJSON(
+    const holdings = await got(
       `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`
-    ).catch(() => {
-      return getJSON(
-        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
-          symbol.split('.')?.[0]
-        }.json`
-      );
-    });
+    )
+      .json<any>()
+      .catch(() => {
+        return got(
+          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
+            symbol.split('.')?.[0]
+          }.json`
+        );
+      });
 
     if (holdings?.weight < 0.95) {
       // Skip if data is inaccurate

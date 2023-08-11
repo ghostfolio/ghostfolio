@@ -30,9 +30,9 @@ import { permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionOffer } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bent from 'bent';
 import * as cheerio from 'cheerio';
 import { format, subDays } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class InfoService {
@@ -172,17 +172,13 @@ export class InfoService {
 
   private async countDockerHubPulls(): Promise<number> {
     try {
-      const get = bent(
+      const { pull_count } = await got(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
-        'GET',
-        'json',
-        200,
         {
-          'User-Agent': 'request'
+          headers: { 'User-Agent': 'request' }
         }
-      );
+      ).json<any>();
 
-      const { pull_count } = await get();
       return pull_count;
     } catch (error) {
       Logger.error(error, 'InfoService');
@@ -193,16 +189,9 @@ export class InfoService {
 
   private async countGitHubContributors(): Promise<number> {
     try {
-      const get = bent(
-        'https://github.com/ghostfolio/ghostfolio',
-        'GET',
-        'string',
-        200,
-        {}
-      );
+      const { body } = await got('https://github.com/ghostfolio/ghostfolio');
 
-      const html = await get();
-      const $ = cheerio.load(html);
+      const $ = cheerio.load(body);
 
       return extractNumberFromString(
         $(
@@ -218,17 +207,13 @@ export class InfoService {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
-      const get = bent(
+      const { stargazers_count } = await got(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
-        'GET',
-        'json',
-        200,
         {
-          'User-Agent': 'request'
+          headers: { 'User-Agent': 'request' }
         }
-      );
+      ).json<any>();
 
-      const { stargazers_count } = await get();
       return stargazers_count;
     } catch (error) {
       Logger.error(error, 'InfoService');
@@ -346,22 +331,21 @@ export class InfoService {
           PROPERTY_BETTER_UPTIME_MONITOR_ID
         )) as string;
 
-        const get = bent(
+        const { data } = await got(
           `https://betteruptime.com/api/v2/monitors/${monitorId}/sla?from=${format(
             subDays(new Date(), 90),
             DATE_FORMAT
           )}&to${format(new Date(), DATE_FORMAT)}`,
-          'GET',
-          'json',
-          200,
-          {
-            Authorization: `Bearer ${this.configurationService.get(
-              'BETTER_UPTIME_API_KEY'
-            )}`
-          }
-        );
 
-        const { data } = await get();
+          {
+            headers: {
+              Authorization: `Bearer ${this.configurationService.get(
+                'BETTER_UPTIME_API_KEY'
+              )}`
+            }
+          }
+        ).json<any>();
+
         return data.attributes.availability / 100;
       } catch (error) {
         Logger.error(error, 'InfoService');

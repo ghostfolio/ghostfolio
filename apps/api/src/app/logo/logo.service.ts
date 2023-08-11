@@ -2,7 +2,7 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { HttpException, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import * as bent from 'bent';
+import got from 'got';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()
@@ -41,15 +41,11 @@ export class LogoService {
   }
 
   private getBuffer(aUrl: string) {
-    const get = bent(
+    return got(
       `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
-      'GET',
-      'buffer',
-      200,
       {
-        'User-Agent': 'request'
+        headers: { 'User-Agent': 'request' }
       }
-    );
-    return get();
+    ).buffer();
   }
 }

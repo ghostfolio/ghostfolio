@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added more durations in the coupon system
 
+### Changed
+
+- Migrated the remaining requests from `bent` to `got`
+
 ## 1.299.1 - 2023-08-10
 
 ### Changed

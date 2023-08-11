@@ -10,8 +10,8 @@ import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import bent from 'bent';
 import { format } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
@@ -135,19 +135,17 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
-      const get = bent(
+      const { fgi } = await got(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
-        'GET',
-        'json',
-        200,
         {
-          useQueryString: true,
-          'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
-          'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
+          headers: {
+            useQueryString: 'true',
+            'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
+            'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
+          }
         }
-      );
+      ).json<any>();
 
-      const { fgi } = await get();
       return fgi;
     } catch (error) {
       Logger.error(error, 'RapidApiService');
