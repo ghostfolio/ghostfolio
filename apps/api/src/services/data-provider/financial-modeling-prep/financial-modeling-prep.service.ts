@@ -10,8 +10,8 @@ import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import bent from 'bent';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
@@ -64,13 +64,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const get = bent(
-        `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const { historical } = await get();
+      const { historical } = await got(
+        `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`
+      ).json<any>();
 
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -115,13 +111,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
-      const get = bent(
-        `${this.URL}/quote/${aSymbols.join(',')}?apikey=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const response = await get();
+      const response = await got(
+        `${this.URL}/quote/${aSymbols.join(',')}?apikey=${this.apiKey}`
+      ).json<any>();
 
       for (const { price, symbol } of response) {
         results[symbol] = {
@@ -153,13 +145,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const get = bent(
-        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const result = await get();
+      const result = await got(
+        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`
+      ).json<any>();
 
       items = result.map(({ currency, name, symbol }) => {
         return {
