@@ -35,11 +35,11 @@ import { format, parseISO } from 'date-fns';
 
 @Component({
   host: { class: 'page' },
-  selector: 'gf-account-page',
-  styleUrls: ['./account-page.scss'],
-  templateUrl: './account-page.html'
+  selector: 'gf-user-account-page',
+  styleUrls: ['./user-account-page.scss'],
+  templateUrl: './user-account-page.html'
 })
-export class AccountPageComponent implements OnDestroy, OnInit {
+export class UserAccountPageComponent implements OnDestroy, OnInit {
   @ViewChild('toggleSignInWithFingerprintEnabledElement')
   signInWithFingerprintElement: MatCheckbox;
 
