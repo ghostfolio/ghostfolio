@@ -273,6 +273,14 @@
             <div class="pr-1 w-50" i18n>User ID</div>
             <div class="pl-1 text-monospace w-50">{{ user?.id }}</div>
           </div>
+          <div class="align-items-center d-flex py-1">
+            <div class="pr-1 w-50"></div>
+            <div class="pl-1 text-monospace w-50">
+              <button color="primary" mat-flat-button (click)="onExport()">
+                <span i18n>Export Data</span>
+              </button>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
