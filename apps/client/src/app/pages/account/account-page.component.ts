@@ -21,7 +21,7 @@ import {
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import { downloadAsFile, getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { uniq } from 'lodash';
@@ -31,6 +31,7 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
+import { format, parseISO } from 'date-fns';
 
 @Component({
   host: { class: 'page' },
@@ -234,6 +235,26 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
             this.changeDetectorRef.markForCheck();
           });
+      });
+  }
+
+  public onExport() {
+    this.dataService
+      .fetchExport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        for (const activity of data.activities) {
+          delete activity.id;
+        }
+
+        downloadAsFile({
+          content: data,
+          fileName: `ghostfolio-export-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.json`,
+          format: 'json'
+        });
       });
   }
 
