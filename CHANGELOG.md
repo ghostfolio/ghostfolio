@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the data export feature to the user account page
 
+### Fixed
+
+- Fixed the rows with cash positions in the holdings table
+
 ## 1.300.0 - 2023-08-11
 
 ### Added
