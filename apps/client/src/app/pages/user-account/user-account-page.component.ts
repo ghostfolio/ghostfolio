@@ -24,6 +24,7 @@ import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { downloadAsFile, getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { StripeService } from 'ngx-stripe';
@@ -31,15 +32,14 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
-import { format, parseISO } from 'date-fns';
 
 @Component({
   host: { class: 'page' },
-  selector: 'gf-account-page',
-  styleUrls: ['./account-page.scss'],
-  templateUrl: './account-page.html'
+  selector: 'gf-user-account-page',
+  styleUrls: ['./user-account-page.scss'],
+  templateUrl: './user-account-page.html'
 })
-export class AccountPageComponent implements OnDestroy, OnInit {
+export class UserAccountPageComponent implements OnDestroy, OnInit {
   @ViewChild('toggleSignInWithFingerprintEnabledElement')
   signInWithFingerprintElement: MatCheckbox;
 

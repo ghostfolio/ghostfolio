@@ -12,14 +12,13 @@ import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/acce
 import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
-import { AccountPageRoutingModule } from './account-page-routing.module';
-import { AccountPageComponent } from './account-page.component';
 import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-dialog/create-or-update-access-dialog.module';
+import { UserAccountPageRoutingModule } from './user-account-page-routing.module';
+import { UserAccountPageComponent } from './user-account-page.component';
 
 @NgModule({
-  declarations: [AccountPageComponent],
+  declarations: [UserAccountPageComponent],
   imports: [
-    AccountPageRoutingModule,
     CommonModule,
     FormsModule,
     GfCreateOrUpdateAccessDialogModule,
@@ -33,7 +32,8 @@ import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-di
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    UserAccountPageRoutingModule
   ]
 })
-export class AccountPageModule {}
+export class UserAccountPageModule {}
