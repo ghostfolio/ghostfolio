@@ -10,6 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ExchangeRateService } from './exchange-rate.service';
+import { parseISO } from 'date-fns';
 
 @Controller('exchange-rate')
 export class ExchangeRateController {
@@ -23,7 +24,7 @@ export class ExchangeRateController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<IDataProviderHistoricalResponse> {
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     const exchangeRate = await this.exchangeRateService.getExchangeRate({
       date,
