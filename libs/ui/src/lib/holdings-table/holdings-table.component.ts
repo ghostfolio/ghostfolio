@@ -14,6 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, Order as OrderModel } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 
@@ -41,7 +42,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   public dataSource: MatTableDataSource<PortfolioPosition> =
     new MatTableDataSource();
   public displayedColumns = [];
-  public ignoreAssetSubClasses = [AssetClass.CASH.toString()];
+  public ignoreAssetSubClasses = [translate(AssetClass.CASH)];
   public isLoading = true;
   public routeQueryParams: Subscription;
 
