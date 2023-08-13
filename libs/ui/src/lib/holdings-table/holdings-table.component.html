@@ -28,8 +28,11 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
-        <div *ngIf="element.name !== element.symbol" class="text-truncate">
+        <div class="text-truncate">
           {{ element.name }}
+          <span *ngIf="element.name === element.symbol"
+            >({{ element.assetSubClass }})</span
+          >
         </div>
         <div>
           <small class="text-muted">{{ element.symbol }}</small>
