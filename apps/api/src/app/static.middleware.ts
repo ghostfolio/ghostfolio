@@ -50,7 +50,7 @@ export const StaticMiddleware = async (
   const languageCode = path.substr(1, 2);
 
   const currentDate = format(new Date(), DATE_FORMAT);
-  const rootUrl = 'https://ghostfol.io';
+  const rootUrl = 'https://ghostfol.io'; // TODO
 
   if (
     path.startsWith('/api/') ||
