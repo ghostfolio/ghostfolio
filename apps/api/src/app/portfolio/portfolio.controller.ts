@@ -111,21 +111,38 @@ export class PortfolioController {
       impersonationId ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      const totalInvestment = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return portfolioPosition.investment;
-        })
-        .reduce((a, b) => a + b, 0);
+      let investmentTuple: [number, number] = [0, 0];
+      for (let holding of Object.entries(holdings)) {
+        var portfolioPosition = holding[1];
+        investmentTuple[0] += portfolioPosition.investment;
+        investmentTuple[1] += this.exchangeRateDataService.toCurrency(
+          portfolioPosition.quantity * portfolioPosition.marketPrice,
+          portfolioPosition.currency,
+          this.request.user.Settings.settings.baseCurrency
+        );
+      }
+      const totalInvestment = investmentTuple[0];
 
-      const totalValue = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return this.exchangeRateDataService.toCurrency(
-            portfolioPosition.quantity * portfolioPosition.marketPrice,
-            portfolioPosition.currency,
-            this.request.user.Settings.settings.baseCurrency
-          );
-        })
-        .reduce((a, b) => a + b, 0);
+      const totalValue = investmentTuple[1];
+
+      if (hasDetails === false) {
+        portfolioSummary = nullifyValuesInObject(summary, [
+          'cash',
+          'committedFunds',
+          'currentGrossPerformance',
+          'currentNetPerformance',
+          'currentValue',
+          'dividend',
+          'emergencyFund',
+          'excludedAccountsAndActivities',
+          'fees',
+          'items',
+          'liabilities',
+          'netWorth',
+          'totalBuy',
+          'totalSell'
+        ]);
+      }
 
       for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
         portfolioPosition.grossPerformance = null;
@@ -135,6 +152,24 @@ export class PortfolioController {
         portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
+        (portfolioPosition.assetClass = hasDetails
+          ? portfolioPosition.assetClass
+          : undefined),
+          (portfolioPosition.assetSubClass = hasDetails
+            ? portfolioPosition.assetSubClass
+            : undefined),
+          (portfolioPosition.countries = hasDetails
+            ? portfolioPosition.countries
+            : []),
+          (portfolioPosition.currency = hasDetails
+            ? portfolioPosition.currency
+            : undefined),
+          (portfolioPosition.markets = hasDetails
+            ? portfolioPosition.markets
+            : undefined),
+          (portfolioPosition.sectors = hasDetails
+            ? portfolioPosition.sectors
+            : []);
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
