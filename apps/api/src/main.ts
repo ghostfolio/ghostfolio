@@ -6,6 +6,7 @@ import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
+import { StaticMiddleware } from './app/static.middleware';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
@@ -51,6 +52,8 @@ async function bootstrap() {
       })
     );
   }
+
+  app.use(StaticMiddleware);
 
   const BASE_CURRENCY = configService.get<string>('BASE_CURRENCY');
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
