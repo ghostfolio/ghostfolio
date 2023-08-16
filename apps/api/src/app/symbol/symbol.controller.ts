@@ -21,6 +21,7 @@ import { isDate, isEmpty } from 'lodash';
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
 import { SymbolService } from './symbol.service';
+import { parseISO } from 'date-fns';
 
 @Controller('symbol')
 export class SymbolController {
@@ -93,7 +94,7 @@ export class SymbolController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<IDataProviderHistoricalResponse> {
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     if (!isDate(date)) {
       throw new HttpException(

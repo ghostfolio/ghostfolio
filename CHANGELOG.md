@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the localized meta descriptions
 
+### Fixed
+
+- Fixed an issue with the date parsing in the historical market data editor of the admin control panel
+
 ## 1.300.0 - 2023-08-11
 
 ### Added

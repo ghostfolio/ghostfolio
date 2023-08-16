@@ -154,7 +154,7 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     day: string;
     yearMonth: string;
   }) {
-    const date = new Date(`${yearMonth}-${day}`);
+    const date = parseISO(`${yearMonth}-${day}`);
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
     if (isSameDay(date, new Date())) {
