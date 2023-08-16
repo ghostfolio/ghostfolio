@@ -235,7 +235,7 @@ export function isCurrency(aSymbol = '') {
 }
 
 export function interpolate(template: string, context: any) {
-  return template.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
+  return template?.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
     const properties = objectPath.split('.');
     return properties.reduce(
       (previous, current) => previous?.[current],

@@ -6,8 +6,8 @@ import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
-import { StaticMiddleware } from './app/static.middleware';
 import { environment } from './environments/environment';
+import { StaticMiddleware } from './middlewares/static.middleware';
 
 async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
