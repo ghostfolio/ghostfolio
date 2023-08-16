@@ -106,8 +106,8 @@ export const StaticMiddleware = async (
 
   if (
     path.startsWith('/api/') ||
-    isFileRequest(path) /*||
-    !environment.production*/
+    isFileRequest(path) ||
+    !environment.production
   ) {
     // Skip
     next();
