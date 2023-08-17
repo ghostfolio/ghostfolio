@@ -164,7 +164,11 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
-      this.positionsArray.push(position);
+      this.positionsArray.push({
+        ...position,
+        assetClassLabel: translate(position.assetClass),
+        assetSubClassLabel: translate(position.assetSubClass)
+      });
     }
   }
 

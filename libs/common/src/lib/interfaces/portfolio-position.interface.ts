@@ -7,7 +7,9 @@ import { Sector } from './sector.interface';
 export interface PortfolioPosition {
   allocationInPercentage: number;
   assetClass?: AssetClass;
+  assetClassLabel?: string;
   assetSubClass?: AssetSubClass | 'CASH';
+  assetSubClassLabel?: string;
   countries: Country[];
   currency: string;
   dataSource: DataSource;

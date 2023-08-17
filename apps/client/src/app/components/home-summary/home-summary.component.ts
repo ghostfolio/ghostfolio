@@ -101,7 +101,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     this.isLoading = true;
 
     this.dataService
-      .fetchPortfolioDetails({})
+      .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
         this.summary = summary;
