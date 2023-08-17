@@ -61,6 +61,11 @@ export class AdminMarketDataComponent
     })
     .concat([
       {
+        id: 'CURRENCIES',
+        label: $localize`Currencies`,
+        type: <Filter['type']>'PRESET_ID'
+      },
+      {
         id: 'ETF_WITHOUT_COUNTRIES',
         label: $localize`ETFs without Countries`,
         type: <Filter['type']>'PRESET_ID'
