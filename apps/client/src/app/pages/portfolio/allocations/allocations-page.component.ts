@@ -72,7 +72,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public positions: {
     [symbol: string]: Pick<
       PortfolioPosition,
-      'assetClass' | 'assetSubClass' | 'currency' | 'exchange' | 'name'
+      | 'assetClass'
+      | 'assetClassLabel'
+      | 'assetSubClass'
+      | 'assetSubClassLabel'
+      | 'currency'
+      | 'exchange'
+      | 'name'
     > & { etfProvider: string; value: number };
   };
   public sectors: {
@@ -341,7 +347,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.positions[symbol] = {
         value,
         assetClass: position.assetClass,
+        assetClassLabel: translate(position.assetClass),
         assetSubClass: position.assetSubClass,
+        assetSubClassLabel: translate(position.assetSubClass),
         currency: position.currency,
         etfProvider: this.extractEtfProvider({
           assetSubClass: position.assetSubClass,
