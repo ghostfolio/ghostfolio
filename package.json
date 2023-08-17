@@ -3,6 +3,7 @@
   "version": "1.300.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
+  "repository": "https://github.com/ghostfolio/ghostfolio",
   "scripts": {
     "affected": "nx affected",
     "affected:apps": "nx affected:apps",
