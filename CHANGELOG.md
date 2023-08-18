@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the data export feature to the user account page
 - Added a currencies preset to the historical market data table of the admin control panel
 
+### Changed
+
+- Improved the localized meta data in `html` files
+
 ### Fixed
 
 - Fixed the rows with cash positions in the holdings table

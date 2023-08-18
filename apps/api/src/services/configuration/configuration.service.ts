@@ -1,5 +1,5 @@
 import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import { DEFAULT_CURRENCY, DEFAULT_ROOT_URL } from '@ghostfolio/common/config';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { bool, cleanEnv, host, json, num, port, str } from 'envalid';
@@ -47,7 +47,7 @@ export class ConfigurationService {
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),
       REDIS_PORT: port({ default: 6379 }),
-      ROOT_URL: str({ default: 'http://localhost:4200' }),
+      ROOT_URL: str({ default: DEFAULT_ROOT_URL }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
