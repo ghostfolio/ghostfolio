@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the localized meta descriptions
+- Improved the localized meta data in `html` files
 
 ### Fixed
 
