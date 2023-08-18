@@ -89,7 +89,7 @@ const isFileRequest = (filename: string) => {
   return filename.split('.').pop() !== filename;
 };
 
-export const StaticMiddleware = async (
+export const HtmlTemplateMiddleware = async (
   request: Request,
   response: Response,
   next: NextFunction
