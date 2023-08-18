@@ -38,6 +38,13 @@ const routes: Routes = [
             (m) => m.LicensePageModule
           )
       })),
+      {
+        path: 'oss-friends',
+        loadChildren: () =>
+          import('./oss-friends/oss-friends-page.module').then(
+            (m) => m.OpenSourceSoftwareFriendsPageModule
+          )
+      },
       ...[
         'privacy-policy',
         /////
