@@ -40,7 +40,7 @@ export class OpenSourceSoftwareFriendsPageComponent implements OnDestroy {
     },
     {
       description:
-        'The Open-Source HubSpot Alternative. A single XOS enables to create unique and life-changing experiences ​​that work for all types of business.',
+        'The Open-Source HubSpot Alternative. A single XOS enables to create unique and life-changing experiences that work for all types of business.',
       name: 'Erxes',
       url: 'https://erxes.io'
     },
