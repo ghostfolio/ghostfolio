@@ -21,4 +21,6 @@ export class SnowballAnalyticsPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'snowball-analytics';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

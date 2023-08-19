@@ -68,7 +68,7 @@
           <li>
             <a i18n [routerLink]="['/about', 'changelog']">Changelog</a>
           </li>
-          <li><a i18n [routerLink]="['/features']">Features</a></li>
+          <li><a i18n [routerLink]="routerLinkFeatures">Features</a></li>
           <li *ngIf="hasPermissionForSubscription">
             <a i18n [routerLink]="routerLinkFaq"
               >Frequently Asked Questions (FAQ)</a

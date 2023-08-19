@@ -21,4 +21,6 @@ export class ExirioPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'exirio';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

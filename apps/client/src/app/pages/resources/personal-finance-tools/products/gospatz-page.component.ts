@@ -21,4 +21,6 @@ export class GoSpatzPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'gospatz';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

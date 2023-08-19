@@ -21,4 +21,6 @@ export class CopilotMoneyPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'copilot-money';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

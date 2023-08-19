@@ -21,4 +21,6 @@ export class DivvyDiaryPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'divvydiary';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

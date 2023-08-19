@@ -21,4 +21,6 @@ export class AltooPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'altoo';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

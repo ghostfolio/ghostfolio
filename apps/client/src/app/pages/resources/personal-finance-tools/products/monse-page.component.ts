@@ -21,4 +21,6 @@ export class MonsePageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'monse';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

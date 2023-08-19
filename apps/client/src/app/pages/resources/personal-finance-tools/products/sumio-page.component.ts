@@ -21,4 +21,6 @@ export class SumioPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'sumio';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

@@ -21,4 +21,6 @@ export class MarketsShPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'markets.sh';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

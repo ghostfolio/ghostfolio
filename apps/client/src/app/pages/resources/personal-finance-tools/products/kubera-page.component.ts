@@ -21,4 +21,6 @@ export class KuberaPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'kubera';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

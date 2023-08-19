@@ -21,4 +21,6 @@ export class JustEtfPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'justetf';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

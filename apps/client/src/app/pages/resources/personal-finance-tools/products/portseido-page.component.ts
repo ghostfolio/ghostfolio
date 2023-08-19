@@ -21,4 +21,6 @@ export class PortseidoPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'portseido';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

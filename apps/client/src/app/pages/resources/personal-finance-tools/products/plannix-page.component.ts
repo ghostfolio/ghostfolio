@@ -21,4 +21,6 @@ export class PlannixPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'plannix';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

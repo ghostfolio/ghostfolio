@@ -21,4 +21,6 @@ export class ProjectionLabPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'projectionlab';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

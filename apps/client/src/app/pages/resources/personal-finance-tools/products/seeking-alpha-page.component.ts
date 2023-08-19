@@ -21,4 +21,6 @@ export class SeekingAlphaPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'seeking-alpha';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

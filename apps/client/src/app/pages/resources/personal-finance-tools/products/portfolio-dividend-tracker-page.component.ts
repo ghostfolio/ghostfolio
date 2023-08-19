@@ -21,4 +21,6 @@ export class PortfolioDividendTrackerPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'portfolio-dividend-tracker';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

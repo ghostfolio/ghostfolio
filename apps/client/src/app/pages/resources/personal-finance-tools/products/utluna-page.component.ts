@@ -21,4 +21,6 @@ export class UtlunaPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'utluna';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

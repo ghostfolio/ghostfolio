@@ -6,7 +6,6 @@ import {
 } from '@angular/router';
 import { paths } from '@ghostfolio/client/app-routing.module';
 import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes';
-import { routes as featuresRoutes } from '@ghostfolio/client/pages/features/routes';
 import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes';
 import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes';
 import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes';
@@ -24,7 +23,7 @@ export class AuthGuard {
     '/blog',
     '/demo',
     `/${paths.faq}`,
-    ...featuresRoutes.map((route) => `/${route}`),
+    `/${paths.features}`,
     ...marketsRoutes.map((route) => `/${route}`),
     '/open',
     '/p',

@@ -21,4 +21,6 @@ export class YeekateePageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'yeekatee';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

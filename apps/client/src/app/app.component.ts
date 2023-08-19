@@ -39,6 +39,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public info: InfoItem;
   public pageTitle: string;
   public routerLinkFaq = ['/' + $localize`faq`];
+  public routerLinkFeatures = ['/' + $localize`features`];
   public showFooter = false;
   public user: User;
   public version = environment.version;
@@ -94,7 +95,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.showFooter =
           (this.currentRoute === 'blog' ||
             this.currentRoute === this.routerLinkFaq[0].slice(1) ||
-            this.currentRoute === 'features' ||
+            this.currentRoute === this.routerLinkFeatures[0].slice(1) ||
             this.currentRoute === 'markets' ||
             this.currentRoute === 'open' ||
             this.currentRoute === 'p' ||

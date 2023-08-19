@@ -21,4 +21,6 @@ export class MaybeFinancePageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'maybe-finance';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

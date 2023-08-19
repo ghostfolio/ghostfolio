@@ -21,4 +21,6 @@ export class DeltaPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'delta';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

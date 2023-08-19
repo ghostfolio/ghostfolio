@@ -21,4 +21,6 @@ export class SharesightPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'sharesight';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

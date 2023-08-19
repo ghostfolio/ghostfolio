@@ -21,4 +21,6 @@ export class GetquinPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'getquin';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

@@ -21,4 +21,6 @@ export class SimplePortfolioPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'simple-portfolio';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }

@@ -21,4 +21,6 @@ export class FolisharePageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'folishare';
   });
+
+  public routerLinkFeatures = ['/' + $localize`features`];
 }
