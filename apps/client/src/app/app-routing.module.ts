@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
-import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes';
-import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes';
-import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes';
-import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes';
-import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes';
+import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes'; // TODO
+import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes'; // TODO
+import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes'; // TODO
+import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes'; // TODO
+import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes'; // TODO
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 
 import { ModulePreloadService } from './core/module-preload.service';
