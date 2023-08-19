@@ -4,6 +4,13 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
+import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes';
+import { routes as faqRoutes } from '@ghostfolio/client/pages/faq/routes';
+import { routes as featuresRoutes } from '@ghostfolio/client/pages/features/routes';
+import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes';
+import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes';
+import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes';
+import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -13,21 +20,17 @@ import { catchError } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
-    '/about',
-    '/about/changelog',
-    '/about/privacy-policy',
+    ...aboutRoutes.map((route) => `/${route}`),
     '/blog',
-    '/de/blog',
     '/demo',
-    '/en/blog',
-    '/faq',
-    '/features',
-    '/markets',
+    ...faqRoutes.map((route) => `/${route}`),
+    ...featuresRoutes.map((route) => `/${route}`),
+    ...marketsRoutes.map((route) => `/${route}`),
     '/open',
     '/p',
-    '/pricing',
-    '/register',
-    '/resources'
+    ...pricingRoutes.map((route) => `/${route}`),
+    ...registerRoutes.map((route) => `/${route}`),
+    ...resourcesRoutes.map((route) => `/${route}`)
   ];
 
   constructor(

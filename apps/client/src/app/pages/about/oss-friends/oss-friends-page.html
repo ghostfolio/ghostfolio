@@ -1,9 +1,14 @@
 <div class="container">
   <div class="mb-5 row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center">
-        <ng-container i18n>Our</ng-container> OSS Friends
-      </h3>
+      <h1 class="h3 mb-4 text-center">
+        <span class="d-none d-sm-block"
+          ><ng-container i18n>Our</ng-container> OSS Friends</span
+        >
+        <small class="text-muted" i18n
+          >Discover more Open Source Software projects</small
+        >
+      </h1>
       <div class="row">
         <div
           *ngFor="let ossFriend of ossFriends"
