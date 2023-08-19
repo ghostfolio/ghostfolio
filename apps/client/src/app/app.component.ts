@@ -38,6 +38,8 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public info: InfoItem;
   public pageTitle: string;
+  public routerLinkFaq = ['/' + $localize`faq`];
+  public showFooter = false;
   public user: User;
   public version = environment.version;
 
@@ -88,6 +90,19 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
         const urlSegments = urlSegmentGroup.segments;
         this.currentRoute = urlSegments[0].path;
+
+        this.showFooter =
+          (this.currentRoute === 'blog' ||
+            this.currentRoute === this.routerLinkFaq[0].slice(1) ||
+            this.currentRoute === 'features' ||
+            this.currentRoute === 'markets' ||
+            this.currentRoute === 'open' ||
+            this.currentRoute === 'p' ||
+            this.currentRoute === 'pricing' ||
+            this.currentRoute === 'resources' ||
+            this.currentRoute === 'register' ||
+            this.currentRoute === 'start') &&
+          this.deviceType !== 'mobile';
 
         if (this.deviceType === 'mobile') {
           setTimeout(() => {

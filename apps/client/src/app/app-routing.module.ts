@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes';
-import { routes as faqRoutes } from '@ghostfolio/client/pages/faq/routes';
 import { routes as featuresRoutes } from '@ghostfolio/client/pages/features/routes';
 import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes';
 import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes';
@@ -10,6 +9,10 @@ import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/ro
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 
 import { ModulePreloadService } from './core/module-preload.service';
+
+export const paths = {
+  faq: $localize`faq`
+};
 
 const routes: Routes = [
   ...aboutRoutes.map((path) => ({
@@ -51,11 +54,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
   },
-  ...faqRoutes.map((path) => ({
-    path,
+  {
+    path: paths.faq,
     loadChildren: () =>
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
-  })),
+  },
   ...featuresRoutes.map((path) => ({
     path,
     loadChildren: () =>

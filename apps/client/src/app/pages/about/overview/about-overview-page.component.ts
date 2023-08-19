@@ -18,6 +18,7 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
+  public routerLinkFaq = ['/' + $localize`faq`];
   public user: User;
   public version = environment.version;
 
