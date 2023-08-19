@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="mb-3 text-center" i18n>Account</h3>
+      <h2 class="h3 mb-3 text-center" i18n>Account</h2>
     </div>
   </div>
   <div *ngIf="user?.settings" class="mb-5 row">
@@ -287,7 +287,7 @@
   </div>
   <div class="row">
     <div class="col">
-      <h3 class="mb-3 text-center" i18n>Granted Access</h3>
+      <h2 class="h3 mb-3 text-center" i18n>Granted Access</h2>
       <gf-access-table
         [accesses]="accesses"
         [showActions]="hasPermissionToDeleteAccess"

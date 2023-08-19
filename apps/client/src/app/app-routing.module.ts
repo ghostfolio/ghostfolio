@@ -1,19 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
+import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes';
+import { routes as faqRoutes } from '@ghostfolio/client/pages/faq/routes';
+import { routes as featuresRoutes } from '@ghostfolio/client/pages/features/routes';
+import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes';
+import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes';
+import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes';
+import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes';
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 
 import { ModulePreloadService } from './core/module-preload.service';
 
 const routes: Routes = [
-  ...[
-    'about',
-    /////
-    'a-propos',
-    'informazioni-su',
-    'over',
-    'sobre',
-    'ueber-uns'
-  ].map((path) => ({
+  ...aboutRoutes.map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
@@ -42,38 +41,22 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
   },
-  ...['blog'].map((path) => ({
-    path,
+  {
+    path: 'blog',
     loadChildren: () =>
       import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
-  })),
+  },
   {
     path: 'demo',
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
   },
-  ...[
-    'faq',
-    /////
-    'domande-piu-frequenti',
-    'foire-aux-questions',
-    'haeufig-gestellte-fragen',
-    'perguntas-mais-frequentes',
-    'preguntas-mas-frecuentes',
-    'vaak-gestelde-vragen'
-  ].map((path) => ({
+  ...faqRoutes.map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
   })),
-  ...[
-    'features',
-    /////
-    'fonctionnalites',
-    'funcionalidades',
-    'funzionalita',
-    'kenmerken'
-  ].map((path) => ({
+  ...featuresRoutes.map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/features/features-page.module').then(
@@ -85,15 +68,7 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
-  ...[
-    'markets',
-    /////
-    'maerkte',
-    'marches',
-    'markten',
-    'mercados',
-    'mercati'
-  ].map((path) => ({
+  ...marketsRoutes.map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(
@@ -119,47 +94,21 @@ const routes: Routes = [
         (m) => m.PortfolioPageModule
       )
   },
-  ...[
-    'pricing',
-    /////
-    'precios',
-    'precos',
-    'preise',
-    'prezzi',
-    'prijzen',
-    'prix'
-  ].map((path) => ({
+  ...pricingRoutes.map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule
       )
   })),
-  ...[
-    'register',
-    /////
-    'enregistrement',
-    'iscrizione',
-    'registo',
-    'registratie',
-    'registrierung',
-    'registro'
-  ].map((path) => ({
+  ...registerRoutes.map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/register/register-page.module').then(
         (m) => m.RegisterPageModule
       )
   })),
-  ...[
-    'resources',
-    /////
-    'bronnen',
-    'recursos',
-    'ressourcen',
-    'ressources',
-    'risorse'
-  ].map((path) => ({
+  ...resourcesRoutes.map((path) => ({
     path,
     loadChildren: () =>
       import('./pages/resources/resources-page.module').then(

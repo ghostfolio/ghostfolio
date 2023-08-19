@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
 export class OpenSourceSoftwareFriendsPageComponent implements OnDestroy {
   public ossFriends = [
     {
-      description: 'Build build custom software on top of your data.',
+      description: 'Build custom software on top of your data.',
       name: 'Appsmith',
       url: 'https://www.appsmith.com'
     },
