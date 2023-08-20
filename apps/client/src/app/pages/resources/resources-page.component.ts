@@ -13,6 +13,10 @@ import { Subject } from 'rxjs';
 export class ResourcesPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
+  public routerLinkResourcesPersonalFinanceTools = [
+    '/' + $localize`resources`,
+    'personal-finance-tools'
+  ];
 
   private unsubscribeSubject = new Subject<void>();
 

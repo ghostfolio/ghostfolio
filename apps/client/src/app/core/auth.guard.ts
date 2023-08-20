@@ -4,13 +4,7 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes';
-import { routes as faqRoutes } from '@ghostfolio/client/pages/faq/routes';
-import { routes as featuresRoutes } from '@ghostfolio/client/pages/features/routes';
-import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes';
-import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes';
-import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes';
-import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes';
+import { paths } from '@ghostfolio/client/app-routing.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -20,17 +14,17 @@ import { catchError } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
-    ...aboutRoutes.map((route) => `/${route}`),
+    `/${paths.about}`,
     '/blog',
     '/demo',
-    ...faqRoutes.map((route) => `/${route}`),
-    ...featuresRoutes.map((route) => `/${route}`),
-    ...marketsRoutes.map((route) => `/${route}`),
+    `/${paths.faq}`,
+    `/${paths.features}`,
+    `/${paths.markets}`,
     '/open',
     '/p',
-    ...pricingRoutes.map((route) => `/${route}`),
-    ...registerRoutes.map((route) => `/${route}`),
-    ...resourcesRoutes.map((route) => `/${route}`)
+    `/${paths.pricing}`,
+    `/${paths.register}`,
+    `/${paths.resources}`
   ];
 
   constructor(
@@ -56,7 +50,7 @@ export class AuthGuard {
               this.router.navigate(['/demo']);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
-              this.router.navigate(['/register']);
+              this.router.navigate(['/' + $localize`register`]);
               resolve(false);
             } else if (
               AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) =>

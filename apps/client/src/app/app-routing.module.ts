@@ -1,22 +1,27 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
-import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes';
-import { routes as faqRoutes } from '@ghostfolio/client/pages/faq/routes';
-import { routes as featuresRoutes } from '@ghostfolio/client/pages/features/routes';
-import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes';
-import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes';
-import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes';
-import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes';
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 
 import { ModulePreloadService } from './core/module-preload.service';
 
+export const paths = {
+  about: $localize`about`,
+  faq: $localize`faq`,
+  features: $localize`features`,
+  license: $localize`license`,
+  markets: $localize`markets`,
+  pricing: $localize`pricing`,
+  privacyPolicy: $localize`privacy-policy`,
+  register: $localize`register`,
+  resources: $localize`resources`
+};
+
 const routes: Routes = [
-  ...aboutRoutes.map((path) => ({
-    path,
+  {
+    path: paths.about,
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
-  })),
+  },
   {
     path: 'account',
     loadChildren: () =>
@@ -51,30 +56,30 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
   },
-  ...faqRoutes.map((path) => ({
-    path,
+  {
+    path: paths.faq,
     loadChildren: () =>
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
-  })),
-  ...featuresRoutes.map((path) => ({
-    path,
+  },
+  {
+    path: paths.features,
     loadChildren: () =>
       import('./pages/features/features-page.module').then(
         (m) => m.FeaturesPageModule
       )
-  })),
+  },
   {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
-  ...marketsRoutes.map((path) => ({
-    path,
+  {
+    path: paths.markets,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(
         (m) => m.MarketsPageModule
       )
-  })),
+  },
   {
     path: 'open',
     loadChildren: () =>
@@ -94,27 +99,27 @@ const routes: Routes = [
         (m) => m.PortfolioPageModule
       )
   },
-  ...pricingRoutes.map((path) => ({
-    path,
+  {
+    path: paths.pricing,
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule
       )
-  })),
-  ...registerRoutes.map((path) => ({
-    path,
+  },
+  {
+    path: paths.register,
     loadChildren: () =>
       import('./pages/register/register-page.module').then(
         (m) => m.RegisterPageModule
       )
-  })),
-  ...resourcesRoutes.map((path) => ({
-    path,
+  },
+  {
+    path: paths.resources,
     loadChildren: () =>
       import('./pages/resources/resources-page.module').then(
         (m) => m.ResourcesPageModule
       )
-  })),
+  },
   {
     path: 'start',
     loadChildren: () =>

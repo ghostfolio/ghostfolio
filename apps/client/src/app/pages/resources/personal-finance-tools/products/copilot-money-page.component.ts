@@ -21,4 +21,11 @@ export class CopilotMoneyPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'copilot-money';
   });
+
+  public routerLinkAbout = ['/' + $localize`about`];
+  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkResourcesPersonalFinanceTools = [
+    '/' + $localize`resources`,
+    'personal-finance-tools'
+  ];
 }

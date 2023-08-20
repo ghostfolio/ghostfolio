@@ -211,7 +211,7 @@
                 </h4>
                 <p class="m-0">
                   Check the current market mood (<a
-                    [routerLink]="['/resources']"
+                    [routerLink]="routerLinkResources"
                     >Fear & Greed Index</a
                   >) within the app.
                 </p>
@@ -294,7 +294,7 @@
   </div>
   <div *ngIf="!user" class="row">
     <div class="col mt-3 text-center">
-      <a color="primary" i18n mat-flat-button [routerLink]="['/register']"
+      <a color="primary" i18n mat-flat-button [routerLink]="routerLinkRegister"
         >Get Started</a
       >
     </div>

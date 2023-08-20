@@ -10,6 +10,10 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './faq-page.html'
 })
 export class FaqPageComponent implements OnDestroy {
+  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkMarkets = ['/' + $localize`markets`];
+  public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkRegister = ['/' + $localize`register`];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

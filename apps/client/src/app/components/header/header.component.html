@@ -69,10 +69,10 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'resources',
-            'text-decoration-underline': currentRoute === 'resources'
+            'font-weight-bold': currentRoute === routeResources,
+            'text-decoration-underline': currentRoute === routeResources
           }"
-          [routerLink]="['/resources']"
+          [routerLink]="routerLinkResources"
           >Resources</a
         >
       </li>
@@ -87,10 +87,10 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'pricing',
-            'text-decoration-underline': currentRoute === 'pricing'
+            'font-weight-bold': currentRoute === routePricing,
+            'text-decoration-underline': currentRoute === routePricing
           }"
-          [routerLink]="['/pricing']"
+          [routerLink]="routerLinkPricing"
           >Pricing</a
         >
       </li>
@@ -100,10 +100,10 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'about',
-            'text-decoration-underline': currentRoute === 'about'
+            'font-weight-bold': currentRoute === routeAbout,
+            'text-decoration-underline': currentRoute === routeAbout
           }"
-          [routerLink]="['/about']"
+          [routerLink]="routerLinkAbout"
           >About</a
         >
       </li>
@@ -210,9 +210,9 @@
             i18n
             mat-menu-item
             [ngClass]="{
-              'font-weight-bold': currentRoute === 'resources'
+              'font-weight-bold': currentRoute === routeResources
             }"
-            [routerLink]="['/resources']"
+            [routerLink]="routerLinkResources"
             >Resources</a
           >
           <a
@@ -223,16 +223,16 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'pricing' }"
-            [routerLink]="['/pricing']"
+            [ngClass]="{ 'font-weight-bold': currentRoute === routePricing }"
+            [routerLink]="routerLinkPricing"
             >Pricing</a
           >
           <a
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'about' }"
-            [routerLink]="['/about']"
+            [ngClass]="{ 'font-weight-bold': currentRoute === routeAbout }"
+            [routerLink]="routerLinkAbout"
             >About Ghostfolio</a
           >
           <hr class="d-flex d-sm-none m-0" />
@@ -260,10 +260,10 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'features',
-            'text-decoration-underline': currentRoute === 'features'
+            'font-weight-bold': currentRoute === routeFeatures,
+            'text-decoration-underline': currentRoute === routeFeatuers
           }"
-          [routerLink]="['/features']"
+          [routerLink]="routerLinkFeatures"
           >Features</a
         >
       </li>
@@ -273,10 +273,10 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'about',
-            'text-decoration-underline': currentRoute === 'about'
+            'font-weight-bold': currentRoute === routeAbout,
+            'text-decoration-underline': currentRoute === routeAbout
           }"
-          [routerLink]="['/about']"
+          [routerLink]="routerLinkAbout"
           >About</a
         >
       </li>
@@ -285,10 +285,10 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'pricing',
-            'text-decoration-underline': currentRoute === 'pricing'
+            'font-weight-bold': currentRoute === routePricing,
+            'text-decoration-underline': currentRoute === routePricing
           }"
-          [routerLink]="['/pricing']"
+          [routerLink]="routerLinkPricing"
           >Pricing</a
         >
       </li>
@@ -301,10 +301,10 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'markets',
-            'text-decoration-underline': currentRoute === 'markets'
+            'font-weight-bold': currentRoute === routeMarkets,
+            'text-decoration-underline': currentRoute === routeMarkets
           }"
-          [routerLink]="['/markets']"
+          [routerLink]="routerLinkMarkets"
           >Markets</a
         >
       </li>
@@ -329,7 +329,7 @@
           class="d-none d-sm-block"
           color="primary"
           mat-flat-button
-          [routerLink]="['/register']"
+          [routerLink]="routerLinkRegister"
           ><ng-container i18n>Get started</ng-container>
         </a>
       </li>

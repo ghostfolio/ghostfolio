@@ -19,7 +19,7 @@
         <a
           *ngIf="canCreateAccount"
           class="text-center"
-          [routerLink]="['/register']"
+          [routerLink]="routerLinkRegister"
         >
           <div
             class="cursor-pointer d-inline-block info-message px-3 py-2"
@@ -43,22 +43,7 @@
   <router-outlet></router-outlet>
 </main>
 
-<footer
-  *ngIf="
-    (currentRoute === 'blog' ||
-      currentRoute === 'faq' ||
-      currentRoute === 'features' ||
-      currentRoute === 'markets' ||
-      currentRoute === 'open' ||
-      currentRoute === 'p' ||
-      currentRoute === 'pricing' ||
-      currentRoute === 'resources' ||
-      currentRoute === 'register' ||
-      currentRoute === 'start') &&
-    deviceType !== 'mobile'
-  "
-  class="d-flex justify-content-center py-4 w-100"
->
+<footer *ngIf="showFooter" class="d-flex justify-content-center py-4 w-100">
   <div class="container">
     <div class="mb-3 row">
       <div class="col-sm">
@@ -68,36 +53,38 @@
         <div class="h6 mt-2" i18n>Personal Finance</div>
         <ul class="list-unstyled">
           <li *ngIf="hasPermissionToAccessFearAndGreedIndex">
-            <a i18n [routerLink]="['/markets']">Markets</a>
+            <a i18n [routerLink]="routerLinkMarkets">Markets</a>
           </li>
-          <li><a i18n [routerLink]="['/resources']">Resources</a></li>
+          <li><a i18n [routerLink]="routerLinkResources">Resources</a></li>
         </ul>
       </div>
       <div class="col-sm">
         <div class="h6 mt-2">Ghostfolio</div>
         <ul class="list-unstyled">
-          <li><a i18n [routerLink]="['/about']">About</a></li>
+          <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
           <li *ngIf="hasPermissionForBlog">
             <a i18n [routerLink]="['/blog']">Blog</a>
           </li>
           <li>
-            <a i18n [routerLink]="['/about', 'changelog']">Changelog</a>
+            <a i18n [routerLink]="routerLinkAboutChangelog">Changelog</a>
           </li>
-          <li><a i18n [routerLink]="['/features']">Features</a></li>
+          <li><a i18n [routerLink]="routerLinkFeatures">Features</a></li>
           <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="['/faq']">Frequently Asked Questions (FAQ)</a>
+            <a i18n [routerLink]="routerLinkFaq"
+              >Frequently Asked Questions (FAQ)</a
+            >
           </li>
           <li>
-            <a i18n [routerLink]="['/about', 'license']">License</a>
+            <a i18n [routerLink]="routerLinkAboutLicense">License</a>
           </li>
           <li *ngIf="hasPermissionForStatistics">
             <a [routerLink]="['/open']">Open Startup</a>
           </li>
           <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="['/pricing']">Pricing</a>
+            <a i18n [routerLink]="routerLinkPricing">Pricing</a>
           </li>
           <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="['/about', 'privacy-policy']"
+            <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"
               >Privacy Policy</a
             >
           </li>
