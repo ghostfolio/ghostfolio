@@ -9,4 +9,6 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './hallo-ghostfolio-page.html'
 })
-export class HalloGhostfolioPageComponent {}
+export class HalloGhostfolioPageComponent {
+  public routerLinkPricing = ['/' + $localize`pricing`];
+}

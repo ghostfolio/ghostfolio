@@ -81,7 +81,7 @@
             <a [routerLink]="['/open']">Open Startup</a>
           </li>
           <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="['/pricing']">Pricing</a>
+            <a i18n [routerLink]="routerLinkPricing">Pricing</a>
           </li>
           <li *ngIf="hasPermissionForSubscription">
             <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"

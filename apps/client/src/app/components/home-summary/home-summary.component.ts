@@ -121,7 +121,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
           });
 
           this.snackBarRef.onAction().subscribe(() => {
-            this.router.navigate(['/pricing']);
+            this.router.navigate(['/' + $localize`pricing`]);
           });
         }
 

@@ -12,4 +12,5 @@ import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 })
 export class BlackFriday2022PageComponent {
   public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkPricing = ['/' + $localize`pricing`];
 }

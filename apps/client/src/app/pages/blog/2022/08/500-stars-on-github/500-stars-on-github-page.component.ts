@@ -11,4 +11,5 @@ import { RouterModule } from '@angular/router';
 })
 export class FiveHundredStarsOnGitHubPageComponent {
   public routerLinkMarkets = ['/' + $localize`markets`];
+  public routerLinkPricing = ['/' + $localize`pricing`];
 }
