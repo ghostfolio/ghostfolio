@@ -47,6 +47,7 @@ export class AppComponent implements OnDestroy, OnInit {
   ];
   public routerLinkFaq = ['/' + $localize`faq`];
   public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkMarkets = ['/' + $localize`markets`];
   public showFooter = false;
   public user: User;
   public version = environment.version;
@@ -103,7 +104,7 @@ export class AppComponent implements OnDestroy, OnInit {
           (this.currentRoute === 'blog' ||
             this.currentRoute === this.routerLinkFaq[0].slice(1) ||
             this.currentRoute === this.routerLinkFeatures[0].slice(1) ||
-            this.currentRoute === 'markets' ||
+            this.currentRoute === this.routerLinkMarkets[0].slice(1) ||
             this.currentRoute === 'open' ||
             this.currentRoute === 'p' ||
             this.currentRoute === 'pricing' ||

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
-import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes'; // TODO
 import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes'; // TODO
 import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes'; // TODO
 import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes'; // TODO
@@ -13,6 +12,7 @@ export const paths = {
   faq: $localize`faq`,
   features: $localize`features`,
   license: $localize`license`,
+  markets: $localize`markets`,
   privacyPolicy: $localize`privacy-policy`
 };
 
@@ -73,13 +73,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
-  ...marketsRoutes.map((path) => ({
-    path,
+  {
+    path: paths.markets,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(
         (m) => m.MarketsPageModule
       )
-  })),
+  },
   {
     path: 'open',
     loadChildren: () =>
