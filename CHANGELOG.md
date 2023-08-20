@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Upgraded `angular` from version `16.1.8` to `16.2.1`
+- Upgraded `Nx` from version `16.6.0` to `16.7.2`
 
 ## 1.301.1 - 2023-08-19
 
