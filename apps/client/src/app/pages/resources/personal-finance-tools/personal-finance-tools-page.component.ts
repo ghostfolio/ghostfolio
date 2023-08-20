@@ -13,6 +13,7 @@ export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public products = products.filter(({ key }) => {
     return key !== 'ghostfolio';
   });
+  public routerLinkAbout = ['/' + $localize`about`];
 
   private unsubscribeSubject = new Subject<void>();
 

@@ -22,5 +22,6 @@ export class MonsePageComponent {
     return key === 'monse';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

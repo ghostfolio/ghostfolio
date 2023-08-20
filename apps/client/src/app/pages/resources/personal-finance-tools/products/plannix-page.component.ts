@@ -22,5 +22,6 @@ export class PlannixPageComponent {
     return key === 'plannix';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

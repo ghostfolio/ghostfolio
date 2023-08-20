@@ -22,5 +22,6 @@ export class FolisharePageComponent {
     return key === 'folishare';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

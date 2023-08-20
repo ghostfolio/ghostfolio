@@ -22,5 +22,6 @@ export class ExirioPageComponent {
     return key === 'exirio';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

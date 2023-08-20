@@ -22,5 +22,6 @@ export class AltooPageComponent {
     return key === 'altoo';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

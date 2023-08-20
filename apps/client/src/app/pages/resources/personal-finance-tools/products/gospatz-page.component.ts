@@ -22,5 +22,6 @@ export class GoSpatzPageComponent {
     return key === 'gospatz';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

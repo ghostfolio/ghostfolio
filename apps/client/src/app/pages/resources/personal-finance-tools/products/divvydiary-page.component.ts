@@ -22,5 +22,6 @@ export class DivvyDiaryPageComponent {
     return key === 'divvydiary';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

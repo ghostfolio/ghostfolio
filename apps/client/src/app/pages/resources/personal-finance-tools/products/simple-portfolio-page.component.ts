@@ -22,5 +22,6 @@ export class SimplePortfolioPageComponent {
     return key === 'simple-portfolio';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

@@ -22,5 +22,6 @@ export class KuberaPageComponent {
     return key === 'kubera';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

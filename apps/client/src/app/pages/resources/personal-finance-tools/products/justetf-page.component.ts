@@ -22,5 +22,6 @@ export class JustEtfPageComponent {
     return key === 'justetf';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

@@ -61,12 +61,12 @@
       <div class="col-sm">
         <div class="h6 mt-2">Ghostfolio</div>
         <ul class="list-unstyled">
-          <li><a i18n [routerLink]="['/about']">About</a></li>
+          <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
           <li *ngIf="hasPermissionForBlog">
             <a i18n [routerLink]="['/blog']">Blog</a>
           </li>
           <li>
-            <a i18n [routerLink]="['/about', 'changelog']">Changelog</a>
+            <a i18n [routerLink]="routerLinkAboutChangelog">Changelog</a>
           </li>
           <li><a i18n [routerLink]="routerLinkFeatures">Features</a></li>
           <li *ngIf="hasPermissionForSubscription">
@@ -75,7 +75,7 @@
             >
           </li>
           <li>
-            <a i18n [routerLink]="['/about', 'license']">License</a>
+            <a i18n [routerLink]="routerLinkAboutLicense">License</a>
           </li>
           <li *ngIf="hasPermissionForStatistics">
             <a [routerLink]="['/open']">Open Startup</a>
@@ -84,7 +84,7 @@
             <a i18n [routerLink]="['/pricing']">Pricing</a>
           </li>
           <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="['/about', 'privacy-policy']"
+            <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"
               >Privacy Policy</a
             >
           </li>

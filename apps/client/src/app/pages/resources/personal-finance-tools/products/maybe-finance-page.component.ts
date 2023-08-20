@@ -22,5 +22,6 @@ export class MaybeFinancePageComponent {
     return key === 'maybe-finance';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

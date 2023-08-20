@@ -22,5 +22,6 @@ export class SnowballAnalyticsPageComponent {
     return key === 'snowball-analytics';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

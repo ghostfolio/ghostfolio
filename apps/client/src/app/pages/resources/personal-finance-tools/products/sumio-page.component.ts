@@ -22,5 +22,6 @@ export class SumioPageComponent {
     return key === 'sumio';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

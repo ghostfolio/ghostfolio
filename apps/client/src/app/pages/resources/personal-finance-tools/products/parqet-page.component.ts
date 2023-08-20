@@ -22,5 +22,6 @@ export class ParqetPageComponent {
     return key === 'parqet';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

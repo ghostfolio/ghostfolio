@@ -22,5 +22,6 @@ export class CopilotMoneyPageComponent {
     return key === 'copilot-money';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

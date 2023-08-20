@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
-import { routes as aboutRoutes } from '@ghostfolio/client/pages/about/routes'; // TODO
 import { routes as marketsRoutes } from '@ghostfolio/client/pages/markets/routes'; // TODO
 import { routes as pricingRoutes } from '@ghostfolio/client/pages/pricing/routes'; // TODO
 import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes'; // TODO
@@ -10,16 +9,19 @@ import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strate
 import { ModulePreloadService } from './core/module-preload.service';
 
 export const paths = {
+  about: $localize`about`,
   faq: $localize`faq`,
-  features: $localize`features`
+  features: $localize`features`,
+  license: $localize`license`,
+  privacyPolicy: $localize`privacy-policy`
 };
 
 const routes: Routes = [
-  ...aboutRoutes.map((path) => ({
-    path,
+  {
+    path: paths.about,
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
-  })),
+  },
   {
     path: 'account',
     loadChildren: () =>

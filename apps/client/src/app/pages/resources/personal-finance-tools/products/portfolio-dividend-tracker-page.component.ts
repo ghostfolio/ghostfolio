@@ -22,5 +22,6 @@ export class PortfolioDividendTrackerPageComponent {
     return key === 'portfolio-dividend-tracker';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

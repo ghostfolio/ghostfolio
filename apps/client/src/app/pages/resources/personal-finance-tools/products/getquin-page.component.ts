@@ -22,5 +22,6 @@ export class GetquinPageComponent {
     return key === 'getquin';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

@@ -22,5 +22,6 @@ export class SeekingAlphaPageComponent {
     return key === 'seeking-alpha';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

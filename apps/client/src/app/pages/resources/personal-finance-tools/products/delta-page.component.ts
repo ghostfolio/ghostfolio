@@ -22,5 +22,6 @@ export class DeltaPageComponent {
     return key === 'delta';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

@@ -22,5 +22,6 @@ export class PortseidoPageComponent {
     return key === 'portseido';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

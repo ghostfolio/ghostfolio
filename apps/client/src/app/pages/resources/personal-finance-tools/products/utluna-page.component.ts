@@ -22,5 +22,6 @@ export class UtlunaPageComponent {
     return key === 'utluna';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

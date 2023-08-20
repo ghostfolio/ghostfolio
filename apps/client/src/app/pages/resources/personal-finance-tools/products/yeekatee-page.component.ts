@@ -22,5 +22,6 @@ export class YeekateePageComponent {
     return key === 'yeekatee';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

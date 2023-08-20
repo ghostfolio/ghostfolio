@@ -38,6 +38,13 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public info: InfoItem;
   public pageTitle: string;
+  public routerLinkAbout = ['/' + $localize`about`];
+  public routerLinkAboutChangelog = ['/' + $localize`about`, 'changelog'];
+  public routerLinkAboutLicense = ['/' + $localize`about`, $localize`license`];
+  public routerLinkAboutPrivacyPolicy = [
+    '/' + $localize`about`,
+    $localize`privacy-policy`
+  ];
   public routerLinkFaq = ['/' + $localize`faq`];
   public routerLinkFeatures = ['/' + $localize`features`];
   public showFooter = false;

@@ -22,5 +22,6 @@ export class MarketsShPageComponent {
     return key === 'markets.sh';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

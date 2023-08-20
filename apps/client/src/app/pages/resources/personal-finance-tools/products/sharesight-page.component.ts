@@ -22,5 +22,6 @@ export class SharesightPageComponent {
     return key === 'sharesight';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }

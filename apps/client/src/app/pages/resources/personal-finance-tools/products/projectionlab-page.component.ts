@@ -22,5 +22,6 @@ export class ProjectionLabPageComponent {
     return key === 'projectionlab';
   });
 
+  public routerLinkAbout = ['/' + $localize`about`];
   public routerLinkFeatures = ['/' + $localize`features`];
 }
