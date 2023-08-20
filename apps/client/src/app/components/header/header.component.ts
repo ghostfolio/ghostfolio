@@ -43,6 +43,7 @@ export class HeaderComponent implements OnChanges {
   public impersonationId: string;
   public isMenuOpen: boolean;
   public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkRegister = ['/' + $localize`register`];
 
   private unsubscribeSubject = new Subject<void>();
 

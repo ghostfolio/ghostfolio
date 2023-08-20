@@ -31,7 +31,12 @@
   <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
       <ng-container *ngIf="hasPermissionToCreateUser">
-        <a color="primary" i18n mat-flat-button [routerLink]="['/register']">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+        >
           Get Started
         </a>
       </ng-container>
@@ -397,7 +402,12 @@
         >
       </p>
       <div class="align-items-center d-flex justify-content-center py-2">
-        <a color="primary" i18n mat-flat-button [routerLink]="['/register']">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+        >
           Get Started
         </a>
         <ng-container *ngIf="hasPermissionForDemo">

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
-import { routes as registerRoutes } from '@ghostfolio/client/pages/register/routes'; // TODO
 import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes'; // TODO
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 
@@ -13,7 +12,8 @@ export const paths = {
   license: $localize`license`,
   markets: $localize`markets`,
   pricing: $localize`pricing`,
-  privacyPolicy: $localize`privacy-policy`
+  privacyPolicy: $localize`privacy-policy`,
+  register: $localize`register`
 };
 
 const routes: Routes = [
@@ -106,13 +106,13 @@ const routes: Routes = [
         (m) => m.PricingPageModule
       )
   },
-  ...registerRoutes.map((path) => ({
-    path,
+  {
+    path: paths.register,
     loadChildren: () =>
       import('./pages/register/register-page.module').then(
         (m) => m.RegisterPageModule
       )
-  })),
+  },
   ...resourcesRoutes.map((path) => ({
     path,
     loadChildren: () =>
