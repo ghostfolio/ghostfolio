@@ -5,7 +5,7 @@
         Discover Open Source Alternatives for Personal Finance Tools
       </h1>
       <div class="introduction mb-4">
-        <p>
+        <p i18n>
           This overview page features a curated collection of personal finance
           tools compared to the open source alternative
           <a [routerLink]="routerLinkAbout">Ghostfolio</a>. If you value
@@ -13,7 +13,7 @@
           provides an excellent opportunity to take control of your financial
           management.
         </p>
-        <p>
+        <p i18n>
           Explore the links below to compare a variety of personal finance tools
           with Ghostfolio.
         </p>
@@ -32,7 +32,7 @@
                 [routerLink]="[pathResources, 'personal-finance-tools', 'open-source-alternative-to-' + product.key]"
               >
                 <div class="flex-grow-1 overflow-hidden">
-                  <div class="h6 m-0 text-truncate">
+                  <div class="h6 m-0 text-truncate" i18n>
                     Open Source Alternative to {{ product.name }}
                   </div>
                 </div>
