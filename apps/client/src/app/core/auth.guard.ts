@@ -5,7 +5,6 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { paths } from '@ghostfolio/client/app-routing.module';
-import { routes as resourcesRoutes } from '@ghostfolio/client/pages/resources/routes';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -25,7 +24,7 @@ export class AuthGuard {
     '/p',
     `/${paths.pricing}`,
     `/${paths.register}`,
-    ...resourcesRoutes.map((route) => `/${route}`)
+    `/${paths.resources}`
   ];
 
   constructor(

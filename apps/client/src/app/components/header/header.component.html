@@ -72,7 +72,7 @@
             'font-weight-bold': currentRoute === 'resources',
             'text-decoration-underline': currentRoute === 'resources'
           }"
-          [routerLink]="['/resources']"
+          [routerLink]="[routerLinkResources]"
           >Resources</a
         >
       </li>
@@ -212,7 +212,7 @@
             [ngClass]="{
               'font-weight-bold': currentRoute === 'resources'
             }"
-            [routerLink]="['/resources']"
+            [routerLink]="routerLinkResources"
             >Resources</a
           >
           <a

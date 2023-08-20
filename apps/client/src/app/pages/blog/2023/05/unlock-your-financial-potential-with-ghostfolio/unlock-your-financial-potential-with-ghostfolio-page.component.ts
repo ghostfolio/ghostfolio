@@ -11,4 +11,5 @@ import { RouterModule } from '@angular/router';
 })
 export class UnlockYourFinancialPotentialWithGhostfolioPageComponent {
   public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkResources = ['/' + $localize`resources`];
 }

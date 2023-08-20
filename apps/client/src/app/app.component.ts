@@ -50,6 +50,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public routerLinkMarkets = ['/' + $localize`markets`];
   public routerLinkPricing = ['/' + $localize`pricing`];
   public routerLinkRegister = ['/' + $localize`register`];
+  public routerLinkResources = ['/' + $localize`resources`];
   public showFooter = false;
   public user: User;
   public version = environment.version;
@@ -110,8 +111,8 @@ export class AppComponent implements OnDestroy, OnInit {
             this.currentRoute === 'open' ||
             this.currentRoute === 'p' ||
             this.currentRoute === this.routerLinkPricing[0].slice(1) ||
-            this.currentRoute === 'resources' ||
             this.currentRoute === this.routerLinkRegister[0].slice(1) ||
+            this.currentRoute === this.routerLinkResources[0].slice(1) ||
             this.currentRoute === 'start') &&
           this.deviceType !== 'mobile';
 

@@ -11,4 +11,5 @@ import { RouterModule } from '@angular/router';
 })
 export class HalloGhostfolioPageComponent {
   public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkResources = ['/' + $localize`resources`];
 }
