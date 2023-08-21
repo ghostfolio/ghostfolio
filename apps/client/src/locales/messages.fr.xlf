@@ -1224,6 +1224,10 @@
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">236</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html">
         <source>Features</source>
