@@ -1,5 +1,4 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
@@ -7,6 +6,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -18,15 +18,10 @@ import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
-  private baseCurrency: string;
-
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService,
     private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
-  }
+  ) {}
 
   public canHandle(symbol: string) {
     return true;
@@ -212,50 +207,50 @@ export class YahooFinanceService implements DataProviderInterface {
         };
 
         if (
-          symbol === `${this.baseCurrency}GBP` &&
-          yahooFinanceSymbols.includes(`${this.baseCurrency}GBp=X`)
+          symbol === `${DEFAULT_CURRENCY}GBP` &&
+          yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}GBp=X`)
         ) {
           // Convert GPB to GBp (pence)
-          response[`${this.baseCurrency}GBp`] = {
+          response[`${DEFAULT_CURRENCY}GBp`] = {
             ...response[symbol],
             currency: 'GBp',
             marketPrice: this.getConvertedValue({
-              symbol: `${this.baseCurrency}GBp`,
+              symbol: `${DEFAULT_CURRENCY}GBp`,
               value: response[symbol].marketPrice
             })
           };
         } else if (
-          symbol === `${this.baseCurrency}ILS` &&
-          yahooFinanceSymbols.includes(`${this.baseCurrency}ILA=X`)
+          symbol === `${DEFAULT_CURRENCY}ILS` &&
+          yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}ILA=X`)
         ) {
           // Convert ILS to ILA
-          response[`${this.baseCurrency}ILA`] = {
+          response[`${DEFAULT_CURRENCY}ILA`] = {
             ...response[symbol],
             currency: 'ILA',
             marketPrice: this.getConvertedValue({
-              symbol: `${this.baseCurrency}ILA`,
+              symbol: `${DEFAULT_CURRENCY}ILA`,
               value: response[symbol].marketPrice
             })
           };
         } else if (
-          symbol === `${this.baseCurrency}ZAR` &&
-          yahooFinanceSymbols.includes(`${this.baseCurrency}ZAc=X`)
+          symbol === `${DEFAULT_CURRENCY}ZAR` &&
+          yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}ZAc=X`)
         ) {
           // Convert ZAR to ZAc (cents)
-          response[`${this.baseCurrency}ZAc`] = {
+          response[`${DEFAULT_CURRENCY}ZAc`] = {
             ...response[symbol],
             currency: 'ZAc',
             marketPrice: this.getConvertedValue({
-              symbol: `${this.baseCurrency}ZAc`,
+              symbol: `${DEFAULT_CURRENCY}ZAc`,
               value: response[symbol].marketPrice
             })
           };
         }
       }
 
-      if (yahooFinanceSymbols.includes(`${this.baseCurrency}USX=X`)) {
+      if (yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}USX=X`)) {
         // Convert USD to USX (cent)
-        response[`${this.baseCurrency}USX`] = {
+        response[`${DEFAULT_CURRENCY}USX`] = {
           currency: 'USX',
           dataSource: this.getName(),
           marketPrice: new Big(1).mul(100).toNumber(),
@@ -303,8 +298,8 @@ export class YahooFinanceService implements DataProviderInterface {
             (quoteType === 'CRYPTOCURRENCY' &&
               this.cryptocurrencyService.isCryptocurrency(
                 symbol.replace(
-                  new RegExp(`-${this.baseCurrency}$`),
-                  this.baseCurrency
+                  new RegExp(`-${DEFAULT_CURRENCY}$`),
+                  DEFAULT_CURRENCY
                 )
               )) ||
             quoteTypes.includes(quoteType)
@@ -314,7 +309,7 @@ export class YahooFinanceService implements DataProviderInterface {
           if (quoteType === 'CRYPTOCURRENCY') {
             // Only allow cryptocurrencies in base currency to avoid having redundancy in the database.
             // Transactions need to be converted manually to the base currency before
-            return symbol.includes(this.baseCurrency);
+            return symbol.includes(DEFAULT_CURRENCY);
           } else if (quoteType === 'FUTURE') {
             // Allow GC=F, but not MGC=F
             return symbol.length === 4;
@@ -373,13 +368,13 @@ export class YahooFinanceService implements DataProviderInterface {
     symbol: string;
     value: number;
   }) {
-    if (symbol === `${this.baseCurrency}GBp`) {
+    if (symbol === `${DEFAULT_CURRENCY}GBp`) {
       // Convert GPB to GBp (pence)
       return new Big(value).mul(100).toNumber();
-    } else if (symbol === `${this.baseCurrency}ILA`) {
+    } else if (symbol === `${DEFAULT_CURRENCY}ILA`) {
       // Convert ILS to ILA
       return new Big(value).mul(100).toNumber();
-    } else if (symbol === `${this.baseCurrency}ZAc`) {
+    } else if (symbol === `${DEFAULT_CURRENCY}ZAc`) {
       // Convert ZAR to ZAc (cents)
       return new Big(value).mul(100).toNumber();
     }

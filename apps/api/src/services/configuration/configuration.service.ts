@@ -1,5 +1,5 @@
 import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
-import { DEFAULT_CURRENCY, DEFAULT_ROOT_URL } from '@ghostfolio/common/config';
+import { DEFAULT_ROOT_URL } from '@ghostfolio/common/config';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { bool, cleanEnv, host, json, num, port, str } from 'envalid';
@@ -12,10 +12,6 @@ export class ConfigurationService {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
       ALPHA_VANTAGE_API_KEY: str({ default: '' }),
-      BASE_CURRENCY: str({
-        choices: ['AUD', 'CAD', 'CNY', 'EUR', 'GBP', 'JPY', 'RUB', 'USD'],
-        default: DEFAULT_CURRENCY
-      }),
       BETTER_UPTIME_API_KEY: str({ default: '' }),
       CACHE_QUOTES_TTL: num({ default: 1 }),
       CACHE_TTL: num({ default: 1 }),

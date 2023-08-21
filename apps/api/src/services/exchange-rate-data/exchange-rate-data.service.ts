@@ -1,10 +1,12 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  PROPERTY_CURRENCIES
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, isToday } from 'date-fns';
@@ -12,13 +14,11 @@ import { isNumber, uniq } from 'lodash';
 
 @Injectable()
 export class ExchangeRateDataService {
-  private baseCurrency: string;
   private currencies: string[] = [];
   private currencyPairs: IDataGatheringItem[] = [];
   private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
@@ -26,7 +26,7 @@ export class ExchangeRateDataService {
   ) {}
 
   public getCurrencies() {
-    return this.currencies?.length > 0 ? this.currencies : [this.baseCurrency];
+    return this.currencies?.length > 0 ? this.currencies : [DEFAULT_CURRENCY];
   }
 
   public getCurrencyPairs() {
@@ -43,7 +43,6 @@ export class ExchangeRateDataService {
   }
 
   public async initialize() {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
     this.currencies = await this.prepareCurrencies();
     this.currencyPairs = [];
     this.exchangeRates = {};
@@ -113,9 +112,9 @@ export class ExchangeRateDataService {
       if (!this.exchangeRates[symbol]) {
         // Not found, calculate indirectly via base currency
         this.exchangeRates[symbol] =
-          resultExtended[`${currency1}${this.baseCurrency}`]?.[date]
+          resultExtended[`${currency1}${DEFAULT_CURRENCY}`]?.[date]
             ?.marketPrice *
-          resultExtended[`${this.baseCurrency}${currency2}`]?.[date]
+          resultExtended[`${DEFAULT_CURRENCY}${currency2}`]?.[date]
             ?.marketPrice;
 
         // Calculate the opposite direction
@@ -144,9 +143,8 @@ export class ExchangeRateDataService {
       } else {
         // Calculate indirectly via base currency
         const factor1 =
-          this.exchangeRates[`${aFromCurrency}${this.baseCurrency}`];
-        const factor2 =
-          this.exchangeRates[`${this.baseCurrency}${aToCurrency}`];
+          this.exchangeRates[`${aFromCurrency}${DEFAULT_CURRENCY}`];
+        const factor2 = this.exchangeRates[`${DEFAULT_CURRENCY}${aToCurrency}`];
 
         factor = factor1 * factor2;
 
@@ -204,28 +202,28 @@ export class ExchangeRateDataService {
         let marketPriceBaseCurrencyToCurrency: number;
 
         try {
-          if (this.baseCurrency === aFromCurrency) {
+          if (aFromCurrency === DEFAULT_CURRENCY) {
             marketPriceBaseCurrencyFromCurrency = 1;
           } else {
             marketPriceBaseCurrencyFromCurrency = (
               await this.marketDataService.get({
                 dataSource,
                 date: aDate,
-                symbol: `${this.baseCurrency}${aFromCurrency}`
+                symbol: `${DEFAULT_CURRENCY}${aFromCurrency}`
               })
             )?.marketPrice;
           }
         } catch {}
 
         try {
-          if (this.baseCurrency === aToCurrency) {
+          if (aToCurrency === DEFAULT_CURRENCY) {
             marketPriceBaseCurrencyToCurrency = 1;
           } else {
             marketPriceBaseCurrencyToCurrency = (
               await this.marketDataService.get({
                 dataSource,
                 date: aDate,
-                symbol: `${this.baseCurrency}${aToCurrency}`
+                symbol: `${DEFAULT_CURRENCY}${aToCurrency}`
               })
             )?.marketPrice;
           }
@@ -295,14 +293,14 @@ export class ExchangeRateDataService {
   private prepareCurrencyPairs(aCurrencies: string[]) {
     return aCurrencies
       .filter((currency) => {
-        return currency !== this.baseCurrency;
+        return currency !== DEFAULT_CURRENCY;
       })
       .map((currency) => {
         return {
-          currency1: this.baseCurrency,
+          currency1: DEFAULT_CURRENCY,
           currency2: currency,
           dataSource: this.dataProviderService.getDataSourceForExchangeRates(),
-          symbol: `${this.baseCurrency}${currency}`
+          symbol: `${DEFAULT_CURRENCY}${currency}`
         };
       });
   }
