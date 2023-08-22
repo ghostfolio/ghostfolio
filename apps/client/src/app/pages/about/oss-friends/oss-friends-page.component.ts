@@ -10,7 +10,7 @@ const ossFriends = require('../../../../assets/oss-friends.json');
   templateUrl: './oss-friends-page.html'
 })
 export class OpenSourceSoftwareFriendsPageComponent implements OnDestroy {
-  public ossFriends = ossFriends;
+  public ossFriends = ossFriends.data;
 
   private unsubscribeSubject = new Subject<void>();
 
