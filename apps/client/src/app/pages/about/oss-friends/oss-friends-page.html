@@ -14,26 +14,27 @@
           *ngFor="let ossFriend of ossFriends"
           class="col-xs-12 col-md-4 mb-3"
         >
-          <mat-card appearance="outlined" class="d-flex flex-column h-100">
-            <mat-card-header>
-              <mat-card-title class="h4"
-                ><a target="_blank" [href]="ossFriend.url"
-                  >{{ ossFriend.name }}</a
-                ></mat-card-title
-              >
-            </mat-card-header>
-            <mat-card-content class="flex-grow-1">
-              <p>{{ ossFriend.description }}</p>
-            </mat-card-content>
-            <mat-card-actions class="justify-content-end">
-              <a mat-button target="_blank" [href]="ossFriend.url">
-                <span
-                  ><ng-container i18n>Visit</ng-container> {{ ossFriend.name
-                  }}</span
-                ><ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
-              </a>
-            </mat-card-actions>
-          </mat-card>
+          <a target="_blank" [href]="ossFriend.href">
+            <mat-card appearance="outlined" class="d-flex flex-column h-100">
+              <mat-card-header>
+                <mat-card-title class="h4">{{ ossFriend.name }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content class="flex-grow-1">
+                <p>{{ ossFriend.description }}</p>
+              </mat-card-content>
+              <mat-card-actions class="justify-content-end">
+                <a mat-button target="_blank" [href]="ossFriend.href">
+                  <span
+                    ><ng-container i18n>Visit</ng-container> {{ ossFriend.name
+                    }}</span
+                  ><ion-icon
+                    class="ml-1"
+                    name="arrow-forward-outline"
+                  ></ion-icon>
+                </a>
+              </mat-card-actions>
+            </mat-card>
+          </a>
         </div>
       </div>
     </div>

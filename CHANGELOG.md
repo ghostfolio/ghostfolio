@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refreshed the cryptocurrencies list
+- Improved the _OSS Friends_ page
 
 ## 1.302.0 - 2023-08-20
 
