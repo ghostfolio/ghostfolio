@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Refreshed the cryptocurrencies list
+- Improved the _OSS Friends_ page
+
+## 1.302.0 - 2023-08-20
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `16.1.8` to `16.2.1`
+- Upgraded `Nx` from version `16.6.0` to `16.7.2`
+
+## 1.301.1 - 2023-08-19
+
+### Added
+
+- Added the data export feature to the user account page
+- Added a currencies preset to the historical market data table of the admin control panel
+- Added the _OSS Friends_ page
+
+### Changed
+
+- Improved the localized meta data in `html` files
+
+### Fixed
+
+- Fixed the rows with cash positions in the holdings table
+- Fixed an issue with the date parsing in the historical market data editor of the admin control panel
+
+## 1.300.0 - 2023-08-11
+
+### Added
+
+- Added more durations in the coupon system
+
+### Changed
+
+- Migrated the remaining requests from `bent` to `got`
+
 ## 1.299.1 - 2023-08-10
 
 ### Changed
@@ -601,7 +643,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed the slide toggles to checkboxes on the account page
+- Changed the slide toggles to checkboxes on the user account page
 - Changed the slide toggles to checkboxes in the admin control panel
 - Increased the density of the theme
 - Migrated the style of various components to `@angular/material` `15` (mdc)
@@ -1163,7 +1205,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the language selector on the account page
+- Improved the language selector on the user account page
 - Improved the wording in the _X-ray_ section (net worth instead of investment)
 - Extended the asset profile details dialog in the admin control panel
 - Updated the browserslist database
@@ -1581,7 +1623,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a language selector to the account page
+- Added a language selector to the user account page
 - Added support for translated labels in the value component
 
 ### Changed
@@ -1910,7 +1952,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the user id to the account page
+- Added the user id to the user account page
 - Added a new view with jobs of the queue to the admin control panel
 
 ### Changed
@@ -3565,7 +3607,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Respected the cash balance on the analysis page
-- Improved the settings selectors on the account page
+- Improved the settings selectors on the user account page
 - Harmonized the slogan to "Open Source Wealth Management Software"
 
 ### Fixed
@@ -4031,7 +4073,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a gradient to the line charts
-- Added a selector to set the base currency on the account page
+- Added a selector to set the base currency on the user account page
 
 ## 0.81.0 - 06.04.2021
 
@@ -4345,7 +4387,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Added the membership status to the account page
+- Added the membership status to the user account page
 
 ### Fixed
 

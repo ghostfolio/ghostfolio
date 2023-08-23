@@ -4,19 +4,22 @@
       <article>
         <div class="mb-4 text-center">
           <h1 class="mb-1">
-            <strong>Ghostfolio</strong>: The Open Source Alternative to
-            <strong>{{ product2.name }}</strong>
+            <strong>Ghostfolio</strong>:
+            <ng-container i18n>The Open Source Alternative to</ng-container
+            >&nbsp;<strong>{{ product2.name }}</strong>
           </h1>
         </div>
         <section class="mb-4">
           <p>
             Are you looking for an open source alternative to {{ product2.name
-            }}? <a [routerLink]="['/about']">Ghostfolio</a> is a powerful
+            }}? <a [routerLink]="routerLinkAbout">Ghostfolio</a> is a powerful
             portfolio management tool that provides individuals with a
             comprehensive platform to track, analyze, and optimize their
             investments. Whether you are an experienced investor or just
             starting out, Ghostfolio offers an intuitive user interface and a
-            <a [routerLink]="['/features']">wide range of functionalities</a>
+            <a [routerLink]="routerLinkFeatures"
+              >wide range of functionalities</a
+            >
             to help you make informed decisions and take control of your
             financial future.
           </p>
@@ -280,7 +283,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a i18n [routerLink]="['/resources', 'personal-finance-tools']"
+              <a i18n [routerLink]="routerLinkResourcesPersonalFinanceTools"
                 >Personal Finance Tools</a
               >
             </li>

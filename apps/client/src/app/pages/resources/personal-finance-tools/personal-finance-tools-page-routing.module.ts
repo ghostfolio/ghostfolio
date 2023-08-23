@@ -22,7 +22,7 @@ const routes: Routes = [
         path: `open-source-alternative-to-${key}`,
         loadComponent: () =>
           import(`./products/${key}-page.component`).then(() => component),
-        title: `Open Source Alternative to ${name}`
+        title: $localize`Open Source Alternative to ${name}`
       };
     })
 ];

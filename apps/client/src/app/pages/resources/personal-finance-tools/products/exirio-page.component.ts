@@ -21,4 +21,11 @@ export class ExirioPageComponent {
   public product2 = products.find(({ key }) => {
     return key === 'exirio';
   });
+
+  public routerLinkAbout = ['/' + $localize`about`];
+  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkResourcesPersonalFinanceTools = [
+    '/' + $localize`resources`,
+    'personal-finance-tools'
+  ];
 }

@@ -1,13 +1,12 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center" i18n>Features</h3>
-      <div class="mb-4">
-        <p>
-          Check out the numerous features of <strong>Ghostfolio</strong> to
-          manage your wealth.
-        </p>
-      </div>
+      <h1 class="h3 mb-4 text-center">
+        <span class="d-none d-sm-block" i18n>Features</span>
+        <small class="text-muted" i18n>
+          Check out the numerous features of Ghostfolio to manage your wealth
+        </small>
+      </h1>
       <div class="row">
         <div class="col-xs-12 col-md-4 mb-3">
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
@@ -212,7 +211,7 @@
                 </h4>
                 <p class="m-0">
                   Check the current market mood (<a
-                    [routerLink]="['/resources']"
+                    [routerLink]="routerLinkResources"
                     >Fear & Greed Index</a
                   >) within the app.
                 </p>
@@ -295,7 +294,7 @@
   </div>
   <div *ngIf="!user" class="row">
     <div class="col mt-3 text-center">
-      <a color="primary" i18n mat-flat-button [routerLink]="['/register']"
+      <a color="primary" i18n mat-flat-button [routerLink]="routerLinkRegister"
         >Get Started</a
       >
     </div>

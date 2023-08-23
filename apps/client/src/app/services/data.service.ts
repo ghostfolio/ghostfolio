@@ -341,7 +341,7 @@ export class DataService {
     filters
   }: {
     filters?: Filter[];
-  }): Observable<PortfolioDetails> {
+  } = {}): Observable<PortfolioDetails> {
     return this.http
       .get<any>('/api/v1/portfolio/details', {
         params: this.buildFiltersAsQueryParams({ filters })
@@ -356,14 +356,6 @@ export class DataService {
 
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
-              response.holdings[symbol].assetClass = translate(
-                response.holdings[symbol].assetClass
-              );
-
-              response.holdings[symbol].assetSubClass = translate(
-                response.holdings[symbol].assetSubClass
-              );
-
               response.holdings[symbol].dateOfFirstActivity = response.holdings[
                 symbol
               ].dateOfFirstActivity

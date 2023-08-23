@@ -9,4 +9,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './unlock-your-financial-potential-with-ghostfolio-page.html'
 })
-export class UnlockYourFinancialPotentialWithGhostfolioPageComponent {}
+export class UnlockYourFinancialPotentialWithGhostfolioPageComponent {
+  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkResources = ['/' + $localize`resources`];
+}

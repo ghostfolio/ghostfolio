@@ -14,6 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class FeaturesPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
+  public routerLinkRegister = ['/' + $localize`register`];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

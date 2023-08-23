@@ -35,10 +35,12 @@ export const DATA_GATHERING_QUEUE = 'DATA_GATHERING_QUEUE';
 export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
 
+export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_REQUEST_TIMEOUT = ms('3 seconds');
+export const DEFAULT_ROOT_URL = 'http://localhost:4200';
 
 export const EMERGENCY_FUND_TAG_ID = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 

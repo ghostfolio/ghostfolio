@@ -9,4 +9,6 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './first-months-in-open-source-page.html'
 })
-export class FirstMonthsInOpenSourcePageComponent {}
+export class FirstMonthsInOpenSourcePageComponent {
+  public routerLinkPricing = ['/' + $localize`pricing`];
+}

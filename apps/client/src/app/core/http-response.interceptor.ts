@@ -77,7 +77,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             });
 
             this.snackBarRef.onAction().subscribe(() => {
-              this.router.navigate(['/pricing']);
+              this.router.navigate(['/' + $localize`pricing`]);
             });
           }
         } else if (error.status === StatusCodes.INTERNAL_SERVER_ERROR) {

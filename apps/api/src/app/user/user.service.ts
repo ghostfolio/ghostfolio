@@ -4,7 +4,11 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  PROPERTY_IS_READ_ONLY_MODE,
+  locale
+} from '@ghostfolio/common/config';
 import { User as IUser, UserSettings } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
@@ -21,8 +25,6 @@ const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
-  public static DEFAULT_CURRENCY = 'USD';
-
   private baseCurrency: string;
 
   public constructor(
@@ -145,8 +147,7 @@ export class UserService {
 
     // Set default value for base currency
     if (!(user.Settings.settings as UserSettings)?.baseCurrency) {
-      (user.Settings.settings as UserSettings).baseCurrency =
-        UserService.DEFAULT_CURRENCY;
+      (user.Settings.settings as UserSettings).baseCurrency = DEFAULT_CURRENCY;
     }
 
     // Set default value for date range
@@ -186,6 +187,9 @@ export class UserService {
         if (Analytics?.activityCount % frequency === 1) {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
+
+        // Reset benchmark
+        user.Settings.settings.benchmark = undefined;
       }
 
       if (user.subscription?.type === 'Premium') {

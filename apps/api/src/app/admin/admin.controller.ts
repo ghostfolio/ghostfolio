@@ -38,7 +38,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
-import { isDate } from 'date-fns';
+import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
@@ -233,7 +233,7 @@ export class AdminController {
       );
     }
 
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     if (!isDate(date)) {
       throw new HttpException(
@@ -333,7 +333,7 @@ export class AdminController {
       );
     }
 
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     return this.marketDataService.updateMarketData({
       data: { marketPrice: data.marketPrice, state: 'CLOSE' },

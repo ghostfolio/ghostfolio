@@ -10,9 +10,11 @@ import { products } from './products';
   templateUrl: './personal-finance-tools-page.html'
 })
 export class PersonalFinanceToolsPageComponent implements OnDestroy {
+  public pathResources = '/' + $localize`resources`;
   public products = products.filter(({ key }) => {
     return key !== 'ghostfolio';
   });
+  public routerLinkAbout = ['/' + $localize`about`];
 
   private unsubscribeSubject = new Subject<void>();
 

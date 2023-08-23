@@ -9,4 +9,6 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './how-do-i-get-my-finances-in-order-page.html'
 })
-export class HowDoIGetMyFinancesInOrderPageComponent {}
+export class HowDoIGetMyFinancesInOrderPageComponent {
+  public routerLinkResources = ['/' + $localize`resources`];
+}

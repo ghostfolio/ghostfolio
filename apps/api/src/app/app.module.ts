@@ -12,7 +12,7 @@ import {
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 import { BullModule } from '@nestjs/bull';
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
@@ -28,7 +28,6 @@ import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
-import { FrontendMiddleware } from './frontend.middleware';
 import { HealthModule } from './health/health.module';
 import { ImportModule } from './import/import.module';
 import { InfoModule } from './info/info.module';
@@ -75,12 +74,6 @@ import { UserModule } from './user/user.module';
     PrismaModule,
     RedisCacheModule,
     ScheduleModule.forRoot(),
-    ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
-      return ServeStaticModule.forRoot({
-        rootPath: join(__dirname, '..', 'client', languageCode),
-        serveRoot: `/${languageCode}`
-      });
-    }),
     ServeStaticModule.forRoot({
       exclude: ['/api*', '/sitemap.xml'],
       rootPath: join(__dirname, '..', 'client'),
@@ -114,10 +107,4 @@ import { UserModule } from './user/user.module';
   controllers: [AppController],
   providers: [CronService]
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(FrontendMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
-  }
-}
+export class AppModule {}

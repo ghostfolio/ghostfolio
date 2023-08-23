@@ -44,7 +44,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.dataService
-      .fetchPortfolioDetails({})
+      .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
         if (summary.cash === null || summary.currentValue === null) {
