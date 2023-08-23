@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refreshed the cryptocurrencies list
 - Improved the _OSS Friends_ page
 
+### Fixed
+
+- Fixed an issue with the _Trackinsight_ data enhancer for asset profile data
+
 ## 1.302.0 - 2023-08-20
 
 ### Changed
