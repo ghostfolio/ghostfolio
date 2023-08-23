@@ -560,7 +560,6 @@ export class PortfolioService {
         value
       );
 
-
       holdings[item.symbol] = {
         markets,
         marketsAdvanced,
