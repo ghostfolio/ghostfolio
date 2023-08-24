@@ -18,6 +18,20 @@ export class HealthController {
   @Get()
   public async getHealth() {}
 
+  @Get('data-enhancer/:name')
+  public async getHealthOfDataEnhancer(@Param('name') name: string) {
+    const hasResponse = await this.healthService.hasResponseFromDataEnhancer(
+      name
+    );
+
+    if (hasResponse !== true) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE),
+        StatusCodes.SERVICE_UNAVAILABLE
+      );
+    }
+  }
+
   @Get('data-provider/:dataSource')
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getHealthOfDataProvider(

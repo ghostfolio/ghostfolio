@@ -126,4 +126,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   public getName() {
     return 'TRACKINSIGHT';
   }
+
+  public getTestSymbol() {
+    return 'QQQ';
+  }
 }
