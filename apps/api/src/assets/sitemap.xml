@@ -143,6 +143,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/en/blog/2023/08/ghostfolio-joins-oss-friends</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/en/faq</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>

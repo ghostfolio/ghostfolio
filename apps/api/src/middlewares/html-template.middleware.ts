@@ -71,6 +71,10 @@ const locales = {
   '/en/blog/2023/07/exploring-the-path-to-fire': {
     featureGraphicPath: 'assets/images/blog/20230701.jpg',
     title: `Exploring the Path to FIRE - ${titleShort}`
+  },
+  '/en/blog/2023/08/ghostfolio-joins-oss-friends': {
+    featureGraphicPath: 'assets/images/blog/ghostfolio-joins-oss-friends.png',
+    title: `Ghostfolio joins OSS Friends - ${titleShort}`
   }
 };
 
