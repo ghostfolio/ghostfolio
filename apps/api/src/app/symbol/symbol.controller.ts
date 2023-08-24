@@ -15,13 +15,13 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
+import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isDate, isEmpty } from 'lodash';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
 import { SymbolService } from './symbol.service';
-import { parseISO } from 'date-fns';
 
 @Controller('symbol')
 export class SymbolController {

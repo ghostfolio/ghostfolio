@@ -7,10 +7,10 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ExchangeRateService } from './exchange-rate.service';
-import { parseISO } from 'date-fns';
 
 @Controller('exchange-rate')
 export class ExchangeRateController {
