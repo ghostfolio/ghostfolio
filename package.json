@@ -34,7 +34,7 @@
     "format:write": "nx format:write",
     "help": "nx help",
     "import-sort": "import-sort --write '{apps,libs}/**/*.ts'",
-    "lint": "nx workspace-lint && ng lint",
+    "lint": "nx lint",
     "ng": "nx",
     "nx": "nx",
     "postinstall": "prisma generate",
