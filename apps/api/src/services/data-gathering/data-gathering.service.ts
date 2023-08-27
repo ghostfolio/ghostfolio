@@ -127,12 +127,10 @@ export class DataGatheringService {
       uniqueAssets = await this.getUniqueAssets();
     }
 
-    const assetProfiles = await this.dataProviderService.getAssetProfiles(
-      uniqueAssets
-    );
-    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-      uniqueAssets
-    );
+    const assetProfiles =
+      await this.dataProviderService.getAssetProfiles(uniqueAssets);
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfiles(uniqueAssets);
 
     for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
       const symbolMapping = symbolProfiles.find((symbolProfile) => {

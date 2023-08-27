@@ -93,9 +93,8 @@ export class SubscriptionService {
 
   public async createSubscriptionViaStripe(aCheckoutSessionId: string) {
     try {
-      const session = await this.stripe.checkout.sessions.retrieve(
-        aCheckoutSessionId
-      );
+      const session =
+        await this.stripe.checkout.sessions.retrieve(aCheckoutSessionId);
 
       await this.createSubscription({
         price: session.amount_total / 100,
