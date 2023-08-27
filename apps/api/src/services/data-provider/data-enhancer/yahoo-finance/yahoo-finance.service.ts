@@ -234,6 +234,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     return DataSource.YAHOO;
   }
 
+  public getTestSymbol() {
+    return 'AAPL';
+  }
+
   public parseAssetClass({
     quoteType,
     shortName
