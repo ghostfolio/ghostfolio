@@ -20,9 +20,8 @@ export class HealthController {
 
   @Get('data-enhancer/:name')
   public async getHealthOfDataEnhancer(@Param('name') name: string) {
-    const hasResponse = await this.healthService.hasResponseFromDataEnhancer(
-      name
-    );
+    const hasResponse =
+      await this.healthService.hasResponseFromDataEnhancer(name);
 
     if (hasResponse !== true) {
       throw new HttpException(
@@ -44,9 +43,8 @@ export class HealthController {
       );
     }
 
-    const hasResponse = await this.healthService.hasResponseFromDataProvider(
-      dataSource
-    );
+    const hasResponse =
+      await this.healthService.hasResponseFromDataProvider(dataSource);
 
     if (hasResponse !== true) {
       throw new HttpException(
