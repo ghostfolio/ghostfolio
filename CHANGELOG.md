@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added health check endpoints for data enhancers
 
+### Changed
+
+- Upgraded `Nx` from version `16.7.2` to `16.7.4`
+
 ## 1.303.0 - 2023-08-23
 
 ### Added
