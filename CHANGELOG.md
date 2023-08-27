@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `Nx` from version `16.7.2` to `16.7.4`
-- Upgraded `prettier` from version `2.8.4` to `3.0.1`
+- Upgraded `prettier` from version `2.8.4` to `3.0.2`
 
 ## 1.303.0 - 2023-08-23
 
