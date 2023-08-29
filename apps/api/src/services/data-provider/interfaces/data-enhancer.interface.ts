@@ -10,4 +10,6 @@ export interface DataEnhancerInterface {
   }): Promise<Partial<SymbolProfile>>;
 
   getName(): string;
+
+  getTestSymbol(): string;
 }

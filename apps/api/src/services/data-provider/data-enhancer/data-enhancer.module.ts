@@ -4,14 +4,18 @@ import { TrackinsightDataEnhancerService } from '@ghostfolio/api/services/data-p
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import { Module } from '@nestjs/common';
 
+import { DataEnhancerService } from './data-enhancer.service';
+
 @Module({
   exports: [
-    'DataEnhancers',
+    DataEnhancerService,
     TrackinsightDataEnhancerService,
-    YahooFinanceDataEnhancerService
+    YahooFinanceDataEnhancerService,
+    'DataEnhancers'
   ],
   imports: [ConfigurationModule, CryptocurrencyModule],
   providers: [
+    DataEnhancerService,
     TrackinsightDataEnhancerService,
     YahooFinanceDataEnhancerService,
     {

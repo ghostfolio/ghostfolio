@@ -38,9 +38,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       .json<any>()
       .catch(() => {
         return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/funds/${
-            symbol.split('.')?.[0]
-          }.json`
+          `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol.split(
+            '.'
+          )?.[0]}.json`
         )
           .json<any>()
           .catch(() => {
@@ -60,9 +60,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       .json<any>()
       .catch(() => {
         return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
-            symbol.split('.')?.[0]
-          }.json`
+          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol.split(
+            '.'
+          )?.[0]}.json`
         )
           .json<any>()
           .catch(() => {
@@ -125,5 +125,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
   public getName() {
     return 'TRACKINSIGHT';
+  }
+
+  public getTestSymbol() {
+    return 'QQQ';
   }
 }

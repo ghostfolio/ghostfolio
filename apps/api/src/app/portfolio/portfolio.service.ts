@@ -470,9 +470,8 @@ export class PortfolioService {
       transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
     );
     const startDate = this.getStartDate(dateRange, portfolioStart);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      startDate
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(startDate);
 
     const cashDetails = await this.accountService.getCashDetails({
       filters,
@@ -887,9 +886,8 @@ export class PortfolioService {
     const transactionPoints = portfolioCalculator.getTransactionPoints();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      portfolioStart
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(portfolioStart);
 
     const position = currentPositions.positions.find(
       (item) => item.symbol === aSymbol
@@ -1135,9 +1133,8 @@ export class PortfolioService {
 
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(dateRange, portfolioStart);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      startDate
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(startDate);
 
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
@@ -1327,9 +1324,8 @@ export class PortfolioService {
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      portfolioStart
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(portfolioStart);
 
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
