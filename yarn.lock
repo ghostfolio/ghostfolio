@@ -11352,7 +11352,7 @@ glob@^10.0.0, glob@^10.2.2:
     minipass "^5.0.0 || ^6.0.2 || ^7.0.0"
     path-scurry "^1.10.1"
 
-glob@^7.0.0, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6, glob@^7.2.0:
+glob@^7.0.0, glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.1.6:
   version "7.2.3"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.3.tgz#b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b"
   integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
@@ -16466,14 +16466,14 @@ repeat-string@^1.6.1:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==
 
-replace-in-file@6.3.5:
-  version "6.3.5"
-  resolved "https://registry.yarnpkg.com/replace-in-file/-/replace-in-file-6.3.5.tgz#ff956b0ab5bc96613207d603d197cd209400a654"
-  integrity sha512-arB9d3ENdKva2fxRnSjwBEXfK1npgyci7ZZuwysgAp7ORjHSyxz6oqIjTEv8R0Ydl4Ll7uOAZXL4vbkhGIizCg==
+replace-in-file@7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/replace-in-file/-/replace-in-file-7.0.1.tgz#1bb69a2e5596341cc6f0f581309add6c1d364b71"
+  integrity sha512-KbhgPq04eA+TxXuUxpgWIH9k/TjF+28ofon2PXP7vq6izAILhxOtksCVcLuuQLtyjouBaPdlH6RJYYcSPVxCOA==
   dependencies:
     chalk "^4.1.2"
-    glob "^7.2.0"
-    yargs "^17.2.1"
+    glob "^8.1.0"
+    yargs "^17.7.2"
 
 request-progress@^3.0.0:
   version "3.0.0"
@@ -19074,7 +19074,7 @@ yargs-parser@^11.1.1:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
 
-yargs@17.7.2, yargs@^17.2.1, yargs@^17.3.1, yargs@^17.6.2:
+yargs@17.7.2, yargs@^17.2.1, yargs@^17.3.1, yargs@^17.6.2, yargs@^17.7.2:
   version "17.7.2"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-17.7.2.tgz#991df39aca675a192b816e1e0363f9d75d2aa269"
   integrity sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==
