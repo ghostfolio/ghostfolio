@@ -3,7 +3,6 @@ import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import { Min } from 'class-validator';
 import got from 'got';
 
 @Injectable()
