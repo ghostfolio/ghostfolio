@@ -3,6 +3,7 @@ import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
+import { Min } from 'class-validator';
 import got from 'got';
 
 @Injectable()
@@ -26,9 +27,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    if (
-      !(response.assetClass === 'EQUITY' && response.assetSubClass === 'ETF')
-    ) {
+    if (!(response.assetSubClass === 'ETF')) {
       return response;
     }
 
@@ -38,9 +37,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       .json<any>()
       .catch(() => {
         return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol.split(
-            '.'
-          )?.[0]}.json`
+          `${TrackinsightDataEnhancerService.baseUrl}/funds/${
+            symbol.split('.')?.[0]
+          }.json`
         )
           .json<any>()
           .catch(() => {
@@ -60,9 +59,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       .json<any>()
       .catch(() => {
         return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol.split(
-            '.'
-          )?.[0]}.json`
+          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
+            symbol.split('.')?.[0]
+          }.json`
         )
           .json<any>()
           .catch(() => {
@@ -70,8 +69,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           });
       });
 
-    if (holdings?.weight < 0.95) {
-      // Skip if data is inaccurate
+    if (holdings?.weight < 1 - Math.min(holdings?.count * 0.000015, 0.95)) {
+      // Skip if data is inaccurate, dependent on holdings count there might be rounding issues
       return response;
     }
 
