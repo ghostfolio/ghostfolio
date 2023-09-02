@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the alignment in the header navigation
+- Fixed the alignment in the menu of the impersonation mode
 
 ## 1.304.0 - 2023-08-27
 
