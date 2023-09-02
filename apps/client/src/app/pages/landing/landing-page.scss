@@ -53,6 +53,10 @@
       mask-image: url('/assets/images/logo-dev-community.svg');
     }
 
+    &.logo-hacker-news {
+      mask-image: url('/assets/images/logo-hacker-news.svg');
+    }
+
     &.logo-openstartup {
       background-image: url('/assets/images/logo-openstartup.png');
       background-position: center;
@@ -128,6 +132,7 @@
     &.logo-agplv3,
     &.logo-alternative-to,
     &.logo-dev-community,
+    &.logo-hacker-news,
     &.logo-privacy-tools,
     &.logo-reddit,
     &.logo-sackgeld,
