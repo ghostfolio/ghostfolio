@@ -7,8 +7,8 @@
   .mat-toolbar {
     background-color: var(--light-background);
 
-    .spacer {
-      flex: 1 1 auto;
+    .list-inline-item {
+      margin: 0;
     }
 
     .mdc-button {
@@ -23,6 +23,10 @@
       ion-icon {
         font-size: 1.5rem;
       }
+    }
+
+    .spacer {
+      flex: 1 1 auto;
     }
   }
 }
