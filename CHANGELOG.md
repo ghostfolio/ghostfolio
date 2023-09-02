@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Shortened the page titles
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `4.16.2` to `5.2.0`
 
