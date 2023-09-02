@@ -10,7 +10,7 @@
           </h1>
         </div>
         <section class="mb-4">
-          <p>
+          <p i18n>
             Are you looking for an open source alternative to {{ product2.name
             }}? <a [routerLink]="routerLinkAbout">Ghostfolio</a> is a powerful
             portfolio management tool that provides individuals with a
@@ -23,7 +23,7 @@
             to help you make informed decisions and take control of your
             financial future.
           </p>
-          <p>
+          <p i18n>
             Ghostfolio is an open source software (OSS), providing a
             cost-effective alternative to {{ product2.name }} making it
             particularly suitable for individuals on a tight budget, such as
@@ -34,7 +34,7 @@
             and personal finance enthusiasts, Ghostfolio continuously enhances
             its capabilities, security, and user experience.
           </p>
-          <p>
+          <p i18n>
             Let’s dive deeper into the detailed comparison table below to gain a
             thorough understanding of how Ghostfolio positions itself relative
             to {{ product2.name }}. We will explore various aspects such as
@@ -177,11 +177,11 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Pricing</td>
-                <td class="mat-mdc-cell px-1 py-2">
+                <td class="mat-mdc-cell px-1 py-2" i18n>
                   Starting from {{ product1.pricingPerYear }} / year
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.pricingPerYear"
+                  <ng-container *ngIf="product2.pricingPerYear" i18n
                     >Starting from {{ product2.pricingPerYear }} /
                     year</ng-container
                   >
@@ -196,7 +196,7 @@
           </table>
         </section>
         <section class="mb-4">
-          <p>
+          <p i18n>
             Please note that the information provided is based on our
             independent research and analysis. This website is not affiliated
             with {{ product2.name }} or any other product mentioned in the
@@ -208,7 +208,7 @@
           </p>
         </section>
         <section class="call-to-action mb-4 py-3 rounded">
-          <h2 class="h4 mb-0 text-center">
+          <h2 class="h4 mb-0 text-center" i18n>
             Ready to take your <strong>investments</strong> to the
             <strong>next level</strong>?
           </h2>
@@ -217,7 +217,7 @@
             Ghostfolio.
           </p>
           <div class="text-center">
-            <a color="primary" href="https://ghostfol.io" mat-flat-button>
+            <a color="primary" href="https://ghostfol.io" i18n mat-flat-button>
               Get Started
             </a>
           </div>

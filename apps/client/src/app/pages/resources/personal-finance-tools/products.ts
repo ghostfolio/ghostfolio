@@ -35,18 +35,18 @@ export const products: Product[] = [
     isOpenSource: true,
     key: 'ghostfolio',
     languages: [
-      'Dutch',
+      'Deutsch',
       'English',
-      'French',
-      'German',
-      'Italian',
-      'Portuguese',
-      'Spanish'
+      'Español',
+      'Français',
+      'Italiano',
+      'Nederlands',
+      'Português'
     ],
     name: 'Ghostfolio',
-    origin: 'Switzerland',
+    origin: $localize`Switzerland`,
     pricingPerYear: '$19',
-    region: 'Global',
+    region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
   },
@@ -57,7 +57,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'altoo',
     name: 'Altoo Wealth Platform',
-    origin: 'Switzerland',
+    origin: $localize`Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
   },
   {
@@ -68,7 +68,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'copilot-money',
     name: 'Copilot Money',
-    origin: 'United States',
+    origin: $localize`United States`,
     pricingPerYear: '$70',
     slogan: 'Do money better with Copilot'
   },
@@ -81,7 +81,7 @@ export const products: Product[] = [
     key: 'delta',
     name: 'Delta Investment Tracker',
     note: 'Acquired by eToro',
-    origin: 'Belgium',
+    origin: $localize`Belgium`,
     slogan: 'The app to track all your investments. Make smart moves only.'
   },
   {
@@ -91,9 +91,9 @@ export const products: Product[] = [
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'divvydiary',
-    languages: ['English', 'German'],
+    languages: ['Deutsch', 'English'],
     name: 'DivvyDiary',
-    origin: 'Germany',
+    origin: $localize`Germany`,
     pricingPerYear: '€65',
     slogan: 'Your personal Dividend Calendar'
   },
@@ -105,7 +105,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'exirio',
     name: 'Exirio',
-    origin: 'United States',
+    origin: $localize`United States`,
     pricingPerYear: '$100',
     slogan: 'All your wealth, in one place.'
   },
@@ -115,9 +115,9 @@ export const products: Product[] = [
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'folishare',
-    languages: ['English', 'German'],
+    languages: ['Deutsch', 'English'],
     name: 'folishare',
-    origin: 'Austria',
+    origin: $localize`Austria`,
     pricingPerYear: '$65',
     slogan: 'Take control over your investments'
   },
@@ -128,9 +128,9 @@ export const products: Product[] = [
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'getquin',
-    languages: ['English', 'German'],
+    languages: ['Deutsch', 'English'],
     name: 'getquin',
-    origin: 'Germany',
+    origin: $localize`Germany`,
     pricingPerYear: '€48',
     slogan: 'Portfolio Tracker, Analysis & Community'
   },
@@ -141,7 +141,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'gospatz',
     name: 'goSPATZ',
-    origin: 'Germany',
+    origin: $localize`Germany`,
     slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
@@ -152,7 +152,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'justetf',
     name: 'justETF',
-    origin: 'Germany',
+    origin: $localize`Germany`,
     pricingPerYear: '€119',
     slogan: 'ETF portfolios made simple'
   },
@@ -164,7 +164,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'kubera',
     name: 'Kubera®',
-    origin: 'United States',
+    origin: $localize`United States`,
     pricingPerYear: '$150',
     slogan: 'The Time Machine for your Net Worth'
   },
@@ -177,9 +177,9 @@ export const products: Product[] = [
     key: 'markets.sh',
     languages: ['English'],
     name: 'markets.sh',
-    origin: 'Germany',
+    origin: $localize`Germany`,
     pricingPerYear: '€168',
-    region: 'Global',
+    region: $localize`Global`,
     slogan: 'Track your investments'
   },
   {
@@ -191,9 +191,9 @@ export const products: Product[] = [
     languages: ['English'],
     name: 'Maybe Finance',
     note: 'Sunset in 2023',
-    origin: 'United States',
+    origin: $localize`United States`,
     pricingPerYear: '$145',
-    region: 'United States',
+    region: $localize`United States`,
     slogan: 'Your financial future, in your control'
   },
   {
@@ -215,7 +215,7 @@ export const products: Product[] = [
     key: 'parqet',
     name: 'Parqet',
     note: 'Originally named as Tresor One',
-    origin: 'Germany',
+    origin: $localize`Germany`,
     pricingPerYear: '€88',
     region: 'Austria, Germany, Switzerland',
     slogan: 'Dein Vermögen immer im Blick'
@@ -227,7 +227,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'plannix',
     name: 'Plannix',
-    origin: 'Italy',
+    origin: $localize`Italy`,
     slogan: 'Your Personal Finance Hub'
   },
   {
@@ -236,9 +236,9 @@ export const products: Product[] = [
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'portfolio-dividend-tracker',
-    languages: ['English', 'Dutch'],
+    languages: ['English', 'Nederlands'],
     name: 'Portfolio Dividend Tracker',
-    origin: 'Netherlands',
+    origin: $localize`Netherlands`,
     pricingPerYear: '€60',
     slogan: 'Manage all your portfolios'
   },
@@ -249,9 +249,9 @@ export const products: Product[] = [
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'portseido',
-    languages: ['Dutch', 'English', 'French', 'German'],
+    languages: ['Deutsch', 'English', 'Français', 'Nederlands'],
     name: 'Portseido',
-    origin: 'Thailand',
+    origin: $localize`Thailand`,
     pricingPerYear: '$96',
     slogan: 'Portfolio Performance and Dividend Tracker'
   },
@@ -263,7 +263,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'projectionlab',
     name: 'ProjectionLab',
-    origin: 'United States',
+    origin: $localize`United States`,
     pricingPerYear: '$108',
     slogan: 'Build Financial Plans You Love.'
   },
@@ -275,7 +275,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'seeking-alpha',
     name: 'Seeking Alpha',
-    origin: 'United States',
+    origin: $localize`United States`,
     pricingPerYear: '$239',
     slogan: 'Stock Market Analysis & Tools for Investors'
   },
@@ -287,9 +287,9 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'sharesight',
     name: 'Sharesight',
-    origin: 'New Zealand',
+    origin: $localize`New Zealand`,
     pricingPerYear: '$135',
-    region: 'Global',
+    region: $localize`Global`,
     slogan: 'Stock Portfolio Tracker'
   },
   {
@@ -299,7 +299,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'simple-portfolio',
     name: 'Simple Portfolio',
-    origin: 'Czech Republic',
+    origin: $localize`Czech Republic`,
     pricingPerYear: '€80',
     slogan: 'Stock Portfolio Tracker'
   },
@@ -322,7 +322,7 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'sumio',
     name: 'Sumio',
-    origin: 'Czech Republic',
+    origin: $localize`Czech Republic`,
     pricingPerYear: '$20',
     slogan: 'Sum up and build your wealth.'
   },
@@ -332,9 +332,9 @@ export const products: Product[] = [
     hasSelfHostingAbility: false,
     isOpenSource: false,
     key: 'utluna',
-    languages: ['English', 'French', 'German'],
+    languages: ['Deutsch', 'English', 'Français'],
     name: 'Utluna',
-    origin: 'Switzerland',
+    origin: $localize`Switzerland`,
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
     useAnonymously: true
@@ -346,8 +346,8 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'yeekatee',
     name: 'yeekatee',
-    origin: 'Switzerland',
-    region: 'Switzerland',
+    origin: $localize`Switzerland`,
+    region: $localize`Switzerland`,
     slogan: 'Connect. Share. Invest.'
   }
 ];
