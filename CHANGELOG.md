@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `replace-in-file` from version `6.3.5` to `7.0.1`
 - Upgraded `yahoo-finance2` from version `2.4.3` to `2.4.4`
 
+### Fixed
+
+- Fixed the alignment in the header navigation
+
 ## 1.304.0 - 2023-08-27
 
 ### Added
