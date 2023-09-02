@@ -129,33 +129,37 @@
         <mat-menu #accountMenu="matMenu" xPosition="before">
           <ng-container *ngIf="user?.access?.length > 0">
             <button mat-menu-item (click)="impersonateAccount(null)">
-              <ion-icon
-                *ngIf="user?.access?.length > 0"
-                class="mr-2"
-                [name]="
-                  impersonationId
-                    ? 'radio-button-off-outline'
-                    : 'radio-button-on-outline'
-                "
-              ></ion-icon>
-              <span i18n>Me</span>
+              <span class="align-items-center d-flex">
+                <ion-icon
+                  *ngIf="user?.access?.length > 0"
+                  class="mr-2"
+                  [name]="
+                    impersonationId
+                      ? 'radio-button-off-outline'
+                      : 'radio-button-on-outline'
+                  "
+                ></ion-icon>
+                <span i18n>Me</span>
+              </span>
             </button>
             <button
               *ngFor="let accessItem of user?.access"
               mat-menu-item
               (click)="impersonateAccount(accessItem.id)"
             >
-              <ion-icon
-                class="mr-2"
-                name="square-outline"
-                [name]="
-                  accessItem.id === impersonationId
-                    ? 'radio-button-on-outline'
-                    : 'radio-button-off-outline'
-                "
-              ></ion-icon>
-              <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
-              <span *ngIf="!accessItem.alias" i18n>User</span>
+              <span class="align-items-center d-flex">
+                <ion-icon
+                  class="mr-2"
+                  name="square-outline"
+                  [name]="
+                    accessItem.id === impersonationId
+                      ? 'radio-button-on-outline'
+                      : 'radio-button-off-outline'
+                  "
+                ></ion-icon>
+                <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
+                <span *ngIf="!accessItem.alias" i18n>User</span>
+              </span>
             </button>
             <hr class="m-0" />
           </ng-container>
