@@ -26,7 +26,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -39,7 +39,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -52,7 +52,7 @@
       </li>
       <li *ngIf="hasPermissionToAccessAdminControl" class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -65,7 +65,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -83,7 +83,7 @@
         class="list-inline-item"
       >
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -96,7 +96,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -260,7 +260,7 @@
     <ul class="alig-items-center d-flex list-inline m-0">
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -273,7 +273,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -286,6 +286,7 @@
       </li>
       <li *ngIf="hasPermissionForSubscription" class="list-inline-item">
         <a
+          class="d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -301,7 +302,7 @@
         class="list-inline-item"
       >
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -321,13 +322,13 @@
         ></a>
       </li>
       <li class="list-inline-item">
-        <button class="mx-1" mat-flat-button (click)="openLoginDialog()">
+        <button class="d-sm-block" mat-flat-button (click)="openLoginDialog()">
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
       <li
         *ngIf="currentRoute !== 'register' && hasPermissionToCreateUser"
-        class="list-inline-item"
+        class="list-inline-item ml-1"
       >
         <a
           class="d-none d-sm-block"
