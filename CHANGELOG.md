@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for the cryptocurrency _CyberConnect_
+
 ### Changed
 
+- Refreshed the cryptocurrencies list
 - Deactivated _Internet Identity_ as a social login provider for the account registration
 
 ## 1.305.0 - 2023-09-03
