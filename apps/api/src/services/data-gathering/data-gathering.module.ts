@@ -5,6 +5,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 import { DATA_GATHERING_QUEUE } from '@ghostfolio/common/config';
 import { BullModule } from '@nestjs/bull';
@@ -28,6 +29,7 @@ import { DataGatheringProcessor } from './data-gathering.processor';
     ExchangeRateDataModule,
     MarketDataModule,
     PrismaModule,
+    PropertyModule,
     SymbolProfileModule
   ],
   providers: [DataGatheringProcessor, DataGatheringService],

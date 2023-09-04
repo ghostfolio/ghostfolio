@@ -4,28 +4,37 @@
       <article>
         <div class="mb-4 text-center">
           <h1 class="mb-1">
-            <strong>Ghostfolio</strong>: The Open Source Alternative to
-            <strong>{{ product2.name }}</strong>
+            <strong>Ghostfolio</strong>:
+            <ng-container i18n>The Open Source Alternative to</ng-container
+            >&nbsp;<strong>{{ product2.name }}</strong>
           </h1>
         </div>
         <section class="mb-4">
-          <p>
+          <p i18n>
             Are you looking for an open source alternative to {{ product2.name
-            }}? <a [routerLink]="['/about']">Ghostfolio</a> is a powerful
+            }}? <a [routerLink]="routerLinkAbout">Ghostfolio</a> is a powerful
             portfolio management tool that provides individuals with a
             comprehensive platform to track, analyze, and optimize their
             investments. Whether you are an experienced investor or just
             starting out, Ghostfolio offers an intuitive user interface and a
-            <a [routerLink]="['/features']">wide range of functionalities</a>
+            <a [routerLink]="routerLinkFeatures"
+              >wide range of functionalities</a
+            >
             to help you make informed decisions and take control of your
             financial future.
           </p>
-          <p>
-            Ghostfolio is open source software (OSS) where a community of
-            developers, contributors, and enthusiasts collaborate to enhance its
-            capabilities, security, and user experience.
+          <p i18n>
+            Ghostfolio is an open source software (OSS), providing a
+            cost-effective alternative to {{ product2.name }} making it
+            particularly suitable for individuals on a tight budget, such as
+            those
+            <a href="../en/blog/2023/07/exploring-the-path-to-fire"
+              >pursuing Financial Independence, Retire Early (FIRE)</a
+            >. By leveraging the collective efforts of a community of developers
+            and personal finance enthusiasts, Ghostfolio continuously enhances
+            its capabilities, security, and user experience.
           </p>
-          <p>
+          <p i18n>
             Let’s dive deeper into the detailed comparison table below to gain a
             thorough understanding of how Ghostfolio positions itself relative
             to {{ product2.name }}. We will explore various aspects such as
@@ -69,11 +78,21 @@
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
                   Available in
                 </td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.languages }}</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product2.languages }}</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container
+                    *ngFor="let language of product1.languages; last as isLast"
+                    >{{ language }}{{ isLast ? '' : ', ' }}</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container
+                    *ngFor="let language of product2.languages; last as isLast"
+                    >{{ language }}{{ isLast ? '' : ', ' }}</ng-container
+                  >
+                </td>
               </tr>
               <tr class="mat-mdc-row">
-                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
+                <td class="mat-mdc-cell px-3 py-2 text-right">
                   Open Source Software
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
@@ -120,6 +139,25 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
+                  Use anonymously
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product1.useAnonymously === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product1.useAnonymously === false" i18n
+                    >❌ No</ng-container
+                  >
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  <ng-container *ngIf="product2.useAnonymously === true" i18n
+                    >✅ Yes</ng-container
+                  ><ng-container *ngIf="product2.useAnonymously === false" i18n
+                    >❌ No</ng-container
+                  >
+                </td>
+              </tr>
+              <tr class="mat-mdc-row">
+                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
                   Free Plan
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
@@ -139,11 +177,11 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Pricing</td>
-                <td class="mat-mdc-cell px-1 py-2">
+                <td class="mat-mdc-cell px-1 py-2" i18n>
                   Starting from {{ product1.pricingPerYear }} / year
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.pricingPerYear"
+                  <ng-container *ngIf="product2.pricingPerYear" i18n
                     >Starting from {{ product2.pricingPerYear }} /
                     year</ng-container
                   >
@@ -157,23 +195,8 @@
             </tbody>
           </table>
         </section>
-        <section class="mb-4 py-3">
-          <h2 class="h4 mb-0 text-center">
-            Ready to take your <strong>investments</strong> to the
-            <strong>next level</strong>?
-          </h2>
-          <p class="lead mb-2 text-center" i18n>
-            Effortlessly track, analyze, and visualize your wealth with
-            Ghostfolio.
-          </p>
-          <div class="text-center">
-            <a color="primary" href="https://ghostfol.io" mat-flat-button>
-              Get Started
-            </a>
-          </div>
-        </section>
         <section class="mb-4">
-          <small>
+          <p i18n>
             Please note that the information provided is based on our
             independent research and analysis. This website is not affiliated
             with {{ product2.name }} or any other product mentioned in the
@@ -182,7 +205,22 @@
             the respective product page. Data needs a refresh? Help us maintain
             accurate data on
             <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
-          </small>
+          </p>
+        </section>
+        <section class="call-to-action mb-4 py-3 rounded">
+          <h2 class="h4 mb-0 text-center" i18n>
+            Ready to take your <strong>investments</strong> to the
+            <strong>next level</strong>?
+          </h2>
+          <p class="lead mb-2 text-center" i18n>
+            Effortlessly track, analyze, and visualize your wealth with
+            Ghostfolio.
+          </p>
+          <div class="text-center">
+            <a color="primary" href="https://ghostfol.io" i18n mat-flat-button>
+              Get Started
+            </a>
+          </div>
         </section>
         <section class="mb-4">
           <ul class="list-inline">
@@ -245,7 +283,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item">
-              <a i18n [routerLink]="['/resources', 'personal-finance-tools']"
+              <a i18n [routerLink]="routerLinkResourcesPersonalFinanceTools"
                 >Personal Finance Tools</a
               >
             </li>

@@ -57,6 +57,7 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
+        PRESET_ID: filtersByPresetId,
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
@@ -93,6 +94,10 @@ export class DataService {
             })
             .join(',')
         );
+      }
+
+      if (filtersByPresetId) {
+        params = params.append('presetId', filtersByPresetId[0].id);
       }
 
       if (filtersByTag) {
@@ -336,7 +341,7 @@ export class DataService {
     filters
   }: {
     filters?: Filter[];
-  }): Observable<PortfolioDetails> {
+  } = {}): Observable<PortfolioDetails> {
     return this.http
       .get<any>('/api/v1/portfolio/details', {
         params: this.buildFiltersAsQueryParams({ filters })
@@ -351,14 +356,6 @@ export class DataService {
 
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
-              response.holdings[symbol].assetClass = translate(
-                response.holdings[symbol].assetClass
-              );
-
-              response.holdings[symbol].assetSubClass = translate(
-                response.holdings[symbol].assetSubClass
-              );
-
               response.holdings[symbol].dateOfFirstActivity = response.holdings[
                 symbol
               ].dateOfFirstActivity
@@ -410,10 +407,10 @@ export class DataService {
         map((response) => {
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
-              response.holdings[symbol].value = isNumber(
-                response.holdings[symbol].value
+              response.holdings[symbol].valueInBaseCurrency = isNumber(
+                response.holdings[symbol].valueInBaseCurrency
               )
-                ? response.holdings[symbol].value
+                ? response.holdings[symbol].valueInBaseCurrency
                 : response.holdings[symbol].valueInPercentage;
             }
           }

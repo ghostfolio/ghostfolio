@@ -5,6 +5,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -14,9 +15,10 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import bent from 'bent';
 import Big from 'big.js';
 import { format, isToday } from 'date-fns';
+import got from 'got';
+import ms from 'ms';
 
 @Injectable()
 export class EodHistoricalDataService implements DataProviderInterface {
@@ -76,19 +78,19 @@ export class EodHistoricalDataService implements DataProviderInterface {
     const symbol = this.convertToEodSymbol(aSymbol);
 
     try {
-      const get = bent(
+      const response = await got(
         `${this.URL}/eod/${symbol}?api_token=${
           this.apiKey
         }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
           to,
           DATE_FORMAT
         )}&period={aGranularity}`,
-        'GET',
-        'json',
-        200
-      );
-
-      const response = await get();
+        {
+          timeout: {
+            request: DEFAULT_REQUEST_TIMEOUT
+          }
+        }
+      ).json<any>();
 
       return response.reduce(
         (result, historicalItem, index, array) => {
@@ -136,16 +138,16 @@ export class EodHistoricalDataService implements DataProviderInterface {
     }
 
     try {
-      const get = bent(
+      const realTimeResponse = await got(
         `${this.URL}/real-time/${symbols[0]}?api_token=${
           this.apiKey
         }&fmt=json&s=${symbols.join(',')}`,
-        'GET',
-        'json',
-        200
-      );
-
-      const realTimeResponse = await get();
+        {
+          timeout: {
+            request: DEFAULT_REQUEST_TIMEOUT
+          }
+        }
+      ).json<any>();
 
       const quotes =
         symbols.length === 1 ? [realTimeResponse] : realTimeResponse;
@@ -329,13 +331,14 @@ export class EodHistoricalDataService implements DataProviderInterface {
     let searchResult = [];
 
     try {
-      const get = bent(
+      const response = await got(
         `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const response = await get();
+        {
+          timeout: {
+            request: DEFAULT_REQUEST_TIMEOUT
+          }
+        }
+      ).json<any>();
 
       searchResult = response.map(
         ({ Code, Currency, Exchange, ISIN: isin, Name: name, Type }) => {

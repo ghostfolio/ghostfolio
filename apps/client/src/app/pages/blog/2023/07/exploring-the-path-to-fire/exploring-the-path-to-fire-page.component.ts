@@ -9,4 +9,6 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './exploring-the-path-to-fire-page.html'
 })
-export class ExploringThePathToFirePageComponent {}
+export class ExploringThePathToFirePageComponent {
+  public routerLinkFeatures = ['/' + $localize`features`];
+}

@@ -1,7 +1,9 @@
 <div class="container">
   <div class="mb-5 row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center">About Ghostfolio</h3>
+      <h1 class="d-none d-sm-block h3 mb-4 text-center">
+        <ng-container i18n>About Ghostfolio</ng-container>
+      </h1>
       <div class="about-container">
         <p>
           Ghostfolio is a lightweight wealth management application for
@@ -46,7 +48,7 @@
         <p>
           If you encounter a bug or would like to suggest an improvement or a
           new
-          <a [routerLink]="['/features']">feature</a>, please join the
+          <a [routerLink]="routerLinkFeatures">feature</a>, please join the
           Ghostfolio
           <a
             href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
@@ -139,7 +141,7 @@
         class="py-4 w-100"
         color="primary"
         mat-flat-button
-        [routerLink]="['/faq']"
+        [routerLink]="routerLinkFaq"
         >Frequently Asked Questions (FAQ)</a
       >
     </div>

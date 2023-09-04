@@ -41,7 +41,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   public dataSource: MatTableDataSource<PortfolioPosition> =
     new MatTableDataSource();
   public displayedColumns = [];
-  public ignoreAssetSubClasses = [AssetClass.CASH.toString()];
+  public ignoreAssetSubClasses = [AssetClass.CASH];
   public isLoading = true;
   public routeQueryParams: Subscription;
 
@@ -55,7 +55,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
 
     if (this.hasPermissionToShowValues) {
-      this.displayedColumns.push('value');
+      this.displayedColumns.push('valueInBaseCurrency');
     }
 
     this.displayedColumns.push('allocationInPercentage');

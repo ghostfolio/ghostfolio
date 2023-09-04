@@ -65,9 +65,8 @@ export class TwitterBotService {
           status += benchmarkListing;
         }
 
-        const { data: createdTweet } = await this.twitterClient.v2.tweet(
-          status
-        );
+        const { data: createdTweet } =
+          await this.twitterClient.v2.tweet(status);
 
         Logger.log(
           `Fear & Greed Index has been tweeted: https://twitter.com/ghostfolio_/status/${createdTweet.id}`,

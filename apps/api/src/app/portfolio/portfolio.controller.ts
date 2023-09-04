@@ -134,7 +134,7 @@ export class PortfolioController {
         portfolioPosition.netPerformance = null;
         portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
-          portfolioPosition.value / totalValue;
+          portfolioPosition.valueInBaseCurrency / totalValue;
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
@@ -161,10 +161,12 @@ export class PortfolioController {
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
+        'fireWealth',
         'items',
         'liabilities',
         'netWorth',
         'totalBuy',
+        'totalInvestment',
         'totalSell'
       ]);
     }
@@ -177,6 +179,9 @@ export class PortfolioController {
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         markets: hasDetails ? portfolioPosition.markets : undefined,
+        marketsAdvanced: hasDetails
+          ? portfolioPosition.marketsAdvanced
+          : undefined,
         sectors: hasDetails ? portfolioPosition.sectors : []
       };
     }
@@ -445,7 +450,8 @@ export class PortfolioController {
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       portfolioPublicDetails.holdings[symbol] = {
-        allocationInPercentage: portfolioPosition.value / totalValue,
+        allocationInPercentage:
+          portfolioPosition.valueInBaseCurrency / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         dataSource: portfolioPosition.dataSource,
@@ -456,7 +462,7 @@ export class PortfolioController {
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
         url: portfolioPosition.url,
-        valueInPercentage: portfolioPosition.value / totalValue
+        valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
       };
     }
 

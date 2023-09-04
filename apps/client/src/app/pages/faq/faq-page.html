@@ -1,9 +1,15 @@
 <div class="container">
   <div class="mb-5 row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>
         Frequently Asked Questions (FAQ)
-      </h3>
+      </h1>
+      <p>
+        Find quick answers to commonly asked questions about Ghostfolio in our
+        Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is,
+        explore its features, and learn about our privacy practices. Get all the
+        information you need in one place.
+      </p>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
           <mat-card-title>What is Ghostfolio?</mat-card-title>
@@ -22,7 +28,7 @@
         </mat-card-header>
         <mat-card-content>
           With Ghostfolio, you can keep track of various assets like stocks,
-          ETFs or cryptocurrencies.
+          ETFs, bonds, cryptocurrencies and commodities.
         </mat-card-content>
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -33,7 +39,7 @@
         >
         <mat-card-content>
           Please find a feature overview to manage your wealth
-          <a [routerLink]="['/features']">here</a>.
+          <a [routerLink]="routerLinkFeatures">here</a>.
         </mat-card-content>
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -41,7 +47,7 @@
           <mat-card-title>How do I start?</mat-card-title></mat-card-header
         >
         <mat-card-content>
-          You can sign up via the “<a [routerLink]="['/register']"
+          You can sign up via the “<a [routerLink]="routerLinkRegister"
             >Get Started</a
           >” button at the top of the page. You have multiple options to join
           Ghostfolio: Create an account with a security token, using
@@ -49,6 +55,17 @@
             >Internet Identity</a
           >
           or <i>Google Sign</i>. We will guide you to set up your portfolio.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Will you spam me with emails once I sign up?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content>
+          No, we do not even collect your email address, so you will not receive
+          any spam emails from us.
         </mat-card-content>
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -76,7 +93,7 @@
           world. The
           <a href="https://github.com/ghostfolio/ghostfolio">source code</a> is
           fully available as open source software (OSS). Thanks to our generous
-          <a [routerLink]="['/pricing']">Ghostfolio Premium</a> users and
+          <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> users and
           <a href="https://www.buymeacoffee.com/ghostfolio">sponsors</a> we have
           the ability to run a free, limited plan for novice
           investors.</mat-card-content
@@ -88,8 +105,33 @@
         >
         <mat-card-content
           >Yes, it is! Our
-          <a [routerLink]="['/pricing']">pricing page</a> details everything you
-          get for free.</mat-card-content
+          <a [routerLink]="routerLinkPricing">pricing page</a> details
+          everything you get for free.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Do you monetize or sell my financial data?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content
+          >No, we value your privacy. We do not sell or share your financial
+          data with any third parties.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >What is your business model?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content
+          >By offering
+          <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a>, a
+          subscription plan with a managed hosting service and enhanced
+          features, we fund our business while providing added value to our
+          users.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -99,12 +141,12 @@
           ></mat-card-header
         >
         <mat-card-content
-          ><a [routerLink]="['/pricing']">Ghostfolio Premium</a> is a fully
+          ><a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> is a fully
           managed Ghostfolio cloud offering for ambitious investors. The revenue
           is used to cover the hosting infrastructure and to fund the ongoing
           development. It is the Open Source code base with some extras like the
-          <a [routerLink]="['/markets']">markets overview</a> and a professional
-          data provider.</mat-card-content
+          <a [routerLink]="routerLinkMarkets">markets overview</a> and a
+          professional data provider.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -115,9 +157,9 @@
         >
         <mat-card-content
           >Yes, you can try
-          <a [routerLink]="['/pricing']">Ghostfolio Premium</a> by signing up
-          for Ghostfolio and applying for a trial (see “My Ghostfolio”). It is
-          easy, free and there is no commitment. You can stop using it at any
+          <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> by signing
+          up for Ghostfolio and applying for a trial (see “My Ghostfolio”). It
+          is easy, free and there is no commitment. You can stop using it at any
           time.</mat-card-content
         >
       </mat-card>
@@ -173,8 +215,9 @@
         </mat-card-header>
         <mat-card-content
           >Any support for Ghostfolio is welcome. Be it with a
-          <a [routerLink]="['/pricing']">Ghostfolio Premium</a> subscription to
-          finance the hosting infrastructure, a positive rating in the
+          <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a>
+          subscription to finance the hosting infrastructure, a positive rating
+          in the
           <a
             href="https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa"
             >Google Play Store</a

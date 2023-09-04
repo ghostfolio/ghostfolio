@@ -1,5 +1,8 @@
+import * as path from 'path';
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { paths } from '@ghostfolio/client/app-routing.module';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
 import { AboutPageComponent } from './about-page.component';
@@ -22,38 +25,27 @@ const routes: Routes = [
             (m) => m.ChangelogPageModule
           )
       },
-      ...[
-        'license',
-        /////
-        'licenca',
-        'licence',
-        'licencia',
-        'licentie',
-        'lizenz',
-        'licenza'
-      ].map((path) => ({
-        path,
+      {
+        path: paths.license,
         loadChildren: () =>
           import('./license/license-page.module').then(
             (m) => m.LicensePageModule
           )
-      })),
-      ...[
-        'privacy-policy',
-        /////
-        'datenschutzbestimmungen',
-        'informativa-sulla-privacy',
-        'politique-de-confidentialite',
-        'politica-de-privacidad',
-        'politica-de-privacidade',
-        'privacybeleid'
-      ].map((path) => ({
-        path,
+      },
+      {
+        path: 'oss-friends',
+        loadChildren: () =>
+          import('./oss-friends/oss-friends-page.module').then(
+            (m) => m.OpenSourceSoftwareFriendsPageModule
+          )
+      },
+      {
+        path: paths.privacyPolicy,
         loadChildren: () =>
           import('./privacy-policy/privacy-policy-page.module').then(
             (m) => m.PrivacyPolicyPageModule
           )
-      }))
+      }
     ],
     component: AboutPageComponent,
     path: '',

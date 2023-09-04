@@ -99,9 +99,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         yahooSymbol = quotes[0].symbol;
       }
 
-      const { countries, sectors, url } = await this.getAssetProfile(
-        yahooSymbol
-      );
+      const { countries, sectors, url } =
+        await this.getAssetProfile(yahooSymbol);
 
       if (countries) {
         response.countries = countries;
@@ -135,6 +134,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     let name = longName;
 
     if (name) {
+      name = name.replace('&amp;', '&');
+
       name = name.replace('Amundi Index Solutions - ', '');
       name = name.replace('iShares ETF (CH) - ', '');
       name = name.replace('iShares III Public Limited Company - ', '');
@@ -230,6 +231,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
   public getName() {
     return DataSource.YAHOO;
+  }
+
+  public getTestSymbol() {
+    return 'AAPL';
   }
 
   public parseAssetClass({

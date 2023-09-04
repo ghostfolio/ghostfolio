@@ -33,6 +33,15 @@ export class ExchangeRateDataService {
     return this.currencyPairs;
   }
 
+  public hasCurrencyPair(currency1: string, currency2: string) {
+    return this.currencyPairs.some(({ symbol }) => {
+      return (
+        symbol === `${currency1}${currency2}` ||
+        symbol === `${currency2}${currency1}`
+      );
+    });
+  }
+
   public async initialize() {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
     this.currencies = await this.prepareCurrencies();
@@ -64,11 +73,11 @@ export class ExchangeRateDataService {
     if (Object.keys(result).length !== this.currencyPairs.length) {
       // Load currencies directly from data provider as a fallback
       // if historical data is not fully available
-      const quotes = await this.dataProviderService.getQuotes(
-        this.currencyPairs.map(({ dataSource, symbol }) => {
+      const quotes = await this.dataProviderService.getQuotes({
+        items: this.currencyPairs.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
         })
-      );
+      });
 
       for (const symbol of Object.keys(quotes)) {
         if (isNumber(quotes[symbol].marketPrice)) {
@@ -125,9 +134,11 @@ export class ExchangeRateDataService {
       return 0;
     }
 
-    let factor = 1;
+    let factor: number;
 
-    if (aFromCurrency !== aToCurrency) {
+    if (aFromCurrency === aToCurrency) {
+      factor = 1;
+    } else {
       if (this.exchangeRates[`${aFromCurrency}${aToCurrency}`]) {
         factor = this.exchangeRates[`${aFromCurrency}${aToCurrency}`];
       } else {
@@ -171,7 +182,9 @@ export class ExchangeRateDataService {
 
     let factor: number;
 
-    if (aFromCurrency !== aToCurrency) {
+    if (aFromCurrency === aToCurrency) {
+      factor = 1;
+    } else {
       const dataSource =
         this.dataProviderService.getDataSourceForExchangeRates();
       const symbol = `${aFromCurrency}${aToCurrency}`;

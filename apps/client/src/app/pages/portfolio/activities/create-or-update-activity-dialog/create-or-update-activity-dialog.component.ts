@@ -14,23 +14,13 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
-import { isString } from 'lodash';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  startWith,
-  switchMap,
-  takeUntil
-} from 'rxjs/operators';
+import { catchError, map, startWith, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
@@ -61,6 +51,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public tags: Tag[] = [];
   public total = 0;
+  public typesTranslationMap = new Map<Type, string>();
   public Validators = Validators;
 
   private unsubscribeSubject = new Subject<void>();
@@ -89,6 +80,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         id,
         name: translate(name)
       };
+    });
+
+    Object.keys(Type).forEach((type) => {
+      this.typesTranslationMap[Type[type]] = translate(Type[type]);
     });
 
     this.activityForm = this.formBuilder.group({
@@ -372,10 +367,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       currencyOfUnitPrice: this.activityForm.controls['currency'].value,
       unitPriceInCustomCurrency: this.currentMarketPrice
     });
-  }
-
-  public displayFn(aLookupItem: LookupItem) {
-    return aLookupItem?.symbol ?? '';
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {

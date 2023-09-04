@@ -15,8 +15,8 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import bent from 'bent';
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
@@ -45,8 +45,7 @@ export class CoinGeckoService implements DataProviderInterface {
     };
 
     try {
-      const get = bent(`${this.URL}/coins/${aSymbol}`, 'GET', 'json', 200);
-      const { name } = await get();
+      const { name } = await got(`${this.URL}/coins/${aSymbol}`).json<any>();
 
       response.name = name;
     } catch (error) {
@@ -79,17 +78,13 @@ export class CoinGeckoService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const get = bent(
+      const { prices } = await got(
         `${
           this.URL
         }/coins/${aSymbol}/market_chart/range?vs_currency=${this.baseCurrency.toLowerCase()}&from=${getUnixTime(
           from
-        )}&to=${getUnixTime(to)}`,
-        'GET',
-        'json',
-        200
-      );
-      const { prices } = await get();
+        )}&to=${getUnixTime(to)}`
+      ).json<any>();
 
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -132,15 +127,11 @@ export class CoinGeckoService implements DataProviderInterface {
     }
 
     try {
-      const get = bent(
+      const response = await got(
         `${this.URL}/simple/price?ids=${aSymbols.join(
           ','
-        )}&vs_currencies=${this.baseCurrency.toLowerCase()}`,
-        'GET',
-        'json',
-        200
-      );
-      const response = await get();
+        )}&vs_currencies=${this.baseCurrency.toLowerCase()}`
+      ).json<any>();
 
       for (const symbol in response) {
         if (Object.prototype.hasOwnProperty.call(response, symbol)) {
@@ -174,8 +165,9 @@ export class CoinGeckoService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const get = bent(`${this.URL}/search?query=${query}`, 'GET', 'json', 200);
-      const { coins } = await get();
+      const { coins } = await got(
+        `${this.URL}/search?query=${query}`
+      ).json<any>();
 
       items = coins.map(({ id: symbol, name }) => {
         return {

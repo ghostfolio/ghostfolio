@@ -7,6 +7,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -15,7 +16,10 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type {
+  MarketDataPreset,
+  RequestWithUser
+} from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -34,7 +38,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
-import { isDate } from 'date-fns';
+import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
@@ -113,7 +117,7 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: `${dataSource}-${symbol}`
+            jobId: getAssetProfileIdentifier({ dataSource, symbol })
           }
         };
       })
@@ -149,7 +153,7 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: `${dataSource}-${symbol}`
+            jobId: getAssetProfileIdentifier({ dataSource, symbol })
           }
         };
       })
@@ -182,7 +186,7 @@ export class AdminController {
       name: GATHER_ASSET_PROFILE_PROCESS,
       opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: `${dataSource}-${symbol}`
+        jobId: getAssetProfileIdentifier({ dataSource, symbol })
       }
     });
   }
@@ -229,7 +233,7 @@ export class AdminController {
       );
     }
 
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     if (!isDate(date)) {
       throw new HttpException(
@@ -249,6 +253,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'))
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
+    @Query('presetId') presetId?: MarketDataPreset,
     @Query('skip') skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
@@ -279,6 +284,7 @@ export class AdminController {
 
     return this.adminService.getMarketData({
       filters,
+      presetId,
       sortColumn,
       sortDirection,
       skip: isNaN(skip) ? undefined : skip,
@@ -327,7 +333,7 @@ export class AdminController {
       );
     }
 
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     return this.marketDataService.updateMarketData({
       data: { marketPrice: data.marketPrice, state: 'CLOSE' },

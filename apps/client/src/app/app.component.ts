@@ -38,6 +38,20 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public info: InfoItem;
   public pageTitle: string;
+  public routerLinkAbout = ['/' + $localize`about`];
+  public routerLinkAboutChangelog = ['/' + $localize`about`, 'changelog'];
+  public routerLinkAboutLicense = ['/' + $localize`about`, $localize`license`];
+  public routerLinkAboutPrivacyPolicy = [
+    '/' + $localize`about`,
+    $localize`privacy-policy`
+  ];
+  public routerLinkFaq = ['/' + $localize`faq`];
+  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkMarkets = ['/' + $localize`markets`];
+  public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkRegister = ['/' + $localize`register`];
+  public routerLinkResources = ['/' + $localize`resources`];
+  public showFooter = false;
   public user: User;
   public version = environment.version;
 
@@ -88,6 +102,19 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
         const urlSegments = urlSegmentGroup.segments;
         this.currentRoute = urlSegments[0].path;
+
+        this.showFooter =
+          (this.currentRoute === 'blog' ||
+            this.currentRoute === this.routerLinkFaq[0].slice(1) ||
+            this.currentRoute === this.routerLinkFeatures[0].slice(1) ||
+            this.currentRoute === this.routerLinkMarkets[0].slice(1) ||
+            this.currentRoute === 'open' ||
+            this.currentRoute === 'p' ||
+            this.currentRoute === this.routerLinkPricing[0].slice(1) ||
+            this.currentRoute === this.routerLinkRegister[0].slice(1) ||
+            this.currentRoute === this.routerLinkResources[0].slice(1) ||
+            this.currentRoute === 'start') &&
+          this.deviceType !== 'mobile';
 
         if (this.deviceType === 'mobile') {
           setTimeout(() => {

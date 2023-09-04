@@ -66,11 +66,11 @@ export class BenchmarkService {
 
     const promises: Promise<number>[] = [];
 
-    const quotes = await this.dataProviderService.getQuotes(
-      benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
+    const quotes = await this.dataProviderService.getQuotes({
+      items: benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
       })
-    );
+    });
 
     for (const { dataSource, symbol } of benchmarkAssetProfiles) {
       promises.push(this.marketDataService.getMax({ dataSource, symbol }));

@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Resources</h1>
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Resources</h1>
       <h2 class="h4 mb-3" i18n>Guides</h2>
       <div class="mb-5">
         <div class="mb-4 media">
@@ -170,7 +170,7 @@
             </div>
           </div>
         </div>
-        <div class="mb-4 media">
+        <div *ngIf="hasPermissionForSubscription" class="mb-4 media">
           <div class="media-body">
             <h3 class="h5 mt-0">Personal Finance Tools</h3>
             <div class="mb-1">
@@ -179,7 +179,7 @@
               monitor investments, and make informed financial decisions.
             </div>
             <div>
-              <a i18n [routerLink]="['/resources', 'personal-finance-tools']"
+              <a [routerLink]="routerLinkResourcesPersonalFinanceTools"
                 >Personal Finance Tools →</a
               >
             </div>

@@ -44,30 +44,31 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
+        this.tabs = [
+          {
+            iconName: 'reader-outline',
+            label: $localize`About`,
+            path: ['/' + $localize`about`]
+          },
+          {
+            iconName: 'sparkles-outline',
+            label: $localize`Changelog`,
+            path: ['/' + $localize`about`, 'changelog']
+          },
+          {
+            iconName: 'ribbon-outline',
+            label: $localize`License`,
+            path: ['/' + $localize`about`, $localize`license`]
+          }
+        ];
+
         if (state?.user) {
-          this.tabs = [
-            {
-              iconName: 'reader-outline',
-              label: $localize`About`,
-              path: ['/about']
-            },
-            {
-              iconName: 'sparkles-outline',
-              label: $localize`Changelog`,
-              path: ['/about', 'changelog']
-            },
-            {
-              iconName: 'ribbon-outline',
-              label: $localize`License`,
-              path: ['/about', 'license']
-            },
-            {
-              iconName: 'shield-checkmark-outline',
-              label: $localize`Privacy Policy`,
-              path: ['/about', 'privacy-policy'],
-              showCondition: this.hasPermissionForSubscription
-            }
-          ];
+          this.tabs.push({
+            iconName: 'shield-checkmark-outline',
+            label: $localize`Privacy Policy`,
+            path: ['/' + $localize`about`, $localize`privacy-policy`],
+            showCondition: this.hasPermissionForSubscription
+          });
           this.user = state.user;
 
           this.hasMessage =
@@ -78,6 +79,12 @@ export class AboutPageComponent implements OnDestroy, OnInit {
 
           this.changeDetectorRef.markForCheck();
         }
+
+        this.tabs.push({
+          iconName: 'happy-outline',
+          label: 'OSS Friends',
+          path: ['/' + $localize`about`, 'oss-friends']
+        });
       });
   }
 

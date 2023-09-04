@@ -4,7 +4,11 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  PROPERTY_IS_READ_ONLY_MODE,
+  locale
+} from '@ghostfolio/common/config';
 import { User as IUser, UserSettings } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
@@ -14,14 +18,13 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
+import { differenceInDays } from 'date-fns';
 import { sortBy } from 'lodash';
 
 const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
-  public static DEFAULT_CURRENCY = 'USD';
-
   private baseCurrency: string;
 
   public constructor(
@@ -123,7 +126,7 @@ export class UserService {
       id,
       provider,
       role,
-      Settings,
+      Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
       updatedAt,
       activityCount: Analytics?.activityCount
@@ -144,8 +147,7 @@ export class UserService {
 
     // Set default value for base currency
     if (!(user.Settings.settings as UserSettings)?.baseCurrency) {
-      (user.Settings.settings as UserSettings).baseCurrency =
-        UserService.DEFAULT_CURRENCY;
+      (user.Settings.settings as UserSettings).baseCurrency = DEFAULT_CURRENCY;
     }
 
     // Set default value for date range
@@ -165,11 +167,29 @@ export class UserService {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);
 
-      if (
-        Analytics?.activityCount % 10 === 0 &&
-        user.subscription?.type === 'Basic'
-      ) {
-        currentPermissions.push(permissions.enableSubscriptionInterstitial);
+      if (user.subscription?.type === 'Basic') {
+        const daysSinceRegistration = differenceInDays(
+          new Date(),
+          user.createdAt
+        );
+        let frequency = 20;
+
+        if (daysSinceRegistration > 180) {
+          frequency = 3;
+        } else if (daysSinceRegistration > 60) {
+          frequency = 5;
+        } else if (daysSinceRegistration > 30) {
+          frequency = 10;
+        } else if (daysSinceRegistration > 15) {
+          frequency = 15;
+        }
+
+        if (Analytics?.activityCount % frequency === 1) {
+          currentPermissions.push(permissions.enableSubscriptionInterstitial);
+        }
+
+        // Reset benchmark
+        user.Settings.settings.benchmark = undefined;
       }
 
       if (user.subscription?.type === 'Premium') {

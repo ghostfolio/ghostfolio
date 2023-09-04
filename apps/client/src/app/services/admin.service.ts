@@ -19,6 +19,7 @@ import { DataSource, MarketData, Platform, Prisma } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
+
 import { DataService } from './data.service';
 
 @Injectable({
@@ -94,7 +95,9 @@ export class AdminService {
       params = params.append('sortDirection', sortDirection);
     }
 
-    params = params.append('take', take);
+    if (take) {
+      params = params.append('take', take);
+    }
 
     return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
       params

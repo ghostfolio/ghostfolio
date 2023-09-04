@@ -29,6 +29,8 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   public isLoggedIn: boolean;
   public price: number;
   public priceId: string;
+  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkRegister = ['/' + $localize`register`];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

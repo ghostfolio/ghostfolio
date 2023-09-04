@@ -41,9 +41,8 @@ export class AuthController {
     @Param('accessToken') accessToken: string
   ): Promise<OAuthResponse> {
     try {
-      const authToken = await this.authService.validateAnonymousLogin(
-        accessToken
-      );
+      const authToken =
+        await this.authService.validateAnonymousLogin(accessToken);
       return { authToken };
     } catch {
       throw new HttpException(

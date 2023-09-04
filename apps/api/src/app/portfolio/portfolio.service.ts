@@ -42,7 +42,6 @@ import type {
   AccountWithValue,
   DateRange,
   GroupBy,
-  Market,
   OrderWithAccount,
   RequestWithUser,
   UserWithSettings
@@ -84,8 +83,10 @@ import {
 import { PortfolioCalculator } from './portfolio-calculator';
 import { RulesService } from './rules.service';
 
+const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
 const emergingMarkets = require('../../assets/countries/emerging-markets.json');
+const europeMarkets = require('../../assets/countries/europe-markets.json');
 
 @Injectable()
 export class PortfolioService {
@@ -469,9 +470,8 @@ export class PortfolioService {
       transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
     );
     const startDate = this.getStartDate(dateRange, portfolioStart);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      startDate
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(startDate);
 
     const cashDetails = await this.accountService.getCashDetails({
       filters,
@@ -504,15 +504,17 @@ export class PortfolioService {
       );
     }
 
-    const dataGatheringItems = currentPositions.positions.map((position) => {
-      return {
-        dataSource: position.dataSource,
-        symbol: position.symbol
-      };
-    });
+    const dataGatheringItems = currentPositions.positions.map(
+      ({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol
+        };
+      }
+    );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes(dataGatheringItems),
+      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
     ]);
 
@@ -536,30 +538,79 @@ export class PortfolioService {
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
-      const markets: { [key in Market]: number } = {
+      const markets: PortfolioPosition['markets'] = {
+        [UNKNOWN_KEY]: 0,
         developedMarkets: 0,
         emergingMarkets: 0,
         otherMarkets: 0
       };
+      const marketsAdvanced: PortfolioPosition['marketsAdvanced'] = {
+        [UNKNOWN_KEY]: 0,
+        asiaPacific: 0,
+        emergingMarkets: 0,
+        europe: 0,
+        japan: 0,
+        northAmerica: 0,
+        otherMarkets: 0
+      };
 
-      for (const country of symbolProfile.countries) {
-        if (developedMarkets.includes(country.code)) {
-          markets.developedMarkets = new Big(markets.developedMarkets)
-            .plus(country.weight)
-            .toNumber();
-        } else if (emergingMarkets.includes(country.code)) {
-          markets.emergingMarkets = new Big(markets.emergingMarkets)
-            .plus(country.weight)
-            .toNumber();
-        } else {
-          markets.otherMarkets = new Big(markets.otherMarkets)
-            .plus(country.weight)
-            .toNumber();
+      if (symbolProfile.countries.length > 0) {
+        for (const country of symbolProfile.countries) {
+          if (developedMarkets.includes(country.code)) {
+            markets.developedMarkets = new Big(markets.developedMarkets)
+              .plus(country.weight)
+              .toNumber();
+          } else if (emergingMarkets.includes(country.code)) {
+            markets.emergingMarkets = new Big(markets.emergingMarkets)
+              .plus(country.weight)
+              .toNumber();
+          } else {
+            markets.otherMarkets = new Big(markets.otherMarkets)
+              .plus(country.weight)
+              .toNumber();
+          }
+
+          if (country.code === 'JP') {
+            marketsAdvanced.japan = new Big(marketsAdvanced.japan)
+              .plus(country.weight)
+              .toNumber();
+          } else if (country.code === 'CA' || country.code === 'US') {
+            marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
+              .plus(country.weight)
+              .toNumber();
+          } else if (asiaPacificMarkets.includes(country.code)) {
+            marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
+              .plus(country.weight)
+              .toNumber();
+          } else if (emergingMarkets.includes(country.code)) {
+            marketsAdvanced.emergingMarkets = new Big(
+              marketsAdvanced.emergingMarkets
+            )
+              .plus(country.weight)
+              .toNumber();
+          } else if (europeMarkets.includes(country.code)) {
+            marketsAdvanced.europe = new Big(marketsAdvanced.europe)
+              .plus(country.weight)
+              .toNumber();
+          } else {
+            marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
+              .plus(country.weight)
+              .toNumber();
+          }
         }
+      } else {
+        markets[UNKNOWN_KEY] = new Big(markets[UNKNOWN_KEY])
+          .plus(value)
+          .toNumber();
+
+        marketsAdvanced[UNKNOWN_KEY] = new Big(marketsAdvanced[UNKNOWN_KEY])
+          .plus(value)
+          .toNumber();
       }
 
       holdings[item.symbol] = {
         markets,
+        marketsAdvanced,
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : value.div(filteredValueInBaseCurrency).toNumber(),
@@ -581,9 +632,10 @@ export class PortfolioService {
         quantity: item.quantity.toNumber(),
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
+        tags: item.tags,
         transactionCount: item.transactionCount,
         url: symbolProfile.url,
-        value: value.toNumber()
+        valueInBaseCurrency: value.toNumber()
       };
     }
 
@@ -626,7 +678,7 @@ export class PortfolioService {
       const emergencyFundInCash = emergencyFund
         .minus(
           this.getEmergencyFundPositionsValueInBaseCurrency({
-            activities: orders
+            holdings
           })
         )
         .toNumber();
@@ -643,7 +695,7 @@ export class PortfolioService {
       holdings[userCurrency] = {
         ...emergencyFundCashPositions[userCurrency],
         investment: emergencyFundInCash,
-        value: emergencyFundInCash
+        valueInBaseCurrency: emergencyFundInCash
       };
     }
 
@@ -654,7 +706,7 @@ export class PortfolioService {
       balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
       emergencyFundPositionsValueInBaseCurrency:
         this.getEmergencyFundPositionsValueInBaseCurrency({
-          activities: orders
+          holdings
         })
     });
 
@@ -740,6 +792,7 @@ export class PortfolioService {
         name: order.SymbolProfile?.name,
         quantity: new Big(order.quantity),
         symbol: order.SymbolProfile.symbol,
+        tags: order.tags,
         type: order.type,
         unitPrice: new Big(order.unitPrice)
       }));
@@ -756,9 +809,8 @@ export class PortfolioService {
     const transactionPoints = portfolioCalculator.getTransactionPoints();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      portfolioStart
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(portfolioStart);
 
     const position = currentPositions.positions.find(
       (item) => item.symbol === aSymbol
@@ -897,9 +949,9 @@ export class PortfolioService {
         )
       };
     } else {
-      const currentData = await this.dataProviderService.getQuotes([
-        { dataSource: DataSource.YAHOO, symbol: aSymbol }
-      ]);
+      const currentData = await this.dataProviderService.getQuotes({
+        items: [{ dataSource: DataSource.YAHOO, symbol: aSymbol }]
+      });
       const marketPrice = currentData[aSymbol]?.marketPrice;
 
       let historicalData = await this.dataProviderService.getHistorical(
@@ -992,23 +1044,22 @@ export class PortfolioService {
 
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(dateRange, portfolioStart);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      startDate
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(startDate);
 
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
     );
 
-    const dataGatheringItem = positions.map((position) => {
+    const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
       return {
-        dataSource: position.dataSource,
-        symbol: position.symbol
+        dataSource,
+        symbol
       };
     });
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes(dataGatheringItem),
+      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(
         positions.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
@@ -1184,9 +1235,8 @@ export class PortfolioService {
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      portfolioStart
-    );
+    const currentPositions =
+      await portfolioCalculator.getCurrentPositions(portfolioStart);
 
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
@@ -1276,7 +1326,7 @@ export class PortfolioService {
 
       if (cashPositions[account.currency]) {
         cashPositions[account.currency].investment += convertedBalance;
-        cashPositions[account.currency].value += convertedBalance;
+        cashPositions[account.currency].valueInBaseCurrency += convertedBalance;
       } else {
         cashPositions[account.currency] = this.getInitialCashPosition({
           balance: convertedBalance,
@@ -1288,7 +1338,9 @@ export class PortfolioService {
     for (const symbol of Object.keys(cashPositions)) {
       // Calculate allocations for each currency
       cashPositions[symbol].allocationInPercentage = value.gt(0)
-        ? new Big(cashPositions[symbol].value).div(value).toNumber()
+        ? new Big(cashPositions[symbol].valueInBaseCurrency)
+            .div(value)
+            .toNumber()
         : 0;
     }
 
@@ -1388,13 +1440,13 @@ export class PortfolioService {
   }
 
   private getEmergencyFundPositionsValueInBaseCurrency({
-    activities
+    holdings
   }: {
-    activities: Activity[];
+    holdings: PortfolioDetails['holdings'];
   }) {
-    const emergencyFundOrders = activities.filter((activity) => {
+    const emergencyFundHoldings = Object.values(holdings).filter(({ tags }) => {
       return (
-        activity.tags?.some(({ id }) => {
+        tags?.some(({ id }) => {
           return id === EMERGENCY_FUND_TAG_ID;
         }) ?? false
       );
@@ -1402,18 +1454,9 @@ export class PortfolioService {
 
     let valueInBaseCurrencyOfEmergencyFundPositions = new Big(0);
 
-    for (const order of emergencyFundOrders) {
-      if (order.type === 'BUY') {
-        valueInBaseCurrencyOfEmergencyFundPositions =
-          valueInBaseCurrencyOfEmergencyFundPositions.plus(
-            order.valueInBaseCurrency
-          );
-      } else if (order.type === 'SELL') {
-        valueInBaseCurrencyOfEmergencyFundPositions =
-          valueInBaseCurrencyOfEmergencyFundPositions.minus(
-            order.valueInBaseCurrency
-          );
-      }
+    for (const { valueInBaseCurrency } of emergencyFundHoldings) {
+      valueInBaseCurrencyOfEmergencyFundPositions =
+        valueInBaseCurrencyOfEmergencyFundPositions.plus(valueInBaseCurrency);
     }
 
     return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
@@ -1472,8 +1515,9 @@ export class PortfolioService {
       quantity: 0,
       sectors: [],
       symbol: currency,
+      tags: [],
       transactionCount: 0,
-      value: balance
+      valueInBaseCurrency: balance
     };
   }
 
@@ -1499,7 +1543,13 @@ export class PortfolioService {
       );
   }
 
-  private getLiabilities(activities: OrderWithAccount[]) {
+  private getLiabilities({
+    activities,
+    userCurrency
+  }: {
+    activities: OrderWithAccount[];
+    userCurrency: string;
+  }) {
     return activities
       .filter(({ type }) => {
         return type === TypeOfOrder.LIABILITY;
@@ -1508,7 +1558,7 @@ export class PortfolioService {
         return this.exchangeRateDataService.toCurrency(
           new Big(quantity).mul(unitPrice).toNumber(),
           SymbolProfile.currency,
-          this.request.user.Settings.settings.baseCurrency
+          userCurrency
         );
       })
       .reduce(
@@ -1618,7 +1668,10 @@ export class PortfolioService {
     const fees = this.getFees({ activities, userCurrency }).toNumber();
     const firstOrderDate = activities[0]?.date;
     const items = this.getItems(activities).toNumber();
-    const liabilities = this.getLiabilities(activities).toNumber();
+    const liabilities = this.getLiabilities({
+      activities,
+      userCurrency
+    }).toNumber();
 
     const totalBuy = this.getTotalByType(activities, userCurrency, 'BUY');
     const totalSell = this.getTotalByType(activities, userCurrency, 'SELL');
@@ -1683,7 +1736,16 @@ export class PortfolioService {
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
-      emergencyFund: emergencyFund.toNumber(),
+      emergencyFund: {
+        assets: emergencyFundPositionsValueInBaseCurrency,
+        cash: emergencyFund
+          .minus(emergencyFundPositionsValueInBaseCurrency)
+          .toNumber(),
+        total: emergencyFund.toNumber()
+      },
+      fireWealth: new Big(performanceInformation.performance.currentValue)
+        .minus(emergencyFundPositionsValueInBaseCurrency)
+        .toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
       }).length
@@ -1735,6 +1797,7 @@ export class PortfolioService {
       name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
       symbol: order.SymbolProfile.symbol,
+      tags: order.tags,
       type: order.type,
       unitPrice: new Big(
         this.exchangeRateDataService.toCurrency(
@@ -1775,12 +1838,12 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }) {
-    const ordersOfTypeItem = await this.orderService.getOrders({
+    const ordersOfTypeItemOrLiability = await this.orderService.getOrders({
       filters,
       userCurrency,
       userId,
       withExcludedAccounts,
-      types: ['ITEM']
+      types: ['ITEM', 'LIABILITY']
     });
 
     const accounts: PortfolioDetails['accounts'] = {};
@@ -1820,13 +1883,14 @@ export class PortfolioService {
         return accountId === account.id;
       });
 
-      const ordersOfTypeItemByAccount = ordersOfTypeItem.filter(
-        ({ accountId }) => {
+      const ordersOfTypeItemOrLiabilityByAccount =
+        ordersOfTypeItemOrLiability.filter(({ accountId }) => {
           return accountId === account.id;
-        }
-      );
+        });
 
-      ordersByAccount = ordersByAccount.concat(ordersOfTypeItemByAccount);
+      ordersByAccount = ordersByAccount.concat(
+        ordersOfTypeItemOrLiabilityByAccount
+      );
 
       accounts[account.id] = {
         balance: account.balance,
@@ -1866,7 +1930,7 @@ export class PortfolioService {
             order.unitPrice ??
             0);
 
-        if (order.type === 'SELL') {
+        if (order.type === 'LIABILITY' || order.type === 'SELL') {
           currentValueOfSymbolInBaseCurrency *= -1;
         }
 

@@ -1,1 +1,5 @@
-export type Market = 'developedMarkets' | 'emergingMarkets' | 'otherMarkets';
+export type Market =
+  | 'developedMarkets'
+  | 'emergingMarkets'
+  | 'otherMarkets'
+  | 'UNKNOWN';

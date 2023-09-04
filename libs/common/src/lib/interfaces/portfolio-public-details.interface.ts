@@ -17,7 +17,7 @@ export interface PortfolioPublicDetails {
       | 'sectors'
       | 'symbol'
       | 'url'
-      | 'value'
+      | 'valueInBaseCurrency'
       | 'valueInPercentage'
     >;
   };

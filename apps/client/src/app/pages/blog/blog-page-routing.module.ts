@@ -136,6 +136,15 @@ const routes: Routes = [
         './2023/07/exploring-the-path-to-fire/exploring-the-path-to-fire-page.component'
       ).then((c) => c.ExploringThePathToFirePageComponent),
     title: 'Exploring the Path to FIRE'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2023/08/ghostfolio-joins-oss-friends',
+    loadComponent: () =>
+      import(
+        './2023/08/ghostfolio-joins-oss-friends/ghostfolio-joins-oss-friends-page.component'
+      ).then((c) => c.GhostfolioJoinsOssFriendsPageComponent),
+    title: 'Ghostfolio joins OSS Friends'
   }
 ];
 

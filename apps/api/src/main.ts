@@ -7,6 +7,7 @@ import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+import { HtmlTemplateMiddleware } from './middlewares/html-template.middleware';
 
 async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
@@ -23,7 +24,7 @@ async function bootstrap() {
     defaultVersion: '1',
     type: VersioningType.URI
   });
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', { exclude: ['sitemap.xml'] });
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,
@@ -40,6 +41,7 @@ async function bootstrap() {
       helmet({
         contentSecurityPolicy: {
           directives: {
+            connectSrc: ["'self'", 'https://js.stripe.com'], // Allow connections to Stripe
             frameSrc: ["'self'", 'https://js.stripe.com'], // Allow loading frames from Stripe
             scriptSrc: ["'self'", "'unsafe-inline'", 'https://js.stripe.com'], // Allow inline scripts and scripts from Stripe
             scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
@@ -50,6 +52,8 @@ async function bootstrap() {
       })
     );
   }
+
+  app.use(HtmlTemplateMiddleware);
 
   const BASE_CURRENCY = configService.get<string>('BASE_CURRENCY');
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
