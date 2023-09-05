@@ -18,7 +18,6 @@ import {
 import Big from 'big.js';
 import { format, isToday } from 'date-fns';
 import got from 'got';
-import ms from 'ms';
 
 @Injectable()
 export class EodHistoricalDataService implements DataProviderInterface {
