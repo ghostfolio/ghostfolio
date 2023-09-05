@@ -78,7 +78,7 @@ const locales = {
   },
   '/en/blog/2023/08/ghostfolio-2': {
     featureGraphicPath: 'assets/images/blog/ghostfolio-2.jpg',
-    title: `Ghostfolio 2.0 - ${titleShort}`
+    title: `Announcing Ghostfolio 2.0 - ${titleShort}`
   }
 };
 
