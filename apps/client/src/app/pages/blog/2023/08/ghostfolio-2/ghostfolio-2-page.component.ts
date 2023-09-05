@@ -9,4 +9,9 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './ghostfolio-2-page.html'
 })
-export class Ghostfolio2PageComponent {}
+export class Ghostfolio2PageComponent {
+  public routerLinkAbout = ['/' + $localize`about`];
+  public routerLinkAboutChangelog = ['/' + $localize`about`, 'changelog'];
+  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkMarkets = ['/' + $localize`markets`];
+}
