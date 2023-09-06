@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refreshed the cryptocurrencies list
 
+### Fixed
+
+- Fixed an issue in the _Yahoo Finance_ data enhancer where countries and sectors have been removed
+
 ## 1.305.0 - 2023-09-03
 
 ### Added
