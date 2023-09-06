@@ -1,5 +1,5 @@
 {
-  "createdAt": "2023-08-22T06:39:23.320Z",
+  "createdAt": "2023-09-02T07:02:24.422Z",
   "data": [
     {
       "name": "Appsmith",
@@ -77,6 +77,11 @@
       "href": "https://openbb.co"
     },
     {
+      "name": "Rivet",
+      "description": "Open-source solution to deploy, scale, and operate your multiplayer game.",
+      "href": "https://rivet.gg"
+    },
+    {
       "name": "Sniffnet",
       "description": "Sniffnet is a network monitoring tool to help you easily keep track of your Internet traffic.",
       "href": "https://www.sniffnet.net"
@@ -84,7 +89,7 @@
     {
       "name": "Tolgee",
       "description": "Software localization from A to Z made really easy.",
-      "href": "https://tolgee.io/"
+      "href": "https://tolgee.io"
     },
     {
       "name": "Trigger.dev",
@@ -110,6 +115,11 @@
       "name": "Webstudio",
       "description": "Webstudio is an open source alternative to Webflow",
       "href": "https://webstudio.is"
+    },
+    {
+      "name": "Spark.NET",
+      "description": "The .NET Web Framework for Makers. Build production ready, full-stack web applications fast without sweating the small stuff.",
+      "href": "https://spark-framework.net"
     }
   ],
   "source": "https://formbricks.com/api/oss-friends"
