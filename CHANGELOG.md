@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for the cryptocurrency _CyberConnect_
+- Added support for the `copy-assets` `Nx` target on _Windows_
 
 ### Changed
 
