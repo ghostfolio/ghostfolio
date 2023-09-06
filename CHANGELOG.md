@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for the cryptocurrency _CyberConnect_
+
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Refreshed the cryptocurrencies list
 
 ## 1.305.0 - 2023-09-03
 
