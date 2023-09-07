@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM:-linux/arm64} node:18-slim as builder
+FROM --platform=$BUILDPLATFORM node:18-slim as builder
 
 # Build application and add additional files
 WORKDIR /ghostfolio
