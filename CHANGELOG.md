@@ -69,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Set up the language localization for Türkçe (`tr`)
 - Added support for the cryptocurrency _CyberConnect_
 - Added a blog post: _Announcing Ghostfolio 2.0_
 
