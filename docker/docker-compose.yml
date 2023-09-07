@@ -10,13 +10,13 @@ services:
       REDIS_HOST: 'redis'
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
-      - 3333:3333
+      - "3333:3333"
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-
+    
   postgres:
     image: postgres:12
     env_file:
