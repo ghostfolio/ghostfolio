@@ -566,7 +566,7 @@ export class ImportService {
           ])
         )?.[symbol];
 
-        if (!assetProfile) {
+        if (!assetProfile?.name) {
           throw new Error(
             `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
