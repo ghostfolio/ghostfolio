@@ -567,6 +567,10 @@ export class ImportService {
         )?.[symbol];
 
         if (!assetProfile?.name) {
+          /* FIXME: `index` in server is different from index in client's `handleImportError` 
+           in apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts
+           due to uniqBy(...) in line 551.
+           This results on a different activity displayed in the frontend. */
           throw new Error(
             `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
           );
