@@ -18,7 +18,8 @@ const descriptions = {
   fr: 'Ghostfolio est un dashboard de finances personnelles qui permet de suivre vos actifs comme les actions, les ETF ou les crypto-monnaies sur plusieurs plateformes.',
   it: 'Ghostfolio è un dashboard di finanza personale per tenere traccia delle vostre attività come azioni, ETF o criptovalute su più piattaforme.',
   nl: 'Ghostfolio is een persoonlijk financieel dashboard om uw activa zoals aandelen, ETF’s of cryptocurrencies over meerdere platforms bij te houden.',
-  pt: 'Ghostfolio é um dashboard de finanças pessoais para acompanhar os seus activos como acções, ETFs ou criptomoedas em múltiplas plataformas.'
+  pt: 'Ghostfolio é um dashboard de finanças pessoais para acompanhar os seus activos como acções, ETFs ou criptomoedas em múltiplas plataformas.',
+  tr: 'Ghostfolio, hisse senetleri, ETF’ler veya kripto para birimleri gibi varlıklarınızı birden fazla platformda takip etmenizi sağlayan bir kişisel finans panosudur.'
 };
 
 const title = 'Ghostfolio – Open Source Wealth Management Software';

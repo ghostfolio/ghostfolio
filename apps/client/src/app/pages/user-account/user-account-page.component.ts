@@ -66,7 +66,8 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
     'fr',
     'it',
     'nl',
-    'pt'
+    'pt',
+    'tr'
   ];
   public price: number;
   public priceId: string;
