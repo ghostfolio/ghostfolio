@@ -26,7 +26,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -39,7 +39,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -52,7 +52,7 @@
       </li>
       <li *ngIf="hasPermissionToAccessAdminControl" class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -65,7 +65,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -83,7 +83,7 @@
         class="list-inline-item"
       >
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -96,7 +96,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -129,33 +129,37 @@
         <mat-menu #accountMenu="matMenu" xPosition="before">
           <ng-container *ngIf="user?.access?.length > 0">
             <button mat-menu-item (click)="impersonateAccount(null)">
-              <ion-icon
-                *ngIf="user?.access?.length > 0"
-                class="mr-2"
-                [name]="
-                  impersonationId
-                    ? 'radio-button-off-outline'
-                    : 'radio-button-on-outline'
-                "
-              ></ion-icon>
-              <span i18n>Me</span>
+              <span class="align-items-center d-flex">
+                <ion-icon
+                  *ngIf="user?.access?.length > 0"
+                  class="mr-2"
+                  [name]="
+                    impersonationId
+                      ? 'radio-button-off-outline'
+                      : 'radio-button-on-outline'
+                  "
+                ></ion-icon>
+                <span i18n>Me</span>
+              </span>
             </button>
             <button
               *ngFor="let accessItem of user?.access"
               mat-menu-item
               (click)="impersonateAccount(accessItem.id)"
             >
-              <ion-icon
-                class="mr-2"
-                name="square-outline"
-                [name]="
-                  accessItem.id === impersonationId
-                    ? 'radio-button-on-outline'
-                    : 'radio-button-off-outline'
-                "
-              ></ion-icon>
-              <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
-              <span *ngIf="!accessItem.alias" i18n>User</span>
+              <span class="align-items-center d-flex">
+                <ion-icon
+                  class="mr-2"
+                  name="square-outline"
+                  [name]="
+                    accessItem.id === impersonationId
+                      ? 'radio-button-on-outline'
+                      : 'radio-button-off-outline'
+                  "
+                ></ion-icon>
+                <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
+                <span *ngIf="!accessItem.alias" i18n>User</span>
+              </span>
             </button>
             <hr class="m-0" />
           </ng-container>
@@ -256,7 +260,7 @@
     <ul class="alig-items-center d-flex list-inline m-0">
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -269,7 +273,7 @@
       </li>
       <li class="list-inline-item">
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -282,6 +286,7 @@
       </li>
       <li *ngIf="hasPermissionForSubscription" class="list-inline-item">
         <a
+          class="d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -297,7 +302,7 @@
         class="list-inline-item"
       >
         <a
-          class="d-none d-sm-block mx-1"
+          class="d-none d-sm-block"
           i18n
           mat-flat-button
           [ngClass]="{
@@ -317,13 +322,13 @@
         ></a>
       </li>
       <li class="list-inline-item">
-        <button class="mx-1" mat-flat-button (click)="openLoginDialog()">
+        <button class="d-sm-block" mat-flat-button (click)="openLoginDialog()">
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
       <li
         *ngIf="currentRoute !== 'register' && hasPermissionToCreateUser"
-        class="list-inline-item"
+        class="list-inline-item ml-1"
       >
         <a
           class="d-none d-sm-block"

@@ -7,7 +7,7 @@ import got from 'got';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private static baseUrl = 'https://data.trackinsight.com';
+  private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countries = require('countries-list/dist/countries.json');
   private static countriesMapping = {
     'Russian Federation': 'Russia'
@@ -33,14 +33,22 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     }
 
     const profile = await got(
-      `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${symbol}.json`
+      `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`
     )
       .json<any>()
       .catch(() => {
-        return {};
+        return got(
+          `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol.split(
+            '.'
+          )?.[0]}.json`
+        )
+          .json<any>()
+          .catch(() => {
+            return {};
+          });
       });
 
-    const isin = profile.isin?.split(';')?.[0];
+    const isin = profile?.isin?.split(';')?.[0];
 
     if (isin) {
       response.isin = isin;
@@ -52,10 +60,14 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       .json<any>()
       .catch(() => {
         return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
-            symbol.split('.')?.[0]
-          }.json`
-        );
+          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol.split(
+            '.'
+          )?.[0]}.json`
+        )
+          .json<any>()
+          .catch(() => {
+            return {};
+          });
       });
 
     if (holdings?.weight < 0.95) {
@@ -113,5 +125,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
   public getName() {
     return 'TRACKINSIGHT';
+  }
+
+  public getTestSymbol() {
+    return 'QQQ';
   }
 }

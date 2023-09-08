@@ -33,6 +33,10 @@ export class UserService {
     private readonly tagService: TagService
   ) {}
 
+  public async count(args?: Prisma.UserCountArgs) {
+    return this.prismaService.user.count(args);
+  }
+
   public async getUser(
     { Account, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale

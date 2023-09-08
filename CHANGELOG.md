@@ -7,9 +7,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for the cryptocurrency _CyberConnect_
+
 ### Changed
 
-- Removed the deprecated environment variable `BASE_CURRENCY`
+- **Breaking Change**: Removed the deprecated environment variable `BASE_CURRENCY`
+- Improved the validation in the activities import
+- Deactivated _Internet Identity_ as a social login provider for the account registration
+- Improved the language localization for German (`de`)
+- Refreshed the cryptocurrencies list
+- Changed the version in the `docker-compose` files from `3.7` to `3.9`
+
+### Fixed
+
+- Fixed an issue in the _Yahoo Finance_ data enhancer where countries and sectors have been removed
+
+## 1.305.0 - 2023-09-03
+
+### Added
+
+- Added _Hacker News_ to the _As seen in_ section on the landing page
+
+### Changed
+
+- Shortened the page titles
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `4.16.2` to `5.2.0`
+- Upgraded `replace-in-file` from version `6.3.5` to `7.0.1`
+- Upgraded `yahoo-finance2` from version `2.4.3` to `2.4.4`
+
+### Fixed
+
+- Fixed the alignment in the header navigation
+- Fixed the alignment in the menu of the impersonation mode
+
+## 1.304.0 - 2023-08-27
+
+### Added
+
+- Added health check endpoints for data enhancers
+
+### Changed
+
+- Upgraded `Nx` from version `16.7.2` to `16.7.4`
+- Upgraded `prettier` from version `2.8.4` to `3.0.2`
+
+## 1.303.0 - 2023-08-23
+
+### Added
+
+- Added a blog post: _Ghostfolio joins OSS Friends_
+
+### Changed
+
+- Refreshed the cryptocurrencies list
+- Improved the _OSS Friends_ page
+
+### Fixed
+
+- Fixed an issue with the _Trackinsight_ data enhancer for asset profile data
 
 ## 1.302.0 - 2023-08-20
 
