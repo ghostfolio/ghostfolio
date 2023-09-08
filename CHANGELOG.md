@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a blog post: _Announcing Ghostfolio 2.0_
+
+## Unreleased
+
+### Added
+
 - Added support for the cryptocurrency _CyberConnect_
 
 ### Changed

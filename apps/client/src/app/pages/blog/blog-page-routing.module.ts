@@ -145,6 +145,15 @@ const routes: Routes = [
         './2023/08/ghostfolio-joins-oss-friends/ghostfolio-joins-oss-friends-page.component'
       ).then((c) => c.GhostfolioJoinsOssFriendsPageComponent),
     title: 'Ghostfolio joins OSS Friends'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2023/08/ghostfolio-2',
+    loadComponent: () =>
+      import('./2023/08/ghostfolio-2/ghostfolio-2-page.component').then(
+        (c) => c.Ghostfolio2PageComponent
+      ),
+    title: 'Ghostfolio 2.0'
   }
 ];
 
