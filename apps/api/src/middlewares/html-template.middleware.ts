@@ -76,7 +76,7 @@ const locales = {
     featureGraphicPath: 'assets/images/blog/ghostfolio-joins-oss-friends.png',
     title: `Ghostfolio joins OSS Friends - ${titleShort}`
   },
-  '/en/blog/2023/08/ghostfolio-2': {
+  '/en/blog/2023/09/ghostfolio-2': {
     featureGraphicPath: 'assets/images/blog/ghostfolio-2.jpg',
     title: `Announcing Ghostfolio 2.0 - ${titleShort}`
   }

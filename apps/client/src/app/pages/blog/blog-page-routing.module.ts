@@ -148,9 +148,9 @@ const routes: Routes = [
   },
   {
     canActivate: [AuthGuard],
-    path: '2023/08/ghostfolio-2',
+    path: '2023/09/ghostfolio-2',
     loadComponent: () =>
-      import('./2023/08/ghostfolio-2/ghostfolio-2-page.component').then(
+      import('./2023/09/ghostfolio-2/ghostfolio-2-page.component').then(
         (c) => c.Ghostfolio2PageComponent
       ),
     title: 'Ghostfolio 2.0'
