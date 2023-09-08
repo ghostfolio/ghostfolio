@@ -8,6 +8,7 @@ import {
   AssetClass,
   AssetSubClass,
   DataSource,
+  Prisma,
   SymbolProfile
 } from '@prisma/client';
 import { countries } from 'countries-list';
@@ -102,11 +103,11 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       const { countries, sectors, url } =
         await this.getAssetProfile(yahooSymbol);
 
-      if (countries) {
+      if ((countries as unknown as Prisma.JsonArray)?.length > 0) {
         response.countries = countries;
       }
 
-      if (sectors) {
+      if ((sectors as unknown as Prisma.JsonArray)?.length > 0) {
         response.sectors = sectors;
       }
 

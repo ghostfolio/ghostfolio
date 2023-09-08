@@ -13,8 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refreshed the cryptocurrencies list
+- Improved the validation in the activities import
 - Deactivated _Internet Identity_ as a social login provider for the account registration
+- Improved the language localization for German (`de`)
+- Refreshed the cryptocurrencies list
+- Changed the version in the `docker-compose` files from `3.7` to `3.9`
+
+### Fixed
+
+- Fixed an issue in the _Yahoo Finance_ data enhancer where countries and sectors have been removed
 
 ## 1.305.0 - 2023-09-03
 

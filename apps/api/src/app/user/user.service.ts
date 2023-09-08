@@ -37,6 +37,10 @@ export class UserService {
     this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
+  public async count(args?: Prisma.UserCountArgs) {
+    return this.prismaService.user.count(args);
+  }
+
   public async getUser(
     { Account, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
