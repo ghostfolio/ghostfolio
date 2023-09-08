@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Refreshed the cryptocurrencies list
 - Changed the version in the `docker-compose` files from `3.7` to `3.9`
+- Upgraded `yahoo-finance2` from version `2.4.4` to `2.5.0`
 
 ### Fixed
 
