@@ -269,7 +269,7 @@ export class InfoService {
       );
 
       if (statistics) {
-        // return statistics;
+        return statistics;
       }
     } catch {}
 
