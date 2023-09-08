@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking Change**: Removed the deprecated environment variable `BASE_CURRENCY`
 - Improved the validation in the activities import
 - Deactivated _Internet Identity_ as a social login provider for the account registration
 - Improved the language localization for German (`de`)

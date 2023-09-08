@@ -6,7 +6,10 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  PROPERTY_CURRENCIES
+} from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
@@ -23,8 +26,6 @@ import { groupBy } from 'lodash';
 
 @Injectable()
 export class AdminService {
-  private baseCurrency: string;
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
@@ -34,9 +35,7 @@ export class AdminService {
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
     private readonly symbolProfileService: SymbolProfileService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
-  }
+  ) {}
 
   public async addAssetProfile({
     dataSource,
@@ -80,15 +79,15 @@ export class AdminService {
       exchangeRates: this.exchangeRateDataService
         .getCurrencies()
         .filter((currency) => {
-          return currency !== this.baseCurrency;
+          return currency !== DEFAULT_CURRENCY;
         })
         .map((currency) => {
           return {
-            label1: this.baseCurrency,
+            label1: DEFAULT_CURRENCY,
             label2: currency,
             value: this.exchangeRateDataService.toCurrency(
               1,
-              this.baseCurrency,
+              DEFAULT_CURRENCY,
               currency
             )
           };
