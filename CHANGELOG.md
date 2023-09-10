@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.0.0 - 2023-09-09
 
+### Changed
+
+- Improved the language localization for Dutch (`nl`)
+
+## Unreleased
+
 ### Added
 
 - Added support for the cryptocurrency _CyberConnect_
