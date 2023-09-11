@@ -1167,7 +1167,7 @@
       </trans-unit>
       <trans-unit id="272c7fd98af55bfa5b9d579176f1cfa25cd5489f" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {transaction} other {transactions}}</source>
-        <target state="translated">{VAR_PLURAL, meervoud, =1 {transaction} other {transactions}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {transaction} other {transactions}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">79,80</context>
