@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for Dutch (`nl`)
+
 ### Fixed
 
 - Fixed an issue with the portfolio summary caused by the language localization for Dutch (`nl`)
