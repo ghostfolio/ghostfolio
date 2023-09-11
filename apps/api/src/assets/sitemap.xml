@@ -663,7 +663,7 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/nl/kenmerken</loc>
+    <loc>https://ghostfol.io/nl/functionaliteiten</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -705,7 +705,7 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/nl/vaak-gestelde-vragen</loc>
+    <loc>https://ghostfol.io/nl/veelgestelde-vragen</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
