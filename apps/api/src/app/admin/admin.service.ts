@@ -8,7 +8,9 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
-  PROPERTY_CURRENCIES
+  PROPERTY_CURRENCIES,
+  PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
 import {
   AdminData,
@@ -305,7 +307,9 @@ export class AdminService {
       response = await this.propertyService.delete({ key });
     }
 
-    if (key === PROPERTY_CURRENCIES) {
+    if (key === PROPERTY_IS_READ_ONLY_MODE && value === 'true') {
+      await this.putSetting(PROPERTY_IS_USER_SIGNUP_ENABLED, 'false');
+    } else if (key === PROPERTY_CURRENCIES) {
       await this.exchangeRateDataService.initialize();
     }
 

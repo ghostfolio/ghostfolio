@@ -8,10 +8,7 @@
     <div class="col">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-content>
-          <div
-            *ngIf="hasPermissionToUpdateUserSettings && user?.subscription"
-            class="d-flex py-1"
-          >
+          <div *ngIf="user?.subscription" class="d-flex py-1">
             <div class="pr-1 w-50" i18n>Membership</div>
             <div class="pl-1 w-50">
               <div class="align-items-center d-flex mb-1">
@@ -28,7 +25,9 @@
                 user?.subscription?.expiresAt | date: defaultDateFormat }}
               </div>
               <div *ngIf="user?.subscription?.type === 'Basic'">
-                <ng-container *ngIf="hasPermissionForSubscription">
+                <ng-container
+                  *ngIf="hasPermissionForSubscription && hasPermissionToUpdateUserSettings"
+                >
                   <button
                     color="primary"
                     mat-flat-button
@@ -69,6 +68,7 @@
                   ></gf-premium-indicator
                 ></a>
                 <a
+                  *ngIf="hasPermissionToUpdateUserSettings"
                   class="mr-2 my-2"
                   i18n
                   mat-stroked-button
