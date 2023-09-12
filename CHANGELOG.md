@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Dutch (`nl`)
+- Improved the read-only mode
 
 ### Fixed
 
@@ -2942,7 +2943,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported the management of additional currencies in the admin control panel
 - Introduced the system message
-- Introduced the read only mode
+- Introduced the read-only mode
 
 ### Changed
 
