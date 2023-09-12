@@ -48,11 +48,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
+      font-weight: bolder;
     }
 
     .cloud-icon {
-      font-size: 30px; /* Adjust the icon size as needed */
+      font-size: 35px; /* Adjust the icon size as needed */
+      font-weight: bolder;
       margin-bottom: 8px; /* Adjust the spacing between icon and text */
       color: inherit;
     }
