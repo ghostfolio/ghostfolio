@@ -70,13 +70,18 @@
         <ng-template #selectFile>
           <div class="d-flex flex-column justify-content-center">
             <button
-              class="py-4"
-              color="primary"
-              mat-stroked-button
+              appFileDrop
+              class="custom-button"
               (click)="onSelectFile(stepper)"
+              (filesDropped)="onFilesDropped($event)"
             >
-              <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
-              <span i18n>Choose File</span>
+              <div class="button-content">
+                <ion-icon
+                  class="cloud-icon"
+                  name="cloud-upload-outline"
+                ></ion-icon>
+                <span i18n>Choose or drop a file here</span>
+              </div>
             </button>
             <p class="mb-0 mt-4 text-center">
               <span class="mr-1" i18n

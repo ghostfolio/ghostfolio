@@ -32,4 +32,34 @@
     right: 1.5rem;
     top: calc(50% - 10px);
   }
+
+  .custom-button {
+    border: 3px dashed rgba(var(--palette-primary-500), 1);
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    background-color: inherit;
+    cursor: pointer;
+    transition: border-color 0.1s ease;
+    color: rgba(var(--palette-primary-500), 1);
+
+    .button-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .cloud-icon {
+      font-size: 30px; /* Adjust the icon size as needed */
+      margin-bottom: 8px; /* Adjust the spacing between icon and text */
+      color: inherit;
+    }
+
+    &:hover {
+      border-color: #28a745;
+      color: #28a745;
+    }
+  }
 }

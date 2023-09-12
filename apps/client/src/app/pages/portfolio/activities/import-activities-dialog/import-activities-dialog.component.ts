@@ -175,6 +175,117 @@ export class ImportActivitiesDialog implements OnDestroy {
     aStepper.reset();
   }
 
+  public onFilesDropped(files: FileList): void {
+    if (files.length === 0) {
+      return;
+    }
+
+    const droppedFile = files[0];
+
+    // Check the file type and handle it accordingly (JSON/CSV)
+    if (
+      droppedFile.type === 'application/json' ||
+      droppedFile.name.endsWith('.json')
+    ) {
+      // Handle JSON file
+      const reader = new FileReader();
+      reader.readAsText(droppedFile, 'UTF-8');
+
+      reader.onload = async (readerEvent) => {
+        const fileContent = readerEvent.target.result as string;
+
+        try {
+          const content = JSON.parse(fileContent);
+
+          this.accounts = content.accounts;
+
+          if (!Array.isArray(content.activities)) {
+            if (Array.isArray(content.orders)) {
+              // Handle orders (activities) data
+              const { activities } =
+                await this.importActivitiesService.importJson({
+                  accounts: content.accounts,
+                  activities: content.orders,
+                  isDryRun: true
+                });
+              this.activities = activities;
+            } else {
+              throw new Error('Unexpected JSON format');
+            }
+          } else {
+            // Handle activities data
+            const { activities } =
+              await this.importActivitiesService.importJson({
+                accounts: content.accounts,
+                activities: content.activities,
+                isDryRun: true
+              });
+            this.activities = activities;
+          }
+        } catch (error) {
+          console.error(error);
+          this.handleImportError({
+            activities: [],
+            error: {
+              error: { message: ['Error handling JSON file'] }
+            }
+          });
+        } finally {
+          this.importStep = ImportStep.SELECT_ACTIVITIES;
+          this.snackBar.dismiss();
+          // Proceed with further steps or updates as needed
+          this.changeDetectorRef.markForCheck();
+        }
+      };
+    } else if (
+      droppedFile.type === 'text/csv' ||
+      droppedFile.name.endsWith('.csv')
+    ) {
+      // Handle CSV file
+      const reader = new FileReader();
+      reader.readAsText(droppedFile, 'UTF-8');
+
+      reader.onload = async (readerEvent) => {
+        const fileContent = readerEvent.target.result as string;
+
+        try {
+          const data = await this.importActivitiesService.importCsv({
+            fileContent,
+            isDryRun: true,
+            userAccounts: this.data.user.accounts
+          });
+          this.activities = data.activities;
+        } catch (error) {
+          console.error(error);
+          this.handleImportError({
+            activities: error?.activities ?? [],
+            error: {
+              error: { message: error?.error?.message ?? [error?.message] }
+            }
+          });
+        } finally {
+          this.importStep = ImportStep.SELECT_ACTIVITIES;
+          this.snackBar.dismiss();
+          // Proceed with further steps or updates as needed
+          this.changeDetectorRef.markForCheck();
+        }
+      };
+    } else {
+      // Handle unsupported file type
+      console.error('Unsupported file format');
+      this.handleImportError({
+        activities: [],
+        error: {
+          error: { message: ['Unsupported file format'] }
+        }
+      });
+      this.importStep = ImportStep.SELECT_ACTIVITIES;
+      this.snackBar.dismiss();
+      // Proceed with further steps or updates as needed
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
   public onSelectFile(aStepper: MatStepper) {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';

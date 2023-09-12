@@ -13,10 +13,11 @@ import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-heade
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 
+import { FileDropDirective } from './file-drop.directive';
 import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
 @NgModule({
-  declarations: [ImportActivitiesDialog],
+  declarations: [ImportActivitiesDialog, FileDropDirective],
   imports: [
     CommonModule,
     FormsModule,
