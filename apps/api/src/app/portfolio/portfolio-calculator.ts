@@ -784,7 +784,7 @@ export class PortfolioCalculator {
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
-          `Missing historical market data for symbol ${currentPosition.symbol}`,
+          `Missing historical market data for ${currentPosition.symbol} (${currentPosition.dataSource})`,
           'PortfolioCalculator'
         );
         hasErrors = true;
