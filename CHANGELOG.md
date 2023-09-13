@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the style of the user interface for granting and revoking public access to share the portfolio
 - Harmonized the logger output: <symbol> (<dataSource>)
 - Improved the language localization for Dutch (`nl`)
 
