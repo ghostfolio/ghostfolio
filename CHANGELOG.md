@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Harmonized the logger output: <symbol> (<dataSource>)
 - Improved the language localization for Dutch (`nl`)
+- Ugraded _Postgres_ from version `12` to `15` in the `docker-compose` files
 
 ### Fixed
 
