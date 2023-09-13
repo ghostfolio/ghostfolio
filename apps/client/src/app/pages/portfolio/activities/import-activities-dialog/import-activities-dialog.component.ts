@@ -175,115 +175,71 @@ export class ImportActivitiesDialog implements OnDestroy {
     aStepper.reset();
   }
 
-  public onFilesDropped(files: FileList): void {
-    if (files.length === 0) {
-      return;
-    }
+  private async handleFile(file: File): Promise<void> {
+    this.snackBar.open('⏳ ' + $localize`Validating data...`);
 
-    const droppedFile = files[0];
+    // Setting up the reader
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
 
-    // Check the file type and handle it accordingly (JSON/CSV)
-    if (
-      droppedFile.type === 'application/json' ||
-      droppedFile.name.endsWith('.json')
-    ) {
-      // Handle JSON file
-      const reader = new FileReader();
-      reader.readAsText(droppedFile, 'UTF-8');
+    reader.onload = async (readerEvent) => {
+      const fileContent = readerEvent.target.result as string;
 
-      reader.onload = async (readerEvent) => {
-        const fileContent = readerEvent.target.result as string;
-
-        try {
+      try {
+        if (file.type === 'application/json' || file.name.endsWith('.json')) {
           const content = JSON.parse(fileContent);
-
           this.accounts = content.accounts;
 
           if (!Array.isArray(content.activities)) {
             if (Array.isArray(content.orders)) {
-              // Handle orders (activities) data
-              const { activities } =
-                await this.importActivitiesService.importJson({
-                  accounts: content.accounts,
-                  activities: content.orders,
-                  isDryRun: true
-                });
-              this.activities = activities;
-            } else {
-              throw new Error('Unexpected JSON format');
-            }
-          } else {
-            // Handle activities data
-            const { activities } =
-              await this.importActivitiesService.importJson({
-                accounts: content.accounts,
-                activities: content.activities,
-                isDryRun: true
+              this.handleImportError({
+                activities: [],
+                error: {
+                  error: {
+                    message: [`orders needs to be renamed to activities`]
+                  }
+                }
               });
-            this.activities = activities;
-          }
-        } catch (error) {
-          console.error(error);
-          this.handleImportError({
-            activities: [],
-            error: {
-              error: { message: ['Error handling JSON file'] }
+              return;
+            } else {
+              throw new Error();
             }
+          }
+
+          const { activities } = await this.importActivitiesService.importJson({
+            accounts: content.accounts,
+            activities: content.activities,
+            isDryRun: true
           });
-        } finally {
-          this.importStep = ImportStep.SELECT_ACTIVITIES;
-          this.snackBar.dismiss();
-          // Proceed with further steps or updates as needed
-          this.changeDetectorRef.markForCheck();
-        }
-      };
-    } else if (
-      droppedFile.type === 'text/csv' ||
-      droppedFile.name.endsWith('.csv')
-    ) {
-      // Handle CSV file
-      const reader = new FileReader();
-      reader.readAsText(droppedFile, 'UTF-8');
-
-      reader.onload = async (readerEvent) => {
-        const fileContent = readerEvent.target.result as string;
-
-        try {
+          this.activities = activities;
+        } else if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
           const data = await this.importActivitiesService.importCsv({
             fileContent,
             isDryRun: true,
             userAccounts: this.data.user.accounts
           });
           this.activities = data.activities;
-        } catch (error) {
-          console.error(error);
-          this.handleImportError({
-            activities: error?.activities ?? [],
-            error: {
-              error: { message: error?.error?.message ?? [error?.message] }
-            }
-          });
-        } finally {
-          this.importStep = ImportStep.SELECT_ACTIVITIES;
-          this.snackBar.dismiss();
-          // Proceed with further steps or updates as needed
-          this.changeDetectorRef.markForCheck();
+        } else {
+          throw new Error();
         }
-      };
-    } else {
-      // Handle unsupported file type
-      console.error('Unsupported file format');
-      this.handleImportError({
-        activities: [],
-        error: {
-          error: { message: ['Unsupported file format'] }
-        }
-      });
-      this.importStep = ImportStep.SELECT_ACTIVITIES;
-      this.snackBar.dismiss();
-      // Proceed with further steps or updates as needed
-      this.changeDetectorRef.markForCheck();
+      } catch (error) {
+        console.error(error);
+        this.handleImportError({ error, activities: [] });
+      } finally {
+        this.importStep = ImportStep.SELECT_ACTIVITIES;
+        this.snackBar.dismiss();
+        this.changeDetectorRef.markForCheck();
+      }
+    };
+  }
+
+  public onFilesDropped(files: FileList): void {
+    if (files.length === 0) {
+      return;
     }
+
+    const droppedFile = files[0];
+    this.handleFile(droppedFile);
   }
 
   public onSelectFile(aStepper: MatStepper) {
@@ -292,91 +248,9 @@ export class ImportActivitiesDialog implements OnDestroy {
     input.type = 'file';
 
     input.onchange = (event) => {
-      this.snackBar.open('⏳ ' + $localize`Validating data...`);
-
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files[0];
-
-      // Setting up the reader
-      const reader = new FileReader();
-      reader.readAsText(file, 'UTF-8');
-
-      reader.onload = async (readerEvent) => {
-        const fileContent = readerEvent.target.result as string;
-
-        try {
-          if (file.name.endsWith('.json')) {
-            const content = JSON.parse(fileContent);
-
-            this.accounts = content.accounts;
-
-            if (!isArray(content.activities)) {
-              if (isArray(content.orders)) {
-                this.handleImportError({
-                  activities: [],
-                  error: {
-                    error: {
-                      message: [`orders needs to be renamed to activities`]
-                    }
-                  }
-                });
-                return;
-              } else {
-                throw new Error();
-              }
-            }
-
-            try {
-              const { activities } =
-                await this.importActivitiesService.importJson({
-                  accounts: content.accounts,
-                  activities: content.activities,
-                  isDryRun: true
-                });
-              this.activities = activities;
-            } catch (error) {
-              console.error(error);
-              this.handleImportError({ error, activities: content.activities });
-            }
-
-            return;
-          } else if (file.name.endsWith('.csv')) {
-            try {
-              const data = await this.importActivitiesService.importCsv({
-                fileContent,
-                isDryRun: true,
-                userAccounts: this.data.user.accounts
-              });
-              this.activities = data.activities;
-            } catch (error) {
-              console.error(error);
-              this.handleImportError({
-                activities: error?.activities ?? [],
-                error: {
-                  error: { message: error?.error?.message ?? [error?.message] }
-                }
-              });
-            }
-
-            return;
-          }
-
-          throw new Error();
-        } catch (error) {
-          console.error(error);
-          this.handleImportError({
-            activities: [],
-            error: { error: { message: ['Unexpected format'] } }
-          });
-        } finally {
-          this.importStep = ImportStep.SELECT_ACTIVITIES;
-          this.snackBar.dismiss();
-
-          aStepper.next();
-
-          this.changeDetectorRef.markForCheck();
-        }
-      };
+      this.handleFile(file);
     };
 
     input.click();

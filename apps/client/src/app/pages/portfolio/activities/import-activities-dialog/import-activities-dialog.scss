@@ -33,21 +33,14 @@
     top: calc(50% - 10px);
   }
 
-  .custom-button {
+  .drop-area {
     border: 3px dashed rgba(var(--palette-primary-500), 1);
     border-radius: 8px;
-    padding: 30px;
-    text-align: center;
     background-color: inherit;
-    cursor: pointer;
     transition: border-color 0.1s ease;
     color: rgba(var(--palette-primary-500), 1);
 
     .button-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
       font-weight: bolder;
     }
 

@@ -17,7 +17,7 @@ import { FileDropDirective } from './file-drop.directive';
 import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
 @NgModule({
-  declarations: [ImportActivitiesDialog, FileDropDirective],
+  declarations: [FileDropDirective, ImportActivitiesDialog],
   imports: [
     CommonModule,
     FormsModule,

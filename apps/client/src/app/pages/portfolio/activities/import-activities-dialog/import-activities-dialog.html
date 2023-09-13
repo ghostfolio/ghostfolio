@@ -70,12 +70,14 @@
         <ng-template #selectFile>
           <div class="d-flex flex-column justify-content-center">
             <button
-              appFileDrop
-              class="custom-button"
+              class="drop-area cursor-pointer text-center p-4"
+              gfFileDrop
               (click)="onSelectFile(stepper)"
               (filesDropped)="onFilesDropped($event)"
             >
-              <div class="button-content">
+              <div
+                class="button-content d-flex align-items-center justify-content-center flex-column"
+              >
                 <ion-icon
                   class="cloud-icon"
                   name="cloud-upload-outline"
