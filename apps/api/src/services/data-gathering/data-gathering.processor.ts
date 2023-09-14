@@ -102,14 +102,7 @@ export class DataGatheringProcessor {
         }
 
         // Count month one up for iteration
-        currentDate = new Date(
-          Date.UTC(
-            getYear(currentDate),
-            getMonth(currentDate),
-            getDate(currentDate) + 1,
-            0
-          )
-        );
+        currentDate.setDate(currentDate.getDate() + 1);
       }
 
       await this.marketDataService.updateMany({ data });
