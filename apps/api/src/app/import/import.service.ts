@@ -410,7 +410,7 @@ export class ImportService {
           currency,
           userCurrency
         ),
-        //@ts-ignore
+        // @ts-ignore
         SymbolProfile: assetProfile,
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
