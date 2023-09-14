@@ -137,6 +137,20 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
   }
 
+  public onFilesDropped({
+    files,
+    stepper
+  }: {
+    files: FileList;
+    stepper: MatStepper;
+  }): void {
+    if (files.length === 0) {
+      return;
+    }
+
+    this.handleFile({ stepper, file: files[0] });
+  }
+
   public onImportStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
       this.importStep = ImportStep.UPLOAD_FILE;
@@ -175,97 +189,15 @@ export class ImportActivitiesDialog implements OnDestroy {
     aStepper.reset();
   }
 
-  public onSelectFile(aStepper: MatStepper) {
+  public onSelectFile(stepper: MatStepper) {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
 
     input.onchange = (event) => {
-      this.snackBar.open('⏳ ' + $localize`Validating data...`);
-
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files[0];
-
-      // Setting up the reader
-      const reader = new FileReader();
-      reader.readAsText(file, 'UTF-8');
-
-      reader.onload = async (readerEvent) => {
-        const fileContent = readerEvent.target.result as string;
-
-        try {
-          if (file.name.endsWith('.json')) {
-            const content = JSON.parse(fileContent);
-
-            this.accounts = content.accounts;
-
-            if (!isArray(content.activities)) {
-              if (isArray(content.orders)) {
-                this.handleImportError({
-                  activities: [],
-                  error: {
-                    error: {
-                      message: [`orders needs to be renamed to activities`]
-                    }
-                  }
-                });
-                return;
-              } else {
-                throw new Error();
-              }
-            }
-
-            try {
-              const { activities } =
-                await this.importActivitiesService.importJson({
-                  accounts: content.accounts,
-                  activities: content.activities,
-                  isDryRun: true
-                });
-              this.activities = activities;
-            } catch (error) {
-              console.error(error);
-              this.handleImportError({ error, activities: content.activities });
-            }
-
-            return;
-          } else if (file.name.endsWith('.csv')) {
-            try {
-              const data = await this.importActivitiesService.importCsv({
-                fileContent,
-                isDryRun: true,
-                userAccounts: this.data.user.accounts
-              });
-              this.activities = data.activities;
-            } catch (error) {
-              console.error(error);
-              this.handleImportError({
-                activities: error?.activities ?? [],
-                error: {
-                  error: { message: error?.error?.message ?? [error?.message] }
-                }
-              });
-            }
-
-            return;
-          }
-
-          throw new Error();
-        } catch (error) {
-          console.error(error);
-          this.handleImportError({
-            activities: [],
-            error: { error: { message: ['Unexpected format'] } }
-          });
-        } finally {
-          this.importStep = ImportStep.SELECT_ACTIVITIES;
-          this.snackBar.dismiss();
-
-          aStepper.next();
-
-          this.changeDetectorRef.markForCheck();
-        }
-      };
+      this.handleFile({ file, stepper });
     };
 
     input.click();
@@ -280,6 +212,97 @@ export class ImportActivitiesDialog implements OnDestroy {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private async handleFile({
+    file,
+    stepper
+  }: {
+    file: File;
+    stepper: MatStepper;
+  }): Promise<void> {
+    this.snackBar.open('⏳ ' + $localize`Validating data...`);
+
+    // Setting up the reader
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+
+    reader.onload = async (readerEvent) => {
+      const fileContent = readerEvent.target.result as string;
+
+      try {
+        if (file.name.endsWith('.json')) {
+          const content = JSON.parse(fileContent);
+
+          this.accounts = content.accounts;
+
+          if (!isArray(content.activities)) {
+            if (isArray(content.orders)) {
+              this.handleImportError({
+                activities: [],
+                error: {
+                  error: {
+                    message: [`orders needs to be renamed to activities`]
+                  }
+                }
+              });
+              return;
+            } else {
+              throw new Error();
+            }
+          }
+
+          try {
+            const { activities } =
+              await this.importActivitiesService.importJson({
+                accounts: content.accounts,
+                activities: content.activities,
+                isDryRun: true
+              });
+            this.activities = activities;
+          } catch (error) {
+            console.error(error);
+            this.handleImportError({ error, activities: content.activities });
+          }
+
+          return;
+        } else if (file.name.endsWith('.csv')) {
+          try {
+            const data = await this.importActivitiesService.importCsv({
+              fileContent,
+              isDryRun: true,
+              userAccounts: this.data.user.accounts
+            });
+            this.activities = data.activities;
+          } catch (error) {
+            console.error(error);
+            this.handleImportError({
+              activities: error?.activities ?? [],
+              error: {
+                error: { message: error?.error?.message ?? [error?.message] }
+              }
+            });
+          }
+
+          return;
+        }
+
+        throw new Error();
+      } catch (error) {
+        console.error(error);
+        this.handleImportError({
+          activities: [],
+          error: { error: { message: ['Unexpected format'] } }
+        });
+      } finally {
+        this.importStep = ImportStep.SELECT_ACTIVITIES;
+        this.snackBar.dismiss();
+
+        stepper.next();
+
+        this.changeDetectorRef.markForCheck();
+      }
+    };
   }
 
   private handleImportError({
