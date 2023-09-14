@@ -4,7 +4,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
@@ -40,7 +43,16 @@ export class CoinGeckoService implements DataProviderInterface {
     };
 
     try {
-      const { name } = await got(`${this.URL}/coins/${aSymbol}`).json<any>();
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { name } = await got(`${this.URL}/coins/${aSymbol}`, {
+        // @ts-ignore
+        signal: abortController.signal
+      }).json<any>();
 
       response.name = name;
     } catch (error) {
@@ -73,12 +85,22 @@ export class CoinGeckoService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const { prices } = await got(
         `${
           this.URL
         }/coins/${aSymbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
           from
-        )}&to=${getUnixTime(to)}`
+        )}&to=${getUnixTime(to)}`,
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
       ).json<any>();
 
       const result: {
@@ -122,10 +144,20 @@ export class CoinGeckoService implements DataProviderInterface {
     }
 
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const response = await got(
         `${this.URL}/simple/price?ids=${aSymbols.join(
           ','
-        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`
+        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
       ).json<any>();
 
       for (const symbol in response) {
@@ -160,9 +192,16 @@ export class CoinGeckoService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const { coins } = await got(
-        `${this.URL}/search?query=${query}`
-      ).json<any>();
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { coins } = await got(`${this.URL}/search?query=${query}`, {
+        // @ts-ignore
+        signal: abortController.signal
+      }).json<any>();
 
       items = coins.map(({ id: symbol, name }) => {
         return {
