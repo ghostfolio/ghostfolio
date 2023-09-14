@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Harmonized the logger output: <symbol> (<dataSource>)
+- Improved the language localization for Italian (`it`)
 - Improved the language localization for Dutch (`nl`)
 
 ### Fixed
@@ -1520,7 +1521,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for Italiano (`it`)
+- Set up the language localization for Italian (`it`)
 - Extended the landing page
 
 ## 1.195.0 - 20.09.2022
