@@ -70,13 +70,13 @@
         <ng-template #selectFile>
           <div class="d-flex flex-column justify-content-center">
             <button
-              class="drop-area cursor-pointer text-center p-4"
+              class="drop-area p-4 text-center text-muted"
               gfFileDrop
               (click)="onSelectFile(stepper)"
-              (filesDropped)="onFilesDropped($event)"
+              (filesDropped)="onFilesDropped({stepper, files: $event})"
             >
               <div
-                class="button-content d-flex align-items-center justify-content-center flex-column"
+                class="align-items-center d-flex flex-column justify-content-center"
               >
                 <ion-icon
                   class="cloud-icon"
@@ -85,21 +85,23 @@
                 <span i18n>Choose or drop a file here</span>
               </div>
             </button>
-            <p class="mb-0 mt-4 text-center">
-              <span class="mr-1" i18n
-                >The following file formats are supported:</span
-              >
-              <a
-                href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
-                target="_blank"
-                >CSV</a
-              >
-              <span class="mx-1" i18n>or</span>
-              <a
-                href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
-                target="_blank"
-                >JSON</a
-              >
+            <p class="mb-0 mt-3 text-center">
+              <small>
+                <span class="mr-1" i18n
+                  >The following file formats are supported:</span
+                >
+                <a
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
+                  target="_blank"
+                  >CSV</a
+                >
+                <span class="mx-1" i18n>or</span>
+                <a
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
+                  target="_blank"
+                  >JSON</a
+                >
+              </small>
             </p>
           </div>
         </ng-template>
@@ -116,7 +118,7 @@
         >
       </ng-template>
       <div class="pt-3">
-        <ng-container *ngIf="errorMessages.length === 0; else errorMessage">
+        <ng-container *ngIf="errorMessages?.length === 0; else errorMessage">
           <gf-activities-table
             *ngIf="importStep === 1"
             [activities]="activities"

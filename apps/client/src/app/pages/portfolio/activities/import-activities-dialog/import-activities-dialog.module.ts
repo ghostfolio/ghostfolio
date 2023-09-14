@@ -10,20 +10,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 
-import { FileDropDirective } from './file-drop.directive';
 import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
 @NgModule({
-  declarations: [FileDropDirective, ImportActivitiesDialog],
+  declarations: [ImportActivitiesDialog],
   imports: [
     CommonModule,
     FormsModule,
     GfActivitiesTableModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
+    GfFileDropModule,
     GfSymbolModule,
     MatButtonModule,
     MatDialogModule,

@@ -137,6 +137,20 @@ export class ImportActivitiesDialog implements OnDestroy {
     }
   }
 
+  public onFilesDropped({
+    files,
+    stepper
+  }: {
+    files: FileList;
+    stepper: MatStepper;
+  }): void {
+    if (files.length === 0) {
+      return;
+    }
+
+    this.handleFile({ stepper, file: files[0] });
+  }
+
   public onImportStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === ImportStep.UPLOAD_FILE) {
       this.importStep = ImportStep.UPLOAD_FILE;
@@ -175,74 +189,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     aStepper.reset();
   }
 
-  private async handleFile(file: File): Promise<void> {
-    this.snackBar.open('⏳ ' + $localize`Validating data...`);
-
-    // Setting up the reader
-    const reader = new FileReader();
-    reader.readAsText(file, 'UTF-8');
-
-    reader.onload = async (readerEvent) => {
-      const fileContent = readerEvent.target.result as string;
-
-      try {
-        if (file.type === 'application/json' || file.name.endsWith('.json')) {
-          const content = JSON.parse(fileContent);
-          this.accounts = content.accounts;
-
-          if (!Array.isArray(content.activities)) {
-            if (Array.isArray(content.orders)) {
-              this.handleImportError({
-                activities: [],
-                error: {
-                  error: {
-                    message: [`orders needs to be renamed to activities`]
-                  }
-                }
-              });
-              return;
-            } else {
-              throw new Error();
-            }
-          }
-
-          const { activities } = await this.importActivitiesService.importJson({
-            accounts: content.accounts,
-            activities: content.activities,
-            isDryRun: true
-          });
-          this.activities = activities;
-        } else if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
-          const data = await this.importActivitiesService.importCsv({
-            fileContent,
-            isDryRun: true,
-            userAccounts: this.data.user.accounts
-          });
-          this.activities = data.activities;
-        } else {
-          throw new Error();
-        }
-      } catch (error) {
-        console.error(error);
-        this.handleImportError({ error, activities: [] });
-      } finally {
-        this.importStep = ImportStep.SELECT_ACTIVITIES;
-        this.snackBar.dismiss();
-        this.changeDetectorRef.markForCheck();
-      }
-    };
-  }
-
-  public onFilesDropped(files: FileList): void {
-    if (files.length === 0) {
-      return;
-    }
-
-    const droppedFile = files[0];
-    this.handleFile(droppedFile);
-  }
-
-  public onSelectFile(aStepper: MatStepper) {
+  public onSelectFile(stepper: MatStepper) {
     const input = document.createElement('input');
     input.accept = 'application/JSON, .csv';
     input.type = 'file';
@@ -250,7 +197,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     input.onchange = (event) => {
       // Getting the file reference
       const file = (event.target as HTMLInputElement).files[0];
-      this.handleFile(file);
+      this.handleFile({ file, stepper });
     };
 
     input.click();
@@ -265,6 +212,97 @@ export class ImportActivitiesDialog implements OnDestroy {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private async handleFile({
+    file,
+    stepper
+  }: {
+    file: File;
+    stepper: MatStepper;
+  }): Promise<void> {
+    this.snackBar.open('⏳ ' + $localize`Validating data...`);
+
+    // Setting up the reader
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+
+    reader.onload = async (readerEvent) => {
+      const fileContent = readerEvent.target.result as string;
+
+      try {
+        if (file.name.endsWith('.json')) {
+          const content = JSON.parse(fileContent);
+
+          this.accounts = content.accounts;
+
+          if (!isArray(content.activities)) {
+            if (isArray(content.orders)) {
+              this.handleImportError({
+                activities: [],
+                error: {
+                  error: {
+                    message: [`orders needs to be renamed to activities`]
+                  }
+                }
+              });
+              return;
+            } else {
+              throw new Error();
+            }
+          }
+
+          try {
+            const { activities } =
+              await this.importActivitiesService.importJson({
+                accounts: content.accounts,
+                activities: content.activities,
+                isDryRun: true
+              });
+            this.activities = activities;
+          } catch (error) {
+            console.error(error);
+            this.handleImportError({ error, activities: content.activities });
+          }
+
+          return;
+        } else if (file.name.endsWith('.csv')) {
+          try {
+            const data = await this.importActivitiesService.importCsv({
+              fileContent,
+              isDryRun: true,
+              userAccounts: this.data.user.accounts
+            });
+            this.activities = data.activities;
+          } catch (error) {
+            console.error(error);
+            this.handleImportError({
+              activities: error?.activities ?? [],
+              error: {
+                error: { message: error?.error?.message ?? [error?.message] }
+              }
+            });
+          }
+
+          return;
+        }
+
+        throw new Error();
+      } catch (error) {
+        console.error(error);
+        this.handleImportError({
+          activities: [],
+          error: { error: { message: ['Unexpected format'] } }
+        });
+      } finally {
+        this.importStep = ImportStep.SELECT_ACTIVITIES;
+        this.snackBar.dismiss();
+
+        stepper.next();
+
+        this.changeDetectorRef.markForCheck();
+      }
+    };
   }
 
   private handleImportError({

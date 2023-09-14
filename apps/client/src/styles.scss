@@ -430,6 +430,11 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-stepper-vertical,
+.mat-stepper-horizontal {
+  background: transparent !important;
+}
+
 .mdc-button {
   &.mat-accent,
   &.mat-primary {
