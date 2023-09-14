@@ -10,7 +10,10 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  HEADER_KEY_IMPERSONATION
+} from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioDividends,
@@ -47,8 +50,6 @@ import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
 export class PortfolioController {
-  private baseCurrency: string;
-
   public constructor(
     private readonly accessService: AccessService,
     private readonly apiService: ApiService,
@@ -57,9 +58,7 @@ export class PortfolioController {
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
-  }
+  ) {}
 
   @Get('details')
   @UseGuards(AuthGuard('jwt'))
@@ -477,8 +476,7 @@ export class PortfolioController {
         return this.exchangeRateDataService.toCurrency(
           portfolioPosition.quantity * portfolioPosition.marketPrice,
           portfolioPosition.currency,
-          this.request.user?.Settings?.settings.baseCurrency ??
-            this.baseCurrency
+          this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
         );
       })
       .reduce((a, b) => a + b, 0);

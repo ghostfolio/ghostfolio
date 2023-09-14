@@ -25,16 +25,16 @@ const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
-  private baseCurrency: string;
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
     private readonly tagService: TagService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  ) {}
+
+  public async count(args?: Prisma.UserCountArgs) {
+    return this.prismaService.user.count(args);
   }
 
   public async getUser(
@@ -267,7 +267,7 @@ export class UserService {
         ...data,
         Account: {
           create: {
-            currency: this.baseCurrency,
+            currency: DEFAULT_CURRENCY,
             isDefault: true,
             name: 'Default Account'
           }
@@ -275,7 +275,7 @@ export class UserService {
         Settings: {
           create: {
             settings: {
-              currency: this.baseCurrency
+              currency: DEFAULT_CURRENCY
             }
           }
         }

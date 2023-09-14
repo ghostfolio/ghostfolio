@@ -55,7 +55,6 @@ async function bootstrap() {
 
   app.use(HtmlTemplateMiddleware);
 
-  const BASE_CURRENCY = configService.get<string>('BASE_CURRENCY');
   const HOST = configService.get<string>('HOST') || '0.0.0.0';
   const PORT = configService.get<number>('PORT') || 3333;
 
@@ -63,15 +62,6 @@ async function bootstrap() {
     logLogo();
     Logger.log(`Listening at http://${HOST}:${PORT}`);
     Logger.log('');
-
-    if (BASE_CURRENCY) {
-      Logger.warn(
-        `The environment variable "BASE_CURRENCY" is deprecated and will be removed in Ghostfolio 2.0.`
-      );
-      Logger.warn(
-        'Please use the currency converter in the activity dialog instead.'
-      );
-    }
   });
 }
 

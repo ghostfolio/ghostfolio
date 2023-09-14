@@ -1,12 +1,13 @@
 import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
+  DEFAULT_CURRENCY,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
@@ -44,10 +45,10 @@ export class InfoService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly jwtService: JwtService,
     private readonly platformService: PlatformService,
-    private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
+    private readonly userService: UserService
   ) {}
 
   public async get(): Promise<InfoItem> {
@@ -139,18 +140,13 @@ export class InfoService {
       subscriptions,
       systemMessage,
       tags,
-      baseCurrency: this.configurationService.get('BASE_CURRENCY'),
+      baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()
     };
   }
 
   private async countActiveUsers(aDays: number) {
-    return await this.prismaService.user.count({
-      orderBy: {
-        Analytics: {
-          updatedAt: 'desc'
-        }
-      },
+    return this.userService.count({
       where: {
         AND: [
           {
@@ -223,10 +219,7 @@ export class InfoService {
   }
 
   private async countNewUsers(aDays: number) {
-    return await this.prismaService.user.count({
-      orderBy: {
-        createdAt: 'desc'
-      },
+    return this.userService.count({
       where: {
         AND: [
           {
@@ -317,11 +310,10 @@ export class InfoService {
       return undefined;
     }
 
-    const stripeConfig = (await this.prismaService.property.findUnique({
-      where: { key: PROPERTY_STRIPE_CONFIG }
-    })) ?? { value: '{}' };
-
-    return JSON.parse(stripeConfig.value);
+    return (
+      ((await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG)) as any) ??
+      {}
+    );
   }
 
   private async getUptime(): Promise<number> {

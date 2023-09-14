@@ -28,6 +28,7 @@
         <ng-container *ngIf="hasPermissionForSocialLogin">
           <div class="my-3 text-muted" i18n>or</div>
           <button
+            *ngIf="false"
             class="d-block mb-2 px-4 rounded-pill"
             mat-stroked-button
             (click)="onLoginWithInternetIdentity()"

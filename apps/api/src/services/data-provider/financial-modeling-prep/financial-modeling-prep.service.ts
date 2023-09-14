@@ -5,6 +5,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
@@ -16,7 +17,6 @@ import got from 'got';
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
   private apiKey: string;
-  private baseCurrency: string;
   private readonly URL = 'https://financialmodelingprep.com/api/v3';
 
   public constructor(
@@ -25,7 +25,6 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     this.apiKey = this.configurationService.get(
       'FINANCIAL_MODELING_PREP_API_KEY'
     );
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
   public canHandle(symbol: string) {
@@ -117,7 +116,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       for (const { price, symbol } of response) {
         results[symbol] = {
-          currency: this.baseCurrency,
+          currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
           marketPrice: price,
