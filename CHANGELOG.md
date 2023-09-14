@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to drop a file in the import activities dialog
+
 ### Changed
 
 - Harmonized the logger output: <symbol> (<dataSource>)
