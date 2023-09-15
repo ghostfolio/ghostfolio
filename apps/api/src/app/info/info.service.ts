@@ -177,7 +177,7 @@ export class InfoService {
 
       return pull_count;
     } catch (error) {
-      Logger.error(error, 'InfoService');
+      Logger.error(error, 'InfoService - DockerHub');
 
       return undefined;
     }
@@ -195,7 +195,7 @@ export class InfoService {
         ).text()
       );
     } catch (error) {
-      Logger.error(error, 'InfoService');
+      Logger.error(error, 'InfoService - GitHub');
 
       return undefined;
     }
@@ -212,7 +212,7 @@ export class InfoService {
 
       return stargazers_count;
     } catch (error) {
-      Logger.error(error, 'InfoService');
+      Logger.error(error, 'InfoService - GitHub');
 
       return undefined;
     }
@@ -324,7 +324,7 @@ export class InfoService {
         )) as string;
 
         const { data } = await got(
-          `https://betteruptime.com/api/v2/monitors/${monitorId}/sla?from=${format(
+          `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
             subDays(new Date(), 90),
             DATE_FORMAT
           )}&to${format(new Date(), DATE_FORMAT)}`,
@@ -340,7 +340,7 @@ export class InfoService {
 
         return data.attributes.availability / 100;
       } catch (error) {
-        Logger.error(error, 'InfoService');
+        Logger.error(error, 'InfoService - Better Stack');
 
         return undefined;
       }
