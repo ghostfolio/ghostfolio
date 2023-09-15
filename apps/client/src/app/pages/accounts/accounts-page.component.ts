@@ -10,7 +10,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { Account as AccountModel, AccountType } from '@prisma/client';
+import { Account as AccountModel } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -151,7 +151,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   public openUpdateAccountDialog({
-    accountType,
     balance,
     comment,
     currency,
@@ -163,7 +162,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
         account: {
-          accountType,
           balance,
           comment,
           currency,
@@ -232,7 +230,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
         account: {
-          accountType: AccountType.SECURITIES,
           balance: 0,
           comment: null,
           currency: this.user?.settings?.baseCurrency,

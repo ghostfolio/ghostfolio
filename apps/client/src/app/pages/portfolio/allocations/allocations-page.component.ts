@@ -173,17 +173,15 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          const accountFilters: Filter[] = this.user.accounts
-            .filter(({ accountType }) => {
-              return accountType === 'SECURITIES';
-            })
-            .map(({ id, name }) => {
+          const accountFilters: Filter[] = this.user.accounts.map(
+            ({ id, name }) => {
               return {
                 id,
                 label: name,
                 type: 'ACCOUNT'
               };
-            });
+            }
+          );
 
           const assetClassFilters: Filter[] = [];
           for (const assetClass of Object.keys(AssetClass)) {
