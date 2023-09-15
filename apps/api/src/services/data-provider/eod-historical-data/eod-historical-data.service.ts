@@ -78,6 +78,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
     const symbol = this.convertToEodSymbol(aSymbol);
 
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const response = await got(
         `${this.URL}/eod/${symbol}?api_token=${
           this.apiKey
@@ -86,9 +92,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
           DATE_FORMAT
         )}&period={aGranularity}`,
         {
-          timeout: {
-            request: DEFAULT_REQUEST_TIMEOUT
-          }
+          // @ts-ignore
+          signal: abortController.signal
         }
       ).json<any>();
 
@@ -138,14 +143,19 @@ export class EodHistoricalDataService implements DataProviderInterface {
     }
 
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const realTimeResponse = await got(
         `${this.URL}/real-time/${symbols[0]}?api_token=${
           this.apiKey
         }&fmt=json&s=${symbols.join(',')}`,
         {
-          timeout: {
-            request: DEFAULT_REQUEST_TIMEOUT
-          }
+          // @ts-ignore
+          signal: abortController.signal
         }
       ).json<any>();
 
@@ -331,12 +341,17 @@ export class EodHistoricalDataService implements DataProviderInterface {
     let searchResult = [];
 
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const response = await got(
         `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
         {
-          timeout: {
-            request: DEFAULT_REQUEST_TIMEOUT
-          }
+          // @ts-ignore
+          signal: abortController.signal
         }
       ).json<any>();
 

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support to drop a file in the import activities dialog
+- Added a timeout to all data source requests
 
 ### Changed
 
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the timeout in _EOD Historical Data_ requests
 - Fixed an issue with the portfolio summary caused by the language localization for Dutch (`nl`)
 
 ## 2.0.0 - 2023-09-09
