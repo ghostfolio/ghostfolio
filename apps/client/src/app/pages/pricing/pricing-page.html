@@ -333,7 +333,7 @@
                 >
               </p>
               <div
-                *ngIf="user?.subscription?.type === 'Basic'"
+                *ngIf="hasPermissionToUpdateUserSettings && user?.subscription?.type === 'Basic'"
                 class="mt-3 text-center"
               >
                 <button color="primary" mat-flat-button (click)="onCheckout()">
