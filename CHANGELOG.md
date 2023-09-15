@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the style of the user interface for granting and revoking public access to share the portfolio
 - Improved the logger output of the info service
 - Harmonized the logger output: <symbol> (<dataSource>)
 - Improved the language localization for Italian (`it`)

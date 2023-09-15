@@ -287,24 +287,19 @@
   </div>
   <div class="row">
     <div class="col">
-      <h2 class="h3 mb-3 text-center" i18n>Granted Access</h2>
+      <h2 class="align-items-center d-flex h3 justify-content-center mb-3">
+        <span i18n>Granted Access</span>
+        <gf-premium-indicator
+          *ngIf="user?.subscription?.type === 'Basic'"
+          class="ml-1"
+        ></gf-premium-indicator>
+      </h2>
       <gf-access-table
         [accesses]="accesses"
+        [hasPermissionToCreateAccess]="hasPermissionToCreateAccess"
         [showActions]="hasPermissionToDeleteAccess"
         (accessDeleted)="onDeleteAccess($event)"
       ></gf-access-table>
     </div>
-  </div>
-
-  <div *ngIf="hasPermissionToCreateAccess" class="fab-container">
-    <a
-      class="align-items-center d-flex justify-content-center"
-      color="primary"
-      mat-fab
-      [queryParams]="{ createDialog: true }"
-      [routerLink]="[]"
-    >
-      <ion-icon name="add-outline" size="large"></ion-icon>
-    </a>
   </div>
 </div>
