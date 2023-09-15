@@ -5,7 +5,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
@@ -63,8 +66,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const { historical } = await got(
-        `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`
+        `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`,
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
       ).json<any>();
 
       const result: {
@@ -110,8 +123,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const response = await got(
-        `${this.URL}/quote/${aSymbols.join(',')}?apikey=${this.apiKey}`
+        `${this.URL}/quote/${aSymbols.join(',')}?apikey=${this.apiKey}`,
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
       ).json<any>();
 
       for (const { price, symbol } of response) {
@@ -144,8 +167,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const result = await got(
-        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`
+        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
       ).json<any>();
 
       items = result.map(({ currency, name, symbol }) => {
