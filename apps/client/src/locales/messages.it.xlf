@@ -8956,7 +8956,7 @@
       </trans-unit>
       <trans-unit id="5827613432388799534" datatype="html">
         <source>open-source-alternative-to</source>
-        <target state="translated">open-source-alternative-to</target>
+        <target state="translated">alternativa-open-source-a</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page-routing.module.ts</context>
           <context context-type="linenumber">22</context>
