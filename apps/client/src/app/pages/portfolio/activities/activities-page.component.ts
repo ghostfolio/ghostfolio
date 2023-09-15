@@ -238,9 +238,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {
         activity,
-        accounts: this.user?.accounts?.filter((account) => {
-          return account.accountType === 'SECURITIES';
-        }),
+        accounts: this.user?.accounts,
         user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
@@ -282,9 +280,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
         const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
           data: {
-            accounts: this.user?.accounts?.filter((account) => {
-              return account.accountType === 'SECURITIES';
-            }),
+            accounts: this.user?.accounts,
             activity: {
               ...aActivity,
               accountId: aActivity?.accountId ?? this.defaultAccountId,

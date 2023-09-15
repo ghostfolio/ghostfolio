@@ -21,7 +21,6 @@ const locales = {
   PRESET_ID: $localize`Preset`,
   RETIREMENT_PROVISION: $localize`Retirement Provision`,
   SATELLITE: $localize`Satellite`,
-  SECURITIES: $localize`Securities`,
   SYMBOL: $localize`Symbol`,
   TAG: $localize`Tag`,
   YEAR: $localize`Year`,

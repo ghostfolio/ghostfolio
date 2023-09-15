@@ -5,7 +5,6 @@
   },
   "accounts": [
     {
-      "accountType": "SECURITIES",
       "balance": 2000,
       "currency": "USD",
       "id": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",

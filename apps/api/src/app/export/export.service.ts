@@ -26,18 +26,8 @@ export class ExportService {
         where: { userId }
       })
     ).map(
-      ({
-        accountType,
-        balance,
-        comment,
-        currency,
-        id,
-        isExcluded,
-        name,
-        platformId
-      }) => {
+      ({ balance, comment, currency, id, isExcluded, name, platformId }) => {
         return {
-          accountType,
           balance,
           comment,
           currency,
