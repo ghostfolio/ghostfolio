@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced a sidebar navigation on desktop
 
+### Changed
+
+- Improved the style of the system message
+
 ## 2.1.0 - 2023-09-15
 
 ### Added
