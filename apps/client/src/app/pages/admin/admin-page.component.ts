@@ -1,9 +1,11 @@
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
 @Component({
+  host: { class: 'page with-tabs' },
   selector: 'gf-admin-page',
   styleUrls: ['./admin-page.scss'],
   templateUrl: './admin-page.html'
@@ -13,18 +15,24 @@ export class AdminPageComponent implements OnDestroy, OnInit {
     return this.hasMessage;
   }
 
+  public deviceType: string;
   public hasMessage: boolean;
   public tabs: TabConfiguration[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private dataService: DataService) {
+  public constructor(
+    private dataService: DataService,
+    private deviceService: DeviceDetectorService
+  ) {
     const { systemMessage } = this.dataService.fetchInfo();
 
     this.hasMessage = !!systemMessage;
   }
 
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
     this.tabs = [
       {
         iconName: 'reader-outline',
