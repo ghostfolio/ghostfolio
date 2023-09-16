@@ -9,10 +9,12 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'page with-tabs' },
   selector: 'gf-about-page',
   styleUrls: ['./about-page.scss'],
   templateUrl: './about-page.html'
@@ -22,6 +24,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     return this.hasMessage;
   }
 
+  public deviceType: string;
   public hasMessage: boolean;
   public hasPermissionForSubscription: boolean;
   public tabs: TabConfiguration[] = [];
@@ -32,6 +35,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
     const { globalPermissions, systemMessage } = this.dataService.fetchInfo();
@@ -88,7 +92,9 @@ export class AboutPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

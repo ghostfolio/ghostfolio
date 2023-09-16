@@ -14,7 +14,10 @@
       [routerLink]="tab.path"
       [routerLinkActiveOptions]="{ exact: true }"
     >
-      <ion-icon size="large" [name]="tab.iconName"></ion-icon>
+      <ion-icon
+        [name]="tab.iconName"
+        [size]="deviceType === 'mobile' ? 'large': 'small'"
+      ></ion-icon>
       <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
     </a>
   </ng-container>

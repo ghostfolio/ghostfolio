@@ -13,10 +13,12 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'page with-tabs' },
   selector: 'gf-portfolio-page',
   styleUrls: ['./portfolio-page.scss'],
   templateUrl: './portfolio-page.html'
@@ -26,6 +28,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
     return this.hasMessage;
   }
 
+  public deviceType: string;
   public hasMessage: boolean;
   public info: InfoItem;
   public tabs: TabConfiguration[] = [];
@@ -36,6 +39,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
@@ -84,7 +88,9 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

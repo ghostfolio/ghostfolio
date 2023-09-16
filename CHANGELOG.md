@@ -7,14 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced a sidebar navigation on desktop
+
 ### Changed
 
-- Harmonized the logger output: <symbol> (<dataSource>)
-- Improved the language localization for Dutch (`nl`)
 - Upgraded _Postgres_ from version `12` to `15` in the `docker-compose` files
+
+## 2.1.0 - 2023-09-15
+
+### Added
+
+- Added support to drop a file in the import activities dialog
+- Added a timeout to all data source requests
+
+### Changed
+
+- Harmonized the style of the user interface for granting and revoking public access to share the portfolio
+- Removed the account type from the user interface as a preparation to remove it from the `Account` database schema
+- Improved the logger output of the info service
+- Harmonized the logger output: `<symbol> (<dataSource>)`
+- Improved the language localization for German (`de`)
+- Improved the language localization for Italian (`it`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the read-only mode
 
 ### Fixed
 
+- Fixed the timeout in _EOD Historical Data_ requests
 - Fixed an issue with the portfolio summary caused by the language localization for Dutch (`nl`)
 
 ## 2.0.0 - 2023-09-09
@@ -1521,7 +1542,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for Italiano (`it`)
+- Set up the language localization for Italian (`it`)
 - Extended the landing page
 
 ## 1.195.0 - 20.09.2022
@@ -2944,7 +2965,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported the management of additional currencies in the admin control panel
 - Introduced the system message
-- Introduced the read only mode
+- Introduced the read-only mode
 
 ### Changed
 

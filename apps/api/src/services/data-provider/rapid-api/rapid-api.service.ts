@@ -5,7 +5,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
+import {
+  DEFAULT_REQUEST_TIMEOUT,
+  ghostfolioFearAndGreedIndexSymbol
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -135,6 +138,12 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const { fgi } = await got(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
         {
@@ -142,7 +151,9 @@ export class RapidApiService implements DataProviderInterface {
             useQueryString: 'true',
             'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
             'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
-          }
+          },
+          // @ts-ignore
+          signal: abortController.signal
         }
       ).json<any>();
 

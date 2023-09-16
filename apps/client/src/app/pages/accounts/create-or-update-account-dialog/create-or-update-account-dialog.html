@@ -10,15 +10,6 @@
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Type</mat-label>
-        <mat-select name="type" required [(value)]="data.account.accountType">
-          <mat-option i18n value="CASH">Cash</mat-option>
-          <mat-option i18n value="SECURITIES">Securities</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
         <mat-select name="currency" required [(value)]="data.account.currency">
           <mat-option *ngFor="let currency of currencies" [value]="currency"
