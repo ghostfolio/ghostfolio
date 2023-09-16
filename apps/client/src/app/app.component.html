@@ -11,7 +11,7 @@
           [routerLink]="routerLinkRegister"
         >
           <div
-            class="cursor-pointer d-inline-block info-message px-3 py-2"
+            class="cursor-pointer d-inline-block info-message"
             (click)="onCreateAccount()"
           >
             <span i18n>You are using the Live Demo.</span>
@@ -20,7 +20,7 @@
         >
         <div
           *ngIf="!canCreateAccount && info?.systemMessage && user"
-          class="cursor-pointer d-inline-block info-message px-3 py-2 text-truncate"
+          class="cursor-pointer d-inline-block info-message text-truncate"
           (click)="onShowSystemMessage()"
         >
           {{ info.systemMessage }}
