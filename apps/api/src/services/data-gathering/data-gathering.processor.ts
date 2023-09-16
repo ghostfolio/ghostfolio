@@ -18,7 +18,8 @@ import {
   getMonth,
   getYear,
   isBefore,
-  parseISO
+  parseISO,
+  addDays
 } from 'date-fns';
 
 import { DataGatheringService } from './data-gathering.service';
@@ -101,8 +102,7 @@ export class DataGatheringProcessor {
           });
         }
 
-        // Count month one up for iteration
-        currentDate.setDate(currentDate.getDate() + 1);
+        currentDate = addDays(currentDate, 1);
       }
 
       await this.marketDataService.updateMany({ data });
