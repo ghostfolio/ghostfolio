@@ -36,6 +36,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
+  public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
   public routerLinkAbout = ['/' + $localize`about`];
@@ -102,6 +103,14 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
         const urlSegments = urlSegmentGroup.segments;
         this.currentRoute = urlSegments[0].path;
+
+        this.hasTabs =
+          (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
+            this.currentRoute === 'admin' ||
+            this.currentRoute === 'home' ||
+            this.currentRoute === 'portfolio' ||
+            this.currentRoute === 'zen') &&
+          this.deviceType !== 'mobile';
 
         this.showFooter =
           (this.currentRoute === 'blog' ||

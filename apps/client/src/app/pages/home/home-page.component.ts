@@ -14,7 +14,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page with-tabs' },
+  host: { class: 'page has-tabs' },
   selector: 'gf-home-page',
   styleUrls: ['./home-page.scss'],
   templateUrl: './home-page.html'

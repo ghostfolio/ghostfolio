@@ -2,7 +2,12 @@
   <router-outlet></router-outlet>
 </mat-tab-nav-panel>
 
-<nav mat-align-tabs="center" mat-tab-nav-bar [tabPanel]="tabPanel">
+<nav
+  mat-align-tabs="center"
+  mat-tab-nav-bar
+  [disablePagination]="true"
+  [tabPanel]="tabPanel"
+>
   <ng-container *ngFor="let tab of tabs">
     <a
       #rla="routerLinkActive"

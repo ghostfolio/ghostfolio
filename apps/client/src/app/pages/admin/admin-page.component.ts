@@ -5,7 +5,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
 @Component({
-  host: { class: 'page with-tabs' },
+  host: { class: 'page has-tabs' },
   selector: 'gf-admin-page',
   styleUrls: ['./admin-page.scss'],
   templateUrl: './admin-page.html'

@@ -8,7 +8,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-about-overview-page',
   styleUrls: ['./about-overview-page.scss'],
   templateUrl: './about-overview-page.html'

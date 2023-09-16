@@ -9,13 +9,15 @@
     font-size: 90%;
   }
 
+  header {
+    height: var(--mat-toolbar-standard-height);
+  }
+
   main {
-    min-height: 100vh;
-    padding-top: 5rem;
+    min-height: calc(100vh - var(--mat-toolbar-standard-height));
 
     .info-message-container {
       height: 3.5rem;
-      margin-top: -0.5rem;
 
       .info-message {
         background-color: rgba(var(--palette-foreground-text), 0.05);

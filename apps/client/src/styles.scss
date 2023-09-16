@@ -275,11 +275,17 @@ body {
     }
 
     .page {
-      &.with-tabs {
+      &.has-tabs {
         .mat-mdc-tab-nav-bar {
           --mat-tab-header-inactive-label-text-color: rgba(
             var(--light-primary-text)
           );
+        }
+
+        @media (min-width: 576px) {
+          .mat-mdc-tab-header {
+            background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+          }
         }
       }
     }
@@ -469,12 +475,14 @@ ngx-skeleton-loader {
   flex-direction: column;
   overflow-y: auto;
 
-  &:not(.with-tabs) {
-    padding-bottom: 5rem;
+  &:not(.has-tabs) {
+    @media (min-width: 576px) {
+      padding: 2rem 0;
+    }
   }
 
-  &.with-tabs {
-    height: calc(100vh - 5rem);
+  &.has-tabs {
+    height: calc(100vh - var(--mat-toolbar-standard-height));
     padding-bottom: env(safe-area-inset-bottom);
     padding-bottom: constant(safe-area-inset-bottom);
 
@@ -491,7 +499,10 @@ ngx-skeleton-loader {
       flex-direction: row-reverse;
 
       .mat-mdc-tab-header {
-        width: 12rem;
+        background-color: rgba(var(--palette-foreground-base), 0.02);
+        padding: 2rem 0;
+        width: 14rem;
+        --mat-tab-header-label-text-tracking: normal;
         --mdc-secondary-navigation-tab-container-height: 2rem;
 
         .mat-mdc-tab-links {
@@ -501,6 +512,10 @@ ngx-skeleton-loader {
             justify-content: flex-start;
           }
         }
+      }
+
+      .mat-mdc-tab-nav-panel {
+        padding: 2rem 0;
       }
     }
   }
@@ -519,7 +534,7 @@ ngx-skeleton-loader {
 }
 
 .with-info-message {
-  height: calc(100vh - 5rem - 3.5rem + 0.5rem) !important;
+  height: calc(100vh - var(--mat-toolbar-standard-height) - 3.5rem) !important;
 }
 
 .with-placeholder-as-option {
