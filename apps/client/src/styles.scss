@@ -274,6 +274,16 @@ body {
       }
     }
 
+    .page {
+      &.with-tabs {
+        .mat-mdc-tab-nav-bar {
+          --mat-tab-header-inactive-label-text-color: rgba(
+            var(--light-primary-text)
+          );
+        }
+      }
+    }
+
     .svgMap-tooltip {
       background: var(--dark-background);
 
@@ -455,7 +465,45 @@ ngx-skeleton-loader {
 }
 
 .page {
-  padding-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  &:not(.with-tabs) {
+    padding-bottom: 5rem;
+  }
+
+  &.with-tabs {
+    height: calc(100vh - 5rem);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: constant(safe-area-inset-bottom);
+
+    .mat-mdc-tab-nav-bar {
+      --mat-tab-header-active-focus-indicator-color: transparent;
+      --mat-tab-header-active-hover-indicator-color: transparent;
+      --mat-tab-header-inactive-label-text-color: rgba(
+        var(--dark-primary-text)
+      );
+      --mdc-tab-indicator-active-indicator-color: transparent;
+    }
+
+    @media (min-width: 576px) {
+      flex-direction: row-reverse;
+
+      .mat-mdc-tab-header {
+        width: 12rem;
+        --mdc-secondary-navigation-tab-container-height: 2rem;
+
+        .mat-mdc-tab-links {
+          flex-direction: column;
+
+          .mat-mdc-tab-link {
+            justify-content: flex-start;
+          }
+        }
+      }
+    }
+  }
 }
 
 .svgMap-tooltip {
