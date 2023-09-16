@@ -4,6 +4,38 @@
   display: block;
   min-height: 100vh;
 
+  &.has-info-message {
+    header {
+      height: calc(2 * var(--mat-toolbar-standard-height));
+
+      .info-message-container {
+        height: var(--mat-toolbar-standard-height);
+
+        .info-message-inner-container {
+          background-color: var(--light-background);
+          height: var(--mat-toolbar-standard-height);
+          z-index: 999;
+
+          .info-message {
+            background-color: rgba(var(--palette-foreground-text), 0.05);
+            border-radius: 2rem;
+            font-size: 80%;
+            max-width: 100%;
+
+            .a {
+              color: rgba(var(--palette-primary-500), 1);
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+
+    main {
+      min-height: calc(100vh - 2 * var(--mat-toolbar-standard-height));
+    }
+  }
+
   footer {
     background-color: rgba(var(--palette-foreground-text), 0.05);
     font-size: 90%;
@@ -15,35 +47,25 @@
 
   main {
     min-height: calc(100vh - var(--mat-toolbar-standard-height));
-
-    .info-message-container {
-      height: 3.5rem;
-
-      .info-message {
-        background-color: rgba(var(--palette-foreground-text), 0.05);
-        border-radius: 2rem;
-        font-size: 80%;
-        max-width: 100%;
-
-        .a {
-          color: rgba(var(--palette-primary-500), 1);
-          font-weight: 500;
-        }
-      }
-    }
   }
 }
 
 :host-context(.is-dark-theme) {
-  footer {
-    background-color: rgba(var(--palette-foreground-text-dark), 0.05);
-  }
+  &.has-info-message {
+    header {
+      .info-message-container {
+        .info-message-inner-container {
+          background-color: var(--dark-background);
 
-  main {
-    .info-message-container {
-      .info-message {
-        background-color: rgba(var(--palette-foreground-text-dark), 0.05);
+          .info-message {
+            background-color: rgba(var(--palette-foreground-text-dark), 0.05);
+          }
+        }
       }
     }
+  }
+
+  footer {
+    background-color: rgba(var(--palette-foreground-text-dark), 0.05);
   }
 }

@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  HostBinding,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
@@ -20,12 +14,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-page.html'
 })
 export class HomePageComponent implements OnDestroy, OnInit {
-  @HostBinding('class.with-info-message') get getHasMessage() {
-    return this.hasMessage;
-  }
-
   public deviceType: string;
-  public hasMessage: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public tabs: TabConfiguration[] = [];
   public user: User;
@@ -38,7 +27,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
-    const { globalPermissions, systemMessage } = this.dataService.fetchInfo();
+    const { globalPermissions } = this.dataService.fetchInfo();
 
     this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
       globalPermissions,
@@ -73,12 +62,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
             }
           ];
           this.user = state.user;
-
-          this.hasMessage =
-            hasPermission(
-              this.user?.permissions,
-              permissions.createUserAccount
-            ) || !!systemMessage;
 
           this.changeDetectorRef.markForCheck();
         }

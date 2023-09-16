@@ -1,22 +1,10 @@
 <header>
-  <gf-header
-    class="position-fixed w-100"
-    [currentRoute]="currentRoute"
-    [hasTabs]="hasTabs"
-    [info]="info"
-    [pageTitle]="pageTitle"
-    [user]="user"
-    (signOut)="onSignOut()"
-  ></gf-header>
-</header>
-
-<main role="main">
   <div
     *ngIf="canCreateAccount || (info?.systemMessage && user)"
-    class="container info-message-container"
+    class="info-message-container"
   >
-    <div class="row">
-      <div class="col-md-8 offset-md-2 text-center">
+    <div class="info-message-inner-container position-fixed w-100">
+      <div class="align-items-center d-flex h-100 justify-content-center">
         <a
           *ngIf="canCreateAccount"
           class="text-center"
@@ -26,8 +14,8 @@
             class="cursor-pointer d-inline-block info-message px-3 py-2"
             (click)="onCreateAccount()"
           >
-            <span>You are using the Live Demo.</span>
-            <span class="a ml-2">Create Account</span>
+            <span i18n>You are using the Live Demo.</span>
+            <span class="a ml-2" i18n>Create Account</span>
           </div></a
         >
         <div
@@ -41,6 +29,18 @@
     </div>
   </div>
 
+  <gf-header
+    class="position-fixed w-100"
+    [currentRoute]="currentRoute"
+    [hasTabs]="hasTabs"
+    [info]="info"
+    [pageTitle]="pageTitle"
+    [user]="user"
+    (signOut)="onSignOut()"
+  ></gf-header>
+</header>
+
+<main role="main">
   <router-outlet></router-outlet>
 </main>
 

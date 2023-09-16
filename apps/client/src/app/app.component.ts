@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostBinding,
   Inject,
   OnDestroy,
   OnInit
@@ -28,10 +29,15 @@ import { UserService } from './services/user/user.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnDestroy, OnInit {
+  @HostBinding('class.has-info-message') get getHasMessage() {
+    return this.hasInfoMessage;
+  }
+
   public canCreateAccount: boolean;
   public currentRoute: string;
   public currentYear = new Date().getFullYear();
   public deviceType: string;
+  public hasInfoMessage: boolean;
   public hasPermissionForBlog: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
@@ -148,6 +154,12 @@ export class AppComponent implements OnDestroy, OnInit {
           this.user?.permissions,
           permissions.createUserAccount
         );
+
+        this.hasInfoMessage =
+          hasPermission(
+            this.user?.permissions,
+            permissions.createUserAccount
+          ) || !!this.info.systemMessage;
 
         this.initializeTheme(this.user?.settings.colorScheme);
 
