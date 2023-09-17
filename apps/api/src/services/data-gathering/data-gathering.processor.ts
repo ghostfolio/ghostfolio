@@ -13,13 +13,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job } from 'bull';
 import {
+  addDays,
   format,
   getDate,
   getMonth,
   getYear,
   isBefore,
-  parseISO,
-  addDays
+  parseISO
 } from 'date-fns';
 
 import { DataGatheringService } from './data-gathering.service';
