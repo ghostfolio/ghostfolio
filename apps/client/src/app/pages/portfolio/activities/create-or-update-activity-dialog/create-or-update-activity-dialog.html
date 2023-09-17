@@ -15,7 +15,7 @@
             >{{ typesTranslationMap[activityForm.controls['type'].value]
             }}</mat-select-trigger
           >
-          <mat-option class="line-height-1" value="BUY">
+          <mat-option value="BUY">
             <span><b>{{ typesTranslationMap['BUY'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
@@ -23,7 +23,6 @@
           </mat-option>
           <mat-option
             *ngIf="data.user?.settings?.isExperimentalFeatures"
-            class="line-height-1"
             value="FEE"
           >
             <span><b>{{ typesTranslationMap['FEE'] }}</b></span>
@@ -31,25 +30,25 @@
               >One-time fee, annual account fees</small
             >
           </mat-option>
-          <mat-option class="line-height-1" value="DIVIDEND">
+          <mat-option value="DIVIDEND">
             <span><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Distribution of corporate earnings</small
             >
           </mat-option>
-          <mat-option class="line-height-1" value="LIABILITY">
+          <mat-option value="LIABILITY">
             <span><b>{{ typesTranslationMap['LIABILITY'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Mortgages, personal loans, credit cards</small
             >
           </mat-option>
-          <mat-option class="line-height-1" value="SELL">
+          <mat-option value="SELL">
             <span><b>{{ typesTranslationMap['SELL'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
-          <mat-option class="line-height-1" value="ITEM">
+          <mat-option value="ITEM">
             <span><b>{{ typesTranslationMap['ITEM'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Luxury items, real estate, private companies</small
