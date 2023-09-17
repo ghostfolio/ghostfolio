@@ -161,6 +161,7 @@
           [ngClass]="{
             buy: element.type === 'BUY',
             dividend: element.type === 'DIVIDEND',
+            fee: element.type === 'FEE',
             item: element.type === 'ITEM',
             liability: element.type === 'LIABILITY',
             sell: element.type === 'SELL'
@@ -169,6 +170,10 @@
           <ion-icon
             *ngIf="element.type === 'BUY' || element.type === 'DIVIDEND'"
             name="arrow-up-circle-outline"
+          ></ion-icon>
+          <ion-icon
+            *ngIf="element.type === 'FEE'"
+            name="hammer-outline"
           ></ion-icon>
           <ion-icon
             *ngIf="element.type === 'ITEM'"
@@ -545,6 +550,7 @@
         'cursor-pointer':
           hasPermissionToOpenDetails &&
           !row.isDraft &&
+          row.type !== 'FEE' &&
           row.type !== 'ITEM' &&
           row.type !== 'LIABILITY'
       }"
