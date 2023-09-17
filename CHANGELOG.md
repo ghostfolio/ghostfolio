@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the timeout in _EOD Historical Data_ requests
 - Fixed an issue with the portfolio summary caused by the language localization for Dutch (`nl`)
+- Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
 
 ## 2.0.0 - 2023-09-09
 
