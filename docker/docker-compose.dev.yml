@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   postgres:
-    image: postgres:12
+    image: postgres:15
     container_name: postgres
     restart: unless-stopped
     env_file:
