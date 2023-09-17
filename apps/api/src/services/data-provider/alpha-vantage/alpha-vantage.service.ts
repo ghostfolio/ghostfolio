@@ -9,6 +9,7 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
+import * as Alphavantage from 'alphavantage';
 import { format, isAfter, isBefore, parse } from 'date-fns';
 
 import { IAlphaVantageHistoricalResponse } from './interfaces/interfaces';
@@ -20,7 +21,7 @@ export class AlphaVantageService implements DataProviderInterface {
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    this.alphaVantage = require('alphavantage')({
+    this.alphaVantage = Alphavantage({
       key: this.configurationService.get('ALPHA_VANTAGE_API_KEY')
     });
   }
@@ -126,6 +127,9 @@ export class AlphaVantageService implements DataProviderInterface {
     return {
       items: result?.bestMatches?.map((bestMatch) => {
         return {
+          assetClass: undefined,
+          assetSubClass: undefined,
+          currency: bestMatch['8. currency'],
           dataSource: this.getName(),
           name: bestMatch['2. name'],
           symbol: bestMatch['1. symbol']
