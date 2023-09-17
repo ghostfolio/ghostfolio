@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for fees on account level
+- Added support for fees on account level (experimental)
 
 ## 2.2.0 - 2023-09-17
 
