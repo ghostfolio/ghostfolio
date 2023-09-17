@@ -20,7 +20,6 @@ import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-holdings-page',
   styleUrls: ['./holdings-page.scss'],
   templateUrl: './holdings-page.html'

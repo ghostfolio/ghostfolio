@@ -1,14 +1,17 @@
-<mat-toolbar class="px-2">
+<mat-toolbar class="px-0">
   <ng-container *ngIf="user">
-    <a
-      class="align-items-center d-flex h-100 no-min-width px-2 rounded-0"
-      mat-button
-      [routerLink]="['/']"
-    >
-      <gf-logo [label]="pageTitle"></gf-logo>
-    </a>
+    <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
+      <a
+        class="align-items-center justify-content-start rounded-0"
+        mat-button
+        [ngClass]="{ 'w-100': hasTabs }"
+        [routerLink]="['/']"
+      >
+        <gf-logo class="px-2" [label]="pageTitle"></gf-logo>
+      </a>
+    </div>
     <span class="spacer"></span>
-    <ul class="alig-items-center d-flex list-inline m-0">
+    <ul class="alig-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block"
@@ -246,18 +249,22 @@
     </ul>
   </ng-container>
   <ng-container *ngIf="user === null">
-    <a
-      class="align-items-center d-flex h-100 mx-2 no-min-width px-2 rounded-0"
-      mat-button
-      [routerLink]="['/']"
-    >
-      <gf-logo
-        [label]="pageTitle"
-        [showLabel]="currentRoute !== 'register'"
-      ></gf-logo>
-    </a>
+    <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
+      <a
+        class="align-items-center justify-content-start rounded-0"
+        mat-button
+        [ngClass]="{ 'w-100': hasTabs }"
+        [routerLink]="['/']"
+      >
+        <gf-logo
+          class="px-2"
+          [label]="pageTitle"
+          [showLabel]="currentRoute !== 'register'"
+        ></gf-logo>
+      </a>
+    </div>
     <span class="spacer"></span>
-    <ul class="alig-items-center d-flex list-inline m-0">
+    <ul class="alig-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block"

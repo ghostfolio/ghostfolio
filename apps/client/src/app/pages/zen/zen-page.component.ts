@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page with-tabs' },
+  host: { class: 'page has-tabs' },
   selector: 'gf-zen-page',
   styleUrls: ['./zen-page.scss'],
   templateUrl: './zen-page.html'

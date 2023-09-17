@@ -10,7 +10,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
   templateUrl: './fire-page.html'

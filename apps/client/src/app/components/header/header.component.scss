@@ -7,6 +7,16 @@
   .mat-toolbar {
     background-color: var(--light-background);
 
+    .logo-container {
+      &.filled {
+        background-color: rgba(var(--palette-foreground-base), 0.02);
+      }
+
+      @media (min-width: 576px) {
+        width: 14rem;
+      }
+    }
+
     .list-inline-item {
       margin: 0;
     }
@@ -34,5 +44,11 @@
 :host-context(.is-dark-theme) {
   .mat-toolbar {
     background-color: var(--dark-background);
+
+    .logo-container {
+      &.filled {
+        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+      }
+    }
   }
 }

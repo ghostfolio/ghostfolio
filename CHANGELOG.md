@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style of the system message
 - Upgraded _Postgres_ from version `12` to `15` in the `docker-compose` files
 
 ## 2.1.0 - 2023-09-15

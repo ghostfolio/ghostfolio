@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  HostBinding,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
@@ -14,18 +8,13 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page with-tabs' },
+  host: { class: 'page has-tabs' },
   selector: 'gf-about-page',
   styleUrls: ['./about-page.scss'],
   templateUrl: './about-page.html'
 })
 export class AboutPageComponent implements OnDestroy, OnInit {
-  @HostBinding('class.with-info-message') get getHasMessage() {
-    return this.hasMessage;
-  }
-
   public deviceType: string;
-  public hasMessage: boolean;
   public hasPermissionForSubscription: boolean;
   public tabs: TabConfiguration[] = [];
   public user: User;
@@ -38,7 +27,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
-    const { globalPermissions, systemMessage } = this.dataService.fetchInfo();
+    const { globalPermissions } = this.dataService.fetchInfo();
 
     this.hasPermissionForSubscription = hasPermission(
       globalPermissions,
@@ -74,12 +63,6 @@ export class AboutPageComponent implements OnDestroy, OnInit {
             showCondition: this.hasPermissionForSubscription
           });
           this.user = state.user;
-
-          this.hasMessage =
-            hasPermission(
-              this.user?.permissions,
-              permissions.createUserAccount
-            ) || !!systemMessage;
 
           this.changeDetectorRef.markForCheck();
         }

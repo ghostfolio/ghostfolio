@@ -26,7 +26,6 @@ import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-analysis-page',
   styleUrls: ['./analysis-page.scss'],
   templateUrl: './analysis-page.html'
