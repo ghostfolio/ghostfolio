@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for fees on account level (experimental)
 
+### Fixed
+
+- Fixed the export functionality for liabilities
+
 ## 2.2.0 - 2023-09-17
 
 ### Added
