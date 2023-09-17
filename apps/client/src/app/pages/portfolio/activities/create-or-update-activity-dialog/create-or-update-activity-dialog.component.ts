@@ -217,6 +217,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
         if (
           this.activityForm.controls['type'].value === 'BUY' ||
+          this.activityForm.controls['type'].value === 'FEE' ||
           this.activityForm.controls['type'].value === 'ITEM'
         ) {
           this.total =
@@ -290,7 +291,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
           this.activityForm.controls['updateAccountBalance'].disable();
           this.activityForm.controls['updateAccountBalance'].setValue(false);
-        } else if (type === 'LIABILITY') {
+        } else if (type === 'FEE' || type === 'LIABILITY') {
           this.activityForm.controls['accountId'].removeValidators(
             Validators.required
           );
@@ -308,13 +309,32 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['dataSource'].updateValueAndValidity();
+
+          if (
+            type === 'FEE' &&
+            this.activityForm.controls['feeInCustomCurrency'].value === 0
+          ) {
+            this.activityForm.controls['feeInCustomCurrency'].reset();
+          }
+
           this.activityForm.controls['name'].setValidators(Validators.required);
           this.activityForm.controls['name'].updateValueAndValidity();
-          this.activityForm.controls['quantity'].setValue(1);
+
+          if (type === 'FEE') {
+            this.activityForm.controls['quantity'].setValue(0);
+          } else if (type === 'LIABILITY') {
+            this.activityForm.controls['quantity'].setValue(1);
+          }
+
           this.activityForm.controls['searchSymbol'].removeValidators(
             Validators.required
           );
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+
+          if (type === 'FEE') {
+            this.activityForm.controls['unitPriceInCustomCurrency'].setValue(0);
+          }
+
           this.activityForm.controls['updateAccountBalance'].disable();
           this.activityForm.controls['updateAccountBalance'].setValue(false);
         } else {

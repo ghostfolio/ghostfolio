@@ -29,6 +29,7 @@ const locales = {
   // Activity types
   BUY: $localize`Buy`,
   DIVIDEND: $localize`Dividend`,
+  FEE: $localize`Fee`,
   ITEM: $localize`Valuable`,
   LIABILITY: $localize`Liability`,
   SELL: $localize`Sell`,

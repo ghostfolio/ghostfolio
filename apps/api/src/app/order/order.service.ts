@@ -97,7 +97,11 @@ export class OrderService {
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (data.type === 'ITEM' || data.type === 'LIABILITY') {
+    if (
+      data.type === 'FEE' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
+    ) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
       currency = data.SymbolProfile.connectOrCreate.create.currency;
@@ -151,7 +155,7 @@ export class OrderService {
     const orderData: Prisma.OrderCreateInput = data;
 
     const isDraft =
-      data.type === 'LIABILITY'
+      data.type === 'FEE' || data.type === 'ITEM' || data.type === 'LIABILITY'
         ? false
         : isAfter(data.date as Date, endOfToday());
 
@@ -197,7 +201,11 @@ export class OrderService {
       where
     });
 
-    if (order.type === 'ITEM' || order.type === 'LIABILITY') {
+    if (
+      order.type === 'FEE' ||
+      order.type === 'ITEM' ||
+      order.type === 'LIABILITY'
+    ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -368,7 +376,11 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (data.type === 'ITEM' || data.type === 'LIABILITY') {
+    if (
+      data.type === 'FEE' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
+    ) {
       delete data.SymbolProfile.connect;
     } else {
       delete data.SymbolProfile.update;

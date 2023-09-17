@@ -77,7 +77,10 @@ export class ExportService {
             currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol: type === 'ITEM' ? SymbolProfile.name : SymbolProfile.symbol
+            symbol:
+              type === 'FEE' || type === 'ITEM' || type === 'LIABILITY'
+                ? SymbolProfile.name
+                : SymbolProfile.symbol
           };
         }
       )
