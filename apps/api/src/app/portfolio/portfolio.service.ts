@@ -1342,36 +1342,6 @@ export class PortfolioService {
     return cashPositions;
   }
 
-  private getDividend({
-    activities,
-    date = new Date(0),
-    userCurrency
-  }: {
-    activities: OrderWithAccount[];
-    date?: Date;
-    userCurrency: string;
-  }) {
-    return activities
-      .filter((activity) => {
-        // Filter out all activities before given date (drafts) and type dividend
-        return (
-          isBefore(date, new Date(activity.date)) &&
-          activity.type === TypeOfOrder.DIVIDEND
-        );
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          userCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
-  }
-
   private getDividendsByGroup({
     dividends,
     groupBy
@@ -1592,6 +1562,39 @@ export class PortfolioService {
     return portfolioStart;
   }
 
+  private getSumOfActivityType({
+    activities,
+    activityType,
+    date = new Date(0),
+    userCurrency
+  }: {
+    activities: OrderWithAccount[];
+    activityType: TypeOfOrder;
+    date?: Date;
+    userCurrency: string;
+  }) {
+    return activities
+      .filter((activity) => {
+        // Filter out all activities before given date (drafts) and
+        // activity type
+        return (
+          isBefore(date, new Date(activity.date)) &&
+          activity.type === activityType
+        );
+      })
+      .map(({ quantity, SymbolProfile, unitPrice }) => {
+        return this.exchangeRateDataService.toCurrency(
+          new Big(quantity).mul(unitPrice).toNumber(),
+          SymbolProfile.currency,
+          userCurrency
+        );
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      );
+  }
+
   private getStreaks({
     investments,
     savingsRate
@@ -1650,9 +1653,10 @@ export class PortfolioService {
       return account?.isExcluded ?? false;
     });
 
-    const dividend = this.getDividend({
+    const dividend = this.getSumOfActivityType({
       activities,
-      userCurrency
+      userCurrency,
+      activityType: TypeOfOrder.DIVIDEND
     }).toNumber();
     const emergencyFund = new Big(
       Math.max(
@@ -1662,6 +1666,11 @@ export class PortfolioService {
     );
     const fees = this.getFees({ activities, userCurrency }).toNumber();
     const firstOrderDate = activities[0]?.date;
+    const interest = this.getSumOfActivityType({
+      activities,
+      userCurrency,
+      activityType: TypeOfOrder.INTEREST
+    }).toNumber();
     const items = this.getItems(activities).toNumber();
     const liabilities = this.getLiabilities({
       activities,
@@ -1725,6 +1734,7 @@ export class PortfolioService {
       excludedAccountsAndActivities,
       fees,
       firstOrderDate,
+      interest,
       items,
       liabilities,
       netWorth,

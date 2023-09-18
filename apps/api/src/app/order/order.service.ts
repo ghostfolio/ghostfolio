@@ -99,6 +99,7 @@ export class OrderService {
 
     if (
       data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
       data.type === 'ITEM' ||
       data.type === 'LIABILITY'
     ) {
@@ -155,7 +156,10 @@ export class OrderService {
     const orderData: Prisma.OrderCreateInput = data;
 
     const isDraft =
-      data.type === 'FEE' || data.type === 'ITEM' || data.type === 'LIABILITY'
+      data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
         ? false
         : isAfter(data.date as Date, endOfToday());
 
@@ -203,6 +207,7 @@ export class OrderService {
 
     if (
       order.type === 'FEE' ||
+      order.type === 'INTEREST' ||
       order.type === 'ITEM' ||
       order.type === 'LIABILITY'
     ) {
@@ -378,6 +383,7 @@ export class OrderService {
 
     if (
       data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
       data.type === 'ITEM' ||
       data.type === 'LIABILITY'
     ) {

@@ -162,14 +162,19 @@
             buy: element.type === 'BUY',
             dividend: element.type === 'DIVIDEND',
             fee: element.type === 'FEE',
+            interest: element.type === 'INTEREST',
             item: element.type === 'ITEM',
             liability: element.type === 'LIABILITY',
             sell: element.type === 'SELL'
           }"
         >
           <ion-icon
-            *ngIf="element.type === 'BUY' || element.type === 'DIVIDEND'"
+            *ngIf="element.type === 'BUY'"
             name="arrow-up-circle-outline"
+          ></ion-icon>
+          <ion-icon
+            *ngIf="element.type === 'DIVIDEND' || element.type === 'INTEREST'"
+            name="add-circle-outline"
           ></ion-icon>
           <ion-icon
             *ngIf="element.type === 'FEE'"
@@ -551,6 +556,7 @@
           hasPermissionToOpenDetails &&
           !row.isDraft &&
           row.type !== 'FEE' &&
+          row.type !== 'INTEREST' &&
           row.type !== 'ITEM' &&
           row.type !== 'LIABILITY'
       }"

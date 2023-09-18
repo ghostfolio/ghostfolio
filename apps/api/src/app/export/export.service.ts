@@ -78,7 +78,10 @@ export class ExportService {
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
             symbol:
-              type === 'FEE' || type === 'ITEM' || type === 'LIABILITY'
+              type === 'FEE' ||
+              type === 'INTEREST' ||
+              type === 'ITEM' ||
+              type === 'LIABILITY'
                 ? SymbolProfile.name
                 : SymbolProfile.symbol
           };

@@ -207,6 +207,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
       this.hasPermissionToOpenDetails &&
       !activity.isDraft &&
       activity.type !== 'FEE' &&
+      activity.type !== 'INTEREST' &&
       activity.type !== 'ITEM' &&
       activity.type !== 'LIABILITY'
     ) {
@@ -391,7 +392,13 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
       if (isNumber(valueInBaseCurrency)) {
         if (type === 'BUY' || type === 'ITEM') {
           totalValue = totalValue.plus(valueInBaseCurrency);
-        } else if (type === 'FEE' || type === 'LIABILITY' || type === 'SELL') {
+        } else if (
+          type === 'DIVIDEND' ||
+          type === 'FEE' ||
+          type === 'INTEREST' ||
+          type === 'LIABILITY' ||
+          type === 'SELL'
+        ) {
           return null;
         }
       } else {

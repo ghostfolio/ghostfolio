@@ -243,7 +243,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       (accountId) => {
         const type = this.activityForm.controls['type'].value;
 
-        if (type === 'FEE' || type === 'ITEM' || type === 'LIABILITY') {
+        if (
+          type === 'FEE' ||
+          type === 'INTEREST' ||
+          type === 'ITEM' ||
+          type === 'LIABILITY'
+        ) {
           const currency =
             this.data.accounts.find(({ id }) => {
               return id === accountId;
@@ -315,7 +320,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
           this.activityForm.controls['updateAccountBalance'].disable();
           this.activityForm.controls['updateAccountBalance'].setValue(false);
-        } else if (type === 'FEE' || type === 'LIABILITY') {
+        } else if (
+          type === 'FEE' ||
+          type === 'INTEREST' ||
+          type === 'LIABILITY'
+        ) {
+          // TODO
           this.activityForm.controls['accountId'].removeValidators(
             Validators.required
           );
@@ -338,6 +348,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           if (
             (type === 'FEE' &&
               this.activityForm.controls['feeInCustomCurrency'].value === 0) ||
+            type === 'INTEREST' ||
             type === 'LIABILITY'
           ) {
             this.activityForm.controls['feeInCustomCurrency'].reset();
@@ -348,7 +359,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
           if (type === 'FEE') {
             this.activityForm.controls['quantity'].setValue(0);
-          } else if (type === 'LIABILITY') {
+          } else if (type === 'INTEREST' || type === 'LIABILITY') {
             this.activityForm.controls['quantity'].setValue(1);
           }
 
