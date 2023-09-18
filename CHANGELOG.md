@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for interest on account level (experimental)
+
 ### Changed
 
 - Improved the preselected currency based on the account's currency in the create or edit activity dialog
