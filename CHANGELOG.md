@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the preselected currency based on the account's currency in the create or edit activity dialog
+
 ### Fixed
 
 - Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
