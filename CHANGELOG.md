@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Unlocked the experimental features setting for all users
+
 ### Fixed
 
 - Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
