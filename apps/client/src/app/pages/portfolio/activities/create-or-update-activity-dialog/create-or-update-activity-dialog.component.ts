@@ -20,7 +20,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
-import { catchError, map, startWith, takeUntil } from 'rxjs/operators';
+import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
@@ -139,7 +139,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     });
 
     this.activityForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(
+        // Slightly delay until the more specific form control value changes have
+        // completed
+        delay(300),
+        takeUntil(this.unsubscribeSubject)
+      )
       .subscribe(async () => {
         let exchangeRateOfFee = 1;
         let exchangeRateOfUnitPrice = 1;
@@ -234,6 +239,23 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         this.changeDetectorRef.markForCheck();
       });
 
+    this.activityForm.controls['accountId'].valueChanges.subscribe(
+      (accountId) => {
+        const type = this.activityForm.controls['type'].value;
+
+        if (type === 'FEE' || type === 'ITEM' || type === 'LIABILITY') {
+          const currency =
+            this.data.accounts.find(({ id }) => {
+              return id === accountId;
+            })?.currency ?? this.data.user.settings.baseCurrency;
+
+          this.activityForm.controls['currency'].setValue(currency);
+          this.activityForm.controls['currencyOfFee'].setValue(currency);
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+        }
+      }
+    );
+
     this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
       if (this.activityForm.controls['searchSymbol'].invalid) {
         this.data.activity.SymbolProfile = null;
@@ -269,19 +291,21 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['accountId'].updateValueAndValidity();
-          this.activityForm.controls['currency'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfFee'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfUnitPrice'].setValue(
-            this.data.user.settings.baseCurrency
-          );
+
+          const currency =
+            this.data.accounts.find(({ id }) => {
+              return id === this.activityForm.controls['accountId'].value;
+            })?.currency ?? this.data.user.settings.baseCurrency;
+
+          this.activityForm.controls['currency'].setValue(currency);
+          this.activityForm.controls['currencyOfFee'].setValue(currency);
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+
           this.activityForm.controls['dataSource'].removeValidators(
             Validators.required
           );
           this.activityForm.controls['dataSource'].updateValueAndValidity();
+          this.activityForm.controls['feeInCustomCurrency'].reset();
           this.activityForm.controls['name'].setValidators(Validators.required);
           this.activityForm.controls['name'].updateValueAndValidity();
           this.activityForm.controls['quantity'].setValue(1);
@@ -296,23 +320,25 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['accountId'].updateValueAndValidity();
-          this.activityForm.controls['currency'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfFee'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfUnitPrice'].setValue(
-            this.data.user.settings.baseCurrency
-          );
+
+          const currency =
+            this.data.accounts.find(({ id }) => {
+              return id === this.activityForm.controls['accountId'].value;
+            })?.currency ?? this.data.user.settings.baseCurrency;
+
+          this.activityForm.controls['currency'].setValue(currency);
+          this.activityForm.controls['currencyOfFee'].setValue(currency);
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+
           this.activityForm.controls['dataSource'].removeValidators(
             Validators.required
           );
           this.activityForm.controls['dataSource'].updateValueAndValidity();
 
           if (
-            type === 'FEE' &&
-            this.activityForm.controls['feeInCustomCurrency'].value === 0
+            (type === 'FEE' &&
+              this.activityForm.controls['feeInCustomCurrency'].value === 0) ||
+            type === 'LIABILITY'
           ) {
             this.activityForm.controls['feeInCustomCurrency'].reset();
           }
