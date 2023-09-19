@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the preselected currency based on the account's currency in the create or edit activity dialog
 - Unlocked the experimental features setting for all users
+- Upgraded `prisma` from version `5.2.0` to `5.3.1`
 
 ### Fixed
 
