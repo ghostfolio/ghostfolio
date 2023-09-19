@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the preselected currency based on the account's currency in the create or edit activity dialog
+- Unlocked the experimental features setting for all users
 
 ### Fixed
 
