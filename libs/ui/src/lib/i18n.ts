@@ -30,6 +30,7 @@ const locales = {
   BUY: $localize`Buy`,
   DIVIDEND: $localize`Dividend`,
   FEE: $localize`Fee`,
+  INTEREST: $localize`Interest`,
   ITEM: $localize`Valuable`,
   LIABILITY: $localize`Liability`,
   SELL: $localize`Sell`,

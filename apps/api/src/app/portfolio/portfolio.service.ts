@@ -56,12 +56,11 @@ import {
   Platform,
   Prisma,
   Tag,
-  Type as TypeOfOrder
+  Type as ActivityType
 } from '@prisma/client';
 import Big from 'big.js';
 import {
   differenceInDays,
-  endOfToday,
   format,
   isAfter,
   isBefore,
@@ -1342,36 +1341,6 @@ export class PortfolioService {
     return cashPositions;
   }
 
-  private getDividend({
-    activities,
-    date = new Date(0),
-    userCurrency
-  }: {
-    activities: OrderWithAccount[];
-    date?: Date;
-    userCurrency: string;
-  }) {
-    return activities
-      .filter((activity) => {
-        // Filter out all activities before given date (drafts) and type dividend
-        return (
-          isBefore(date, new Date(activity.date)) &&
-          activity.type === TypeOfOrder.DIVIDEND
-        );
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          userCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
-  }
-
   private getDividendsByGroup({
     dividends,
     groupBy
@@ -1516,52 +1485,6 @@ export class PortfolioService {
     };
   }
 
-  private getItems(activities: OrderWithAccount[], date = new Date(0)) {
-    return activities
-      .filter((activity) => {
-        // Filter out all activities before given date (drafts) and type item
-        return (
-          isBefore(date, new Date(activity.date)) &&
-          activity.type === TypeOfOrder.ITEM
-        );
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          this.request.user.Settings.settings.baseCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
-  }
-
-  private getLiabilities({
-    activities,
-    userCurrency
-  }: {
-    activities: OrderWithAccount[];
-    userCurrency: string;
-  }) {
-    return activities
-      .filter(({ type }) => {
-        return type === TypeOfOrder.LIABILITY;
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          userCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
-  }
-
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
     switch (aDateRange) {
       case '1d':
@@ -1650,9 +1573,10 @@ export class PortfolioService {
       return account?.isExcluded ?? false;
     });
 
-    const dividend = this.getDividend({
+    const dividend = this.getSumOfActivityType({
       activities,
-      userCurrency
+      userCurrency,
+      activityType: 'DIVIDEND'
     }).toNumber();
     const emergencyFund = new Big(
       Math.max(
@@ -1662,23 +1586,49 @@ export class PortfolioService {
     );
     const fees = this.getFees({ activities, userCurrency }).toNumber();
     const firstOrderDate = activities[0]?.date;
-    const items = this.getItems(activities).toNumber();
-    const liabilities = this.getLiabilities({
+    const interest = this.getSumOfActivityType({
       activities,
-      userCurrency
+      userCurrency,
+      activityType: 'INTEREST'
+    }).toNumber();
+    const items = this.getSumOfActivityType({
+      activities,
+      userCurrency,
+      activityType: 'ITEM'
+    }).toNumber();
+    const liabilities = this.getSumOfActivityType({
+      activities,
+      userCurrency,
+      activityType: 'LIABILITY'
     }).toNumber();
 
-    const totalBuy = this.getTotalByType(activities, userCurrency, 'BUY');
-    const totalSell = this.getTotalByType(activities, userCurrency, 'SELL');
+    const totalBuy = this.getSumOfActivityType({
+      activities,
+      userCurrency,
+      activityType: 'BUY'
+    }).toNumber();
+    const totalSell = this.getSumOfActivityType({
+      activities,
+      userCurrency,
+      activityType: 'SELL'
+    }).toNumber();
 
     const cash = new Big(balanceInBaseCurrency)
       .minus(emergencyFund)
       .plus(emergencyFundPositionsValueInBaseCurrency)
       .toNumber();
     const committedFunds = new Big(totalBuy).minus(totalSell);
-    const totalOfExcludedActivities = new Big(
-      this.getTotalByType(excludedActivities, userCurrency, 'BUY')
-    ).minus(this.getTotalByType(excludedActivities, userCurrency, 'SELL'));
+    const totalOfExcludedActivities = this.getSumOfActivityType({
+      userCurrency,
+      activities: excludedActivities,
+      activityType: 'BUY'
+    }).minus(
+      this.getSumOfActivityType({
+        userCurrency,
+        activities: excludedActivities,
+        activityType: 'SELL'
+      })
+    );
 
     const cashDetailsWithExcludedAccounts =
       await this.accountService.getCashDetails({
@@ -1725,6 +1675,7 @@ export class PortfolioService {
       excludedAccountsAndActivities,
       fees,
       firstOrderDate,
+      interest,
       items,
       liabilities,
       netWorth,
@@ -1745,6 +1696,39 @@ export class PortfolioService {
         return type === 'BUY' || type === 'SELL';
       }).length
     };
+  }
+
+  private getSumOfActivityType({
+    activities,
+    activityType,
+    date = new Date(0),
+    userCurrency
+  }: {
+    activities: OrderWithAccount[];
+    activityType: ActivityType;
+    date?: Date;
+    userCurrency: string;
+  }) {
+    return activities
+      .filter((activity) => {
+        // Filter out all activities before given date (drafts) and
+        // activity type
+        return (
+          isBefore(date, new Date(activity.date)) &&
+          activity.type === activityType
+        );
+      })
+      .map(({ quantity, SymbolProfile, unitPrice }) => {
+        return this.exchangeRateDataService.toCurrency(
+          new Big(quantity).mul(unitPrice).toNumber(),
+          SymbolProfile.currency,
+          userCurrency
+        );
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      );
   }
 
   private async getTransactionPoints({
@@ -1816,6 +1800,21 @@ export class PortfolioService {
       portfolioOrders,
       transactionPoints: portfolioCalculator.getTransactionPoints()
     };
+  }
+
+  private getUserCurrency(aUser: UserWithSettings) {
+    return (
+      aUser.Settings?.settings.baseCurrency ??
+      this.request.user?.Settings?.settings.baseCurrency ??
+      DEFAULT_CURRENCY
+    );
+  }
+
+  private async getUserId(aImpersonationId: string, aUserId: string) {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(aImpersonationId);
+
+    return impersonationUserId || aUserId;
   }
 
   private async getValueOfAccountsAndPlatforms({
@@ -1960,39 +1959,5 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
-  }
-
-  private getTotalByType(
-    orders: OrderWithAccount[],
-    currency: string,
-    type: TypeOfOrder
-  ) {
-    return orders
-      .filter(
-        (order) => !isAfter(order.date, endOfToday()) && order.type === type
-      )
-      .map((order) => {
-        return this.exchangeRateDataService.toCurrency(
-          order.quantity * order.unitPrice,
-          order.SymbolProfile.currency,
-          currency
-        );
-      })
-      .reduce((previous, current) => previous + current, 0);
-  }
-
-  private getUserCurrency(aUser: UserWithSettings) {
-    return (
-      aUser.Settings?.settings.baseCurrency ??
-      this.request.user?.Settings?.settings.baseCurrency ??
-      DEFAULT_CURRENCY
-    );
-  }
-
-  private async getUserId(aImpersonationId: string, aUserId: string) {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(aImpersonationId);
-
-    return impersonationUserId || aUserId;
   }
 }

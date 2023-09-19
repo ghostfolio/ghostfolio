@@ -250,6 +250,7 @@ enum Type {
   BUY
   DIVIDEND
   FEE
+  INTEREST
   ITEM
   LIABILITY
   SELL
