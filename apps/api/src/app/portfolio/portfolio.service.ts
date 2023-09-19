@@ -56,12 +56,11 @@ import {
   Platform,
   Prisma,
   Tag,
-  Type as TypeOfOrder
+  Type as ActivityType
 } from '@prisma/client';
 import Big from 'big.js';
 import {
   differenceInDays,
-  endOfToday,
   format,
   isAfter,
   isBefore,
@@ -1577,7 +1576,7 @@ export class PortfolioService {
     const dividend = this.getSumOfActivityType({
       activities,
       userCurrency,
-      activityType: TypeOfOrder.DIVIDEND
+      activityType: 'DIVIDEND'
     }).toNumber();
     const emergencyFund = new Big(
       Math.max(
@@ -1590,7 +1589,7 @@ export class PortfolioService {
     const interest = this.getSumOfActivityType({
       activities,
       userCurrency,
-      activityType: TypeOfOrder.INTEREST
+      activityType: 'INTEREST'
     }).toNumber();
     const items = this.getSumOfActivityType({
       activities,
@@ -1706,7 +1705,7 @@ export class PortfolioService {
     userCurrency
   }: {
     activities: OrderWithAccount[];
-    activityType: TypeOfOrder;
+    activityType: ActivityType;
     date?: Date;
     userCurrency: string;
   }) {
