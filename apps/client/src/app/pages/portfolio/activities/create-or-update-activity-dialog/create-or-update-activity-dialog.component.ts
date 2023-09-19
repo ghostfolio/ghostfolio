@@ -325,7 +325,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           type === 'INTEREST' ||
           type === 'LIABILITY'
         ) {
-          // TODO
           this.activityForm.controls['accountId'].removeValidators(
             Validators.required
           );
