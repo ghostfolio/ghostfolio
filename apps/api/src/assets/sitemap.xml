@@ -255,6 +255,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/en/blog/2023/10/hacktoberfest-2023</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/en/faq</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
