@@ -12,7 +12,8 @@ import {
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Account as AccountModel } from '@prisma/client';
+import { AccountWithValue as AccountModel } from '@ghostfolio/common/types';
+
 import { get } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
 
@@ -99,6 +100,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onToggleExcluded(aAccount: AccountModel) {
+    aAccount.isLoading = true;
     this.accountToggleExcluded.emit(aAccount);
   }
 

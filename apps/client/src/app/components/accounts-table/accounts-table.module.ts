@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AccountsTableComponent } from './accounts-table.component';
 
@@ -22,6 +23,7 @@ import { AccountsTableComponent } from './accounts-table.component';
     MatMenuModule,
     MatSortModule,
     MatTableModule,
+    MatProgressSpinnerModule,
     NgxSkeletonLoaderModule,
     RouterModule
   ],
