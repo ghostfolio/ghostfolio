@@ -6,6 +6,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   extractNumberFromString,
@@ -14,10 +15,10 @@ import {
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import bent from 'bent';
 import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -95,10 +96,19 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const get = bent(url, 'GET', 'string', 200, headers);
+      const abortController = new AbortController();
 
-      const html = await get();
-      const $ = cheerio.load(html);
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { body } = await got(url, {
+        headers,
+        // @ts-ignore
+        signal: abortController.signal
+      });
+
+      const $ = cheerio.load(body);
 
       const value = extractNumberFromString($(selector).text());
 

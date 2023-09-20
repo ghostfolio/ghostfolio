@@ -5,6 +5,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -14,21 +18,19 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import bent from 'bent';
 import Big from 'big.js';
 import { format, isToday } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class EodHistoricalDataService implements DataProviderInterface {
   private apiKey: string;
-  private baseCurrency: string;
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
     this.apiKey = this.configurationService.get('EOD_HISTORICAL_DATA_API_KEY');
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
   public canHandle(symbol: string) {
@@ -76,19 +78,24 @@ export class EodHistoricalDataService implements DataProviderInterface {
     const symbol = this.convertToEodSymbol(aSymbol);
 
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const response = await got(
         `${this.URL}/eod/${symbol}?api_token=${
           this.apiKey
         }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
           to,
           DATE_FORMAT
         )}&period={aGranularity}`,
-        'GET',
-        'json',
-        200
-      );
-
-      const response = await get();
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       return response.reduce(
         (result, historicalItem, index, array) => {
@@ -136,16 +143,21 @@ export class EodHistoricalDataService implements DataProviderInterface {
     }
 
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const realTimeResponse = await got(
         `${this.URL}/real-time/${symbols[0]}?api_token=${
           this.apiKey
         }&fmt=json&s=${symbols.join(',')}`,
-        'GET',
-        'json',
-        200
-      );
-
-      const realTimeResponse = await get();
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       const quotes =
         symbols.length === 1 ? [realTimeResponse] : realTimeResponse;
@@ -174,7 +186,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
           })?.currency;
 
           result[this.convertFromEodSymbol(code)] = {
-            currency: currency ?? this.baseCurrency,
+            currency: currency ?? DEFAULT_CURRENCY,
             dataSource: DataSource.EOD_HISTORICAL_DATA,
             marketPrice: close,
             marketState: isToday(new Date(timestamp * 1000)) ? 'open' : 'closed'
@@ -185,24 +197,24 @@ export class EodHistoricalDataService implements DataProviderInterface {
         {}
       );
 
-      if (response[`${this.baseCurrency}GBP`]) {
-        response[`${this.baseCurrency}GBp`] = {
-          ...response[`${this.baseCurrency}GBP`],
-          currency: `${this.baseCurrency}GBp`,
+      if (response[`${DEFAULT_CURRENCY}GBP`]) {
+        response[`${DEFAULT_CURRENCY}GBp`] = {
+          ...response[`${DEFAULT_CURRENCY}GBP`],
+          currency: `${DEFAULT_CURRENCY}GBp`,
           marketPrice: this.getConvertedValue({
-            symbol: `${this.baseCurrency}GBp`,
-            value: response[`${this.baseCurrency}GBP`].marketPrice
+            symbol: `${DEFAULT_CURRENCY}GBp`,
+            value: response[`${DEFAULT_CURRENCY}GBP`].marketPrice
           })
         };
       }
 
-      if (response[`${this.baseCurrency}ILS`]) {
-        response[`${this.baseCurrency}ILA`] = {
-          ...response[`${this.baseCurrency}ILS`],
-          currency: `${this.baseCurrency}ILA`,
+      if (response[`${DEFAULT_CURRENCY}ILS`]) {
+        response[`${DEFAULT_CURRENCY}ILA`] = {
+          ...response[`${DEFAULT_CURRENCY}ILS`],
+          currency: `${DEFAULT_CURRENCY}ILA`,
           marketPrice: this.getConvertedValue({
-            symbol: `${this.baseCurrency}ILA`,
-            value: response[`${this.baseCurrency}ILS`].marketPrice
+            symbol: `${DEFAULT_CURRENCY}ILA`,
+            value: response[`${DEFAULT_CURRENCY}ILS`].marketPrice
           })
         };
       }
@@ -271,7 +283,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     if (symbol.endsWith('.FOREX')) {
       symbol = symbol.replace('GBX', 'GBp');
       symbol = symbol.replace('.FOREX', '');
-      symbol = `${this.baseCurrency}${symbol}`;
+      symbol = `${DEFAULT_CURRENCY}${symbol}`;
     }
 
     return symbol;
@@ -284,17 +296,17 @@ export class EodHistoricalDataService implements DataProviderInterface {
    */
   private convertToEodSymbol(aSymbol: string) {
     if (
-      aSymbol.startsWith(this.baseCurrency) &&
-      aSymbol.length > this.baseCurrency.length
+      aSymbol.startsWith(DEFAULT_CURRENCY) &&
+      aSymbol.length > DEFAULT_CURRENCY.length
     ) {
       if (
         isCurrency(
-          aSymbol.substring(0, aSymbol.length - this.baseCurrency.length)
+          aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
         )
       ) {
         return `${aSymbol
           .replace('GBp', 'GBX')
-          .replace(this.baseCurrency, '')}.FOREX`;
+          .replace(DEFAULT_CURRENCY, '')}.FOREX`;
       }
     }
 
@@ -308,10 +320,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
     symbol: string;
     value: number;
   }) {
-    if (symbol === `${this.baseCurrency}GBp`) {
+    if (symbol === `${DEFAULT_CURRENCY}GBp`) {
       // Convert GPB to GBp (pence)
       return new Big(value).mul(100).toNumber();
-    } else if (symbol === `${this.baseCurrency}ILA`) {
+    } else if (symbol === `${DEFAULT_CURRENCY}ILA`) {
       // Convert ILS to ILA
       return new Big(value).mul(100).toNumber();
     }
@@ -329,13 +341,19 @@ export class EodHistoricalDataService implements DataProviderInterface {
     let searchResult = [];
 
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const response = await got(
         `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const response = await get();
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       searchResult = response.map(
         ({ Code, Currency, Exchange, ISIN: isin, Name: name, Type }) => {

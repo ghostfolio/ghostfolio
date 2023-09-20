@@ -33,7 +33,7 @@ COPY ./tsconfig.base.json tsconfig.base.json
 COPY ./libs libs
 COPY ./apps apps
 
-RUN yarn build:all
+RUN yarn build:production
 
 # Prepare the dist image with additional node_modules
 WORKDIR /ghostfolio/dist/apps/api
@@ -58,4 +58,4 @@ RUN apt update && apt install -y \
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
-CMD [  "yarn", "start:prod" ]
+CMD [ "yarn", "start:production" ]

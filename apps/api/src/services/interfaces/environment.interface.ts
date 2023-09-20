@@ -3,7 +3,6 @@ import { CleanedEnvAccessors } from 'envalid';
 export interface Environment extends CleanedEnvAccessors {
   ACCESS_TOKEN_SALT: string;
   ALPHA_VANTAGE_API_KEY: string;
-  BASE_CURRENCY: string;
   BETTER_UPTIME_API_KEY: string;
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;

@@ -5,18 +5,21 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import bent from 'bent';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
   private apiKey: string;
-  private baseCurrency: string;
   private readonly URL = 'https://financialmodelingprep.com/api/v3';
 
   public constructor(
@@ -25,7 +28,6 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     this.apiKey = this.configurationService.get(
       'FINANCIAL_MODELING_PREP_API_KEY'
     );
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
   }
 
   public canHandle(symbol: string) {
@@ -64,13 +66,19 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { historical } = await got(
         `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const { historical } = await get();
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -115,17 +123,23 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const response = await got(
         `${this.URL}/quote/${aSymbols.join(',')}?apikey=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const response = await get();
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       for (const { price, symbol } of response) {
         results[symbol] = {
-          currency: this.baseCurrency,
+          currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
           marketPrice: price,
@@ -153,13 +167,19 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const result = await got(
         `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
-        'GET',
-        'json',
-        200
-      );
-      const result = await get();
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       items = result.map(({ currency, name, symbol }) => {
         return {

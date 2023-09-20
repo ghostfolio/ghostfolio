@@ -33,6 +33,14 @@
             color: var(--blue);
           }
 
+          &.fee {
+            color: var(--gray);
+          }
+
+          &.interest {
+            color: var(--cyan);
+          }
+
           &.item {
             color: var(--purple);
           }

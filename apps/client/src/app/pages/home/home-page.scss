@@ -2,33 +2,6 @@
 
 :host {
   color: rgb(var(--dark-primary-text));
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 5rem);
-  overflow-y: auto;
-
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-bottom: constant(safe-area-inset-bottom);
-
-  ::ng-deep {
-    gf-home-holdings,
-    gf-home-market,
-    gf-home-overview,
-    gf-home-summary {
-      flex: 1 1 auto;
-      overflow-y: auto;
-    }
-
-    .mat-mdc-tab-link-container {
-      --mdc-tab-indicator-active-indicator-color: transparent;
-
-      .mat-mdc-tab-link {
-        &:hover {
-          opacity: 0.75;
-        }
-      }
-    }
-  }
 }
 
 :host-context(.is-dark-theme) {

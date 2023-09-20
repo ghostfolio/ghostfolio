@@ -9,4 +9,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   templateUrl: './500-stars-on-github-page.html'
 })
-export class FiveHundredStarsOnGitHubPageComponent {}
+export class FiveHundredStarsOnGitHubPageComponent {
+  public routerLinkMarkets = ['/' + $localize`markets`];
+  public routerLinkPricing = ['/' + $localize`pricing`];
+}

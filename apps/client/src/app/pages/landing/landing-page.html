@@ -1,10 +1,18 @@
 <div class="container">
   <div class="row">
     <div class="col text-center">
-      <h1 class="font-weight-bold intro mt-5">
-        Manage your wealth like a boss
-      </h1>
-      <p class="lead mb-4">
+      <div>
+        <div class="badge badge-light badge-pill border mb-3 px-3 py-2">
+          <a href="../en/blog/2023/09/ghostfolio-2"
+            ><span class="mr-1 text-uppercase" i18n>New</span>
+            <span class="font-weight-normal">Ghostfolio 2.0</span></a
+          >
+        </div>
+        <h1 class="font-weight-bold intro" i18n>
+          Manage your wealth like a boss
+        </h1>
+      </div>
+      <p class="lead mb-4" i18n>
         Ghostfolio is a privacy-first, open source dashboard for your personal
         finances. Break down your asset allocation, know your net worth and make
         solid, data-driven investment decisions.
@@ -31,13 +39,20 @@
   <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
       <ng-container *ngIf="hasPermissionToCreateUser">
-        <a color="primary" mat-flat-button [routerLink]="['/register']">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+        >
           Get Started
         </a>
       </ng-container>
       <ng-container *ngIf="hasPermissionForDemo">
-        <div *ngIf="hasPermissionToCreateUser" class="mx-3 text-muted">or</div>
-        <a mat-stroked-button [routerLink]="['/demo']"> Live Demo </a>
+        <div *ngIf="hasPermissionToCreateUser" class="mx-3 text-muted" i18n>
+          or
+        </div>
+        <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
       </ng-container>
     </div>
   </div>
@@ -45,7 +60,7 @@
   <div *ngIf="hasPermissionForStatistics" class="row mb-5">
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
@@ -53,6 +68,7 @@
         [routerLink]="['/open']"
       >
         <gf-value
+          i18n
           icon="people-outline"
           size="large"
           [value]="statistics?.activeUsers30d ?? '-'"
@@ -62,7 +78,7 @@
     </div>
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
@@ -70,6 +86,7 @@
         [routerLink]="['/open']"
       >
         <gf-value
+          i18n
           icon="star-outline"
           size="large"
           [value]="statistics?.gitHubStargazers ?? '-'"
@@ -79,7 +96,7 @@
     </div>
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
@@ -87,6 +104,7 @@
         [routerLink]="['/open']"
       >
         <gf-value
+          i18n
           icon="cloud-download-outline"
           size="large"
           [value]="statistics?.dockerHubPulls ?? '-'"
@@ -97,7 +115,9 @@
   </div>
 
   <div class="row mb-5">
-    <div class="col-12 text-center text-muted"><small>As seen in</small></div>
+    <div class="col-12 text-center text-muted">
+      <small i18n>As seen in</small>
+    </div>
     <div class="col-md-3 d-flex justify-content-center my-1">
       <a
         class="d-block logo logo-alternative-to mask"
@@ -120,6 +140,14 @@
         href="https://dev.to"
         target="_blank"
         title="DEV Community - A constructive and inclusive social network for software developers"
+      ></a>
+    </div>
+    <div class="col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-hacker-news mask"
+        href="https://news.ycombinator.com"
+        target="_blank"
+        title="Hacker News"
       ></a>
     </div>
     <div class="col-md-3 d-flex justify-content-center my-1">
@@ -190,11 +218,11 @@
 
   <div class="pt-3 row">
     <div class="col text-center">
-      <h2 class="h4 mb-1 text-center">
+      <h2 class="h4 mb-1 text-center" i18n>
         Protect your <strong>assets</strong>. Refine your
         <strong>personal investment strategy</strong>.
       </h2>
-      <p class="lead m-0">
+      <p class="lead m-0" i18n>
         Ghostfolio empowers busy people to keep track of stocks, ETFs or
         cryptocurrencies without being tracked.
       </p>
@@ -205,19 +233,20 @@
     <div class="col-md-4 my-2">
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-title>360° View</mat-card-title>
+          <mat-card-title i18n>360° View</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content i18n>
           Get the full picture of your personal finances across multiple
+          platforms.
         </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-4 my-2">
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-title>Web3 Ready</mat-card-title>
+          <mat-card-title i18n>Web3 Ready</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content i18n>
           Use Ghostfolio anonymously and own your financial data.
         </mat-card-content>
       </mat-card>
@@ -225,9 +254,9 @@
     <div class="col-md-4 my-2">
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-title>Open Source</mat-card-title>
+          <mat-card-title i18n>Open Source</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content i18n>
           Benefit from continuous improvements through a strong community.
         </mat-card-content>
       </mat-card>
@@ -236,51 +265,53 @@
 
   <div class="row my-5">
     <div class="col-md-6 offset-md-3">
-      <h2 class="h4 mb-1 text-center">Why <strong>Ghostfolio</strong>?</h2>
-      <p class="lead mb-3 text-center">Ghostfolio is for you if you are...</p>
+      <h2 class="h4 mb-1 text-center" i18n>Why <strong>Ghostfolio</strong>?</h2>
+      <p class="lead mb-3 text-center" i18n>
+        Ghostfolio is for you if you are...
+      </p>
       <ul class="list-unstyled">
         <li class="d-flex mb-3">
           <span class="mr-3">💼 </span
-          ><span
+          ><span i18n
             >trading stocks, ETFs or cryptocurrencies on multiple
             platforms</span
           >
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🏦</span
-          ><span>pursuing a buy & hold strategy</span>
+          ><span i18n>pursuing a buy & hold strategy</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🎯</span
-          ><span
+          ><span i18n
             >interested in getting insights of your portfolio composition</span
           >
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">👻</span
-          ><span>valuing privacy and data ownership</span>
+          ><span i18n>valuing privacy and data ownership</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🧘</span><span>into minimalism</span>
+          <span class="mr-3">🧘</span><span i18n>into minimalism</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🧺</span
-          ><span>caring about diversifying your financial resources</span>
+          ><span i18n>caring about diversifying your financial resources</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🆓</span
-          ><span>interested in financial independence</span>
+          ><span i18n>interested in financial independence</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🙅</span
-          ><span>saying no to spreadsheets in {{ currentYear }}</span>
+          ><span i18n>saying no to spreadsheets in {{ currentYear }}</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">😎</span><span>still reading this list</span>
+          <span class="mr-3">😎</span><span i18n>still reading this list</span>
         </li>
       </ul>
       <div class="mt-4 text-center">
-        <a mat-stroked-button [routerLink]="['/about']"
+        <a i18n mat-stroked-button [routerLink]="routerLinkAbout"
           >Learn more about Ghostfolio</a
         >
       </div>
@@ -289,7 +320,7 @@
 
   <div class="row my-5">
     <div class="col-12">
-      <h2 class="h4 mb-1 text-center">
+      <h2 class="h4 mb-1 text-center" i18n>
         What our <strong>users</strong> are saying
       </h2>
     </div>
@@ -319,7 +350,7 @@
 
   <div *ngIf="hasPermissionForSubscription" class="row my-5">
     <div class="col-12">
-      <h2 class="h4 text-center">
+      <h2 class="h4 text-center" i18n>
         Members from around the globe are using
         <a href="pricing"><strong>Ghostfolio Premium</strong></a>
       </h2>
@@ -334,17 +365,17 @@
 
   <div *ngIf="hasPermissionForSubscription" class="row my-3">
     <div class="col-12">
-      <h2 class="h4 mb-1 text-center">
+      <h2 class="h4 mb-1 text-center" i18n>
         How does <strong>Ghostfolio</strong> work?
       </h2>
-      <p class="lead mb-3 text-center">Get started in only 3 steps</p>
+      <p class="lead mb-3 text-center" i18n>Get started in only 3 steps</p>
     </div>
     <div class="col-md-4 my-2">
       <mat-card appearance="outlined" class="h-100">
         <mat-card-content class="d-flex flex-row">
           <div class="flex-grow-1">
-            <div class="font-weight-bold">Sign up anonymously*</div>
-            <div class="text-muted">
+            <div class="font-weight-bold" i18n>Sign up anonymously*</div>
+            <div class="text-muted" i18n>
               <small>* no e-mail address nor credit card required</small>
             </div>
           </div>
@@ -356,7 +387,7 @@
       <mat-card appearance="outlined" class="h-100">
         <mat-card-content class="d-flex flex-row">
           <div class="flex-grow-1">
-            <div class="font-weight-bold">
+            <div class="font-weight-bold" i18n>
               Add any of your historical transactions
             </div>
           </div>
@@ -368,7 +399,7 @@
       <mat-card appearance="outlined" class="h-100">
         <mat-card-content class="d-flex flex-row">
           <div class="flex-grow-1">
-            <div class="font-weight-bold">
+            <div class="font-weight-bold" i18n>
               Get valuable insights of your portfolio composition
             </div>
           </div>
@@ -380,19 +411,24 @@
 
   <div *ngIf="hasPermissionToCreateUser" class="row my-5">
     <div class="col">
-      <h2 class="h4 mb-1 text-center">Are <strong>you</strong> ready?</h2>
-      <p class="lead mb-3 text-center">
+      <h2 class="h4 mb-1 text-center" i18n>Are <strong>you</strong> ready?</h2>
+      <p class="lead mb-3 text-center" i18n>
         Join now<ng-container *ngIf="hasPermissionForDemo">
           or check out the example account</ng-container
         >
       </p>
       <div class="align-items-center d-flex justify-content-center py-2">
-        <a color="primary" mat-flat-button [routerLink]="['/register']">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+        >
           Get Started
         </a>
         <ng-container *ngIf="hasPermissionForDemo">
-          <div class="mx-3 text-muted">or</div>
-          <a mat-stroked-button [routerLink]="['/demo']"> Live Demo </a>
+          <div class="mx-3 text-muted" i18n>or</div>
+          <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
         </ng-container>
       </div>
     </div>

@@ -8,11 +8,13 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
@@ -26,8 +28,6 @@ import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
 import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,13 +51,31 @@ export class AdminMarketDataComponent
     AssetSubClass.PRECIOUS_METAL,
     AssetSubClass.PRIVATE_EQUITY,
     AssetSubClass.STOCK
-  ].map((assetSubClass) => {
-    return {
-      id: assetSubClass,
-      label: translate(assetSubClass),
-      type: 'ASSET_SUB_CLASS'
-    };
-  });
+  ]
+    .map((assetSubClass) => {
+      return {
+        id: assetSubClass.toString(),
+        label: translate(assetSubClass),
+        type: <Filter['type']>'ASSET_SUB_CLASS'
+      };
+    })
+    .concat([
+      {
+        id: 'CURRENCIES',
+        label: $localize`Currencies`,
+        type: <Filter['type']>'PRESET_ID'
+      },
+      {
+        id: 'ETF_WITHOUT_COUNTRIES',
+        label: $localize`ETFs without Countries`,
+        type: <Filter['type']>'PRESET_ID'
+      },
+      {
+        id: 'ETF_WITHOUT_SECTORS',
+        label: $localize`ETFs without Sectors`,
+        type: <Filter['type']>'PRESET_ID'
+      }
+    ]);
   public currentDataSource: DataSource;
   public currentSymbol: string;
   public dataSource: MatTableDataSource<AdminMarketDataItem> =
@@ -236,6 +254,12 @@ export class AdminMarketDataComponent
     } = { pageIndex: 0 }
   ) {
     this.isLoading = true;
+
+    this.pageSize =
+      this.activeFilters.length === 1 &&
+      this.activeFilters[0].type === 'PRESET_ID'
+        ? undefined
+        : DEFAULT_PAGE_SIZE;
 
     if (pageIndex === 0 && this.paginator) {
       this.paginator.pageIndex = 0;

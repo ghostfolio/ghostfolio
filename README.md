@@ -13,6 +13,8 @@
 [![Shield: Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](#contributing)
 [![Shield: License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
+New: [Ghostfolio 2.0](https://ghostfol.io/en/blog/2023/09/ghostfolio-2)
+
 </div>
 
 **Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions. The software is designed for personal use in continuous operation.
@@ -136,9 +138,9 @@ docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
    At each start, the container will automatically apply the database schema migrations if needed.
 
-### Run with _Unraid_ (Community)
+### Home Server Systems (Community)
 
-Please follow the instructions of the Ghostfolio [Unraid Community App](https://unraid.net/community/apps?q=ghostfolio).
+Ghostfolio is available for various home server systems, including [Runtipi](https://www.runtipi.io/docs/apps-available), [TrueCharts](https://truecharts.org/charts/stable/ghostfolio), [Umbrel](https://apps.umbrel.com/app/ghostfolio), and [Unraid](https://unraid.net/community/apps?q=ghostfolio).
 
 ## Development
 
@@ -153,7 +155,6 @@ Please follow the instructions of the Ghostfolio [Unraid Community App](https://
 ### Setup
 
 1. Run `yarn install`
-1. Run `yarn build:dev` to build the source code including the assets
 1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `yarn database:setup` to initialize the database schema
 1. Start the server and the client (see [_Development_](#Development))
@@ -263,7 +264,9 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 
 ## Community Projects
 
-- [ghostfolio-cli](https://github.com/DerAndereJohannes/ghostfolio-cli): Command-line interface to access your portfolio
+Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio
+
+Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ repository to get listed as well. [Learn more →](https://docs.github.com/en/articles/classifying-your-repository-with-topics)
 
 ## Contributing
 

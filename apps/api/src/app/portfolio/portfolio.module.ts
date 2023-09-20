@@ -2,6 +2,7 @@ import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
@@ -36,6 +37,7 @@ import { RulesService } from './rules.service';
     UserModule
   ],
   providers: [
+    AccountBalanceService,
     AccountService,
     CurrentRateService,
     PortfolioService,

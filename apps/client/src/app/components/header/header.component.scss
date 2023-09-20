@@ -7,8 +7,18 @@
   .mat-toolbar {
     background-color: var(--light-background);
 
-    .spacer {
-      flex: 1 1 auto;
+    .logo-container {
+      &.filled {
+        background-color: rgba(var(--palette-foreground-base), 0.02);
+      }
+
+      @media (min-width: 576px) {
+        width: 14rem;
+      }
+    }
+
+    .list-inline-item {
+      margin: 0;
     }
 
     .mdc-button {
@@ -24,11 +34,21 @@
         font-size: 1.5rem;
       }
     }
+
+    .spacer {
+      flex: 1 1 auto;
+    }
   }
 }
 
 :host-context(.is-dark-theme) {
   .mat-toolbar {
     background-color: var(--dark-background);
+
+    .logo-container {
+      &.filled {
+        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+      }
+    }
   }
 }

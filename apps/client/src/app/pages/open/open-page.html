@@ -1,9 +1,9 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center">Open Startup</h3>
-      <div class="intro-container">
-        <p>
+      <h1 class="d-none d-sm-block h3 mb-4 text-center">Open Startup</h1>
+      <div class="intro-container mb-4">
+        <p i18n>
           At Ghostfolio, transparency is at the core of our values. We publish
           the source code as
           <a
@@ -18,7 +18,7 @@
             >AGPL-3.0 license</a
           >
           and we openly share aggregated key metrics of the platform’s
-          performance.
+          operational status.
         </p>
       </div>
     </div>
@@ -31,6 +31,8 @@
           <div class="row">
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
+                i18n
+                i18n-subLabel
                 size="large"
                 subLabel="(Last 24 hours)"
                 [locale]="user?.settings?.locale"
@@ -40,6 +42,8 @@
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
+                i18n
+                i18n-subLabel
                 size="large"
                 subLabel="(Last 30 days)"
                 [locale]="user?.settings?.locale"
@@ -49,6 +53,8 @@
             </div>
             <div class="col-xs-12 col-md-4 my-2">
               <gf-value
+                i18n
+                i18n-subLabel
                 size="large"
                 subLabel="(Last 30 days)"
                 [locale]="user?.settings?.locale"
@@ -62,6 +68,7 @@
                 href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
               >
                 <gf-value
+                  i18n
                   size="large"
                   [locale]="user?.settings?.locale"
                   [value]="statistics?.slackCommunityUsers ?? '-'"
@@ -75,6 +82,7 @@
                 href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
               >
                 <gf-value
+                  i18n
                   size="large"
                   [locale]="user?.settings?.locale"
                   [value]="statistics?.gitHubContributors ?? '-'"
@@ -88,6 +96,7 @@
                 href="https://github.com/ghostfolio/ghostfolio/stargazers"
               >
                 <gf-value
+                  i18n
                   size="large"
                   [locale]="user?.settings?.locale"
                   [value]="statistics?.gitHubStargazers ?? '-'"
@@ -101,6 +110,7 @@
                 href="https://hub.docker.com/r/ghostfolio/ghostfolio"
               >
                 <gf-value
+                  i18n
                   size="large"
                   [locale]="user?.settings?.locale"
                   [value]="statistics?.dockerHubPulls ?? '-'"
@@ -111,6 +121,8 @@
             <div class="col-xs-12 col-md-4 my-2">
               <a class="d-block" href="https://status.ghostfol.io">
                 <gf-value
+                  i18n
+                  i18n-subLabel
                   size="large"
                   subLabel="(Last 90 days)"
                   [isPercent]="true"

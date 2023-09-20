@@ -62,7 +62,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
                 undefined,
                 { duration: 6000 }
               );
-            } else {
+            } else if (!error.url.endsWith('auth/anonymous')) {
               this.snackBarRef = this.snackBar.open(
                 $localize`This feature requires a subscription.`,
                 this.hasPermissionForSubscription
@@ -77,7 +77,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             });
 
             this.snackBarRef.onAction().subscribe(() => {
-              this.router.navigate(['/pricing']);
+              this.router.navigate(['/' + $localize`pricing`]);
             });
           }
         } else if (error.status === StatusCodes.INTERNAL_SERVER_ERROR) {

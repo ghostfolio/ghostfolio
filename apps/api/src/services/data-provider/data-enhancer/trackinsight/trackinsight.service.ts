@@ -1,15 +1,14 @@
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import bent from 'bent';
-
-const getJSON = bent('json');
+import got from 'got';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
-  private static baseUrl = 'https://data.trackinsight.com';
+  private static baseUrl = 'https://www.trackinsight.com/data-api';
   private static countries = require('countries-list/dist/countries.json');
   private static countriesMapping = {
     'Russian Federation': 'Russia'
@@ -34,27 +33,83 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const profile = await getJSON(
-      `${TrackinsightDataEnhancerService.baseUrl}/data-api/funds/${symbol}.json`
-    ).catch(() => {
-      return {};
-    });
+    let abortController = new AbortController();
 
-    const isin = profile.isin?.split(';')?.[0];
+    setTimeout(() => {
+      abortController.abort();
+    }, DEFAULT_REQUEST_TIMEOUT);
+
+    const profile = await got(
+      `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`,
+      {
+        // @ts-ignore
+        signal: abortController.signal
+      }
+    )
+      .json<any>()
+      .catch(() => {
+        const abortController = new AbortController();
+
+        setTimeout(() => {
+          abortController.abort();
+        }, DEFAULT_REQUEST_TIMEOUT);
+
+        return got(
+          `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol.split(
+            '.'
+          )?.[0]}.json`,
+          {
+            // @ts-ignore
+            signal: abortController.signal
+          }
+        )
+          .json<any>()
+          .catch(() => {
+            return {};
+          });
+      });
+
+    const isin = profile?.isin?.split(';')?.[0];
 
     if (isin) {
       response.isin = isin;
     }
 
-    const holdings = await getJSON(
-      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`
-    ).catch(() => {
-      return getJSON(
-        `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
-          symbol.split('.')?.[0]
-        }.json`
-      );
-    });
+    abortController = new AbortController();
+
+    setTimeout(() => {
+      abortController.abort();
+    }, DEFAULT_REQUEST_TIMEOUT);
+
+    const holdings = await got(
+      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`,
+      {
+        // @ts-ignore
+        signal: abortController.signal
+      }
+    )
+      .json<any>()
+      .catch(() => {
+        const abortController = new AbortController();
+
+        setTimeout(() => {
+          abortController.abort();
+        }, DEFAULT_REQUEST_TIMEOUT);
+
+        return got(
+          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol.split(
+            '.'
+          )?.[0]}.json`,
+          {
+            // @ts-ignore
+            signal: abortController.signal
+          }
+        )
+          .json<any>()
+          .catch(() => {
+            return {};
+          });
+      });
 
     if (holdings?.weight < 0.95) {
       // Skip if data is inaccurate
@@ -111,5 +166,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
   public getName() {
     return 'TRACKINSIGHT';
+  }
+
+  public getTestSymbol() {
+    return 'QQQ';
   }
 }

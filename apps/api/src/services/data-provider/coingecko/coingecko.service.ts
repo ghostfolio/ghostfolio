@@ -1,10 +1,13 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
@@ -15,19 +18,14 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import bent from 'bent';
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
-  private baseCurrency: string;
   private readonly URL = 'https://api.coingecko.com/api/v3';
 
-  public constructor(
-    private readonly configurationService: ConfigurationService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
-  }
+  public constructor() {}
 
   public canHandle(symbol: string) {
     return true;
@@ -39,14 +37,22 @@ export class CoinGeckoService implements DataProviderInterface {
     const response: Partial<SymbolProfile> = {
       assetClass: AssetClass.CASH,
       assetSubClass: AssetSubClass.CRYPTOCURRENCY,
-      currency: this.baseCurrency,
+      currency: DEFAULT_CURRENCY,
       dataSource: this.getName(),
       symbol: aSymbol
     };
 
     try {
-      const get = bent(`${this.URL}/coins/${aSymbol}`, 'GET', 'json', 200);
-      const { name } = await get();
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { name } = await got(`${this.URL}/coins/${aSymbol}`, {
+        // @ts-ignore
+        signal: abortController.signal
+      }).json<any>();
 
       response.name = name;
     } catch (error) {
@@ -79,17 +85,23 @@ export class CoinGeckoService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { prices } = await got(
         `${
           this.URL
-        }/coins/${aSymbol}/market_chart/range?vs_currency=${this.baseCurrency.toLowerCase()}&from=${getUnixTime(
+        }/coins/${aSymbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
           from
         )}&to=${getUnixTime(to)}`,
-        'GET',
-        'json',
-        200
-      );
-      const { prices } = await get();
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -132,23 +144,29 @@ export class CoinGeckoService implements DataProviderInterface {
     }
 
     try {
-      const get = bent(
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const response = await got(
         `${this.URL}/simple/price?ids=${aSymbols.join(
           ','
-        )}&vs_currencies=${this.baseCurrency.toLowerCase()}`,
-        'GET',
-        'json',
-        200
-      );
-      const response = await get();
+        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
       for (const symbol in response) {
         if (Object.prototype.hasOwnProperty.call(response, symbol)) {
           results[symbol] = {
-            currency: this.baseCurrency,
+            currency: DEFAULT_CURRENCY,
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: DataSource.COINGECKO,
-            marketPrice: response[symbol][this.baseCurrency.toLowerCase()],
+            marketPrice: response[symbol][DEFAULT_CURRENCY.toLowerCase()],
             marketState: 'open'
           };
         }
@@ -174,8 +192,16 @@ export class CoinGeckoService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const get = bent(`${this.URL}/search?query=${query}`, 'GET', 'json', 200);
-      const { coins } = await get();
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { coins } = await got(`${this.URL}/search?query=${query}`, {
+        // @ts-ignore
+        signal: abortController.signal
+      }).json<any>();
 
       items = coins.map(({ id: symbol, name }) => {
         return {
@@ -183,7 +209,7 @@ export class CoinGeckoService implements DataProviderInterface {
           symbol,
           assetClass: AssetClass.CASH,
           assetSubClass: AssetSubClass.CRYPTOCURRENCY,
-          currency: this.baseCurrency,
+          currency: DEFAULT_CURRENCY,
           dataSource: this.getName()
         };
       });

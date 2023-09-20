@@ -5,13 +5,16 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
+import {
+  DEFAULT_REQUEST_TIMEOUT,
+  ghostfolioFearAndGreedIndexSymbol
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import bent from 'bent';
 import { format } from 'date-fns';
+import got from 'got';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
@@ -135,19 +138,25 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
-      const get = bent(
-        `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
-        'GET',
-        'json',
-        200,
-        {
-          useQueryString: true,
-          'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
-          'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
-        }
-      );
+      const abortController = new AbortController();
 
-      const { fgi } = await get();
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { fgi } = await got(
+        `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
+        {
+          headers: {
+            useQueryString: 'true',
+            'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
+            'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
+          },
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
+
       return fgi;
     } catch (error) {
       Logger.error(error, 'RapidApiService');

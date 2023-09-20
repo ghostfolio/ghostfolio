@@ -1,13 +1,13 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { DEFAULT_CURRENCY, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { isCurrency } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
   DataSource,
+  Prisma,
   SymbolProfile
 } from '@prisma/client';
 import { countries } from 'countries-list';
@@ -16,23 +16,18 @@ import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-ifa
 
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
-  private baseCurrency: string;
-
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
-  }
+  ) {}
 
   public convertFromYahooFinanceSymbol(aYahooFinanceSymbol: string) {
     let symbol = aYahooFinanceSymbol.replace(
-      new RegExp(`-${this.baseCurrency}$`),
-      this.baseCurrency
+      new RegExp(`-${DEFAULT_CURRENCY}$`),
+      DEFAULT_CURRENCY
     );
 
-    if (symbol.includes('=X') && !symbol.includes(this.baseCurrency)) {
-      symbol = `${this.baseCurrency}${symbol}`;
+    if (symbol.includes('=X') && !symbol.includes(DEFAULT_CURRENCY)) {
+      symbol = `${DEFAULT_CURRENCY}${symbol}`;
     }
 
     return symbol.replace('=X', '');
@@ -47,21 +42,18 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
    */
   public convertToYahooFinanceSymbol(aSymbol: string) {
     if (
-      aSymbol.includes(this.baseCurrency) &&
-      aSymbol.length > this.baseCurrency.length
+      aSymbol.includes(DEFAULT_CURRENCY) &&
+      aSymbol.length > DEFAULT_CURRENCY.length
     ) {
       if (
         isCurrency(
-          aSymbol.substring(0, aSymbol.length - this.baseCurrency.length)
+          aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
         )
       ) {
         return `${aSymbol}=X`;
       } else if (
         this.cryptocurrencyService.isCryptocurrency(
-          aSymbol.replace(
-            new RegExp(`-${this.baseCurrency}$`),
-            this.baseCurrency
-          )
+          aSymbol.replace(new RegExp(`-${DEFAULT_CURRENCY}$`), DEFAULT_CURRENCY)
         )
       ) {
         // Add a dash before the last three characters
@@ -69,8 +61,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         // DOGEUSD -> DOGE-USD
         // SOL1USD -> SOL1-USD
         return aSymbol.replace(
-          new RegExp(`-?${this.baseCurrency}$`),
-          `-${this.baseCurrency}`
+          new RegExp(`-?${DEFAULT_CURRENCY}$`),
+          `-${DEFAULT_CURRENCY}`
         );
       }
     }
@@ -99,15 +91,14 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         yahooSymbol = quotes[0].symbol;
       }
 
-      const { countries, sectors, url } = await this.getAssetProfile(
-        yahooSymbol
-      );
+      const { countries, sectors, url } =
+        await this.getAssetProfile(yahooSymbol);
 
-      if (countries) {
+      if ((countries as unknown as Prisma.JsonArray)?.length > 0) {
         response.countries = countries;
       }
 
-      if (sectors) {
+      if ((sectors as unknown as Prisma.JsonArray)?.length > 0) {
         response.sectors = sectors;
       }
 
@@ -135,6 +126,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     let name = longName;
 
     if (name) {
+      name = name.replace('&amp;', '&');
+
       name = name.replace('Amundi Index Solutions - ', '');
       name = name.replace('iShares ETF (CH) - ', '');
       name = name.replace('iShares III Public Limited Company - ', '');
@@ -230,6 +223,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
   public getName() {
     return DataSource.YAHOO;
+  }
+
+  public getTestSymbol() {
+    return 'AAPL';
   }
 
   public parseAssetClass({

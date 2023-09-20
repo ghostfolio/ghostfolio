@@ -15,11 +15,16 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import {
+  STAY_SIGNED_IN,
+  SettingsStorageService
+} from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import { downloadAsFile, getDateFormatString } from '@ghostfolio/common/helper';
 import { Access, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { StripeService } from 'ngx-stripe';
@@ -30,11 +35,11 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
 
 @Component({
   host: { class: 'page' },
-  selector: 'gf-account-page',
-  styleUrls: ['./account-page.scss'],
-  templateUrl: './account-page.html'
+  selector: 'gf-user-account-page',
+  styleUrls: ['./user-account-page.scss'],
+  templateUrl: './user-account-page.html'
 })
-export class AccountPageComponent implements OnDestroy, OnInit {
+export class UserAccountPageComponent implements OnDestroy, OnInit {
   @ViewChild('toggleSignInWithFingerprintEnabledElement')
   signInWithFingerprintElement: MatCheckbox;
 
@@ -80,6 +85,7 @@ export class AccountPageComponent implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private router: Router,
+    private settingsStorageService: SettingsStorageService,
     private stripeService: StripeService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
@@ -229,6 +235,26 @@ export class AccountPageComponent implements OnDestroy, OnInit {
 
             this.changeDetectorRef.markForCheck();
           });
+      });
+  }
+
+  public onExport() {
+    this.dataService
+      .fetchExport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        for (const activity of data.activities) {
+          delete activity.id;
+        }
+
+        downloadAsFile({
+          content: data,
+          fileName: `ghostfolio-export-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.json`,
+          format: 'json'
+        });
       });
   }
 
@@ -397,6 +423,8 @@ export class AccountPageComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe(() => {
+        this.settingsStorageService.removeSetting(STAY_SIGNED_IN);
+
         this.update();
       });
   }

@@ -8,7 +8,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-about-overview-page',
   styleUrls: ['./about-overview-page.scss'],
   templateUrl: './about-overview-page.html'
@@ -18,6 +17,8 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
+  public routerLinkFaq = ['/' + $localize`faq`];
+  public routerLinkFeatures = ['/' + $localize`features`];
   public user: User;
   public version = environment.version;
 

@@ -5,6 +5,304 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.4.0 - 2023-09-19
+
+### Added
+
+- Added support for interest on account level (experimental)
+
+### Changed
+
+- Improved the preselected currency based on the account's currency in the create or edit activity dialog
+- Unlocked the experimental features setting for all users
+- Upgraded `prisma` from version `5.2.0` to `5.3.1`
+
+### Fixed
+
+- Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
+
+## 2.3.0 - 2023-09-17
+
+### Added
+
+- Added support for fees on account level (experimental)
+
+### Fixed
+
+- Fixed the export functionality for liabilities
+
+## 2.2.0 - 2023-09-17
+
+### Added
+
+- Introduced a sidebar navigation on desktop
+
+### Changed
+
+- Improved the style of the system message
+- Upgraded _Postgres_ from version `12` to `15` in the `docker-compose` files
+
+## 2.1.0 - 2023-09-15
+
+### Added
+
+- Added support to drop a file in the import activities dialog
+- Added a timeout to all data source requests
+
+### Changed
+
+- Harmonized the style of the user interface for granting and revoking public access to share the portfolio
+- Removed the account type from the user interface as a preparation to remove it from the `Account` database schema
+- Improved the logger output of the info service
+- Harmonized the logger output: `<symbol> (<dataSource>)`
+- Improved the language localization for German (`de`)
+- Improved the language localization for Italian (`it`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the read-only mode
+
+### Fixed
+
+- Fixed the timeout in _EOD Historical Data_ requests
+- Fixed an issue with the portfolio summary caused by the language localization for Dutch (`nl`)
+
+## 2.0.0 - 2023-09-09
+
+### Added
+
+- Added support for the cryptocurrency _CyberConnect_
+- Added a blog post: _Announcing Ghostfolio 2.0_
+
+### Changed
+
+- **Breaking Change**: Removed the deprecated environment variable `BASE_CURRENCY`
+- Improved the validation in the activities import
+- Deactivated _Internet Identity_ as a social login provider for the account registration
+- Improved the language localization for German (`de`)
+- Refreshed the cryptocurrencies list
+- Changed the version in the `docker-compose` files from `3.7` to `3.9`
+- Upgraded `yahoo-finance2` from version `2.4.4` to `2.5.0`
+
+### Fixed
+
+- Fixed an issue in the _Yahoo Finance_ data enhancer where countries and sectors have been removed
+
+## 1.305.0 - 2023-09-03
+
+### Added
+
+- Added _Hacker News_ to the _As seen in_ section on the landing page
+
+### Changed
+
+- Shortened the page titles
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `4.16.2` to `5.2.0`
+- Upgraded `replace-in-file` from version `6.3.5` to `7.0.1`
+- Upgraded `yahoo-finance2` from version `2.4.3` to `2.4.4`
+
+### Fixed
+
+- Fixed the alignment in the header navigation
+- Fixed the alignment in the menu of the impersonation mode
+
+## 1.304.0 - 2023-08-27
+
+### Added
+
+- Added health check endpoints for data enhancers
+
+### Changed
+
+- Upgraded `Nx` from version `16.7.2` to `16.7.4`
+- Upgraded `prettier` from version `2.8.4` to `3.0.2`
+
+## 1.303.0 - 2023-08-23
+
+### Added
+
+- Added a blog post: _Ghostfolio joins OSS Friends_
+
+### Changed
+
+- Refreshed the cryptocurrencies list
+- Improved the _OSS Friends_ page
+
+### Fixed
+
+- Fixed an issue with the _Trackinsight_ data enhancer for asset profile data
+
+## 1.302.0 - 2023-08-20
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `16.1.8` to `16.2.1`
+- Upgraded `Nx` from version `16.6.0` to `16.7.2`
+
+## 1.301.1 - 2023-08-19
+
+### Added
+
+- Added the data export feature to the user account page
+- Added a currencies preset to the historical market data table of the admin control panel
+- Added the _OSS Friends_ page
+
+### Changed
+
+- Improved the localized meta data in `html` files
+
+### Fixed
+
+- Fixed the rows with cash positions in the holdings table
+- Fixed an issue with the date parsing in the historical market data editor of the admin control panel
+
+## 1.300.0 - 2023-08-11
+
+### Added
+
+- Added more durations in the coupon system
+
+### Changed
+
+- Migrated the remaining requests from `bent` to `got`
+
+## 1.299.1 - 2023-08-10
+
+### Changed
+
+- Optimized the activities import by allowing a different currency than the asset's official one
+- Added a timeout to the _EOD Historical Data_ requests
+- Migrated the requests from `bent` to `got` in the _EOD Historical Data_ service
+
+### Fixed
+
+- Fixed the editing of the emergency fund
+- Fixed the historical data gathering interval for asset profiles used as benchmarks having activities
+
+## 1.298.0 - 2023-08-06
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.6.0` to `2.7.0`
+- Upgraded `Nx` from version `16.5.5` to `16.6.0`
+
+### Fixed
+
+- Fixed the styles of various components (card, progress, tab) after the upgrade to `@angular/material` `16`
+
+## 1.297.4 - 2023-08-05
+
+### Added
+
+- Added the footer to the public page
+- Added a `copy-assets` `Nx` target to the client build
+
+### Changed
+
+- Improved the alignment of the region percentages on the allocations page
+- Improved the alignment of the region percentages on the public page
+- Improved the redirection of the home page to the localized home page
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `15.2.5` to `16.1.8`
+- Upgraded `nestjs` from version `9.1.4` to `10.1.3`
+- Upgraded `Nx` from version `16.0.3` to `16.5.5`
+
+## 1.296.0 - 2023-08-01
+
+### Changed
+
+- Optimized the validation in the activities import by reducing the list to unique asset profiles
+- Optimized the data gathering in the activities import
+
+## 1.295.0 - 2023-07-30
+
+### Added
+
+- Added a step by step introduction for new users
+
+### Fixed
+
+- Removed the _Stay signed in_ setting on _Sign in with fingerprint_ activation
+
+## 1.294.0 - 2023-07-29
+
+### Changed
+
+- Extended the allocations by market chart on the allocations page by unavailable data
+
+### Fixed
+
+- Considered liabilities in the total account value calculation
+
+## 1.293.0 - 2023-07-26
+
+### Added
+
+- Added error handling for the _Redis_ connections to keep the app running if the connection fails
+
+### Changed
+
+- Set the `lastmod` dates of `sitemap.xml` dynamically
+
+### Fixed
+
+- Fixed the missing values in the holdings table
+- Fixed the `no such file or directory` error caused by the missing `favicon.ico` file
+
+## 1.292.0 - 2023-07-24
+
+### Added
+
+- Introduced the allocations by market chart on the allocations page
+
+### Changed
+
+- Upgraded `yahoo-finance2` from version `2.4.2` to `2.4.3`
+
+### Fixed
+
+- Fixed an issue in the public page
+
+## 1.291.0 - 2023-07-23
+
+### Added
+
+- Broken down the emergency fund by cash and assets
+- Added support for account balance time series
+
+### Changed
+
+- Renamed queries to presets in the historical market data table of the admin control panel
+
+## 1.290.0 - 2023-07-16
+
+### Added
+
+- Added hints to the activity types in the create or edit activity dialog
+- Added queries to the historical market data table of the admin control panel
+
+### Changed
+
+- Improved the usability of the login dialog
+- Disabled the caching in the health check endpoints for data providers
+- Improved the content of the Frequently Asked Questions (FAQ) page
+- Upgraded `prisma` from version `4.15.0` to `4.16.2`
+
+## 1.289.0 - 2023-07-14
+
+### Changed
+
+- Upgraded `yahoo-finance2` from version `2.4.1` to `2.4.2`
+
+## 1.288.0 - 2023-07-12
+
+### Changed
+
+- Improved the loading state during filtering on the allocations page
+- Beautified the names with ampersand (`&amp;`) in the asset profile
+- Improved the language localization for German (`de`)
+
 ## 1.287.0 - 2023-07-09
 
 ### Changed
@@ -464,7 +762,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Changed the slide toggles to checkboxes on the account page
+- Changed the slide toggles to checkboxes on the user account page
 - Changed the slide toggles to checkboxes in the admin control panel
 - Increased the density of the theme
 - Migrated the style of various components to `@angular/material` `15` (mdc)
@@ -1026,7 +1324,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the language selector on the account page
+- Improved the language selector on the user account page
 - Improved the wording in the _X-ray_ section (net worth instead of investment)
 - Extended the asset profile details dialog in the admin control panel
 - Updated the browserslist database
@@ -1271,7 +1569,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for Italiano (`it`)
+- Set up the language localization for Italian (`it`)
 - Extended the landing page
 
 ## 1.195.0 - 20.09.2022
@@ -1444,7 +1742,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a language selector to the account page
+- Added a language selector to the user account page
 - Added support for translated labels in the value component
 
 ### Changed
@@ -1773,7 +2071,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the user id to the account page
+- Added the user id to the user account page
 - Added a new view with jobs of the queue to the admin control panel
 
 ### Changed
@@ -2694,7 +2992,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported the management of additional currencies in the admin control panel
 - Introduced the system message
-- Introduced the read only mode
+- Introduced the read-only mode
 
 ### Changed
 
@@ -3428,7 +3726,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Respected the cash balance on the analysis page
-- Improved the settings selectors on the account page
+- Improved the settings selectors on the user account page
 - Harmonized the slogan to "Open Source Wealth Management Software"
 
 ### Fixed
@@ -3894,7 +4192,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a gradient to the line charts
-- Added a selector to set the base currency on the account page
+- Added a selector to set the base currency on the user account page
 
 ## 0.81.0 - 06.04.2021
 
@@ -4208,7 +4506,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Added the membership status to the account page
+- Added the membership status to the user account page
 
 ### Fixed
 

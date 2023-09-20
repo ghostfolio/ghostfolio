@@ -11,11 +11,58 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
-          <mat-option i18n value="BUY">Buy</mat-option>
-          <mat-option i18n value="DIVIDEND">Dividend</mat-option>
-          <mat-option i18n value="ITEM">Item</mat-option>
-          <mat-option i18n value="LIABILITY">Liability</mat-option>
-          <mat-option i18n value="SELL">Sell</mat-option>
+          <mat-select-trigger
+            >{{ typesTranslationMap[activityForm.controls['type'].value]
+            }}</mat-select-trigger
+          >
+          <mat-option value="BUY">
+            <span><b>{{ typesTranslationMap['BUY'] }}</b></span>
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
+            >
+          </mat-option>
+          <mat-option
+            *ngIf="data.user?.settings?.isExperimentalFeatures"
+            value="FEE"
+          >
+            <span><b>{{ typesTranslationMap['FEE'] }}</b></span>
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >One-time fee, annual account fees</small
+            >
+          </mat-option>
+          <mat-option value="DIVIDEND">
+            <span><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span>
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Distribution of corporate earnings</small
+            >
+          </mat-option>
+          <mat-option
+            *ngIf="data.user?.settings?.isExperimentalFeatures"
+            value="INTEREST"
+          >
+            <span><b>{{ typesTranslationMap['INTEREST'] }}</b></span>
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Revenue for lending out money</small
+            >
+          </mat-option>
+          <mat-option value="LIABILITY">
+            <span><b>{{ typesTranslationMap['LIABILITY'] }}</b></span>
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Mortgages, personal loans, credit cards</small
+            >
+          </mat-option>
+          <mat-option value="SELL">
+            <span><b>{{ typesTranslationMap['SELL'] }}</b></span>
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
+            >
+          </mat-option>
+          <mat-option value="ITEM">
+            <span><b>{{ typesTranslationMap['ITEM'] }}</b></span>
+            <small class="d-block line-height-1 text-muted text-nowrap" i18n
+              >Luxury items, real estate, private companies</small
+            >
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -95,60 +142,72 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' || activityForm.controls['type']?.value === 'INTEREST' || activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
         <input formControlName="quantity" matInput type="number" />
       </mat-form-field>
     </div>
-    <div class="align-items-start d-flex mb-3">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label
-          ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
-            <ng-container *ngSwitchCase="'DIVIDEND'" i18n
-              >Dividend</ng-container
-            >
-            <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
-            <ng-container *ngSwitchCase="'LIABILITY'" i18n>Value</ng-container>
-            <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
-          </ng-container>
-        </mat-label>
-        <input
-          formControlName="unitPriceInCustomCurrency"
-          matInput
-          type="number"
-        />
-        <div
-          class="ml-2"
-          matTextSuffix
-          [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
-        >
-          <mat-select formControlName="currencyOfUnitPrice">
-            <mat-option *ngFor="let currency of currencies" [value]="currency">
-              {{ currency }}
-            </mat-option>
-          </mat-select>
-        </div>
-        <mat-error
-          *ngIf="activityForm.controls['unitPriceInCustomCurrency'].hasError('invalid')"
-          ><ng-container i18n
-            >Oops! Could not get the historical exchange rate from</ng-container
+    <div
+      class="mb-3"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' }"
+    >
+      <div class="align-items-start d-flex">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label
+            ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
+              <ng-container *ngSwitchCase="'DIVIDEND'" i18n
+                >Dividend</ng-container
+              >
+              <ng-container *ngSwitchCase="'INTEREST'" i18n>Value</ng-container>
+              <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
+              <ng-container *ngSwitchCase="'LIABILITY'" i18n
+                >Value</ng-container
+              >
+              <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
+            </ng-container>
+          </mat-label>
+          <input
+            formControlName="unitPriceInCustomCurrency"
+            matInput
+            type="number"
+          />
+          <div
+            class="ml-2"
+            matTextSuffix
+            [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
           >
-          {{ activityForm.controls['date']?.value | date: defaultDateFormat
-          }}</mat-error
+            <mat-select formControlName="currencyOfUnitPrice">
+              <mat-option
+                *ngFor="let currency of currencies"
+                [value]="currency"
+              >
+                {{ currency }}
+              </mat-option>
+            </mat-select>
+          </div>
+          <mat-error
+            *ngIf="activityForm.controls['unitPriceInCustomCurrency'].hasError('invalid')"
+            ><ng-container i18n
+              >Oops! Could not get the historical exchange rate
+              from</ng-container
+            >
+            {{ activityForm.controls['date']?.value | date: defaultDateFormat
+            }}</mat-error
+          >
+        </mat-form-field>
+        <button
+          *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
+          class="ml-2 mt-1 no-min-width"
+          mat-button
+          title="Apply current market price"
+          type="button"
+          (click)="applyCurrentMarketPrice()"
         >
-      </mat-form-field>
-      <button
-        *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
-        class="ml-2 mt-1 no-min-width"
-        mat-button
-        title="Apply current market price"
-        type="button"
-        (click)="applyCurrentMarketPrice()"
-      >
-        <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
-      </button>
+          <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+        </button>
+      </div>
     </div>
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
@@ -157,6 +216,8 @@
             <ng-container *ngSwitchCase="'DIVIDEND'" i18n
               >Dividend</ng-container
             >
+            <ng-container *ngSwitchCase="'FEE'" i18n>Value</ng-container>
+            <ng-container *ngSwitchCase="'INTEREST'" i18n>Value</ng-container>
             <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
             <ng-container *ngSwitchCase="'LIABILITY'" i18n>Value</ng-container>
             <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
@@ -170,7 +231,7 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'INTEREST' || activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>

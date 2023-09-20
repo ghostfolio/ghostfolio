@@ -1,8 +1,9 @@
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { HttpException, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import * as bent from 'bent';
+import got from 'got';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()
@@ -41,15 +42,19 @@ export class LogoService {
   }
 
   private getBuffer(aUrl: string) {
-    const get = bent(
+    const abortController = new AbortController();
+
+    setTimeout(() => {
+      abortController.abort();
+    }, DEFAULT_REQUEST_TIMEOUT);
+
+    return got(
       `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
-      'GET',
-      'buffer',
-      200,
       {
-        'User-Agent': 'request'
+        headers: { 'User-Agent': 'request' },
+        // @ts-ignore
+        signal: abortController.signal
       }
-    );
-    return get();
+    ).buffer();
   }
 }

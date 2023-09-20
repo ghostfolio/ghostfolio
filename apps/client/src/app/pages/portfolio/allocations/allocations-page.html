@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="d-none d-sm-block mb-3 text-center" i18n>Allocations</h3>
+      <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Allocations</h1>
       <gf-activities-filter
         [allFilters]="allFilters"
         [isLoading]="isLoading"
@@ -93,7 +93,7 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-            [keys]="['assetClass', 'assetSubClass']"
+            [keys]="['assetClassLabel', 'assetSubClassLabel']"
             [locale]="user?.settings?.locale"
             [positions]="positions"
           ></gf-portfolio-proportion-chart>
@@ -174,7 +174,7 @@
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Country</span
+            ><span i18n>By Market</span
             ><gf-premium-indicator
               *ngIf="user?.subscription?.type === 'Basic'"
               class="ml-1"
@@ -186,10 +186,8 @@
             [baseCurrency]="user?.settings?.baseCurrency"
             [colorScheme]="user?.settings?.colorScheme"
             [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-            [keys]="['name']"
             [locale]="user?.settings?.locale"
-            [maxItems]="10"
-            [positions]="countries"
+            [positions]="marketsAdvanced"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>
@@ -217,7 +215,7 @@
             ></gf-world-map-chart>
           </div>
           <div class="row">
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -226,7 +224,7 @@
                 >Developed Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -235,13 +233,25 @@
                 >Emerging Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
                 [isPercent]="true"
                 [value]="markets?.otherMarkets?.value"
                 >Other Markets</gf-value
+              >
+            </div>
+            <div
+              *ngIf="markets?.[UNKNOWN_KEY]?.value > 0"
+              class="col-xs-12 col-md my-2"
+            >
+              <gf-value
+                i18n
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.[UNKNOWN_KEY]?.value"
+                >No data available</gf-value
               >
             </div>
           </div>
@@ -288,6 +298,30 @@
             [keys]="['etfProvider']"
             [locale]="user?.settings?.locale"
             [positions]="positions"
+          ></gf-portfolio-proportion-chart>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Country</span
+            ><gf-premium-indicator
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1"
+            ></gf-premium-indicator
+          ></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['name']"
+            [locale]="user?.settings?.locale"
+            [maxItems]="10"
+            [positions]="countries"
           ></gf-portfolio-proportion-chart>
         </mat-card-content>
       </mat-card>

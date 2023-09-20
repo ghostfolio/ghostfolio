@@ -15,6 +15,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
+import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isDate, isEmpty } from 'lodash';
 
@@ -93,7 +94,7 @@ export class SymbolController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<IDataProviderHistoricalResponse> {
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     if (!isDate(date)) {
       throw new HttpException(

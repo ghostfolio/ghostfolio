@@ -19,10 +19,10 @@ const routes: Routes = [
     .map(({ component, key, name }) => {
       return {
         canActivate: [AuthGuard],
-        path: `open-source-alternative-to-${key}`,
+        path: $localize`open-source-alternative-to` + `-${key}`,
         loadComponent: () =>
           import(`./products/${key}-page.component`).then(() => component),
-        title: `Open Source Alternative to ${name}`
+        title: $localize`Open Source Alternative to ${name}`
       };
     })
 ];

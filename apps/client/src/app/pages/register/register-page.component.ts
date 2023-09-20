@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Role } from '@prisma/client';
@@ -36,8 +35,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     private internetIdentityService: InternetIdentityService,
     private router: Router,
-    private tokenStorageService: TokenStorageService,
-    private userService: UserService
+    private tokenStorageService: TokenStorageService
   ) {
     this.info = this.dataService.fetchInfo();
 

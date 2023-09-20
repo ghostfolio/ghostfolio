@@ -28,8 +28,11 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
-        <div *ngIf="element.name !== element.symbol" class="text-truncate">
+        <div class="text-truncate">
           {{ element.name }}
+          <span *ngIf="element.name === element.symbol"
+            >({{ element.assetSubClassLabel }})</span
+          >
         </div>
         <div>
           <small class="text-muted">{{ element.symbol }}</small>
@@ -61,7 +64,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="value">
+    <ng-container matColumnDef="valueInBaseCurrency">
       <th
         *matHeaderCellDef
         class="d-none d-lg-table-cell justify-content-end px-1"
@@ -79,7 +82,7 @@
           <gf-value
             [isCurrency]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.value"
+            [value]="isLoading ? undefined : element.valueInBaseCurrency"
           ></gf-value>
         </div>
       </td>

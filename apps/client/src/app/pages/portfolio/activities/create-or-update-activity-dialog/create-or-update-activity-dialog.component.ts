@@ -14,23 +14,13 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
-import { isString } from 'lodash';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  startWith,
-  switchMap,
-  takeUntil
-} from 'rxjs/operators';
+import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
@@ -61,6 +51,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public tags: Tag[] = [];
   public total = 0;
+  public typesTranslationMap = new Map<Type, string>();
   public Validators = Validators;
 
   private unsubscribeSubject = new Subject<void>();
@@ -89,6 +80,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         id,
         name: translate(name)
       };
+    });
+
+    Object.keys(Type).forEach((type) => {
+      this.typesTranslationMap[Type[type]] = translate(Type[type]);
     });
 
     this.activityForm = this.formBuilder.group({
@@ -144,7 +139,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     });
 
     this.activityForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+      .pipe(
+        // Slightly delay until the more specific form control value changes have
+        // completed
+        delay(300),
+        takeUntil(this.unsubscribeSubject)
+      )
       .subscribe(async () => {
         let exchangeRateOfFee = 1;
         let exchangeRateOfUnitPrice = 1;
@@ -222,6 +222,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
         if (
           this.activityForm.controls['type'].value === 'BUY' ||
+          this.activityForm.controls['type'].value === 'FEE' ||
           this.activityForm.controls['type'].value === 'ITEM'
         ) {
           this.total =
@@ -237,6 +238,28 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
+
+    this.activityForm.controls['accountId'].valueChanges.subscribe(
+      (accountId) => {
+        const type = this.activityForm.controls['type'].value;
+
+        if (
+          type === 'FEE' ||
+          type === 'INTEREST' ||
+          type === 'ITEM' ||
+          type === 'LIABILITY'
+        ) {
+          const currency =
+            this.data.accounts.find(({ id }) => {
+              return id === accountId;
+            })?.currency ?? this.data.user.settings.baseCurrency;
+
+          this.activityForm.controls['currency'].setValue(currency);
+          this.activityForm.controls['currencyOfFee'].setValue(currency);
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+        }
+      }
+    );
 
     this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
       if (this.activityForm.controls['searchSymbol'].invalid) {
@@ -273,19 +296,21 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             Validators.required
           );
           this.activityForm.controls['accountId'].updateValueAndValidity();
-          this.activityForm.controls['currency'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfFee'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfUnitPrice'].setValue(
-            this.data.user.settings.baseCurrency
-          );
+
+          const currency =
+            this.data.accounts.find(({ id }) => {
+              return id === this.activityForm.controls['accountId'].value;
+            })?.currency ?? this.data.user.settings.baseCurrency;
+
+          this.activityForm.controls['currency'].setValue(currency);
+          this.activityForm.controls['currencyOfFee'].setValue(currency);
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+
           this.activityForm.controls['dataSource'].removeValidators(
             Validators.required
           );
           this.activityForm.controls['dataSource'].updateValueAndValidity();
+          this.activityForm.controls['feeInCustomCurrency'].reset();
           this.activityForm.controls['name'].setValidators(Validators.required);
           this.activityForm.controls['name'].updateValueAndValidity();
           this.activityForm.controls['quantity'].setValue(1);
@@ -295,31 +320,57 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
           this.activityForm.controls['updateAccountBalance'].disable();
           this.activityForm.controls['updateAccountBalance'].setValue(false);
-        } else if (type === 'LIABILITY') {
+        } else if (
+          type === 'FEE' ||
+          type === 'INTEREST' ||
+          type === 'LIABILITY'
+        ) {
           this.activityForm.controls['accountId'].removeValidators(
             Validators.required
           );
           this.activityForm.controls['accountId'].updateValueAndValidity();
-          this.activityForm.controls['currency'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfFee'].setValue(
-            this.data.user.settings.baseCurrency
-          );
-          this.activityForm.controls['currencyOfUnitPrice'].setValue(
-            this.data.user.settings.baseCurrency
-          );
+
+          const currency =
+            this.data.accounts.find(({ id }) => {
+              return id === this.activityForm.controls['accountId'].value;
+            })?.currency ?? this.data.user.settings.baseCurrency;
+
+          this.activityForm.controls['currency'].setValue(currency);
+          this.activityForm.controls['currencyOfFee'].setValue(currency);
+          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+
           this.activityForm.controls['dataSource'].removeValidators(
             Validators.required
           );
           this.activityForm.controls['dataSource'].updateValueAndValidity();
+
+          if (
+            (type === 'FEE' &&
+              this.activityForm.controls['feeInCustomCurrency'].value === 0) ||
+            type === 'INTEREST' ||
+            type === 'LIABILITY'
+          ) {
+            this.activityForm.controls['feeInCustomCurrency'].reset();
+          }
+
           this.activityForm.controls['name'].setValidators(Validators.required);
           this.activityForm.controls['name'].updateValueAndValidity();
-          this.activityForm.controls['quantity'].setValue(1);
+
+          if (type === 'FEE') {
+            this.activityForm.controls['quantity'].setValue(0);
+          } else if (type === 'INTEREST' || type === 'LIABILITY') {
+            this.activityForm.controls['quantity'].setValue(1);
+          }
+
           this.activityForm.controls['searchSymbol'].removeValidators(
             Validators.required
           );
           this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+
+          if (type === 'FEE') {
+            this.activityForm.controls['unitPriceInCustomCurrency'].setValue(0);
+          }
+
           this.activityForm.controls['updateAccountBalance'].disable();
           this.activityForm.controls['updateAccountBalance'].setValue(false);
         } else {
@@ -372,10 +423,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       currencyOfUnitPrice: this.activityForm.controls['currency'].value,
       unitPriceInCustomCurrency: this.currentMarketPrice
     });
-  }
-
-  public displayFn(aLookupItem: LookupItem) {
-    return aLookupItem?.symbol ?? '';
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {

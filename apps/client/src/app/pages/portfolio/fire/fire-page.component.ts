@@ -10,7 +10,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
   templateUrl: './fire-page.html'
@@ -44,14 +43,14 @@ export class FirePageComponent implements OnDestroy, OnInit {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.dataService
-      .fetchPortfolioDetails({})
+      .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
         if (summary.cash === null || summary.currentValue === null) {
           return;
         }
 
-        this.fireWealth = new Big(summary.currentValue);
+        this.fireWealth = new Big(summary.fireWealth);
         this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
         this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
 

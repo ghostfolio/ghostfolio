@@ -10,7 +10,10 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  HEADER_KEY_IMPERSONATION
+} from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioDividends,
@@ -47,8 +50,6 @@ import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
 export class PortfolioController {
-  private baseCurrency: string;
-
   public constructor(
     private readonly accessService: AccessService,
     private readonly apiService: ApiService,
@@ -57,9 +58,7 @@ export class PortfolioController {
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
-  }
+  ) {}
 
   @Get('details')
   @UseGuards(AuthGuard('jwt'))
@@ -134,7 +133,7 @@ export class PortfolioController {
         portfolioPosition.netPerformance = null;
         portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
-          portfolioPosition.value / totalValue;
+          portfolioPosition.valueInBaseCurrency / totalValue;
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
@@ -161,10 +160,12 @@ export class PortfolioController {
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
+        'fireWealth',
         'items',
         'liabilities',
         'netWorth',
         'totalBuy',
+        'totalInvestment',
         'totalSell'
       ]);
     }
@@ -177,6 +178,9 @@ export class PortfolioController {
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         markets: hasDetails ? portfolioPosition.markets : undefined,
+        marketsAdvanced: hasDetails
+          ? portfolioPosition.marketsAdvanced
+          : undefined,
         sectors: hasDetails ? portfolioPosition.sectors : []
       };
     }
@@ -437,15 +441,15 @@ export class PortfolioController {
         return this.exchangeRateDataService.toCurrency(
           portfolioPosition.quantity * portfolioPosition.marketPrice,
           portfolioPosition.currency,
-          this.request.user?.Settings?.settings.baseCurrency ??
-            this.baseCurrency
+          this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
         );
       })
       .reduce((a, b) => a + b, 0);
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       portfolioPublicDetails.holdings[symbol] = {
-        allocationInPercentage: portfolioPosition.value / totalValue,
+        allocationInPercentage:
+          portfolioPosition.valueInBaseCurrency / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         dataSource: portfolioPosition.dataSource,
@@ -456,7 +460,7 @@ export class PortfolioController {
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
         url: portfolioPosition.url,
-        valueInPercentage: portfolioPosition.value / totalValue
+        valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
       };
     }
 
