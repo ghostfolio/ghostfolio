@@ -5,7 +5,7 @@ Date,Code,Currency,Price,Quantity,Action,Fee
 06/06/2050,MSFT,USD,0.00,0,buy,0.00
 01-02-2021,MSFT,USD,3.15,5,dividend,0.00
 02/03/2021,AAPL,USD,210.581,5,buy,30.00
-03.04.2022,Penthouse Apartment,USD,205000.0,1,item,0.00
+03.04.2022,Small Apartment,USD,205000.0,1,item,0.00
 2040-02-01,MSFT,USD,0.00,0,buy,0.00
 2040/03/02,AAPL,USD,100.00,0,buy,2.00
 2040.04.03,MSFT,USD,62.00,0,buy,3.00
