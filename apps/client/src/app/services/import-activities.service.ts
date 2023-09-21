@@ -4,11 +4,11 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { Account, DataSource, Type } from '@prisma/client';
-import { isMatch, parse, parseISO } from 'date-fns';
 import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 
 @Injectable({
   providedIn: 'root'
@@ -219,30 +219,11 @@ export class ImportActivitiesService {
     item: any;
   }) {
     item = this.lowercaseKeys(item);
-    let date: string;
-
     for (const key of ImportActivitiesService.DATE_KEYS) {
       if (item[key]) {
-        if (isMatch(item[key], 'dd-MM-yyyy') && item[key].length === 10) {
-          // Check length to only match yyyy (and not yy)
-          date = parse(item[key], 'dd-MM-yyyy', new Date()).toISOString();
-        } else if (
-          isMatch(item[key], 'dd/MM/yyyy') &&
-          item[key].length === 10
-        ) {
-          // Check length to only match yyyy (and not yy)
-          date = parse(item[key], 'dd/MM/yyyy', new Date()).toISOString();
-        } else if (isMatch(item[key], 'yyyyMMdd') && item[key].length === 8) {
-          // Check length to only match yyyy (and not yy)
-          date = parse(item[key], 'yyyyMMdd', new Date()).toISOString();
-        } else {
-          try {
-            date = parseISO(item[key]).toISOString();
-          } catch {}
-        }
-
-        if (date) {
-          return date;
+        const parsedDate = parseDateHelper(item[key]);
+        if (parsedDate !== null) {
+          return parsedDate.toISOString();
         }
       }
     }

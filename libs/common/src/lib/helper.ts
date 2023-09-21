@@ -1,7 +1,15 @@
 import * as currencies from '@dinero.js/currencies';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
-import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
+import {
+  getDate,
+  getMonth,
+  getYear,
+  parse,
+  subDays,
+  isMatch,
+  parseISO
+} from 'date-fns';
 import { de, es, fr, it, nl, pt, tr } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
@@ -284,8 +292,33 @@ export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
 
-export function parseDate(date: string) {
-  return parse(date, DATE_FORMAT, new Date());
+// Define the supported date format patterns
+const DATE_FORMATS = [
+  'dd-MM-yyyy',
+  'dd/MM/yyyy',
+  'dd.MM.yyyy',
+  'yyyy-MM-dd',
+  'yyyy.MM.dd',
+  'yyyy/MM/dd'
+];
+
+// Helper function to parse a date string
+export function parseDate(date: string): Date | null {
+  const matchingFormat = DATE_FORMATS.find(
+    (format) => isMatch(date, format) && date.length === format.length
+  );
+
+  if (matchingFormat) {
+    return parse(date, matchingFormat, new Date());
+  }
+
+  try {
+    return parseISO(date);
+  } catch (error) {
+    console.error(`Error parsing date: ${error}`);
+    // Return null to indicate parsing failure
+    return null;
+  }
 }
 
 export function prettifySymbol(aSymbol: string): string {
