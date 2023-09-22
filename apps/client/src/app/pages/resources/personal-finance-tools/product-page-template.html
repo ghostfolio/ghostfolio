@@ -96,16 +96,16 @@
                   Open Source Software
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product1.isOpenSource === true" i18n
+                  <ng-container *ngIf="product1.isOpenSource" i18n
                     >✅ Yes</ng-container
-                  ><ng-container *ngIf="product1.isOpenSource === false" i18n
+                  ><ng-container *ngIf="!product1.isOpenSource" i18n
                     >❌ No</ng-container
                   >
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.isOpenSource === true" i18n
+                  <ng-container *ngIf="product2.isOpenSource" i18n
                     >✅ Yes</ng-container
-                  ><ng-container *ngIf="product2.isOpenSource === false" i18n
+                  ><ng-container *ngIf="!product2.isOpenSource" i18n
                     >❌ No
                   </ng-container>
                 </td>
