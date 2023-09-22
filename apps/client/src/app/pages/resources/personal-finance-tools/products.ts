@@ -1,6 +1,7 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
@@ -22,6 +23,7 @@ import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.compone
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
 import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
+import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
@@ -59,6 +61,16 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: $localize`Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: CapMonPageComponent,
+    founded: 2022,
+    isOpenSource: false,
+    key: 'capmon',
+    name: 'CapMon.org',
+    origin: $localize`Germany`,
+    note: 'Sunset in 2023',
+    slogan: 'Next Generation Assets Tracking'
   },
   {
     component: CopilotMoneyPageComponent,
@@ -311,9 +323,19 @@ export const products: Product[] = [
     isOpenSource: false,
     key: 'snowball-analytics',
     name: 'Snowball Analytics',
-    origin: 'France',
+    origin: $localize`France`,
     pricingPerYear: '$80',
     slogan: 'Simple and powerful portfolio tracker'
+  },
+  {
+    component: StockMarketEyePageComponent,
+    founded: 2008,
+    isOpenSource: false,
+    key: 'stockmarketeye',
+    name: 'StockMarketEye',
+    origin: $localize`France`,
+    note: 'Sunset in 2023',
+    slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
     component: SumioPageComponent,
