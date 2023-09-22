@@ -23,7 +23,7 @@
         <target state="translated">Il rischio di perdita nel trading può essere notevole. Non è consigliabile investire denaro di cui potresti avere bisogno a breve termine.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
-          <context context-type="linenumber">169,170</context>
+          <context context-type="linenumber">172,173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b6192ee60a5e0e40874f4d02fbaaa584a0f1541e" datatype="html">
@@ -1606,7 +1606,7 @@
         <target state="translated">Inserisci il tuo codice del buono:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.component.ts</context>
-          <context context-type="linenumber">262</context>
+          <context context-type="linenumber">263</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4420880039966769543" datatype="html">
@@ -1614,7 +1614,7 @@
         <target state="translated">Impossibile riscattare il codice del buono</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.component.ts</context>
-          <context context-type="linenumber">272</context>
+          <context context-type="linenumber">273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4819099731531004979" datatype="html">
@@ -1622,7 +1622,7 @@
         <target state="translated">Il codice del buono è stato riscattato</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.component.ts</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">285</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7967484035994732534" datatype="html">
@@ -1630,7 +1630,7 @@
         <target state="translated">Ricarica</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.component.ts</context>
-          <context context-type="linenumber">285</context>
+          <context context-type="linenumber">286</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7963559562180316948" datatype="html">
@@ -1638,7 +1638,7 @@
         <target state="translated">Vuoi davvero rimuovere questo metodo di accesso?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.component.ts</context>
-          <context context-type="linenumber">331</context>
+          <context context-type="linenumber">332</context>
         </context-group>
       </trans-unit>
       <trans-unit id="29881a45dafbe5aa05cd9d0441a4c0c2fb06df92" datatype="html">
@@ -1722,7 +1722,7 @@
         <target state="translated">Locale</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">173</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4402006eb2c97591dd8c87a5bd8f721fe9e4dc00" datatype="html">
@@ -1730,7 +1730,7 @@
         <target state="translated">Formato data e numero</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">171</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b5dc65493e3e15fbe15b7d9c17f7626321d82e76" datatype="html">
@@ -1742,7 +1742,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="78cf1b9b94e0e93e65d1d522001a5c54304e9f25" datatype="html">
@@ -1750,7 +1750,7 @@
         <target state="translated"> Accesso con impronta digitale </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">240,242</context>
+          <context context-type="linenumber">244,246</context>
         </context-group>
       </trans-unit>
       <trans-unit id="83c4d4d764d2e2725ab8e919ec16ac400e1f290a" datatype="html">
@@ -1758,7 +1758,7 @@
         <target state="translated">ID utente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">277</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9021c579c084e68d9db06a569d76f024111c6c54" datatype="html">
@@ -1766,7 +1766,7 @@
         <target state="translated">Accesso concesso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">291</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5e41f1b4c46ad9e0a9bc83fa36445483aa5cc324" datatype="html">
@@ -2862,7 +2862,7 @@
         <target state="translated">Funzionalità sperimentali</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">258</context>
+          <context context-type="linenumber">262</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1931353503905413384" datatype="html">
@@ -2910,7 +2910,7 @@
         <target state="translated">Aspetto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">201</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5fb13fb4a8447e59cdf05dc196ade39c02a6f8aa" datatype="html">
@@ -2918,7 +2918,7 @@
         <target state="translated">Auto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">212</context>
+          <context context-type="linenumber">216</context>
         </context-group>
       </trans-unit>
       <trans-unit id="693d14f486a25e86bc515dfcfc4462d5201217ef" datatype="html">
@@ -2926,7 +2926,7 @@
         <target state="translated">Chiaro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">213</context>
+          <context context-type="linenumber">217</context>
         </context-group>
       </trans-unit>
       <trans-unit id="adb4562d2dbd3584370e44496969d58c511ecb63" datatype="html">
@@ -2934,7 +2934,7 @@
         <target state="translated">Scuro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">214</context>
+          <context context-type="linenumber">218</context>
         </context-group>
       </trans-unit>
       <trans-unit id="112783260724635106" datatype="html">
@@ -3220,6 +3220,10 @@
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
           <context context-type="linenumber">160</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="064d88bead9e71bd849ecaefd8b38cca8f195a88" datatype="html">
         <source>Activities Count</source>
@@ -3450,7 +3454,7 @@
         <target state="translated"> Esperienza priva di distrazioni per i periodi più turbolenti </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">224,226</context>
+          <context context-type="linenumber">228,230</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b706a0f7740f8180094b8f6144462d121da49aa4" datatype="html">
@@ -3458,7 +3462,7 @@
         <target state="translated"> Un&apos;anteprima delle funzionalità in arrivo </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">259,261</context>
+          <context context-type="linenumber">263,265</context>
         </context-group>
       </trans-unit>
       <trans-unit id="280c5b1f5b5b748fbbb37bf7a12c37f41539c1ff" datatype="html">
@@ -3845,9 +3849,9 @@
           <context context-type="linenumber">348</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="356c1521a0dbc186d553e8c71bb7c64bc3998433" datatype="html">
-        <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used to cover the hosting infrastructure and to fund the ongoing development of Ghostfolio. </source>
-        <target state="translated"> La nostra offerta cloud ufficiale Ghostfolio Premium è il modo più semplice per iniziare. Grazie al risparmio di tempo, questa è l&apos;opzione migliore per la maggior parte delle persone. I ricavi vengono utilizzati per coprire l&apos;infrastruttura di hosting e per finanziare lo sviluppo continuo di Ghostfolio. </target>
+      <trans-unit id="de0d77a5255f97548d2b579f78c20c911a71820f" datatype="html">
+        <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover the costs of the hosting infrastructure and to fund ongoing development. </source>
+        <target state="new"> La nostra offerta cloud ufficiale Ghostfolio Premium è il modo più semplice per iniziare. Grazie al risparmio di tempo, questa è l&apos;opzione migliore per la maggior parte delle persone. I ricavi vengono utilizzati per coprire l&apos;infrastruttura di hosting e per finanziare lo sviluppo continuo di Ghostfolio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">6,11</context>
@@ -7186,7 +7190,7 @@
         <target state="translated">Autenticazione biometrica</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8d0f35e084b3902a5b04ee86cfde0d4b991a93af" datatype="html">
@@ -7270,7 +7274,7 @@
         <target state="translated">Esporta dati</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page.html</context>
-          <context context-type="linenumber">280</context>
+          <context context-type="linenumber">284</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8298612418414367990" datatype="html">
