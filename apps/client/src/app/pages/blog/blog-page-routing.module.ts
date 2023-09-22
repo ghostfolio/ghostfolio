@@ -157,10 +157,10 @@ const routes: Routes = [
   },
   {
     canActivate: [AuthGuard],
-    path: '2023/10/hacktoberfest-2023',
+    path: '2023/09/hacktoberfest-2023',
     loadComponent: () =>
       import(
-        './2023/10/hacktoberfest-2023/hacktoberfest-2023-page.component'
+        './2023/09/hacktoberfest-2023/hacktoberfest-2023-page.component'
       ).then((c) => c.Hacktoberfest2023PageComponent),
     title: 'Hacktoberfest 2023'
   }

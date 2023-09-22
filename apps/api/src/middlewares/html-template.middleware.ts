@@ -80,7 +80,7 @@ const locales = {
     featureGraphicPath: 'assets/images/blog/ghostfolio-2.jpg',
     title: `Announcing Ghostfolio 2.0 - ${titleShort}`
   },
-  '/en/blog/2023/10/hacktoberfest-2023': {
+  '/en/blog/2023/09/hacktoberfest-2023': {
     featureGraphicPath: 'assets/images/blog/hacktoberfest-2023.png',
     title: `Hacktoberfest 2023 - ${titleShort}`
   }
