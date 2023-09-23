@@ -147,9 +147,9 @@ export class OrderController {
       userId: this.request.user.id
     });
 
-    if (data.dataSource !== 'MANUAL' && !order.isDraft) {
-      // Gather symbol data in the background, if data source not
-      // MANUAL and not draft
+    if (data.dataSource && !order.isDraft) {
+      // Gather symbol data in the background, if data source is set
+      // (not MANUAL) and not draft
       this.dataGatheringService.gatherSymbols([
         {
           dataSource: data.dataSource,
