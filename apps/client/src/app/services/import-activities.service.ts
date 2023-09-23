@@ -219,12 +219,12 @@ export class ImportActivitiesService {
     item: any;
   }) {
     item = this.lowercaseKeys(item);
+
     for (const key of ImportActivitiesService.DATE_KEYS) {
       if (item[key]) {
-        const parsedDate = parseDateHelper(item[key]);
-        if (parsedDate !== null) {
-          return parsedDate.toISOString();
-        }
+        try {
+          return parseDateHelper(item[key].toString()).toISOString();
+        } catch {}
       }
     }
 
