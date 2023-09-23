@@ -294,7 +294,7 @@ export const DATE_FORMAT_YEARLY = 'yyyy';
 
 export function parseDate(date: string): Date | null {
   // Transform 'yyyyMMdd' format to supported format by parse function
-  if (date.length === 8) {
+  if (date?.length === 8) {
     const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);
 
     if (match) {
