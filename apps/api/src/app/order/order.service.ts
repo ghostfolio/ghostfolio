@@ -123,20 +123,22 @@ export class OrderService {
       };
     }
 
-    this.dataGatheringService.addJobToQueue({
-      data: {
-        dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-        symbol: data.SymbolProfile.connectOrCreate.create.symbol
-      },
-      name: GATHER_ASSET_PROFILE_PROCESS,
-      opts: {
-        ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: getAssetProfileIdentifier({
+    if (data.SymbolProfile.connectOrCreate.create.dataSource !== 'MANUAL') {
+      this.dataGatheringService.addJobToQueue({
+        data: {
           dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
           symbol: data.SymbolProfile.connectOrCreate.create.symbol
-        })
-      }
-    });
+        },
+        name: GATHER_ASSET_PROFILE_PROCESS,
+        opts: {
+          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+          jobId: getAssetProfileIdentifier({
+            dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
+            symbol: data.SymbolProfile.connectOrCreate.create.symbol
+          })
+        }
+      });
+    }
 
     delete data.accountId;
     delete data.assetClass;
