@@ -173,8 +173,14 @@ export class PortfolioController {
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       holdings[symbol] = {
         ...portfolioPosition,
-        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
-        assetSubClass: hasDetails ? portfolioPosition.assetSubClass : undefined,
+        assetClass:
+          hasDetails || portfolioPosition.assetClass === 'CASH'
+            ? portfolioPosition.assetClass
+            : undefined,
+        assetSubClass:
+          hasDetails || portfolioPosition.assetSubClass === 'CASH'
+            ? portfolioPosition.assetSubClass
+            : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         markets: hasDetails ? portfolioPosition.markets : undefined,
