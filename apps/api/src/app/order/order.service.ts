@@ -233,7 +233,9 @@ export class OrderService {
     types,
     userCurrency,
     userId,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    skip,
+    take = Number.MAX_SAFE_INTEGER
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
@@ -241,6 +243,8 @@ export class OrderService {
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
+    skip?: number;
+    take?: number;
   }): Promise<Activity[]> {
     const where: Prisma.OrderWhereInput = { userId };
 
@@ -315,6 +319,8 @@ export class OrderService {
 
     return (
       await this.orders({
+        skip,
+        take,
         where,
         include: {
           // eslint-disable-next-line @typescript-eslint/naming-convention

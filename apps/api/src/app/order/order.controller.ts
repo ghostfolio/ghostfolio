@@ -89,7 +89,9 @@ export class OrderController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('take') take?: number,
+    @Query('skip') skip?: number
   ): Promise<Activities> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
@@ -106,7 +108,9 @@ export class OrderController {
       userCurrency,
       includeDrafts: true,
       userId: impersonationUserId || this.request.user.id,
-      withExcludedAccounts: true
+      withExcludedAccounts: true,
+      skip: isNaN(skip) ? undefined : skip,
+      take: isNaN(take) ? undefined : take
     });
 
     return { activities };
