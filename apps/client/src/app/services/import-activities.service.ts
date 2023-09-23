@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 import { Account, DataSource, Type } from '@prisma/client';
 import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 
 @Injectable({
   providedIn: 'root'

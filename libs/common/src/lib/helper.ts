@@ -5,10 +5,10 @@ import {
   getDate,
   getMonth,
   getYear,
-  parse,
-  subDays,
   isMatch,
-  parseISO
+  parse,
+  parseISO,
+  subDays
 } from 'date-fns';
 import { de, es, fr, it, nl, pt, tr } from 'date-fns/locale';
 
