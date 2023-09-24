@@ -101,7 +101,8 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'fr',
   'it',
   'nl',
-  'pt'
+  'pt',
+  'tr'
 ];
 
 export const UNKNOWN_KEY = 'UNKNOWN';

@@ -127,6 +127,10 @@ export class DataGatheringService {
       uniqueAssets = await this.getUniqueAssets();
     }
 
+    if (uniqueAssets.length <= 0) {
+      return;
+    }
+
     const assetProfiles =
       await this.dataProviderService.getAssetProfiles(uniqueAssets);
     const symbolProfiles =
