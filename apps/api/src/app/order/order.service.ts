@@ -235,7 +235,7 @@ export class OrderService {
     types,
     userCurrency,
     userId,
-    withExcludedAccounts = false,
+    withExcludedAccounts = false
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
