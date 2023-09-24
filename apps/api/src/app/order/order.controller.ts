@@ -90,8 +90,8 @@ export class OrderController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('tags') filterByTags?: string,
-    @Query('take') take?: number,
-    @Query('skip') skip?: number
+    @Query('skip') skip?: number,
+    @Query('take') take?: number
   ): Promise<Activities> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
@@ -107,10 +107,10 @@ export class OrderController {
       filters,
       userCurrency,
       includeDrafts: true,
-      userId: impersonationUserId || this.request.user.id,
-      withExcludedAccounts: true,
       skip: isNaN(skip) ? undefined : skip,
-      take: isNaN(take) ? undefined : take
+      take: isNaN(take) ? undefined : take,
+      userId: impersonationUserId || this.request.user.id,
+      withExcludedAccounts: true
     });
 
     return { activities };

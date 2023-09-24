@@ -230,21 +230,21 @@ export class OrderService {
   public async getOrders({
     filters,
     includeDrafts = false,
+    skip,
+    take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
     userId,
     withExcludedAccounts = false,
-    skip,
-    take = Number.MAX_SAFE_INTEGER
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
+    skip?: number;
+    take?: number;
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
-    skip?: number;
-    take?: number;
   }): Promise<Activity[]> {
     const where: Prisma.OrderWhereInput = { userId };
 
