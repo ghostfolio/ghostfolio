@@ -4,6 +4,8 @@ import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-pr
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
+import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -15,7 +17,7 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { DataSource, MarketData, Platform, Prisma } from '@prisma/client';
+import { DataSource, MarketData, Platform, Prisma, Tag } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
@@ -62,6 +64,10 @@ export class AdminService {
     return this.http.delete<void>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`
     );
+  }
+
+  public deleteTag(aId: string) {
+    return this.http.delete<void>(`/api/v1/tag/${aId}`);
   }
 
   public fetchAdminData() {
@@ -139,6 +145,10 @@ export class AdminService {
     return this.http.get<Platform[]>('/api/v1/platform');
   }
 
+  public fetchTags() {
+    return this.http.get<Tag[]>('/api/v1/tag');
+  }
+
   public gather7Days() {
     return this.http.post<void>('/api/v1/admin/gather', {});
   }
@@ -208,6 +218,10 @@ export class AdminService {
     return this.http.post<Platform>(`/api/v1/platform`, aPlatform);
   }
 
+  public postTag(aTag: CreateTagDto) {
+    return this.http.post<Tag>(`/api/v1/tag`, aTag);
+  }
+
   public putMarketData({
     dataSource,
     date,
@@ -232,5 +246,9 @@ export class AdminService {
       `/api/v1/platform/${aPlatform.id}`,
       aPlatform
     );
+  }
+
+  public putTag(aTag: UpdateTagDto) {
+    return this.http.put<Tag>(`/api/v1/tag/${aTag.id}`, aTag);
   }
 }
