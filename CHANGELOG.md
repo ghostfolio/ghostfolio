@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the management of tags in the admin control panel
 - Added a blog post: _Hacktoberfest 2023_
 
 ### Changed
