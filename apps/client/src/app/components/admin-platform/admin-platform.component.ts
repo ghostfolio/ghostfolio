@@ -19,7 +19,7 @@ import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
+import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
