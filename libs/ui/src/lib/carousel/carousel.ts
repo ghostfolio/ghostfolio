@@ -35,7 +35,7 @@ import {
   }
   
   @Component({
-    selector: 'app-carousel',
+    selector: 'gf-carousel',
     templateUrl: './carousel.html',
     styleUrls: ['./carousel.scss'],
     encapsulation: ViewEncapsulation.None,
