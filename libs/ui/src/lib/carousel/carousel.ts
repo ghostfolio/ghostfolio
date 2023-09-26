@@ -18,21 +18,7 @@ import {
   import {MatIconModule} from '@angular/material/icon';
   import {MatButtonModule} from '@angular/material/button';
   import {NgIf} from '@angular/common';
-  
-  @Directive({
-    selector: '[carousel-item]',
-    standalone: true,
-  })
-  export class CarouselItem implements FocusableOption {
-    @HostBinding('attr.role') readonly role = 'listitem';
-    @HostBinding('tabindex') tabindex = '-1';
-  
-    constructor(readonly element: ElementRef<HTMLElement>) {}
-  
-    focus(): void {
-      this.element.nativeElement.focus({preventScroll: true});
-    }
-  }
+import { CarouselItem } from './carousel-item.directive';
   
   @Component({
     selector: 'gf-carousel',
