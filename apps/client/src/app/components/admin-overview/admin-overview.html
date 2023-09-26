@@ -72,19 +72,6 @@
               </div>
             </div>
           </div>
-          <div
-            *ngIf="info?.tags?.length > 0"
-            class="align-items-start d-flex my-3"
-          >
-            <div class="w-50" i18n>Tags</div>
-            <div class="w-50">
-              <table>
-                <tr *ngFor="let tag of info.tags">
-                  <td class="pl-1">{{ tag.name }}</td>
-                </tr>
-              </table>
-            </div>
-          </div>
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Signup</div>
             <div class="w-50">
