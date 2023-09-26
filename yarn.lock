@@ -17889,6 +17889,13 @@ toidentifier@1.0.1:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.1.tgz#3be34321a88a820ed1bd80dfaa33e479fbb8dd35"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
 
+tough-cookie-file-store@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/tough-cookie-file-store/-/tough-cookie-file-store-2.0.3.tgz#788f7a6fe5cd8f61a1afb71b2f0b964ebf914b80"
+  integrity sha512-sMpZVcmFf6EYFHFFl+SYH4W1/OnXBYMGDsv2IlbQ2caHyFElW/UR/gpj/KYU1JwmP4dE9xqwv2+vWcmlXHojSw==
+  dependencies:
+    tough-cookie "^4.0.0"
+
 tough-cookie@^4.0.0, tough-cookie@^4.1.2:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/tough-cookie/-/tough-cookie-4.1.3.tgz#97b9adb0728b42280aa3d814b6b999b2ff0318bf"
@@ -19035,16 +19042,17 @@ y18n@^5.0.5:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
-yahoo-finance2@2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.5.0.tgz#847834b33d24dc8ce96357401aba7dae1bcfda9f"
-  integrity sha512-YTniHzTx17lrs7tUonFZMWvY0dF4UJSrPkrTNMqNrb+la7Nde/5KY7mQFf+8VdXhngPup2V9ex27M2WK3ADtbw==
+yahoo-finance2@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.7.0.tgz#2f3d078409616495a6f9357b1cce1c797903b82c"
+  integrity sha512-kh/t3P72MDLyf1jCEPTVZXtIwW8tuxhEg2zWHhPINxnBCT6cToQjF59dWnHNosPji5iUmtvhMWLmMbWJkBBSSw==
   dependencies:
     "@types/tough-cookie" "^4.0.2"
     ajv "8.10.0"
     ajv-formats "2.1.1"
     node-fetch "^2.6.1"
     tough-cookie "^4.1.2"
+    tough-cookie-file-store "^2.0.3"
 
 yallist@^3.0.2:
   version "3.1.1"
