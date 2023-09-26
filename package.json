@@ -129,7 +129,7 @@
     "svgmap": "2.6.0",
     "twitter-api-v2": "1.14.2",
     "uuid": "9.0.0",
-    "yahoo-finance2": "2.5.0",
+    "yahoo-finance2": "2.7.0",
     "zone.js": "0.13.1"
   },
   "devDependencies": {
@@ -189,7 +189,7 @@
     "jest-preset-angular": "13.1.1",
     "nx": "16.7.4",
     "nx-cloud": "16.3.0",
-    "prettier": "3.0.2",
+    "prettier": "3.0.3",
     "prettier-plugin-organize-attributes": "1.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",

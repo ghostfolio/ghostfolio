@@ -1,5 +1,5 @@
 {
-  "createdAt": "2023-09-18T13:16:22.059Z",
+  "createdAt": "2023-09-25T08:15:38.055Z",
   "data": [
     {
       "name": "Appsmith",
@@ -80,6 +80,11 @@
       "name": "OpenStatus",
       "description": "Open-source monitoring platform with beautiful status pages",
       "href": "https://www.openstatus.dev"
+    },
+    {
+      "name": "Papermark",
+      "description": "Open-Source Docsend Alternative to securely share documents with real-time analytics.",
+      "href": "https://www.papermark.io/"
     },
     {
       "name": "Requestly",

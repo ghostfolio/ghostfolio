@@ -19,7 +19,7 @@ import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
-import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-account-platform.component';
+import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog/create-or-update-platform-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -114,6 +114,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((platforms) => {
         this.platforms = platforms;
+
         this.dataSource = new MatTableDataSource(platforms);
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = get;
@@ -130,7 +131,6 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
           url: null
         }
       },
-
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
@@ -170,7 +170,6 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
           url
         }
       },
-
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });

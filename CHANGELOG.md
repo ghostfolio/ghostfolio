@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a blog post: _Hacktoberfest 2023_
 
+### Changed
+
+- Upgraded `prettier` from version `3.0.2` to `3.0.3`
+- Upgraded `yahoo-finance2` from version `2.5.0` to `2.7.0`
+
 ## 2.5.0 - 2023-09-23
 
 ### Added
