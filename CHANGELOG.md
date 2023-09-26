@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post: _Hacktoberfest 2023_
+
 ### Changed
 
 - Upgraded `prettier` from version `3.0.2` to `3.0.3`
