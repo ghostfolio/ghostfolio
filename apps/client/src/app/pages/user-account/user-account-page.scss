@@ -1,17 +1,5 @@
 :host {
-  color: rgb(var(--dark-primary-text));
-  display: block;
-
-  gf-access-table {
-    overflow-x: auto;
-  }
-
-  .hint-text {
-    font-size: 90%;
-    line-height: 1.2;
-  }
 }
 
 :host-context(.is-dark-theme) {
-  color: rgb(var(--light-primary-text));
 }
