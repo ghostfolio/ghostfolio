@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { GfUserAccountAccessModule } from '@ghostfolio/client/components/user-account-access/user-account-access.module';
+import { GfUserAccountMembershipModule } from '@ghostfolio/client/components/user-account-membership/user-account-membership.module';
+import { GfUserAccountSettingsModule } from '@ghostfolio/client/components/user-account-settings/user-account-settings.module';
 
 import { UserAccountPageRoutingModule } from './user-account-page-routing.module';
 import { UserAccountPageComponent } from './user-account-page.component';
-import { GfUserAccountSettingsModule } from '@ghostfolio/client/components/user-account-settings/user-account-settings.module';
-import { GfUserAccountAccessModule } from '@ghostfolio/client/components/user-account-access/user-account-access.module';
-import { GfUserAccountMembershipModule } from '@ghostfolio/client/components/user-account-membership/user-account-membership.module';
 
 @NgModule({
   declarations: [UserAccountPageComponent],
@@ -14,6 +15,7 @@ import { GfUserAccountMembershipModule } from '@ghostfolio/client/components/use
     GfUserAccountAccessModule,
     GfUserAccountMembershipModule,
     GfUserAccountSettingsModule,
+    MatTabsModule,
     UserAccountPageRoutingModule
   ]
 })

@@ -1,221 +1,197 @@
 <div class="container">
+  <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Settings</h1>
   <div class="row">
     <div class="col">
-      <h2 class="h3 mb-3 text-center" i18n>Settings</h2>
-    </div>
-  </div>
-  <div *ngIf="user?.settings" class="mb-5 row">
-    <div class="col">
-      <mat-card appearance="outlined" class="mb-3">
-        <mat-card-content>
-          <div class="align-items-center d-flex mt-4 py-1">
+      <div class="align-items-center d-flex py-1">
+        <div class="pr-1 w-50">
+          <div i18n>Presenter View</div>
+          <div class="hint-text text-muted" i18n>
+            Protection for sensitive information like absolute performances and
+            quantity values
+          </div>
+        </div>
+        <div class="pl-1 w-50">
+          <mat-checkbox
+            color="primary"
+            [checked]="user.settings.isRestrictedView"
+            [disabled]="!hasPermissionToUpdateUserSettings"
+            (change)="onRestrictedViewChange($event)"
+          ></mat-checkbox>
+        </div>
+      </div>
+      <div class="d-flex mt-4 py-1">
+        <form #changeUserSettingsForm="ngForm" class="w-100">
+          <div class="d-flex mb-2">
+            <div class="align-items-center d-flex pt-1 pt-1 w-50">
+              <ng-container i18n>Base Currency</ng-container>
+            </div>
+            <div class="pl-1 w-50">
+              <mat-form-field appearance="outline" class="w-100 without-hint">
+                <mat-select
+                  name="baseCurrency"
+                  [disabled]="!hasPermissionToUpdateUserSettings"
+                  [value]="user.settings.baseCurrency"
+                  (selectionChange)="onChangeUserSetting('baseCurrency', $event.value)"
+                >
+                  <mat-option
+                    *ngFor="let currency of currencies"
+                    [value]="currency"
+                    >{{ currency }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="align-items-center d-flex mb-2">
             <div class="pr-1 w-50">
-              <div i18n>Presenter View</div>
-              <div class="hint-text text-muted" i18n>
-                Protection for sensitive information like absolute performances
-                and quantity values
+              <div i18n>Language</div>
+            </div>
+            <div class="pl-1 w-50">
+              <mat-form-field appearance="outline" class="w-100 without-hint">
+                <mat-select
+                  name="language"
+                  [disabled]="!hasPermissionToUpdateUserSettings"
+                  [value]="language"
+                  (selectionChange)="onChangeUserSetting('language', $event.value)"
+                >
+                  <mat-option [value]="null"></mat-option>
+                  <mat-option value="de">Deutsch</mat-option>
+                  <mat-option value="en">English</mat-option>
+                  <mat-option value="es"
+                    >Español (<ng-container i18n>Community</ng-container
+                    >)</mat-option
+                  >
+                  <mat-option value="fr"
+                    >Français (<ng-container i18n>Community</ng-container
+                    >)</mat-option
+                  >
+                  <mat-option value="it"
+                    >Italiano (<ng-container i18n>Community</ng-container
+                    >)</mat-option
+                  >
+                  <mat-option value="nl"
+                    >Nederlands (<ng-container i18n>Community</ng-container
+                    >)</mat-option
+                  >
+                  <mat-option value="pt"
+                    >Português (<ng-container i18n>Community</ng-container
+                    >)</mat-option
+                  >
+                  <mat-option value="tr"
+                    >Türkçe (<ng-container i18n>Community</ng-container
+                    >)</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="align-items-center d-flex mb-2">
+            <div class="pr-1 w-50">
+              <div i18n>Locale</div>
+              <div class="hint-text text-muted">
+                <ng-container i18n>Date and number format</ng-container>
               </div>
             </div>
             <div class="pl-1 w-50">
-              <mat-checkbox
-                color="primary"
-                [checked]="user.settings.isRestrictedView"
-                [disabled]="!hasPermissionToUpdateUserSettings"
-                (change)="onRestrictedViewChange($event)"
-              ></mat-checkbox>
+              <mat-form-field appearance="outline" class="w-100 without-hint">
+                <mat-select
+                  name="locale"
+                  [disabled]="!hasPermissionToUpdateUserSettings"
+                  [value]="user.settings.locale"
+                  (selectionChange)="onChangeUserSetting('locale', $event.value)"
+                >
+                  <mat-option [value]="null"></mat-option>
+                  <mat-option *ngFor="let locale of locales" [value]="locale"
+                    >{{ locale }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
-          <div class="d-flex mt-4 py-1">
-            <form #changeUserSettingsForm="ngForm" class="w-100">
-              <div class="d-flex mb-2">
-                <div class="align-items-center d-flex pt-1 pt-1 w-50">
-                  <ng-container i18n>Base Currency</ng-container>
-                </div>
-                <div class="pl-1 w-50">
-                  <mat-form-field
-                    appearance="outline"
-                    class="w-100 without-hint"
-                  >
-                    <mat-select
-                      name="baseCurrency"
-                      [disabled]="!hasPermissionToUpdateUserSettings"
-                      [value]="user.settings.baseCurrency"
-                      (selectionChange)="onChangeUserSetting('baseCurrency', $event.value)"
-                    >
-                      <mat-option
-                        *ngFor="let currency of currencies"
-                        [value]="currency"
-                        >{{ currency }}</mat-option
-                      >
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="align-items-center d-flex mb-2">
-                <div class="pr-1 w-50">
-                  <div i18n>Language</div>
-                </div>
-                <div class="pl-1 w-50">
-                  <mat-form-field
-                    appearance="outline"
-                    class="w-100 without-hint"
-                  >
-                    <mat-select
-                      name="language"
-                      [disabled]="!hasPermissionToUpdateUserSettings"
-                      [value]="language"
-                      (selectionChange)="onChangeUserSetting('language', $event.value)"
-                    >
-                      <mat-option [value]="null"></mat-option>
-                      <mat-option value="de">Deutsch</mat-option>
-                      <mat-option value="en">English</mat-option>
-                      <mat-option value="es"
-                        >Español (<ng-container i18n>Community</ng-container
-                        >)</mat-option
-                      >
-                      <mat-option value="fr"
-                        >Français (<ng-container i18n>Community</ng-container
-                        >)</mat-option
-                      >
-                      <mat-option value="it"
-                        >Italiano (<ng-container i18n>Community</ng-container
-                        >)</mat-option
-                      >
-                      <mat-option value="nl"
-                        >Nederlands (<ng-container i18n>Community</ng-container
-                        >)</mat-option
-                      >
-                      <mat-option value="pt"
-                        >Português (<ng-container i18n>Community</ng-container
-                        >)</mat-option
-                      >
-                      <mat-option value="tr"
-                        >Türkçe (<ng-container i18n>Community</ng-container
-                        >)</mat-option
-                      >
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="align-items-center d-flex mb-2">
-                <div class="pr-1 w-50">
-                  <div i18n>Locale</div>
-                  <div class="hint-text text-muted">
-                    <ng-container i18n>Date and number format</ng-container>
-                  </div>
-                </div>
-                <div class="pl-1 w-50">
-                  <mat-form-field
-                    appearance="outline"
-                    class="w-100 without-hint"
-                  >
-                    <mat-select
-                      name="locale"
-                      [disabled]="!hasPermissionToUpdateUserSettings"
-                      [value]="user.settings.locale"
-                      (selectionChange)="onChangeUserSetting('locale', $event.value)"
-                    >
-                      <mat-option [value]="null"></mat-option>
-                      <mat-option
-                        *ngFor="let locale of locales"
-                        [value]="locale"
-                        >{{ locale }}</mat-option
-                      >
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <div class="d-flex">
-                <div class="align-items-center d-flex pr-1 pt-1 w-50">
-                  <ng-container i18n>Appearance</ng-container>
-                </div>
-                <div class="pl-1 w-50">
-                  <mat-form-field
-                    appearance="outline"
-                    class="w-100 without-hint"
-                  >
-                    <mat-select
-                      class="with-placeholder-as-option"
-                      name="colorScheme"
-                      [disabled]="!hasPermissionToUpdateUserSettings"
-                      [placeholder]="appearancePlaceholder"
-                      [value]="user?.settings?.colorScheme"
-                      (selectionChange)="onChangeUserSetting('colorScheme', $event.value)"
-                    >
-                      <mat-option i18n [value]="null">Auto</mat-option>
-                      <mat-option i18n value="LIGHT">Light</mat-option>
-                      <mat-option i18n value="DARK">Dark</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="d-flex mt-4 py-1">
-            <div class="pr-1 w-50">
-              <div i18n>Zen Mode</div>
-              <div class="hint-text text-muted" i18n>
-                Distraction-free experience for turbulent times
-              </div>
+          <div class="d-flex">
+            <div class="align-items-center d-flex pr-1 pt-1 w-50">
+              <ng-container i18n>Appearance</ng-container>
             </div>
             <div class="pl-1 w-50">
-              <mat-checkbox
-                color="primary"
-                [checked]="user.settings.viewMode === 'ZEN'"
-                [disabled]="!hasPermissionToUpdateViewMode"
-                (change)="onViewModeChange($event)"
-              ></mat-checkbox>
+              <mat-form-field appearance="outline" class="w-100 without-hint">
+                <mat-select
+                  class="with-placeholder-as-option"
+                  name="colorScheme"
+                  [disabled]="!hasPermissionToUpdateUserSettings"
+                  [placeholder]="appearancePlaceholder"
+                  [value]="user?.settings?.colorScheme"
+                  (selectionChange)="onChangeUserSetting('colorScheme', $event.value)"
+                >
+                  <mat-option i18n [value]="null">Auto</mat-option>
+                  <mat-option i18n value="LIGHT">Light</mat-option>
+                  <mat-option i18n value="DARK">Dark</mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           </div>
-          <div class="align-items-center d-flex mt-4 py-1">
-            <div class="pr-1 w-50">
-              <div i18n>Biometric Authentication</div>
-              <div class="hint-text text-muted" i18n>
-                Sign in with fingerprint
-              </div>
-            </div>
-            <div class="pl-1 w-50">
-              <mat-checkbox
-                #toggleSignInWithFingerprintEnabledElement
-                color="primary"
-                [disabled]="!hasPermissionToUpdateUserSettings"
-                (change)="onSignInWithFingerprintChange($event)"
-              ></mat-checkbox>
-            </div>
+        </form>
+      </div>
+      <div class="d-flex mt-4 py-1">
+        <div class="pr-1 w-50">
+          <div i18n>Zen Mode</div>
+          <div class="hint-text text-muted" i18n>
+            Distraction-free experience for turbulent times
           </div>
-          <div
-            *ngIf="hasPermissionToUpdateUserSettings"
-            class="align-items-center d-flex mt-4 py-1"
-          >
-            <div class="pr-1 w-50">
-              <div i18n>Experimental Features</div>
-              <div class="hint-text text-muted" i18n>
-                Sneak peek at upcoming functionality
-              </div>
-            </div>
-            <div class="pl-1 w-50">
-              <mat-checkbox
-                color="primary"
-                [checked]="user.settings.isExperimentalFeatures"
-                [disabled]="!hasPermissionToUpdateUserSettings"
-                (change)="onExperimentalFeaturesChange($event)"
-              ></mat-checkbox>
-            </div>
+        </div>
+        <div class="pl-1 w-50">
+          <mat-checkbox
+            color="primary"
+            [checked]="user.settings.viewMode === 'ZEN'"
+            [disabled]="!hasPermissionToUpdateViewMode"
+            (change)="onViewModeChange($event)"
+          ></mat-checkbox>
+        </div>
+      </div>
+      <div class="align-items-center d-flex mt-4 py-1">
+        <div class="pr-1 w-50">
+          <div i18n>Biometric Authentication</div>
+          <div class="hint-text text-muted" i18n>Sign in with fingerprint</div>
+        </div>
+        <div class="pl-1 w-50">
+          <mat-checkbox
+            #toggleSignInWithFingerprintEnabledElement
+            color="primary"
+            [disabled]="!hasPermissionToUpdateUserSettings"
+            (change)="onSignInWithFingerprintChange($event)"
+          ></mat-checkbox>
+        </div>
+      </div>
+      <div
+        *ngIf="hasPermissionToUpdateUserSettings"
+        class="align-items-center d-flex mt-4 py-1"
+      >
+        <div class="pr-1 w-50">
+          <div i18n>Experimental Features</div>
+          <div class="hint-text text-muted" i18n>
+            Sneak peek at upcoming functionality
           </div>
-          <div class="align-items-center d-flex mt-4 py-1">
-            <div class="pr-1 w-50" i18n>User ID</div>
-            <div class="pl-1 text-monospace w-50">{{ user?.id }}</div>
-          </div>
-          <div class="align-items-center d-flex py-1">
-            <div class="pr-1 w-50"></div>
-            <div class="pl-1 text-monospace w-50">
-              <button color="primary" mat-flat-button (click)="onExport()">
-                <span i18n>Export Data</span>
-              </button>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        </div>
+        <div class="pl-1 w-50">
+          <mat-checkbox
+            color="primary"
+            [checked]="user.settings.isExperimentalFeatures"
+            [disabled]="!hasPermissionToUpdateUserSettings"
+            (change)="onExperimentalFeaturesChange($event)"
+          ></mat-checkbox>
+        </div>
+      </div>
+      <div class="align-items-center d-flex mt-4 py-1">
+        <div class="pr-1 w-50" i18n>User ID</div>
+        <div class="pl-1 text-monospace w-50">{{ user?.id }}</div>
+      </div>
+      <div class="align-items-center d-flex py-1">
+        <div class="pr-1 w-50"></div>
+        <div class="pl-1 text-monospace w-50">
+          <button color="primary" mat-flat-button (click)="onExport()">
+            <span i18n>Export Data</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

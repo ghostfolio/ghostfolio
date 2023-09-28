@@ -1,10 +1,29 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <h2 class="h3 mb-3 text-center" i18n>Account</h2>
-      <gf-user-account-membership *ngIf="user?.subscription" />
-      <gf-user-account-settings />
-      <gf-user-account-access />
-    </div>
-  </div>
-</div>
+<mat-tab-nav-panel #tabPanel class="flex-grow-1 overflow-auto">
+  <router-outlet></router-outlet>
+</mat-tab-nav-panel>
+
+<nav
+  mat-align-tabs="center"
+  mat-tab-nav-bar
+  [disablePagination]="true"
+  [tabPanel]="tabPanel"
+>
+  <ng-container *ngFor="let tab of tabs">
+    <a
+      #rla="routerLinkActive"
+      *ngIf="tab.showCondition !== false"
+      class="px-3"
+      mat-tab-link
+      routerLinkActive
+      [active]="rla.isActive"
+      [routerLink]="tab.path"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <ion-icon
+        [name]="tab.iconName"
+        [size]="deviceType === 'mobile' ? 'large': 'small'"
+      ></ion-icon>
+      <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
+    </a>
+  </ng-container>
+</nav>

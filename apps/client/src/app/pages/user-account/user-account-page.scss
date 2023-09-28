@@ -1,5 +1,9 @@
+@import 'apps/client/src/styles/ghostfolio-style';
+
 :host {
+  color: rgb(var(--dark-primary-text));
 }
 
 :host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
 }
