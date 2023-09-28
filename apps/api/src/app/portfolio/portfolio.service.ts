@@ -50,13 +50,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
   Account,
+  Type as ActivityType,
   AssetClass,
   DataSource,
   Order,
   Platform,
   Prisma,
-  Tag,
-  Type as ActivityType
+  Tag
 } from '@prisma/client';
 import Big from 'big.js';
 import {
