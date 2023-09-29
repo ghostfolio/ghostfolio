@@ -1,4 +1,5 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import {
   PortfolioDetails,
@@ -6,16 +7,18 @@ import {
   UserSettings
 } from '@ghostfolio/common/interfaces';
 
-import { Rule } from '../../rule';
-
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
+  private accounts: PortfolioDetails['accounts'];
+
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    private accounts: PortfolioDetails['accounts']
+    accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
       name: 'Investment'
     });
+
+    this.accounts = accounts;
   }
 
   public evaluate(ruleSettings: Settings) {

@@ -10,6 +10,7 @@ import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rule
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -1275,6 +1276,10 @@ export class PortfolioService {
               positions
             )
           ],
+          <UserSettings>this.request.user.Settings.settings
+        ),
+        emergencyFund: await this.rulesService.evaluate(
+          [new EmergencyFundSetup(this.exchangeRateDataService)],
           <UserSettings>this.request.user.Settings.settings
         ),
         fees: await this.rulesService.evaluate(
