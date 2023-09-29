@@ -324,28 +324,15 @@
         What our <strong>users</strong> are saying
       </h2>
     </div>
-    <div *ngFor="let testimonial of testimonials" class="col-md-6">
-      <div class="d-flex flex-row py-3">
-        <div class="d-flex justify-content-center">
-          <gf-logo
-            class="mr-3 mt-2 pt-1"
-            size="medium"
-            [showLabel]="false"
-          ></gf-logo>
+    <gf-carousel [aria-label]="'Featured components'">
+      <a *ngFor="let comp of getTopComponents()" carousel-item class="carousel-item docs-featured-components-carousel-item"
+         routerLink="/components/{{comp}}">
+        <div class="docs-homepage-img-container">
+          <img alt="" src="../../../assets/screenshots/{{comp}}.scene.png" role="presentation">
         </div>
-        <div>
-          <div>{{ testimonial.quote }}</div>
-          <div class="mt-2 text-muted">
-            —
-            <a *ngIf="testimonial.url" target="_blank" [href]="testimonial.url"
-              >{{ testimonial.author }}</a
-            >
-            <span *ngIf="!testimonial.url">{{ testimonial.author }}</span>, {{
-            testimonial.country }}
-          </div>
-        </div>
-      </div>
-    </div>
+        {{(comp[0].toUpperCase() + comp.slice(1)).replace('-', ' ')}}
+      </a>
+    </gf-carousel>
   </div>
 
   <div *ngIf="hasPermissionForSubscription" class="row my-5">
