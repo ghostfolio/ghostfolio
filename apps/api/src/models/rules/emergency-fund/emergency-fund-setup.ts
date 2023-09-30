@@ -4,24 +4,29 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 export class EmergencyFundSetup extends Rule<Settings> {
+  private emergencyFund: number;
+
   public constructor(
-    protected exchangeRateDataService: ExchangeRateDataService
+    protected exchangeRateDataService: ExchangeRateDataService,
+    emergencyFund: number
   ) {
     super(exchangeRateDataService, {
       name: 'Emergency Fund: Set up'
     });
+
+    this.emergencyFund = emergencyFund;
   }
 
   public evaluate(ruleSettings: Settings) {
-    if (ruleSettings.threshold > 0) {
+    if (this.emergencyFund > ruleSettings.threshold) {
       return {
-        evaluation: `You have set up an emergency fund`,
+        evaluation: 'An emergency fund has been set up',
         value: true
       };
     }
 
     return {
-      evaluation: `You have not set up an emergency fund yet`,
+      evaluation: 'No emergency fund has been set up',
       value: false
     };
   }
@@ -30,7 +35,7 @@ export class EmergencyFundSetup extends Rule<Settings> {
     return {
       baseCurrency: aUserSettings.baseCurrency,
       isActive: true,
-      threshold: aUserSettings.emergencyFund
+      threshold: 0
     };
   }
 }

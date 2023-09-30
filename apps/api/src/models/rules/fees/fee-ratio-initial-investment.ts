@@ -21,7 +21,9 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
   }
 
   public evaluate(ruleSettings: Settings) {
-    const feeRatio = this.fees / this.totalInvestment;
+    const feeRatio = this.totalInvestment
+      ? this.fees / this.totalInvestment
+      : 0;
 
     if (feeRatio > ruleSettings.threshold) {
       return {

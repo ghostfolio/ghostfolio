@@ -1215,12 +1215,6 @@ export class PortfolioService {
         userId
       });
 
-    if (isEmpty(orders)) {
-      return {
-        rules: {}
-      };
-    }
-
     const portfolioCalculator = new PortfolioCalculator({
       currency: userCurrency,
       currentRateService: this.currentRateService,
@@ -1229,7 +1223,9 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
+    const portfolioStart = parseDate(
+      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    );
     const currentPositions =
       await portfolioCalculator.getCurrentPositions(portfolioStart);
 
@@ -1250,37 +1246,48 @@ export class PortfolioService {
       userId
     });
 
+    const userSettings = <UserSettings>this.request.user.Settings.settings;
+
     return {
       rules: {
-        accountClusterRisk: await this.rulesService.evaluate(
-          [
-            new AccountClusterRiskCurrentInvestment(
-              this.exchangeRateDataService,
-              accounts
+        accountClusterRisk: isEmpty(orders)
+          ? undefined
+          : await this.rulesService.evaluate(
+              [
+                new AccountClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  accounts
+                ),
+                new AccountClusterRiskSingleAccount(
+                  this.exchangeRateDataService,
+                  accounts
+                )
+              ],
+              userSettings
             ),
-            new AccountClusterRiskSingleAccount(
-              this.exchangeRateDataService,
-              accounts
-            )
-          ],
-          <UserSettings>this.request.user.Settings.settings
-        ),
-        currencyClusterRisk: await this.rulesService.evaluate(
-          [
-            new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-              this.exchangeRateDataService,
-              positions
+        currencyClusterRisk: isEmpty(orders)
+          ? undefined
+          : await this.rulesService.evaluate(
+              [
+                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                  this.exchangeRateDataService,
+                  positions
+                ),
+                new CurrencyClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  positions
+                )
+              ],
+              userSettings
             ),
-            new CurrencyClusterRiskCurrentInvestment(
-              this.exchangeRateDataService,
-              positions
-            )
-          ],
-          <UserSettings>this.request.user.Settings.settings
-        ),
         emergencyFund: await this.rulesService.evaluate(
-          [new EmergencyFundSetup(this.exchangeRateDataService)],
-          <UserSettings>this.request.user.Settings.settings
+          [
+            new EmergencyFundSetup(
+              this.exchangeRateDataService,
+              userSettings.emergencyFund
+            )
+          ],
+          userSettings
         ),
         fees: await this.rulesService.evaluate(
           [
@@ -1290,7 +1297,7 @@ export class PortfolioService {
               this.getFees({ userCurrency, activities: orders }).toNumber()
             )
           ],
-          <UserSettings>this.request.user.Settings.settings
+          userSettings
         )
       }
     };
