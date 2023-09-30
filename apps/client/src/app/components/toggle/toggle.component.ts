@@ -19,6 +19,9 @@ import { ToggleOption } from '@ghostfolio/common/types';
 export class ToggleComponent implements OnChanges, OnInit {
   public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [
     { label: $localize`Today`, value: '1d' },
+    { label: $localize`5D`, value: '5d' },
+    { label: $localize`1M`, value: '1m' },
+    { label: $localize`6M`, value: '6m' },
     { label: $localize`YTD`, value: 'ytd' },
     { label: $localize`1Y`, value: '1y' },
     { label: $localize`5Y`, value: '5y' },

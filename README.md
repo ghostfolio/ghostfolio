@@ -49,7 +49,7 @@ Ghostfolio is for you if you are...
 
 - ✅ Create, update and delete transactions
 - ✅ Multi account management
-- ✅ Portfolio performance for `Today`, `YTD`, `1Y`, `5Y`, `Max`
+- ✅ Portfolio performance for `Today`, `1D`, `5D`, `1M`, `6M`, `YTD`, `1Y`, `5Y`, `Max`
 - ✅ Various charts
 - ✅ Static analysis to identify potential risks in your portfolio
 - ✅ Import and export transactions
