@@ -137,8 +137,8 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchAccesses()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.accesses = response;
+      .subscribe((accesses) => {
+        this.accesses = accesses;
 
         this.changeDetectorRef.markForCheck();
       });
