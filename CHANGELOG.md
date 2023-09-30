@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a new static portfolio analysis rule: Emergency fund setup
+
 ### Changed
 
 - Set up the _Inter_ font family

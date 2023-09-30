@@ -1,17 +1,20 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { TimelinePosition, UserSettings } from '@ghostfolio/common/interfaces';
 
-import { Rule } from '../../rule';
-
 export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Settings> {
+  private positions: TimelinePosition[];
+
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    private positions: TimelinePosition[]
+    positions: TimelinePosition[]
   ) {
     super(exchangeRateDataService, {
       name: 'Investment: Base Currency'
     });
+
+    this.positions = positions;
   }
 
   public evaluate(ruleSettings: Settings) {

@@ -3,42 +3,31 @@ import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
-export class FeeRatioInitialInvestment extends Rule<Settings> {
-  private fees: number;
-  private totalInvestment: number;
+export class EmergencyFundSetup extends Rule<Settings> {
+  private emergencyFund: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    totalInvestment: number,
-    fees: number
+    emergencyFund: number
   ) {
     super(exchangeRateDataService, {
-      name: 'Fee Ratio'
+      name: 'Emergency Fund: Set up'
     });
 
-    this.fees = fees;
-    this.totalInvestment = totalInvestment;
+    this.emergencyFund = emergencyFund;
   }
 
   public evaluate(ruleSettings: Settings) {
-    const feeRatio = this.totalInvestment
-      ? this.fees / this.totalInvestment
-      : 0;
-
-    if (feeRatio > ruleSettings.threshold) {
+    if (this.emergencyFund > ruleSettings.threshold) {
       return {
-        evaluation: `The fees do exceed ${
-          ruleSettings.threshold * 100
-        }% of your initial investment (${(feeRatio * 100).toPrecision(3)}%)`,
-        value: false
+        evaluation: 'An emergency fund has been set up',
+        value: true
       };
     }
 
     return {
-      evaluation: `The fees do not exceed ${
-        ruleSettings.threshold * 100
-      }% of your initial investment (${(feeRatio * 100).toPrecision(3)}%)`,
-      value: true
+      evaluation: 'No emergency fund has been set up',
+      value: false
     };
   }
 
@@ -46,7 +35,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     return {
       baseCurrency: aUserSettings.baseCurrency,
       isActive: true,
-      threshold: 0.01
+      threshold: 0
     };
   }
 }
