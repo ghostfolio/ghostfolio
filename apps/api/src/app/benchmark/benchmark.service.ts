@@ -245,6 +245,45 @@ export class BenchmarkService {
     };
   }
 
+  public async deleteBenchmark({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+    const assetProfile = await this.prismaService.symbolProfile.findFirst({
+      where: {
+        dataSource,
+        symbol
+      }
+    });
+
+    if (!assetProfile) {
+      return;
+    }
+
+    let benchmarks =
+      ((await this.propertyService.getByKey(
+        PROPERTY_BENCHMARKS
+      )) as BenchmarkProperty[]) ?? [];
+
+    benchmarks = benchmarks.filter(
+      (item) => item.symbolProfileId !== assetProfile.id
+    );
+
+    benchmarks = uniqBy(benchmarks, 'symbolProfileId');
+
+    await this.propertyService.put({
+      key: PROPERTY_BENCHMARKS,
+      value: JSON.stringify(benchmarks)
+    });
+
+    return {
+      dataSource,
+      symbol,
+      id: assetProfile.id,
+      name: assetProfile.name
+    };
+  }
+
   private getMarketCondition(aPerformanceInPercent: number) {
     return aPerformanceInPercent <= -0.2 ? 'BEAR_MARKET' : 'NEUTRAL_MARKET';
   }

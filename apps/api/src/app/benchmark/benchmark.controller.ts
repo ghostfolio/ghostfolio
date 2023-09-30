@@ -94,4 +94,41 @@ export class BenchmarkController {
       );
     }
   }
+
+  @Post('remove')
+  @UseGuards(AuthGuard('jwt'))
+  public async deleteBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    try {
+      const benchmark = await this.benchmarkService.deleteBenchmark({
+        dataSource,
+        symbol
+      });
+
+      if (!benchmark) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.NOT_FOUND),
+          StatusCodes.NOT_FOUND
+        );
+      }
+
+      return benchmark;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 }

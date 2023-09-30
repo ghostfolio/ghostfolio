@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
@@ -22,6 +23,7 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     GfValueModule,
     MatButtonModule,
     MatDialogModule,
+    MatCheckboxModule,
     MatInputModule,
     MatMenuModule,
     ReactiveFormsModule,
