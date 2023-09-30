@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.7.0 - 2023-09-30
+
+### Added
+
+- Added a new static portfolio analysis rule: Emergency fund setup
+- Added tabs to the user account page
+
+### Changed
+
+- Set up the _Inter_ font family
+- Upgraded `yahoo-finance2` from version `2.7.0` to `2.8.0`
+
+### Fixed
+
+- Fixed a link on the features page
+
 ## 2.6.0 - 2023-09-26
 
 ### Added

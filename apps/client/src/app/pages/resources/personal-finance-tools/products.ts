@@ -6,6 +6,7 @@ import { CopilotMoneyPageComponent } from './products/copilot-money-page.compone
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
+import { FinaryPageComponent } from './products/finary-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
@@ -23,6 +24,7 @@ import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.compone
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
 import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
+import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
@@ -114,6 +116,15 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$100',
     slogan: 'All your wealth, in one place.'
+  },
+  {
+    component: FinaryPageComponent,
+    founded: 2020,
+    key: 'finary',
+    languages: ['Deutsch', 'English', 'Français'],
+    name: 'Finary',
+    origin: $localize`United States`,
+    slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
   },
   {
     component: FolisharePageComponent,
@@ -303,6 +314,13 @@ export const products: Product[] = [
     origin: $localize`France`,
     pricingPerYear: '$80',
     slogan: 'Simple and powerful portfolio tracker'
+  },
+  {
+    component: StocklePageComponent,
+    key: 'stockle',
+    name: 'Stockle',
+    origin: $localize`Finland`,
+    slogan: 'Supercharge your investments tracking experience'
   },
   {
     component: StockMarketEyePageComponent,
