@@ -141,6 +141,49 @@
         ]
       }
     },
+    "copy-assets-windows": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "mkdir dist\\apps\\client"
+          },
+          {
+            "command": "xcopy /E /I apps\\client\\src\\assets dist\\apps\\client"
+          },
+          {
+            "command": "xcopy /E /I apps\\client\\src\\assets\\.well-known dist\\apps\\client"
+          },
+          {
+            "command": "copy apps\\client\\src\\assets\\favicon.ico dist\\apps\\client"
+          },
+          {
+            "command": "copy apps\\client\\src\\assets\\index.html dist\\apps\\client"
+          },
+          {
+            "command": "copy apps\\client\\src\\assets\\robots.txt dist\\apps\\client"
+          },
+          {
+            "command": "copy apps\\client\\src\\assets\\site.webmanifest dist\\apps\\client"
+          },
+          {
+            "command": "copy node_modules\\ionicons\\dist\\index.js dist\\apps\\client"
+          },
+          {
+            "command": "copy node_modules\\ionicons\\dist\\ionicons.js dist\\apps\\client"
+          },
+          {
+            "command": "xcopy /E /I /Y node_modules\\ionicons\\dist\\ionicons dist\\apps\\client\\ionicons"
+          },
+          {
+            "command": "copy CHANGELOG.md dist\\apps\\client\\assets"
+          },
+          {
+            "command": "copy LICENSE dist\\apps\\client\\assets"
+          }
+        ]
+      }
+    },
     "serve": {
       "executor": "@nx/angular:webpack-dev-server",
       "options": {
