@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added tabs to the user account page
 
+### Fixed
+
+- Fixed a link on the features page
+
 ## 2.6.0 - 2023-09-26
 
 ### Added
