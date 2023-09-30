@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set up the _Inter_ font family
 - Upgraded `yahoo-finance2` from version `2.7.0` to `2.8.0`
 
 ### Fixed
