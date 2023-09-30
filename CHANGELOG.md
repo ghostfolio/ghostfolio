@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added tabs to the user account page
 
+### Changed
+
+- Upgraded `yahoo-finance2` from version `2.7.0` to `2.8.0`
+
 ### Fixed
 
 - Fixed a link on the features page
