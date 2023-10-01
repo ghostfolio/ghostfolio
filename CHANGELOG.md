@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Harmonized the settings icon of the user account page
 
+### Fixed
+
+- Fixed the sidebar navigation on the user account page
+
 ## 2.7.0 - 2023-09-30
 
 ### Added

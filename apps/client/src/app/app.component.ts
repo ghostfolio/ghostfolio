@@ -112,6 +112,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
         this.hasTabs =
           (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
+            this.currentRoute === 'account' ||
             this.currentRoute === 'admin' ||
             this.currentRoute === 'home' ||
             this.currentRoute === 'portfolio' ||
