@@ -28,9 +28,9 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<CreateOrUpdateAccountDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccountDialogParams,
     private formBuilder: FormBuilder
   ) {}
 
@@ -41,13 +41,13 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({
-      accountId: [this.data.account.id],
+      accountId: [{ value: this.data.account.id, disabled: true }],
       balance: [this.data.account.balance, Validators.required],
       comment: [this.data.account.comment],
       currency: [this.data.account.currency, Validators.required],
       isExcluded: [this.data.account.isExcluded],
-      platformId: [this.data.account.platformId],
-      name: [this.data.account.name, Validators.required]
+      name: [this.data.account.name, Validators.required],
+      platformId: [this.data.account.platformId]
     });
   }
 
