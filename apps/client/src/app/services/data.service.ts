@@ -36,7 +36,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';

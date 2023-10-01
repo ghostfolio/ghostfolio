@@ -13,7 +13,6 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   AdminMarketDataDetails,
-  ScraperConfiguration,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
