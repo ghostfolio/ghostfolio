@@ -257,7 +257,7 @@ export class BenchmarkService {
     });
 
     if (!assetProfile) {
-      return;
+      return null;
     }
 
     let benchmarks =
@@ -265,9 +265,9 @@ export class BenchmarkService {
         PROPERTY_BENCHMARKS
       )) as BenchmarkProperty[]) ?? [];
 
-    benchmarks = benchmarks.filter(
-      (item) => item.symbolProfileId !== assetProfile.id
-    );
+    benchmarks = benchmarks.filter(({ symbolProfileId }) => {
+      return symbolProfileId !== assetProfile.id;
+    });
 
     benchmarks = uniqBy(benchmarks, 'symbolProfileId');
 

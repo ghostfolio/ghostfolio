@@ -204,6 +204,10 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/order/`);
   }
 
+  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
+  }
+
   public deleteOrder(aId: string) {
     return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
@@ -465,10 +469,6 @@ export class DataService {
 
   public postBenchmark(benchmark: UniqueAsset) {
     return this.http.post(`/api/v1/benchmark`, benchmark);
-  }
-
-  public deleteBenchmark(benchmark: UniqueAsset) {
-    return this.http.post(`/api/v1/benchmark/remove`, benchmark);
   }
 
   public postOrder(aOrder: CreateOrderDto) {

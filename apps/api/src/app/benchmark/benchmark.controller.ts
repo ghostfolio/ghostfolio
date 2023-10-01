@@ -10,6 +10,7 @@ import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   Inject,
@@ -95,9 +96,12 @@ export class BenchmarkController {
     }
   }
 
-  @Post('remove')
+  @Delete(':dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
-  public async deleteBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
+  public async deleteBenchmark(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ) {
     if (
       !hasPermission(
         this.request.user.permissions,

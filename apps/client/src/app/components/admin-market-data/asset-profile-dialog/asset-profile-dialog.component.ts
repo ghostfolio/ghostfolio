@@ -152,17 +152,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
-    this.dataService
-      .deleteBenchmark({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
   public onSubmit() {
     let scraperConfiguration = {};
     let symbolMapping = {};
@@ -193,6 +182,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
       .subscribe(() => {
         this.initialize();
+      });
+  }
+
+  public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
+    this.dataService
+      .deleteBenchmark({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.isBenchmark = false;
       });
   }
 
