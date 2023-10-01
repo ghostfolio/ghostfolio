@@ -12,7 +12,7 @@ import { isString } from 'lodash';
 export class CreateAccountDto {
   @IsOptional()
   @IsString()
-  accountType: AccountType;
+  accountType?: AccountType;
 
   @IsNumber()
   balance: number;
