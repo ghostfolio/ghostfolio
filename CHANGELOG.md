@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the version to the admin control panel
 
+### Fixed
+
+- Fixed the sidebar navigation on the user account page
+
 ## 2.7.0 - 2023-09-30
 
 ### Added
