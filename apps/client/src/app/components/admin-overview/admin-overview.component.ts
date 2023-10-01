@@ -43,7 +43,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public transactionCount: number;
   public userCount: number;
   public user: User;
-  public version: string = environment.version;
+  public version = environment.version;
 
   private unsubscribeSubject = new Subject<void>();
 
