@@ -21,6 +21,7 @@
         "tsConfig": "apps/client/tsconfig.app.json",
         "assets": [],
         "styles": [
+          "apps/client/src/assets/fonts/inter.css",
           "apps/client/src/styles/theme.scss",
           "apps/client/src/styles.scss"
         ],
