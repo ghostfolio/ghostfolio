@@ -1,0 +1,13 @@
+:host {
+  color: rgb(var(--dark-primary-text));
+  display: block;
+
+  .hint-text {
+    font-size: 90%;
+    line-height: 1.2;
+  }
+}
+
+:host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
+}
