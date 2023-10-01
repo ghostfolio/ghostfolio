@@ -23,6 +23,7 @@ import { uniq } from 'lodash';
 import { StringValue } from 'ms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { environment } from 'apps/client/src/environments/environment';
 
 @Component({
   selector: 'gf-admin-overview',
@@ -42,6 +43,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public transactionCount: number;
   public userCount: number;
   public user: User;
+  public version: string = environment.version;
 
   private unsubscribeSubject = new Subject<void>();
 
