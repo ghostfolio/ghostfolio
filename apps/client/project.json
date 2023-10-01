@@ -103,83 +103,40 @@
       "options": {
         "commands": [
           {
-            "command": "mkdir -p dist/apps/client"
+            "command": "shx mkdir -p dist/apps/client"
           },
           {
-            "command": "cp -r apps/client/src/assets dist/apps/client"
+            "command": "shx cp -r apps/client/src/assets dist/apps/client"
           },
           {
-            "command": "cp -r apps/client/src/assets/.well-known dist/apps/client"
+            "command": "shx cp -r apps/client/src/assets/.well-known dist/apps/client"
           },
           {
-            "command": "cp apps/client/src/assets/favicon.ico dist/apps/client"
+            "command": "shx cp apps/client/src/assets/favicon.ico dist/apps/client"
           },
           {
-            "command": "cp apps/client/src/assets/index.html dist/apps/client"
+            "command": "shx cp apps/client/src/assets/index.html dist/apps/client"
           },
           {
-            "command": "cp apps/client/src/assets/robots.txt dist/apps/client"
+            "command": "shx cp apps/client/src/assets/robots.txt dist/apps/client"
           },
           {
-            "command": "cp apps/client/src/assets/site.webmanifest dist/apps/client"
+            "command": "shx cp apps/client/src/assets/site.webmanifest dist/apps/client"
           },
           {
-            "command": "cp node_modules/ionicons/dist/index.js dist/apps/client"
+            "command": "shx cp node_modules/ionicons/dist/index.js dist/apps/client"
           },
           {
-            "command": "cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
+            "command": "shx cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
           },
           {
-            "command": "cp -r node_modules/ionicons/dist/ionicons dist/apps/client/ionicons"
+            "command": "shx cp -r node_modules/ionicons/dist/ionicons dist/apps/client/ionicons"
           },
           {
-            "command": "cp CHANGELOG.md dist/apps/client/assets"
+            "command": "shx cp CHANGELOG.md dist/apps/client/assets"
           },
           {
-            "command": "cp LICENSE dist/apps/client/assets"
-          }
-        ]
-      }
-    },
-    "copy-assets-windows": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "mkdir dist\\apps\\client"
-          },
-          {
-            "command": "xcopy /E /I apps\\client\\src\\assets dist\\apps\\client"
-          },
-          {
-            "command": "xcopy /E /I apps\\client\\src\\assets\\.well-known dist\\apps\\client"
-          },
-          {
-            "command": "copy apps\\client\\src\\assets\\favicon.ico dist\\apps\\client"
-          },
-          {
-            "command": "copy apps\\client\\src\\assets\\index.html dist\\apps\\client"
-          },
-          {
-            "command": "copy apps\\client\\src\\assets\\robots.txt dist\\apps\\client"
-          },
-          {
-            "command": "copy apps\\client\\src\\assets\\site.webmanifest dist\\apps\\client"
-          },
-          {
-            "command": "copy node_modules\\ionicons\\dist\\index.js dist\\apps\\client"
-          },
-          {
-            "command": "copy node_modules\\ionicons\\dist\\ionicons.js dist\\apps\\client"
-          },
-          {
-            "command": "xcopy /E /I /Y node_modules\\ionicons\\dist\\ionicons dist\\apps\\client\\ionicons"
-          },
-          {
-            "command": "copy CHANGELOG.md dist\\apps\\client\\assets"
-          },
-          {
-            "command": "copy LICENSE dist\\apps\\client\\assets"
+            "command": "shx cp LICENSE dist/apps/client/assets"
           }
         ]
       }
