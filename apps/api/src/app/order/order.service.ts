@@ -230,6 +230,8 @@ export class OrderService {
   public async getOrders({
     filters,
     includeDrafts = false,
+    skip,
+    take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
     userId,
@@ -237,6 +239,8 @@ export class OrderService {
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
+    skip?: number;
+    take?: number;
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
@@ -315,6 +319,8 @@ export class OrderService {
 
     return (
       await this.orders({
+        skip,
+        take,
         where,
         include: {
           // eslint-disable-next-line @typescript-eslint/naming-convention

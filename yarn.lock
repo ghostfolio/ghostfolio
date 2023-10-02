@@ -14264,7 +14264,7 @@ minimatch@^9.0.0, minimatch@^9.0.1:
   dependencies:
     brace-expansion "^2.0.1"
 
-minimist@^1.2.0, minimist@^1.2.5, minimist@^1.2.6:
+minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.5, minimist@^1.2.6:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
@@ -16984,6 +16984,14 @@ shelljs@^0.8.5:
     interpret "^1.0.0"
     rechoir "^0.6.2"
 
+shx@0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/shx/-/shx-0.3.4.tgz#74289230b4b663979167f94e1935901406e40f02"
+  integrity sha512-N6A9MLVqjxZYcVn8hLmtneQWIJtp8IKzMP4eMnx+nqkvXoqinUPCbUFLp2UcWTEIUONhlk0ewxr/jaVGlc+J+g==
+  dependencies:
+    minimist "^1.2.3"
+    shelljs "^0.8.5"
+
 side-channel@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/side-channel/-/side-channel-1.0.4.tgz#efce5c8fdc104ee751b25c58d4290011fa5ea2cf"
@@ -19042,10 +19050,10 @@ y18n@^5.0.5:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
-yahoo-finance2@2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.7.0.tgz#2f3d078409616495a6f9357b1cce1c797903b82c"
-  integrity sha512-kh/t3P72MDLyf1jCEPTVZXtIwW8tuxhEg2zWHhPINxnBCT6cToQjF59dWnHNosPji5iUmtvhMWLmMbWJkBBSSw==
+yahoo-finance2@2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.8.0.tgz#c1c1d139d6d16ff3e105af6269e6c869724ac16d"
+  integrity sha512-8KupoZQEBb+nynDXcOinYdrQ0anPjrX1wQQ8ehVOGZUGMW73fR2YznxumRlVyqSw9J9clS7eS8UhjcOUecmKUA==
   dependencies:
     "@types/tough-cookie" "^4.0.2"
     ajv "8.10.0"
