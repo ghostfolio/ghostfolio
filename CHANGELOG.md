@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
+
 ### Fixed
 
 - Fixed the sidebar navigation on the user account page
