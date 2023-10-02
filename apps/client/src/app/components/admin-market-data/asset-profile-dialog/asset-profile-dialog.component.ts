@@ -146,9 +146,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .postBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
+        this.dataService.updateInfo();
+
+        this.isBenchmark = true;
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -190,7 +192,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .deleteBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.dataService.updateInfo();
+
         this.isBenchmark = false;
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 

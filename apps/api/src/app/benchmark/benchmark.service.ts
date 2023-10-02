@@ -269,8 +269,6 @@ export class BenchmarkService {
       return symbolProfileId !== assetProfile.id;
     });
 
-    benchmarks = uniqBy(benchmarks, 'symbolProfileId');
-
     await this.propertyService.put({
       key: PROPERTY_BENCHMARKS,
       value: JSON.stringify(benchmarks)

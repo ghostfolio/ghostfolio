@@ -500,4 +500,19 @@ export class DataService {
       couponCode
     });
   }
+
+  public updateInfo() {
+    this.http.get<InfoItem>('/api/v1/info').subscribe((info) => {
+      const utmSource = <'ios' | 'trusted-web-activity'>(
+        window.localStorage.getItem('utm_source')
+      );
+
+      info.globalPermissions = filterGlobalPermissions(
+        info.globalPermissions,
+        utmSource
+      );
+
+      (window as any).info = info;
+    });
+  }
 }
