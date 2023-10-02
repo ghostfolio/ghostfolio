@@ -148,6 +148,7 @@
       <div class="w-50">
         <mat-checkbox
           color="primary"
+          i18n
           [checked]="isBenchmark"
           (change)="isBenchmark ? onUnsetBenchmark({dataSource: data.dataSource, symbol: data.symbol}) : onSetBenchmark({dataSource: data.dataSource, symbol: data.symbol})"
           >Benchmark</mat-checkbox

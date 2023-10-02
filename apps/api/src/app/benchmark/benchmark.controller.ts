@@ -33,32 +33,6 @@ export class BenchmarkController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @Get()
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getBenchmark(): Promise<BenchmarkResponse> {
-    return {
-      benchmarks: await this.benchmarkService.getBenchmarks()
-    };
-  }
-
-  @Get(':dataSource/:symbol/:startDateString')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async getBenchmarkMarketDataBySymbol(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('startDateString') startDateString: string,
-    @Param('symbol') symbol: string
-  ): Promise<BenchmarkMarketDataDetails> {
-    const startDate = new Date(startDateString);
-
-    return this.benchmarkService.getMarketDataBySymbol({
-      dataSource,
-      startDate,
-      symbol
-    });
-  }
-
   @Post()
   @UseGuards(AuthGuard('jwt'))
   public async addBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
@@ -134,5 +108,31 @@ export class BenchmarkController {
         StatusCodes.INTERNAL_SERVER_ERROR
       );
     }
+  }
+
+  @Get()
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async getBenchmark(): Promise<BenchmarkResponse> {
+    return {
+      benchmarks: await this.benchmarkService.getBenchmarks()
+    };
+  }
+
+  @Get(':dataSource/:symbol/:startDateString')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  public async getBenchmarkMarketDataBySymbol(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('startDateString') startDateString: string,
+    @Param('symbol') symbol: string
+  ): Promise<BenchmarkMarketDataDetails> {
+    const startDate = new Date(startDateString);
+
+    return this.benchmarkService.getMarketDataBySymbol({
+      dataSource,
+      startDate,
+      symbol
+    });
   }
 }
