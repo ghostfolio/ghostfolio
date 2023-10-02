@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Harmonized the settings icon of the user account page
+- Improved the usability to set an asset profile as a benchmark
 
 ### Fixed
 
