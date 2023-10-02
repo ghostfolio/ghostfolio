@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { environment } from '@ghostfolio/client/../environments/environment';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -42,6 +43,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public transactionCount: number;
   public userCount: number;
   public user: User;
+  public version = environment.version;
 
   private unsubscribeSubject = new Subject<void>();
 
