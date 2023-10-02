@@ -7,9 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the version to the admin control panel
+- Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
+
 ### Changed
 
+- Harmonized the settings icon of the user account page
 - Improved the usability to set an asset profile as a benchmark
+
+### Fixed
+
+- Fixed the sidebar navigation on the user account page
+
+## 2.7.0 - 2023-09-30
+
+### Added
+
+- Added a new static portfolio analysis rule: Emergency fund setup
+- Added tabs to the user account page
+
+### Changed
+
+- Set up the _Inter_ font family
+- Upgraded `yahoo-finance2` from version `2.7.0` to `2.8.0`
+
+### Fixed
+
+- Fixed a link on the features page
 
 ## 2.6.0 - 2023-09-26
 
