@@ -51,6 +51,10 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     });
   }
 
+  public onCancel() {
+    this.dialogRef.close();
+  }
+
   public onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.controls['balance'].value,
@@ -69,10 +73,6 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     }
 
     this.dialogRef.close({ account });
-  }
-
-  public onCancel() {
-    this.dialogRef.close();
   }
 
   public ngOnDestroy() {
