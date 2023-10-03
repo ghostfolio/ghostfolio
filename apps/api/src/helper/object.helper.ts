@@ -3,7 +3,7 @@ import { cloneDeep, isArray, isObject } from 'lodash';
 
 export function hasNotDefinedValuesInObject(aObject: Object): boolean {
   for (const key in aObject) {
-    if (aObject[key] === null || aObject[key] === null) {
+    if (aObject[key] === null || aObject[key] === undefined) {
       return true;
     } else if (isObject(aObject[key])) {
       return hasNotDefinedValuesInObject(aObject[key]);
