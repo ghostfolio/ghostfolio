@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
 import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Tag } from '@prisma/client';
 import { get } from 'lodash';
@@ -40,6 +41,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -114,9 +116,12 @@ export class AdminTagComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags) => {
         this.tags = tags;
+
         this.dataSource = new MatTableDataSource(this.tags);
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = get;
+
+        this.dataService.updateInfo();
 
         this.changeDetectorRef.markForCheck();
       });
