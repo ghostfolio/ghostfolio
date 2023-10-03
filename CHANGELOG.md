@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Supported enter key press to submit the form of the create or update account dialog
+- Added the version to the admin control panel
+- Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
+
+### Changed
+
+- Harmonized the settings icon of the user account page
+- Improved the usability to set an asset profile as a benchmark
+- Reload platforms after making a change in the admin control panel
+- Reload tags after making a change in the admin control panel
 
 ### Fixed
 
