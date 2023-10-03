@@ -30,7 +30,7 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
 
           this.tabs = [
             {
-              iconName: 'cog-outline',
+              iconName: 'settings-outline',
               label: $localize`Settings`,
               path: ['/account']
             },
