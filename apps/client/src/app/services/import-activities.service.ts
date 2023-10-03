@@ -28,6 +28,7 @@ export class ImportActivitiesService {
     'unitprice',
     'value'
   ];
+  private static COMMENT_KEYS = ["comment", "note"]
 
   public constructor(private http: HttpClient) {}
 
@@ -60,7 +61,8 @@ export class ImportActivitiesService {
         symbol: this.parseSymbol({ content, index, item }),
         type: this.parseType({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
-        updateAccountBalance: false
+        updateAccountBalance: false,
+        comment: this.parseComment({ item })
       });
     }
 
@@ -128,7 +130,8 @@ export class ImportActivitiesService {
     SymbolProfile,
     type,
     unitPrice,
-    updateAccountBalance
+    updateAccountBalance,
+    comment
   }: Activity): CreateOrderDto {
     return {
       accountId,
@@ -140,7 +143,8 @@ export class ImportActivitiesService {
       currency: SymbolProfile.currency,
       dataSource: SymbolProfile.dataSource,
       date: date.toString(),
-      symbol: SymbolProfile.symbol
+      symbol: SymbolProfile.symbol,
+      comment
     };
   }
 
@@ -197,6 +201,22 @@ export class ImportActivitiesService {
     };
   }
 
+  private parseComment({
+    item
+  }: {
+    item: any;
+  }) {
+    item = this.lowercaseKeys(item);
+
+    for (const key of ImportActivitiesService.COMMENT_KEYS) {
+      if (item[key]) {
+        return item[key];
+      }
+    }
+
+    return ""
+  }
+
   private parseDataSource({ item }: { item: any }) {
     item = this.lowercaseKeys(item);
 
@@ -210,7 +230,7 @@ export class ImportActivitiesService {
   }
 
   private parseDate({
-    content,
+  content,
     index,
     item
   }: {
