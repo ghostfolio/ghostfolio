@@ -1,4 +1,4 @@
-<form 
+<form
   class="d-flex flex-column h-100"
   [formGroup]="accountForm"
   (keyup.enter)="accountForm.valid && onSubmit()"
@@ -10,7 +10,7 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
-        <input matInput formControlName="name" required />
+        <input formControlName="name" matInput required />
       </mat-form-field>
     </div>
     <div>
@@ -26,12 +26,7 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Cash Balance</mat-label>
-        <input
-          formControlName="balance"
-          matInput
-          required
-          type="number"
-        />
+        <input formControlName="balance" matInput required type="number" />
         <span class="ml-2" matTextSuffix>{{ data.account.currency }}</span>
       </mat-form-field>
     </div>
@@ -59,19 +54,14 @@
       </mat-form-field>
     </div>
     <div class="mb-3 px-2">
-      <mat-checkbox
-        color="primary"
-        formControlName="isExcluded"
+      <mat-checkbox color="primary" formControlName="isExcluded"
         >Exclude from Analysis</mat-checkbox
       >
     </div>
     <div *ngIf="data.account.id">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account ID</mat-label>
-        <input
-          formControlName="accountId"
-          matInput
-        />
+        <input formControlName="accountId" matInput />
       </mat-form-field>
     </div>
   </div>
