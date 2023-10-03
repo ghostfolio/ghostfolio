@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Supported enter key press to submit the form of the create or update account dialog
+
 ### Fixed
 
-- Fixed account form submission on enter key press
 - Fixed the sidebar navigation on the user account page
 
 ## 2.7.0 - 2023-09-30
