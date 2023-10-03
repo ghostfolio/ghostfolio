@@ -41,7 +41,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({
-      accountId: [{ value: this.data.account.id, disabled: true }],
+      accountId: [{ disabled: true, value: this.data.account.id }],
       balance: [this.data.account.balance, Validators.required],
       comment: [this.data.account.comment],
       currency: [this.data.account.currency, Validators.required],
