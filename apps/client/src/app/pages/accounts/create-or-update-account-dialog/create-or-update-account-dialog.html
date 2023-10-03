@@ -10,13 +10,13 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
-        <input formControlName="name" matInput required />
+        <input formControlName="name" matInput />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
-        <mat-select formControlName="currency" required>
+        <mat-select formControlName="currency">
           <mat-option *ngFor="let currency of currencies" [value]="currency"
             >{{ currency }}</mat-option
           >
@@ -26,7 +26,7 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Cash Balance</mat-label>
-        <input formControlName="balance" matInput required type="number" />
+        <input formControlName="balance" matInput type="number" />
         <span class="ml-2" matTextSuffix>{{ data.account.currency }}</span>
       </mat-form-field>
     </div>
