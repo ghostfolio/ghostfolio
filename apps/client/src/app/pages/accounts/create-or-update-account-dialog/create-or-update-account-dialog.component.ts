@@ -18,10 +18,8 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import {
-  CreateOrUpdateAccountDialogParams,
-  Platform
-} from './interfaces/interfaces';
+import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
+import { Platform } from '@prisma/client';
 
 @Component({
   host: { class: 'h-100' },
@@ -33,8 +31,8 @@ import {
 export class CreateOrUpdateAccountDialog implements OnDestroy {
   public accountForm: FormGroup;
   public currencies: string[] = [];
-  public platforms: Platform[];
   public filteredPlatforms: Observable<Platform[]>;
+  public platforms: Platform[];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -49,7 +47,9 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     const { currencies, platforms } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
-    this.platforms = platforms;
+    this.platforms = platforms.map((platform) => {
+      return { ...platform, url: '' };
+    });
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],
@@ -59,9 +59,9 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       isExcluded: [this.data.account.isExcluded],
       name: [this.data.account.name, Validators.required],
       platformId: [
-        this.platforms.find(
-          (platform) => platform.id === this.data.account.platformId
-        ),
+        this.platforms.find(({ id }) => {
+          return id === this.data.account.platformId;
+        }),
         this._autocompleteObjectValidator()
       ]
     });
@@ -106,22 +106,23 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
 
   public autoCompleteCheck() {
     const inputValue = this.accountForm.controls['platformId'].value;
-    const matchingEntry = this.platforms.find(
-      (platform) => platform.name === inputValue
-    );
-    this.accountForm.controls['platformId'].setValue(matchingEntry);
+    if (typeof inputValue === 'string') {
+      const matchingEntry = this.platforms.find(({ name }) => {
+        return name === inputValue;
+      });
+      this.accountForm.controls['platformId'].setValue(matchingEntry);
+    }
   }
 
   displayFn(platform: Platform) {
-    return platform && platform.name ? platform.name : '';
+    return platform?.name ? platform.name : '';
   }
 
   private _filter(value: string): Platform[] {
     const filterValue = value.toLowerCase();
-
-    return this.platforms.filter((platformEntry) =>
-      platformEntry.name.toLowerCase().includes(filterValue)
-    );
+    return this.platforms.filter(({ name }) => {
+      return name.toLowerCase().includes(filterValue);
+    });
   }
 
   private _autocompleteObjectValidator(): ValidatorFn {

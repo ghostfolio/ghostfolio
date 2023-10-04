@@ -16,13 +16,13 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
   imports: [
     CommonModule,
     FormsModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatAutocompleteModule,
     ReactiveFormsModule
   ]
 })
