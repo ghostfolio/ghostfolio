@@ -5,12 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added the application version to the endpoint `GET api/v1/admin`
+
 ## 2.8.0 - 2023-10-03
 
 ### Added
 
 - Supported enter key press to submit the form of the create or update account dialog
-- Added the version to the admin control panel
+- Added the application version to the admin control panel
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
 
 ### Changed
