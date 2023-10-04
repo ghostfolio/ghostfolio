@@ -15,7 +15,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class ImportActivitiesService {
   private static ACCOUNT_KEYS = ['account', 'accountid'];
-  private static COMMENT_KEYS = ["comment", "note"]
+  private static COMMENT_KEYS = ['comment', 'note']
   private static CURRENCY_KEYS = ['ccy', 'currency', 'currencyprimary'];
   private static DATA_SOURCE_KEYS = ['datasource'];
   private static DATE_KEYS = ['date', 'tradedate'];
@@ -191,7 +191,7 @@ export class ImportActivitiesService {
       }
     }
 
-    return ""
+    return ''
   }
 
   private parseCurrency({
