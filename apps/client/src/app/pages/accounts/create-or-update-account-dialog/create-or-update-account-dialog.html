@@ -42,12 +42,23 @@
     <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
-        <mat-select formControlName="platformId">
-          <mat-option [value]="null"></mat-option>
-          <mat-option *ngFor="let platform of platforms" [value]="platform.id"
-            >{{ platform.name }}</mat-option
+
+        <input
+          formControlName="platformId"
+          matInput
+          placeholder="Platform"
+          type="text"
+          [matAutocomplete]="auto"
+          (blur)="autoCompleteCheck()"
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option
+            *ngFor="let platformEntry of filteredPlatforms | async"
+            [value]="platformEntry"
           >
-        </mat-select>
+            {{platformEntry.name}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
     </div>
     <div>
