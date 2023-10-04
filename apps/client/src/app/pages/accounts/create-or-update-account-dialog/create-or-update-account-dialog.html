@@ -10,7 +10,11 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
-        <input formControlName="name" matInput />
+        <input
+          formControlName="name"
+          matInput
+          (keydown.enter)="$event.preventDefault()"
+        />
       </mat-form-field>
     </div>
     <div>
@@ -26,7 +30,12 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Cash Balance</mat-label>
-        <input formControlName="balance" matInput type="number" />
+        <input
+          formControlName="balance"
+          matInput
+          type="number"
+          (keydown.enter)="$event.preventDefault()"
+        />
         <span class="ml-2" matTextSuffix>{{ data.account.currency }}</span>
       </mat-form-field>
     </div>
