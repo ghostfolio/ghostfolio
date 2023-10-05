@@ -1,10 +1,7 @@
 import { FocusableOption } from "@angular/cdk/a11y";
-import { Directive, ElementRef, HostBinding } from "@angular/core";
+import { ElementRef, HostBinding } from "@angular/core";
 
-@Directive({
-    selector: '[carousel-item]',
-    standalone: true,
-  })
+
   export class CarouselItem implements FocusableOption {
     @HostBinding('attr.role') readonly role = 'listitem';
     @HostBinding('tabindex') tabindex = '-1';

@@ -22,10 +22,6 @@ import { CarouselItem } from './carousel-item.directive';
   
   @Component({
     selector: 'gf-carousel',
-    templateUrl: './carousel.html',
-    styleUrls: ['./carousel.scss'],
-    encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
       NgIf,
       MatButtonModule,

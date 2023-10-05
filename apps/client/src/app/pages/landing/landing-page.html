@@ -347,13 +347,12 @@
       </div>
     </div> -->
     <gf-carousel [aria-label]="'Featured components'">
-      <a *ngFor="let comp of getTopComponents()" carousel-item>
+      <div *ngFor="let testimonial of testimonials" carousel-item>
         <gf-logo
             class="mr-3 mt-2 pt-1"
             size="medium"
             [showLabel]="false"
         ></gf-logo>
-        {{(comp[0].toUpperCase() + comp.slice(1)).replace('-', ' ')}}
         <div class="mt-2 text-muted">
           —
           <a *ngIf="testimonial.url" target="_blank" [href]="testimonial.url"
@@ -362,7 +361,7 @@
           <span *ngIf="!testimonial.url">{{ testimonial.author }}</span>, {{
           testimonial.country }}
         </div>
-      </a>
+      </div>
     </gf-carousel>
   </div>
 
