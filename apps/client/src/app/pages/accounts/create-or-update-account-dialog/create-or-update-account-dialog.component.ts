@@ -110,23 +110,25 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       const matchingEntry = this.platforms.find(({ name }) => {
         return name === inputValue;
       });
-      this.accountForm.controls['platformId'].setValue(matchingEntry);
+      if (matchingEntry) {
+        this.accountForm.controls['platformId'].setValue(matchingEntry);
+      }
     }
   }
 
-  displayFn(platform: Platform) {
+  public displayFn(platform: Platform) {
     return platform?.name ? platform.name : '';
   }
 
   private _filter(value: string): Platform[] {
     const filterValue = value.toLowerCase();
     return this.platforms.filter(({ name }) => {
-      return name.toLowerCase().includes(filterValue);
+      return name.toLowerCase().startsWith(filterValue);
     });
   }
 
   private _autocompleteObjectValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (control: AbstractControl) => {
       if (typeof control.value === 'string') {
         return { invalidAutocompleteObject: { value: control.value } };
       }
