@@ -8,4 +8,8 @@ export class CreateAccessDto {
   @IsOptional()
   @IsString()
   granteeUserId?: string;
+
+  @IsOptional()
+  @IsString()
+  type?: string;
 }
