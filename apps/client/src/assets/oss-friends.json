@@ -1,11 +1,6 @@
 {
-  "createdAt": "2023-09-25T08:15:38.055Z",
+  "createdAt": "2023-10-05T00:00:00.000Z",
   "data": [
-    {
-      "name": "Appsmith",
-      "description": "Build build custom software on top of your data.",
-      "href": "https://www.appsmith.com"
-    },
     {
       "name": "BoxyHQ",
       "description": "BoxyHQ’s suite of APIs for security and privacy helps engineering teams build and ship compliant cloud applications faster.",
@@ -65,11 +60,6 @@
       "name": "Mockoon",
       "description": "Mockoon is the easiest and quickest way to design and run mock REST APIs.",
       "href": "https://mockoon.com"
-    },
-    {
-      "name": "Novu",
-      "description": "The open-source notification infrastructure for developers. Simple components and APIs for managing all communication channels in one place.",
-      "href": "https://novu.co"
     },
     {
       "name": "OpenBB",
