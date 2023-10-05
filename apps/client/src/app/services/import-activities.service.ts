@@ -15,7 +15,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class ImportActivitiesService {
   private static ACCOUNT_KEYS = ['account', 'accountid'];
-  private static COMMENT_KEYS = ['comment', 'note']
+  private static COMMENT_KEYS = ['comment', 'note'];
   private static CURRENCY_KEYS = ['ccy', 'currency', 'currencyprimary'];
   private static DATA_SOURCE_KEYS = ['datasource'];
   private static DATE_KEYS = ['date', 'tradedate'];
@@ -178,11 +178,7 @@ export class ImportActivitiesService {
     return undefined;
   }
 
-  private parseComment({
-    item
-  }: {
-    item: any;
-  }) {
+  private parseComment({ item }: { item: any }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.COMMENT_KEYS) {
@@ -191,7 +187,7 @@ export class ImportActivitiesService {
       }
     }
 
-    return ''
+    return '';
   }
 
   private parseCurrency({
