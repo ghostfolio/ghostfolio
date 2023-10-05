@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { GfUserAccountAccessModule } from '@ghostfolio/client/components/user-account-access/user-account-access.module';
 import { GfUserAccountMembershipModule } from '@ghostfolio/client/components/user-account-membership/user-account-membership.module';
@@ -17,6 +17,7 @@ import { UserAccountPageComponent } from './user-account-page.component';
     GfUserAccountSettingsModule,
     MatTabsModule,
     UserAccountPageRoutingModule
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UserAccountPageModule {}

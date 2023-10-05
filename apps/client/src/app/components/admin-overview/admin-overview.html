@@ -11,8 +11,8 @@
             <div class="w-50" i18n>User Count</div>
             <div class="w-50">
               <gf-value
-                precision="0"
                 [locale]="user?.settings?.locale"
+                [precision]="0"
                 [value]="userCount"
               ></gf-value>
             </div>
@@ -21,8 +21,8 @@
             <div class="w-50" i18n>Activity Count</div>
             <div class="w-50">
               <gf-value
-                precision="0"
                 [locale]="user?.settings?.locale"
+                [precision]="0"
                 [value]="transactionCount"
               ></gf-value>
               <div *ngIf="transactionCount && userCount">

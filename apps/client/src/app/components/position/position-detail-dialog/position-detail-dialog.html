@@ -213,11 +213,11 @@
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
-              [baseCurrency]="user?.settings?.baseCurrency"
+              [baseCurrency]="data.baseCurrency"
               [colorScheme]="data.colorScheme"
               [isInPercent]="true"
               [keys]="['name']"
-              [locale]="user?.settings?.locale"
+              [locale]="data.locale"
               [maxItems]="10"
               [positions]="sectors"
             ></gf-portfolio-proportion-chart>
@@ -225,11 +225,11 @@
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Countries</div>
             <gf-portfolio-proportion-chart
-              [baseCurrency]="user?.settings?.baseCurrency"
+              [baseCurrency]="data.baseCurrency"
               [colorScheme]="data.colorScheme"
               [isInPercent]="true"
               [keys]="['name']"
-              [locale]="user?.settings?.locale"
+              [locale]="data.locale"
               [maxItems]="10"
               [positions]="countries"
             ></gf-portfolio-proportion-chart>
