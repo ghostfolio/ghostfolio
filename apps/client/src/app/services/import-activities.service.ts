@@ -187,7 +187,7 @@ export class ImportActivitiesService {
       }
     }
 
-    return '';
+    return undefined;
   }
 
   private parseCurrency({
