@@ -39,18 +39,27 @@ export class MarketDataService {
     });
   }
 
-  public async getMax({ dataSource, symbol }: UniqueAsset): Promise<number> {
-    const aggregations = await this.prismaService.marketData.aggregate({
-      _max: {
-        marketPrice: true
-      },
-      where: {
-        dataSource,
-        symbol
-      }
-    });
-
-    return aggregations._max.marketPrice;
+  public async getMax({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<{ marketPrice: number; date: Date }> {
+    const highestMarketPriceDataRow =
+      await this.prismaService.marketData.findFirst({
+        select: {
+          marketPrice: true,
+          date: true
+        },
+        where: {
+          dataSource,
+          symbol
+        },
+        orderBy: [
+          {
+            marketPrice: 'desc'
+          }
+        ]
+      });
+    return highestMarketPriceDataRow;
   }
 
   public async getRange({

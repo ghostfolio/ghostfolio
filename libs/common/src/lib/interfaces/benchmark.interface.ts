@@ -6,6 +6,7 @@ export interface Benchmark {
   performances: {
     allTimeHigh: {
       performancePercent: number;
+      date: Date;
     };
   };
 }
