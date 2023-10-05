@@ -24,7 +24,7 @@
     class="fab-container"
   >
     <a
-      class="align-items-center d-flex justify-content-center"
+      class="align-items-center d-flex justify-content-center mt-2"
       color="primary"
       mat-fab
       [queryParams]="{ createDialog: true }"
@@ -32,5 +32,13 @@
     >
       <ion-icon name="add-outline" size="large"></ion-icon>
     </a>
+    <a
+    class="align-items-center d-flex justify-content-center mt-2"
+    color="primary"
+    mat-fab
+    (click)="transferCashBalanceDialog()"
+  >
+  <ion-icon name="wallet-outline" size="large"></ion-icon>
+  </a>
   </div>
 </div>

@@ -16,6 +16,7 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
+import { TransferCashBalanceDialog } from './transfer-cash-balance/transfer-cash-balance-dialog.component';
 
 @Component({
   host: { class: 'page' },
@@ -264,6 +265,23 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             });
         }
 
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
+  }
+
+  private transferCashBalanceDialog(): void {
+    const dialogRef = this.dialog.open(TransferCashBalanceDialog, {
+      data: {
+        accounts: this.accounts
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data: any) => {
         this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
