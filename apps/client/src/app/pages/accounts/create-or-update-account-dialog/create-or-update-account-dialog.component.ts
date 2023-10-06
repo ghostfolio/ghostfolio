@@ -47,9 +47,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     const { currencies, platforms } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
-    this.platforms = platforms.map((platform) => {
-      return { ...platform, url: '' };
-    });
+    this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({
       accountId: [{ disabled: true, value: this.data.account.id }],
