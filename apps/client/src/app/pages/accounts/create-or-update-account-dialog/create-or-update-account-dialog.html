@@ -56,7 +56,14 @@
             *ngFor="let platformEntry of filteredPlatforms | async"
             [value]="platformEntry"
           >
-            {{ platformEntry.name }}
+            <span class="d-flex">
+              <gf-symbol-icon
+                class="mr-1"
+                [tooltip]="platformEntry.name"
+                [url]="platformEntry.url"
+              ></gf-symbol-icon>
+              <span>{{ platformEntry.name }}</span>
+            </span>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
