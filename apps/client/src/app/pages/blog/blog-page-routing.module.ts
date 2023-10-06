@@ -154,6 +154,15 @@ const routes: Routes = [
         (c) => c.Ghostfolio2PageComponent
       ),
     title: 'Ghostfolio 2.0'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2023/09/hacktoberfest-2023',
+    loadComponent: () =>
+      import(
+        './2023/09/hacktoberfest-2023/hacktoberfest-2023-page.component'
+      ).then((c) => c.Hacktoberfest2023PageComponent),
+    title: 'Hacktoberfest 2023'
   }
 ];
 

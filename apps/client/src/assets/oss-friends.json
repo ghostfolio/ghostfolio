@@ -1,11 +1,6 @@
 {
-  "createdAt": "2023-09-18T13:16:22.059Z",
+  "createdAt": "2023-10-05T00:00:00.000Z",
   "data": [
-    {
-      "name": "Appsmith",
-      "description": "Build build custom software on top of your data.",
-      "href": "https://www.appsmith.com"
-    },
     {
       "name": "BoxyHQ",
       "description": "BoxyHQ’s suite of APIs for security and privacy helps engineering teams build and ship compliant cloud applications faster.",
@@ -67,11 +62,6 @@
       "href": "https://mockoon.com"
     },
     {
-      "name": "Novu",
-      "description": "The open-source notification infrastructure for developers. Simple components and APIs for managing all communication channels in one place.",
-      "href": "https://novu.co"
-    },
-    {
       "name": "OpenBB",
       "description": "Democratizing investment research through an open source financial ecosystem. The OpenBB Terminal allows everyone to perform investment research, from everywhere.",
       "href": "https://openbb.co"
@@ -80,6 +70,11 @@
       "name": "OpenStatus",
       "description": "Open-source monitoring platform with beautiful status pages",
       "href": "https://www.openstatus.dev"
+    },
+    {
+      "name": "Papermark",
+      "description": "Open-Source Docsend Alternative to securely share documents with real-time analytics.",
+      "href": "https://www.papermark.io/"
     },
     {
       "name": "Requestly",

@@ -15,6 +15,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class ImportActivitiesService {
   private static ACCOUNT_KEYS = ['account', 'accountid'];
+  private static COMMENT_KEYS = ['comment', 'note'];
   private static CURRENCY_KEYS = ['ccy', 'currency', 'currencyprimary'];
   private static DATA_SOURCE_KEYS = ['datasource'];
   private static DATE_KEYS = ['date', 'tradedate'];
@@ -52,6 +53,7 @@ export class ImportActivitiesService {
     for (const [index, item] of content.entries()) {
       activities.push({
         accountId: this.parseAccount({ item, userAccounts }),
+        comment: this.parseComment({ item }),
         currency: this.parseCurrency({ content, index, item }),
         dataSource: this.parseDataSource({ item }),
         date: this.parseDate({ content, index, item }),
@@ -122,6 +124,7 @@ export class ImportActivitiesService {
 
   private convertToCreateOrderDto({
     accountId,
+    comment,
     date,
     fee,
     quantity,
@@ -132,6 +135,7 @@ export class ImportActivitiesService {
   }: Activity): CreateOrderDto {
     return {
       accountId,
+      comment,
       fee,
       quantity,
       type,
@@ -168,6 +172,18 @@ export class ImportActivitiesService {
             account.name.toLowerCase() === item[key].toLowerCase()
           );
         })?.id;
+      }
+    }
+
+    return undefined;
+  }
+
+  private parseComment({ item }: { item: any }) {
+    item = this.lowercaseKeys(item);
+
+    for (const key of ImportActivitiesService.COMMENT_KEYS) {
+      if (item[key]) {
+        return item[key];
       }
     }
 

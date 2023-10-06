@@ -1,17 +1,26 @@
-<form #addAccountForm="ngForm" class="d-flex flex-column h-100">
+<form
+  class="d-flex flex-column h-100"
+  [formGroup]="accountForm"
+  (keyup.enter)="accountForm.valid && onSubmit()"
+  (ngSubmit)="onSubmit()"
+>
   <h1 *ngIf="data.account.id" i18n mat-dialog-title>Update account</h1>
   <h1 *ngIf="!data.account.id" i18n mat-dialog-title>Add account</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
-        <input matInput name="name" required [(ngModel)]="data.account.name" />
+        <input
+          formControlName="name"
+          matInput
+          (keydown.enter)="$event.stopPropagation()"
+        />
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
-        <mat-select name="currency" required [(value)]="data.account.currency">
+        <mat-select formControlName="currency">
           <mat-option *ngFor="let currency of currencies" [value]="currency"
             >{{ currency }}</mat-option
           >
@@ -22,11 +31,10 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Cash Balance</mat-label>
         <input
+          formControlName="balance"
           matInput
-          name="balance"
-          required
           type="number"
-          [(ngModel)]="data.account.balance"
+          (keydown.enter)="$event.stopPropagation()"
         />
         <span class="ml-2" matTextSuffix>{{ data.account.currency }}</span>
       </mat-form-field>
@@ -34,7 +42,7 @@
     <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
-        <mat-select name="platformId" [(value)]="data.account.platformId">
+        <mat-select formControlName="platformId">
           <mat-option [value]="null"></mat-option>
           <mat-option *ngFor="let platform of platforms" [value]="platform.id"
             >{{ platform.name }}</mat-option
@@ -48,40 +56,31 @@
         <textarea
           cdkAutosizeMinRows="2"
           cdkTextareaAutosize
+          formControlName="comment"
           matInput
-          name="comment"
-          [(ngModel)]="data.account.comment"
           (keyup.enter)="$event.stopPropagation()"
         ></textarea>
       </mat-form-field>
     </div>
     <div class="mb-3 px-2">
-      <mat-checkbox
-        color="primary"
-        name="isExcluded"
-        [(ngModel)]="data.account.isExcluded"
+      <mat-checkbox color="primary" formControlName="isExcluded"
         >Exclude from Analysis</mat-checkbox
       >
     </div>
     <div *ngIf="data.account.id">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Account ID</mat-label>
-        <input
-          disabled
-          matInput
-          name="accountId"
-          [(ngModel)]="data.account.id"
-        />
+        <input formControlName="accountId" matInput />
       </mat-form-field>
     </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
-    <button i18n mat-button (click)="onCancel()">Cancel</button>
+    <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
     <button
       color="primary"
       mat-flat-button
-      [disabled]="!addAccountForm.form.valid"
-      [mat-dialog-close]="data"
+      type="submit"
+      [disabled]="!accountForm.valid"
     >
       <ng-container i18n>Save</ng-container>
     </button>

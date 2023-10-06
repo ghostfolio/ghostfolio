@@ -18,6 +18,12 @@
 
 ### Prisma
 
+#### Access database via GUI
+
+Run `yarn database:gui`
+
+https://www.prisma.io/studio
+
 #### Synchronize schema with database for prototyping
 
 Run `yarn database:push`

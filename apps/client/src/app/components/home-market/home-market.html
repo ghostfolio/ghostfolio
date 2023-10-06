@@ -8,15 +8,15 @@
       <gf-line-chart
         class="mb-3"
         symbol="Fear & Greed Index"
-        yMax="100"
-        yMin="0"
         [colorScheme]="user?.settings?.colorScheme"
         [historicalDataItems]="historicalDataItems"
         [isAnimated]="true"
         [locale]="user?.settings?.locale"
         [showXAxis]="true"
         [showYAxis]="true"
+        [yMax]="100"
         [yMaxLabel]="greedLabel"
+        [yMin]="0"
         [yMinLabel]="fearLabel"
       ></gf-line-chart>
       <gf-fear-and-greed-index

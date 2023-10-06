@@ -9,7 +9,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for notes in the activities import
+- Added the application version to the endpoint `GET api/v1/admin`
 - Introduced a carousel component for the testimonial section on the landing page
+
+### Fixed
+
+- Fixed the style of the active features page in the navigation on desktop
+
+## 2.8.0 - 2023-10-03
+
+### Added
+
+- Supported enter key press to submit the form of the create or update account dialog
+- Added the application version to the admin control panel
+- Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
+
+### Changed
+
+- Harmonized the settings icon of the user account page
+- Improved the usability to set an asset profile as a benchmark
+- Reload platforms after making a change in the admin control panel
+- Reload tags after making a change in the admin control panel
+
+### Fixed
+
+- Fixed the sidebar navigation on the user account page
+
+## 2.7.0 - 2023-09-30
+
+### Added
+
+- Added a new static portfolio analysis rule: Emergency fund setup
+- Added tabs to the user account page
+
+### Changed
+
+- Set up the _Inter_ font family
+- Upgraded `yahoo-finance2` from version `2.7.0` to `2.8.0`
+
+### Fixed
+
+- Fixed a link on the features page
+
+## 2.6.0 - 2023-09-26
+
+### Added
+
+- Added the management of tags in the admin control panel
+- Added a blog post: _Hacktoberfest 2023_
+
+### Changed
+
+- Upgraded `prettier` from version `3.0.2` to `3.0.3`
+- Upgraded `yahoo-finance2` from version `2.5.0` to `2.7.0`
 
 ## 2.5.0 - 2023-09-23
 

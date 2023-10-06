@@ -10,6 +10,7 @@ import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rule
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -50,13 +51,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
   Account,
+  Type as ActivityType,
   AssetClass,
   DataSource,
   Order,
   Platform,
   Prisma,
-  Tag,
-  Type as ActivityType
+  Tag
 } from '@prisma/client';
 import Big from 'big.js';
 import {
@@ -1214,12 +1215,6 @@ export class PortfolioService {
         userId
       });
 
-    if (isEmpty(orders)) {
-      return {
-        rules: {}
-      };
-    }
-
     const portfolioCalculator = new PortfolioCalculator({
       currency: userCurrency,
       currentRateService: this.currentRateService,
@@ -1228,7 +1223,9 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
+    const portfolioStart = parseDate(
+      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    );
     const currentPositions =
       await portfolioCalculator.getCurrentPositions(portfolioStart);
 
@@ -1249,33 +1246,48 @@ export class PortfolioService {
       userId
     });
 
+    const userSettings = <UserSettings>this.request.user.Settings.settings;
+
     return {
       rules: {
-        accountClusterRisk: await this.rulesService.evaluate(
-          [
-            new AccountClusterRiskCurrentInvestment(
-              this.exchangeRateDataService,
-              accounts
+        accountClusterRisk: isEmpty(orders)
+          ? undefined
+          : await this.rulesService.evaluate(
+              [
+                new AccountClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  accounts
+                ),
+                new AccountClusterRiskSingleAccount(
+                  this.exchangeRateDataService,
+                  accounts
+                )
+              ],
+              userSettings
             ),
-            new AccountClusterRiskSingleAccount(
+        currencyClusterRisk: isEmpty(orders)
+          ? undefined
+          : await this.rulesService.evaluate(
+              [
+                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                  this.exchangeRateDataService,
+                  positions
+                ),
+                new CurrencyClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  positions
+                )
+              ],
+              userSettings
+            ),
+        emergencyFund: await this.rulesService.evaluate(
+          [
+            new EmergencyFundSetup(
               this.exchangeRateDataService,
-              accounts
+              userSettings.emergencyFund
             )
           ],
-          <UserSettings>this.request.user.Settings.settings
-        ),
-        currencyClusterRisk: await this.rulesService.evaluate(
-          [
-            new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-              this.exchangeRateDataService,
-              positions
-            ),
-            new CurrencyClusterRiskCurrentInvestment(
-              this.exchangeRateDataService,
-              positions
-            )
-          ],
-          <UserSettings>this.request.user.Settings.settings
+          userSettings
         ),
         fees: await this.rulesService.evaluate(
           [
@@ -1285,7 +1297,7 @@ export class PortfolioService {
               this.getFees({ userCurrency, activities: orders }).toNumber()
             )
           ],
-          <UserSettings>this.request.user.Settings.settings
+          userSettings
         )
       }
     };
