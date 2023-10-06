@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for notes in the activities import
 - Added the application version to the endpoint `GET api/v1/admin`
+- Introduced a carousel component for the testimonial section on the landing page
 
 ### Fixed
 
