@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
@@ -16,6 +17,7 @@ import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
+import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
   host: { class: 'page' },
@@ -67,6 +69,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
+        } else if (params['transferBalanceDialog']) {
+          this.openTransferBalanceDialog();
         }
       });
   }
@@ -142,6 +146,12 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           this.fetchAccounts();
         }
       });
+  }
+
+  public onTransferBalance() {
+    this.router.navigate([], {
+      queryParams: { transferBalanceDialog: true }
+    });
   }
 
   public onUpdateAccount(aAccount: AccountModel) {
@@ -262,6 +272,32 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
                 this.fetchAccounts();
               }
             });
+        }
+
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
+  }
+
+  private openTransferBalanceDialog(): void {
+    const dialogRef = this.dialog.open(TransferBalanceDialog, {
+      data: {
+        accounts: this.accounts
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data: any) => {
+        if (data) {
+          const { accountIdFrom, accountIdTo, balance }: TransferBalanceDto =
+            data?.account;
+
+          console.log(
+            `Transfer cash balance of ${balance} from account ${accountIdFrom} to account ${accountIdTo}`
+          );
         }
 
         this.router.navigate(['.'], { relativeTo: this.route });

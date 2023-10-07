@@ -1,3 +1,14 @@
+<div *ngIf="false" class="d-flex justify-content-end">
+  <button
+    class="align-items-center d-flex"
+    mat-stroked-button
+    (click)="onTransferBalance()"
+  >
+    <ion-icon class="mr-2" name="arrow-redo-outline"></ion-icon>
+    <ng-container i18n>Transfer Cash Balance</ng-container>...
+  </button>
+</div>
+
 <table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="status">
     <th
