@@ -15,6 +15,7 @@ export interface EnhancedSymbolProfile {
   dataSource: DataSource;
   dateOfFirstActivity?: Date;
   id: string;
+  isin: string | null;
   name: string | null;
   scraperConfiguration?: ScraperConfiguration | null;
   sectors: Sector[];
