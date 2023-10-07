@@ -321,7 +321,6 @@ export class AdminController {
     @Param('symbol') symbolParam: string,
     @Body() data: UpdateBulkMarketDataDto
   ) {
-    console.log('hit post new endoint nice');
     if (
       !hasPermission(
         this.request.user.permissions,
