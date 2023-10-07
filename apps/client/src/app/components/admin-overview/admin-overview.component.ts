@@ -43,7 +43,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public transactionCount: number;
   public userCount: number;
   public user: User;
-  public version:any
+  public version: string;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -204,16 +204,18 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ exchangeRates, settings, transactionCount, userCount ,version }) => {
-        this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
-        this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
-        this.exchangeRates = exchangeRates;
-        this.transactionCount = transactionCount;
-        this.userCount = userCount;
-        this.version = version
+      .subscribe(
+        ({ exchangeRates, settings, transactionCount, userCount, version }) => {
+          this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
+          this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
+          this.exchangeRates = exchangeRates;
+          this.transactionCount = transactionCount;
+          this.userCount = userCount;
+          this.version = version;
 
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+        }
+      );
   }
 
   private generateCouponCode(aLength: number) {
