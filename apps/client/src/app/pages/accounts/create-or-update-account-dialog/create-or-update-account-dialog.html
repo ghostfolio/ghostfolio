@@ -42,14 +42,13 @@
     <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Platform</mat-label>
-
         <input
           formControlName="platformId"
           matInput
-          placeholder="Platform"
           type="text"
           [matAutocomplete]="auto"
           (blur)="autoCompleteCheck()"
+          (keydown.enter)="$event.stopPropagation()"
         />
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
           <mat-option

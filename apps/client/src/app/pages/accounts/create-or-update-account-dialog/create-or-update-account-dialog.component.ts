@@ -43,7 +43,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     private formBuilder: FormBuilder
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     const { currencies, platforms } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
@@ -60,18 +60,37 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
         this.platforms.find(({ id }) => {
           return id === this.data.account.platformId;
         }),
-        this._autocompleteObjectValidator()
+        this.autocompleteObjectValidator()
       ]
     });
+
     this.filteredPlatforms = this.accountForm
       .get('platformId')
       .valueChanges.pipe(
         startWith(''),
         map((value) => {
           const name = typeof value === 'string' ? value : value?.name;
-          return name ? this._filter(name as string) : this.platforms.slice();
+          return name ? this.filter(name as string) : this.platforms.slice();
         })
       );
+  }
+
+  public autoCompleteCheck() {
+    const inputValue = this.accountForm.controls['platformId'].value;
+
+    if (typeof inputValue === 'string') {
+      const matchingEntry = this.platforms.find(({ name }) => {
+        return name === inputValue;
+      });
+
+      if (matchingEntry) {
+        this.accountForm.controls['platformId'].setValue(matchingEntry);
+      }
+    }
+  }
+
+  public displayFn(platform: Platform) {
+    return platform?.name ?? '';
   }
 
   public onCancel() {
@@ -88,6 +107,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       name: this.accountForm.controls['name'].value,
       platformId: this.accountForm.controls['platformId'].value?.id ?? null
     };
+
     if (this.data.account.id) {
       (account as UpdateAccountDto).id = this.data.account.id;
     } else {
@@ -102,35 +122,21 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.unsubscribeSubject.complete();
   }
 
-  public autoCompleteCheck() {
-    const inputValue = this.accountForm.controls['platformId'].value;
-    if (typeof inputValue === 'string') {
-      const matchingEntry = this.platforms.find(({ name }) => {
-        return name === inputValue;
-      });
-      if (matchingEntry) {
-        this.accountForm.controls['platformId'].setValue(matchingEntry);
-      }
-    }
-  }
-
-  public displayFn(platform: Platform) {
-    return platform?.name ?? '';
-  }
-
-  private _filter(value: string): Platform[] {
-    const filterValue = value.toLowerCase();
-    return this.platforms.filter(({ name }) => {
-      return name.toLowerCase().startsWith(filterValue);
-    });
-  }
-
-  private _autocompleteObjectValidator(): ValidatorFn {
+  private autocompleteObjectValidator(): ValidatorFn {
     return (control: AbstractControl) => {
       if (control.value && typeof control.value === 'string') {
         return { invalidAutocompleteObject: { value: control.value } };
       }
+
       return null;
     };
+  }
+
+  private filter(value: string): Platform[] {
+    const filterValue = value.toLowerCase();
+
+    return this.platforms.filter(({ name }) => {
+      return name.toLowerCase().startsWith(filterValue);
+    });
   }
 }
