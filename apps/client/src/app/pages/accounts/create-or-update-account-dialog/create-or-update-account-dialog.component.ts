@@ -86,7 +86,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       id: this.accountForm.controls['accountId'].value,
       isExcluded: this.accountForm.controls['isExcluded'].value,
       name: this.accountForm.controls['name'].value,
-      platformId: this.accountForm.controls['platformId'].value.id
+      platformId: this.accountForm.controls['platformId'].value?.id ?? null
     };
     if (this.data.account.id) {
       (account as UpdateAccountDto).id = this.data.account.id;
