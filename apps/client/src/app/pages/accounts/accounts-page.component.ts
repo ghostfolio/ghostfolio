@@ -69,6 +69,9 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
         }
+        else if (params['transferBalanceDialog']) {
+          this.openTransferCashBalanceDialog();
+        }
       });
   }
 
@@ -269,7 +272,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  private transferCashBalanceDialog(): void {
+  private openTransferCashBalanceDialog(): void {
     const dialogRef = this.dialog.open(TransferCashBalanceDialog, {
       data: {
         accounts: this.accounts
