@@ -7,7 +7,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
-import { Account as AccountModel } from '@prisma/client';
+import { Account } from '@prisma/client';
 import { Subject } from 'rxjs';
 
 import { TransferBalanceDialogParams } from './interfaces/interfaces';
@@ -20,7 +20,7 @@ import { TransferBalanceDialogParams } from './interfaces/interfaces';
   templateUrl: 'transfer-balance-dialog.html'
 })
 export class TransferBalanceDialog implements OnDestroy {
-  public accounts: AccountModel[] = [];
+  public accounts: Account[] = [];
   public currency: string;
   public transferBalanceForm: FormGroup;
 
@@ -32,7 +32,7 @@ export class TransferBalanceDialog implements OnDestroy {
     private formBuilder: FormBuilder
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.accounts = this.data.accounts;
 
     this.transferBalanceForm = this.formBuilder.group({
