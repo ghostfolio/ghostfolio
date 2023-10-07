@@ -1,18 +1,11 @@
 <form
   class="d-flex flex-column h-100"
-  [formGroup]="transferCashBalanceForm"
-  (keyup.enter)="transferCashBalanceForm.valid && onSubmit()"
+  [formGroup]="transferBalanceForm"
+  (keyup.enter)="transferBalanceForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
   <h1 i18n mat-dialog-title>Transfer Cash Balance</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
-    <div>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label i18n>Value</mat-label>
-          <input formControlName="balance" matInput type="number" (keydown.enter)="$event.stopPropagation()" />
-          <span class="ml-2" matTextSuffix>{{ currency }}</span>
-        </mat-form-field>
-      </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>From</mat-label>
@@ -22,7 +15,7 @@
           >
         </mat-select>
       </mat-form-field>
-    </div>    
+    </div>
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>To</mat-label>
@@ -33,14 +26,26 @@
         </mat-select>
       </mat-form-field>
     </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Value</mat-label>
+        <input
+          formControlName="balance"
+          matInput
+          type="number"
+          (keydown.enter)="$event.stopPropagation()"
+        />
+        <span class="ml-2" matTextSuffix>{{ currency }}</span>
+      </mat-form-field>
+    </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
-    <button i18n mat-button (click)="onCancel()" type="button">Cancel</button>
+    <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
     <button
       color="primary"
       mat-flat-button
       type="submit"
-      [disabled]="!transferCashBalanceForm.valid"
+      [disabled]="!transferBalanceForm.valid"
     >
       <ng-container i18n>Transfer</ng-container>
     </button>
