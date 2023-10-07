@@ -5,10 +5,10 @@ import {
 
 export class TransferCashBalanceDto {
     @IsString()
-    fromAccount: string;
+    accountIdFrom: string;
 
     @IsString()
-    toAccount: string;
+    accountIdTo: string;
 
     @IsNumber()
     balance: number;
