@@ -115,7 +115,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   }
 
   public displayFn(platform: Platform) {
-    return platform?.name ? platform.name : '';
+    return platform?.name ?? '';
   }
 
   private _filter(value: string): Platform[] {
@@ -127,7 +127,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
 
   private _autocompleteObjectValidator(): ValidatorFn {
     return (control: AbstractControl) => {
-      if (typeof control.value === 'string') {
+      if (control.value && typeof control.value === 'string') {
         return { invalidAutocompleteObject: { value: control.value } };
       }
       return null;
