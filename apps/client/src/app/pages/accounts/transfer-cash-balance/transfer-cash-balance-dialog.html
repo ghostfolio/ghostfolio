@@ -9,8 +9,8 @@
     <div>
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Value</mat-label>
-          <input formControlName="balance" matInput type="number" />
-          <span class="ml-2" matTextSuffix>CHF</span>
+          <input formControlName="balance" matInput type="number" (keydown.enter)="$event.stopPropagation()" />
+          <span class="ml-2" matTextSuffix>{{ currency }}</span>
         </mat-form-field>
       </div>
     <div>
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="justify-content-end" mat-dialog-actions>
-    <button i18n mat-button (click)="onCancel()">Cancel</button>
+    <button i18n mat-button (click)="onCancel()" type="button">Cancel</button>
     <button
       color="primary"
       mat-flat-button

@@ -19,8 +19,9 @@ import { TransferCashBalanceDialogParams } from './interfaces/interfaces';
     templateUrl: 'transfer-cash-balance-dialog.html'
 })
 export class TransferCashBalanceDialog implements OnDestroy {
-    public transferCashBalanceForm: FormGroup;
     public accounts: AccountModel[] = [];
+    public currency = '';
+    public transferCashBalanceForm: FormGroup;
 
     private unsubscribeSubject = new Subject<void>();
 
@@ -39,6 +40,10 @@ export class TransferCashBalanceDialog implements OnDestroy {
             fromAccount: ['', Validators.required],
             toAccount: ['', Validators.required],
         });
+
+        this.transferCashBalanceForm.get('fromAccount').valueChanges.subscribe((id) => {
+            this.currency = this.accounts.find((account) => account.id === id).currency;
+        })
     }
 
     public onCancel() {
@@ -48,11 +53,11 @@ export class TransferCashBalanceDialog implements OnDestroy {
     public onSubmit() {
         const account: TransferCashBalanceDto = {
             balance: this.transferCashBalanceForm.controls['balance'].value,
-            fromAccount: this.transferCashBalanceForm.controls['fromAccount'].value,
-            toAccount: this.transferCashBalanceForm.controls['toAccount'].value,
+            accountIdFrom: this.transferCashBalanceForm.controls['fromAccount'].value,
+            accountIdTo: this.transferCashBalanceForm.controls['toAccount'].value,
         };
 
-        console.log(`Transfer cash balance of ${account.balance} from account ${account.fromAccount} to account ${account.toAccount}`)
+        console.log(`Transfer cash balance of ${account.balance} from account ${account.accountIdFrom} to account ${account.accountIdTo}`)
 
         this.dialogRef.close({ account });
     }
