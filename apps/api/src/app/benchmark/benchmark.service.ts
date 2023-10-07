@@ -64,7 +64,7 @@ export class BenchmarkService {
 
     const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles();
 
-    const promises: Promise<{ marketPrice: number; date: Date }>[] = [];
+    const promises: Promise<{ date: Date; marketPrice: number }>[] = [];
 
     const quotes = await this.dataProviderService.getQuotes({
       items: benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
@@ -85,7 +85,7 @@ export class BenchmarkService {
 
       let performancePercentFromAllTimeHigh = 0;
 
-      if (allTimeHigh && allTimeHigh.marketPrice && marketPrice) {
+      if (allTimeHigh?.marketPrice && marketPrice) {
         performancePercentFromAllTimeHigh = this.calculateChangeInPercentage(
           allTimeHigh.marketPrice,
           marketPrice
@@ -100,8 +100,8 @@ export class BenchmarkService {
         name: benchmarkAssetProfiles[index].name,
         performances: {
           allTimeHigh: {
-            performancePercent: performancePercentFromAllTimeHigh,
-            date: allTimeHigh.date
+            date: allTimeHigh.date,
+            performancePercent: performancePercentFromAllTimeHigh
           }
         }
       };
