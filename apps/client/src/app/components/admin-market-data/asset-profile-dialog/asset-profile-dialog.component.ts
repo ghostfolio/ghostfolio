@@ -8,7 +8,10 @@ import {
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { parseISO } from 'date-fns';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
@@ -43,6 +46,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public isBenchmark = false;
+  public historicalDataAsString: string;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -202,5 +206,32 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  public importHistoricalData() {
+    const inputHistoricalData = this.historicalDataAsString;
+    const inputSplittedByLine = inputHistoricalData.split('\n');
+    const dataBulkUpdate: UpdateMarketDataDto[] = [];
+    inputSplittedByLine.forEach((line) => {
+      const inputSplittedBySeparator = line.split(';');
+      const inputDate = parseISO(inputSplittedBySeparator[0]);
+      dataBulkUpdate.push({
+        date: inputDate,
+        marketPrice: Number(inputSplittedBySeparator[1])
+      });
+    });
+
+    this.adminService
+      .postMarketData({
+        dataSource: this.data.dataSource,
+        marketData: { marketData: dataBulkUpdate },
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.dataService.updateInfo();
+      });
+
+    this.historicalDataAsString = '';
   }
 }
