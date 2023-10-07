@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the application version to the endpoint `GET api/v1/admin`
 - Introduced a carousel component for the testimonial section on the landing page
 
+### Changed
+
+- Displayed the link to the markets overview on the home page without any permission
+
 ### Fixed
 
 - Fixed the style of the active features page in the navigation on desktop
