@@ -36,7 +36,8 @@
     class="align-items-center d-flex justify-content-center mt-2"
     color="primary"
     mat-fab
-    (click)="transferCashBalanceDialog()"
+    [queryParams]="{ transferBalanceDialog: true }"
+    [routerLink]="[]"
   >
   <ion-icon name="wallet-outline" size="large"></ion-icon>
   </a>
