@@ -66,8 +66,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
             this.user.permissions,
             permissions.createOrder
           );
-
-          this.update();
         }
       });
   }
