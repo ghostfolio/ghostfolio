@@ -57,6 +57,7 @@ export class DataService {
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
         PRESET_ID: filtersByPresetId,
+        SEARCH_QUERY: filtersBySearchQuery,
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
@@ -97,6 +98,10 @@ export class DataService {
 
       if (filtersByPresetId) {
         params = params.append('presetId', filtersByPresetId[0].id);
+      }
+
+      if (filtersBySearchQuery) {
+        params = params.append('query', filtersBySearchQuery[0].id);
       }
 
       if (filtersByTag) {

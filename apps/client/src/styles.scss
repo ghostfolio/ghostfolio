@@ -214,6 +214,16 @@ body {
     }
   }
 
+  .mat-mdc-menu-panel {
+    &.assistant {
+      max-width: unset !important;
+
+      .mat-mdc-menu-content {
+        padding: 0;
+      }
+    }
+  }
+
   &.is-dark-theme {
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
