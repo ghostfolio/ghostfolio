@@ -110,6 +110,30 @@
           >About</a
         >
       </li>
+      <li *ngIf="hasPermissionToAccessAssistant" class="list-inline-item">
+        <button
+          #assistantTrigger="matMenuTrigger"
+          class="h-100 no-min-width px-2"
+          mat-button
+          [mat-menu-trigger-for]="assistantMenu"
+          [matMenuTriggerRestoreFocus]="false"
+          (menuOpened)="onOpenAssistant()"
+        >
+          <ion-icon name="search-outline"></ion-icon>
+        </button>
+        <mat-menu
+          #assistantMenu="matMenu"
+          class="assistant"
+          xPosition="before"
+          [overlapTrigger]="true"
+          (closed)="assistantElement?.setIsOpen(false)"
+        >
+          <gf-assistant
+            #assistant
+            [deviceType]="deviceType"
+            (closed)="closeAssistant()"
+        /></mat-menu>
+      </li>
       <li class="list-inline-item">
         <button
           class="no-min-width px-1"

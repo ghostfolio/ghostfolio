@@ -1076,7 +1076,8 @@ export class PortfolioService {
 
         return (
           enhancedSymbolProfile.isin?.toLowerCase().startsWith(searchQuery) ||
-          enhancedSymbolProfile.name?.toLowerCase().startsWith(searchQuery)
+          enhancedSymbolProfile.name?.toLowerCase().startsWith(searchQuery) ||
+          enhancedSymbolProfile.symbol?.toLowerCase().startsWith(searchQuery)
         );
       });
     }

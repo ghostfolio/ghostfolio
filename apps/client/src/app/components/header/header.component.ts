@@ -2,11 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -18,6 +21,7 @@ import {
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -28,7 +32,24 @@ import { catchError, takeUntil } from 'rxjs/operators';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnChanges {
+  @HostListener('window:keydown', ['$event'])
+  openAssistantWithHotKey(event: KeyboardEvent) {
+    if (
+      event.key === '/' &&
+      event.target instanceof Element &&
+      event.target?.nodeName?.toLowerCase() !== 'input' &&
+      event.target?.nodeName?.toLowerCase() !== 'textarea' &&
+      this.hasPermissionToAccessAssistant
+    ) {
+      this.assistantElement.setIsOpen(true);
+      this.assistentMenuTriggerElement.openMenu();
+
+      event.preventDefault();
+    }
+  }
+
   @Input() currentRoute: string;
+  @Input() deviceType: string;
   @Input() hasTabs: boolean;
   @Input() info: InfoItem;
   @Input() pageTitle: string;
@@ -36,9 +57,13 @@ export class HeaderComponent implements OnChanges {
 
   @Output() signOut = new EventEmitter<void>();
 
+  @ViewChild('assistant') assistantElement: AssistantComponent;
+  @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
+
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
+  public hasPermissionToAccessAssistant: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
@@ -89,6 +114,11 @@ export class HeaderComponent implements OnChanges {
       permissions.accessAdminControl
     );
 
+    this.hasPermissionToAccessAssistant = hasPermission(
+      this.user?.permissions,
+      permissions.accessAssistant
+    );
+
     this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
       this.info?.globalPermissions,
       permissions.enableFearAndGreedIndex
@@ -98,6 +128,10 @@ export class HeaderComponent implements OnChanges {
       this.info?.globalPermissions,
       permissions.createUserAccount
     );
+  }
+
+  public closeAssistant() {
+    this.assistentMenuTriggerElement?.closeMenu();
   }
 
   public impersonateAccount(aId: string) {
@@ -116,6 +150,10 @@ export class HeaderComponent implements OnChanges {
 
   public onMenuOpened() {
     this.isMenuOpen = true;
+  }
+
+  public onOpenAssistant() {
+    this.assistantElement.initialize();
   }
 
   public onSignOut() {
