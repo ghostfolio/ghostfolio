@@ -11,5 +11,5 @@ export class CreateAccessDto {
 
   @IsOptional()
   @IsString()
-  type?: string;
+  type?: 'PUBLIC';
 }
