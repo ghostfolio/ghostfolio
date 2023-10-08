@@ -26,6 +26,10 @@
   .search-container {
     border-color: rgba(var(--light-dividers));
 
+    input {
+      color: rgba(var(--light-primary-text));
+    }
+
     .hot-key-hint {
       border-color: rgba(var(--light-dividers));
     }

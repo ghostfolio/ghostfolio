@@ -4,7 +4,7 @@
   (keydown.tab)="$event.stopPropagation()"
 >
   <div class="align-items-center d-flex search-container">
-    <ion-icon class="ml-2 mr-0 text-muted" name="search-outline"></ion-icon>
+    <ion-icon class="ml-2 mr-0" name="search-outline"></ion-icon>
     <input
       #search
       autocomplete="off"
@@ -23,7 +23,7 @@
     </div>
     <button
       *ngIf="searchFormControl.value"
-      class="h-100 no-min-width px-3 rounded-0 text-muted"
+      class="h-100 no-min-width px-3 rounded-0"
       mat-button
       (click)="initialize()"
     >
@@ -31,7 +31,7 @@
     </button>
     <button
       *ngIf="!searchFormControl.value"
-      class="h-100 no-min-width px-3 rounded-0 text-muted"
+      class="h-100 no-min-width px-3 rounded-0"
       mat-button
       (click)="onCloseAssistant()"
     >
@@ -40,7 +40,7 @@
   </div>
   <div class="overflow-auto py-3 result-container">
     <div>
-      <div class="h6 mb-1 px-2 text-muted" i18n>Holdings</div>
+      <div class="h6 mb-1 px-2" i18n>Holdings</div>
       <gf-assistant-list-item
         *ngFor="let holding of searchResults?.holdings"
         [holding]="holding"
@@ -56,9 +56,7 @@
             width: '100%'
           }"
         ></ngx-skeleton-loader>
-        <div *ngIf="!isLoading" class="px-2 py-1 text-muted" i18n>
-          No entries...
-        </div>
+        <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
       </ng-container>
     </div>
   </div>
