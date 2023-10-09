@@ -30,6 +30,8 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
 import { UpdateAccountDto } from './update-account.dto';
+import { TransferBalanceDto } from './transfer-balance.dto';
+import { resetHours } from '@ghostfolio/common/helper';
 
 @Controller('account')
 export class AccountController {
@@ -38,7 +40,7 @@ export class AccountController {
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  ) { }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
@@ -153,6 +155,43 @@ export class AccountController {
       );
     }
   }
+
+  @Post('transfer-balance')
+  @UseGuards(AuthGuard('jwt'))
+  public async transferAccountBalance(@Body() {
+    accountIdFrom,
+    accountIdTo,
+    balance
+  }: TransferBalanceDto) {
+    if (
+      !hasPermission(this.request.user.permissions, permissions.updateAccount)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const today = resetHours(new Date());
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    await this.accountService.updateAccountBalance({
+      accountId: accountIdFrom,
+      amount: balance,
+      currency: userCurrency,
+      date: today,
+      userId: this.request.user.id
+    });
+
+    await this.accountService.updateAccountBalance({
+      accountId: accountIdTo,
+      amount: balance,
+      currency: userCurrency,
+      date: today,
+      userId: this.request.user.id
+    });
+  }
+
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
