@@ -21,4 +21,4 @@ import { AdminJobsComponent } from './admin-jobs.component';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfAdminJobsModule { }
+export class GfAdminJobsModule {}
