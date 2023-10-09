@@ -19,7 +19,7 @@ import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
-import { sortBy } from 'lodash';
+import { sortBy, without } from 'lodash';
 
 const crypto = require('crypto');
 
@@ -163,6 +163,13 @@ export class UserService {
 
     let currentPermissions = getPermissions(user.role);
 
+    if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {
+      currentPermissions = without(
+        currentPermissions,
+        permissions.accessAssistant
+      );
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);
@@ -187,6 +194,11 @@ export class UserService {
         if (Analytics?.activityCount % frequency === 1) {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
+
+        currentPermissions = without(
+          currentPermissions,
+          permissions.createAccess
+        );
 
         // Reset benchmark
         user.Settings.settings.benchmark = undefined;

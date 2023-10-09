@@ -4,7 +4,6 @@ import { Subject } from 'rxjs';
 const ossFriends = require('../../../../assets/oss-friends.json');
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-oss-friends-page',
   styleUrls: ['./oss-friends-page.scss'],
   templateUrl: './oss-friends-page.html'

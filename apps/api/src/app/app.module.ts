@@ -39,6 +39,7 @@ import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
+import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -101,6 +102,7 @@ import { UserModule } from './user/user.module';
     SitemapModule,
     SubscriptionModule,
     SymbolModule,
+    TagModule,
     TwitterBotModule,
     UserModule
   ],

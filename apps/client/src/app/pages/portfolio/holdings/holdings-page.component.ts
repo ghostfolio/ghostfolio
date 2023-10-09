@@ -20,7 +20,6 @@ import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-holdings-page',
   styleUrls: ['./holdings-page.scss'],
   templateUrl: './holdings-page.html'
@@ -114,17 +113,15 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
             permissions.createOrder
           );
 
-          const accountFilters: Filter[] = this.user.accounts
-            .filter(({ accountType }) => {
-              return accountType === 'SECURITIES';
-            })
-            .map(({ id, name }) => {
+          const accountFilters: Filter[] = this.user.accounts.map(
+            ({ id, name }) => {
               return {
                 id,
                 label: name,
                 type: 'ACCOUNT'
               };
-            });
+            }
+          );
 
           const assetClassFilters: Filter[] = [];
           for (const assetClass of Object.keys(AssetClass)) {

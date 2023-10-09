@@ -10,7 +10,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
   templateUrl: './fire-page.html'
@@ -19,6 +18,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public accountClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public deviceType: string;
+  public emergencyFundRules: PortfolioReportRule[];
   public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
   public hasImpersonationId: boolean;
@@ -68,6 +68,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
           portfolioReport.rules['accountClusterRisk'] || null;
         this.currencyClusterRiskRules =
           portfolioReport.rules['currencyClusterRisk'] || null;
+        this.emergencyFundRules =
+          portfolioReport.rules['emergencyFund'] || null;
         this.feeRules = portfolioReport.rules['fees'] || null;
 
         this.changeDetectorRef.markForCheck();

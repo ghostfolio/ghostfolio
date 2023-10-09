@@ -14,6 +14,7 @@ export interface PortfolioSummary extends PortfolioPerformance {
   fees: number;
   fireWealth: number;
   firstOrderDate: Date;
+  interest: number;
   items: number;
   liabilities: number;
   netWorth: number;

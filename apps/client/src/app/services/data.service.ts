@@ -36,7 +36,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
@@ -58,6 +57,7 @@ export class DataService {
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
         PRESET_ID: filtersByPresetId,
+        SEARCH_QUERY: filtersBySearchQuery,
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
@@ -98,6 +98,10 @@ export class DataService {
 
       if (filtersByPresetId) {
         params = params.append('presetId', filtersByPresetId[0].id);
+      }
+
+      if (filtersBySearchQuery) {
+        params = params.append('query', filtersBySearchQuery[0].id);
       }
 
       if (filtersByTag) {
@@ -202,6 +206,10 @@ export class DataService {
 
   public deleteAllOrders() {
     return this.http.delete<any>(`/api/v1/order/`);
+  }
+
+  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
   public deleteOrder(aId: string) {
@@ -494,6 +502,21 @@ export class DataService {
   public redeemCoupon(couponCode: string) {
     return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
+    });
+  }
+
+  public updateInfo() {
+    this.http.get<InfoItem>('/api/v1/info').subscribe((info) => {
+      const utmSource = <'ios' | 'trusted-web-activity'>(
+        window.localStorage.getItem('utm_source')
+      );
+
+      info.globalPermissions = filterGlobalPermissions(
+        info.globalPermissions,
+        utmSource
+      );
+
+      (window as any).info = info;
     });
   }
 }

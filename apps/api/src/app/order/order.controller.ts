@@ -89,7 +89,9 @@ export class OrderController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('tags') filterByTags?: string
+    @Query('skip') skip?: number,
+    @Query('tags') filterByTags?: string,
+    @Query('take') take?: number
   ): Promise<Activities> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
@@ -105,6 +107,8 @@ export class OrderController {
       filters,
       userCurrency,
       includeDrafts: true,
+      skip: isNaN(skip) ? undefined : skip,
+      take: isNaN(take) ? undefined : take,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccounts: true
     });
@@ -147,8 +151,9 @@ export class OrderController {
       userId: this.request.user.id
     });
 
-    if (!order.isDraft) {
-      // Gather symbol data in the background, if not draft
+    if (data.dataSource && !order.isDraft) {
+      // Gather symbol data in the background, if data source is set
+      // (not MANUAL) and not draft
       this.dataGatheringService.gatherSymbols([
         {
           dataSource: data.dataSource,

@@ -19,6 +19,7 @@ import { Access } from '@ghostfolio/common/interfaces';
 })
 export class AccessTableComponent implements OnChanges, OnInit {
   @Input() accesses: Access[];
+  @Input() hasPermissionToCreateAccess = false;
   @Input() showActions: boolean;
 
   @Output() accessDeleted = new EventEmitter<string>();

@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  position: relative;
+
+  ::ng-deep {
+    [gf-carousel-item] {
+      flex-shrink: 0;
+      width: 100%;
+    }
+  }
+
+  button {
+    top: 50%;
+    transform: translateY(-50%);
+
+    &.carousel-nav-prev {
+      left: -50px;
+    }
+
+    &.carousel-nav-next {
+      right: -50px;
+    }
+  }
+
+  .carousel-content {
+    flex-direction: row;
+    outline: none;
+    transition: transform 0.5s ease-in-out;
+
+    .animations-disabled & {
+      transition: none;
+    }
+  }
+}

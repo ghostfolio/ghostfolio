@@ -2,7 +2,12 @@
   <router-outlet></router-outlet>
 </mat-tab-nav-panel>
 
-<nav mat-align-tabs="center" mat-tab-nav-bar [tabPanel]="tabPanel">
+<nav
+  mat-align-tabs="center"
+  mat-tab-nav-bar
+  [disablePagination]="true"
+  [tabPanel]="tabPanel"
+>
   <ng-container *ngFor="let tab of tabs">
     <a
       #rla="routerLinkActive"
@@ -14,7 +19,10 @@
       [routerLink]="tab.path"
       [routerLinkActiveOptions]="{ exact: true }"
     >
-      <ion-icon size="large" [name]="tab.iconName"></ion-icon>
+      <ion-icon
+        [name]="tab.iconName"
+        [size]="deviceType === 'mobile' ? 'large': 'small'"
+      ></ion-icon>
       <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
     </a>
   </ng-container>

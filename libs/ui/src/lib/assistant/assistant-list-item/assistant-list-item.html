@@ -1,0 +1,12 @@
+<a
+  #link
+  class="d-block px-2 py-1 text-truncate"
+  [queryParams]="{
+    dataSource: holding?.dataSource,
+    positionDetailDialog: true,
+    symbol: holding?.symbol
+  }"
+  [routerLink]="['/portfolio', 'holdings']"
+  (click)="onClick()"
+  >{{ holding?.name }}</a
+>

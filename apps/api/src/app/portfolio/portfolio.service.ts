@@ -10,6 +10,7 @@ import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rule
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -50,18 +51,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {
   Account,
+  Type as ActivityType,
   AssetClass,
   DataSource,
   Order,
   Platform,
   Prisma,
-  Tag,
-  Type as TypeOfOrder
+  Tag
 } from '@prisma/client';
 import Big from 'big.js';
 import {
   differenceInDays,
-  endOfToday,
   format,
   isAfter,
   isBefore,
@@ -465,8 +465,9 @@ export class PortfolioService {
       transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
     );
     const startDate = this.getStartDate(dateRange, portfolioStart);
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(startDate);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate
+    );
 
     const cashDetails = await this.accountService.getCashDetails({
       filters,
@@ -881,8 +882,9 @@ export class PortfolioService {
     const transactionPoints = portfolioCalculator.getTransactionPoints();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(portfolioStart);
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      portfolioStart
+    );
 
     const position = currentPositions.positions.find(
       (item) => item.symbol === aSymbol
@@ -1103,6 +1105,9 @@ export class PortfolioService {
     filters?: Filter[];
     impersonationId: string;
   }): Promise<{ hasErrors: boolean; positions: Position[] }> {
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
@@ -1128,12 +1133,13 @@ export class PortfolioService {
 
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(dateRange, portfolioStart);
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(startDate);
-
-    const positions = currentPositions.positions.filter(
-      (item) => !item.quantity.eq(0)
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate
     );
+
+    let positions = currentPositions.positions.filter(({ quantity }) => {
+      return !quantity.eq(0);
+    });
 
     const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
       return {
@@ -1154,6 +1160,18 @@ export class PortfolioService {
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
     for (const symbolProfile of symbolProfiles) {
       symbolProfileMap[symbolProfile.symbol] = symbolProfile;
+    }
+
+    if (searchQuery) {
+      positions = positions.filter(({ symbol }) => {
+        const enhancedSymbolProfile = symbolProfileMap[symbol];
+
+        return (
+          enhancedSymbolProfile.isin?.toLowerCase().startsWith(searchQuery) ||
+          enhancedSymbolProfile.name?.toLowerCase().startsWith(searchQuery) ||
+          enhancedSymbolProfile.symbol?.toLowerCase().startsWith(searchQuery)
+        );
+      });
     }
 
     return {
@@ -1304,12 +1322,6 @@ export class PortfolioService {
         userId
       });
 
-    if (isEmpty(orders)) {
-      return {
-        rules: {}
-      };
-    }
-
     const portfolioCalculator = new PortfolioCalculator({
       currency: userCurrency,
       currentRateService: this.currentRateService,
@@ -1318,9 +1330,12 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(portfolioStart);
+    const portfolioStart = parseDate(
+      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    );
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      portfolioStart
+    );
 
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
@@ -1339,33 +1354,48 @@ export class PortfolioService {
       userId
     });
 
+    const userSettings = <UserSettings>this.request.user.Settings.settings;
+
     return {
       rules: {
-        accountClusterRisk: await this.rulesService.evaluate(
-          [
-            new AccountClusterRiskCurrentInvestment(
-              this.exchangeRateDataService,
-              accounts
+        accountClusterRisk: isEmpty(orders)
+          ? undefined
+          : await this.rulesService.evaluate(
+              [
+                new AccountClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  accounts
+                ),
+                new AccountClusterRiskSingleAccount(
+                  this.exchangeRateDataService,
+                  accounts
+                )
+              ],
+              userSettings
             ),
-            new AccountClusterRiskSingleAccount(
+        currencyClusterRisk: isEmpty(orders)
+          ? undefined
+          : await this.rulesService.evaluate(
+              [
+                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                  this.exchangeRateDataService,
+                  positions
+                ),
+                new CurrencyClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  positions
+                )
+              ],
+              userSettings
+            ),
+        emergencyFund: await this.rulesService.evaluate(
+          [
+            new EmergencyFundSetup(
               this.exchangeRateDataService,
-              accounts
+              userSettings.emergencyFund
             )
           ],
-          <UserSettings>this.request.user.Settings.settings
-        ),
-        currencyClusterRisk: await this.rulesService.evaluate(
-          [
-            new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-              this.exchangeRateDataService,
-              positions
-            ),
-            new CurrencyClusterRiskCurrentInvestment(
-              this.exchangeRateDataService,
-              positions
-            )
-          ],
-          <UserSettings>this.request.user.Settings.settings
+          userSettings
         ),
         fees: await this.rulesService.evaluate(
           [
@@ -1375,7 +1405,7 @@ export class PortfolioService {
               this.getFees({ userCurrency, activities: orders }).toNumber()
             )
           ],
-          <UserSettings>this.request.user.Settings.settings
+          userSettings
         )
       }
     };
@@ -1429,36 +1459,6 @@ export class PortfolioService {
     }
 
     return cashPositions;
-  }
-
-  private getDividend({
-    activities,
-    date = new Date(0),
-    userCurrency
-  }: {
-    activities: OrderWithAccount[];
-    date?: Date;
-    userCurrency: string;
-  }) {
-    return activities
-      .filter((activity) => {
-        // Filter out all activities before given date (drafts) and type dividend
-        return (
-          isBefore(date, new Date(activity.date)) &&
-          activity.type === TypeOfOrder.DIVIDEND
-        );
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          userCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
   }
 
   private getDividendsByGroup({
@@ -1605,52 +1605,6 @@ export class PortfolioService {
     };
   }
 
-  private getItems(activities: OrderWithAccount[], date = new Date(0)) {
-    return activities
-      .filter((activity) => {
-        // Filter out all activities before given date (drafts) and type item
-        return (
-          isBefore(date, new Date(activity.date)) &&
-          activity.type === TypeOfOrder.ITEM
-        );
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          this.request.user.Settings.settings.baseCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
-  }
-
-  private getLiabilities({
-    activities,
-    userCurrency
-  }: {
-    activities: OrderWithAccount[];
-    userCurrency: string;
-  }) {
-    return activities
-      .filter(({ type }) => {
-        return type === TypeOfOrder.LIABILITY;
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          userCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
-  }
-
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
     switch (aDateRange) {
       case '1d':
@@ -1734,6 +1688,7 @@ export class PortfolioService {
     let dividend = 0;
     let fees = 0;
     let items = 0;
+    let interest = 0;
 
     let liabilities = 0;
 
@@ -1769,6 +1724,9 @@ export class PortfolioService {
             break;
           case 'LIABILITY':
             liabilities += amount;
+            break;
+          case 'INTEREST':
+            interest += amount;
         }
       }
     }
@@ -1787,9 +1745,17 @@ export class PortfolioService {
       .plus(emergencyFundPositionsValueInBaseCurrency)
       .toNumber();
     const committedFunds = new Big(totalBuy).minus(totalSell);
-    const totalOfExcludedActivities = new Big(
-      this.getTotalByType(excludedActivities, userCurrency, 'BUY')
-    ).minus(this.getTotalByType(excludedActivities, userCurrency, 'SELL'));
+    const totalOfExcludedActivities = this.getSumOfActivityType({
+      userCurrency,
+      activities: excludedActivities,
+      activityType: 'BUY'
+    }).minus(
+      this.getSumOfActivityType({
+        userCurrency,
+        activities: excludedActivities,
+        activityType: 'SELL'
+      })
+    );
 
     const cashDetailsWithExcludedAccounts =
       await this.accountService.getCashDetails({
@@ -1836,6 +1802,7 @@ export class PortfolioService {
       excludedAccountsAndActivities,
       fees,
       firstOrderDate,
+      interest,
       items,
       liabilities,
       netWorth,
@@ -1856,6 +1823,39 @@ export class PortfolioService {
         return type === 'BUY' || type === 'SELL';
       }).length
     };
+  }
+
+  private getSumOfActivityType({
+    activities,
+    activityType,
+    date = new Date(0),
+    userCurrency
+  }: {
+    activities: OrderWithAccount[];
+    activityType: ActivityType;
+    date?: Date;
+    userCurrency: string;
+  }) {
+    return activities
+      .filter((activity) => {
+        // Filter out all activities before given date (drafts) and
+        // activity type
+        return (
+          isBefore(date, new Date(activity.date)) &&
+          activity.type === activityType
+        );
+      })
+      .map(({ quantity, SymbolProfile, unitPrice }) => {
+        return this.exchangeRateDataService.toCurrency(
+          new Big(quantity).mul(unitPrice).toNumber(),
+          SymbolProfile.currency,
+          userCurrency
+        );
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      );
   }
 
   private async getTransactionPoints({
@@ -1927,6 +1927,21 @@ export class PortfolioService {
       portfolioOrders,
       transactionPoints: portfolioCalculator.getTransactionPoints()
     };
+  }
+
+  private getUserCurrency(aUser: UserWithSettings) {
+    return (
+      aUser.Settings?.settings.baseCurrency ??
+      this.request.user?.Settings?.settings.baseCurrency ??
+      DEFAULT_CURRENCY
+    );
+  }
+
+  private async getUserId(aImpersonationId: string, aUserId: string) {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(aImpersonationId);
+
+    return impersonationUserId || aUserId;
   }
 
   private async getValueOfAccountsAndPlatforms({
@@ -2071,39 +2086,5 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
-  }
-
-  private getTotalByType(
-    orders: OrderWithAccount[],
-    currency: string,
-    type: TypeOfOrder
-  ) {
-    return orders
-      .filter(
-        (order) => !isAfter(order.date, endOfToday()) && order.type === type
-      )
-      .map((order) => {
-        return this.exchangeRateDataService.toCurrency(
-          order.quantity * order.unitPrice,
-          order.SymbolProfile.currency,
-          currency
-        );
-      })
-      .reduce((previous, current) => previous + current, 0);
-  }
-
-  private getUserCurrency(aUser: UserWithSettings) {
-    return (
-      aUser.Settings?.settings.baseCurrency ??
-      this.request.user?.Settings?.settings.baseCurrency ??
-      DEFAULT_CURRENCY
-    );
-  }
-
-  private async getUserId(aImpersonationId: string, aUserId: string) {
-    const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(aImpersonationId);
-
-    return impersonationUserId || aUserId;
   }
 }

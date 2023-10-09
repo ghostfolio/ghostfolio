@@ -12,4 +12,5 @@ export interface AdminData {
     lastActivity: Date;
     transactionCount: number;
   }[];
+  version: string;
 }

@@ -10,8 +10,9 @@ import {
 import { isString } from 'lodash';
 
 export class UpdateAccountDto {
+  @IsOptional()
   @IsString()
-  accountType: AccountType;
+  accountType?: AccountType;
 
   @IsNumber()
   balance: number;

@@ -8,14 +8,17 @@ export class ApiService {
   public buildFiltersFromQueryParams({
     filterByAccounts,
     filterByAssetClasses,
+    filterBySearchQuery,
     filterByTags
   }: {
     filterByAccounts?: string;
     filterByAssetClasses?: string;
+    filterBySearchQuery?: string;
     filterByTags?: string;
   }): Filter[] {
     const accountIds = filterByAccounts?.split(',') ?? [];
     const assetClasses = filterByAssetClasses?.split(',') ?? [];
+    const searchQuery = filterBySearchQuery?.toLowerCase();
     const tagIds = filterByTags?.split(',') ?? [];
 
     return [
@@ -31,6 +34,10 @@ export class ApiService {
           type: 'ASSET_CLASS'
         };
       }),
+      {
+        id: searchQuery,
+        type: 'SEARCH_QUERY'
+      },
       ...tagIds.map((tagId) => {
         return <Filter>{
           id: tagId,

@@ -208,8 +208,14 @@ export class PortfolioController {
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       holdings[symbol] = {
         ...portfolioPosition,
-        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
-        assetSubClass: hasDetails ? portfolioPosition.assetSubClass : undefined,
+        assetClass:
+          hasDetails || portfolioPosition.assetClass === 'CASH'
+            ? portfolioPosition.assetClass
+            : undefined,
+        assetSubClass:
+          hasDetails || portfolioPosition.assetSubClass === 'CASH'
+            ? portfolioPosition.assetSubClass
+            : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         markets: hasDetails ? portfolioPosition.markets : undefined,
@@ -420,12 +426,14 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('query') filterBySearchQuery?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioPositions> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
+      filterBySearchQuery,
       filterByTags
     });
 

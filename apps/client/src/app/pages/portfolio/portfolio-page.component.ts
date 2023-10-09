@@ -1,33 +1,18 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  HostBinding,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  InfoItem,
-  TabConfiguration,
-  User
-} from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'page has-tabs' },
   selector: 'gf-portfolio-page',
   styleUrls: ['./portfolio-page.scss'],
   templateUrl: './portfolio-page.html'
 })
 export class PortfolioPageComponent implements OnDestroy, OnInit {
-  @HostBinding('class.with-info-message') get getHasMessage() {
-    return this.hasMessage;
-  }
-
-  public hasMessage: boolean;
-  public info: InfoItem;
+  public deviceType: string;
   public tabs: TabConfiguration[] = [];
   public user: User;
 
@@ -35,11 +20,9 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
-    this.info = this.dataService.fetchInfo();
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -73,18 +56,14 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
           ];
           this.user = state.user;
 
-          this.hasMessage =
-            hasPermission(
-              this.user?.permissions,
-              permissions.createUserAccount
-            ) || !!this.info.systemMessage;
-
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

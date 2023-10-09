@@ -1,0 +1,12 @@
+:host {
+  color: rgb(var(--dark-primary-text));
+  display: block;
+
+  gf-access-table {
+    overflow-x: auto;
+  }
+}
+
+:host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
+}

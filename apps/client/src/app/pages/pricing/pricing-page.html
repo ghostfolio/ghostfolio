@@ -6,8 +6,8 @@
         <p i18n>
           Our official Ghostfolio Premium cloud offering is the easiest way to
           get started. Due to the time it saves, this will be the best option
-          for most people. The revenue is used to cover the hosting
-          infrastructure and to fund the ongoing development of Ghostfolio.
+          for most people. Revenue is used to cover the costs of the hosting
+          infrastructure and to fund ongoing development.
         </p>
         <p *ngIf="user?.subscription?.type === 'Basic'">
           If you plan to open an account at <i>DEGIRO</i>, <i>frankly</i>,
@@ -333,7 +333,7 @@
                 >
               </p>
               <div
-                *ngIf="user?.subscription?.type === 'Basic'"
+                *ngIf="hasPermissionToUpdateUserSettings && user?.subscription?.type === 'Basic'"
                 class="mt-3 text-center"
               >
                 <button color="primary" mat-flat-button (click)="onCheckout()">

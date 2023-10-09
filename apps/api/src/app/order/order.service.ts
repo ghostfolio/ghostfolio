@@ -97,7 +97,12 @@ export class OrderService {
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (data.type === 'ITEM' || data.type === 'LIABILITY') {
+    if (
+      data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
+    ) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
       currency = data.SymbolProfile.connectOrCreate.create.currency;
@@ -118,20 +123,22 @@ export class OrderService {
       };
     }
 
-    this.dataGatheringService.addJobToQueue({
-      data: {
-        dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-        symbol: data.SymbolProfile.connectOrCreate.create.symbol
-      },
-      name: GATHER_ASSET_PROFILE_PROCESS,
-      opts: {
-        ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: getAssetProfileIdentifier({
+    if (data.SymbolProfile.connectOrCreate.create.dataSource !== 'MANUAL') {
+      this.dataGatheringService.addJobToQueue({
+        data: {
           dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
           symbol: data.SymbolProfile.connectOrCreate.create.symbol
-        })
-      }
-    });
+        },
+        name: GATHER_ASSET_PROFILE_PROCESS,
+        opts: {
+          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+          jobId: getAssetProfileIdentifier({
+            dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
+            symbol: data.SymbolProfile.connectOrCreate.create.symbol
+          })
+        }
+      });
+    }
 
     delete data.accountId;
     delete data.assetClass;
@@ -151,6 +158,9 @@ export class OrderService {
     const orderData: Prisma.OrderCreateInput = data;
 
     const isDraft =
+      data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
+      data.type === 'ITEM' ||
       data.type === 'LIABILITY'
         ? false
         : isAfter(data.date as Date, endOfToday());
@@ -197,7 +207,12 @@ export class OrderService {
       where
     });
 
-    if (order.type === 'ITEM' || order.type === 'LIABILITY') {
+    if (
+      order.type === 'FEE' ||
+      order.type === 'INTEREST' ||
+      order.type === 'ITEM' ||
+      order.type === 'LIABILITY'
+    ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -215,6 +230,8 @@ export class OrderService {
   public async getOrders({
     filters,
     includeDrafts = false,
+    skip,
+    take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
     userId,
@@ -222,6 +239,8 @@ export class OrderService {
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
+    skip?: number;
+    take?: number;
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
@@ -300,6 +319,8 @@ export class OrderService {
 
     return (
       await this.orders({
+        skip,
+        take,
         where,
         include: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -368,7 +389,12 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (data.type === 'ITEM' || data.type === 'LIABILITY') {
+    if (
+      data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
+    ) {
       delete data.SymbolProfile.connect;
     } else {
       delete data.SymbolProfile.update;

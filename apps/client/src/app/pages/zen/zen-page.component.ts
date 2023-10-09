@@ -1,33 +1,27 @@
-import { ViewportScroller } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { first, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  host: { class: 'page has-tabs' },
   selector: 'gf-zen-page',
-  templateUrl: './zen-page.html',
-  styleUrls: ['./zen-page.scss']
+  styleUrls: ['./zen-page.scss'],
+  templateUrl: './zen-page.html'
 })
-export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
+export class ZenPageComponent implements OnDestroy, OnInit {
+  public deviceType: string;
   public tabs: TabConfiguration[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private route: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private userService: UserService,
-    private viewportScroller: ViewportScroller
+    private deviceService: DeviceDetectorService,
+    private userService: UserService
   ) {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -52,12 +46,8 @@ export class ZenPageComponent implements AfterViewInit, OnDestroy, OnInit {
       });
   }
 
-  public ngOnInit() {}
-
-  public ngAfterViewInit(): void {
-    this.route.fragment
-      .pipe(first())
-      .subscribe((fragment) => this.viewportScroller.scrollToAnchor(fragment));
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 
   public ngOnDestroy() {

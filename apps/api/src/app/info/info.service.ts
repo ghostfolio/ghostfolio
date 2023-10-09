@@ -8,6 +8,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
@@ -54,12 +55,8 @@ export class InfoService {
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
     let isReadOnlyMode: boolean;
-    const platforms = (
-      await this.platformService.getPlatforms({
-        orderBy: { name: 'asc' }
-      })
-    ).map(({ id, name }) => {
-      return { id, name };
+    const platforms = await this.platformService.getPlatforms({
+      orderBy: { name: 'asc' }
     });
     let systemMessage: string;
 
@@ -168,16 +165,24 @@ export class InfoService {
 
   private async countDockerHubPulls(): Promise<number> {
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const { pull_count } = await got(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
         {
-          headers: { 'User-Agent': 'request' }
+          headers: { 'User-Agent': 'request' },
+          // @ts-ignore
+          signal: abortController.signal
         }
       ).json<any>();
 
       return pull_count;
     } catch (error) {
-      Logger.error(error, 'InfoService');
+      Logger.error(error, 'InfoService - DockerHub');
 
       return undefined;
     }
@@ -185,7 +190,16 @@ export class InfoService {
 
   private async countGitHubContributors(): Promise<number> {
     try {
-      const { body } = await got('https://github.com/ghostfolio/ghostfolio');
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
+      const { body } = await got('https://github.com/ghostfolio/ghostfolio', {
+        // @ts-ignore
+        signal: abortController.signal
+      });
 
       const $ = cheerio.load(body);
 
@@ -195,7 +209,7 @@ export class InfoService {
         ).text()
       );
     } catch (error) {
-      Logger.error(error, 'InfoService');
+      Logger.error(error, 'InfoService - GitHub');
 
       return undefined;
     }
@@ -203,16 +217,24 @@ export class InfoService {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, DEFAULT_REQUEST_TIMEOUT);
+
       const { stargazers_count } = await got(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
         {
-          headers: { 'User-Agent': 'request' }
+          headers: { 'User-Agent': 'request' },
+          // @ts-ignore
+          signal: abortController.signal
         }
       ).json<any>();
 
       return stargazers_count;
     } catch (error) {
-      Logger.error(error, 'InfoService');
+      Logger.error(error, 'InfoService - GitHub');
 
       return undefined;
     }
@@ -323,24 +345,31 @@ export class InfoService {
           PROPERTY_BETTER_UPTIME_MONITOR_ID
         )) as string;
 
+        const abortController = new AbortController();
+
+        setTimeout(() => {
+          abortController.abort();
+        }, DEFAULT_REQUEST_TIMEOUT);
+
         const { data } = await got(
-          `https://betteruptime.com/api/v2/monitors/${monitorId}/sla?from=${format(
+          `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
             subDays(new Date(), 90),
             DATE_FORMAT
           )}&to${format(new Date(), DATE_FORMAT)}`,
-
           {
             headers: {
               Authorization: `Bearer ${this.configurationService.get(
                 'BETTER_UPTIME_API_KEY'
               )}`
-            }
+            },
+            // @ts-ignore
+            signal: abortController.signal
           }
         ).json<any>();
 
         return data.attributes.availability / 100;
       } catch (error) {
-        Logger.error(error, 'InfoService');
+        Logger.error(error, 'InfoService - Better Stack');
 
         return undefined;
       }

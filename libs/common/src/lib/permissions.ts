@@ -3,16 +3,19 @@ import { Role } from '@prisma/client';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
+  accessAssistant: 'accessAssistant',
   createAccess: 'createAccess',
   createAccount: 'createAccount',
   createOrder: 'createOrder',
   createPlatform: 'createPlatform',
+  createTag: 'createTag',
   createUserAccount: 'createUserAccount',
   deleteAccess: 'deleteAccess',
   deleteAccount: 'deleteAcccount',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
   deletePlatform: 'deletePlatform',
+  deleteTag: 'deleteTag',
   deleteUser: 'deleteUser',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
   enableImport: 'enableImport',
@@ -29,6 +32,7 @@ export const permissions = {
   updateAuthDevice: 'updateAuthDevice',
   updateOrder: 'updateOrder',
   updatePlatform: 'updatePlatform',
+  updateTag: 'updateTag',
   updateUserSettings: 'updateUserSettings',
   updateViewMode: 'updateViewMode'
 };
@@ -38,29 +42,34 @@ export function getPermissions(aRole: Role): string[] {
     case 'ADMIN':
       return [
         permissions.accessAdminControl,
+        permissions.accessAssistant,
         permissions.createAccess,
         permissions.createAccount,
         permissions.createOrder,
         permissions.createPlatform,
+        permissions.createTag,
         permissions.deleteAccess,
         permissions.deleteAccount,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
         permissions.deletePlatform,
+        permissions.deleteTag,
         permissions.deleteUser,
         permissions.updateAccount,
         permissions.updateAuthDevice,
         permissions.updateOrder,
         permissions.updatePlatform,
+        permissions.updateTag,
         permissions.updateUserSettings,
         permissions.updateViewMode
       ];
 
     case 'DEMO':
-      return [permissions.createUserAccount];
+      return [permissions.accessAssistant, permissions.createUserAccount];
 
     case 'USER':
       return [
+        permissions.accessAssistant,
         permissions.createAccess,
         permissions.createAccount,
         permissions.createOrder,

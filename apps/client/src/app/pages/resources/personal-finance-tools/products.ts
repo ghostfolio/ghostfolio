@@ -1,10 +1,12 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
+import { FinaryPageComponent } from './products/finary-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
@@ -22,6 +24,8 @@ import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.compone
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
 import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
+import { StocklePageComponent } from './products/stockle-page.component';
+import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
@@ -45,7 +49,7 @@ export const products: Product[] = [
     ],
     name: 'Ghostfolio',
     origin: $localize`Switzerland`,
-    pricingPerYear: '$19',
+    pricingPerYear: '$24',
     region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
@@ -54,18 +58,25 @@ export const products: Product[] = [
     component: AltooPageComponent,
     founded: 2017,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'altoo',
     name: 'Altoo Wealth Platform',
     origin: $localize`Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    component: CapMonPageComponent,
+    founded: 2022,
+    key: 'capmon',
+    name: 'CapMon.org',
+    origin: $localize`Germany`,
+    note: 'Sunset in 2023',
+    slogan: 'Next Generation Assets Tracking'
+  },
+  {
     component: CopilotMoneyPageComponent,
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'copilot-money',
     name: 'Copilot Money',
     origin: $localize`United States`,
@@ -77,7 +88,6 @@ export const products: Product[] = [
     founded: 2017,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'delta',
     name: 'Delta Investment Tracker',
     note: 'Acquired by eToro',
@@ -89,7 +99,6 @@ export const products: Product[] = [
     founded: 2019,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'divvydiary',
     languages: ['Deutsch', 'English'],
     name: 'DivvyDiary',
@@ -102,7 +111,6 @@ export const products: Product[] = [
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'exirio',
     name: 'Exirio',
     origin: $localize`United States`,
@@ -110,10 +118,18 @@ export const products: Product[] = [
     slogan: 'All your wealth, in one place.'
   },
   {
+    component: FinaryPageComponent,
+    founded: 2020,
+    key: 'finary',
+    languages: ['Deutsch', 'English', 'Français'],
+    name: 'Finary',
+    origin: $localize`United States`,
+    slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
+  },
+  {
     component: FolisharePageComponent,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'folishare',
     languages: ['Deutsch', 'English'],
     name: 'folishare',
@@ -126,7 +142,6 @@ export const products: Product[] = [
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'getquin',
     languages: ['Deutsch', 'English'],
     name: 'getquin',
@@ -138,7 +153,6 @@ export const products: Product[] = [
     component: GoSpatzPageComponent,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'gospatz',
     name: 'goSPATZ',
     origin: $localize`Germany`,
@@ -149,7 +163,6 @@ export const products: Product[] = [
     founded: 2011,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'justetf',
     name: 'justETF',
     origin: $localize`Germany`,
@@ -161,7 +174,6 @@ export const products: Product[] = [
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'kubera',
     name: 'Kubera®',
     origin: $localize`United States`,
@@ -173,7 +185,6 @@ export const products: Product[] = [
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'markets.sh',
     languages: ['English'],
     name: 'markets.sh',
@@ -186,7 +197,6 @@ export const products: Product[] = [
     component: MaybeFinancePageComponent,
     founded: 2021,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'maybe-finance',
     languages: ['English'],
     name: 'Maybe Finance',
@@ -200,7 +210,6 @@ export const products: Product[] = [
     component: MonsePageComponent,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'monse',
     name: 'Monse',
     pricingPerYear: '$60',
@@ -211,7 +220,6 @@ export const products: Product[] = [
     founded: 2020,
     hasSelfHostingAbility: false,
     hasFreePlan: true,
-    isOpenSource: false,
     key: 'parqet',
     name: 'Parqet',
     note: 'Originally named as Tresor One',
@@ -224,7 +232,6 @@ export const products: Product[] = [
     component: PlannixPageComponent,
     founded: 2023,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'plannix',
     name: 'Plannix',
     origin: $localize`Italy`,
@@ -234,7 +241,6 @@ export const products: Product[] = [
     component: PortfolioDividendTrackerPageComponent,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'portfolio-dividend-tracker',
     languages: ['English', 'Nederlands'],
     name: 'Portfolio Dividend Tracker',
@@ -247,7 +253,6 @@ export const products: Product[] = [
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'portseido',
     languages: ['Deutsch', 'English', 'Français', 'Nederlands'],
     name: 'Portseido',
@@ -260,7 +265,6 @@ export const products: Product[] = [
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: true,
-    isOpenSource: false,
     key: 'projectionlab',
     name: 'ProjectionLab',
     origin: $localize`United States`,
@@ -272,7 +276,6 @@ export const products: Product[] = [
     founded: 2004,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'seeking-alpha',
     name: 'Seeking Alpha',
     origin: $localize`United States`,
@@ -284,7 +287,6 @@ export const products: Product[] = [
     founded: 2007,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'sharesight',
     name: 'Sharesight',
     origin: $localize`New Zealand`,
@@ -296,7 +298,6 @@ export const products: Product[] = [
     component: SimplePortfolioPageComponent,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'simple-portfolio',
     name: 'Simple Portfolio',
     origin: $localize`Czech Republic`,
@@ -308,18 +309,32 @@ export const products: Product[] = [
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'snowball-analytics',
     name: 'Snowball Analytics',
-    origin: 'France',
+    origin: $localize`France`,
     pricingPerYear: '$80',
     slogan: 'Simple and powerful portfolio tracker'
+  },
+  {
+    component: StocklePageComponent,
+    key: 'stockle',
+    name: 'Stockle',
+    origin: $localize`Finland`,
+    slogan: 'Supercharge your investments tracking experience'
+  },
+  {
+    component: StockMarketEyePageComponent,
+    founded: 2008,
+    key: 'stockmarketeye',
+    name: 'StockMarketEye',
+    origin: $localize`France`,
+    note: 'Sunset in 2023',
+    slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
     component: SumioPageComponent,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'sumio',
     name: 'Sumio',
     origin: $localize`Czech Republic`,
@@ -330,7 +345,6 @@ export const products: Product[] = [
     component: UtlunaPageComponent,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'utluna',
     languages: ['Deutsch', 'English', 'Français'],
     name: 'Utluna',
@@ -343,7 +357,6 @@ export const products: Product[] = [
     component: YeekateePageComponent,
     founded: 2021,
     hasSelfHostingAbility: false,
-    isOpenSource: false,
     key: 'yeekatee',
     name: 'yeekatee',
     origin: $localize`Switzerland`,

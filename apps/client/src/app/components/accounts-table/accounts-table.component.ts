@@ -34,6 +34,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   @Output() accountDeleted = new EventEmitter<string>();
   @Output() accountToUpdate = new EventEmitter<AccountModel>();
+  @Output() transferBalance = new EventEmitter<void>();
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -95,6 +96,10 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   public onOpenComment(aComment: string) {
     alert(aComment);
+  }
+
+  public onTransferBalance() {
+    this.transferBalance.emit();
   }
 
   public onUpdateAccount(aAccount: AccountModel) {

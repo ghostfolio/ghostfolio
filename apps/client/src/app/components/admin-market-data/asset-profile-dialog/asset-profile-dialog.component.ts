@@ -13,7 +13,6 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   AdminMarketDataDetails,
-  ScraperConfiguration,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -146,9 +145,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .postBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
+        this.dataService.updateInfo();
+
+        this.isBenchmark = true;
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -182,6 +183,19 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
       .subscribe(() => {
         this.initialize();
+      });
+  }
+
+  public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
+    this.dataService
+      .deleteBenchmark({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.dataService.updateInfo();
+
+        this.isBenchmark = false;
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 

@@ -17,7 +17,7 @@ services:
       redis:
         condition: service_healthy
   postgres:
-    image: postgres:12
+    image: postgres:15
     env_file:
       - ../.env
     healthcheck:

@@ -47,6 +47,7 @@ export class PlatformController {
         StatusCodes.FORBIDDEN
       );
     }
+
     return this.platformService.createPlatform(data);
   }
 
