@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the queue jobs view in the admin control panel to an `@angular/material` data table
+- Improved the symbol conversion in the _EOD Historical Data_ service
 
 ## 2.9.0 - 2023-10-08
 
