@@ -47,7 +47,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DataService {
-  public constructor(private http: HttpClient) { }
+  public constructor(private http: HttpClient) {}
 
   public buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
     let params = new HttpParams();

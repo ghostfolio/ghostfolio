@@ -40,7 +40,7 @@ export class AccountController {
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
-  ) { }
+  ) {}
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
@@ -158,11 +158,9 @@ export class AccountController {
 
   @Post('transfer-balance')
   @UseGuards(AuthGuard('jwt'))
-  public async transferAccountBalance(@Body() {
-    accountIdFrom,
-    accountIdTo,
-    balance
-  }: TransferBalanceDto) {
+  public async transferAccountBalance(
+    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
+  ) {
     if (
       !hasPermission(this.request.user.permissions, permissions.updateAccount)
     ) {
@@ -191,7 +189,6 @@ export class AccountController {
       userId: this.request.user.id
     });
   }
-
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
