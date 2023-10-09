@@ -1,0 +1,17 @@
+<div class="container">
+  <h1
+    class="align-items-center d-none d-sm-flex h3 justify-content-center mb-3 text-center"
+  >
+    <span i18n>Granted Access</span>
+    <gf-premium-indicator
+      *ngIf="user?.subscription?.type === 'Basic'"
+      class="ml-1"
+    ></gf-premium-indicator>
+  </h1>
+  <gf-access-table
+    [accesses]="accesses"
+    [hasPermissionToCreateAccess]="hasPermissionToCreateAccess"
+    [showActions]="hasPermissionToDeleteAccess"
+    (accessDeleted)="onDeleteAccess($event)"
+  ></gf-access-table>
+</div>

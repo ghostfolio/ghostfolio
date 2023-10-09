@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col text-center">
-      <div class="mt-5">
+      <div>
         <div class="badge badge-light badge-pill border mb-3 px-3 py-2">
           <a href="../en/blog/2023/09/ghostfolio-2"
             ><span class="mr-1 text-uppercase" i18n>New</span>
@@ -60,7 +60,7 @@
   <div *ngIf="hasPermissionForStatistics" class="row mb-5">
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
@@ -78,7 +78,7 @@
     </div>
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
@@ -96,7 +96,7 @@
     </div>
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
@@ -320,31 +320,36 @@
 
   <div class="row my-5">
     <div class="col-12">
-      <h2 class="h4 mb-1 text-center" i18n>
+      <h2 class="h4 mb-3 text-center" i18n>
         What our <strong>users</strong> are saying
       </h2>
     </div>
-    <div *ngFor="let testimonial of testimonials" class="col-md-6">
-      <div class="d-flex flex-row py-3">
-        <div class="d-flex justify-content-center">
-          <gf-logo
-            class="mr-3 mt-2 pt-1"
-            size="medium"
-            [showLabel]="false"
-          ></gf-logo>
-        </div>
-        <div>
-          <div>{{ testimonial.quote }}</div>
-          <div class="mt-2 text-muted">
-            —
-            <a *ngIf="testimonial.url" target="_blank" [href]="testimonial.url"
-              >{{ testimonial.author }}</a
-            >
-            <span *ngIf="!testimonial.url">{{ testimonial.author }}</span>, {{
-            testimonial.country }}
+    <div class="col-md-8 offset-md-2">
+      <gf-carousel [aria-label]="'Testimonials'">
+        <div *ngFor="let testimonial of testimonials" gf-carousel-item>
+          <div class="d-flex px-3">
+            <gf-logo
+              class="mr-3 mt-2 pt-1"
+              size="medium"
+              [showLabel]="false"
+            ></gf-logo>
+            <div>
+              <div>{{ testimonial.quote }}</div>
+              <div class="mt-2 text-muted">
+                —
+                <a
+                  *ngIf="testimonial.url"
+                  target="_blank"
+                  [href]="testimonial.url"
+                  >{{ testimonial.author }}</a
+                >
+                <span *ngIf="!testimonial.url">{{ testimonial.author }}</span>,
+                {{ testimonial.country }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </gf-carousel>
     </div>
   </div>
 

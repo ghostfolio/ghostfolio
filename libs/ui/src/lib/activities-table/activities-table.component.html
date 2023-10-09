@@ -156,39 +156,7 @@
         <ng-container i18n>Type</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
-        <div
-          class="d-inline-flex p-1 type-badge"
-          [ngClass]="{
-            buy: element.type === 'BUY',
-            dividend: element.type === 'DIVIDEND',
-            item: element.type === 'ITEM',
-            liability: element.type === 'LIABILITY',
-            sell: element.type === 'SELL',
-            stake: element.type === 'STAKE'
-          }"
-        >
-          <ion-icon
-            *ngIf="
-              element.type === 'BUY' ||
-              element.type === 'DIVIDEND' ||
-              element.type === 'STAKE'
-            "
-            name="arrow-up-circle-outline"
-          ></ion-icon>
-          <ion-icon
-            *ngIf="element.type === 'ITEM'"
-            name="cube-outline"
-          ></ion-icon>
-          <ion-icon
-            *ngIf="element.type === 'LIABILITY'"
-            name="flame-outline"
-          ></ion-icon>
-          <ion-icon
-            *ngIf="element.type === 'SELL'"
-            name="arrow-down-circle-outline"
-          ></ion-icon>
-          <span class="d-none d-lg-block mx-1">{{ element.type }}</span>
-        </div>
+        <gf-activity-type [activityType]="element.type"></gf-activity-type>
       </td>
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
@@ -508,7 +476,7 @@
       </th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
         <button
-          *ngIf="this.showActions"
+          *ngIf="showActions"
           class="mx-1 no-min-width px-2"
           mat-button
           [matMenuTriggerFor]="activityMenu"
@@ -550,6 +518,8 @@
         'cursor-pointer':
           hasPermissionToOpenDetails &&
           !row.isDraft &&
+          row.type !== 'FEE' &&
+          row.type !== 'INTEREST' &&
           row.type !== 'ITEM' &&
           row.type !== 'LIABILITY'
       }"

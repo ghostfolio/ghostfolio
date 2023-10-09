@@ -21,7 +21,6 @@ const locales = {
   PRESET_ID: $localize`Preset`,
   RETIREMENT_PROVISION: $localize`Retirement Provision`,
   SATELLITE: $localize`Satellite`,
-  SECURITIES: $localize`Securities`,
   SYMBOL: $localize`Symbol`,
   TAG: $localize`Tag`,
   YEAR: $localize`Year`,
@@ -30,6 +29,8 @@ const locales = {
   // Activity types
   BUY: $localize`Buy`,
   DIVIDEND: $localize`Dividend`,
+  FEE: $localize`Fee`,
+  INTEREST: $localize`Interest`,
   ITEM: $localize`Valuable`,
   LIABILITY: $localize`Liability`,
   SELL: $localize`Sell`,

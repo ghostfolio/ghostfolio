@@ -15,8 +15,8 @@ export class CreateOrUpdatePlatformDialog {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    public dialogRef: MatDialogRef<CreateOrUpdatePlatformDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdatePlatformDialogParams
+    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdatePlatformDialogParams,
+    public dialogRef: MatDialogRef<CreateOrUpdatePlatformDialog>
   ) {}
 
   public onCancel() {

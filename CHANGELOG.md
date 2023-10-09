@@ -5,15 +5,146 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.9.0 - 2023-10-08
+
+### Added
+
+- Added support to search for a holding by `isin`, `name` and `symbol` (experimental)
+- Added support for notes in the activities import
+- Added support to search in the platform selector of the create or update account dialog
+- Added support for a search query in the portfolio position endpoint
+- Added the application version to the endpoint `GET api/v1/admin`
+- Introduced a carousel component for the testimonial section on the landing page
 
 ### Changed
 
-- Harmonized the logger output: <symbol> (<dataSource>)
-- Improved the language localization for Dutch (`nl`)
+- Displayed the link to the markets overview on the home page without any permission
 
 ### Fixed
 
+- Fixed the style of the active features page in the navigation on desktop
+
+## 2.8.0 - 2023-10-03
+
+### Added
+
+- Supported enter key press to submit the form of the create or update account dialog
+- Added the application version to the admin control panel
+- Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
+
+### Changed
+
+- Harmonized the settings icon of the user account page
+- Improved the usability to set an asset profile as a benchmark
+- Reload platforms after making a change in the admin control panel
+- Reload tags after making a change in the admin control panel
+
+### Fixed
+
+- Fixed the sidebar navigation on the user account page
+
+## 2.7.0 - 2023-09-30
+
+### Added
+
+- Added a new static portfolio analysis rule: Emergency fund setup
+- Added tabs to the user account page
+
+### Changed
+
+- Set up the _Inter_ font family
+- Upgraded `yahoo-finance2` from version `2.7.0` to `2.8.0`
+
+### Fixed
+
+- Fixed a link on the features page
+
+## 2.6.0 - 2023-09-26
+
+### Added
+
+- Added the management of tags in the admin control panel
+- Added a blog post: _Hacktoberfest 2023_
+
+### Changed
+
+- Upgraded `prettier` from version `3.0.2` to `3.0.3`
+- Upgraded `yahoo-finance2` from version `2.5.0` to `2.7.0`
+
+## 2.5.0 - 2023-09-23
+
+### Added
+
+- Added support for translated activity types in the activities table
+- Added support for dates in `DD.MM.YYYY` format in the activities import
+- Set up the language localization for Türkçe (`tr`)
+
+### Changed
+
+- Skipped creating queue jobs for asset profiles with `MANUAL` data source on creating a new activity
+
+### Fixed
+
+- Fixed an issue with the cash position in the holdings table
+
+## 2.4.0 - 2023-09-19
+
+### Added
+
+- Added support for interest on account level (experimental)
+
+### Changed
+
+- Improved the preselected currency based on the account's currency in the create or edit activity dialog
+- Unlocked the experimental features setting for all users
+- Upgraded `prisma` from version `5.2.0` to `5.3.1`
+
+### Fixed
+
+- Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
+
+## 2.3.0 - 2023-09-17
+
+### Added
+
+- Added support for fees on account level (experimental)
+
+### Fixed
+
+- Fixed the export functionality for liabilities
+
+## 2.2.0 - 2023-09-17
+
+### Added
+
+- Introduced a sidebar navigation on desktop
+
+### Changed
+
+- Improved the style of the system message
+- Upgraded _Postgres_ from version `12` to `15` in the `docker-compose` files
+
+## 2.1.0 - 2023-09-15
+
+### Added
+
+- Added support to drop a file in the import activities dialog
+- Added a timeout to all data source requests
+
+### Changed
+
+- Harmonized the style of the user interface for granting and revoking public access to share the portfolio
+- Removed the account type from the user interface as a preparation to remove it from the `Account` database schema
+- Improved the logger output of the info service
+- Harmonized the logger output: `<symbol> (<dataSource>)`
+- Improved the language localization for German (`de`)
+- Improved the language localization for Italian (`it`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the read-only mode
+
+### Fixed
+
+- Fixed the timeout in _EOD Historical Data_ requests
 - Fixed an issue with the portfolio summary caused by the language localization for Dutch (`nl`)
 
 ## 2.0.0 - 2023-09-09
@@ -1520,7 +1651,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for Italiano (`it`)
+- Set up the language localization for Italian (`it`)
 - Extended the landing page
 
 ## 1.195.0 - 20.09.2022
@@ -2943,7 +3074,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Supported the management of additional currencies in the admin control panel
 - Introduced the system message
-- Introduced the read only mode
+- Introduced the read-only mode
 
 ### Changed
 

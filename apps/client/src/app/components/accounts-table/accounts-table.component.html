@@ -1,3 +1,14 @@
+<div *ngIf="false" class="d-flex justify-content-end">
+  <button
+    class="align-items-center d-flex"
+    mat-stroked-button
+    (click)="onTransferBalance()"
+  >
+    <ion-icon class="mr-2" name="arrow-redo-outline"></ion-icon>
+    <ng-container i18n>Transfer Cash Balance</ng-container>...
+  </button>
+</div>
+
 <table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="status">
     <th
@@ -85,7 +96,7 @@
   <ng-container matColumnDef="transactions">
     <th
       *matHeaderCellDef
-      class="px-1 text-right"
+      class="justify-content-end px-1"
       mat-header-cell
       mat-sort-header="transactionCount"
     >
@@ -93,9 +104,7 @@
       <span class="d-none d-sm-block" i18n>Activities</span>
     </th>
     <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-      <ng-container *ngIf="element.accountType === 'SECURITIES'">{{
-        element.transactionCount
-      }}</ng-container>
+      {{ element.transactionCount }}
     </td>
     <td *matFooterCellDef class="px-1 text-right" mat-footer-cell>
       {{ transactionCount }}

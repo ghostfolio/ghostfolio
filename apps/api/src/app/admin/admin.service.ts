@@ -1,4 +1,5 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
+import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -8,7 +9,9 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
-  PROPERTY_CURRENCIES
+  PROPERTY_CURRENCIES,
+  PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
 import {
   AdminData,
@@ -95,7 +98,8 @@ export class AdminService {
       settings: await this.propertyService.get(),
       transactionCount: await this.prismaService.order.count(),
       userCount: await this.prismaService.user.count(),
-      users: await this.getUsersWithAnalytics()
+      users: await this.getUsersWithAnalytics(),
+      version: environment.version
     };
   }
 
@@ -305,7 +309,9 @@ export class AdminService {
       response = await this.propertyService.delete({ key });
     }
 
-    if (key === PROPERTY_CURRENCIES) {
+    if (key === PROPERTY_IS_READ_ONLY_MODE && value === 'true') {
+      await this.putSetting(PROPERTY_IS_USER_SIGNUP_ENABLED, 'false');
+    } else if (key === PROPERTY_CURRENCIES) {
       await this.exchangeRateDataService.initialize();
     }
 

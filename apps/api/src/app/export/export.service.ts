@@ -26,18 +26,8 @@ export class ExportService {
         where: { userId }
       })
     ).map(
-      ({
-        accountType,
-        balance,
-        comment,
-        currency,
-        id,
-        isExcluded,
-        name,
-        platformId
-      }) => {
+      ({ balance, comment, currency, id, isExcluded, name, platformId }) => {
         return {
-          accountType,
           balance,
           comment,
           currency,
@@ -87,7 +77,13 @@ export class ExportService {
             currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol: type === 'ITEM' ? SymbolProfile.name : SymbolProfile.symbol
+            symbol:
+              type === 'FEE' ||
+              type === 'INTEREST' ||
+              type === 'ITEM' ||
+              type === 'LIABILITY'
+                ? SymbolProfile.name
+                : SymbolProfile.symbol
           };
         }
       )

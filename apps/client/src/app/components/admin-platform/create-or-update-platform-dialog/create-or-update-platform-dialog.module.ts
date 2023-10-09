@@ -6,7 +6,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import { CreateOrUpdatePlatformDialog } from './create-or-update-account-platform.component';
+import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog.component';
 
 @NgModule({
   declarations: [CreateOrUpdatePlatformDialog],

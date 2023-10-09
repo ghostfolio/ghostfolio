@@ -24,7 +24,6 @@ import { ImportActivitiesDialog } from './import-activities-dialog/import-activi
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-activities-page',
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'
@@ -81,8 +80,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    const { globalPermissions } = this.dataService.fetchInfo();
-
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
     this.impersonationStorageService
@@ -238,9 +235,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {
         activity,
-        accounts: this.user?.accounts?.filter((account) => {
-          return account.accountType === 'SECURITIES';
-        }),
+        accounts: this.user?.accounts,
         user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
@@ -282,9 +277,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
         const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
           data: {
-            accounts: this.user?.accounts?.filter((account) => {
-              return account.accountType === 'SECURITIES';
-            }),
+            accounts: this.user?.accounts,
             activity: {
               ...aActivity,
               accountId: aActivity?.accountId ?? this.defaultAccountId,

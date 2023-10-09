@@ -1,3 +1,15 @@
+<div *ngIf="hasPermissionToCreateAccess" class="d-flex justify-content-end">
+  <a
+    color="primary"
+    i18n
+    mat-flat-button
+    [queryParams]="{ createDialog: true }"
+    [routerLink]="[]"
+  >
+    Add Access
+  </a>
+</div>
+
 <table class="gf-table w-100" mat-table [dataSource]="dataSource">
   <ng-container matColumnDef="alias">
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Alias</th>

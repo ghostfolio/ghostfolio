@@ -29,13 +29,13 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./account-detail-dialog.component.scss']
 })
 export class AccountDetailDialog implements OnDestroy, OnInit {
-  public accountType: string;
   public balance: number;
   public currency: string;
   public equity: number;
   public name: string;
   public orders: OrderWithAccount[];
   public platformName: string;
+  public transactionCount: number;
   public user: User;
   public valueInBaseCurrency: number;
 
@@ -65,15 +65,14 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
-          accountType,
           balance,
           currency,
           name,
           Platform,
+          transactionCount,
           value,
           valueInBaseCurrency
         }) => {
-          this.accountType = translate(accountType);
           this.balance = balance;
           this.currency = currency;
 
@@ -85,6 +84,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
           this.name = name;
           this.platformName = Platform?.name ?? '-';
+          this.transactionCount = transactionCount;
           this.valueInBaseCurrency = valueInBaseCurrency;
 
           this.changeDetectorRef.markForCheck();

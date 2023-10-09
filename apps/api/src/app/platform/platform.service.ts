@@ -6,6 +6,18 @@ import { Platform, Prisma } from '@prisma/client';
 export class PlatformService {
   public constructor(private readonly prismaService: PrismaService) {}
 
+  public async createPlatform(data: Prisma.PlatformCreateInput) {
+    return this.prismaService.platform.create({
+      data
+    });
+  }
+
+  public async deletePlatform(
+    where: Prisma.PlatformWhereUniqueInput
+  ): Promise<Platform> {
+    return this.prismaService.platform.delete({ where });
+  }
+
   public async getPlatform(
     platformWhereUniqueInput: Prisma.PlatformWhereUniqueInput
   ): Promise<Platform> {
@@ -56,12 +68,6 @@ export class PlatformService {
     });
   }
 
-  public async createPlatform(data: Prisma.PlatformCreateInput) {
-    return this.prismaService.platform.create({
-      data
-    });
-  }
-
   public async updatePlatform({
     data,
     where
@@ -73,11 +79,5 @@ export class PlatformService {
       data,
       where
     });
-  }
-
-  public async deletePlatform(
-    where: Prisma.PlatformWhereUniqueInput
-  ): Promise<Platform> {
-    return this.prismaService.platform.delete({ where });
   }
 }

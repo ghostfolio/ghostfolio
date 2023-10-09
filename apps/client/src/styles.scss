@@ -5,7 +5,7 @@
 
 :root {
   --dark-background: rgb(25, 25, 25);
-  --font-family-sans-serif: Roboto, 'Helvetica Neue', sans-serif;
+  --font-family-sans-serif: 'Inter', Roboto, 'Helvetica Neue', sans-serif;
   --light-background: rgb(255, 255, 255);
 
   --dark-primary-text: 0, 0, 0, 0.87;
@@ -214,6 +214,16 @@ body {
     }
   }
 
+  .mat-mdc-menu-panel {
+    &.assistant {
+      max-width: unset !important;
+
+      .mat-mdc-menu-content {
+        padding: 0;
+      }
+    }
+  }
+
   &.is-dark-theme {
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
@@ -271,6 +281,22 @@ body {
       &.mat-accent,
       &.mat-primary {
         --mdc-filled-button-label-text-color: rgba(var(--dark-primary-text));
+      }
+    }
+
+    .page {
+      &.has-tabs {
+        .mat-mdc-tab-nav-bar {
+          --mat-tab-header-inactive-label-text-color: rgba(
+            var(--light-primary-text)
+          );
+        }
+
+        @media (min-width: 576px) {
+          .mat-mdc-tab-header {
+            background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+          }
+        }
       }
     }
 
@@ -357,6 +383,12 @@ ngx-skeleton-loader {
   @include gf-table;
 }
 
+.has-info-message {
+  .page.has-tabs {
+    height: calc(100vh - 2 * var(--mat-toolbar-standard-height));
+  }
+}
+
 .hidden {
   visibility: hidden;
 }
@@ -430,6 +462,11 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-stepper-vertical,
+.mat-stepper-horizontal {
+  background: transparent !important;
+}
+
 .mdc-button {
   &.mat-accent,
   &.mat-primary {
@@ -450,7 +487,54 @@ ngx-skeleton-loader {
 }
 
 .page {
-  padding-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  &:not(.has-tabs) {
+    @media (min-width: 576px) {
+      padding: 2rem 0;
+    }
+  }
+
+  &.has-tabs {
+    height: calc(100vh - var(--mat-toolbar-standard-height));
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: constant(safe-area-inset-bottom);
+
+    .mat-mdc-tab-nav-bar {
+      --mat-tab-header-active-focus-indicator-color: transparent;
+      --mat-tab-header-active-hover-indicator-color: transparent;
+      --mat-tab-header-inactive-label-text-color: rgba(
+        var(--dark-primary-text)
+      );
+      --mdc-tab-indicator-active-indicator-color: transparent;
+    }
+
+    @media (min-width: 576px) {
+      flex-direction: row-reverse;
+
+      .mat-mdc-tab-header {
+        background-color: rgba(var(--palette-foreground-base), 0.02);
+        padding: 2rem 0;
+        width: 14rem;
+        --mat-tab-header-label-text-tracking: normal;
+        --mdc-secondary-navigation-tab-container-height: 2rem;
+
+        .mat-mdc-tab-links {
+          flex-direction: column;
+
+          .mat-mdc-tab-link {
+            justify-content: flex-start;
+          }
+        }
+      }
+
+      .mat-mdc-tab-nav-panel {
+        padding: 2rem 0;
+      }
+    }
+  }
 }
 
 .svgMap-tooltip {
@@ -463,10 +547,6 @@ ngx-skeleton-loader {
 
 .text-decoration-underline {
   text-decoration: underline !important;
-}
-
-.with-info-message {
-  height: calc(100vh - 5rem - 3.5rem + 0.5rem) !important;
 }
 
 .with-placeholder-as-option {

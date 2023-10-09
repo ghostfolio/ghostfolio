@@ -13,6 +13,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Job } from 'bull';
 import {
+  addDays,
   format,
   getDate,
   getMonth,
@@ -101,15 +102,7 @@ export class DataGatheringProcessor {
           });
         }
 
-        // Count month one up for iteration
-        currentDate = new Date(
-          Date.UTC(
-            getYear(currentDate),
-            getMonth(currentDate),
-            getDate(currentDate) + 1,
-            0
-          )
-        );
+        currentDate = addDays(currentDate, 1);
       }
 
       await this.marketDataService.updateMany({ data });

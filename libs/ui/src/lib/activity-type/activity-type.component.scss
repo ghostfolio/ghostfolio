@@ -1,0 +1,47 @@
+:host {
+  display: block;
+
+  .activity-type-badge {
+    background-color: rgba(var(--palette-foreground-text), 0.05);
+    border-radius: 1rem;
+    line-height: 1em;
+
+    ion-icon {
+      font-size: 1rem;
+    }
+
+    &.buy {
+      color: var(--green);
+    }
+
+    &.dividend {
+      color: var(--blue);
+    }
+
+    &.fee {
+      color: var(--gray);
+    }
+
+    &.interest {
+      color: var(--cyan);
+    }
+
+    &.item {
+      color: var(--purple);
+    }
+
+    &.liability {
+      color: var(--red);
+    }
+
+    &.sell {
+      color: var(--orange);
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .activity-type-badge {
+    background-color: rgba(var(--palette-foreground-text-dark), 0.1) !important;
+  }
+}
