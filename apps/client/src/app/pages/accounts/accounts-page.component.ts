@@ -298,9 +298,15 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           console.log(
             `Transfer cash balance of ${balance} from account ${accountIdFrom} to account ${accountIdTo}`
           );
-        }
 
-        this.router.navigate(['.'], { relativeTo: this.route });
+          this.dataService.postTransferAccountBalance({
+            accountIdFrom,
+            accountIdTo,
+            balance
+          }).pipe(takeUntil(this.unsubscribeSubject)).subscribe(() => {
+            this.router.navigate(['.'], { relativeTo: this.route });
+          });
+        }
       });
   }
 }
