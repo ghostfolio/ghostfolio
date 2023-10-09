@@ -1,10 +1,19 @@
 import * as currencies from '@dinero.js/currencies';
 import { DataSource } from '@prisma/client';
-import { getDate, getMonth, getYear, parse, subDays } from 'date-fns';
-import { de, es, it, nl } from 'date-fns/locale';
+import Big from 'big.js';
+import {
+  getDate,
+  getMonth,
+  getYear,
+  isMatch,
+  parse,
+  parseISO,
+  subDays
+} from 'date-fns';
+import { de, es, fr, it, nl, pt, tr } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
-import { Benchmark } from './interfaces';
+import { Benchmark, UniqueAsset } from './interfaces';
 import { ColorScheme } from './types';
 
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
@@ -14,7 +23,11 @@ export function capitalize(aString: string) {
 }
 
 export function decodeDataSource(encodedDataSource: string) {
-  return Buffer.from(encodedDataSource, 'hex').toString();
+  if (encodedDataSource) {
+    return Buffer.from(encodedDataSource, 'hex').toString();
+  }
+
+  return undefined;
 }
 
 export function downloadAsFile({
@@ -59,6 +72,10 @@ export function extractNumberFromString(aString: string): number {
   }
 }
 
+export function getAssetProfileIdentifier({ dataSource, symbol }: UniqueAsset) {
+  return `${dataSource}-${symbol}`;
+}
+
 export function getBackgroundColor(aColorScheme: ColorScheme) {
   return getCssVariable(
     aColorScheme === 'DARK' ||
@@ -79,10 +96,16 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return de;
   } else if (aLanguageCode === 'es') {
     return es;
+  } else if (aLanguageCode === 'fr') {
+    return fr;
   } else if (aLanguageCode === 'it') {
     return it;
   } else if (aLanguageCode === 'nl') {
     return nl;
+  } else if (aLanguageCode === 'pt') {
+    return pt;
+  } else if (aLanguageCode === 'tr') {
+    return tr;
   }
 
   return undefined;
@@ -113,6 +136,18 @@ export function getDateWithTimeFormatString(aLocale?: string) {
   return `${getDateFormatString(aLocale)}, HH:mm:ss`;
 }
 
+export function getEmojiFlag(aCountryCode: string) {
+  if (!aCountryCode) {
+    return aCountryCode;
+  }
+
+  return aCountryCode
+    .toUpperCase()
+    .replace(/./g, (character) =>
+      String.fromCodePoint(127397 + character.charCodeAt(0))
+    );
+}
+
 export function getLocale() {
   return navigator.languages?.length
     ? navigator.languages[0]
@@ -133,6 +168,21 @@ export function getNumberFormatGroup(aLocale?: string) {
   return formatObject.find((object) => {
     return object.type === 'group';
   }).value;
+}
+
+export function getStartOfUtcDate(aDate: Date) {
+  const date = new Date(aDate);
+  date.setUTCHours(0, 0, 0, 0);
+
+  return date;
+}
+
+export function getSum(aArray: Big[]) {
+  if (aArray?.length > 0) {
+    return aArray.reduce((a, b) => a.plus(b), new Big(0));
+  }
+
+  return new Big(0);
 }
 
 export function getTextColor(aColorScheme: ColorScheme) {
@@ -194,6 +244,16 @@ export function isCurrency(aSymbol = '') {
   return currencies[aSymbol];
 }
 
+export function interpolate(template: string, context: any) {
+  return template?.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
+    const properties = objectPath.split('.');
+    return properties.reduce(
+      (previous, current) => previous?.[current],
+      context
+    );
+  });
+}
+
 export function resetHours(aDate: Date) {
   const year = getYear(aDate);
   const month = getMonth(aDate);
@@ -229,15 +289,39 @@ export function resolveMarketCondition(
 }
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
+export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
+export const DATE_FORMAT_YEARLY = 'yyyy';
 
-export function parseDate(date: string) {
-  return parse(date, DATE_FORMAT, new Date());
+export function parseDate(date: string): Date | null {
+  // Transform 'yyyyMMdd' format to supported format by parse function
+  if (date?.length === 8) {
+    const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);
+
+    if (match) {
+      const [, year, month, day] = match;
+      date = `${year}-${month}-${day}`;
+    }
+  }
+
+  const dateFormat = [
+    'dd-MM-yyyy',
+    'dd/MM/yyyy',
+    'dd.MM.yyyy',
+    'yyyy-MM-dd',
+    'yyyy/MM/dd',
+    'yyyy.MM.dd',
+    'yyyyMMdd'
+  ].find((format) => {
+    return isMatch(date, format) && format.length === date.length;
+  });
+
+  if (dateFormat) {
+    return parse(date, dateFormat, new Date());
+  }
+
+  return parseISO(date);
 }
 
 export function prettifySymbol(aSymbol: string): string {
   return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
-}
-
-export function transformTickToAbbreviation(value: number) {
-  return value < 1000000 ? `${value / 1000}K` : `${value / 1000000}M`;
 }

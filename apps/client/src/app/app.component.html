@@ -1,36 +1,27 @@
 <header>
-  <gf-header
-    class="position-fixed w-100"
-    [currentRoute]="currentRoute"
-    [info]="info"
-    [user]="user"
-    (signOut)="onSignOut()"
-  ></gf-header>
-</header>
-
-<main role="main">
   <div
     *ngIf="canCreateAccount || (info?.systemMessage && user)"
-    class="container info-message-container"
+    class="info-message-container"
   >
-    <div class="row">
-      <div class="col-md-8 offset-md-2 text-center">
+    <div class="info-message-inner-container position-fixed w-100">
+      <div class="align-items-center d-flex h-100 justify-content-center">
         <a
           *ngIf="canCreateAccount"
           class="text-center"
-          [routerLink]="['/register']"
+          [routerLink]="routerLinkRegister"
         >
           <div
-            class="cursor-pointer d-inline-block info-message px-3 py-2"
+            class="cursor-pointer d-inline-block info-message"
             (click)="onCreateAccount()"
           >
-            <span>You are using the Live Demo.</span>
-            <span class="a ml-2">Create Account</span>
+            <span i18n>You are using the Live Demo.</span>
+            <span class="a ml-2" i18n>Create Account</span>
           </div></a
         >
         <div
           *ngIf="!canCreateAccount && info?.systemMessage && user"
-          class="d-inline-block info-message px-3 py-2"
+          class="cursor-pointer d-inline-block info-message text-truncate"
+          (click)="onShowSystemMessage()"
         >
           {{ info.systemMessage }}
         </div>
@@ -38,23 +29,153 @@
     </div>
   </div>
 
+  <gf-header
+    class="position-fixed w-100"
+    [currentRoute]="currentRoute"
+    [deviceType]="deviceType"
+    [hasTabs]="hasTabs"
+    [info]="info"
+    [pageTitle]="pageTitle"
+    [user]="user"
+    (signOut)="onSignOut()"
+  ></gf-header>
+</header>
+
+<main role="main">
   <router-outlet></router-outlet>
 </main>
 
-<footer
-  *ngIf="currentRoute === 'start'"
-  class="footer d-flex justify-content-center w-100"
->
-  <div class="container text-center">
-    <div>
-      © {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
-      {{ version }}
+<footer *ngIf="showFooter" class="d-flex justify-content-center py-4 w-100">
+  <div class="container">
+    <div class="mb-3 row">
+      <div class="col-sm">
+        <a [routerLink]="['/']"><gf-logo /></a>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2" i18n>Personal Finance</div>
+        <ul class="list-unstyled">
+          <li *ngIf="hasPermissionToAccessFearAndGreedIndex">
+            <a i18n [routerLink]="routerLinkMarkets">Markets</a>
+          </li>
+          <li><a i18n [routerLink]="routerLinkResources">Resources</a></li>
+        </ul>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2">Ghostfolio</div>
+        <ul class="list-unstyled">
+          <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
+          <li *ngIf="hasPermissionForBlog">
+            <a i18n [routerLink]="['/blog']">Blog</a>
+          </li>
+          <li>
+            <a i18n [routerLink]="routerLinkAboutChangelog">Changelog</a>
+          </li>
+          <li><a i18n [routerLink]="routerLinkFeatures">Features</a></li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="routerLinkFaq"
+              >Frequently Asked Questions (FAQ)</a
+            >
+          </li>
+          <li>
+            <a i18n [routerLink]="routerLinkAboutLicense">License</a>
+          </li>
+          <li *ngIf="hasPermissionForStatistics">
+            <a [routerLink]="['/open']">Open Startup</a>
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="routerLinkPricing">Pricing</a>
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"
+              >Privacy Policy</a
+            >
+          </li>
+          <li *ngIf="hasPermissionForSubscription">
+            <a
+              class="align-items-baseline d-flex"
+              href="https://status.ghostfol.io"
+              target="_blank"
+              title="Ghostfolio Status"
+              >Status<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-sm">
+        <div class="h6 mt-2" i18n>Community</div>
+        <ul class="list-unstyled">
+          <li>
+            <a
+              class="align-items-baseline d-flex"
+              href="https://github.com/ghostfolio/ghostfolio"
+              target="_blank"
+              title="Find Ghostfolio on GitHub"
+              >GitHub<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+          <li>
+            <a
+              class="align-items-baseline d-flex"
+              href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+              target="_blank"
+              title="Join the Ghostfolio Slack community"
+              >Slack<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+          <li>
+            <a
+              class="align-items-baseline d-flex"
+              href="https://twitter.com/ghostfolio_"
+              target="_blank"
+              title="Follow Ghostfolio on Twitter"
+              >Twitter<ion-icon class="ml-1" name="open-outline"></ion-icon
+            ></a>
+          </li>
+          <li>&nbsp;</li>
+          <li>
+            <a href="../de" title="Ghostfolio in Deutsch">Deutsch</a>
+          </li>
+          <li>
+            <a href="../en" title="Ghostfolio in English">English</a>
+          </li>
+          <li>
+            <a href="../es" title="Ghostfolio in Español">Español</a>
+          </li>
+          <li>
+            <a href="../fr" title="Ghostfolio en Français">Français</a>
+          </li>
+          <li>
+            <a href="../it" title="Ghostfolio in Italiano">Italiano</a>
+          </li>
+          <li>
+            <a href="../nl" title="Ghostfolio in Nederlands">Nederlands</a>
+          </li>
+          <li>
+            <a href="../pt" title="Ghostfolio in Português">Português</a>
+          </li>
+          <!--
+            <li>
+              <a href="../tr" title="Ghostfolio in Türkçe">Türkçe</a>
+            </li>
+          -->
+        </ul>
+      </div>
     </div>
-    <div class="py-2 text-muted">
-      <small i18n
-        >The risk of loss in trading can be substantial. It is not advisable to
-        invest money you may need in the short term.</small
-      >
+
+    <div class="row text-center">
+      <div class="col">
+        © 2021 - {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
+        {{ version }}
+      </div>
+    </div>
+
+    <div class="row text-center text-muted">
+      <div class="col">
+        <small i18n
+          >The risk of loss in trading can be substantial. It is not advisable
+          to invest money you may need in the short term.</small
+        >
+      </div>
     </div>
   </div>
 </footer>

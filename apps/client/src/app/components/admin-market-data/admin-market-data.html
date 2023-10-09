@@ -13,10 +13,10 @@
     <div class="col">
       <table
         class="gf-table w-100"
+        mat-table
         matSort
         matSortActive="symbol"
         matSortDirection="asc"
-        mat-table
         [dataSource]="dataSource"
       >
         <ng-container matColumnDef="symbol">
@@ -56,7 +56,7 @@
         </ng-container>
 
         <ng-container matColumnDef="date">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>First Activity</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
@@ -64,17 +64,17 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="activityCount">
+        <ng-container matColumnDef="activitiesCount">
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Activity Count</ng-container>
+            <ng-container i18n>Activities Count</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.activityCount }}
+            {{ element.activitiesCount }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="marketDataItemCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>Historical Data</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
@@ -82,17 +82,8 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="countriesCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Countries Count</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.countriesCount }}
-          </td>
-        </ng-container>
-
         <ng-container matColumnDef="sectorsCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>Sectors Count</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 text-right" mat-cell>
@@ -100,33 +91,61 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="countriesCount">
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
+            <ng-container i18n>Countries Count</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+            {{ element.countriesCount }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="comment">
+          <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            <ion-icon
+              *ngIf="element.comment"
+              class="d-block"
+              name="document-text-outline"
+            ></ion-icon>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="actions">
-          <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
-          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+          <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
             <button
               class="mx-1 no-min-width px-2"
               mat-button
-              [matMenuTriggerFor]="accountMenu"
+              [matMenuTriggerFor]="assetProfilesActionsMenu"
               (click)="$event.stopPropagation()"
             >
               <ion-icon name="ellipsis-vertical"></ion-icon>
             </button>
-            <mat-menu #accountMenu="matMenu" xPosition="before">
-              <button
-                mat-menu-item
-                (click)="onGatherSymbol({dataSource: element.dataSource, symbol: element.symbol})"
-              >
-                <ng-container i18n>Gather Data</ng-container>
+            <mat-menu #assetProfilesActionsMenu="matMenu" xPosition="before">
+              <button mat-menu-item (click)="onGather7Days()">
+                <ng-container i18n>Gather Recent Data</ng-container>
               </button>
-              <button
-                mat-menu-item
-                (click)="onGatherProfileDataBySymbol({dataSource: element.dataSource, symbol: element.symbol})"
-              >
+              <button mat-menu-item (click)="onGatherMax()">
+                <ng-container i18n>Gather All Data</ng-container>
+              </button>
+              <button mat-menu-item (click)="onGatherProfileData()">
                 <ng-container i18n>Gather Profile Data</ng-container>
               </button>
+            </mat-menu>
+          </th>
+          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+            <button
+              class="mx-1 no-min-width px-2"
+              mat-button
+              [matMenuTriggerFor]="assetProfileActionsMenu"
+              (click)="$event.stopPropagation()"
+            >
+              <ion-icon name="ellipsis-horizontal"></ion-icon>
+            </button>
+            <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
               <button
                 mat-menu-item
-                [disabled]="element.activityCount !== 0"
+                [disabled]="element.activitiesCount !== 0"
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >
                 <ng-container i18n>Delete</ng-container>
@@ -140,9 +159,43 @@
           *matRowDef="let row; columns: displayedColumns"
           class="cursor-pointer"
           mat-row
-          (click)="onOpenAssetProfileDialog({ dateOfFirstActivity: row.date, dataSource: row.dataSource, symbol: row.symbol })"
+          (click)="onOpenAssetProfileDialog({ dataSource: row.dataSource, symbol: row.symbol })"
         ></tr>
       </table>
+
+      <mat-paginator
+        [length]="totalItems"
+        [ngClass]="{
+          'd-none':
+            (isLoading && totalItems === 0) ||
+            totalItems <= pageSize
+        }"
+        [pageSize]="pageSize"
+        [showFirstLastButtons]="true"
+        (page)="onChangePage($event)"
+      ></mat-paginator>
+
+      <ngx-skeleton-loader
+        *ngIf="isLoading && totalItems === 0"
+        animation="pulse"
+        class="px-4 py-3"
+        [theme]="{
+          height: '1.5rem',
+          width: '100%'
+        }"
+      ></ngx-skeleton-loader>
     </div>
+  </div>
+
+  <div class="fab-container">
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [queryParams]="{ createAssetProfileDialog: true }"
+      [routerLink]="[]"
+    >
+      <ion-icon name="add-outline" size="large"></ion-icon>
+    </a>
   </div>
 </div>

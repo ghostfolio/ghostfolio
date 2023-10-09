@@ -64,7 +64,8 @@ describe('PortfolioCalculator', () => {
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth = portfolioCalculator.getInvestmentsByMonth();
+      const investmentsByMonth =
+        portfolioCalculator.getInvestmentsByGroup('month');
 
       spy.mockRestore();
 
@@ -81,6 +82,7 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('320.43'),
             currency: 'CHF',
             dataSource: 'YAHOO',
+            fee: new Big('0'),
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74'),
             grossPerformancePercentage: new Big('42.40043067128546016291'),
@@ -103,6 +105,40 @@ describe('PortfolioCalculator', () => {
 
       expect(investmentsByMonth).toEqual([
         { date: '2015-01-01', investment: new Big('640.86') },
+        { date: '2015-02-01', investment: new Big('0') },
+        { date: '2015-03-01', investment: new Big('0') },
+        { date: '2015-04-01', investment: new Big('0') },
+        { date: '2015-05-01', investment: new Big('0') },
+        { date: '2015-06-01', investment: new Big('0') },
+        { date: '2015-07-01', investment: new Big('0') },
+        { date: '2015-08-01', investment: new Big('0') },
+        { date: '2015-09-01', investment: new Big('0') },
+        { date: '2015-10-01', investment: new Big('0') },
+        { date: '2015-11-01', investment: new Big('0') },
+        { date: '2015-12-01', investment: new Big('0') },
+        { date: '2016-01-01', investment: new Big('0') },
+        { date: '2016-02-01', investment: new Big('0') },
+        { date: '2016-03-01', investment: new Big('0') },
+        { date: '2016-04-01', investment: new Big('0') },
+        { date: '2016-05-01', investment: new Big('0') },
+        { date: '2016-06-01', investment: new Big('0') },
+        { date: '2016-07-01', investment: new Big('0') },
+        { date: '2016-08-01', investment: new Big('0') },
+        { date: '2016-09-01', investment: new Big('0') },
+        { date: '2016-10-01', investment: new Big('0') },
+        { date: '2016-11-01', investment: new Big('0') },
+        { date: '2016-12-01', investment: new Big('0') },
+        { date: '2017-01-01', investment: new Big('0') },
+        { date: '2017-02-01', investment: new Big('0') },
+        { date: '2017-03-01', investment: new Big('0') },
+        { date: '2017-04-01', investment: new Big('0') },
+        { date: '2017-05-01', investment: new Big('0') },
+        { date: '2017-06-01', investment: new Big('0') },
+        { date: '2017-07-01', investment: new Big('0') },
+        { date: '2017-08-01', investment: new Big('0') },
+        { date: '2017-09-01', investment: new Big('0') },
+        { date: '2017-10-01', investment: new Big('0') },
+        { date: '2017-11-01', investment: new Big('0') },
         { date: '2017-12-01', investment: new Big('-14156.4') }
       ]);
     });

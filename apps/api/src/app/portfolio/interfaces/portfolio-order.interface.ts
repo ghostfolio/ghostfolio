@@ -1,4 +1,4 @@
-import { DataSource, Type as TypeOfOrder } from '@prisma/client';
+import { DataSource, Tag, Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 
 export interface PortfolioOrder {
@@ -9,6 +9,7 @@ export interface PortfolioOrder {
   name: string;
   quantity: Big;
   symbol: string;
+  tags?: Tag[];
   type: TypeOfOrder;
   unitPrice: Big;
 }

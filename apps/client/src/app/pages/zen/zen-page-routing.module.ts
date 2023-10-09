@@ -10,8 +10,7 @@ const routes: Routes = [
   {
     canActivate: [AuthGuard],
     children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: HomeOverviewComponent },
+      { path: '', component: HomeOverviewComponent },
       { path: 'holdings', component: HomeHoldingsComponent }
     ],
     component: ZenPageComponent,

@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "date": "2023-04-29T00:00:00.000Z",
+    "version": "dev"
+  },
+  "activities": [
+    {
+      "fee": 0,
+      "quantity": 10,
+      "type": "BUY",
+      "unitPrice": 65.31,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2012-01-02T22:00:00.000Z",
+      "symbol": "VTI"
+    },
+    {
+      "fee": 0,
+      "quantity": 10,
+      "type": "BUY",
+      "unitPrice": 65.40,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2011-01-02T22:00:00.000Z",
+      "symbol": "VTI"
+    },
+    {
+      "fee": 0,
+      "quantity": 10,
+      "type": "BUY",
+      "unitPrice": 57.05,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2010-01-03T22:00:00.000Z",
+      "symbol": "VTI"
+    }
+  ]
+}

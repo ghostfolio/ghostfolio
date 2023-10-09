@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM node:16-slim as builder
+FROM --platform=$BUILDPLATFORM node:18-slim as builder
 
 # Build application and add additional files
 WORKDIR /ghostfolio
@@ -33,7 +33,7 @@ COPY ./tsconfig.base.json tsconfig.base.json
 COPY ./libs libs
 COPY ./apps apps
 
-RUN yarn build:all
+RUN yarn build:production
 
 # Prepare the dist image with additional node_modules
 WORKDIR /ghostfolio/dist/apps/api
@@ -50,12 +50,12 @@ COPY package.json /ghostfolio/dist/apps/api
 RUN yarn database:generate-typings
 
 # Image to run, copy everything needed from builder
-FROM node:16-slim
+FROM node:18-slim
 RUN apt update && apt install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 WORKDIR /ghostfolio/apps/api
-EXPOSE 3333
-CMD [  "yarn", "start:prod" ]
+EXPOSE ${PORT:-3333}
+CMD [ "yarn", "start:production" ]

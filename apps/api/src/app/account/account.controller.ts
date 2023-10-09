@@ -1,10 +1,7 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
-import {
-  nullifyValuesInObject,
-  nullifyValuesInObjects
-} from '@ghostfolio/api/helper/object.helper';
-import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { Accounts } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type {
@@ -22,7 +19,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -39,8 +37,7 @@ export class AccountController {
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Delete(':id')
@@ -85,86 +82,35 @@ export class AccountController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAllAccounts(
-    @Headers('impersonation-id') impersonationId
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId
   ): Promise<Accounts> {
     const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        impersonationId,
-        this.request.user.id
-      );
+      await this.impersonationService.validateImpersonationId(impersonationId);
 
-    let accountsWithAggregations =
-      await this.portfolioService.getAccountsWithAggregations({
-        userId: impersonationUserId || this.request.user.id,
-        withExcludedAccounts: true
-      });
-
-    if (
-      impersonationUserId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      accountsWithAggregations = {
-        ...nullifyValuesInObject(accountsWithAggregations, [
-          'totalBalanceInBaseCurrency',
-          'totalValueInBaseCurrency'
-        ]),
-        accounts: nullifyValuesInObjects(accountsWithAggregations.accounts, [
-          'balance',
-          'balanceInBaseCurrency',
-          'convertedBalance',
-          'fee',
-          'quantity',
-          'unitPrice',
-          'value',
-          'valueInBaseCurrency'
-        ])
-      };
-    }
-
-    return accountsWithAggregations;
+    return this.portfolioService.getAccountsWithAggregations({
+      userId: impersonationUserId || this.request.user.id,
+      withExcludedAccounts: true
+    });
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
-    @Headers('impersonation-id') impersonationId,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Param('id') id: string
   ): Promise<AccountWithValue> {
     const impersonationUserId =
-      await this.impersonationService.validateImpersonationId(
-        impersonationId,
-        this.request.user.id
-      );
+      await this.impersonationService.validateImpersonationId(impersonationId);
 
-    let accountsWithAggregations =
+    const accountsWithAggregations =
       await this.portfolioService.getAccountsWithAggregations({
         filters: [{ id, type: 'ACCOUNT' }],
         userId: impersonationUserId || this.request.user.id,
         withExcludedAccounts: true
       });
-
-    if (
-      impersonationUserId ||
-      this.userService.isRestrictedView(this.request.user)
-    ) {
-      accountsWithAggregations = {
-        ...nullifyValuesInObject(accountsWithAggregations, [
-          'totalBalanceInBaseCurrency',
-          'totalValueInBaseCurrency'
-        ]),
-        accounts: nullifyValuesInObjects(accountsWithAggregations.accounts, [
-          'balance',
-          'balanceInBaseCurrency',
-          'convertedBalance',
-          'fee',
-          'quantity',
-          'unitPrice',
-          'value',
-          'valueInBaseCurrency'
-        ])
-      };
-    }
 
     return accountsWithAggregations.accounts[0];
   }

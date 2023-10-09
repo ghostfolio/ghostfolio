@@ -28,7 +28,6 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() errors: ResponseError['errors'];
-  @Input() hasError: boolean;
   @Input() isAllTimeHigh: boolean;
   @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;

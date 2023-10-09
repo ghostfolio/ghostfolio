@@ -1,17 +1,21 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
   Get,
   HttpException,
+  Inject,
   Param,
   Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
+import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isDate, isEmpty } from 'lodash';
 
@@ -21,7 +25,10 @@ import { SymbolService } from './symbol.service';
 
 @Controller('symbol')
 export class SymbolController {
-  public constructor(private readonly symbolService: SymbolService) {}
+  public constructor(
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly symbolService: SymbolService
+  ) {}
 
   /**
    * Must be before /:symbol
@@ -30,10 +37,15 @@ export class SymbolController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
-    @Query() { query = '' }
+    @Query('includeIndices') includeIndices: boolean = false,
+    @Query('query') query = ''
   ): Promise<{ items: LookupItem[] }> {
     try {
-      return this.symbolService.lookup(query.toLowerCase());
+      return this.symbolService.lookup({
+        includeIndices,
+        query: query.toLowerCase(),
+        user: this.request.user
+      });
     } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
@@ -51,7 +63,7 @@ export class SymbolController {
   public async getSymbolData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string,
-    @Query('includeHistoricalData') includeHistoricalData?: number
+    @Query('includeHistoricalData') includeHistoricalData = 0
   ): Promise<SymbolItem> {
     if (!DataSource[dataSource]) {
       throw new HttpException(
@@ -82,7 +94,7 @@ export class SymbolController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<IDataProviderHistoricalResponse> {
-    const date = new Date(dateString);
+    const date = parseISO(dateString);
 
     if (!isDate(date)) {
       throw new HttpException(
@@ -91,10 +103,19 @@ export class SymbolController {
       );
     }
 
-    return this.symbolService.getForDate({
+    const result = await this.symbolService.getForDate({
       dataSource,
       date,
       symbol
     });
+
+    if (!result || isEmpty(result)) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return result;
   }
 }

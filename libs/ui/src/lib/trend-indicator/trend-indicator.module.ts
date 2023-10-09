@@ -8,7 +8,6 @@ import { TrendIndicatorComponent } from './trend-indicator.component';
   declarations: [TrendIndicatorComponent],
   exports: [TrendIndicatorComponent],
   imports: [CommonModule, NgxSkeletonLoaderModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfTrendIndicatorModule {}

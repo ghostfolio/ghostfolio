@@ -3,11 +3,11 @@ import {
   IDataGatheringItem,
   IDataProviderHistoricalResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
 import { format, subDays } from 'date-fns';
 
 import { LookupItem } from './interfaces/lookup-item.interface';
@@ -27,12 +27,12 @@ export class SymbolService {
     dataGatheringItem: IDataGatheringItem;
     includeHistoricalData?: number;
   }): Promise<SymbolItem> {
-    const quotes = await this.dataProviderService.getQuotes([
-      dataGatheringItem
-    ]);
+    const quotes = await this.dataProviderService.getQuotes({
+      items: [dataGatheringItem]
+    });
     const { currency, marketPrice } = quotes[dataGatheringItem.symbol] ?? {};
 
-    if (dataGatheringItem.dataSource && marketPrice) {
+    if (dataGatheringItem.dataSource && marketPrice >= 0) {
       let historicalData: HistoricalDataItem[] = [];
 
       if (includeHistoricalData > 0) {
@@ -65,13 +65,9 @@ export class SymbolService {
 
   public async getForDate({
     dataSource,
-    date,
+    date = new Date(),
     symbol
-  }: {
-    dataSource: DataSource;
-    date: Date;
-    symbol: string;
-  }): Promise<IDataProviderHistoricalResponse> {
+  }: IDataGatheringItem): Promise<IDataProviderHistoricalResponse> {
     const historicalData = await this.dataProviderService.getHistoricalRaw(
       [{ dataSource, symbol }],
       date,
@@ -84,15 +80,27 @@ export class SymbolService {
     };
   }
 
-  public async lookup(aQuery: string): Promise<{ items: LookupItem[] }> {
+  public async lookup({
+    includeIndices = false,
+    query,
+    user
+  }: {
+    includeIndices?: boolean;
+    query: string;
+    user: UserWithSettings;
+  }): Promise<{ items: LookupItem[] }> {
     const results: { items: LookupItem[] } = { items: [] };
 
-    if (!aQuery) {
+    if (!query) {
       return results;
     }
 
     try {
-      const { items } = await this.dataProviderService.search(aQuery);
+      const { items } = await this.dataProviderService.search({
+        includeIndices,
+        query,
+        user
+      });
       results.items = items;
       return results;
     } catch (error) {

@@ -1,0 +1,37 @@
+:host {
+  display: block;
+
+  .result-container {
+    max-height: 15rem;
+  }
+
+  .search-container {
+    border-bottom: 1px solid rgba(var(--dark-dividers));
+    height: 2.5rem;
+
+    input {
+      background: transparent;
+      outline: 0;
+    }
+
+    .hot-key-hint {
+      border: 1px solid rgba(var(--dark-dividers));
+      border-radius: 0.25rem;
+      cursor: default;
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .search-container {
+    border-color: rgba(var(--light-dividers));
+
+    input {
+      color: rgba(var(--light-primary-text));
+    }
+
+    .hot-key-hint {
+      border-color: rgba(var(--light-dividers));
+    }
+  }
+}

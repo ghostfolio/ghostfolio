@@ -1,6 +1,8 @@
 <div class="mb-2 row">
   <div class="col-md-6 col-xs-12 d-flex">
-    <div class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate">
+    <div
+      class="align-items-center d-flex flex-grow-1 h5 mb-0 py-2 text-truncate"
+    >
       <span i18n>Performance</span>
       <gf-premium-indicator
         *ngIf="user?.subscription?.type === 'Basic'"
@@ -13,11 +15,11 @@
       appearance="outline"
       class="w-100 without-hint"
       color="accent"
-      [hidden]="benchmarks?.length === 0"
     >
       <mat-label i18n>Compare with...</mat-label>
       <mat-select
         name="benchmark"
+        [disabled]="user?.subscription?.type === 'Basic'"
         [value]="benchmark"
         (selectionChange)="onChangeBenchmark($event.value)"
       >
@@ -26,6 +28,12 @@
           *ngFor="let symbolProfile of benchmarks"
           [value]="symbolProfile.id"
           >{{ symbolProfile.name }}</mat-option
+        >
+        <mat-option
+          *ngIf="hasPermissionToAccessAdminControl"
+          i18n
+          [routerLink]="['/admin', 'market-data']"
+          >Manage Benchmarks</mat-option
         >
       </mat-select>
     </mat-form-field>

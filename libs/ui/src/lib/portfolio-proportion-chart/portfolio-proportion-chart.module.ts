@@ -7,7 +7,6 @@ import { PortfolioProportionChartComponent } from './portfolio-proportion-chart.
 @NgModule({
   declarations: [PortfolioProportionChartComponent],
   exports: [PortfolioProportionChartComponent],
-  imports: [CommonModule, NgxSkeletonLoaderModule],
-  providers: []
+  imports: [CommonModule, NgxSkeletonLoaderModule]
 })
 export class GfPortfolioProportionChartModule {}

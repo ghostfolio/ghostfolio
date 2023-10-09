@@ -1,10 +1,11 @@
-import { DataSource } from '@prisma/client';
+import { DataSource, Tag } from '@prisma/client';
 import Big from 'big.js';
 
 export interface TimelinePosition {
   averagePrice: Big;
   currency: string;
   dataSource: DataSource;
+  fee: Big;
   firstBuyDate: string;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
@@ -14,5 +15,6 @@ export interface TimelinePosition {
   netPerformancePercentage: Big;
   quantity: Big;
   symbol: string;
+  tags?: Tag[];
   transactionCount: number;
 }

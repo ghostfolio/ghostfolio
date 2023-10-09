@@ -1,5 +1,5 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
@@ -7,8 +7,9 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
+import * as Alphavantage from 'alphavantage';
 import { format, isAfter, isBefore, parse } from 'date-fns';
 
 import { IAlphaVantageHistoricalResponse } from './interfaces/interfaces';
@@ -20,7 +21,7 @@ export class AlphaVantageService implements DataProviderInterface {
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    this.alphaVantage = require('alphavantage')({
+    this.alphaVantage = Alphavantage({
       key: this.configurationService.get('ALPHA_VANTAGE_API_KEY')
     });
   }
@@ -33,8 +34,23 @@ export class AlphaVantageService implements DataProviderInterface {
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
     return {
-      dataSource: this.getName()
+      dataSource: this.getName(),
+      symbol: aSymbol
     };
+  }
+
+  public async getDividends({
+    from,
+    granularity = 'day',
+    symbol,
+    to
+  }: {
+    from: Date;
+    granularity: Granularity;
+    symbol: string;
+    to: Date;
+  }) {
+    return {};
   }
 
   public async getHistorical(
@@ -95,12 +111,25 @@ export class AlphaVantageService implements DataProviderInterface {
     return {};
   }
 
-  public async search(aQuery: string): Promise<{ items: LookupItem[] }> {
-    const result = await this.alphaVantage.data.search(aQuery);
+  public getTestSymbol() {
+    return undefined;
+  }
+
+  public async search({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }): Promise<{ items: LookupItem[] }> {
+    const result = await this.alphaVantage.data.search(query);
 
     return {
       items: result?.bestMatches?.map((bestMatch) => {
         return {
+          assetClass: undefined,
+          assetSubClass: undefined,
+          currency: bestMatch['8. currency'],
           dataSource: this.getName(),
           name: bestMatch['2. name'],
           symbol: bestMatch['1. symbol']

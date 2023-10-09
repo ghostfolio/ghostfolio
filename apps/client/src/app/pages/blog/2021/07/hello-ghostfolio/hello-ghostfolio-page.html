@@ -19,7 +19,7 @@
             Due to rising inflation and negative interest rates, I have been
             looking for some time at how I can invest my assets in the most
             diversified way possible. Specifically, I follow a
-            <a [routerLink]="['/resources']">buy and hold strategy</a> with
+            <a [routerLink]="routerLinkResources">buy and hold strategy</a> with
             investments in different asset classes spread across different
             platforms. Therefore, I was looking for an app that would
             holistically aggregate my portfolio. During my research on the
@@ -115,7 +115,7 @@
             strategy? I'm happy for everyone who tries Ghostfolio. Are you
             convinced of its potential? Any support for Ghostfolio is welcome.
             Be it with a
-            <a [routerLink]="['/pricing']">Ghostfolio Premium</a>
+            <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a>
             Subscription to finance the hosting, a positive rating in the
             <a
               href="https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa"
@@ -125,7 +125,7 @@
             feedback, bug reports, feature requests and of course contributions!
           </p>
           <p>
-            You can reach me by email at
+            You can reach me by e-mail at
             <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a> or on Twitter
             <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a>.
           </p>
@@ -177,6 +177,19 @@
             </li>
           </ul>
         </section>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a i18n [routerLink]="['/blog']">Blog</a>
+            </li>
+            <li
+              aria-current="page"
+              class="active breadcrumb-item text-truncate"
+            >
+              Hello Ghostfolio
+            </li>
+          </ol>
+        </nav>
       </article>
     </div>
   </div>

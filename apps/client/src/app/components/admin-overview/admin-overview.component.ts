@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { environment } from '@ghostfolio/client/../environments/environment';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -8,7 +9,9 @@ import {
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
-  PROPERTY_SYSTEM_MESSAGE
+  PROPERTY_IS_USER_SIGNUP_ENABLED,
+  PROPERTY_SYSTEM_MESSAGE,
+  ghostfolioPrefix
 } from '@ghostfolio/common/config';
 import { Coupon, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -28,7 +31,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-overview.html'
 })
 export class AdminOverviewComponent implements OnDestroy, OnInit {
-  public couponDuration: StringValue = '30 days';
+  public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
   public customCurrencies: string[];
   public exchangeRates: { label1: string; label2: string; value: number }[];
@@ -36,9 +39,11 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
+  public permissions = permissions;
   public transactionCount: number;
   public userCount: number;
   public user: User;
+  public version: string;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -97,7 +102,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public onAddCoupon() {
     const coupons = [
       ...this.coupons,
-      { code: this.generateCouponCode(16), duration: this.couponDuration }
+      {
+        code: `${ghostfolioPrefix}${this.generateCouponCode(14)}`,
+        duration: this.couponDuration
+      }
     ];
     this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
   }
@@ -162,39 +170,17 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onGather7Days() {
-    this.adminService
-      .gather7Days()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
-  public onGatherMax() {
-    this.adminService
-      .gatherMax()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
-      });
-  }
-
-  public onGatherProfileData() {
-    this.adminService
-      .gatherProfileData()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
-  }
-
-  public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
+  public onReadOnlyModeChange(aEvent: MatCheckboxChange) {
     this.putAdminSetting({
       key: PROPERTY_IS_READ_ONLY_MODE,
       value: aEvent.checked ? true : undefined
+    });
+  }
+
+  public onEnableUserSignupModeChange(aEvent: MatCheckboxChange) {
+    this.putAdminSetting({
+      key: PROPERTY_IS_USER_SIGNUP_ENABLED,
+      value: aEvent.checked ? undefined : false
     });
   }
 
@@ -215,18 +201,21 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   private fetchAdminData() {
-    this.dataService
+    this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ exchangeRates, settings, transactionCount, userCount }) => {
-        this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
-        this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
-        this.exchangeRates = exchangeRates;
-        this.transactionCount = transactionCount;
-        this.userCount = userCount;
+      .subscribe(
+        ({ exchangeRates, settings, transactionCount, userCount, version }) => {
+          this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
+          this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
+          this.exchangeRates = exchangeRates;
+          this.transactionCount = transactionCount;
+          this.userCount = userCount;
+          this.version = version;
 
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+        }
+      );
   }
 
   private generateCouponCode(aLength: number) {
@@ -245,7 +234,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   private putAdminSetting({ key, value }: { key: string; value: any }) {
     this.dataService
       .putAdminSetting(key, {
-        value: value ? JSON.stringify(value) : undefined
+        value: value || value === false ? JSON.stringify(value) : undefined
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {

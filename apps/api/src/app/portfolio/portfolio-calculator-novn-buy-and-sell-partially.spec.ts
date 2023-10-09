@@ -64,7 +64,8 @@ describe('PortfolioCalculator', () => {
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth = portfolioCalculator.getInvestmentsByMonth();
+      const investmentsByMonth =
+        portfolioCalculator.getInvestmentsByGroup('month');
 
       spy.mockRestore();
 
@@ -81,6 +82,7 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('75.80'),
             currency: 'CHF',
             dataSource: 'YAHOO',
+            fee: new Big('4.25'),
             firstBuyDate: '2022-03-07',
             grossPerformance: new Big('21.93'),
             grossPerformancePercentage: new Big('0.14465699208443271768'),

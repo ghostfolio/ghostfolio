@@ -86,7 +86,7 @@
           </p>
           <p>
             My personal goal is to reach break-even with the Saas offering (<a
-              [routerLink]="['/pricing']"
+              [routerLink]="routerLinkPricing"
               >Ghostfolio Premium</a
             >) and regularly report about the progress and my learnings on this
             exciting journey.
@@ -99,7 +99,7 @@
             >
             of users. In the future, I would like to involve more contributors
             to further extend the functionality of Ghostfolio (e.g. with new
-            reports). Get in touch with me by email at
+            reports). Get in touch with me by e-mail at
             <a href="mailto:hi@ghostfol.io">hi@ghostfol.io</a> or on Twitter
             <a href="https://twitter.com/ghostfolio_">@ghostfolio_</a> if you
             are interested, I’m happy to discuss ideas.
@@ -177,6 +177,19 @@
             </li>
           </ul>
         </section>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a i18n [routerLink]="['/blog']">Blog</a>
+            </li>
+            <li
+              aria-current="page"
+              class="active breadcrumb-item text-truncate"
+            >
+              Ghostfolio: First months in Open Source
+            </li>
+          </ol>
+        </nav>
       </article>
     </div>
   </div>

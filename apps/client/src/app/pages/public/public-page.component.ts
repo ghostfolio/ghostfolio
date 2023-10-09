@@ -9,6 +9,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
 import { StatusCodes } from 'http-status-codes';
+import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -32,18 +33,18 @@ export class PublicPageComponent implements OnInit {
   };
   public portfolioPublicDetails: PortfolioPublicDetails;
   public positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name' | 'value'>;
+    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
+      value: number;
+    };
   };
-  public positionsArray: Pick<
-    PortfolioPosition,
-    'currency' | 'name' | 'netPerformancePercent' | 'symbol' | 'value'
-  >[];
+  public positionsArray: PortfolioPublicDetails['holdings'][string][];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
   public symbols: {
     [name: string]: { name: string; symbol: string; value: number };
   };
+  public UNKNOWN_KEY = UNKNOWN_KEY;
 
   private id: string;
   private unsubscribeSubject = new Subject<void>();
@@ -99,6 +100,10 @@ export class PublicPageComponent implements OnInit {
       }
     };
     this.markets = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      },
       developedMarkets: {
         name: 'developedMarkets',
         value: 0
@@ -131,7 +136,7 @@ export class PublicPageComponent implements OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioPublicDetails.holdings
     )) {
-      const value = position.allocationCurrent;
+      const value = position.allocationInPercentage;
 
       this.positions[symbol] = {
         value,
@@ -142,39 +147,47 @@ export class PublicPageComponent implements OnInit {
 
       if (position.countries.length > 0) {
         this.markets.developedMarkets.value +=
-          position.markets.developedMarkets * position.value;
+          position.markets.developedMarkets * position.valueInBaseCurrency;
         this.markets.emergingMarkets.value +=
-          position.markets.emergingMarkets * position.value;
+          position.markets.emergingMarkets * position.valueInBaseCurrency;
         this.markets.otherMarkets.value +=
-          position.markets.otherMarkets * position.value;
+          position.markets.otherMarkets * position.valueInBaseCurrency;
 
         for (const country of position.countries) {
           const { code, continent, name, weight } = country;
 
           if (this.continents[continent]?.value) {
-            this.continents[continent].value += weight * position.value;
+            this.continents[continent].value +=
+              weight * position.valueInBaseCurrency;
           } else {
             this.continents[continent] = {
               name: continent,
-              value: weight * this.portfolioPublicDetails.holdings[symbol].value
+              value:
+                weight *
+                this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency
             };
           }
 
           if (this.countries[code]?.value) {
-            this.countries[code].value += weight * position.value;
+            this.countries[code].value += weight * position.valueInBaseCurrency;
           } else {
             this.countries[code] = {
               name,
-              value: weight * this.portfolioPublicDetails.holdings[symbol].value
+              value:
+                weight *
+                this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency
             };
           }
         }
       } else {
         this.continents[UNKNOWN_KEY].value +=
-          this.portfolioPublicDetails.holdings[symbol].value;
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
 
         this.countries[UNKNOWN_KEY].value +=
-          this.portfolioPublicDetails.holdings[symbol].value;
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
+
+        this.markets[UNKNOWN_KEY].value +=
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
       }
 
       if (position.sectors.length > 0) {
@@ -182,30 +195,35 @@ export class PublicPageComponent implements OnInit {
           const { name, weight } = sector;
 
           if (this.sectors[name]?.value) {
-            this.sectors[name].value += weight * position.value;
+            this.sectors[name].value += weight * position.valueInBaseCurrency;
           } else {
             this.sectors[name] = {
               name,
-              value: weight * this.portfolioPublicDetails.holdings[symbol].value
+              value:
+                weight *
+                this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency
             };
           }
         }
       } else {
         this.sectors[UNKNOWN_KEY].value +=
-          this.portfolioPublicDetails.holdings[symbol].value;
+          this.portfolioPublicDetails.holdings[symbol].valueInBaseCurrency;
       }
 
       this.symbols[prettifySymbol(symbol)] = {
         name: position.name,
         symbol: prettifySymbol(symbol),
-        value: position.value
+        value: isNumber(position.valueInBaseCurrency)
+          ? position.valueInBaseCurrency
+          : position.valueInPercentage
       };
     }
 
     const marketsTotal =
       this.markets.developedMarkets.value +
       this.markets.emergingMarkets.value +
-      this.markets.otherMarkets.value;
+      this.markets.otherMarkets.value +
+      this.markets[UNKNOWN_KEY].value;
 
     this.markets.developedMarkets.value =
       this.markets.developedMarkets.value / marketsTotal;
@@ -213,6 +231,8 @@ export class PublicPageComponent implements OnInit {
       this.markets.emergingMarkets.value / marketsTotal;
     this.markets.otherMarkets.value =
       this.markets.otherMarkets.value / marketsTotal;
+    this.markets[UNKNOWN_KEY].value =
+      this.markets[UNKNOWN_KEY].value / marketsTotal;
   }
 
   public ngOnDestroy() {

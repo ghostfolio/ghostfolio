@@ -1,6 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -10,9 +10,11 @@ import {
   MatNativeDateModule
 } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialCssVarsModule } from 'angular-material-css-vars';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { GfLogoModule } from '@ghostfolio/ui/logo';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
@@ -23,6 +25,7 @@ import { DateFormats } from './adapter/date-formats';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GfHeaderModule } from './components/header/header.module';
+import { GfSubscriptionInterstitialDialogModule } from './components/subscription-interstitial-dialog/subscription-interstitial-dialog.module';
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';
 import { LanguageService } from './core/language.service';
@@ -32,25 +35,28 @@ export function NgxStripeFactory(): string {
 }
 
 @NgModule({
+  bootstrap: [AppComponent],
   declarations: [AppComponent],
   imports: [
     AppRoutingModule,
     BrowserAnimationsModule,
     BrowserModule,
     GfHeaderModule,
+    GfLogoModule,
+    GfSubscriptionInterstitialDialogModule,
     HttpClientModule,
     MarkdownModule.forRoot(),
     MatAutocompleteModule,
     MatChipsModule,
-    MaterialCssVarsModule.forRoot({
-      darkThemeClass: 'is-dark-theme',
-      isAutoContrast: true,
-      lightThemeClass: 'is-light-theme'
-    }),
     MatNativeDateModule,
     MatSnackBarModule,
+    MatTooltipModule,
     NgxSkeletonLoaderModule,
-    NgxStripeModule.forRoot(environment.stripePublicKey)
+    NgxStripeModule.forRoot(environment.stripePublicKey),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      registrationStrategy: 'registerImmediately'
+    })
   ],
   providers: [
     authInterceptorProviders,
@@ -67,6 +73,6 @@ export function NgxStripeFactory(): string {
       useFactory: NgxStripeFactory
     }
   ],
-  bootstrap: [AppComponent]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

@@ -9,9 +9,9 @@
         <section class="mb-4">
           <p>
             Before you can think of
-            <a [routerLink]="['/resources']">long-term investing</a>, you have
-            to get your finances in order. Take a look at Peter's journey to see
-            how you can achieve it, too.
+            <a [routerLink]="routerLinkResources">long-term investing</a>, you
+            have to get your finances in order. Take a look at Peter's journey
+            to see how you can achieve it, too.
           </p>
           <p>
             Peter enjoys life, but sometimes he overspends a bit. He realizes it
@@ -203,6 +203,19 @@
             </li>
           </ul>
         </section>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a i18n [routerLink]="['/blog']">Blog</a>
+            </li>
+            <li
+              aria-current="page"
+              class="active breadcrumb-item text-truncate"
+            >
+              How do I get my finances in order?
+            </li>
+          </ol>
+        </nav>
       </article>
     </div>
   </div>

@@ -9,7 +9,7 @@ import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
 })
 export class RulesComponent {
   @Input() hasPermissionToCreateOrder: boolean;
-  @Input() rules: PortfolioReportRule;
+  @Input() rules: PortfolioReportRule[];
 
   public constructor() {}
 }

@@ -1,32 +1,55 @@
-@import '~apps/client/src/styles/ghostfolio-style';
+@import 'apps/client/src/styles/ghostfolio-style';
 
 :host {
   display: block;
   min-height: 100vh;
 
-  main {
-    min-height: 100vh;
-    padding-top: 5rem;
+  &.has-info-message {
+    header {
+      height: calc(2 * var(--mat-toolbar-standard-height));
 
-    .info-message-container {
-      height: 3.5rem;
-      margin-top: -0.5rem;
+      .info-message-container {
+        height: var(--mat-toolbar-standard-height);
 
-      .info-message {
-        background-color: rgba(0, 0, 0, $alpha-hover);
-        border-radius: 2rem;
-        font-size: 80%;
+        .info-message-inner-container {
+          background-color: rgba(var(--palette-primary-500), 1);
+          height: var(--mat-toolbar-standard-height);
+          z-index: 999;
 
-        .a {
-          color: rgba(var(--palette-primary-500), 1);
-          font-weight: 500;
+          .info-message {
+            color: rgba(var(--palette-foreground-text), 1);
+            font-size: 80%;
+            max-width: 100%;
+
+            .a {
+              font-weight: 500;
+            }
+          }
         }
       }
     }
+
+    main {
+      min-height: calc(100vh - 2 * var(--mat-toolbar-standard-height));
+    }
   }
 
-  .footer {
-    height: 5rem;
-    line-height: 1;
+  footer {
+    background-color: rgba(var(--palette-foreground-text), 0.05);
+    font-size: 90%;
+  }
+
+  header {
+    height: var(--mat-toolbar-standard-height);
+  }
+
+  main {
+    min-height: calc(100vh - var(--mat-toolbar-standard-height));
+  }
+}
+
+:host-context(.is-dark-theme) {
+  footer {
+    background-color: rgba(var(--palette-foreground-text-dark), 0.05);
   }
 }

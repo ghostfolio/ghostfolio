@@ -1,6 +1,7 @@
 <div>
   <gf-line-chart
     class="mb-4"
+    [colorScheme]="user?.settings?.colorScheme"
     [historicalDataItems]="historicalDataItems"
     [isAnimated]="true"
     [locale]="locale"

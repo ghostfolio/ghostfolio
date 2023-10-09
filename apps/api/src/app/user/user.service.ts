@@ -1,39 +1,40 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { environment } from '@ghostfolio/api/environments/environment';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
-import { PROPERTY_IS_READ_ONLY_MODE, locale } from '@ghostfolio/common/config';
 import {
-  User as IUser,
-  UserSettings,
-  UserWithSettings
-} from '@ghostfolio/common/interfaces';
+  DEFAULT_CURRENCY,
+  PROPERTY_IS_READ_ONLY_MODE,
+  locale
+} from '@ghostfolio/common/config';
+import { User as IUser, UserSettings } from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasRole,
   permissions
 } from '@ghostfolio/common/permissions';
+import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
-import { sortBy } from 'lodash';
+import { differenceInDays } from 'date-fns';
+import { sortBy, without } from 'lodash';
 
 const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
-  public static DEFAULT_CURRENCY = 'USD';
-
-  private baseCurrency: string;
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
     private readonly tagService: TagService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  ) {}
+
+  public async count(args?: Prisma.UserCountArgs) {
+    return this.prismaService.user.count(args);
   }
 
   public async getUser(
@@ -97,6 +98,7 @@ export class UserService {
     const {
       accessToken,
       Account,
+      Analytics,
       authChallenge,
       createdAt,
       id,
@@ -107,7 +109,12 @@ export class UserService {
       thirdPartyId,
       updatedAt
     } = await this.prismaService.user.findUnique({
-      include: { Account: true, Settings: true, Subscription: true },
+      include: {
+        Account: true,
+        Analytics: true,
+        Settings: true,
+        Subscription: true
+      },
       where: userWhereUniqueInput
     });
 
@@ -119,9 +126,10 @@ export class UserService {
       id,
       provider,
       role,
-      Settings,
+      Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
-      updatedAt
+      updatedAt,
+      activityCount: Analytics?.activityCount
     };
 
     if (user?.Settings) {
@@ -139,8 +147,7 @@ export class UserService {
 
     // Set default value for base currency
     if (!(user.Settings.settings as UserSettings)?.baseCurrency) {
-      (user.Settings.settings as UserSettings).baseCurrency =
-        UserService.DEFAULT_CURRENCY;
+      (user.Settings.settings as UserSettings).baseCurrency = DEFAULT_CURRENCY;
     }
 
     // Set default value for date range
@@ -154,15 +161,52 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
+    let currentPermissions = getPermissions(user.role);
+
+    if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {
+      currentPermissions = without(
+        currentPermissions,
+        permissions.accessAssistant
+      );
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);
-    }
 
-    let currentPermissions = getPermissions(user.role);
+      if (user.subscription?.type === 'Basic') {
+        const daysSinceRegistration = differenceInDays(
+          new Date(),
+          user.createdAt
+        );
+        let frequency = 20;
 
-    if (user.subscription?.type === 'Premium') {
-      currentPermissions.push(permissions.reportDataGlitch);
+        if (daysSinceRegistration > 180) {
+          frequency = 3;
+        } else if (daysSinceRegistration > 60) {
+          frequency = 5;
+        } else if (daysSinceRegistration > 30) {
+          frequency = 10;
+        } else if (daysSinceRegistration > 15) {
+          frequency = 15;
+        }
+
+        if (Analytics?.activityCount % frequency === 1) {
+          currentPermissions.push(permissions.enableSubscriptionInterstitial);
+        }
+
+        currentPermissions = without(
+          currentPermissions,
+          permissions.createAccess
+        );
+
+        // Reset benchmark
+        user.Settings.settings.benchmark = undefined;
+      }
+
+      if (user.subscription?.type === 'Premium') {
+        currentPermissions.push(permissions.reportDataGlitch);
+      }
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
@@ -183,6 +227,10 @@ export class UserService {
           );
         });
       }
+    }
+
+    if (!environment.production && role === 'ADMIN') {
+      currentPermissions.push(permissions.impersonateAllUsers);
     }
 
     user.Account = sortBy(user.Account, (account) => {
@@ -217,7 +265,11 @@ export class UserService {
     return hash.digest('hex');
   }
 
-  public async createUser(data: Prisma.UserCreateInput): Promise<User> {
+  public async createUser({
+    data
+  }: {
+    data: Prisma.UserCreateInput;
+  }): Promise<User> {
     if (!data?.provider) {
       data.provider = 'ANONYMOUS';
     }
@@ -227,7 +279,7 @@ export class UserService {
         ...data,
         Account: {
           create: {
-            currency: this.baseCurrency,
+            currency: DEFAULT_CURRENCY,
             isDefault: true,
             name: 'Default Account'
           }
@@ -235,12 +287,20 @@ export class UserService {
         Settings: {
           create: {
             settings: {
-              currency: this.baseCurrency
+              currency: DEFAULT_CURRENCY
             }
           }
         }
       }
     });
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      await this.prismaService.analytics.create({
+        data: {
+          User: { connect: { id: user.id } }
+        }
+      });
+    }
 
     if (data.provider === 'ANONYMOUS') {
       const accessToken = this.createAccessToken(
@@ -276,21 +336,29 @@ export class UserService {
   }
 
   public async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-    await this.prismaService.access.deleteMany({
-      where: { OR: [{ granteeUserId: where.id }, { userId: where.id }] }
-    });
+    try {
+      await this.prismaService.access.deleteMany({
+        where: { OR: [{ granteeUserId: where.id }, { userId: where.id }] }
+      });
+    } catch {}
 
-    await this.prismaService.account.deleteMany({
-      where: { userId: where.id }
-    });
+    try {
+      await this.prismaService.account.deleteMany({
+        where: { userId: where.id }
+      });
+    } catch {}
 
-    await this.prismaService.analytics.delete({
-      where: { userId: where.id }
-    });
+    try {
+      await this.prismaService.analytics.delete({
+        where: { userId: where.id }
+      });
+    } catch {}
 
-    await this.prismaService.order.deleteMany({
-      where: { userId: where.id }
-    });
+    try {
+      await this.prismaService.order.deleteMany({
+        where: { userId: where.id }
+      });
+    } catch {}
 
     try {
       await this.prismaService.settings.delete({

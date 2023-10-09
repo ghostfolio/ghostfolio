@@ -1,37 +1,33 @@
 <div align="center">
-  <a href="https://ghostfol.io">
-    <img
-      alt="Ghostfolio Logo"
-      src="https://avatars.githubusercontent.com/u/82473144?s=200"
-      width="100"
-    />
-  </a>
 
-  <h1>Ghostfolio</h1>
-  <p>
-    <strong>Open Source Wealth Management Software</strong>
-  </p>
-  <p>
-    <a href="https://ghostfol.io"><strong>Ghostfol.io</strong></a> | <a href="https://ghostfol.io/en/demo"><strong>Live Demo</strong></a> | <a href="https://ghostfol.io/en/pricing"><strong>Ghostfolio Premium</strong></a> | <a href="https://ghostfol.io/en/faq"><strong>FAQ</strong></a> | <a href="https://ghostfol.io/en/blog"><strong>Blog</strong></a> | <a href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"><strong>Slack</strong></a> | <a href="https://twitter.com/ghostfolio_"><strong>Twitter</strong></a>
-  </p>
-  <p>
-    <a href="#contributing">
-      <img src="https://img.shields.io/badge/contributions-welcome-orange.svg"/></a>
-    <a href="https://www.gnu.org/licenses/agpl-3.0" rel="nofollow">
-      <img src="https://img.shields.io/badge/License-AGPL%20v3-blue.svg" alt="License: AGPL v3"/></a>
-  </p>
+[<img src="https://avatars.githubusercontent.com/u/82473144?s=200" width="100" alt="Ghostfolio logo">](https://ghostfol.io)
+
+# Ghostfolio
+
+**Open Source Wealth Management Software**
+
+[**Ghostfol.io**](https://ghostfol.io) | [**Live Demo**](https://ghostfol.io/en/demo) | [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) | [**FAQ**](https://ghostfol.io/en/faq) |
+[**Blog**](https://ghostfol.io/en/blog) | [**Slack**](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) | [**Twitter**](https://twitter.com/ghostfolio_)
+
+[![Shield: Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-Support-yellow?logo=buymeacoffee)](https://www.buymeacoffee.com/ghostfolio)
+[![Shield: Contributions Welcome](https://img.shields.io/badge/Contributions-Welcome-orange.svg)](#contributing)
+[![Shield: License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
+New: [Ghostfolio 2.0](https://ghostfol.io/en/blog/2023/09/ghostfolio-2)
+
 </div>
 
-**Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions.
+**Ghostfolio** is an open source wealth management software built with web technology. The application empowers busy people to keep track of stocks, ETFs or cryptocurrencies and make solid, data-driven investment decisions. The software is designed for personal use in continuous operation.
 
-<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
-  <a href="https://www.youtube.com/watch?v=yY6ObSQVJZk">
-    <img src="./apps/client/src/assets/images/video-preview.jpg" width="600"></a>
+<div align="center">
+
+[<img src="./apps/client/src/assets/images/video-preview.jpg" width="600" alt="Preview image of the Ghostfolio video trailer">](https://www.youtube.com/watch?v=yY6ObSQVJZk)
+
 </div>
 
 ## Ghostfolio Premium
 
-Our official **[Ghostfolio Premium](https://ghostfol.io/en/pricing)** cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. The revenue is used for covering the hosting costs.
+Our official **[Ghostfolio Premium](https://ghostfol.io/en/pricing)** cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover the costs of the hosting infrastructure and to fund ongoing development.
 
 If you prefer to run Ghostfolio on your own infrastructure, please find further instructions in the [Self-hosting](#self-hosting) section.
 
@@ -46,23 +42,25 @@ Ghostfolio is for you if you are...
 - 🧘 into minimalism
 - 🧺 caring about diversifying your financial resources
 - 🆓 interested in financial independence
-- 🙅 saying no to spreadsheets in 2022
+- 🙅 saying no to spreadsheets
 - 😎 still reading this list
 
 ## Features
 
 - ✅ Create, update and delete transactions
 - ✅ Multi account management
-- ✅ Portfolio performance: Time-weighted rate of return (TWR) for `Today`, `YTD`, `1Y`, `5Y`, `Max`
+- ✅ Portfolio performance for `Today`, `YTD`, `1Y`, `5Y`, `Max`
 - ✅ Various charts
 - ✅ Static analysis to identify potential risks in your portfolio
 - ✅ Import and export transactions
 - ✅ Dark Mode
 - ✅ Zen Mode
-- ✅ Mobile-first design
+- ✅ Progressive Web App (PWA) with a mobile-first design
 
-<div align="center" style="margin-top: 1rem; margin-bottom: 1rem;">
-  <img src="./apps/client/src/assets/images/screenshot.png" width="300">
+<div align="center">
+
+<img src="./apps/client/src/assets/images/screenshot.png" width="300" alt="Image of a phone showing the Ghostfolio app open">
+
 </div>
 
 ## Technology Stack
@@ -79,14 +77,19 @@ The frontend is built with [Angular](https://angular.io) and uses [Angular Mater
 
 ## Self-hosting
 
-We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64` and `linux/arm64`.
+We provide official container images hosted on [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio) for `linux/amd64`, `linux/arm/v7` and `linux/arm64`.
+
+<div align="center">
+
+[<img src="./apps/client/src/assets/images/button-buy-me-a-coffee.png" width="150" alt="Buy me a coffee button"/>](https://www.buymeacoffee.com/ghostfolio)
+
+</div>
 
 ### Supported Environment Variables
 
 | Name                | Default Value | Description                                                                                                                         |
 | ------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `ACCESS_TOKEN_SALT` |               | A random string used as salt for access tokens                                                                                      |
-| `BASE_CURRENCY`     | `USD`         | The base currency of the Ghostfolio application. Caution: This cannot be changed later!                                             |
 | `DATABASE_URL`      |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
 | `HOST`              | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
 | `JWT_SECRET_KEY`    |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
@@ -104,7 +107,8 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 - Basic knowledge of Docker
 - Installation of [Docker](https://www.docker.com/products/docker-desktop)
-- Local copy of this Git repository (clone)
+- Create a local copy of this Git repository (clone)
+- Copy the file `.env.example` to `.env` and populate it with your data (`cp .env.example .env`)
 
 #### a. Run environment
 
@@ -123,13 +127,10 @@ docker-compose --env-file ./.env -f docker/docker-compose.build.yml build
 docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 ```
 
-#### Fetch Historical Data
+#### Setup
 
-Open http://localhost:3333 in your browser and accomplish these steps:
-
+1. Open http://localhost:3333 in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
-1. Click _Sign out_ and check out the _Live Demo_
 
 #### Upgrade Version
 
@@ -137,40 +138,42 @@ Open http://localhost:3333 in your browser and accomplish these steps:
 1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
    At each start, the container will automatically apply the database schema migrations if needed.
 
-### Run with _Unraid_ (Community)
+### Home Server Systems (Community)
 
-Please follow the instructions of the Ghostfolio [Unraid Community App](https://unraid.net/community/apps?q=ghostfolio).
+Ghostfolio is available for various home server systems, including [Runtipi](https://www.runtipi.io/docs/apps-available), [TrueCharts](https://truecharts.org/charts/stable/ghostfolio), [Umbrel](https://apps.umbrel.com/app/ghostfolio), and [Unraid](https://unraid.net/community/apps?q=ghostfolio).
 
 ## Development
 
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version 16+)
+- [Node.js](https://nodejs.org/en/download) (version 18+)
 - [Yarn](https://yarnpkg.com/en/docs/install)
-- A local copy of this Git repository (clone)
+- Create a local copy of this Git repository (clone)
+- Copy the file `.env.example` to `.env` and populate it with your data (`cp .env.example .env`)
 
 ### Setup
 
 1. Run `yarn install`
-1. Run `yarn build:dev` to build the source code including the assets
 1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
-1. Run `yarn database:setup` to initialize the database schema and populate your database with (example) data
+1. Run `yarn database:setup` to initialize the database schema
 1. Start the server and the client (see [_Development_](#Development))
+1. Open http://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-1. Go to the _Admin Control Panel_ and click _Gather All Data_ to fetch historical data
-1. Click _Sign out_ and check out the _Live Demo_
 
 ### Start Server
 
-<ol type="a">
-  <li>Debug: Run <code>yarn watch:server</code> and click "Launch Program" in <a href="https://code.visualstudio.com">Visual Studio Code</a></li>
-  <li>Serve: Run <code>yarn start:server</code></li>
-</ol>
+#### Debug
+
+Run `yarn watch:server` and click _Launch Program_ in [Visual Studio Code](https://code.visualstudio.com)
+
+#### Serve
+
+Run `yarn start:server`
 
 ### Start Client
 
-Run `yarn start:client`
+Run `yarn start:client` and open http://localhost:4200/en in your browser
 
 ### Start _Storybook_
 
@@ -190,19 +193,23 @@ Run `yarn test`
 
 ## Public API
 
+### Authorization: Bearer Token
+
+Set the header for each request as follows:
+
+```
+"Authorization": "Bearer eyJh..."
+```
+
+You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anonymous` (Body: `{ accessToken: <INSERT_SECURITY_TOKEN_OF_ACCOUNT> }`)
+
+Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>` or `curl -s http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>`.
+
 ### Import Activities
 
 #### Request
 
 `POST http://localhost:3333/api/v1/import`
-
-#### Authorization: Bearer Token
-
-Set the header as follows:
-
-```
-"Authorization": "Bearer eyJh..."
-```
 
 #### Body
 
@@ -215,7 +222,7 @@ Set the header as follows:
       "date": "2021-09-15T00:00:00.000Z",
       "fee": 19,
       "quantity": 5,
-      "symbol": "MSFT"
+      "symbol": "MSFT",
       "type": "BUY",
       "unitPrice": 298.58
     }
@@ -226,6 +233,7 @@ Set the header as follows:
 | Field      | Type                | Description                                        |
 | ---------- | ------------------- | -------------------------------------------------- |
 | accountId  | string (`optional`) | Id of the account                                  |
+| comment    | string (`optional`) | Comment of the activity                            |
 | currency   | string              | `CHF` \| `EUR` \| `USD` etc.                       |
 | dataSource | string              | `MANUAL` (for type `ITEM`) \| `YAHOO`              |
 | date       | string              | Date in the format `ISO-8601`                      |
@@ -254,16 +262,22 @@ Set the header as follows:
 }
 ```
 
+## Community Projects
+
+Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio
+
+Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ repository to get listed as well. [Learn more →](https://docs.github.com/en/articles/classifying-your-repository-with-topics)
+
 ## Contributing
 
 Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public - including you.
 
-Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack channel](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg), tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_) or send an e-mail to hi@ghostfol.io. We would love to hear from you.
+Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_). We would love to hear from you.
 
-If you like to support this project, get **[Ghostfolio Premium](https://ghostfol.io/en/pricing)** or **[Buy me a coffee](https://www.buymeacoffee.com/ghostfolio)**.
+If you like to support this project, get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
 
 ## License
 
-© 2022 [Ghostfolio](https://ghostfol.io)
+© 2021 - 2023 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).

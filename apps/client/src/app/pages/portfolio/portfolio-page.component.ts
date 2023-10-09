@@ -1,46 +1,68 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
+  host: { class: 'page has-tabs' },
   selector: 'gf-portfolio-page',
   styleUrls: ['./portfolio-page.scss'],
   templateUrl: './portfolio-page.html'
 })
 export class PortfolioPageComponent implements OnDestroy, OnInit {
-  public hasPermissionForSubscription: boolean;
+  public deviceType: string;
+  public tabs: TabConfiguration[] = [];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
-    const { globalPermissions } = this.dataService.fetchInfo();
-
-    this.hasPermissionForSubscription = hasPermission(
-      globalPermissions,
-      permissions.enableSubscription
-    );
-  }
-
-  public ngOnInit() {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
+          this.tabs = [
+            {
+              iconName: 'analytics-outline',
+              label: $localize`Analysis`,
+              path: ['/portfolio']
+            },
+            {
+              iconName: 'wallet-outline',
+              label: $localize`Holdings`,
+              path: ['/portfolio', 'holdings']
+            },
+            {
+              iconName: 'swap-vertical-outline',
+              label: $localize`Activities`,
+              path: ['/portfolio', 'activities']
+            },
+            {
+              iconName: 'pie-chart-outline',
+              label: $localize`Allocations`,
+              path: ['/portfolio', 'allocations']
+            },
+            {
+              iconName: 'calculator-outline',
+              label: 'FIRE / X-ray',
+              path: ['/portfolio', 'fire']
+            }
+          ];
           this.user = state.user;
 
           this.changeDetectorRef.markForCheck();
         }
       });
+  }
+
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 
   public ngOnDestroy() {

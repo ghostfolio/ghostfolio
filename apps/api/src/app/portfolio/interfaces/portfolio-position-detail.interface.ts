@@ -1,4 +1,5 @@
 import {
+  DataProviderInfo,
   EnhancedSymbolProfile,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
@@ -7,6 +8,10 @@ import { Tag } from '@prisma/client';
 
 export interface PortfolioPositionDetail {
   averagePrice: number;
+  dataProviderInfo: DataProviderInfo;
+  dividendInBaseCurrency: number;
+  stakeRewards: number;
+  feeInBaseCurrency: number;
   firstBuyDate: string;
   grossPerformance: number;
   grossPerformancePercent: number;

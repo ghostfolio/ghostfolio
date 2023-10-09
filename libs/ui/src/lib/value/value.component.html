@@ -32,11 +32,11 @@
             {{ formattedValue }}
           </ng-container>
         </div>
-        <small *ngIf="currency && size === 'medium'" class="ml-1">
-          {{ currency }}
+        <small *ngIf="unit && size === 'medium'" class="ml-1">
+          {{ unit }}
         </small>
-        <div *ngIf="currency && size !== 'medium'" class="ml-1">
-          {{ currency }}
+        <div *ngIf="unit && size !== 'medium'" class="ml-1">
+          {{ unit }}
         </div>
       </ng-container>
       <ng-container *ngIf="isString">
@@ -48,17 +48,6 @@
         </div>
       </ng-container>
     </div>
-    <ng-container>
-      <div *ngIf="size === 'large'">
-        <span class="h6"
-          ><ng-container *ngTemplateOutlet="label"></ng-container
-        ></span>
-        <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
-      </div>
-      <small *ngIf="size !== 'large'">
-        <ng-container *ngTemplateOutlet="label"></ng-container>
-      </small>
-    </ng-container>
   </ng-container>
 
   <ngx-skeleton-loader
@@ -66,8 +55,20 @@
     animation="pulse"
     [theme]="{
       height:
-        size === 'large' ? '2.5rem' : size === 'medium' ? '2rem' : '1.5rem',
+        size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
       width: '5rem'
     }"
   ></ngx-skeleton-loader>
+
+  <ng-container>
+    <div *ngIf="size === 'large'">
+      <span class="h6"
+        ><ng-container *ngTemplateOutlet="label"></ng-container
+      ></span>
+      <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
+    </div>
+    <small *ngIf="size !== 'large'">
+      <ng-container *ngTemplateOutlet="label"></ng-container>
+    </small>
+  </ng-container>
 </div>

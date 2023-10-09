@@ -12,20 +12,21 @@ import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.in
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
   Accounts,
-  AdminData,
-  AdminMarketData,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
   Filter,
+  ImportResponse,
   InfoItem,
   OAuthResponse,
   PortfolioDetails,
+  PortfolioDividends,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -34,16 +35,10 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import { AccountWithValue, DateRange } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
-import {
-  AssetClass,
-  AssetSubClass,
-  DataSource,
-  Order as OrderModel
-} from '@prisma/client';
+import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
+import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
-import { cloneDeep, groupBy } from 'lodash';
+import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -52,6 +47,77 @@ import { map } from 'rxjs/operators';
 })
 export class DataService {
   public constructor(private http: HttpClient) {}
+
+  public buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
+    let params = new HttpParams();
+
+    if (filters?.length > 0) {
+      const {
+        ACCOUNT: filtersByAccount,
+        ASSET_CLASS: filtersByAssetClass,
+        ASSET_SUB_CLASS: filtersByAssetSubClass,
+        PRESET_ID: filtersByPresetId,
+        SEARCH_QUERY: filtersBySearchQuery,
+        TAG: filtersByTag
+      } = groupBy(filters, (filter) => {
+        return filter.type;
+      });
+
+      if (filtersByAccount) {
+        params = params.append(
+          'accounts',
+          filtersByAccount
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetClass) {
+        params = params.append(
+          'assetClasses',
+          filtersByAssetClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByAssetSubClass) {
+        params = params.append(
+          'assetSubClasses',
+          filtersByAssetSubClass
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+
+      if (filtersByPresetId) {
+        params = params.append('presetId', filtersByPresetId[0].id);
+      }
+
+      if (filtersBySearchQuery) {
+        params = params.append('query', filtersBySearchQuery[0].id);
+      }
+
+      if (filtersByTag) {
+        params = params.append(
+          'tags',
+          filtersByTag
+            .map(({ id }) => {
+              return id;
+            })
+            .join(',')
+        );
+      }
+    }
+
+    return params;
+  }
 
   public createCheckoutSession({
     couponId,
@@ -94,14 +160,40 @@ export class DataService {
       );
   }
 
-  public fetchAdminData() {
-    return this.http.get<AdminData>('/api/v1/admin');
+  public fetchDividends({
+    filters,
+    groupBy = 'month',
+    range
+  }: {
+    filters?: Filter[];
+    groupBy?: GroupBy;
+    range: DateRange;
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('groupBy', groupBy);
+    params = params.append('range', range);
+
+    return this.http.get<PortfolioDividends>('/api/v1/portfolio/dividends', {
+      params
+    });
   }
 
-  public fetchAdminMarketData({ filters }: { filters?: Filter[] }) {
-    return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
-      params: this.buildFiltersAsQueryParams({ filters })
-    });
+  public fetchDividendsImport({ dataSource, symbol }: UniqueAsset) {
+    return this.http.get<ImportResponse>(
+      `/api/v1/import/dividends/${dataSource}/${symbol}`
+    );
+  }
+
+  public fetchExchangeRateForDate({
+    date,
+    symbol
+  }: {
+    date: Date;
+    symbol: string;
+  }) {
+    return this.http.get<IDataProviderHistoricalResponse>(
+      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT)}`
+    );
   }
 
   public deleteAccess(aId: string) {
@@ -110,6 +202,14 @@ export class DataService {
 
   public deleteAccount(aId: string) {
     return this.http.delete<any>(`/api/v1/account/${aId}`);
+  }
+
+  public deleteAllOrders() {
+    return this.http.delete<any>(`/api/v1/order/`);
+  }
+
+  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
   public deleteOrder(aId: string) {
@@ -170,15 +270,21 @@ export class DataService {
   }
 
   public fetchInvestments({
-    groupBy,
+    filters,
+    groupBy = 'month',
     range
   }: {
-    groupBy?: 'month';
+    filters?: Filter[];
+    groupBy?: GroupBy;
     range: DateRange;
   }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('groupBy', groupBy);
+    params = params.append('range', range);
+
     return this.http.get<PortfolioInvestments>(
       '/api/v1/portfolio/investments',
-      { params: { groupBy, range } }
+      { params }
     );
   }
 
@@ -203,18 +309,35 @@ export class DataService {
   }
 
   public fetchPositions({
+    filters,
     range
   }: {
+    filters?: Filter[];
     range: DateRange;
   }): Observable<PortfolioPositions> {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('range', range);
+
     return this.http.get<PortfolioPositions>('/api/v1/portfolio/positions', {
-      params: { range }
+      params
     });
   }
 
-  public fetchSymbols(aQuery: string) {
+  public fetchSymbols({
+    includeIndices = false,
+    query
+  }: {
+    includeIndices?: boolean;
+    query: string;
+  }) {
+    let params = new HttpParams().set('query', query);
+
+    if (includeIndices) {
+      params = params.append('includeIndices', includeIndices);
+    }
+
     return this.http
-      .get<{ items: LookupItem[] }>(`/api/v1/symbol/lookup?query=${aQuery}`)
+      .get<{ items: LookupItem[] }>('/api/v1/symbol/lookup', { params })
       .pipe(
         map((respose) => {
           return respose.items;
@@ -226,7 +349,7 @@ export class DataService {
     filters
   }: {
     filters?: Filter[];
-  }): Observable<PortfolioDetails> {
+  } = {}): Observable<PortfolioDetails> {
     return this.http
       .get<any>('/api/v1/portfolio/details', {
         params: this.buildFiltersAsQueryParams({ filters })
@@ -241,13 +364,17 @@ export class DataService {
 
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
-              response.holdings[symbol].assetClass = translate(
-                response.holdings[symbol].assetClass
-              );
+              response.holdings[symbol].dateOfFirstActivity = response.holdings[
+                symbol
+              ].dateOfFirstActivity
+                ? parseISO(response.holdings[symbol].dateOfFirstActivity)
+                : undefined;
 
-              response.holdings[symbol].assetSubClass = translate(
-                response.holdings[symbol].assetSubClass
-              );
+              response.holdings[symbol].value = isNumber(
+                response.holdings[symbol].value
+              )
+                ? response.holdings[symbol].value
+                : response.holdings[symbol].valueInPercentage;
             }
           }
 
@@ -257,12 +384,19 @@ export class DataService {
   }
 
   public fetchPortfolioPerformance({
+    filters,
     range
   }: {
+    filters?: Filter[];
     range: DateRange;
   }): Observable<PortfolioPerformanceResponse> {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = params.append('range', range);
+
     return this.http
-      .get<any>(`/api/v2/portfolio/performance`, { params: { range } })
+      .get<any>(`/api/v2/portfolio/performance`, {
+        params
+      })
       .pipe(
         map((response) => {
           if (response.firstOrderDate) {
@@ -275,9 +409,23 @@ export class DataService {
   }
 
   public fetchPortfolioPublic(aId: string) {
-    return this.http.get<PortfolioPublicDetails>(
-      `/api/v1/portfolio/public/${aId}`
-    );
+    return this.http
+      .get<PortfolioPublicDetails>(`/api/v1/portfolio/public/${aId}`)
+      .pipe(
+        map((response) => {
+          if (response.holdings) {
+            for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].valueInBaseCurrency = isNumber(
+                response.holdings[symbol].valueInBaseCurrency
+              )
+                ? response.holdings[symbol].valueInBaseCurrency
+                : response.holdings[symbol].valueInPercentage;
+            }
+          }
+
+          return response;
+        })
+      );
   }
 
   public fetchPortfolioReport() {
@@ -304,29 +452,15 @@ export class DataService {
             }
           }
 
-          if (data.SymbolProfile) {
-            if (data.SymbolProfile.assetClass) {
-              data.SymbolProfile.assetClass = <AssetClass>(
-                translate(data.SymbolProfile.assetClass)
-              );
-            }
-
-            if (data.SymbolProfile.assetSubClass) {
-              data.SymbolProfile.assetSubClass = <AssetSubClass>(
-                translate(data.SymbolProfile.assetSubClass)
-              );
-            }
-          }
-
           return data;
         })
       );
   }
 
   public loginAnonymous(accessToken: string) {
-    return this.http.get<OAuthResponse>(
-      `/api/v1/auth/anonymous/${accessToken}`
-    );
+    return this.http.post<OAuthResponse>(`/api/v1/auth/anonymous`, {
+      accessToken
+    });
   }
 
   public postAccess(aAccess: CreateAccessDto) {
@@ -335,6 +469,10 @@ export class DataService {
 
   public postAccount(aAccount: CreateAccountDto) {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
+  }
+
+  public postBenchmark(benchmark: UniqueAsset) {
+    return this.http.post(`/api/v1/benchmark`, benchmark);
   }
 
   public postOrder(aOrder: CreateOrderDto) {
@@ -367,52 +505,18 @@ export class DataService {
     });
   }
 
-  private buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
-    let params = new HttpParams();
+  public updateInfo() {
+    this.http.get<InfoItem>('/api/v1/info').subscribe((info) => {
+      const utmSource = <'ios' | 'trusted-web-activity'>(
+        window.localStorage.getItem('utm_source')
+      );
 
-    if (filters?.length > 0) {
-      const {
-        ACCOUNT: filtersByAccount,
-        ASSET_CLASS: filtersByAssetClass,
-        TAG: filtersByTag
-      } = groupBy(filters, (filter) => {
-        return filter.type;
-      });
+      info.globalPermissions = filterGlobalPermissions(
+        info.globalPermissions,
+        utmSource
+      );
 
-      if (filtersByAccount) {
-        params = params.append(
-          'accounts',
-          filtersByAccount
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByAssetClass) {
-        params = params.append(
-          'assetClasses',
-          filtersByAssetClass
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-
-      if (filtersByTag) {
-        params = params.append(
-          'tags',
-          filtersByTag
-            .map(({ id }) => {
-              return id;
-            })
-            .join(',')
-        );
-      }
-    }
-
-    return params;
+      (window as any).info = info;
+    });
   }
 }

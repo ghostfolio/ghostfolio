@@ -24,7 +24,7 @@ Large.args = {
   size: 'large'
 };
 
-export const NoName = Template.bind({});
-NoName.args = {
-  hideName: true
+export const NoLabel = Template.bind({});
+NoLabel.args = {
+  showLabel: false
 };

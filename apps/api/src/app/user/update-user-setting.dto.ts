@@ -5,6 +5,7 @@ import type {
 } from '@ghostfolio/common/types';
 import {
   IsBoolean,
+  IsISO8601,
   IsIn,
   IsNumber,
   IsOptional,
@@ -12,6 +13,10 @@ import {
 } from 'class-validator';
 
 export class UpdateUserSettingDto {
+  @IsNumber()
+  @IsOptional()
+  annualInterestRate?: number;
+
   @IsOptional()
   @IsString()
   baseCurrency?: string;
@@ -47,6 +52,14 @@ export class UpdateUserSettingDto {
   @IsString()
   @IsOptional()
   locale?: string;
+
+  @IsNumber()
+  @IsOptional()
+  projectedTotalAmount?: number;
+
+  @IsISO8601()
+  @IsOptional()
+  retirementDate?: string;
 
   @IsNumber()
   @IsOptional()

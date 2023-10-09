@@ -23,10 +23,12 @@ import {
   parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
 import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
+  ChartData,
   LineController,
   LineElement,
   LinearScale,
@@ -57,7 +59,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   @ViewChild('chartCanvas') chartCanvas;
 
-  public chart: Chart<any>;
+  public chart: Chart<'line'>;
+  public hasPermissionToAccessAdminControl: boolean;
 
   public constructor() {
     Chart.register(
@@ -75,6 +78,11 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
+    this.hasPermissionToAccessAdminControl = hasPermission(
+      this.user?.permissions,
+      permissions.accessAdminControl
+    );
+
     if (this.performanceDataItems) {
       this.initialize();
     }
@@ -89,14 +97,14 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    const data = {
+    const data: ChartData<'line'> = {
       datasets: [
         {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
           data: this.performanceDataItems.map(({ date, value }) => {
-            return { x: parseDate(date), y: value };
+            return { x: parseDate(date).getTime(), y: value };
           }),
           label: $localize`Portfolio`
         },
@@ -105,7 +113,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 2,
           data: this.benchmarkDataItems.map(({ date, value }) => {
-            return { x: parseDate(date), y: value };
+            return { x: parseDate(date).getTime(), y: value };
           }),
           label: $localize`Benchmark`
         }
@@ -159,11 +167,12 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
             responsive: true,
             scales: {
               x: {
+                border: {
+                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+                  width: 1
+                },
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  borderWidth: 1,
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
                   display: false
                 },
                 type: 'time',
@@ -173,17 +182,27 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
                 }
               },
               y: {
+                border: {
+                  width: 0
+                },
                 display: true,
                 grid: {
-                  borderColor: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.8)`,
-                  display: false,
-                  drawBorder: false
+                  color: ({ scale, tick }) => {
+                    if (
+                      tick.value === 0 ||
+                      tick.value === scale.max ||
+                      tick.value === scale.min
+                    ) {
+                      return `rgba(${getTextColor(this.colorScheme)}, 0.1)`;
+                    }
+
+                    return 'transparent';
+                  }
                 },
                 position: 'right',
                 ticks: {
                   callback: (value: number) => {
-                    return `${value} %`;
+                    return `${value.toFixed(2)} %`;
                   },
                   display: true,
                   mirror: true,

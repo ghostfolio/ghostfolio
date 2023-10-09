@@ -1,0 +1,141 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center">Open Startup</h1>
+      <div class="intro-container mb-4">
+        <p i18n>
+          At Ghostfolio, transparency is at the core of our values. We publish
+          the source code as
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >open source software</a
+          >
+          (OSS) under the
+          <a
+            href="https://www.gnu.org/licenses/agpl-3.0.html"
+            title="GNU Affero General Public License"
+            >AGPL-3.0 license</a
+          >
+          and we openly share aggregated key metrics of the platform’s
+          operational status.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                i18n
+                i18n-subLabel
+                size="large"
+                subLabel="(Last 24 hours)"
+                [locale]="user?.settings?.locale"
+                [value]="statistics?.activeUsers1d ?? '-'"
+                >Active Users</gf-value
+              >
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                i18n
+                i18n-subLabel
+                size="large"
+                subLabel="(Last 30 days)"
+                [locale]="user?.settings?.locale"
+                [value]="statistics?.newUsers30d ?? '-'"
+                >New Users</gf-value
+              >
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <gf-value
+                i18n
+                i18n-subLabel
+                size="large"
+                subLabel="(Last 30 days)"
+                [locale]="user?.settings?.locale"
+                [value]="statistics?.activeUsers30d ?? '-'"
+                >Active Users</gf-value
+              >
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <a
+                class="d-block"
+                href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+              >
+                <gf-value
+                  i18n
+                  size="large"
+                  [locale]="user?.settings?.locale"
+                  [value]="statistics?.slackCommunityUsers ?? '-'"
+                  >Users in Slack community</gf-value
+                >
+              </a>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <a
+                class="d-block"
+                href="https://github.com/ghostfolio/ghostfolio/graphs/contributors"
+              >
+                <gf-value
+                  i18n
+                  size="large"
+                  [locale]="user?.settings?.locale"
+                  [value]="statistics?.gitHubContributors ?? '-'"
+                  >Contributors on GitHub</gf-value
+                >
+              </a>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <a
+                class="d-block"
+                href="https://github.com/ghostfolio/ghostfolio/stargazers"
+              >
+                <gf-value
+                  i18n
+                  size="large"
+                  [locale]="user?.settings?.locale"
+                  [value]="statistics?.gitHubStargazers ?? '-'"
+                  >Stars on GitHub</gf-value
+                >
+              </a>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <a
+                class="d-block"
+                href="https://hub.docker.com/r/ghostfolio/ghostfolio"
+              >
+                <gf-value
+                  i18n
+                  size="large"
+                  [locale]="user?.settings?.locale"
+                  [value]="statistics?.dockerHubPulls ?? '-'"
+                  >Pulls on Docker Hub</gf-value
+                >
+              </a>
+            </div>
+            <div class="col-xs-12 col-md-4 my-2">
+              <a class="d-block" href="https://status.ghostfol.io">
+                <gf-value
+                  i18n
+                  i18n-subLabel
+                  size="large"
+                  subLabel="(Last 90 days)"
+                  [isPercent]="true"
+                  [locale]="user?.settings?.locale"
+                  [precision]="2"
+                  [value]="statistics?.uptime ?? '-'"
+                  >Uptime</gf-value
+                >
+              </a>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

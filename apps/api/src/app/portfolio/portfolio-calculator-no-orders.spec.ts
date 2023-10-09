@@ -41,7 +41,8 @@ describe('PortfolioCalculator', () => {
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth = portfolioCalculator.getInvestmentsByMonth();
+      const investmentsByMonth =
+        portfolioCalculator.getInvestmentsByGroup('month');
 
       spy.mockRestore();
 

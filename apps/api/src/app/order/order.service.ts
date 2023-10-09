@@ -1,12 +1,13 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
+import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
@@ -73,35 +74,42 @@ export class OrderService {
       dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
+      updateAccountBalance?: boolean;
       userId: string;
     }
   ): Promise<Order> {
-    const defaultAccount = (
-      await this.accountService.getAccounts(data.userId)
-    ).find((account) => {
-      return account.isDefault === true;
-    });
+    let Account;
 
-    const tags = data.tags ?? [];
-
-    let Account = {
-      connect: {
-        id_userId: {
-          userId: data.userId,
-          id: data.accountId ?? defaultAccount?.id
+    if (data.accountId) {
+      Account = {
+        connect: {
+          id_userId: {
+            userId: data.userId,
+            id: data.accountId
+          }
         }
-      }
-    };
+      };
+    }
 
-    if (data.type === 'ITEM') {
+    const accountId = data.accountId;
+    let currency = data.currency;
+    const tags = data.tags ?? [];
+    const updateAccountBalance = data.updateAccountBalance ?? false;
+    const userId = data.userId;
+
+    if (
+      data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
+    ) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
-      const currency = data.SymbolProfile.connectOrCreate.create.currency;
+      currency = data.SymbolProfile.connectOrCreate.create.currency;
       const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
 
-      Account = undefined;
       data.id = id;
       data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
       data.SymbolProfile.connectOrCreate.create.assetSubClass = assetSubClass;
@@ -113,31 +121,23 @@ export class OrderService {
         dataSource,
         symbol: id
       };
-    } else {
-      data.SymbolProfile.connectOrCreate.create.symbol =
-        data.SymbolProfile.connectOrCreate.create.symbol.toUpperCase();
     }
 
-    await this.dataGatheringService.addJobToQueue(
-      GATHER_ASSET_PROFILE_PROCESS,
-      {
-        dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-        symbol: data.SymbolProfile.connectOrCreate.create.symbol
-      },
-      GATHER_ASSET_PROFILE_PROCESS_OPTIONS
-    );
-
-    const isDraft = isAfter(data.date as Date, endOfToday());
-
-    if (!isDraft) {
-      // Gather symbol data of order in the background, if not draft
-      this.dataGatheringService.gatherSymbols([
-        {
+    if (data.SymbolProfile.connectOrCreate.create.dataSource !== 'MANUAL') {
+      this.dataGatheringService.addJobToQueue({
+        data: {
           dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
-          date: <Date>data.date,
           symbol: data.SymbolProfile.connectOrCreate.create.symbol
+        },
+        name: GATHER_ASSET_PROFILE_PROCESS,
+        opts: {
+          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+          jobId: getAssetProfileIdentifier({
+            dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
+            symbol: data.SymbolProfile.connectOrCreate.create.symbol
+          })
         }
-      ]);
+      });
     }
 
     delete data.accountId;
@@ -152,11 +152,20 @@ export class OrderService {
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;
+    delete data.updateAccountBalance;
     delete data.userId;
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    return this.prismaService.order.create({
+    const isDraft =
+      data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
+        ? false
+        : isAfter(data.date as Date, endOfToday());
+
+    const order = await this.prismaService.order.create({
       data: {
         ...orderData,
         Account,
@@ -168,6 +177,27 @@ export class OrderService {
         }
       }
     });
+
+    if (updateAccountBalance === true) {
+      let amount = new Big(data.unitPrice)
+        .mul(data.quantity)
+        .plus(data.fee)
+        .toNumber();
+
+      if (data.type === 'BUY') {
+        amount = new Big(amount).mul(-1).toNumber();
+      }
+
+      await this.accountService.updateAccountBalance({
+        accountId,
+        amount,
+        currency,
+        userId,
+        date: data.date as Date
+      });
+    }
+
+    return order;
   }
 
   public async deleteOrder(
@@ -177,16 +207,31 @@ export class OrderService {
       where
     });
 
-    if (order.type === 'ITEM') {
+    if (
+      order.type === 'FEE' ||
+      order.type === 'INTEREST' ||
+      order.type === 'ITEM' ||
+      order.type === 'LIABILITY'
+    ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
     return order;
   }
 
+  public async deleteOrders(where: Prisma.OrderWhereInput): Promise<number> {
+    const { count } = await this.prismaService.order.deleteMany({
+      where
+    });
+
+    return count;
+  }
+
   public async getOrders({
     filters,
     includeDrafts = false,
+    skip,
+    take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
     userId,
@@ -194,6 +239,8 @@ export class OrderService {
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
+    skip?: number;
+    take?: number;
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
@@ -272,6 +319,8 @@ export class OrderService {
 
     return (
       await this.orders({
+        skip,
+        take,
         where,
         include: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -288,7 +337,11 @@ export class OrderService {
       })
     )
       .filter((order) => {
-        return withExcludedAccounts || order.Account?.isExcluded === false;
+        return (
+          withExcludedAccounts ||
+          !order.Account ||
+          order.Account?.isExcluded === false
+        );
       })
       .map((order) => {
         const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
@@ -336,7 +389,12 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (data.type === 'ITEM') {
+    if (
+      data.type === 'FEE' ||
+      data.type === 'INTEREST' ||
+      data.type === 'ITEM' ||
+      data.type === 'LIABILITY'
+    ) {
       delete data.SymbolProfile.connect;
     } else {
       delete data.SymbolProfile.update;
@@ -361,6 +419,12 @@ export class OrderService {
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;
+
+    // Remove existing tags
+    await this.prismaService.order.update({
+      data: { tags: { set: [] } },
+      where
+    });
 
     return this.prismaService.order.update({
       data: {

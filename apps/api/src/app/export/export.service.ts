@@ -1,11 +1,15 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
 import { Export } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ExportService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly accountService: AccountService,
+    private readonly orderService: OrderService
+  ) {}
 
   public async export({
     activityIds,
@@ -14,19 +18,30 @@ export class ExportService {
     activityIds?: string[];
     userId: string;
   }): Promise<Export> {
-    let activities = await this.prismaService.order.findMany({
+    const accounts = (
+      await this.accountService.accounts({
+        orderBy: {
+          name: 'asc'
+        },
+        where: { userId }
+      })
+    ).map(
+      ({ balance, comment, currency, id, isExcluded, name, platformId }) => {
+        return {
+          balance,
+          comment,
+          currency,
+          id,
+          isExcluded,
+          name,
+          platformId
+        };
+      }
+    );
+
+    let activities = await this.orderService.orders({
+      include: { SymbolProfile: true },
       orderBy: { date: 'desc' },
-      select: {
-        accountId: true,
-        comment: true,
-        date: true,
-        fee: true,
-        id: true,
-        quantity: true,
-        SymbolProfile: true,
-        type: true,
-        unitPrice: true
-      },
       where: { userId }
     });
 
@@ -38,6 +53,7 @@ export class ExportService {
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
+      accounts,
       activities: activities.map(
         ({
           accountId,
@@ -61,7 +77,13 @@ export class ExportService {
             currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol: type === 'ITEM' ? SymbolProfile.name : SymbolProfile.symbol
+            symbol:
+              type === 'FEE' ||
+              type === 'INTEREST' ||
+              type === 'ITEM' ||
+              type === 'LIABILITY'
+                ? SymbolProfile.name
+                : SymbolProfile.symbol
           };
         }
       )

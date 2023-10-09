@@ -1,7 +1,8 @@
-@import '~apps/client/src/styles/ghostfolio-style';
+@import 'apps/client/src/styles/ghostfolio-style';
 
 :host {
   display: block;
+  height: 100%;
 
   .chart-container {
     aspect-ratio: 16 / 9;
@@ -29,5 +30,9 @@
       right: 0;
       top: 0;
     }
+  }
+
+  .introduction {
+    max-width: 50rem;
   }
 }

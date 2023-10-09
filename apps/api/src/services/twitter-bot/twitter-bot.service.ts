@@ -1,6 +1,6 @@
 import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   ghostfolioFearAndGreedIndexDataSource,
   ghostfolioFearAndGreedIndexSymbol
@@ -65,9 +65,8 @@ export class TwitterBotService {
           status += benchmarkListing;
         }
 
-        const { data: createdTweet } = await this.twitterClient.v2.tweet(
-          status
-        );
+        const { data: createdTweet } =
+          await this.twitterClient.v2.tweet(status);
 
         Logger.log(
           `Fear & Greed Index has been tweeted: https://twitter.com/ghostfolio_/status/${createdTweet.id}`,

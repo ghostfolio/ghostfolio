@@ -15,17 +15,17 @@ import { isNumber } from 'lodash';
 })
 export class ValueComponent implements OnChanges {
   @Input() colorizeSign = false;
-  @Input() currency = '';
   @Input() icon = '';
   @Input() isAbsolute = false;
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() locale = getLocale();
+  @Input() locale: string | undefined;
   @Input() position = '';
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel = '';
+  @Input() unit = '';
   @Input() value: number | string = '';
 
   public absoluteValue = 0;
@@ -37,6 +37,8 @@ export class ValueComponent implements OnChanges {
   public constructor() {}
 
   public ngOnChanges() {
+    this.initializeVariables();
+
     if (this.value || this.value === 0) {
       if (isNumber(this.value)) {
         this.isNumber = true;
@@ -44,7 +46,7 @@ export class ValueComponent implements OnChanges {
         this.absoluteValue = Math.abs(<number>this.value);
 
         if (this.colorizeSign) {
-          if (this.currency || this.isCurrency) {
+          if (this.isCurrency) {
             try {
               this.formattedValue = this.absoluteValue.toLocaleString(
                 this.locale,
@@ -65,6 +67,13 @@ export class ValueComponent implements OnChanges {
               );
             } catch {}
           }
+        } else if (this.isCurrency) {
+          try {
+            this.formattedValue = this.value?.toLocaleString(this.locale, {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            });
+          } catch {}
         } else if (this.isPercent) {
           try {
             this.formattedValue = (this.value * 100).toLocaleString(
@@ -75,13 +84,6 @@ export class ValueComponent implements OnChanges {
               }
             );
           } catch {}
-        } else if (this.currency || this.isCurrency) {
-          try {
-            this.formattedValue = this.value?.toLocaleString(this.locale, {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            });
-          } catch {}
         } else if (this.precision || this.precision === 0) {
           try {
             this.formattedValue = this.value?.toLocaleString(this.locale, {
@@ -90,7 +92,7 @@ export class ValueComponent implements OnChanges {
             });
           } catch {}
         } else {
-          this.formattedValue = this.value?.toString();
+          this.formattedValue = this.value?.toLocaleString(this.locale);
         }
 
         if (this.isAbsolute) {
@@ -119,5 +121,18 @@ export class ValueComponent implements OnChanges {
     if (this.formattedValue === '0.00') {
       this.useAbsoluteValue = true;
     }
+  }
+
+  private initializeVariables() {
+    this.absoluteValue = 0;
+    this.formattedValue = '';
+    this.isNumber = false;
+    this.isString = false;
+
+    if (!this.locale) {
+      this.locale = getLocale();
+    }
+
+    this.useAbsoluteValue = false;
   }
 }

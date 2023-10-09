@@ -1,0 +1,36 @@
+:host {
+  color: rgb(var(--dark-primary-text));
+  display: block;
+
+  .about-container {
+    a {
+      color: rgba(var(--palette-primary-500), 1);
+      font-weight: 500;
+
+      &:hover {
+        color: rgba(var(--palette-primary-300), 1);
+      }
+    }
+
+    .independent-and-bootstrapped-logo {
+      background-image: url('/assets/bootstrapped-dark.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      height: 2rem;
+      opacity: 0.87;
+      width: 10rem;
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
+
+  .about-container {
+    .independent-and-bootstrapped-logo {
+      background-image: url('/assets/bootstrapped-light.svg');
+      opacity: 1;
+    }
+  }
+}

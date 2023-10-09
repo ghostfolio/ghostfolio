@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row mb-3">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Activities</h1>
+      <gf-activities-table
+        [activities]="activities"
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [deviceType]="deviceType"
+        [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
+        [hasPermissionToExportActivities]="!hasImpersonationId"
+        [locale]="user?.settings?.locale"
+        [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
+        (activityDeleted)="onDeleteActivity($event)"
+        (activityToClone)="onCloneActivity($event)"
+        (activityToUpdate)="onUpdateActivity($event)"
+        (deleteAllActivities)="onDeleteAllActivities()"
+        (export)="onExport($event)"
+        (exportDrafts)="onExportDrafts($event)"
+        (import)="onImport()"
+        (importDividends)="onImportDividends()"
+      ></gf-activities-table>
+    </div>
+  </div>
+
+  <div
+    *ngIf="!hasImpersonationId && hasPermissionToCreateActivity && !user.settings.isRestrictedView"
+    class="fab-container"
+  >
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [queryParams]="{ createDialog: true }"
+      [routerLink]="[]"
+    >
+      <ion-icon name="add-outline" size="large"></ion-icon>
+    </a>
+  </div>
+</div>

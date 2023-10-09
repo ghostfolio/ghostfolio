@@ -2,7 +2,6 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-privacy-policy-page',
   styleUrls: ['./privacy-policy-page.scss'],
   templateUrl: './privacy-policy-page.html'

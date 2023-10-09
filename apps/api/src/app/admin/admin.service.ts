@@ -1,11 +1,18 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { environment } from '@ghostfolio/api/environments/environment';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
-import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import {
+  DEFAULT_CURRENCY,
+  PROPERTY_CURRENCIES,
+  PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_IS_USER_SIGNUP_ENABLED
+} from '@ghostfolio/common/config';
 import {
   AdminData,
   AdminMarketData,
@@ -14,25 +21,55 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { Injectable } from '@nestjs/common';
-import { AssetSubClass, Prisma, Property } from '@prisma/client';
+import { MarketDataPreset } from '@ghostfolio/common/types';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { AssetSubClass, Prisma, Property, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
 
 @Injectable()
 export class AdminService {
-  private baseCurrency: string;
-
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
     private readonly symbolProfileService: SymbolProfileService
-  ) {
-    this.baseCurrency = this.configurationService.get('BASE_CURRENCY');
+  ) {}
+
+  public async addAssetProfile({
+    dataSource,
+    symbol
+  }: UniqueAsset): Promise<SymbolProfile | never> {
+    try {
+      const assetProfiles = await this.dataProviderService.getAssetProfiles([
+        { dataSource, symbol }
+      ]);
+
+      if (!assetProfiles[symbol]?.currency) {
+        throw new BadRequestException(
+          `Asset profile not found for ${symbol} (${dataSource})`
+        );
+      }
+
+      return await this.symbolProfileService.add(
+        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
+      );
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new BadRequestException(
+          `Asset profile of ${symbol} (${dataSource}) already exists`
+        );
+      }
+
+      throw error;
+    }
   }
 
   public async deleteProfileData({ dataSource, symbol }: UniqueAsset) {
@@ -45,15 +82,15 @@ export class AdminService {
       exchangeRates: this.exchangeRateDataService
         .getCurrencies()
         .filter((currency) => {
-          return currency !== this.baseCurrency;
+          return currency !== DEFAULT_CURRENCY;
         })
         .map((currency) => {
           return {
-            label1: this.baseCurrency,
+            label1: DEFAULT_CURRENCY,
             label2: currency,
             value: this.exchangeRateDataService.toCurrency(
               1,
-              this.baseCurrency,
+              DEFAULT_CURRENCY,
               currency
             )
           };
@@ -61,12 +98,38 @@ export class AdminService {
       settings: await this.propertyService.get(),
       transactionCount: await this.prismaService.order.count(),
       userCount: await this.prismaService.user.count(),
-      users: await this.getUsersWithAnalytics()
+      users: await this.getUsersWithAnalytics(),
+      version: environment.version
     };
   }
 
-  public async getMarketData(filters?: Filter[]): Promise<AdminMarketData> {
+  public async getMarketData({
+    filters,
+    presetId,
+    sortColumn,
+    sortDirection,
+    skip,
+    take = Number.MAX_SAFE_INTEGER
+  }: {
+    filters?: Filter[];
+    presetId?: MarketDataPreset;
+    skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
+    take?: number;
+  }): Promise<AdminMarketData> {
+    let orderBy: Prisma.Enumerable<Prisma.SymbolProfileOrderByWithRelationInput> =
+      [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
+
+    if (presetId === 'CURRENCIES') {
+      return this.getMarketDataForCurrencies();
+    } else if (
+      presetId === 'ETF_WITHOUT_COUNTRIES' ||
+      presetId === 'ETF_WITHOUT_SECTORS'
+    ) {
+      filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
+    }
 
     const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
       filters,
@@ -75,47 +138,40 @@ export class AdminService {
       }
     );
 
-    const marketData = await this.prismaService.marketData.groupBy({
+    const marketDataItems = await this.prismaService.marketData.groupBy({
       _count: true,
       by: ['dataSource', 'symbol']
     });
 
-    let currencyPairsToGather: AdminMarketDataItem[] = [];
-
     if (filtersByAssetSubClass) {
       where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
-    } else {
-      currencyPairsToGather = this.exchangeRateDataService
-        .getCurrencyPairs()
-        .map(({ dataSource, symbol }) => {
-          const marketDataItemCount =
-            marketData.find((marketDataItem) => {
-              return (
-                marketDataItem.dataSource === dataSource &&
-                marketDataItem.symbol === symbol
-              );
-            })?._count ?? 0;
-
-          return {
-            dataSource,
-            marketDataItemCount,
-            symbol,
-            countriesCount: 0,
-            sectorsCount: 0
-          };
-        });
     }
 
-    const symbolProfilesToGather: AdminMarketDataItem[] = (
-      await this.prismaService.symbolProfile.findMany({
+    if (sortColumn) {
+      orderBy = [{ [sortColumn]: sortDirection }];
+
+      if (sortColumn === 'activitiesCount') {
+        orderBy = {
+          Order: {
+            _count: sortDirection
+          }
+        };
+      }
+    }
+
+    let [assetProfiles, count] = await Promise.all([
+      this.prismaService.symbolProfile.findMany({
+        orderBy,
+        skip,
+        take,
         where,
-        orderBy: [{ symbol: 'asc' }],
         select: {
           _count: {
             select: { Order: true }
           },
           assetClass: true,
           assetSubClass: true,
+          comment: true,
           countries: true,
           dataSource: true,
           Order: {
@@ -127,37 +183,64 @@ export class AdminService {
           sectors: true,
           symbol: true
         }
-      })
-    ).map((symbolProfile) => {
-      const countriesCount = symbolProfile.countries
-        ? Object.keys(symbolProfile.countries).length
-        : 0;
-      const marketDataItemCount =
-        marketData.find((marketDataItem) => {
-          return (
-            marketDataItem.dataSource === symbolProfile.dataSource &&
-            marketDataItem.symbol === symbolProfile.symbol
-          );
-        })?._count ?? 0;
-      const sectorsCount = symbolProfile.sectors
-        ? Object.keys(symbolProfile.sectors).length
-        : 0;
+      }),
+      this.prismaService.symbolProfile.count({ where })
+    ]);
 
-      return {
-        countriesCount,
-        marketDataItemCount,
-        sectorsCount,
-        activityCount: symbolProfile._count.Order,
-        assetClass: symbolProfile.assetClass,
-        assetSubClass: symbolProfile.assetSubClass,
-        dataSource: symbolProfile.dataSource,
-        date: symbolProfile.Order?.[0]?.date,
-        symbol: symbolProfile.symbol
-      };
-    });
+    let marketData = assetProfiles.map(
+      ({
+        _count,
+        assetClass,
+        assetSubClass,
+        comment,
+        countries,
+        dataSource,
+        Order,
+        sectors,
+        symbol
+      }) => {
+        const countriesCount = countries ? Object.keys(countries).length : 0;
+        const marketDataItemCount =
+          marketDataItems.find((marketDataItem) => {
+            return (
+              marketDataItem.dataSource === dataSource &&
+              marketDataItem.symbol === symbol
+            );
+          })?._count ?? 0;
+        const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+
+        return {
+          assetClass,
+          assetSubClass,
+          comment,
+          countriesCount,
+          dataSource,
+          symbol,
+          marketDataItemCount,
+          sectorsCount,
+          activitiesCount: _count.Order,
+          date: Order?.[0]?.date
+        };
+      }
+    );
+
+    if (presetId) {
+      if (presetId === 'ETF_WITHOUT_COUNTRIES') {
+        marketData = marketData.filter(({ countriesCount }) => {
+          return countriesCount === 0;
+        });
+      } else if (presetId === 'ETF_WITHOUT_SECTORS') {
+        marketData = marketData.filter(({ sectorsCount }) => {
+          return sectorsCount === 0;
+        });
+      }
+
+      count = marketData.length;
+    }
 
     return {
-      marketData: [...currencyPairsToGather, ...symbolProfilesToGather]
+      count,
+      marketData
     };
   }
 
@@ -165,8 +248,14 @@ export class AdminService {
     dataSource,
     symbol
   }: UniqueAsset): Promise<AdminMarketDataDetails> {
-    return {
-      marketData: await this.marketDataService.marketDataItems({
+    const [[assetProfile], marketData] = await Promise.all([
+      this.symbolProfileService.getSymbolProfiles([
+        {
+          dataSource,
+          symbol
+        }
+      ]),
+      this.marketDataService.marketDataItems({
         orderBy: {
           date: 'asc'
         },
@@ -175,7 +264,40 @@ export class AdminService {
           symbol
         }
       })
+    ]);
+
+    return {
+      marketData,
+      assetProfile: assetProfile ?? {
+        symbol,
+        currency: '-'
+      }
     };
+  }
+
+  public async patchAssetProfileData({
+    comment,
+    dataSource,
+    scraperConfiguration,
+    symbol,
+    symbolMapping
+  }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
+    await this.symbolProfileService.updateSymbolProfile({
+      comment,
+      dataSource,
+      scraperConfiguration,
+      symbol,
+      symbolMapping
+    });
+
+    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource,
+        symbol
+      }
+    ]);
+
+    return symbolProfile;
   }
 
   public async putSetting(key: string, value: string) {
@@ -187,20 +309,67 @@ export class AdminService {
       response = await this.propertyService.delete({ key });
     }
 
-    if (key === PROPERTY_CURRENCIES) {
+    if (key === PROPERTY_IS_READ_ONLY_MODE && value === 'true') {
+      await this.putSetting(PROPERTY_IS_USER_SIGNUP_ENABLED, 'false');
+    } else if (key === PROPERTY_CURRENCIES) {
       await this.exchangeRateDataService.initialize();
     }
 
     return response;
   }
 
+  private async getMarketDataForCurrencies(): Promise<AdminMarketData> {
+    const marketDataItems = await this.prismaService.marketData.groupBy({
+      _count: true,
+      by: ['dataSource', 'symbol']
+    });
+
+    const marketData: AdminMarketDataItem[] = this.exchangeRateDataService
+      .getCurrencyPairs()
+      .map(({ dataSource, symbol }) => {
+        const marketDataItemCount =
+          marketDataItems.find((marketDataItem) => {
+            return (
+              marketDataItem.dataSource === dataSource &&
+              marketDataItem.symbol === symbol
+            );
+          })?._count ?? 0;
+
+        return {
+          dataSource,
+          marketDataItemCount,
+          symbol,
+          assetClass: 'CASH',
+          countriesCount: 0,
+          sectorsCount: 0
+        };
+      });
+
+    return { marketData, count: marketData.length };
+  }
+
   private async getUsersWithAnalytics(): Promise<AdminData['users']> {
-    const usersWithAnalytics = await this.prismaService.user.findMany({
-      orderBy: {
+    let orderBy: any = {
+      createdAt: 'desc'
+    };
+    let where;
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      orderBy = {
         Analytics: {
           updatedAt: 'desc'
         }
-      },
+      };
+      where = {
+        NOT: {
+          Analytics: null
+        }
+      };
+    }
+
+    const usersWithAnalytics = await this.prismaService.user.findMany({
+      orderBy,
+      where,
       select: {
         _count: {
           select: { Account: true, Order: true }
@@ -208,6 +377,7 @@ export class AdminService {
         Analytics: {
           select: {
             activityCount: true,
+            country: true,
             updatedAt: true
           }
         },
@@ -215,19 +385,16 @@ export class AdminService {
         id: true,
         Subscription: true
       },
-      take: 30,
-      where: {
-        NOT: {
-          Analytics: null
-        }
-      }
+      take: 30
     });
 
     return usersWithAnalytics.map(
       ({ _count, Analytics, createdAt, id, Subscription }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
-        const engagement = Analytics.activityCount / daysSinceRegistration;
+        const engagement = Analytics
+          ? Analytics.activityCount / daysSinceRegistration
+          : undefined;
 
         const subscription = this.configurationService.get(
           'ENABLE_FEATURE_SUBSCRIPTION'
@@ -241,7 +408,8 @@ export class AdminService {
           id,
           subscription,
           accountCount: _count.Account || 0,
-          lastActivity: Analytics.updatedAt,
+          country: Analytics?.country,
+          lastActivity: Analytics?.updatedAt,
           transactionCount: _count.Order || 0
         };
       }

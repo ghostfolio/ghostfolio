@@ -1,0 +1,9 @@
+<small class="text-muted">
+  <ng-container i18n>Market data provided by</ng-container>&nbsp;<ng-container
+    *ngFor="let dataProviderInfo of dataProviderInfos; let last = last"
+    ><a target="_blank" [href]="dataProviderInfo.url">{{
+      dataProviderInfo.name
+    }}</a
+    ><ng-container *ngIf="!last">, </ng-container></ng-container
+  >.
+</small>

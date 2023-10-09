@@ -1,4 +1,5 @@
 {
+  "name": "common",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/common/src",
   "projectType": "library",
@@ -10,7 +11,7 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/common"],
       "options": {
         "jestConfig": "libs/common/jest.config.ts",

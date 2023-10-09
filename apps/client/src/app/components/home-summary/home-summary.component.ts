@@ -69,8 +69,8 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((aId) => {
-        this.hasImpersonationId = !!aId;
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
       });
   }
 
@@ -101,7 +101,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     this.isLoading = true;
 
     this.dataService
-      .fetchPortfolioDetails({})
+      .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
         this.summary = summary;
@@ -121,7 +121,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
           });
 
           this.snackBarRef.onAction().subscribe(() => {
-            this.router.navigate(['/pricing']);
+            this.router.navigate(['/' + $localize`pricing`]);
           });
         }
 

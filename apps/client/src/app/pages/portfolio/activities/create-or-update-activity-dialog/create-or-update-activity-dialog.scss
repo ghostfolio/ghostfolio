@@ -1,0 +1,29 @@
+:host {
+  display: block;
+
+  .mat-mdc-dialog-actions {
+    gf-value {
+      font-size: 0.9rem;
+    }
+  }
+
+  .mat-mdc-dialog-content {
+    max-height: unset;
+
+    .mat-datepicker-input {
+      &.mat-mdc-input-element:disabled {
+        color: var(--dark-primary-text);
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-mdc-dialog-content {
+    .mat-datepicker-input {
+      &.mat-mdc-input-element:disabled {
+        color: var(--light-primary-text);
+      }
+    }
+  }
+}

@@ -12,8 +12,9 @@
       <div class="col-12 d-flex justify-content-center mb-3">
         <gf-value
           size="large"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="value"
         ></gf-value>
       </div>
@@ -40,8 +41,9 @@
           i18n
           size="medium"
           [colorizeSign]="true"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="netPerformance"
           >Change</gf-value
         >
@@ -61,8 +63,9 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="SymbolProfile?.currency"
           [value]="averagePrice"
           >Average Unit Price</gf-value
         >
@@ -71,8 +74,9 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="SymbolProfile?.currency"
           [value]="marketPrice"
           >Market Price</gf-value
         >
@@ -81,9 +85,10 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
           [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [unit]="SymbolProfile?.currency"
           [value]="minPrice"
           >Minimum Price</gf-value
         >
@@ -92,9 +97,10 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="SymbolProfile?.currency"
+          [isCurrency]="true"
           [locale]="data.locale"
           [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [unit]="SymbolProfile?.currency"
           [value]="maxPrice"
           >Maximum Price</gf-value
         >
@@ -113,10 +119,50 @@
         <gf-value
           i18n
           size="medium"
-          [currency]="data.baseCurrency"
+          [isCurrency]="true"
           [locale]="data.locale"
+          [unit]="data.baseCurrency"
           [value]="investment"
           >Investment</gf-value
+        >
+      </div>
+      <div
+        *ngIf="dividendInBaseCurrency > 0 || !stakeRewards"
+        class="col-6 mb-3"
+      >
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="data.locale"
+          [unit]="data.baseCurrency"
+          [value]="dividendInBaseCurrency"
+          >Dividend</gf-value
+        >
+      </div>
+
+      <div
+        *ngIf="stakeRewards > 0 && dividendInBaseCurrency == 0"
+        class="col-6 mb-3"
+      >
+        <gf-value
+          i18n
+          size="medium"
+          [locale]="data.locale"
+          [precision]="stakePrecision"
+          [value]="stakeRewards"
+          >Stake Rewards
+        </gf-value>
+      </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="data.locale"
+          [unit]="data.baseCurrency"
+          [value]="feeInBaseCurrency"
+          >Fees</gf-value
         >
       </div>
       <div class="col-6 mb-3">
@@ -139,11 +185,7 @@
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [hidden]="!SymbolProfile?.assetClass"
-          [value]="SymbolProfile?.assetClass"
+        <gf-value i18n size="medium" [hidden]="!assetClass" [value]="assetClass"
           >Asset Class</gf-value
         >
       </div>
@@ -151,8 +193,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!SymbolProfile?.assetSubClass"
-          [value]="SymbolProfile?.assetSubClass"
+          [hidden]="!assetSubClass"
+          [value]="assetSubClass"
           >Asset Sub Class</gf-value
         >
       </div>
@@ -188,11 +230,11 @@
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
-              [baseCurrency]="user?.settings?.baseCurrency"
+              [baseCurrency]="data.baseCurrency"
               [colorScheme]="data.colorScheme"
               [isInPercent]="true"
               [keys]="['name']"
-              [locale]="user?.settings?.locale"
+              [locale]="data.locale"
               [maxItems]="10"
               [positions]="sectors"
             ></gf-portfolio-proportion-chart>
@@ -200,20 +242,26 @@
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Countries</div>
             <gf-portfolio-proportion-chart
-              [baseCurrency]="user?.settings?.baseCurrency"
+              [baseCurrency]="data.baseCurrency"
               [colorScheme]="data.colorScheme"
               [isInPercent]="true"
               [keys]="['name']"
-              [locale]="user?.settings?.locale"
+              [locale]="data.locale"
               [maxItems]="10"
               [positions]="countries"
             ></gf-portfolio-proportion-chart>
           </div>
         </ng-template>
       </ng-container>
+      <div *ngIf="dataProviderInfo" class="col-md-12 mb-3 text-center">
+        <hr />
+        <gf-data-provider-credits [dataProviderInfos]="[dataProviderInfo]">
+        </gf-data-provider-credits>
+        <hr />
+      </div>
     </div>
 
-    <div *ngIf="orders?.length > 0" class="row">
+    <div class="row" [ngClass]="{ 'd-none': !orders?.length }">
       <div class="col mb-3">
         <div class="h5 mb-0" i18n>Activities</div>
         <gf-activities-table
@@ -221,24 +269,25 @@
           [baseCurrency]="data.baseCurrency"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!hasImpersonationId"
+          [hasPermissionToExportActivities]="true"
           [hasPermissionToFilter]="false"
-          [hasPermissionToImportActivities]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="data.locale"
           [showActions]="false"
-          [showSymbolColumn]="false"
+          [showNameColumn]="false"
           (export)="onExport()"
         ></gf-activities-table>
       </div>
     </div>
 
     <div *ngIf="tags?.length > 0" class="row">
-      <div class="col mb-3">
+      <div class="col">
         <div class="h5" i18n>Tags</div>
-        <mat-chip-list>
-          <mat-chip *ngFor="let tag of tags">{{ tag.name }}</mat-chip>
-        </mat-chip-list>
+        <mat-chip-listbox>
+          <mat-chip-option *ngFor="let tag of tags" disabled
+            >{{ tag.name }}</mat-chip-option
+          >
+        </mat-chip-listbox>
       </div>
     </div>
 
@@ -246,7 +295,7 @@
       *ngIf="data.hasPermissionToReportDataGlitch === true && orders?.length > 0"
       class="row"
     >
-      <div class="col mb-3">
+      <div class="col">
         <hr />
         <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
           ><ion-icon class="mr-1" name="flag-outline"></ion-icon

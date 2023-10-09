@@ -2,7 +2,7 @@ import { Platform } from '@angular/cdk/platform';
 import { Inject, forwardRef } from '@angular/core';
 import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material/core';
 import { getDateFormatString } from '@ghostfolio/common/helper';
-import { format, parse } from 'date-fns';
+import { addYears, format, getYear, parse } from 'date-fns';
 
 export class CustomDateAdapter extends NativeDateAdapter {
   public constructor(
@@ -31,6 +31,16 @@ export class CustomDateAdapter extends NativeDateAdapter {
    * Parses a date from a provided value
    */
   public parse(aValue: string): Date {
-    return parse(aValue, getDateFormatString(this.locale), new Date());
+    let date = parse(aValue, getDateFormatString(this.locale), new Date());
+
+    if (getYear(date) < 1900) {
+      if (getYear(date) > Number(format(new Date(), 'yy')) + 1) {
+        date = addYears(date, 1900);
+      } else {
+        date = addYears(date, 2000);
+      }
+    }
+
+    return date;
   }
 }

@@ -1,0 +1,63 @@
+:host {
+  display: block;
+
+  a {
+    color: rgba(var(--palette-primary-500), 1);
+  }
+
+  mat-stepper {
+    ::ng-deep {
+      .mat-step-header {
+        &[aria-selected='false'] {
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+  .mat-expansion-panel {
+    background: none;
+    box-shadow: none;
+
+    .mat-expansion-panel-header {
+      color: inherit;
+
+      &[aria-disabled='true'] {
+        cursor: default;
+      }
+    }
+  }
+
+  .mat-mdc-progress-spinner {
+    right: 1.5rem;
+    top: calc(50% - 10px);
+  }
+
+  .drop-area {
+    background-color: rgba(var(--palette-foreground-base), 0.02);
+    border: 1px dashed
+      rgba(
+        var(--palette-foreground-divider),
+        var(--palette-foreground-divider-alpha)
+      );
+    border-radius: 0.25rem;
+
+    &:hover {
+      border-color: rgba(var(--palette-primary-500), 1) !important;
+      color: rgba(var(--palette-primary-500), 1);
+    }
+
+    .cloud-icon {
+      font-size: 2.5rem;
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .drop-area {
+    border-color: rgba(
+      var(--palette-foreground-divider-dark),
+      var(--palette-foreground-divider-alpha-dark)
+    );
+  }
+}

@@ -1,5 +1,6 @@
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
@@ -11,16 +12,21 @@ import { CashDetails } from './interfaces/cash-details.interface';
 @Injectable()
 export class AccountService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService
   ) {}
 
-  public async account(
-    accountWhereUniqueInput: Prisma.AccountWhereUniqueInput
-  ): Promise<Account | null> {
-    return this.prismaService.account.findUnique({
-      where: accountWhereUniqueInput
+  public async account({
+    id_userId
+  }: Prisma.AccountWhereUniqueInput): Promise<Account | null> {
+    const { id, userId } = id_userId;
+
+    const [account] = await this.accounts({
+      where: { id, userId }
     });
+
+    return account;
   }
 
   public async accountWithOrders(
@@ -50,9 +56,11 @@ export class AccountService {
       Platform?: Platform;
     })[]
   > {
-    const { include, skip, take, cursor, where, orderBy } = params;
+    const { include = {}, skip, take, cursor, where, orderBy } = params;
 
-    return this.prismaService.account.findMany({
+    include.balances = { orderBy: { date: 'desc' }, take: 1 };
+
+    const accounts = await this.prismaService.account.findMany({
       cursor,
       include,
       orderBy,
@@ -60,15 +68,36 @@ export class AccountService {
       take,
       where
     });
+
+    return accounts.map((account) => {
+      account = { ...account, balance: account.balances[0]?.value ?? 0 };
+
+      delete account.balances;
+
+      return account;
+    });
   }
 
   public async createAccount(
     data: Prisma.AccountCreateInput,
     aUserId: string
   ): Promise<Account> {
-    return this.prismaService.account.create({
+    const account = await this.prismaService.account.create({
       data
     });
+
+    await this.prismaService.accountBalance.create({
+      data: {
+        Account: {
+          connect: {
+            id_userId: { id: account.id, userId: aUserId }
+          }
+        },
+        value: data.balance
+      }
+    });
+
+    return account;
   }
 
   public async deleteAccount(
@@ -167,9 +196,65 @@ export class AccountService {
     aUserId: string
   ): Promise<Account> {
     const { data, where } = params;
+
+    await this.prismaService.accountBalance.create({
+      data: {
+        Account: {
+          connect: {
+            id_userId: where.id_userId
+          }
+        },
+        value: <number>data.balance
+      }
+    });
+
     return this.prismaService.account.update({
       data,
       where
     });
+  }
+
+  public async updateAccountBalance({
+    accountId,
+    amount,
+    currency,
+    date,
+    userId
+  }: {
+    accountId: string;
+    amount: number;
+    currency: string;
+    date: Date;
+    userId: string;
+  }) {
+    const { balance, currency: currencyOfAccount } = await this.account({
+      id_userId: {
+        userId,
+        id: accountId
+      }
+    });
+
+    const amountInCurrencyOfAccount =
+      await this.exchangeRateDataService.toCurrencyAtDate(
+        amount,
+        currency,
+        currencyOfAccount,
+        date
+      );
+
+    if (amountInCurrencyOfAccount) {
+      await this.accountBalanceService.createAccountBalance({
+        date,
+        Account: {
+          connect: {
+            id_userId: {
+              userId,
+              id: accountId
+            }
+          }
+        },
+        value: new Big(balance).plus(amountInCurrencyOfAccount).toNumber()
+      });
+    }
   }
 }

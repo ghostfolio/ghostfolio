@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
+import { paths } from '@ghostfolio/client/app-routing.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -12,22 +12,19 @@ import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
+export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
-    '/about',
-    '/about/changelog',
-    '/about/privacy-policy',
+    `/${paths.about}`,
     '/blog',
-    '/de/blog',
     '/demo',
-    '/en/blog',
-    '/faq',
-    '/features',
-    '/markets',
+    `/${paths.faq}`,
+    `/${paths.features}`,
+    `/${paths.markets}`,
+    '/open',
     '/p',
-    '/pricing',
-    '/register',
-    '/resources'
+    `/${paths.pricing}`,
+    `/${paths.register}`,
+    `/${paths.resources}`
   ];
 
   constructor(
@@ -53,7 +50,7 @@ export class AuthGuard implements CanActivate {
               this.router.navigate(['/demo']);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
-              this.router.navigate(['/register']);
+              this.router.navigate(['/' + $localize`register`]);
               resolve(false);
             } else if (
               AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) =>

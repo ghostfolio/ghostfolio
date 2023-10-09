@@ -24,8 +24,9 @@ Loading.args = {
 
 export const Currency = Template.bind({});
 Currency.args = {
-  currency: 'USD',
+  isCurrency: true,
   locale: 'en-US',
+  unit: 'USD',
   value: 7
 };
 

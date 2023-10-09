@@ -1,6 +1,6 @@
 <div class="container">
-  <h3 class="mb-3 text-center" i18n>Markets</h3>
-  <div class="mb-5 row">
+  <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Markets</h1>
+  <div *ngIf="hasPermissionToAccessFearAndGreedIndex" class="mb-5 row">
     <div class="col-xs-12 col-md-8 offset-md-2">
       <div class="mb-2 text-center text-muted">
         <small i18n>Last {{ numberOfDays }} Days</small>
@@ -8,14 +8,15 @@
       <gf-line-chart
         class="mb-3"
         symbol="Fear & Greed Index"
-        yMax="100"
-        yMin="0"
+        [colorScheme]="user?.settings?.colorScheme"
         [historicalDataItems]="historicalDataItems"
         [isAnimated]="true"
         [locale]="user?.settings?.locale"
         [showXAxis]="true"
         [showYAxis]="true"
+        [yMax]="100"
         [yMaxLabel]="greedLabel"
+        [yMin]="0"
         [yMinLabel]="fearLabel"
       ></gf-line-chart>
       <gf-fear-and-greed-index

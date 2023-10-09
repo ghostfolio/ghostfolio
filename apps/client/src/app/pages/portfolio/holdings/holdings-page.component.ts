@@ -16,11 +16,10 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
-  host: { class: 'page' },
   selector: 'gf-holdings-page',
   styleUrls: ['./holdings-page.scss'],
   templateUrl: './holdings-page.html'
@@ -36,7 +35,6 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   public placeholder = '';
   public portfolioDetails: PortfolioDetails;
   public positionsArray: PortfolioPosition[];
-  public routeQueryParams: Subscription;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -51,7 +49,7 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    this.routeQueryParams = route.queryParams
+    route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (
@@ -73,8 +71,8 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((aId) => {
-        this.hasImpersonationId = !!aId;
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
       });
 
     this.filters$
@@ -115,17 +113,15 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
             permissions.createOrder
           );
 
-          const accountFilters: Filter[] = this.user.accounts
-            .filter(({ accountType }) => {
-              return accountType === 'SECURITIES';
-            })
-            .map(({ id, name }) => {
+          const accountFilters: Filter[] = this.user.accounts.map(
+            ({ id, name }) => {
               return {
                 id,
                 label: name,
                 type: 'ACCOUNT'
               };
-            });
+            }
+          );
 
           const assetClassFilters: Filter[] = [];
           for (const assetClass of Object.keys(AssetClass)) {
@@ -139,7 +135,7 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
           const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
             return {
               id,
-              label: name,
+              label: translate(name),
               type: 'TAG'
             };
           });
@@ -165,7 +161,11 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
-      this.positionsArray.push(position);
+      this.positionsArray.push({
+        ...position,
+        assetClassLabel: translate(position.assetClass),
+        assetSubClassLabel: translate(position.assetSubClass)
+      });
     }
   }
 

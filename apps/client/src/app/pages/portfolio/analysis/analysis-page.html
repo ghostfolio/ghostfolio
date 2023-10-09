@@ -1,5 +1,5 @@
 <div class="container">
-  <h3 class="d-flex justify-content-center" i18n>Analysis</h3>
+  <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Analysis</h1>
   <div *ngIf="user?.settings?.viewMode !== 'ZEN'" class="my-4 text-center">
     <gf-toggle
       [defaultValue]="user?.settings?.dateRange"
@@ -8,6 +8,12 @@
       (change)="onChangeDateRange($event.value)"
     ></gf-toggle>
   </div>
+  <gf-activities-filter
+    [allFilters]="allFilters"
+    [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
+    [placeholder]="placeholder"
+    (valueChanged)="filters$.next($event)"
+  ></gf-activities-filter>
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator
@@ -28,27 +34,37 @@
 
   <div class="mb-5 row">
     <div class="col-md-6">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
           <mat-card-title class="align-items-center d-flex" i18n
             >Top</mat-card-title
           >
         </mat-card-header>
         <mat-card-content>
-          <div *ngFor="let position of top3; let i = index" class="d-flex py-1">
-            <div class="flex-grow-1 mr-2 text-truncate">
-              {{ i + 1 }}. {{ position.name }}
-            </div>
-            <div class="d-flex justify-content-end">
-              <gf-value
-                class="justify-content-end"
-                position="end"
-                [colorizeSign]="true"
-                [isPercent]="true"
-                [locale]="user?.settings?.locale"
-                [value]="position.netPerformancePercentage"
-              ></gf-value>
-            </div>
+          <div *ngFor="let position of top3; let i = index" class="py-1">
+            <a
+              class="d-flex"
+              [queryParams]="{
+                dataSource: position.dataSource,
+                positionDetailDialog: true,
+                symbol: position.symbol
+              }"
+              [routerLink]="[]"
+            >
+              <div class="flex-grow-1 mr-2 text-truncate">
+                {{ i + 1 }}. {{ position.name }}
+              </div>
+              <div class="d-flex justify-content-end">
+                <gf-value
+                  class="justify-content-end"
+                  position="end"
+                  [colorizeSign]="true"
+                  [isPercent]="true"
+                  [locale]="user?.settings?.locale"
+                  [value]="position.netPerformancePercentage"
+                ></gf-value>
+              </div>
+            </a>
           </div>
           <div>
             <ngx-skeleton-loader
@@ -64,30 +80,37 @@
       </mat-card>
     </div>
     <div class="col-md-6">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
           <mat-card-title class="align-items-center d-flex" i18n
             >Bottom</mat-card-title
           >
         </mat-card-header>
         <mat-card-content>
-          <div
-            *ngFor="let position of bottom3; let i = index"
-            class="d-flex py-1"
-          >
-            <div class="flex-grow-1 mr-2 text-truncate">
-              {{ i + 1 }}. {{ position.name }}
-            </div>
-            <div class="d-flex justify-content-end">
-              <gf-value
-                class="justify-content-end"
-                position="end"
-                [colorizeSign]="true"
-                [isPercent]="true"
-                [locale]="user?.settings?.locale"
-                [value]="position.netPerformancePercentage"
-              ></gf-value>
-            </div>
+          <div *ngFor="let position of bottom3; let i = index" class="py-1">
+            <a
+              class="d-flex"
+              [queryParams]="{
+                dataSource: position.dataSource,
+                positionDetailDialog: true,
+                symbol: position.symbol
+              }"
+              [routerLink]="[]"
+            >
+              <div class="flex-grow-1 mr-2 text-truncate">
+                {{ i + 1 }}. {{ position.name }}
+              </div>
+              <div class="d-flex justify-content-end">
+                <gf-value
+                  class="justify-content-end"
+                  position="end"
+                  [colorizeSign]="true"
+                  [isPercent]="true"
+                  [locale]="user?.settings?.locale"
+                  [value]="position.netPerformancePercentage"
+                ></gf-value>
+              </div>
+            </a>
           </div>
           <div>
             <ngx-skeleton-loader
@@ -121,6 +144,7 @@
         <gf-investment-chart
           class="h-100"
           [benchmarkDataItems]="investments"
+          [benchmarkDataLabel]="portfolioEvolutionDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
           [historicalDataItems]="performanceDataItems"
@@ -133,7 +157,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="mb-5 row">
     <div class="col-lg">
       <div class="align-items-center d-flex mb-4">
         <div
@@ -153,17 +177,74 @@
           (change)="onChangeGroupBy($event.value)"
         ></gf-toggle>
       </div>
+      <div *ngIf="streaks" class="row">
+        <div class="col-md-6 col-xs-12 my-2">
+          <gf-value
+            i18n
+            size="large"
+            [unit]="unitCurrentStreak"
+            [value]="streaks?.currentStreak"
+            >Current Streak</gf-value
+          >
+        </div>
+        <div class="col-md-6 col-xs-12 my-2">
+          <gf-value
+            i18n
+            size="large"
+            [unit]="unitLongestStreak"
+            [value]="streaks?.longestStreak"
+            >Longest Streak</gf-value
+          >
+        </div>
+      </div>
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
-          groupBy="month"
-          [benchmarkDataItems]="investmentsByMonth"
+          [benchmarkDataItems]="investmentsByGroup"
+          [benchmarkDataLabel]="investmentTimelineDataLabel"
           [currency]="user?.settings?.baseCurrency"
           [daysInMarket]="daysInMarket"
+          [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
-          [savingsRate]="(hasImpersonationId || user.settings.isRestrictedView) ? undefined : user?.settings?.savingsRate"
+          [savingsRate]="savingsRate"
+        ></gf-investment-chart>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg">
+      <div class="align-items-center d-flex mb-4">
+        <div
+          class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
+        >
+          <span i18n>Dividend Timeline</span>
+          <gf-premium-indicator
+            *ngIf="user?.subscription?.type === 'Basic'"
+            class="ml-1"
+          ></gf-premium-indicator>
+        </div>
+        <gf-toggle
+          class="d-none d-lg-block"
+          [defaultValue]="mode"
+          [isLoading]="false"
+          [options]="modeOptions"
+          (change)="onChangeGroupBy($event.value)"
+        ></gf-toggle>
+      </div>
+      <div class="chart-container">
+        <gf-investment-chart
+          class="h-100"
+          [benchmarkDataItems]="dividendsByGroup"
+          [benchmarkDataLabel]="dividendTimelineDataLabel"
+          [currency]="user?.settings?.baseCurrency"
+          [daysInMarket]="daysInMarket"
+          [groupBy]="mode"
+          [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [locale]="user?.settings?.locale"
+          [range]="user?.settings?.dateRange"
         ></gf-investment-chart>
       </div>
     </div>

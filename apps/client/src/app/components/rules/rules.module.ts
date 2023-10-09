@@ -21,4 +21,4 @@ import { RulesComponent } from './rules.component';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class RulesModule {}
+export class GfRulesModule {}

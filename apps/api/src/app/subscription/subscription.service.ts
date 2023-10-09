@@ -1,7 +1,8 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription.type';
+import { UserWithSettings } from '@ghostfolio/common/types';
+import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
@@ -19,7 +20,7 @@ export class SubscriptionService {
     this.stripe = new Stripe(
       this.configurationService.get('STRIPE_SECRET_KEY'),
       {
-        apiVersion: '2020-08-27'
+        apiVersion: '2022-11-15'
       }
     );
   }
@@ -27,17 +28,17 @@ export class SubscriptionService {
   public async createCheckoutSession({
     couponId,
     priceId,
-    userId
+    user
   }: {
     couponId?: string;
     priceId: string;
-    userId: string;
+    user: UserWithSettings;
   }) {
     const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
-      cancel_url: `${this.configurationService.get(
-        'ROOT_URL'
-      )}/${DEFAULT_LANGUAGE_CODE}/account`,
-      client_reference_id: userId,
+      cancel_url: `${this.configurationService.get('ROOT_URL')}/${
+        user.Settings?.settings?.language ?? DEFAULT_LANGUAGE_CODE
+      }/account`,
+      client_reference_id: user.id,
       line_items: [
         {
           price: priceId,
@@ -70,13 +71,16 @@ export class SubscriptionService {
 
   public async createSubscription({
     duration = '1 year',
+    price,
     userId
   }: {
     duration?: StringValue;
+    price: number;
     userId: string;
   }) {
     await this.prismaService.subscription.create({
       data: {
+        price,
         expiresAt: addMilliseconds(new Date(), ms(duration)),
         User: {
           connect: {
@@ -89,14 +93,12 @@ export class SubscriptionService {
 
   public async createSubscriptionViaStripe(aCheckoutSessionId: string) {
     try {
-      const session = await this.stripe.checkout.sessions.retrieve(
-        aCheckoutSessionId
-      );
+      const session =
+        await this.stripe.checkout.sessions.retrieve(aCheckoutSessionId);
 
-      await this.createSubscription({ userId: session.client_reference_id });
-
-      await this.stripe.customers.update(session.customer as string, {
-        description: session.client_reference_id
+      await this.createSubscription({
+        price: session.amount_total / 100,
+        userId: session.client_reference_id
       });
 
       return session.client_reference_id;
@@ -105,7 +107,9 @@ export class SubscriptionService {
     }
   }
 
-  public getSubscription(aSubscriptions: Subscription[]) {
+  public getSubscription(
+    aSubscriptions: Subscription[]
+  ): UserWithSettings['subscription'] {
     if (aSubscriptions.length > 0) {
       const latestSubscription = aSubscriptions.reduce((a, b) => {
         return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
@@ -113,12 +117,14 @@ export class SubscriptionService {
 
       return {
         expiresAt: latestSubscription.expiresAt,
+        offer: latestSubscription.price === 0 ? 'default' : 'renewal',
         type: isBefore(new Date(), latestSubscription.expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic
       };
     } else {
       return {
+        offer: 'default',
         type: SubscriptionType.Basic
       };
     }

@@ -1,13 +1,21 @@
 <div class="container">
   <div class="row">
     <div class="col text-center">
-      <h1 class="font-weight-bold intro mt-5">
-        Manage your wealth like a boss
-      </h1>
-      <p class="lead mb-4">
-        Ghostfolio is a privacy-first, open source dashboard to manage your
-        personal finances. Break down your asset allocation, know your net worth
-        and make solid, data-driven investment decisions.
+      <div>
+        <div class="badge badge-light badge-pill border mb-3 px-3 py-2">
+          <a href="../en/blog/2023/09/ghostfolio-2"
+            ><span class="mr-1 text-uppercase" i18n>New</span>
+            <span class="font-weight-normal">Ghostfolio 2.0</span></a
+          >
+        </div>
+        <h1 class="font-weight-bold intro" i18n>
+          Manage your wealth like a boss
+        </h1>
+      </div>
+      <p class="lead mb-4" i18n>
+        Ghostfolio is a privacy-first, open source dashboard for your personal
+        finances. Break down your asset allocation, know your net worth and make
+        solid, data-driven investment decisions.
       </p>
       <div class="mb-4">
         <a
@@ -30,34 +38,37 @@
 <div class="container">
   <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
-      <div class="text-center">
+      <ng-container *ngIf="hasPermissionToCreateUser">
         <a
-          class="d-inline-block"
           color="primary"
+          i18n
           mat-flat-button
-          [routerLink]="['/register']"
+          [routerLink]="routerLinkRegister"
         >
           Get Started
         </a>
-        <div class="d-inline-block mx-3 text-muted">or</div>
-        <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
-          Live Demo
-        </a>
-      </div>
+      </ng-container>
+      <ng-container *ngIf="hasPermissionForDemo">
+        <div *ngIf="hasPermissionToCreateUser" class="mx-3 text-muted" i18n>
+          or
+        </div>
+        <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
+      </ng-container>
     </div>
   </div>
 
   <div *ngIf="hasPermissionForStatistics" class="row mb-5">
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
-        [routerLink]="['/about']"
+        [routerLink]="['/open']"
       >
         <gf-value
+          i18n
           icon="people-outline"
           size="large"
           [value]="statistics?.activeUsers30d ?? '-'"
@@ -67,14 +78,15 @@
     </div>
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Stars on GitHub"
-        [routerLink]="['/about']"
+        [routerLink]="['/open']"
       >
         <gf-value
+          i18n
           icon="star-outline"
           size="large"
           [value]="statistics?.gitHubStargazers ?? '-'"
@@ -84,14 +96,15 @@
     </div>
     <div
       class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': this.deviceType !== 'mobile' }"
+      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
     >
       <a
         class="d-block"
         title="Ghostfolio in Numbers: Pulls on Docker Hub"
-        [routerLink]="['/about']"
+        [routerLink]="['/open']"
       >
         <gf-value
+          i18n
           icon="cloud-download-outline"
           size="large"
           [value]="statistics?.dockerHubPulls ?? '-'"
@@ -102,8 +115,10 @@
   </div>
 
   <div class="row mb-5">
-    <div class="col-12 text-center text-muted"><small>As seen in</small></div>
-    <div class="col-md-2 d-flex justify-content-center my-1">
+    <div class="col-12 text-center text-muted">
+      <small i18n>As seen in</small>
+    </div>
+    <div class="col-md-3 d-flex justify-content-center my-1">
       <a
         class="d-block logo logo-alternative-to mask"
         href="https://alternativeto.net"
@@ -111,7 +126,7 @@
         title="AlternativeTo - Crowdsourced software recommendations"
       ></a>
     </div>
-    <div class="col-md-2 d-flex justify-content-center my-1">
+    <div class="col-md-3 d-flex justify-content-center my-1">
       <a
         class="d-block logo logo-awesome"
         href="https://github.com/awesome-selfhosted/awesome-selfhosted"
@@ -119,7 +134,23 @@
         title="Awesome-Selfhosted: A list of Free Software network services and web applications which can be hosted on your own servers"
       ></a>
     </div>
-    <div class="col-md-2 d-flex justify-content-center my-1">
+    <div class="col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-dev-community mask"
+        href="https://dev.to"
+        target="_blank"
+        title="DEV Community - A constructive and inclusive social network for software developers"
+      ></a>
+    </div>
+    <div class="col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-hacker-news mask"
+        href="https://news.ycombinator.com"
+        target="_blank"
+        title="Hacker News"
+      ></a>
+    </div>
+    <div class="col-md-3 d-flex justify-content-center my-1">
       <a
         class="d-block logo logo-openstartup"
         href="https://openstartup.tm"
@@ -127,7 +158,7 @@
         title="Open Startup: The most complete list of open startups"
       ></a>
     </div>
-    <div class="col-md-2 d-flex justify-content-center my-1">
+    <div class="col-md-3 d-flex justify-content-center my-1">
       <a
         class="d-block logo logo-privacy-tools mask"
         href="https://www.privacytools.io"
@@ -135,7 +166,7 @@
         title="Privacy Tools: Software Alternatives and Encryption"
       ></a>
     </div>
-    <div class="col-md-2 d-flex justify-content-center my-1">
+    <div class="col-md-3 d-flex justify-content-center my-1">
       <a
         class="d-block logo logo-product-hunt"
         href="https://www.producthunt.com"
@@ -143,7 +174,39 @@
         title="Product Hunt – The best new products in tech."
       ></a>
     </div>
-    <div class="col-md-2 d-flex justify-content-center my-1">
+    <div class="align-items-center col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-reddit mask"
+        href="https://www.reddit.com"
+        target="_blank"
+        title="Reddit - Dive into anything"
+      ></a>
+    </div>
+    <div class="col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-sackgeld mask"
+        href="https://www.sackgeld.com"
+        target="_blank"
+        title="Sackgeld.com – Apps für ein höheres Sackgeld"
+      ></a>
+    </div>
+    <div class="col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-sourceforge mask"
+        href="https://sourceforge.net"
+        target="_blank"
+        title="SourceForge: The Complete Open-Source and Business Software Platform"
+      ></a>
+    </div>
+    <div class="align-items-center col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-umbrel mask"
+        href="https://umbrel.com"
+        target="_blank"
+        title="Umbrel — A personal server OS for self-hosting"
+      ></a>
+    </div>
+    <div class="col-md-3 d-flex justify-content-center my-1">
       <a
         class="d-block logo logo-unraid mask"
         href="https://unraid.net"
@@ -155,11 +218,11 @@
 
   <div class="pt-3 row">
     <div class="col text-center">
-      <h2 class="h4 mb-1 text-center">
+      <h2 class="h4 mb-1 text-center" i18n>
         Protect your <strong>assets</strong>. Refine your
         <strong>personal investment strategy</strong>.
       </h2>
-      <p class="lead m-0">
+      <p class="lead m-0" i18n>
         Ghostfolio empowers busy people to keep track of stocks, ETFs or
         cryptocurrencies without being tracked.
       </p>
@@ -168,73 +231,87 @@
 
   <div class="row my-3">
     <div class="col-md-4 my-2">
-      <mat-card>
-        <mat-card-title>360° View</mat-card-title>
-        Get the full picture of your personal finances across multiple
-        platforms.
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title i18n>360° View</mat-card-title>
+        </mat-card-header>
+        <mat-card-content i18n>
+          Get the full picture of your personal finances across multiple
+          platforms.
+        </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-4 my-2">
-      <mat-card>
-        <mat-card-title>Web3 Ready</mat-card-title>
-        Use Ghostfolio anonymously and own your financial data.
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title i18n>Web3 Ready</mat-card-title>
+        </mat-card-header>
+        <mat-card-content i18n>
+          Use Ghostfolio anonymously and own your financial data.
+        </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-4 my-2">
-      <mat-card>
-        <mat-card-title>Open Source</mat-card-title>
-        Benefit from continuous improvements through a strong community.
+      <mat-card appearance="outlined">
+        <mat-card-header>
+          <mat-card-title i18n>Open Source</mat-card-title>
+        </mat-card-header>
+        <mat-card-content i18n>
+          Benefit from continuous improvements through a strong community.
+        </mat-card-content>
       </mat-card>
     </div>
   </div>
 
   <div class="row my-5">
     <div class="col-md-6 offset-md-3">
-      <h2 class="h4 mb-1 text-center">Why <strong>Ghostfolio</strong>?</h2>
-      <p class="lead mb-3 text-center">Ghostfolio is for you if you are...</p>
+      <h2 class="h4 mb-1 text-center" i18n>Why <strong>Ghostfolio</strong>?</h2>
+      <p class="lead mb-3 text-center" i18n>
+        Ghostfolio is for you if you are...
+      </p>
       <ul class="list-unstyled">
         <li class="d-flex mb-3">
           <span class="mr-3">💼 </span
-          ><span
+          ><span i18n
             >trading stocks, ETFs or cryptocurrencies on multiple
             platforms</span
           >
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🏦</span
-          ><span>pursuing a buy & hold strategy</span>
+          ><span i18n>pursuing a buy & hold strategy</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🎯</span
-          ><span
+          ><span i18n
             >interested in getting insights of your portfolio composition</span
           >
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">👻</span
-          ><span>valuing privacy and data ownership</span>
+          ><span i18n>valuing privacy and data ownership</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">🧘</span><span>into minimalism</span>
+          <span class="mr-3">🧘</span><span i18n>into minimalism</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🧺</span
-          ><span>caring about diversifying your financial resources</span>
+          ><span i18n>caring about diversifying your financial resources</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🆓</span
-          ><span>interested in financial independence</span>
+          ><span i18n>interested in financial independence</span>
         </li>
         <li class="d-flex mb-3">
           <span class="mr-3">🙅</span
-          ><span>saying no to spreadsheets in {{ currentYear }}</span>
+          ><span i18n>saying no to spreadsheets in {{ currentYear }}</span>
         </li>
         <li class="d-flex mb-3">
-          <span class="mr-3">😎</span><span>still reading this list</span>
+          <span class="mr-3">😎</span><span i18n>still reading this list</span>
         </li>
       </ul>
       <div class="mt-4 text-center">
-        <a mat-stroked-button [routerLink]="['/about']"
+        <a i18n mat-stroked-button [routerLink]="routerLinkAbout"
           >Learn more about Ghostfolio</a
         >
       </div>
@@ -243,94 +320,123 @@
 
   <div class="row my-5">
     <div class="col-12">
-      <h2 class="h4 mb-1 text-center">
+      <h2 class="h4 mb-3 text-center" i18n>
         What our <strong>users</strong> are saying
       </h2>
     </div>
-    <div *ngFor="let testimonial of testimonials" class="col-md-6">
-      <div class="d-flex flex-row py-3">
-        <div class="d-flex justify-content-center">
-          <gf-logo
-            class="mr-3 mt-2 pt-1"
-            size="medium"
-            [hideName]="true"
-          ></gf-logo>
-        </div>
-        <div>
-          <div>{{ testimonial.quote }}</div>
-          <div class="mt-2 text-muted">
-            — {{ testimonial.author }}, {{ testimonial.country }}
+    <div class="col-md-8 offset-md-2">
+      <gf-carousel [aria-label]="'Testimonials'">
+        <div *ngFor="let testimonial of testimonials" gf-carousel-item>
+          <div class="d-flex px-3">
+            <gf-logo
+              class="mr-3 mt-2 pt-1"
+              size="medium"
+              [showLabel]="false"
+            ></gf-logo>
+            <div>
+              <div>{{ testimonial.quote }}</div>
+              <div class="mt-2 text-muted">
+                —
+                <a
+                  *ngIf="testimonial.url"
+                  target="_blank"
+                  [href]="testimonial.url"
+                  >{{ testimonial.author }}</a
+                >
+                <span *ngIf="!testimonial.url">{{ testimonial.author }}</span>,
+                {{ testimonial.country }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </gf-carousel>
     </div>
   </div>
 
-  <div class="row my-3">
+  <div *ngIf="hasPermissionForSubscription" class="row my-5">
     <div class="col-12">
-      <h2 class="h4 mb-1 text-center">
+      <h2 class="h4 text-center" i18n>
+        Members from around the globe are using
+        <a href="pricing"><strong>Ghostfolio Premium</strong></a>
+      </h2>
+    </div>
+    <div class="col-md-8 customer-map-container offset-md-2">
+      <gf-world-map-chart
+        format="👻"
+        [countries]="countriesOfSubscribersMap"
+      ></gf-world-map-chart>
+    </div>
+  </div>
+
+  <div *ngIf="hasPermissionForSubscription" class="row my-3">
+    <div class="col-12">
+      <h2 class="h4 mb-1 text-center" i18n>
         How does <strong>Ghostfolio</strong> work?
       </h2>
-      <p class="lead mb-3 text-center">Get started in only 3 steps</p>
+      <p class="lead mb-3 text-center" i18n>Get started in only 3 steps</p>
     </div>
     <div class="col-md-4 my-2">
-      <mat-card class="d-flex flex-row h-100">
-        <div class="flex-grow-1">
-          <div class="font-weight-bold">Sign up anonymously*</div>
-          <div class="text-muted">
-            <small>* no e-mail address nor credit card required</small>
+      <mat-card appearance="outlined" class="h-100">
+        <mat-card-content class="d-flex flex-row">
+          <div class="flex-grow-1">
+            <div class="font-weight-bold" i18n>Sign up anonymously*</div>
+            <div class="text-muted" i18n>
+              <small>* no e-mail address nor credit card required</small>
+            </div>
           </div>
-        </div>
-        <div class="pl-2 text-muted text-right">1</div>
+          <div class="pl-2 text-muted text-right">1</div>
+        </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-4 my-2">
-      <mat-card class="d-flex flex-row h-100">
-        <div class="flex-grow-1">
-          <div class="font-weight-bold">
-            Add any of your historical transactions
+      <mat-card appearance="outlined" class="h-100">
+        <mat-card-content class="d-flex flex-row">
+          <div class="flex-grow-1">
+            <div class="font-weight-bold" i18n>
+              Add any of your historical transactions
+            </div>
           </div>
-        </div>
-        <div class="pl-2 text-muted text-right">2</div>
+          <div class="pl-2 text-muted text-right">2</div>
+        </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-4 my-2">
-      <mat-card class="d-flex flex-row h-100">
-        <div class="flex-grow-1">
-          <div class="font-weight-bold">
-            Get valuable insights of your portfolio composition
+      <mat-card appearance="outlined" class="h-100">
+        <mat-card-content class="d-flex flex-row">
+          <div class="flex-grow-1">
+            <div class="font-weight-bold" i18n>
+              Get valuable insights of your portfolio composition
+            </div>
           </div>
-        </div>
-        <div class="pl-2 text-muted text-right">3</div>
+          <div class="pl-2 text-muted text-right">3</div>
+        </mat-card-content>
       </mat-card>
     </div>
   </div>
 
-  <div class="row my-5">
+  <div *ngIf="hasPermissionToCreateUser" class="row my-5">
     <div class="col">
-      <h2 class="h4 mb-1 text-center">Are <strong>you</strong> ready?</h2>
-      <p class="lead mb-3 text-center">
-        Join now or check out the example account
+      <h2 class="h4 mb-1 text-center" i18n>Are <strong>you</strong> ready?</h2>
+      <p class="lead mb-3 text-center" i18n>
+        Join now<ng-container *ngIf="hasPermissionForDemo">
+          or check out the example account</ng-container
+        >
       </p>
-      <div class="py-2 text-center">
-        <a color="primary" mat-flat-button [routerLink]="['/register']">
+      <div class="align-items-center d-flex justify-content-center py-2">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+        >
           Get Started
         </a>
-        <div class="d-inline-block mx-3 text-muted">or</div>
-        <a class="d-inline-block" mat-stroked-button [routerLink]="['/demo']">
-          Live Demo
-        </a>
+        <ng-container *ngIf="hasPermissionForDemo">
+          <div class="mx-3 text-muted" i18n>or</div>
+          <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
+        </ng-container>
       </div>
     </div>
-  </div>
-
-  <div class="downloads my-5 row justify-content-center">
-    <a
-      href="https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa"
-      title="Get Ghostfolio on Google Play"
-    >
-      <img alt="Google Play Badge" src="../assets/badge-en-google-play.png" />
-    </a>
   </div>
 </div>
 

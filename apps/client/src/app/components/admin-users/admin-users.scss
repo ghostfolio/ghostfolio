@@ -1,4 +1,4 @@
-@import '~apps/client/src/styles/ghostfolio-style';
+@import 'apps/client/src/styles/ghostfolio-style';
 
 :host {
   display: block;
@@ -9,8 +9,8 @@
     table {
       min-width: 100%;
 
-      .mat-row,
-      .mat-header-row {
+      .mat-mdc-row,
+      .mat-mdc-header-row {
         width: 100%;
       }
     }

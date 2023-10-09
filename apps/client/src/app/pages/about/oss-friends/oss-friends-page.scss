@@ -1,0 +1,9 @@
+:host {
+  display: block;
+
+  .mat-mdc-card {
+    &:hover {
+      border-color: var(--gf-theme-primary-500);
+    }
+  }
+}

@@ -8,7 +8,6 @@ import { PremiumIndicatorComponent } from './premium-indicator.component';
   declarations: [PremiumIndicatorComponent],
   exports: [PremiumIndicatorComponent],
   imports: [CommonModule, RouterModule],
-  providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfPremiumIndicatorModule {}

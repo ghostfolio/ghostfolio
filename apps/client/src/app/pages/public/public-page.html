@@ -1,15 +1,15 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <h3 class="h4 mb-3 text-center" i18n>
+      <h1 class="h4 mb-3 text-center" i18n>
         Hello, {{ portfolioPublicDetails?.alias ?? 'someone' }} has shared a
         <strong>Portfolio</strong> with you!
-      </h3>
+      </h1>
     </div>
   </div>
   <div class="proportion-charts row">
     <div class="col-md-12 allocations-by-symbol">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Holdings</mat-card-title>
         </mat-card-header>
@@ -25,7 +25,7 @@
       </mat-card>
     </div>
     <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Currencies</mat-card-title>
         </mat-card-header>
@@ -40,7 +40,7 @@
       </mat-card>
     </div>
     <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Sectors</mat-card-title>
         </mat-card-header>
@@ -55,7 +55,7 @@
       </mat-card>
     </div>
     <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Continents</mat-card-title>
         </mat-card-header>
@@ -71,17 +71,20 @@
   </div>
   <div *ngIf="portfolioPublicDetails?.hasDetails" class="row world-map-chart">
     <div class="col-lg">
-      <mat-card class="mb-3">
+      <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>Regions</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <gf-world-map-chart
-            [countries]="countries"
-            [isInPercent]="true"
-          ></gf-world-map-chart>
+          <div class="world-map-chart-container">
+            <gf-world-map-chart
+              format="{0}%"
+              [countries]="countries"
+              [isInPercent]="true"
+            ></gf-world-map-chart>
+          </div>
           <div class="row">
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -90,7 +93,7 @@
                 >Developed Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
@@ -99,13 +102,25 @@
                 >Emerging Markets</gf-value
               >
             </div>
-            <div class="col-xs-12 col-md-4 my-2">
+            <div class="col-xs-12 col-md my-2">
               <gf-value
                 i18n
                 size="large"
                 [isPercent]="true"
                 [value]="markets?.otherMarkets?.value"
                 >Other Markets</gf-value
+              >
+            </div>
+            <div
+              *ngIf="markets?.[UNKNOWN_KEY]?.value > 0"
+              class="col-xs-12 col-md my-2"
+            >
+              <gf-value
+                i18n
+                size="large"
+                [isPercent]="true"
+                [value]="markets?.[UNKNOWN_KEY]?.value"
+                >No data available</gf-value
               >
             </div>
           </div>
@@ -115,12 +130,12 @@
   </div>
   <div class="row">
     <div class="col-lg">
-      <gf-positions-table
-        pageSize="7"
+      <gf-holdings-table
         [deviceType]="deviceType"
         [hasPermissionToShowValues]="false"
+        [pageSize]="7"
         [positions]="positionsArray"
-      ></gf-positions-table>
+      ></gf-holdings-table>
     </div>
   </div>
   <div class="row my-5">

@@ -40,4 +40,36 @@ export class FireCalculatorService {
       totalAmount
     };
   }
+
+  public calculatePeriodsToRetire({
+    P,
+    PMT,
+    r,
+    totalAmount
+  }: {
+    P: number;
+    PMT: number;
+    r: number;
+    totalAmount: number;
+  }) {
+    if (r == 0) {
+      // No compound interest
+      return (totalAmount - P) / PMT;
+    } else if (totalAmount <= P) {
+      return 0;
+    }
+
+    const periodInterest = new Big(r).div(this.COMPOUND_PERIOD);
+    const numerator1: number = Math.log10(
+      new Big(totalAmount).plus(new Big(PMT).div(periodInterest)).toNumber()
+    );
+    const numerator2: number = Math.log10(
+      new Big(P).plus(new Big(PMT).div(periodInterest)).toNumber()
+    );
+    const denominator: number = Math.log10(
+      new Big(1).plus(periodInterest).toNumber()
+    );
+
+    return (numerator1 - numerator2) / denominator;
+  }
 }
