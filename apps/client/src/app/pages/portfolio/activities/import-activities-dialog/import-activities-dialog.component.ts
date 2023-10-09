@@ -267,6 +267,7 @@ export class ImportActivitiesDialog implements OnDestroy {
 
           return;
         } else if (file.name.endsWith('.csv')) {
+          const content: string[] = fileContent.split('\n').slice(1);
           try {
             const data = await this.importActivitiesService.importCsv({
               fileContent,
@@ -277,7 +278,7 @@ export class ImportActivitiesDialog implements OnDestroy {
           } catch (error) {
             console.error(error);
             this.handleImportError({
-              activities: error?.activities ?? [],
+              activities: error?.activities ?? content,
               error: {
                 error: { message: error?.error?.message ?? [error?.message] }
               }
