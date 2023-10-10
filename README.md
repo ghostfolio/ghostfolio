@@ -272,6 +272,8 @@ Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ r
 
 Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public - including you.
 
+Make sure you check out our [Contributing guidelines](./CONTRIBUTING.md).
+
 Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_). We would love to hear from you.
 
 If you like to support this project, get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
