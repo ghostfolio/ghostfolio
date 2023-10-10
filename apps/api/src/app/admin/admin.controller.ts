@@ -314,11 +314,11 @@ export class AdminController {
     return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Post('market-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
   public async updateMarketData(
-    @Param('dataSource') dataSourceParam: DataSource,
-    @Param('symbol') symbolParam: string,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string,
     @Body() data: UpdateBulkMarketDataDto
   ) {
     if (
@@ -332,16 +332,17 @@ export class AdminController {
         StatusCodes.FORBIDDEN
       );
     }
-    const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = [];
-    data.marketData.forEach((entry) => {
-      dataBulkUpdate.push({
-        dataSource: dataSourceParam,
-        symbol: symbolParam,
+
+    const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
+      (entry) => ({
+        dataSource: dataSource,
+        symbol: symbol,
         date: entry.date,
         marketPrice: entry.marketPrice,
         state: 'CLOSE'
-      });
-    });
+      })
+    );
+
     return this.marketDataService.updateMany({
       data: dataBulkUpdate
     });

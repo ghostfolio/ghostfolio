@@ -45,8 +45,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public isBenchmark = false;
   public historicalDataAsString: string;
+  public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -203,23 +203,19 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   public importHistoricalData() {
     const inputHistoricalData = this.historicalDataAsString;
     const inputSplittedByLine = inputHistoricalData.split('\n');
-    const dataBulkUpdate: UpdateMarketDataDto[] = [];
-    inputSplittedByLine.forEach((line) => {
-      const inputSplittedBySeparator = line.split(';');
-      const inputDate = parseISO(inputSplittedBySeparator[0]);
-      dataBulkUpdate.push({
-        date: inputDate,
-        marketPrice: Number(inputSplittedBySeparator[1])
-      });
-    });
+    const dataBulkUpdate: UpdateMarketDataDto[] = inputSplittedByLine.map(
+      (line) => {
+        const inputSplittedBySeparator = line.split(';');
+        const inputDate = parseISO(inputSplittedBySeparator[0]);
+        return {
+          date: inputDate,
+          marketPrice: Number(inputSplittedBySeparator[1])
+        };
+      }
+    );
 
     this.adminService
       .postMarketData({
@@ -233,5 +229,10 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
 
     this.historicalDataAsString = '';
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }
