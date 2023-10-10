@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Harmonized the style of the create button on the page for granting and revoking public access to share the portfolio
+- Improved the language localization for German (`de`)
 
 ## 2.10.0 - 2023-10-09
 
