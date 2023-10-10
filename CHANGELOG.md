@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the markets overview by benchmarks (date of last all time high)
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.10.0 - 2023-10-09
 
 ### Added
