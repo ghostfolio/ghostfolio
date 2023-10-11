@@ -170,12 +170,27 @@ export class AccountController {
       );
     }
 
+    const currentAccountIds = (
+      await this.accountService.getAccounts(this.request.user.id)
+    ).map((account) => account.id);
+
+    if (
+      ![accountIdFrom, accountIdTo].every((id) =>
+        currentAccountIds.includes(id)
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
     const today = resetHours(new Date());
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     await this.accountService.updateAccountBalance({
       accountId: accountIdFrom,
-      amount: balance,
+      amount: -balance,
       currency: userCurrency,
       date: today,
       userId: this.request.user.id
