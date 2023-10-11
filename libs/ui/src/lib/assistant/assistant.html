@@ -38,7 +38,10 @@
       <ion-icon class="m-0" name="close-outline"></ion-icon>
     </button>
   </div>
-  <div class="overflow-auto py-3 result-container">
+  <div
+    *ngIf="isLoading || searchFormControl.value"
+    class="overflow-auto py-3 result-container"
+  >
     <div>
       <div class="h6 mb-1 px-2" i18n>Holdings</div>
       <gf-assistant-list-item

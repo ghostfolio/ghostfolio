@@ -283,7 +283,6 @@ export class EodHistoricalDataService implements DataProviderInterface {
     if (symbol.endsWith('.FOREX')) {
       symbol = symbol.replace('GBX', 'GBp');
       symbol = symbol.replace('.FOREX', '');
-      symbol = `${DEFAULT_CURRENCY}${symbol}`;
     }
 
     return symbol;
@@ -292,7 +291,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   /**
    * Converts a symbol to a EOD symbol
    *
-   * Currency:  USDCHF  -> CHF.FOREX
+   * Currency:  USDCHF  -> USDCHF.FOREX
    */
   private convertToEodSymbol(aSymbol: string) {
     if (
@@ -304,9 +303,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
           aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
         )
       ) {
-        return `${aSymbol
-          .replace('GBp', 'GBX')
-          .replace(DEFAULT_CURRENCY, '')}.FOREX`;
+        let symbol = aSymbol;
+        symbol = symbol.replace('GBp', 'GBX');
+
+        return `${symbol}.FOREX`;
       }
     }
 
