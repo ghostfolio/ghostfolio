@@ -32,12 +32,9 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public displayedColumns = [
     'index',
     'user',
-    'country',
     'registration',
     'accounts',
     'activities',
-    'engagementPerDay',
-    'lastRequest',
     'actions'
   ];
   private unsubscribeSubject = new Subject<void>();
@@ -55,6 +52,29 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
       this.info?.globalPermissions,
       permissions.enableSubscription
     );
+
+    if (this.hasPermissionForSubscription) {
+      this.displayedColumns = [
+        'index',
+        'user',
+        'country',
+        'registration',
+        'accounts',
+        'activities',
+        'engagementPerDay',
+        'lastRequest',
+        'actions'
+      ];
+    } else {
+      this.displayedColumns = [
+        'index',
+        'user',
+        'registration',
+        'accounts',
+        'activities',
+        'actions'
+      ];
+    }
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -130,7 +150,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ users }) => {
-        this.dataSource = new MatTableDataSource(users)
+        this.dataSource = new MatTableDataSource(users);
         this.changeDetectorRef.markForCheck();
       });
   }
