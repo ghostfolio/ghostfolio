@@ -6,6 +6,7 @@ import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { AdminUsersComponent } from './admin-users.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [AdminUsersComponent],
@@ -15,7 +16,8 @@ import { AdminUsersComponent } from './admin-users.component';
     GfPremiumIndicatorModule,
     GfValueModule,
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatTableModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
