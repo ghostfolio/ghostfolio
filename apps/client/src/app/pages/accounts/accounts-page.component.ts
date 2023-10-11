@@ -295,10 +295,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           const { accountIdFrom, accountIdTo, balance }: TransferBalanceDto =
             data?.account;
 
-          console.log(
-            `Transfer cash balance of ${balance} from account ${accountIdFrom} to account ${accountIdTo}`
-          );
-
           this.dataService
             .postTransferAccountBalance({
               accountIdFrom,
