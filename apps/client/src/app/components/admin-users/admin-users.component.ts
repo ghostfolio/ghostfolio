@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -26,8 +27,16 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
   public user: User;
-  public users: AdminData['users'];
-
+  public dataSource: MatTableDataSource<AdminData['users'][0]> =
+    new MatTableDataSource();
+  public displayedColumns = [
+    'index',
+    'user',
+    'registration',
+    'accounts',
+    'activities',
+    'actions'
+  ];
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -43,6 +52,29 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
       this.info?.globalPermissions,
       permissions.enableSubscription
     );
+
+    if (this.hasPermissionForSubscription) {
+      this.displayedColumns = [
+        'index',
+        'user',
+        'country',
+        'registration',
+        'accounts',
+        'activities',
+        'engagementPerDay',
+        'lastRequest',
+        'actions'
+      ];
+    } else {
+      this.displayedColumns = [
+        'index',
+        'user',
+        'registration',
+        'accounts',
+        'activities',
+        'actions'
+      ];
+    }
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -118,8 +150,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ users }) => {
-        this.users = users;
-
+        this.dataSource = new MatTableDataSource(users);
         this.changeDetectorRef.markForCheck();
       });
   }
