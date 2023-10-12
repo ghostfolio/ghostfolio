@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Harmonized the style of the create button on the page for granting and revoking public access to share the portfolio
 - Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.3.1` to `5.4.2`
 
 ## 2.10.0 - 2023-10-09
 
