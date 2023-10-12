@@ -19,7 +19,7 @@
         <gf-value
           [isDate]="true"
           [locale]="locale"
-          [value]="element?.performances?.allTimeHigh?.date ?? undefined"
+          [value]="element?.performances?.allTimeHigh?.date"
         ></gf-value>
       </div>
     </td>
@@ -44,9 +44,7 @@
           'text-success':
             element?.performances?.allTimeHigh?.performancePercent > 0
         }"
-        [value]="
-          element?.performances?.allTimeHigh?.performancePercent ?? undefined
-        "
+        [value]="element?.performances?.allTimeHigh?.performancePercent"
       ></gf-value>
     </td>
   </ng-container>
