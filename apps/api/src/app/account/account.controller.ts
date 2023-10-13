@@ -29,6 +29,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
+import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccountDto } from './update-account.dto';
 
 @Controller('account')
@@ -152,6 +153,58 @@ export class AccountController {
         this.request.user.id
       );
     }
+  }
+
+  @Post('transfer-balance')
+  @UseGuards(AuthGuard('jwt'))
+  public async transferAccountBalance(
+    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
+  ) {
+    if (
+      !hasPermission(this.request.user.permissions, permissions.updateAccount)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const accountsOfUser = await this.accountService.getAccounts(
+      this.request.user.id
+    );
+
+    const currentAccountIds = accountsOfUser.map(({ id }) => {
+      return id;
+    });
+
+    if (
+      ![accountIdFrom, accountIdTo].every((accountId) => {
+        return currentAccountIds.includes(accountId);
+      })
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    const { currency } = accountsOfUser.find(({ id }) => {
+      return id === accountIdFrom;
+    });
+
+    await this.accountService.updateAccountBalance({
+      currency,
+      accountId: accountIdFrom,
+      amount: -balance,
+      userId: this.request.user.id
+    });
+
+    await this.accountService.updateAccountBalance({
+      currency,
+      accountId: accountIdTo,
+      amount: balance,
+      userId: this.request.user.id
+    });
   }
 
   @Put(':id')
