@@ -1,0 +1,4 @@
+Date,Code,Currency,Price,Quantity,Action,Fee
+12/10/2023,MSFT,USD,329.050,10,buy,0
+12/10/2023,AAPL,USD,179.050,20,<invalid>,0
+12/10/2023,GOOGL,USD,138.310,30,buy,0
