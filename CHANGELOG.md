@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `5.3.1` to `5.4.2`
 
+### Fixed
+
+- Fixed `FEE` and `INTEREST` types in the activities import of `csv` files
+
 ## 2.10.0 - 2023-10-09
 
 ### Added
