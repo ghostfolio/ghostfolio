@@ -31,11 +31,14 @@ import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccountDto } from './update-account.dto';
+import { AccountBalances } from './interfaces/account-balances.interface';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 
 @Controller('account')
 export class AccountController {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
@@ -114,6 +117,16 @@ export class AccountController {
       });
 
     return accountsWithAggregations.accounts[0];
+  }
+
+  @Get(':id/balances')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async getAccountBalancesById(
+    @Param('id') id: string
+  ): Promise<AccountBalances> {
+
+    return await this.accountBalanceService.getAccountBalances(id);
   }
 
   @Post()

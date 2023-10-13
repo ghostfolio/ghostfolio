@@ -1,3 +1,4 @@
+import { AccountBalances } from '@ghostfolio/api/app/account/interfaces/account-balances.interface';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { AccountBalance, Prisma } from '@prisma/client';
@@ -12,5 +13,19 @@ export class AccountBalanceService {
     return this.prismaService.accountBalance.create({
       data
     });
+  }
+
+  public async getAccountBalances(accountId: string): Promise<AccountBalances> {
+    const balances = await this.prismaService.accountBalance.findMany({
+      where: {
+        accountId: accountId,
+      },
+      select: {
+        date: true,
+        id: true,
+        value: true
+      }
+    });
+    return { balances }
   }
 }
