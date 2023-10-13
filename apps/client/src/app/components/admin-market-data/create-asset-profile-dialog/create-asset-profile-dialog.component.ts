@@ -31,21 +31,20 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     public readonly adminService: AdminService,
     public readonly changeDetectorRef: ChangeDetectorRef,
     public readonly dialogRef: MatDialogRef<CreateAssetProfileDialog>,
-    public readonly formBuilder: FormBuilder,
-    
+    public readonly formBuilder: FormBuilder
   ) {}
-  
-  public ngOnInit() {  
 
-      
-    this.createAssetProfileForm = this.formBuilder.group({
-      searchSymbol: new FormControl(null, [Validators.required]),
-      addSymbol: new FormControl(null, [Validators.required])
-    },
-    {
-      validators: atLeastOneValid,
-    });
-    
+  public ngOnInit() {
+    this.createAssetProfileForm = this.formBuilder.group(
+      {
+        searchSymbol: new FormControl(null, [Validators.required]),
+        addSymbol: new FormControl(null, [Validators.required])
+      },
+      {
+        validators: atLeastOneValid
+      }
+    );
+
     this.selectedOption = 'auto';
   }
 
@@ -58,20 +57,21 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   }
 
   public onSubmit() {
-    console.log(this.createAssetProfileForm.controls['addSymbol'].value)
-    this.selectedOption==='auto'?
-    this.dialogRef.close({
-      dataSource:
-        this.createAssetProfileForm.controls['searchSymbol'].value.dataSource,
-      symbol: this.createAssetProfileForm.controls['searchSymbol'].value.symbol
-    })
-    :
-    this.dialogRef.close({
-      dataSource:"MANUAL",
-      symbol: this.createAssetProfileForm.controls['addSymbol'].value
-    })
+    console.log(this.createAssetProfileForm.controls['addSymbol'].value);
+    this.selectedOption === 'auto'
+      ? this.dialogRef.close({
+          dataSource:
+            this.createAssetProfileForm.controls['searchSymbol'].value
+              .dataSource,
+          symbol:
+            this.createAssetProfileForm.controls['searchSymbol'].value.symbol
+        })
+      : this.dialogRef.close({
+          dataSource: 'MANUAL',
+          symbol: this.createAssetProfileForm.controls['addSymbol'].value
+        });
   }
- 
+
   public ngOnDestroy() {}
 }
 
@@ -79,13 +79,18 @@ const atLeastOneValid = (control: AbstractControl): ValidationErrors | null => {
   const searchSymbolControl = control.get('searchSymbol');
   const addSymbolControl = control.get('addSymbol');
 
-  if(searchSymbolControl.valid && addSymbolControl.valid){
+  if (searchSymbolControl.valid && addSymbolControl.valid) {
     return { atLeastOneValid: true };
   }
 
-  if ((!searchSymbolControl || !addSymbolControl) || (searchSymbolControl.valid || addSymbolControl.valid)) {   
-    return null; 
+  if (
+    !searchSymbolControl ||
+    !addSymbolControl ||
+    searchSymbolControl.valid ||
+    addSymbolControl.valid
+  ) {
+    return null;
   }
 
-  return { atLeastOneValid: true }; 
+  return { atLeastOneValid: true };
 };

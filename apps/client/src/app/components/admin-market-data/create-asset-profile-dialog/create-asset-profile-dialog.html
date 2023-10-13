@@ -7,28 +7,46 @@
   <h1 i18n mat-dialog-title>Add Asset Profile</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div class="my-2">
-      <mat-radio-group [(ngModel)]="selectedOption" name="radioOptions">
-          <div class="flex"><mat-radio-button [checked]="selectedOption==='auto'" value="auto" (click)="onRadioChange('auto')" name="auto"></mat-radio-button><label for="auto">Search</label></div>
-          <div class="flex"><mat-radio-button value="manual" (click)="onRadioChange('manual')" name="manual"></mat-radio-button><label for="auto">Add Manually</label></div>
+      <mat-radio-group name="radioOptions" [(ngModel)]="selectedOption">
+        <div class="flex">
+          <mat-radio-button
+            name="auto"
+            value="auto"
+            [checked]="selectedOption==='auto'"
+            (click)="onRadioChange('auto')"
+          ></mat-radio-button
+          ><label for="auto">Search</label>
+        </div>
+        <div class="flex">
+          <mat-radio-button
+            name="manual"
+            value="manual"
+            (click)="onRadioChange('manual')"
+          ></mat-radio-button
+          ><label for="auto">Add Manually</label>
+        </div>
       </mat-radio-group>
     </div>
-   
-      <div *ngIf="selectedOption === 'auto'">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label i18n>Name, symbol or ISIN</mat-label>
-            <gf-symbol-autocomplete
-              formControlName="searchSymbol"
-              [includeIndices]="true"
-            />
-          </mat-form-field>
-      </div>
-      <div *ngIf="selectedOption === 'manual'">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Symbol</mat-label>
-          <input matInput formControlName="addSymbol" placeholder="Enter symbol"/>
-        </mat-form-field>
-      </div>   
-   
+
+    <div *ngIf="selectedOption === 'auto'">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Name, symbol or ISIN</mat-label>
+        <gf-symbol-autocomplete
+          formControlName="searchSymbol"
+          [includeIndices]="true"
+        />
+      </mat-form-field>
+    </div>
+    <div *ngIf="selectedOption === 'manual'">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Symbol</mat-label>
+        <input
+          formControlName="addSymbol"
+          matInput
+          placeholder="Enter symbol"
+        />
+      </mat-form-field>
+    </div>
   </div>
   <div class="d-flex justify-content-end" mat-dialog-actions>
     <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
