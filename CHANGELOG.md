@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support to transfer a part of the cash balance from one to another account
 - Extended the markets overview by benchmarks (date of last all time high)
 
 ### Changed
