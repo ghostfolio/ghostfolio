@@ -510,7 +510,9 @@ ngx-skeleton-loader {
     padding-bottom: constant(safe-area-inset-bottom);
 
     .fab-container {
-      bottom: 5rem;
+      @media (max-width: 575.98px) {
+        bottom: 5rem;
+      }
     }
 
     .mat-mdc-tab-nav-bar {
