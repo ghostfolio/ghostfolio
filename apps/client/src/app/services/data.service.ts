@@ -480,18 +480,6 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/order`, aOrder);
   }
 
-  public postTransferAccountBalance({
-    accountIdFrom,
-    accountIdTo,
-    balance
-  }: TransferBalanceDto) {
-    return this.http.post('/api/v1/account/transfer-balance', {
-      accountIdFrom,
-      accountIdTo,
-      balance
-    });
-  }
-
   public postUser() {
     return this.http.post<UserItem>(`/api/v1/user`, {});
   }
@@ -515,6 +503,18 @@ export class DataService {
   public redeemCoupon(couponCode: string) {
     return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
+    });
+  }
+
+  public transferAccountBalance({
+    accountIdFrom,
+    accountIdTo,
+    balance
+  }: TransferBalanceDto) {
+    return this.http.post('/api/v1/account/transfer-balance', {
+      accountIdFrom,
+      accountIdTo,
+      balance
     });
   }
 

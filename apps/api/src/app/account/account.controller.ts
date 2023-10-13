@@ -29,9 +29,8 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
-import { UpdateAccountDto } from './update-account.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
-import { resetHours } from '@ghostfolio/common/helper';
+import { UpdateAccountDto } from './update-account.dto';
 
 @Controller('account')
 export class AccountController {
@@ -170,14 +169,18 @@ export class AccountController {
       );
     }
 
-    const currentAccountIds = (
-      await this.accountService.getAccounts(this.request.user.id)
-    ).map((account) => account.id);
+    const accountsOfUser = await this.accountService.getAccounts(
+      this.request.user.id
+    );
+
+    const currentAccountIds = accountsOfUser.map(({ id }) => {
+      return id;
+    });
 
     if (
-      ![accountIdFrom, accountIdTo].every((id) =>
-        currentAccountIds.includes(id)
-      )
+      ![accountIdFrom, accountIdTo].every((accountId) => {
+        return currentAccountIds.includes(accountId);
+      })
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
@@ -185,22 +188,21 @@ export class AccountController {
       );
     }
 
-    const today = resetHours(new Date());
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    const { currency } = accountsOfUser.find(({ id }) => {
+      return id === accountIdFrom;
+    });
 
     await this.accountService.updateAccountBalance({
+      currency,
       accountId: accountIdFrom,
       amount: -balance,
-      currency: userCurrency,
-      date: today,
       userId: this.request.user.id
     });
 
     await this.accountService.updateAccountBalance({
+      currency,
       accountId: accountIdTo,
       amount: balance,
-      currency: userCurrency,
-      date: today,
       userId: this.request.user.id
     });
   }

@@ -296,16 +296,18 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             data?.account;
 
           this.dataService
-            .postTransferAccountBalance({
+            .transferAccountBalance({
               accountIdFrom,
               accountIdTo,
               balance
             })
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe(() => {
-              this.router.navigate(['.'], { relativeTo: this.route });
+              this.fetchAccounts();
             });
         }
+
+        this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
 }
