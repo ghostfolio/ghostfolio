@@ -317,9 +317,9 @@ export class AdminController {
   @Post('market-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
   public async updateMarketData(
+    @Body() data: UpdateBulkMarketDataDto,
     @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string,
-    @Body() data: UpdateBulkMarketDataDto
+    @Param('symbol') symbol: string
   ) {
     if (
       !hasPermission(
@@ -334,11 +334,11 @@ export class AdminController {
     }
 
     const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
-      (entry) => ({
-        dataSource: dataSource,
-        symbol: symbol,
-        date: entry.date,
-        marketPrice: entry.marketPrice,
+      ({ date, marketPrice }) => ({
+        dataSource,
+        date,
+        marketPrice,
+        symbol,
         state: 'CLOSE'
       })
     );

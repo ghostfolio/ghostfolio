@@ -53,7 +53,7 @@
     ></gf-admin-market-data-detail>
 
     <div class="mt-3">
-      <mat-form-field appearance="outline" class="w-100">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label>
           <ng-container i18n>Historical Data</ng-container> (CSV)
         </mat-label>
@@ -69,9 +69,9 @@
       </mat-form-field>
     </div>
 
-    <div class="d-flex justify-content-end" mat-dialog-actions>
+    <div class="d-flex justify-content-end mt-2">
       <button color="accent" mat-flat-button (click)="importHistoricalData()">
-        <ng-container i18n>Import historical Data </ng-container>
+        <ng-container i18n>Import Historical Data </ng-container>
       </button>
     </div>
 

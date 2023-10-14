@@ -208,11 +208,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     const inputSplittedByLine = inputHistoricalData.split('\n');
     const dataBulkUpdate: UpdateMarketDataDto[] = inputSplittedByLine.map(
       (line) => {
-        const inputSplittedBySeparator = line.split(';');
-        const inputDate = parseISO(inputSplittedBySeparator[0]);
+        const [dateString, marketPriceString] = line.split(';');
+
         return {
-          date: inputDate,
-          marketPrice: Number(inputSplittedBySeparator[1])
+          date: parseISO(dateString),
+          marketPrice: Number(marketPriceString)
         };
       }
     );
