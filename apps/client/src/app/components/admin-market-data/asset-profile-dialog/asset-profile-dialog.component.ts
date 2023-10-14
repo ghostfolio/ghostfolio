@@ -45,7 +45,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public historicalDataAsString: string;
+  public historicalDataAsCsvString: string;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -138,6 +138,34 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
+  public onImportHistoricalData() {
+    const inputHistoricalData = this.historicalDataAsCsvString;
+    const inputSplittedByLine = inputHistoricalData.split('\n');
+    const dataBulkUpdate: UpdateMarketDataDto[] = inputSplittedByLine.map(
+      (line) => {
+        const [dateString, marketPriceString] = line.split(';');
+
+        return {
+          date: parseISO(dateString),
+          marketPrice: Number(marketPriceString)
+        };
+      }
+    );
+
+    this.adminService
+      .postMarketData({
+        dataSource: this.data.dataSource,
+        marketData: { marketData: dataBulkUpdate },
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.initialize();
+      });
+
+    this.historicalDataAsCsvString = '';
+  }
+
   public onMarketDataChanged(withRefresh: boolean = false) {
     if (withRefresh) {
       this.initialize();
@@ -201,34 +229,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
-  }
-
-  public importHistoricalData() {
-    const inputHistoricalData = this.historicalDataAsString;
-    const inputSplittedByLine = inputHistoricalData.split('\n');
-    const dataBulkUpdate: UpdateMarketDataDto[] = inputSplittedByLine.map(
-      (line) => {
-        const [dateString, marketPriceString] = line.split(';');
-
-        return {
-          date: parseISO(dateString),
-          marketPrice: Number(marketPriceString)
-        };
-      }
-    );
-
-    this.adminService
-      .postMarketData({
-        dataSource: this.data.dataSource,
-        marketData: { marketData: dataBulkUpdate },
-        symbol: this.data.symbol
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.dataService.updateInfo();
-      });
-
-    this.historicalDataAsString = '';
   }
 
   public ngOnDestroy() {
