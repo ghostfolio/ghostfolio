@@ -20,11 +20,10 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
-        <mat-select formControlName="currency">
-          <mat-option *ngFor="let currency of currencies" [value]="currency"
-            >{{ currency }}</mat-option
-          >
-        </mat-select>
+        <gf-currency-autocomplete
+          formControlName="currency"
+          [currencies]="currencies"
+        />
       </mat-form-field>
     </div>
     <div>

@@ -20,6 +20,7 @@ import { Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
+import { Currency } from '@ghostfolio/common/interfaces/currency.interface';
 
 @Component({
   host: { class: 'h-100' },
@@ -30,7 +31,7 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdateAccountDialog implements OnDestroy {
   public accountForm: FormGroup;
-  public currencies: string[] = [];
+  public currencies: Currency[] = [];
   public filteredPlatforms: Observable<Platform[]>;
   public platforms: Platform[];
 
@@ -46,7 +47,10 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   public ngOnInit() {
     const { currencies, platforms } = this.dataService.fetchInfo();
 
-    this.currencies = currencies;
+    this.currencies = currencies.map((currency) => ({
+      label: currency,
+      value: currency
+    }));
     this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({

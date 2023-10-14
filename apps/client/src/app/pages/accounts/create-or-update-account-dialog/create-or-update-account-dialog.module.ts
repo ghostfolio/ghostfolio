@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
-
+import { GfCurrencyAutocompleteModule } from '@ghostfolio/ui/currency-selector/currency-selector.module';
 import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.component';
 
 @NgModule({
@@ -17,6 +17,7 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
   imports: [
     CommonModule,
     FormsModule,
+    GfCurrencyAutocompleteModule,
     GfSymbolIconModule,
     MatAutocompleteModule,
     MatButtonModule,
