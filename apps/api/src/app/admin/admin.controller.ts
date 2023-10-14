@@ -43,6 +43,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
+import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
@@ -313,6 +314,43 @@ export class AdminController {
     return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
   }
 
+  @Post('market-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async updateMarketData(
+    @Body() data: UpdateBulkMarketDataDto,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ) {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
+      ({ date, marketPrice }) => ({
+        dataSource,
+        date,
+        marketPrice,
+        symbol,
+        state: 'CLOSE'
+      })
+    );
+
+    return this.marketDataService.updateMany({
+      data: dataBulkUpdate
+    });
+  }
+
+  /**
+   * @deprecated
+   */
   @Put('market-data/:dataSource/:symbol/:dateString')
   @UseGuards(AuthGuard('jwt'))
   public async update(
