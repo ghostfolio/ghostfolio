@@ -45,8 +45,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public historicalDataAsCsvString =
-    AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
+  public historicalDataAsCsvString: string;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -75,6 +74,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public initialize() {
+    this.historicalDataAsCsvString =
+      AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
+
     this.adminService
       .fetchAdminMarketDataBySymbol({
         dataSource: this.data.dataSource,
@@ -164,9 +166,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe(() => {
         this.initialize();
       });
-
-    this.historicalDataAsCsvString =
-      AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
   }
 
   public onMarketDataChanged(withRefresh: boolean = false) {

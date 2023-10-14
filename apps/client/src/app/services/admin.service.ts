@@ -225,6 +225,7 @@ export class AdminService {
     symbol: string;
   }) {
     const url = `/api/v1/admin/market-data/${dataSource}/${symbol}`;
+
     return this.http.post<MarketData>(url, marketData);
   }
 
