@@ -37,12 +37,12 @@ import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/
 @Controller('account')
 export class AccountController {
   public constructor(
-    private readonly accountService: AccountService,
     private readonly accountBalanceService: AccountBalanceService,
+    private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  ) { }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
@@ -125,8 +125,10 @@ export class AccountController {
   public async getAccountBalancesById(
     @Param('id') id: string
   ): Promise<AccountBalances> {
-
-    return await this.accountBalanceService.getAccountBalances(id);
+    return this.accountBalanceService.getAccountBalances({
+      accountId: id,
+      userId: this.request.user.id
+    });
   }
 
   @Post()

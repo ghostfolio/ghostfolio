@@ -5,7 +5,7 @@ import { AccountBalance, Prisma } from '@prisma/client';
 
 @Injectable()
 export class AccountBalanceService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) { }
 
   public async createAccountBalance(
     data: Prisma.AccountBalanceCreateInput
@@ -15,17 +15,25 @@ export class AccountBalanceService {
     });
   }
 
-  public async getAccountBalances(accountId: string): Promise<AccountBalances> {
+  public async getAccountBalances({
+    accountId,
+    userId
+  }: {
+    accountId: string;
+    userId: string;
+  }): Promise<AccountBalances> {
     const balances = await this.prismaService.accountBalance.findMany({
-      where: {
-        accountId: accountId,
-      },
       select: {
         date: true,
         id: true,
         value: true
+      },
+      where: {
+        accountId,
+        userId
       }
     });
-    return { balances }
+
+    return { balances };
   }
 }
