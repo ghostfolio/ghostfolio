@@ -1,0 +1,28 @@
+<input
+  autocapitalize="off"
+  autocomplete="off"
+  matInput
+  [formControl]="control"
+  [matAutocomplete]="currencyAutocomplete"
+/>
+
+<mat-autocomplete
+  #currencyAutocomplete="matAutocomplete"
+  [displayWith]="displayFn"
+  (optionSelected)="onUpdateCurrency($event)"
+>
+  <ng-container *ngIf="!isLoading">
+    <mat-option
+      *ngFor="let currencyItem of filteredCurrencies"
+      class="line-height-1"
+      [value]="currencyItem.value"
+    >
+      {{ currencyItem.label }}
+    </mat-option>
+  </ng-container>
+</mat-autocomplete>
+<mat-spinner
+  *ngIf="isLoading"
+  class="position-absolute"
+  [diameter]="20"
+></mat-spinner>

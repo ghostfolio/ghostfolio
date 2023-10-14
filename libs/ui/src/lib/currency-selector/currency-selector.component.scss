@@ -1,0 +1,8 @@
+:host {
+  display: block;
+
+  .mat-mdc-progress-spinner {
+    right: 0;
+    top: calc(50% - 10px);
+  }
+}
