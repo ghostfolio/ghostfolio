@@ -8,18 +8,18 @@ import {
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { parseISO } from 'date-fns';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
-
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 import { MarketData, SymbolProfile } from '@prisma/client';
+import { format, parseISO } from 'date-fns';
+import { parse as csvToJson } from 'papaparse';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -45,13 +45,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public historicalDataAsCsvString: string;
+  public historicalDataAsCsvString =
+    AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
 
+  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
+    new Date(),
+    DATE_FORMAT
+  )};123.45`;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -139,23 +144,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onImportHistoricalData() {
-    const inputHistoricalData = this.historicalDataAsCsvString;
-    const inputSplittedByLine = inputHistoricalData.split('\n');
-    const dataBulkUpdate: UpdateMarketDataDto[] = inputSplittedByLine.map(
-      (line) => {
-        const [dateString, marketPriceString] = line.split(';');
-
-        return {
-          date: parseISO(dateString),
-          marketPrice: Number(marketPriceString)
-        };
-      }
-    );
+    const marketData = csvToJson(this.historicalDataAsCsvString, {
+      dynamicTyping: true,
+      header: true,
+      skipEmptyLines: true
+    }).data;
 
     this.adminService
       .postMarketData({
         dataSource: this.data.dataSource,
-        marketData: { marketData: dataBulkUpdate },
+        marketData: {
+          marketData: marketData.map(({ date, marketPrice }) => {
+            return { marketPrice, date: parseISO(date) };
+          })
+        },
         symbol: this.data.symbol
       })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -163,7 +165,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         this.initialize();
       });
 
-    this.historicalDataAsCsvString = '';
+    this.historicalDataAsCsvString =
+      AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
   }
 
   public onMarketDataChanged(withRefresh: boolean = false) {
