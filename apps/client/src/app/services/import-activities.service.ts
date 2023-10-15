@@ -286,7 +286,7 @@ export class ImportActivitiesService {
 
     for (const key of ImportActivitiesService.QUANTITY_KEYS) {
       if (isFinite(item[key])) {
-        return item[key];
+        return Math.abs(item[key]);
       }
     }
 
@@ -372,7 +372,7 @@ export class ImportActivitiesService {
 
     for (const key of ImportActivitiesService.UNIT_PRICE_KEYS) {
       if (isFinite(item[key])) {
-        return item[key];
+        return Math.abs(item[key]);
       }
     }
 
