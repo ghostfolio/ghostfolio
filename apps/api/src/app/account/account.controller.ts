@@ -1,8 +1,12 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
-import { Accounts } from '@ghostfolio/common/interfaces';
+import {
+  AccountBalancesResponse,
+  Accounts
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type {
   AccountWithValue,
@@ -31,8 +35,6 @@ import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccountDto } from './update-account.dto';
-import { AccountBalances } from './interfaces/account-balances.interface';
-import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 
 @Controller('account')
 export class AccountController {
@@ -42,7 +44,7 @@ export class AccountController {
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
-  ) { }
+  ) {}
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
@@ -124,7 +126,7 @@ export class AccountController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountBalancesById(
     @Param('id') id: string
-  ): Promise<AccountBalances> {
+  ): Promise<AccountBalancesResponse> {
     return this.accountBalanceService.getAccountBalances({
       accountId: id,
       userId: this.request.user.id
