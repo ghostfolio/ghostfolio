@@ -16,9 +16,9 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { Position } from '@ghostfolio/common/interfaces';
-import { EMPTY, Subject, lastValueFrom } from 'rxjs';
+import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -29,13 +29,13 @@ import {
 } from 'rxjs/operators';
 
 import { AssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
-import { ISearchResults } from './interfaces/interfaces';
+import { ISearchResultItem, ISearchResults } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-assistant',
-  templateUrl: './assistant.html',
-  styleUrls: ['./assistant.scss']
+  styleUrls: ['./assistant.scss'],
+  templateUrl: './assistant.html'
 })
 export class AssistantComponent implements OnDestroy, OnInit {
   @HostListener('document:keydown', ['$event']) onKeydown(
@@ -71,6 +71,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
   }
 
   @Input() deviceType: string;
+  @Input() hasPermissionToAccessAdminControl: boolean;
 
   @Output() closed = new EventEmitter<void>();
 
@@ -87,6 +88,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
   public placeholder = $localize`Find holding...`;
   public searchFormControl = new FormControl('');
   public searchResults: ISearchResults = {
+    assetProfiles: [],
     holdings: []
   };
 
@@ -94,6 +96,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService
   ) {}
@@ -104,6 +107,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
         map((searchTerm) => {
           this.isLoading = true;
           this.searchResults = {
+            assetProfiles: [],
             holdings: []
           };
 
@@ -115,6 +119,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
         distinctUntilChanged(),
         mergeMap(async (searchTerm) => {
           const result = <ISearchResults>{
+            assetProfiles: [],
             holdings: []
           };
 
@@ -140,6 +145,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
     this.isLoading = true;
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
     this.searchResults = {
+      assetProfiles: [],
       holdings: []
     };
 
@@ -180,10 +186,23 @@ export class AssistantComponent implements OnDestroy, OnInit {
   }
 
   private async getSearchResults(aSearchTerm: string) {
-    let holdings: Position[] = [];
+    let assetProfiles: ISearchResultItem[] = [];
+    let holdings: ISearchResultItem[] = [];
+
+    if (this.hasPermissionToAccessAdminControl) {
+      try {
+        assetProfiles = await lastValueFrom(
+          this.searchAssetProfiles(aSearchTerm)
+        );
+        assetProfiles = assetProfiles.slice(
+          0,
+          AssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+        );
+      } catch {}
+    }
 
     try {
-      holdings = await lastValueFrom(this.searchHolding(aSearchTerm));
+      holdings = await lastValueFrom(this.searchHoldings(aSearchTerm));
       holdings = holdings.slice(
         0,
         AssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
@@ -191,11 +210,38 @@ export class AssistantComponent implements OnDestroy, OnInit {
     } catch {}
 
     return {
+      assetProfiles,
       holdings
     };
   }
 
-  private searchHolding(aSearchTerm: string) {
+  private searchAssetProfiles(
+    aSearchTerm: string
+  ): Observable<ISearchResultItem[]> {
+    return this.adminService
+      .fetchAdminMarketData({
+        filters: [
+          {
+            id: aSearchTerm,
+            type: 'SEARCH_QUERY'
+          }
+        ],
+        take: AssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+      })
+      .pipe(
+        catchError(() => {
+          return EMPTY;
+        }),
+        map(({ marketData }) => {
+          return marketData.map(({ dataSource, name, symbol }) => {
+            return { dataSource, name, symbol };
+          });
+        }),
+        takeUntil(this.unsubscribeSubject)
+      );
+  }
+
+  private searchHoldings(aSearchTerm: string): Observable<ISearchResultItem[]> {
     return this.dataService
       .fetchPositions({
         filters: [
@@ -211,7 +257,9 @@ export class AssistantComponent implements OnDestroy, OnInit {
           return EMPTY;
         }),
         map(({ positions }) => {
-          return positions;
+          return positions.map(({ dataSource, name, symbol }) => {
+            return { dataSource, name, symbol };
+          });
         }),
         takeUntil(this.unsubscribeSubject)
       );

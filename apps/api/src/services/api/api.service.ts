@@ -8,16 +8,19 @@ export class ApiService {
   public buildFiltersFromQueryParams({
     filterByAccounts,
     filterByAssetClasses,
+    filterByAssetSubClasses,
     filterBySearchQuery,
     filterByTags
   }: {
     filterByAccounts?: string;
     filterByAssetClasses?: string;
+    filterByAssetSubClasses?: string;
     filterBySearchQuery?: string;
     filterByTags?: string;
   }): Filter[] {
     const accountIds = filterByAccounts?.split(',') ?? [];
     const assetClasses = filterByAssetClasses?.split(',') ?? [];
+    const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
     const searchQuery = filterBySearchQuery?.toLowerCase();
     const tagIds = filterByTags?.split(',') ?? [];
 
@@ -32,6 +35,12 @@ export class ApiService {
         return <Filter>{
           id: assetClass,
           type: 'ASSET_CLASS'
+        };
+      }),
+      ...assetSubClasses.map((assetClass) => {
+        return <Filter>{
+          id: assetClass,
+          type: 'ASSET_SUB_CLASS'
         };
       }),
       {

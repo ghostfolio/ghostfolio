@@ -12,6 +12,7 @@ export interface AdminMarketDataItem {
   dataSource: DataSource;
   date?: Date;
   marketDataItemCount: number;
+  name: string;
   sectorsCount: number;
   symbol: string;
 }
