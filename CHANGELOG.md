@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the endpoint `GET api/v1/account/:id/balances` which provides historical cash balances
+- Added support to search for an asset profile by `isin`, `name` and `symbol` as an administrator (experimental)
 
 ### Changed
 
