@@ -24,23 +24,25 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
   templateUrl: 'create-asset-profile-dialog.html'
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
-  private atLeastOneValid = (control: AbstractControl): ValidationErrors | null => {
+  private atLeastOneValid = (
+    control: AbstractControl
+  ): ValidationErrors | null => {
     const addSymbolControl = control.get('addSymbol');
     const searchSymbolControl = control.get('searchSymbol');
-  
+
     if (addSymbolControl.valid && searchSymbolControl.valid) {
       return { atLeastOneValid: true };
     }
-  
+
     if (
       !searchSymbolControl ||
       !addSymbolControl ||
       searchSymbolControl.valid ||
       addSymbolControl.valid
     ) {
-      return  { atLeastOneValid: false };
+      return { atLeastOneValid: false };
     }
-  
+
     return { atLeastOneValid: true };
   };
 
@@ -93,5 +95,3 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
 
   public ngOnDestroy() {}
 }
-
-

@@ -44,7 +44,7 @@ export class AdminService {
     currency,
     dataSource,
     symbol
-  }: UniqueAsset  & { currency?: string }): Promise<SymbolProfile | never> {
+  }: UniqueAsset & { currency?: string }): Promise<SymbolProfile | never> {
     try {
       if (dataSource === 'MANUAL')
         return await this.symbolProfileService.add({

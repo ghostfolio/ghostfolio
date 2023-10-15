@@ -7,29 +7,28 @@
   <h1 i18n mat-dialog-title>Add Asset Profile</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div class="my-2">
-      <mat-radio-group color="primary"  formControlName="selectedOption" name="radioOptions">
-          <mat-radio-button
-            i18n
-            name="auto"
-            value="auto"
-            [checked]="selectedOption==='auto'"
-            (click)="onRadioChange('auto')"
-          ></mat-radio-button
-          >
-          <label for="auto">
-            Search
-          </label>
-          <mat-radio-button
-            i18n
-            name="manual"
-            value="manual"
-            (click)="onRadioChange('manual')"
-            style="margin-left: 10px;"
-          >   </mat-radio-button
-          >
-          <label for="manual">
-            Add Manually
-          </label>
+      <mat-radio-group
+        color="primary"
+        formControlName="selectedOption"
+        name="radioOptions"
+      >
+        <mat-radio-button
+          i18n
+          name="auto"
+          value="auto"
+          [checked]="selectedOption==='auto'"
+          (click)="onRadioChange('auto')"
+        ></mat-radio-button>
+        <label for="auto"> Search </label>
+        <mat-radio-button
+          i18n
+          name="manual"
+          style="margin-left: 10px"
+          value="manual"
+          (click)="onRadioChange('manual')"
+        >
+        </mat-radio-button>
+        <label for="manual"> Add Manually </label>
       </mat-radio-group>
     </div>
 
