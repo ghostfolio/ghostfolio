@@ -7,24 +7,29 @@
   <h1 i18n mat-dialog-title>Add Asset Profile</h1>
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div class="my-2">
-      <mat-radio-group name="radioOptions" [(ngModel)]="selectedOption">
-        <div class="flex">
+      <mat-radio-group color="primary"  formControlName="selectedOption" name="radioOptions">
           <mat-radio-button
+            i18n
             name="auto"
             value="auto"
             [checked]="selectedOption==='auto'"
             (click)="onRadioChange('auto')"
           ></mat-radio-button
-          ><label for="auto">Search</label>
-        </div>
-        <div class="flex">
+          >
+          <label for="auto">
+            Search
+          </label>
           <mat-radio-button
+            i18n
             name="manual"
             value="manual"
             (click)="onRadioChange('manual')"
-          ></mat-radio-button
-          ><label for="auto">Add Manually</label>
-        </div>
+            style="margin-left: 10px;"
+          >   </mat-radio-button
+          >
+          <label for="manual">
+            Add Manually
+          </label>
       </mat-radio-group>
     </div>
 
@@ -39,7 +44,7 @@
     </div>
     <div *ngIf="selectedOption === 'manual'">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Symbol</mat-label>
+        <mat-label i18n>Symbol</mat-label>
         <input
           formControlName="addSymbol"
           matInput

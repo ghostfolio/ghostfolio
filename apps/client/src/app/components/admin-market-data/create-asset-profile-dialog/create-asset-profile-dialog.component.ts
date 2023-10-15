@@ -24,6 +24,26 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
   templateUrl: 'create-asset-profile-dialog.html'
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
+  private atLeastOneValid = (control: AbstractControl): ValidationErrors | null => {
+    const addSymbolControl = control.get('addSymbol');
+    const searchSymbolControl = control.get('searchSymbol');
+  
+    if (addSymbolControl.valid && searchSymbolControl.valid) {
+      return { atLeastOneValid: true };
+    }
+  
+    if (
+      !searchSymbolControl ||
+      !addSymbolControl ||
+      searchSymbolControl.valid ||
+      addSymbolControl.valid
+    ) {
+      return  { atLeastOneValid: false };
+    }
+  
+    return { atLeastOneValid: true };
+  };
+
   public createAssetProfileForm: FormGroup;
   public selectedOption: string;
 
@@ -41,7 +61,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         addSymbol: new FormControl(null, [Validators.required])
       },
       {
-        validators: atLeastOneValid
+        validators: this.atLeastOneValid
       }
     );
 
@@ -57,7 +77,6 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   }
 
   public onSubmit() {
-    console.log(this.createAssetProfileForm.controls['addSymbol'].value);
     this.selectedOption === 'auto'
       ? this.dialogRef.close({
           dataSource:
@@ -75,22 +94,4 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public ngOnDestroy() {}
 }
 
-const atLeastOneValid = (control: AbstractControl): ValidationErrors | null => {
-  const searchSymbolControl = control.get('searchSymbol');
-  const addSymbolControl = control.get('addSymbol');
 
-  if (searchSymbolControl.valid && addSymbolControl.valid) {
-    return { atLeastOneValid: true };
-  }
-
-  if (
-    !searchSymbolControl ||
-    !addSymbolControl ||
-    searchSymbolControl.valid ||
-    addSymbolControl.valid
-  ) {
-    return null;
-  }
-
-  return { atLeastOneValid: true };
-};
