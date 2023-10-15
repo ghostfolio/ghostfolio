@@ -11,12 +11,13 @@
           </div>
         </div>
         <div class="pl-1 w-50">
-          <mat-checkbox
+          <mat-slide-toggle
             color="primary"
+            hideIcon="true"
             [checked]="user.settings.isRestrictedView"
             [disabled]="!hasPermissionToUpdateUserSettings"
             (change)="onRestrictedViewChange($event)"
-          ></mat-checkbox>
+          ></mat-slide-toggle>
         </div>
       </div>
       <div class="d-flex mt-4 py-1">
@@ -139,12 +140,13 @@
           </div>
         </div>
         <div class="pl-1 w-50">
-          <mat-checkbox
+          <mat-slide-toggle
             color="primary"
+            hideIcon="true"
             [checked]="user.settings.viewMode === 'ZEN'"
             [disabled]="!hasPermissionToUpdateViewMode"
             (change)="onViewModeChange($event)"
-          ></mat-checkbox>
+          ></mat-slide-toggle>
         </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">
@@ -153,12 +155,13 @@
           <div class="hint-text text-muted" i18n>Sign in with fingerprint</div>
         </div>
         <div class="pl-1 w-50">
-          <mat-checkbox
+          <mat-slide-toggle
             color="primary"
+            hideIcon="true"
             [checked]="isWebAuthnEnabled === true"
             [disabled]="!hasPermissionToUpdateUserSettings"
             (change)="onSignInWithFingerprintChange($event)"
-          ></mat-checkbox>
+          ></mat-slide-toggle>
         </div>
       </div>
       <div
@@ -172,12 +175,13 @@
           </div>
         </div>
         <div class="pl-1 w-50">
-          <mat-checkbox
+          <mat-slide-toggle
             color="primary"
+            hideIcon="true"
             [checked]="user.settings.isExperimentalFeatures"
             [disabled]="!hasPermissionToUpdateUserSettings"
             (change)="onExperimentalFeaturesChange($event)"
-          ></mat-checkbox>
+          ></mat-slide-toggle>
         </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">

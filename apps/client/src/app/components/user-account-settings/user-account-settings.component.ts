@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   STAY_SIGNED_IN,
@@ -117,7 +117,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onExperimentalFeaturesChange(aEvent: MatCheckboxChange) {
+  public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isExperimentalFeatures: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -155,7 +155,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onRestrictedViewChange(aEvent: MatCheckboxChange) {
+  public onRestrictedViewChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isRestrictedView: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -173,7 +173,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onSignInWithFingerprintChange(aEvent: MatCheckboxChange) {
+  public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
       this.registerDevice();
     } else {
@@ -189,7 +189,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onViewModeChange(aEvent: MatCheckboxChange) {
+  public onViewModeChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ viewMode: aEvent.checked === true ? 'ZEN' : 'DEFAULT' })
       .pipe(takeUntil(this.unsubscribeSubject))
