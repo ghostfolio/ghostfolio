@@ -12,7 +12,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
