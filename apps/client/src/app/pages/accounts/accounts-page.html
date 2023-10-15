@@ -8,7 +8,7 @@
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
           [locale]="user?.settings?.locale"
-          [showActions]="!hasImpersonationId && hasPermissionToDeleteAccount && !user.settings.isRestrictedView"
+          [showActions]="!hasImpersonationId && hasPermissionToUpdateAccount && !user.settings.isRestrictedView"
           [totalBalanceInBaseCurrency]="totalBalanceInBaseCurrency"
           [totalValueInBaseCurrency]="totalValueInBaseCurrency"
           [transactionCount]="transactionCount"
