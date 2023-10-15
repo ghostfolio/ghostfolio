@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the endpoint `GET api/v1/account/:id/balances` which provides historical cash balances
+
+## Unreleased
+
+### Added
+
 - Added support to transfer a part of the cash balance from one to another account
 - Extended the markets overview by benchmarks (date of last all time high)
 - Added support to import historical market data in the admin control panel
