@@ -66,6 +66,8 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
             this.user.permissions,
             permissions.createOrder
           );
+
+          this.update();
         }
       });
   }
@@ -79,8 +81,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
-
-    this.update();
   }
 
   public onChangeDateRange(dateRange: DateRange) {
