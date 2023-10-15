@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the endpoint `GET api/v1/account/:id/balances` which provides historical cash balances
+
 ### Fixed
 
 - Displayed the transfer cash balance button based on a permission
