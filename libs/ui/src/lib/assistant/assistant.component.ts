@@ -18,6 +18,7 @@ import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { translate } from '@ghostfolio/ui/i18n';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -233,9 +234,17 @@ export class AssistantComponent implements OnDestroy, OnInit {
           return EMPTY;
         }),
         map(({ marketData }) => {
-          return marketData.map(({ dataSource, name, symbol }) => {
-            return { dataSource, name, symbol };
-          });
+          return marketData.map(
+            ({ assetSubClass, currency, dataSource, name, symbol }) => {
+              return {
+                currency,
+                dataSource,
+                name,
+                symbol,
+                assetSubClassString: translate(assetSubClass)
+              };
+            }
+          );
         }),
         takeUntil(this.unsubscribeSubject)
       );
@@ -257,9 +266,17 @@ export class AssistantComponent implements OnDestroy, OnInit {
           return EMPTY;
         }),
         map(({ positions }) => {
-          return positions.map(({ dataSource, name, symbol }) => {
-            return { dataSource, name, symbol };
-          });
+          return positions.map(
+            ({ assetSubClass, currency, dataSource, name, symbol }) => {
+              return {
+                currency,
+                dataSource,
+                name,
+                symbol,
+                assetSubClassString: translate(assetSubClass)
+              };
+            }
+          );
         }),
         takeUntil(this.unsubscribeSubject)
       );

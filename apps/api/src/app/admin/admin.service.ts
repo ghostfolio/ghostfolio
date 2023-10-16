@@ -185,6 +185,7 @@ export class AdminService {
           assetSubClass: true,
           comment: true,
           countries: true,
+          currency: true,
           dataSource: true,
           name: true,
           Order: {
@@ -206,6 +207,7 @@ export class AdminService {
         assetClass,
         assetSubClass,
         comment,
+        currency,
         countries,
         dataSource,
         name,
@@ -227,6 +229,7 @@ export class AdminService {
           assetClass,
           assetSubClass,
           comment,
+          currency,
           countriesCount,
           dataSource,
           name,
@@ -356,6 +359,7 @@ export class AdminService {
           symbol,
           assetClass: 'CASH',
           countriesCount: 0,
+          currency: symbol.replace(DEFAULT_CURRENCY, ''),
           name: symbol,
           sectorsCount: 0
         };
