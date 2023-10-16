@@ -105,7 +105,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.controls['balance'].value,
       comment: this.accountForm.controls['comment'].value,
-      currency: this.accountForm.controls['currency'].value,
+      currency: this.accountForm.controls['currency'].value?.value,
       id: this.accountForm.controls['accountId'].value,
       isExcluded: this.accountForm.controls['isExcluded'].value,
       name: this.accountForm.controls['name'].value,
