@@ -16,13 +16,8 @@ import {
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { Subject, of, tap } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  takeUntil
-} from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 import { Currency } from '@ghostfolio/common/interfaces/currency.interface';
 import { AbstractMatFormField } from '../symbol-autocomplete/abstract-mat-form-field';
 
@@ -76,38 +71,41 @@ export class CurrencySelectorComponent
     }
 
     this.control.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        if (super.value?.value) {
+          super.value.value = null;
+        }
+      });
+
+    this.control.valueChanges
       .pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
         takeUntil(this.unsubscribeSubject),
-        tap(() => {
-          this.isLoading = true;
-
-          this.changeDetectorRef.markForCheck();
-        }),
-        switchMap((query) => {
-          return of(
-            this.currencies.filter((currency) =>
-              currency.label.toLowerCase().includes(query?.toLowerCase() || '')
-            ) || []
-          );
-        })
+        startWith(''),
+        map((value) => (value ? this.filter(value) : this.currencies.slice()))
       )
-      .subscribe((filteredCurrencies: Currency[]) => {
-        this.filteredCurrencies = filteredCurrencies;
-
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
+      .subscribe((val) => {
+        this.filteredCurrencies = val;
       });
   }
 
-  public displayFn(currency: string) {
-    return currency;
+  public displayFn(currency: Currency) {
+    return currency?.label ?? '';
   }
 
   public get empty() {
     return this.input?.empty;
+  }
+
+  private filter(value: Currency | string) {
+    const filterValue =
+      typeof value === 'string'
+        ? value?.toLowerCase()
+        : value?.value.toLowerCase();
+
+    return this.currencies.filter((currency) =>
+      currency.value.toLowerCase().startsWith(filterValue)
+    );
   }
 
   public focus() {
@@ -124,7 +122,8 @@ export class CurrencySelectorComponent
 
   public onUpdateCurrency(event: MatAutocompleteSelectedEvent) {
     super.value = {
-      value: event.option.value
+      label: event.option.value.label,
+      value: event.option.value.value
     } as Currency;
   }
 
@@ -142,11 +141,9 @@ export class CurrencySelectorComponent
 
   private validateRequired() {
     const requiredCheck = super.required
-      ? !super.value?.value &&
-        !this.currencies
-          .map((currency) => currency.value)
-          .includes(super.value.value)
+      ? !super.value.label || !super.value.value
       : false;
+
     if (requiredCheck) {
       this.ngControl.control.setErrors({ invalidData: true });
     }
