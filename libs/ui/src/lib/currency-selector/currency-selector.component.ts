@@ -42,7 +42,6 @@ export class CurrencySelectorComponent
   implements OnInit, OnDestroy
 {
   @Input() private currencies: Currency[] = [];
-  @Input() public isLoading = false;
 
   @ViewChild(MatInput, { static: false }) private input: MatInput;
 
