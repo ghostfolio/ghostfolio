@@ -12,10 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Params } from '@angular/router';
-import { Position } from '@ghostfolio/common/interfaces';
-import { SymbolProfile } from '@prisma/client';
-
-import { ISearchResultItem } from '../interfaces/interfaces';
+import { ISearchResultItem } from '@ghostfolio/ui/assistant/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,18 +40,21 @@ export class AssistantListItemComponent implements FocusableOption, OnChanges {
   public constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   public ngOnChanges() {
+    const dataSource = this.item?.dataSource;
+    const symbol = this.item?.symbol;
+
     if (this.mode === 'assetProfile') {
       this.queryParams = {
-        assetProfileDialog: true,
-        dataSource: this.item?.dataSource,
-        symbol: this.item?.symbol
+        dataSource,
+        symbol,
+        assetProfileDialog: true
       };
       this.routerLink = ['/admin', 'market-data'];
     } else if (this.mode === 'holding') {
       this.queryParams = {
-        dataSource: this.item?.dataSource,
-        positionDetailDialog: true,
-        symbol: this.item?.symbol
+        dataSource,
+        symbol,
+        positionDetailDialog: true
       };
       this.routerLink = ['/portfolio', 'holdings'];
     }
