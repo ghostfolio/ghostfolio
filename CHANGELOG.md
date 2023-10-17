@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Displayed the transfer cash balance button based on a permission
 - Fixed the biometric authentication
+- Fixed the query to get asset profiles that match both the `dataSource` and `symbol` values
 
 ## 2.11.0 - 2023-10-14
 
