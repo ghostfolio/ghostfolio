@@ -139,10 +139,14 @@ export class AdminService {
       filters = [{ id: 'ETF', type: 'ASSET_SUB_CLASS' }];
     }
 
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
+
     const { ASSET_SUB_CLASS: filtersByAssetSubClass } = groupBy(
       filters,
-      (filter) => {
-        return filter.type;
+      ({ type }) => {
+        return type;
       }
     );
 
@@ -153,6 +157,14 @@ export class AdminService {
 
     if (filtersByAssetSubClass) {
       where.assetSubClass = AssetSubClass[filtersByAssetSubClass[0].id];
+    }
+
+    if (searchQuery) {
+      where.OR = [
+        { isin: { mode: 'insensitive', startsWith: searchQuery } },
+        { name: { mode: 'insensitive', startsWith: searchQuery } },
+        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
+      ];
     }
 
     if (sortColumn) {
@@ -181,7 +193,9 @@ export class AdminService {
           assetSubClass: true,
           comment: true,
           countries: true,
+          currency: true,
           dataSource: true,
+          name: true,
           Order: {
             orderBy: [{ date: 'asc' }],
             select: { date: true },
@@ -202,7 +216,9 @@ export class AdminService {
         assetSubClass,
         comment,
         countries,
+        currency,
         dataSource,
+        name,
         Order,
         sectors,
         symbol
@@ -221,8 +237,10 @@ export class AdminService {
           assetClass,
           assetSubClass,
           comment,
+          currency,
           countriesCount,
           dataSource,
+          name,
           symbol,
           marketDataItemCount,
           sectorsCount,
@@ -349,6 +367,8 @@ export class AdminService {
           symbol,
           assetClass: 'CASH',
           countriesCount: 0,
+          currency: symbol.replace(DEFAULT_CURRENCY, ''),
+          name: symbol,
           sectorsCount: 0
         };
       });

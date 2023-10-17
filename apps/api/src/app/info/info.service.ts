@@ -55,12 +55,8 @@ export class InfoService {
   public async get(): Promise<InfoItem> {
     const info: Partial<InfoItem> = {};
     let isReadOnlyMode: boolean;
-    const platforms = (
-      await this.platformService.getPlatforms({
-        orderBy: { name: 'asc' }
-      })
-    ).map(({ id, name }) => {
-      return { id, name };
+    const platforms = await this.platformService.getPlatforms({
+      orderBy: { name: 'asc' }
     });
     let systemMessage: string;
 

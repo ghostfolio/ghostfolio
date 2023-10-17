@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { QUEUE_JOB_STATUS_LIST } from '@ghostfolio/common/config';
@@ -24,7 +25,19 @@ import { takeUntil } from 'rxjs/operators';
 export class AdminJobsComponent implements OnDestroy, OnInit {
   public defaultDateTimeFormat: string;
   public filterForm: FormGroup;
-  public jobs: AdminJobs['jobs'] = [];
+  public dataSource: MatTableDataSource<AdminJobs['jobs'][0]> =
+    new MatTableDataSource();
+  public displayedColumns = [
+    'index',
+    'type',
+    'symbol',
+    'dataSource',
+    'attempts',
+    'created',
+    'finished',
+    'status',
+    'actions'
+  ];
   public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
   public user: User;
 
@@ -102,7 +115,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
       .fetchJobs({ status: aStatus })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ jobs }) => {
-        this.jobs = jobs;
+        this.dataSource = new MatTableDataSource(jobs);
 
         this.changeDetectorRef.markForCheck();
       });

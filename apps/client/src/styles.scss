@@ -214,6 +214,16 @@ body {
     }
   }
 
+  .mat-mdc-menu-panel {
+    &.assistant {
+      max-width: unset !important;
+
+      .mat-mdc-menu-content {
+        padding: 0;
+      }
+    }
+  }
+
   &.is-dark-theme {
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
@@ -481,6 +491,13 @@ ngx-skeleton-loader {
   flex-direction: column;
   overflow-y: auto;
 
+  .fab-container {
+    bottom: 2rem;
+    position: fixed;
+    right: 2rem;
+    z-index: 999;
+  }
+
   &:not(.has-tabs) {
     @media (min-width: 576px) {
       padding: 2rem 0;
@@ -491,6 +508,12 @@ ngx-skeleton-loader {
     height: calc(100vh - var(--mat-toolbar-standard-height));
     padding-bottom: env(safe-area-inset-bottom);
     padding-bottom: constant(safe-area-inset-bottom);
+
+    .fab-container {
+      @media (max-width: 575.98px) {
+        bottom: 5rem;
+      }
+    }
 
     .mat-mdc-tab-nav-bar {
       --mat-tab-header-active-focus-indicator-color: transparent;
