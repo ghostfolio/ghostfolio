@@ -6,6 +6,7 @@ import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-foote
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AccountDetailDialog } from './account-detail-dialog.component';
@@ -17,6 +18,7 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
     GfActivitiesTableModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
+    GfInvestmentChartModule,
     GfValueModule,
     MatButtonModule,
     MatDialogModule,

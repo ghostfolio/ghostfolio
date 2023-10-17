@@ -10,14 +10,15 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
+import { User, HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import Big from 'big.js';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, differenceInDays } from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
 
@@ -31,9 +32,13 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
 export class AccountDetailDialog implements OnDestroy, OnInit {
   public balance: number;
   public currency: string;
+  public daysInMarket: number;
   public equity: number;
+  public hasImpersonationId: boolean;
+  public isLoadingBenchmarkComparator: boolean;
   public name: string;
   public orders: OrderWithAccount[];
+  public performanceDataItems: HistoricalDataItem[];
   public platformName: string;
   public transactionCount: number;
   public user: User;
@@ -46,6 +51,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AccountDetailDialog>,
+    private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -54,12 +60,21 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          this.update();
+
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
   public ngOnInit(): void {
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
+
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -132,5 +147,36 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private update() {
+    this.isLoadingBenchmarkComparator = false;
+
+    this.dataService
+      .fetchPortfolioPerformance({
+        range: this.user?.settings?.dateRange
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ chart, firstOrderDate }) => {
+        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
+
+        this.performanceDataItems = [];
+
+        for (const [
+          index,
+          { date, value, valueInPercentage }
+        ] of chart.entries()) {
+          if (index > 0 || this.user?.settings?.dateRange === 'max') {
+            // Ignore first item where value is 0
+            this.performanceDataItems.push({
+              date,
+              value: isNumber(value) ? value : valueInPercentage
+            });
+          }
+        }
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.changeDetectorRef.markForCheck();
   }
 }
