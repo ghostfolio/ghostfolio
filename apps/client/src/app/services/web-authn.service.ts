@@ -88,7 +88,9 @@ export class WebAuthnService {
         { deviceId }
       )
       .pipe(
-        switchMap(startAuthentication),
+        switchMap((requestOptionsJSON) =>
+          startAuthentication(requestOptionsJSON, true)
+        ),
         switchMap((assertionResponse) => {
           return this.http.post<{ authToken: string }>(
             `/api/v1/auth/webauthn/verify-assertion`,
