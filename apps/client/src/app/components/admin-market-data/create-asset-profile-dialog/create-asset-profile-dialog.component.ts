@@ -24,7 +24,7 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
-  public mode: 'auto' | 'manual' = 'auto';
+  public mode: 'auto' | 'manual';
 
   public constructor(
     public readonly adminService: AdminService,
