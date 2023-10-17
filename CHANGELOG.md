@@ -14,10 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the `copy-assets` `Nx` target to copy the locales to the server’s assets
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `5.2.1` to `8.3`
 
 ### Fixed
 
 - Displayed the transfer cash balance button based on a permission
+- Fixed the biometric authentication
 
 ## 2.11.0 - 2023-10-14
 
