@@ -342,7 +342,7 @@ export class AdminMarketDataComponent
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(({ dataSource, symbol }) => {
+          .subscribe(({ dataSource, symbol } = {}) => {
             if (dataSource && symbol) {
               this.adminService
                 .addAssetProfile({ dataSource, symbol })

@@ -1014,6 +1014,9 @@ export class PortfolioService {
     filters?: Filter[];
     impersonationId: string;
   }): Promise<{ hasErrors: boolean; positions: Position[] }> {
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
     const { portfolioOrders, transactionPoints } =
@@ -1042,9 +1045,9 @@ export class PortfolioService {
     const currentPositions =
       await portfolioCalculator.getCurrentPositions(startDate);
 
-    const positions = currentPositions.positions.filter(
-      (item) => !item.quantity.eq(0)
-    );
+    let positions = currentPositions.positions.filter(({ quantity }) => {
+      return !quantity.eq(0);
+    });
 
     const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
       return {
@@ -1067,12 +1070,25 @@ export class PortfolioService {
       symbolProfileMap[symbolProfile.symbol] = symbolProfile;
     }
 
+    if (searchQuery) {
+      positions = positions.filter(({ symbol }) => {
+        const enhancedSymbolProfile = symbolProfileMap[symbol];
+
+        return (
+          enhancedSymbolProfile.isin?.toLowerCase().startsWith(searchQuery) ||
+          enhancedSymbolProfile.name?.toLowerCase().startsWith(searchQuery) ||
+          enhancedSymbolProfile.symbol?.toLowerCase().startsWith(searchQuery)
+        );
+      });
+    }
+
     return {
       hasErrors: currentPositions.hasErrors,
       positions: positions.map((position) => {
         return {
           ...position,
           assetClass: symbolProfileMap[position.symbol].assetClass,
+          assetSubClass: symbolProfileMap[position.symbol].assetSubClass,
           averagePrice: new Big(position.averagePrice).toNumber(),
           grossPerformance: position.grossPerformance?.toNumber() ?? null,
           grossPerformancePercentage:

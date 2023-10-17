@@ -3,10 +3,9 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
-import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   STAY_SIGNED_IN,
@@ -29,14 +28,12 @@ import { catchError, takeUntil } from 'rxjs/operators';
   templateUrl: './user-account-settings.html'
 })
 export class UserAccountSettingsComponent implements OnDestroy, OnInit {
-  @ViewChild('toggleSignInWithFingerprintEnabledElement')
-  signInWithFingerprintElement: MatCheckbox;
-
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
   public currencies: string[] = [];
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
     'de',
@@ -250,9 +247,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   }
 
   private update() {
-    if (this.signInWithFingerprintElement) {
-      this.signInWithFingerprintElement.checked =
-        this.webAuthnService.isEnabled() ?? false;
-    }
+    this.isWebAuthnEnabled = this.webAuthnService.isEnabled() ?? false;
+
+    this.changeDetectorRef.markForCheck();
   }
 }

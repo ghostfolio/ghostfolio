@@ -1,9 +1,9 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
-  DEFAULT_PAGE_SIZE,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
@@ -12,8 +12,7 @@ import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
-  EnhancedSymbolProfile,
-  Filter
+  EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type {
@@ -43,12 +42,14 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
+import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
 export class AdminController {
   public constructor(
     private readonly adminService: AdminService,
+    private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
@@ -254,6 +255,7 @@ export class AdminController {
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
     @Query('presetId') presetId?: MarketDataPreset,
+    @Query('query') filterBySearchQuery?: string,
     @Query('skip') skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
@@ -271,16 +273,10 @@ export class AdminController {
       );
     }
 
-    const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
-
-    const filters: Filter[] = [
-      ...assetSubClasses.map((assetSubClass) => {
-        return <Filter>{
-          id: assetSubClass,
-          type: 'ASSET_SUB_CLASS'
-        };
-      })
-    ];
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAssetSubClasses,
+      filterBySearchQuery
+    });
 
     return this.adminService.getMarketData({
       filters,
@@ -313,6 +309,43 @@ export class AdminController {
     return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
   }
 
+  @Post('market-data/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'))
+  public async updateMarketData(
+    @Body() data: UpdateBulkMarketDataDto,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ) {
+    if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.accessAdminControl
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
+      ({ date, marketPrice }) => ({
+        dataSource,
+        date,
+        marketPrice,
+        symbol,
+        state: 'CLOSE'
+      })
+    );
+
+    return this.marketDataService.updateMany({
+      data: dataBulkUpdate
+    });
+  }
+
+  /**
+   * @deprecated
+   */
   @Put('market-data/:dataSource/:symbol/:dateString')
   @UseGuards(AuthGuard('jwt'))
   public async update(

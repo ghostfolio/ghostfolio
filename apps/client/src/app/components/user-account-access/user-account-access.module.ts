@@ -7,6 +7,7 @@ import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 
 import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-dialog/create-or-update-access-dialog.module';
 import { UserAccountAccessComponent } from './user-account-access.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [UserAccountAccessComponent],
@@ -16,6 +17,7 @@ import { UserAccountAccessComponent } from './user-account-access.component';
     GfCreateOrUpdateAccessDialogModule,
     GfPortfolioAccessTableModule,
     GfPremiumIndicatorModule,
+    MatButtonModule,
     MatDialogModule,
     RouterModule
   ]

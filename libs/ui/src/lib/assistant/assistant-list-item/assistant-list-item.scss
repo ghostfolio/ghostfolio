@@ -1,0 +1,19 @@
+:host {
+  display: block;
+
+  &.has-focus {
+    background-color: rgba(var(--palette-primary-500), 1);
+
+    a {
+      color: rgba(var(--light-primary-text));
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  &.has-focus {
+    a {
+      color: rgba(var(--dark-primary-text));
+    }
+  }
+}
