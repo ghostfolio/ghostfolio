@@ -11,6 +11,7 @@ import { Module } from '@nestjs/common';
 
 import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
+import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 
 @Module({
   controllers: [AccountController],
@@ -21,6 +22,7 @@ import { AccountService } from './account.service';
     DataProviderModule,
     ExchangeRateDataModule,
     ImpersonationModule,
+    I18nModule,
     PortfolioModule,
     PrismaModule,
     RedisCacheModule,
