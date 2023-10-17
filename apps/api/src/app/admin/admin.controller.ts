@@ -398,8 +398,11 @@ export class AdminController {
         StatusCodes.FORBIDDEN
       );
     }
-
-    return this.adminService.addAssetProfile({ dataSource, symbol });
+    return this.adminService.addAssetProfile({
+      dataSource,
+      symbol,
+      currency: this.request.user.Settings.settings.baseCurrency
+    });
   }
 
   @Delete('profile-data/:dataSource/:symbol')

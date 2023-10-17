@@ -41,10 +41,19 @@ export class AdminService {
   ) {}
 
   public async addAssetProfile({
+    currency,
     dataSource,
     symbol
-  }: UniqueAsset): Promise<SymbolProfile | never> {
+  }: UniqueAsset & { currency?: string }): Promise<SymbolProfile | never> {
     try {
+      if (dataSource === 'MANUAL') {
+        return this.symbolProfileService.add({
+          currency,
+          dataSource,
+          symbol
+        });
+      }
+
       const assetProfiles = await this.dataProviderService.getAssetProfiles([
         { dataSource, symbol }
       ]);
