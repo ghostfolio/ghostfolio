@@ -1,8 +1,6 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  Inject,
   OnDestroy,
   OnInit
 } from '@angular/core';
@@ -21,37 +19,15 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   selector: 'gf-create-asset-profile-dialog',
+  styleUrls: ['./create-asset-profile-dialog.component.scss'],
   templateUrl: 'create-asset-profile-dialog.html'
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
-  private atLeastOneValid = (
-    control: AbstractControl
-  ): ValidationErrors | null => {
-    const addSymbolControl = control.get('addSymbol');
-    const searchSymbolControl = control.get('searchSymbol');
-
-    if (addSymbolControl.valid && searchSymbolControl.valid) {
-      return { atLeastOneValid: true };
-    }
-
-    if (
-      !searchSymbolControl ||
-      !addSymbolControl ||
-      searchSymbolControl.valid ||
-      addSymbolControl.valid
-    ) {
-      return { atLeastOneValid: false };
-    }
-
-    return { atLeastOneValid: true };
-  };
-
   public createAssetProfileForm: FormGroup;
-  public selectedOption: string;
+  public mode: 'auto' | 'manual' = 'auto';
 
   public constructor(
     public readonly adminService: AdminService,
-    public readonly changeDetectorRef: ChangeDetectorRef,
     public readonly dialogRef: MatDialogRef<CreateAssetProfileDialog>,
     public readonly formBuilder: FormBuilder
   ) {}
@@ -59,27 +35,27 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public ngOnInit() {
     this.createAssetProfileForm = this.formBuilder.group(
       {
-        searchSymbol: new FormControl(null, [Validators.required]),
-        addSymbol: new FormControl(null, [Validators.required])
+        addSymbol: new FormControl(null, [Validators.required]),
+        searchSymbol: new FormControl(null, [Validators.required])
       },
       {
         validators: this.atLeastOneValid
       }
     );
 
-    this.selectedOption = 'auto';
+    this.mode = 'auto';
   }
 
   public onCancel() {
     this.dialogRef.close();
   }
 
-  public onRadioChange(option: string) {
-    this.selectedOption = option;
+  public onRadioChange(mode: 'auto' | 'manual') {
+    this.mode = mode;
   }
 
   public onSubmit() {
-    this.selectedOption === 'auto'
+    this.mode === 'auto'
       ? this.dialogRef.close({
           dataSource:
             this.createAssetProfileForm.controls['searchSymbol'].value
@@ -94,4 +70,24 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {}
+
+  private atLeastOneValid(control: AbstractControl): ValidationErrors {
+    const addSymbolControl = control.get('addSymbol');
+    const searchSymbolControl = control.get('searchSymbol');
+
+    if (addSymbolControl.valid && searchSymbolControl.valid) {
+      return { atLeastOneValid: true };
+    }
+
+    if (
+      addSymbolControl.valid ||
+      !addSymbolControl ||
+      searchSymbolControl.valid ||
+      !searchSymbolControl
+    ) {
+      return { atLeastOneValid: false };
+    }
+
+    return { atLeastOneValid: true };
+  }
 }

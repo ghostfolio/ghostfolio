@@ -9,30 +9,18 @@
     <div class="my-2">
       <mat-radio-group
         color="primary"
-        formControlName="selectedOption"
-        name="radioOptions"
+        [value]="mode"
+        (change)="onRadioChange($event.value)"
       >
-        <mat-radio-button
-          i18n
-          name="auto"
-          value="auto"
-          [checked]="selectedOption==='auto'"
-          (click)="onRadioChange('auto')"
-        ></mat-radio-button>
-        <label for="auto"> Search </label>
-        <mat-radio-button
-          i18n
-          name="manual"
-          style="margin-left: 10px"
-          value="manual"
-          (click)="onRadioChange('manual')"
-        >
+        <mat-radio-button name="auto" value="auto"></mat-radio-button>
+        <label class="m-0" for="auto" i18n>Search</label>
+        <mat-radio-button class="ml-3" name="manual" value="manual">
         </mat-radio-button>
-        <label for="manual"> Add Manually </label>
+        <label class="m-0" for="manual" i18n>Add Manually</label>
       </mat-radio-group>
     </div>
 
-    <div *ngIf="selectedOption === 'auto'">
+    <div *ngIf="mode === 'auto'">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name, symbol or ISIN</mat-label>
         <gf-symbol-autocomplete
@@ -41,14 +29,10 @@
         />
       </mat-form-field>
     </div>
-    <div *ngIf="selectedOption === 'manual'">
+    <div *ngIf="mode === 'manual'">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Symbol</mat-label>
-        <input
-          formControlName="addSymbol"
-          matInput
-          placeholder="Enter symbol"
-        />
+        <input formControlName="addSymbol" matInput />
       </mat-form-field>
     </div>
   </div>

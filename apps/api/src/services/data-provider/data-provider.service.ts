@@ -15,7 +15,6 @@ import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
-import { data } from 'cheerio/lib/api/attributes';
 import { format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber } from 'lodash';
 
