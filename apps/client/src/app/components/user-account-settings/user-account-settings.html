@@ -154,8 +154,8 @@
         </div>
         <div class="pl-1 w-50">
           <mat-checkbox
-            #toggleSignInWithFingerprintEnabledElement
             color="primary"
+            [checked]="isWebAuthnEnabled === true"
             [disabled]="!hasPermissionToUpdateUserSettings"
             (change)="onSignInWithFingerprintChange($event)"
           ></mat-checkbox>

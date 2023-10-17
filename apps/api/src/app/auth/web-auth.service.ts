@@ -88,16 +88,16 @@ export class WebAuthService {
     let verification: VerifiedRegistrationResponse;
     try {
       const opts: VerifyRegistrationResponseOpts = {
+        expectedChallenge,
+        expectedOrigin: this.expectedOrigin,
+        expectedRPID: this.rpID,
         response: {
           clientExtensionResults: credential.clientExtensionResults,
           id: credential.id,
           rawId: credential.rawId,
           response: credential.response,
           type: 'public-key'
-        },
-        expectedChallenge,
-        expectedOrigin: this.expectedOrigin,
-        expectedRPID: this.rpID
+        }
       };
       verification = await verifyRegistrationResponse(opts);
     } catch (error) {
@@ -123,8 +123,8 @@ export class WebAuthService {
          */
         existingDevice = await this.deviceService.createAuthDevice({
           counter,
-          credentialPublicKey: Buffer.from(credentialPublicKey),
           credentialId: Buffer.from(credentialID),
+          credentialPublicKey: Buffer.from(credentialPublicKey),
           User: { connect: { id: user.id } }
         });
       }
@@ -187,13 +187,6 @@ export class WebAuthService {
     let verification: VerifiedAuthenticationResponse;
     try {
       const opts: VerifyAuthenticationResponseOpts = {
-        response: {
-          clientExtensionResults: credential.clientExtensionResults,
-          id: credential.id,
-          rawId: credential.rawId,
-          response: credential.response,
-          type: 'public-key'
-        },
         authenticator: {
           credentialID: device.credentialId,
           credentialPublicKey: device.credentialPublicKey,
@@ -201,7 +194,14 @@ export class WebAuthService {
         },
         expectedChallenge: `${user.authChallenge}`,
         expectedOrigin: this.expectedOrigin,
-        expectedRPID: this.rpID
+        expectedRPID: this.rpID,
+        response: {
+          clientExtensionResults: credential.clientExtensionResults,
+          id: credential.id,
+          rawId: credential.rawId,
+          response: credential.response,
+          type: 'public-key'
+        }
       };
       verification = await verifyAuthenticationResponse(opts);
     } catch (error) {
