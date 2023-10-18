@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -502,6 +503,18 @@ export class DataService {
   public redeemCoupon(couponCode: string) {
     return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
+    });
+  }
+
+  public transferAccountBalance({
+    accountIdFrom,
+    accountIdTo,
+    balance
+  }: TransferBalanceDto) {
+    return this.http.post('/api/v1/account/transfer-balance', {
+      accountIdFrom,
+      accountIdTo,
+      balance
     });
   }
 

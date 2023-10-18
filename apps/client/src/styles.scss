@@ -462,6 +462,15 @@ ngx-skeleton-loader {
   }
 }
 
+/**
+ * Fix for https://github.com/angular/components/issues/26818
+ */
+.mat-mdc-slide-toggle {
+  .mdc-switch__track {
+    background-color: rgba(var(--palette-primary-500), 1);
+  }
+}
+
 .mat-stepper-vertical,
 .mat-stepper-horizontal {
   background: transparent !important;
@@ -510,7 +519,9 @@ ngx-skeleton-loader {
     padding-bottom: constant(safe-area-inset-bottom);
 
     .fab-container {
-      bottom: 5rem;
+      @media (max-width: 575.98px) {
+        bottom: 5rem;
+      }
     }
 
     .mat-mdc-tab-nav-bar {

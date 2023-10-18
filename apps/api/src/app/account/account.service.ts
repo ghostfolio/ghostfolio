@@ -109,7 +109,7 @@ export class AccountService {
     });
   }
 
-  public async getAccounts(aUserId: string) {
+  public async getAccounts(aUserId: string): Promise<Account[]> {
     const accounts = await this.accounts({
       include: { Order: true, Platform: true },
       orderBy: { name: 'asc' },
@@ -218,13 +218,13 @@ export class AccountService {
     accountId,
     amount,
     currency,
-    date,
+    date = new Date(),
     userId
   }: {
     accountId: string;
     amount: number;
     currency: string;
-    date: Date;
+    date?: Date;
     userId: string;
   }) {
     const { balance, currency: currencyOfAccount } = await this.account({

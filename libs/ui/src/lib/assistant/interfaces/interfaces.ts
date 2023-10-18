@@ -1,5 +1,12 @@
-import { Position } from '@ghostfolio/common/interfaces';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
+export interface ISearchResultItem extends UniqueAsset {
+  assetSubClassString: string;
+  currency: string;
+  name: string;
+}
 
 export interface ISearchResults {
-  holdings: Position[];
+  assetProfiles: ISearchResultItem[];
+  holdings: ISearchResultItem[];
 }

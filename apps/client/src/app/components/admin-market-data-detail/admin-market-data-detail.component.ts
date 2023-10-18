@@ -177,7 +177,7 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ withRefresh }) => {
+      .subscribe(({ withRefresh } = { withRefresh: false }) => {
         this.marketDataChanged.next(withRefresh);
       });
   }

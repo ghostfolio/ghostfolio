@@ -33,6 +33,7 @@ import type { PortfolioReport } from './portfolio-report.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
 import type { Product } from './product';
+import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
@@ -49,6 +50,7 @@ import type { User } from './user.interface';
 
 export {
   Access,
+  AccountBalancesResponse,
   Accounts,
   AdminData,
   AdminJobs,

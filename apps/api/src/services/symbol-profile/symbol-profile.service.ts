@@ -52,20 +52,12 @@ export class SymbolProfileService {
           SymbolProfileOverrides: true
         },
         where: {
-          AND: [
-            {
-              dataSource: {
-                in: aUniqueAssets.map(({ dataSource }) => {
-                  return dataSource;
-                })
-              },
-              symbol: {
-                in: aUniqueAssets.map(({ symbol }) => {
-                  return symbol;
-                })
-              }
-            }
-          ]
+          OR: aUniqueAssets.map(({ dataSource, symbol }) => {
+            return {
+              dataSource,
+              symbol
+            };
+          })
         }
       })
       .then((symbolProfiles) => this.getSymbols(symbolProfiles));
