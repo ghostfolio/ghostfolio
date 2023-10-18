@@ -1,0 +1,17 @@
+<div
+  class="d-flex flex-column justify-content-between px-3 py-4 bg-dark card-item"
+>
+  <div class="d-flex justify-content-end mr-2">
+    <gf-logo></gf-logo>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div class="px-3">
+      <p class="card-item-heading">Card Holder</p>
+      <p class="card-item-name">{{ name }}</p>
+    </div>
+    <div class="px-3">
+      <p class="card-item-heading">Expires</p>
+      <p class="card-item-name">{{ expiresAt | date: 'MM/yy' }}</p>
+    </div>
+  </div>
+</div>
