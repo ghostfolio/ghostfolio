@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a chart to the account detail dialog
+
+## Unreleased
+
+### Added
+
 - Extended the markets overview by benchmarks (date of last all time high)
 
 ### Changed
