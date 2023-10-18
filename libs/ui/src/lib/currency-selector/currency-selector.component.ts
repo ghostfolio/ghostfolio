@@ -16,10 +16,10 @@ import {
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { Currency } from '@ghostfolio/common/interfaces/currency.interface';
+import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 import { Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
-import { Currency } from '@ghostfolio/common/interfaces/currency.interface';
-import { AbstractMatFormField } from '../symbol-autocomplete/abstract-mat-form-field';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,15 +27,15 @@ import { AbstractMatFormField } from '../symbol-autocomplete/abstract-mat-form-f
     '[attr.aria-describedBy]': 'describedBy',
     '[id]': 'id'
   },
-  selector: 'gf-currency-autocomplete',
-  styleUrls: ['./currency-selector.component.scss'],
-  templateUrl: 'currency-selector.component.html',
   providers: [
     {
       provide: MatFormFieldControl,
       useExisting: CurrencySelectorComponent
     }
-  ]
+  ],
+  selector: 'gf-currency-autocomplete',
+  styleUrls: ['./currency-selector.component.scss'],
+  templateUrl: 'currency-selector.component.html'
 })
 export class CurrencySelectorComponent
   extends AbstractMatFormField<Currency>
@@ -81,10 +81,12 @@ export class CurrencySelectorComponent
       .pipe(
         takeUntil(this.unsubscribeSubject),
         startWith(''),
-        map((value) => (value ? this.filter(value) : this.currencies.slice()))
+        map((value) => {
+          return value ? this.filter(value) : this.currencies.slice();
+        })
       )
-      .subscribe((val) => {
-        this.filteredCurrencies = val;
+      .subscribe((values) => {
+        this.filteredCurrencies = values;
       });
   }
 
@@ -94,17 +96,6 @@ export class CurrencySelectorComponent
 
   public get empty() {
     return this.input?.empty;
-  }
-
-  private filter(value: Currency | string) {
-    const filterValue =
-      typeof value === 'string'
-        ? value?.toLowerCase()
-        : value?.value.toLowerCase();
-
-    return this.currencies.filter((currency) =>
-      currency.value.toLowerCase().startsWith(filterValue)
-    );
   }
 
   public focus() {
@@ -136,6 +127,17 @@ export class CurrencySelectorComponent
 
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private filter(value: Currency | string) {
+    const filterValue =
+      typeof value === 'string'
+        ? value?.toLowerCase()
+        : value?.value.toLowerCase();
+
+    return this.currencies.filter((currency) => {
+      return currency.value.toLowerCase().startsWith(filterValue);
+    });
   }
 
   private validateRequired() {

@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 import { CurrencySelectorComponent } from './currency-selector.component';
 
 @NgModule({
@@ -16,9 +16,8 @@ import { CurrencySelectorComponent } from './currency-selector.component';
     MatAutocompleteModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressSpinnerModule,
     ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfCurrencyAutocompleteModule {}
+export class GfCurrencySelectorModule {}
