@@ -20,18 +20,18 @@
       </div>
     </div>
 
-    <div class="chart-container">
+    <div class="chart-container mb-3">
       <gf-investment-chart
         class="h-100"
         [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
         [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-        [isLoading]="isLoadingBenchmarkComparator"
+        [isLoading]="isLoadingChart"
         [locale]="user?.settings?.locale"
       ></gf-investment-chart>
     </div>
 
-    <div class="row mt-4">
+    <div class="row">
       <div class="col-6 mb-3">
         <gf-value
           i18n

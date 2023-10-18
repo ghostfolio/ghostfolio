@@ -8,17 +8,16 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { User, HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { HistoricalDataItem, User } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import Big from 'big.js';
-import { format, parseISO, differenceInDays } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
 
@@ -32,13 +31,12 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
 export class AccountDetailDialog implements OnDestroy, OnInit {
   public balance: number;
   public currency: string;
-  public daysInMarket: number;
   public equity: number;
   public hasImpersonationId: boolean;
-  public isLoadingBenchmarkComparator: boolean;
+  public historicalDataItems: HistoricalDataItem[];
+  public isLoadingChart: boolean;
   public name: string;
   public orders: OrderWithAccount[];
-  public historicalDataItems: HistoricalDataItem[];
   public platformName: string;
   public transactionCount: number;
   public user: User;
@@ -65,13 +63,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnInit(): void {
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-      });
+  public ngOnInit() {
+    this.isLoadingChart = true;
 
     this.dataService
       .fetchAccount(this.data.accountId)
@@ -126,23 +119,33 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         range: 'max'
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ chart, firstOrderDate }) => {
-        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
+      .subscribe(({ chart }) => {
+        this.historicalDataItems = chart.map(
+          ({ date, value, valueInPercentage }) => {
+            return {
+              date,
+              value:
+                this.hasImpersonationId || this.user.settings.isRestrictedView
+                  ? valueInPercentage
+                  : value
+            };
+          }
+        );
 
-        this.historicalDataItems = [];
-
-        chart.forEach(({ date, value, valueInPercentage }) => {
-          this.historicalDataItems.push({
-            date,
-            value: this.hasImpersonationId ? valueInPercentage : value
-          });
-        });
+        this.isLoadingChart = false;
 
         this.changeDetectorRef.markForCheck();
       });
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
   }
 
