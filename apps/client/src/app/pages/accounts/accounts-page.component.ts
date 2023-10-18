@@ -30,7 +30,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateAccount: boolean;
-  public hasPermissionToDeleteAccount: boolean;
+  public hasPermissionToUpdateAccount: boolean;
   public routeQueryParams: Subscription;
   public totalBalanceInBaseCurrency = 0;
   public totalValueInBaseCurrency = 0;
@@ -95,9 +95,9 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             this.user.permissions,
             permissions.createAccount
           );
-          this.hasPermissionToDeleteAccount = hasPermission(
+          this.hasPermissionToUpdateAccount = hasPermission(
             this.user.permissions,
-            permissions.deleteAccount
+            permissions.updateAccount
           );
 
           this.changeDetectorRef.markForCheck();

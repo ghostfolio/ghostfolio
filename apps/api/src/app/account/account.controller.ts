@@ -1,8 +1,12 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
-import { Accounts } from '@ghostfolio/common/interfaces';
+import {
+  AccountBalancesResponse,
+  Accounts
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type {
   AccountWithValue,
@@ -35,6 +39,7 @@ import { UpdateAccountDto } from './update-account.dto';
 @Controller('account')
 export class AccountController {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
@@ -114,6 +119,18 @@ export class AccountController {
       });
 
     return accountsWithAggregations.accounts[0];
+  }
+
+  @Get(':id/balances')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async getAccountBalancesById(
+    @Param('id') id: string
+  ): Promise<AccountBalancesResponse> {
+    return this.accountBalanceService.getAccountBalances({
+      accountId: id,
+      userId: this.request.user.id
+    });
   }
 
   @Post()

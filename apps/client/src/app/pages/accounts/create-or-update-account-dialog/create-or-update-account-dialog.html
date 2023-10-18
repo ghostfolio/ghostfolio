@@ -35,7 +35,9 @@
           type="number"
           (keydown.enter)="$event.stopPropagation()"
         />
-        <span class="ml-2" matTextSuffix>{{ data.account.currency }}</span>
+        <span class="ml-2" matTextSuffix
+          >{{ accountForm.controls['currency'].value }}</span
+        >
       </mat-form-field>
     </div>
     <div [ngClass]="{ 'd-none': platforms?.length < 1 }">

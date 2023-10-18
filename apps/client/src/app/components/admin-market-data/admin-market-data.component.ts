@@ -178,10 +178,20 @@ export class AdminMarketDataComponent
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    this.adminService
-      .deleteProfileData({ dataSource, symbol })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+    const confirmation = confirm(
+      $localize`Do you really want to delete this asset profile?`
+    );
+
+    if (confirmation) {
+      this.adminService
+        .deleteProfileData({ dataSource, symbol })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(() => {
+          setTimeout(() => {
+            window.location.reload();
+          }, 300);
+        });
+    }
   }
 
   public onGather7Days() {
@@ -342,7 +352,7 @@ export class AdminMarketDataComponent
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(({ dataSource, symbol }) => {
+          .subscribe(({ dataSource, symbol } = {}) => {
             if (dataSource && symbol) {
               this.adminService
                 .addAssetProfile({ dataSource, symbol })

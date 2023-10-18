@@ -5,12 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.12.0 - 2023-10-17
+
+### Added
+
+- Added the endpoint `GET api/v1/account/:id/balances` which provides historical cash balances
+- Added support to search for an asset profile by `isin`, `name` and `symbol` as an administrator (experimental)
+- Added support for creating asset profiles with `MANUAL` data source
+
+### Changed
+
+- Changed the checkboxes to slide toggles in the user settings of the user account page
+- Extended the `copy-assets` `Nx` target to copy the locales to the server’s assets
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `5.2.1` to `8.3`
+
+### Fixed
+
+- Displayed the transfer cash balance button based on a permission
+- Fixed the biometric authentication
+- Fixed the query to get asset profiles that match both the `dataSource` and `symbol` values
+
+## 2.11.0 - 2023-10-14
 
 ### Added
 
 - Added support to transfer a part of the cash balance from one to another account
 - Extended the markets overview by benchmarks (date of last all time high)
+- Added support to import historical market data in the admin control panel
 
 ### Changed
 
@@ -21,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed `FEE` and `INTEREST` types in the activities import of `csv` files
+- Fixed the displayed currency of the cash balance in the create or update account dialog
 
 ## 2.10.0 - 2023-10-09
 
@@ -124,13 +146,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the preselected currency based on the account's currency in the create or edit activity dialog
+- Improved the preselected currency based on the account’s currency in the create or edit activity dialog
 - Unlocked the experimental features setting for all users
 - Upgraded `prisma` from version `5.2.0` to `5.3.1`
 
 ### Fixed
 
-- Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
+- Fixed a memory leak related to the server’s timezone (behind UTC) in the data gathering
 
 ## 2.3.0 - 2023-09-17
 
@@ -281,7 +303,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Optimized the activities import by allowing a different currency than the asset's official one
+- Optimized the activities import by allowing a different currency than the asset’s official one
 - Added a timeout to the _EOD Historical Data_ requests
 - Migrated the requests from `bent` to `got` in the _EOD Historical Data_ service
 
@@ -788,7 +810,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Persisted today's market data continuously
+- Persisted today’s market data continuously
 
 ### Fixed
 
@@ -1022,7 +1044,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Filtered activities with type `ITEM` from search results
-- Considered the user's language in the _Stripe_ checkout
+- Considered the user’s language in the _Stripe_ checkout
 - Upgraded the _Stripe_ dependencies
 - Upgraded `twitter-api-v2` from version `1.10.3` to `1.14.2`
 
@@ -2696,7 +2718,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the countries and sectors charts in the position detail dialog
-- Distinguished today's data point of historical data in the admin control panel
+- Distinguished today’s data point of historical data in the admin control panel
 - Restructured the server modules
 
 ### Fixed
