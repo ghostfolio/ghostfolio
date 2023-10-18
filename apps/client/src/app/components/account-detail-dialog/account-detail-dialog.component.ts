@@ -38,7 +38,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public isLoadingBenchmarkComparator: boolean;
   public name: string;
   public orders: OrderWithAccount[];
-  public performanceDataItems: HistoricalDataItem[];
+  public historicalDataItems: HistoricalDataItem[];
   public platformName: string;
   public transactionCount: number;
   public user: User;
@@ -59,8 +59,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          this.update();
 
           this.changeDetectorRef.markForCheck();
         }
@@ -116,6 +114,32 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+
+    this.dataService
+      .fetchPortfolioPerformance({
+        filters: [
+          {
+            id: this.data.accountId,
+            type: 'ACCOUNT'
+          }
+        ],
+        range: 'max'
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ chart, firstOrderDate }) => {
+        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
+
+        this.historicalDataItems = [];
+
+        chart.forEach(({ date, value, valueInPercentage }) => {
+          this.historicalDataItems.push({
+            date,
+            value: this.hasImpersonationId ? valueInPercentage : value
+          });
+        });
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onClose(): void {
@@ -147,36 +171,5 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  private update() {
-    this.isLoadingBenchmarkComparator = false;
-
-    this.dataService
-      .fetchPortfolioPerformance({
-        range: this.user?.settings?.dateRange
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ chart, firstOrderDate }) => {
-        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
-
-        this.performanceDataItems = [];
-
-        for (const [
-          index,
-          { date, value, valueInPercentage }
-        ] of chart.entries()) {
-          if (index > 0 || this.user?.settings?.dateRange === 'max') {
-            // Ignore first item where value is 0
-            this.performanceDataItems.push({
-              date,
-              value: isNumber(value) ? value : valueInPercentage
-            });
-          }
-        }
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.changeDetectorRef.markForCheck();
   }
 }
