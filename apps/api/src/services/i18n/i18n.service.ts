@@ -26,7 +26,11 @@ export class I18nService {
       Logger.warn(`Translation not found for locale '${locale}'`);
     }
 
-    const translatedText = $(`trans-unit[id="${id}"] > target`).text();
+    const translatedText = $(
+      `trans-unit[id="${id}"] > ${
+        locale === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
+      }`
+    ).text();
 
     if (!translatedText) {
       Logger.warn(`Translation not found for id '${id}' in locale '${locale}'`);
