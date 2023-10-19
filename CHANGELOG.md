@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a chart to the account detail dialog
+- Added an `i18n` service to query `messages.*.xlf` files on the server
+
+### Changed
+
+- Changed the users table in the admin control panel to an `@angular/material` data table
+
 ### Fixed
 
 - Fixed an issue where holdings were requested twice from the server

@@ -74,6 +74,11 @@ const routes: Routes = [
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
   {
+    path: 'i18n',
+    loadChildren: () =>
+      import('./pages/i18n/i18n-page.module').then((m) => m.I18nPageModule)
+  },
+  {
     path: paths.markets,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(

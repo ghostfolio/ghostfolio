@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import { join } from 'path';
 
 import { environment } from '@ghostfolio/api/environments/environment';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {
   DEFAULT_LANGUAGE_CODE,
   DEFAULT_ROOT_URL,
@@ -11,19 +12,10 @@ import { DATE_FORMAT, interpolate } from '@ghostfolio/common/helper';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 
-const descriptions = {
-  de: 'Mit dem Finanz-Dashboard Ghostfolio können Sie Ihr Vermögen in Form von Aktien, ETFs oder Kryptowährungen verteilt über mehrere Finanzinstitute überwachen.',
-  en: 'Ghostfolio is a personal finance dashboard to keep track of your assets like stocks, ETFs or cryptocurrencies across multiple platforms.',
-  es: 'Ghostfolio es un dashboard de finanzas personales para hacer un seguimiento de tus activos como acciones, ETFs o criptodivisas a través de múltiples plataformas.',
-  fr: 'Ghostfolio est un dashboard de finances personnelles qui permet de suivre vos actifs comme les actions, les ETF ou les crypto-monnaies sur plusieurs plateformes.',
-  it: 'Ghostfolio è un dashboard di finanza personale per tenere traccia delle vostre attività come azioni, ETF o criptovalute su più piattaforme.',
-  nl: 'Ghostfolio is een persoonlijk financieel dashboard om uw activa zoals aandelen, ETF’s of cryptocurrencies over meerdere platforms bij te houden.',
-  pt: 'Ghostfolio é um dashboard de finanças pessoais para acompanhar os seus activos como acções, ETFs ou criptomoedas em múltiplas plataformas.',
-  tr: 'Ghostfolio, hisse senetleri, ETF’ler veya kripto para birimleri gibi varlıklarınızı birden fazla platformda takip etmenizi sağlayan bir kişisel finans panosudur.'
-};
-
 const title = 'Ghostfolio – Open Source Wealth Management Software';
 const titleShort = 'Ghostfolio';
+
+const i18nService = new I18nService();
 
 let indexHtmlMap: { [languageCode: string]: string } = {};
 
@@ -130,7 +122,10 @@ export const HtmlTemplateMiddleware = async (
       languageCode,
       path,
       rootUrl,
-      description: descriptions[languageCode],
+      description: i18nService.getTranslation({
+        languageCode,
+        id: 'metaDescription'
+      }),
       featureGraphicPath:
         locales[path]?.featureGraphicPath ?? 'assets/cover.png',
       title: locales[path]?.title ?? title
