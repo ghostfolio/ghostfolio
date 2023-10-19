@@ -30,6 +30,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
   public user: User;
+
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
