@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
+import { HistoricalDataItem, User } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
@@ -32,6 +32,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public balance: number;
   public currency: string;
   public equity: number;
+  public hasImpersonationId: boolean;
+  public historicalDataItems: HistoricalDataItem[];
+  public isLoadingChart: boolean;
   public name: string;
   public orders: OrderWithAccount[];
   public platformName: string;
@@ -46,6 +49,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AccountDetailDialog>,
+    private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -59,7 +63,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       });
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
+    this.isLoadingChart = true;
+
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -101,9 +107,45 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+
+    this.dataService
+      .fetchPortfolioPerformance({
+        filters: [
+          {
+            id: this.data.accountId,
+            type: 'ACCOUNT'
+          }
+        ],
+        range: 'max'
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ chart }) => {
+        this.historicalDataItems = chart.map(
+          ({ date, value, valueInPercentage }) => {
+            return {
+              date,
+              value:
+                this.hasImpersonationId || this.user.settings.isRestrictedView
+                  ? valueInPercentage
+                  : value
+            };
+          }
+        );
+
+        this.isLoadingChart = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
   }
 
