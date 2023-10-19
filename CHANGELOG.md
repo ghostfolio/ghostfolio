@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a chart to the account detail dialog
 
+### Changed
+
+- Changed the users table in the admin control panel to an `@angular/material` data table
+
 ## 2.12.0 - 2023-10-17
 
 ### Added
