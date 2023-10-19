@@ -1,12 +1,12 @@
-import { readdirSync, readFileSync, existsSync } from 'fs';
+import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
-import { Injectable, Logger } from '@nestjs/common';
+
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
+import { Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 
-@Injectable()
 export class I18nService {
   private localesPath = join(__dirname, 'assets', 'locales');
-  private localeRegex = /^messages\.[a-z]{2}\.xlf$/;
   private translations: { [locale: string]: cheerio.CheerioAPI } = {};
 
   public constructor() {
@@ -21,15 +21,15 @@ export class I18nService {
     locale: string;
   }): string {
     const $ = this.translations[locale];
+
     if (!$) {
-      throw new Error(`Translation not found for locale '${locale}'`);
+      Logger.warn(`Translation not found for locale '${locale}'`);
     }
 
     const translatedText = $(`trans-unit[id="${id}"] > target`).text();
+
     if (!translatedText) {
-      throw new Error(
-        `Translation not found for id '${id}' in locale '${locale}'`
-      );
+      Logger.warn(`Translation not found for id '${id}' in locale '${locale}'`);
     }
 
     return translatedText;
@@ -38,20 +38,21 @@ export class I18nService {
   private loadFiles() {
     try {
       const files = readdirSync(this.localesPath, 'utf-8');
+
       for (const file of files) {
-        if (!this.localeRegex.test(file)) {
-          continue;
-        }
-        if (!existsSync(join(this.localesPath, file))) {
-          throw new Error(`File: ${file} not found`);
-        } else {
-          const xmlData = readFileSync(join(this.localesPath, file), 'utf8');
-          this.translations[file.split('.')[1]] = this.parseXml(xmlData);
-        }
+        const xmlData = readFileSync(join(this.localesPath, file), 'utf8');
+        this.translations[this.parseLanguageCode(file)] =
+          this.parseXml(xmlData);
       }
     } catch (error) {
       Logger.error(error, 'I18nService');
     }
+  }
+
+  private parseLanguageCode(aFileName: string) {
+    const match = aFileName.match(/\.([a-zA-Z]+)\.xlf$/);
+
+    return match ? match[1] : DEFAULT_LANGUAGE_CODE;
   }
 
   private parseXml(xmlData: string): cheerio.CheerioAPI {
