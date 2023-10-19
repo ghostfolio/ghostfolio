@@ -21,22 +21,15 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
+  public dataSource: MatTableDataSource<AdminData['users'][0]> =
+    new MatTableDataSource();
   public defaultDateFormat: string;
+  public displayedColumns: string[] = [];
   public getEmojiFlag = getEmojiFlag;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
   public user: User;
-  public dataSource: MatTableDataSource<AdminData['users'][0]> =
-    new MatTableDataSource();
-  public displayedColumns = [
-    'index',
-    'user',
-    'registration',
-    'accounts',
-    'activities',
-    'actions'
-  ];
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -151,6 +144,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ users }) => {
         this.dataSource = new MatTableDataSource(users);
+
         this.changeDetectorRef.markForCheck();
       });
   }
