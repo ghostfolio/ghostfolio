@@ -1,15 +1,15 @@
-import * as fs from 'fs';
+import { readdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
 
 @Injectable()
 export class I18nService {
-  private localesPath = join(__dirname, 'assets/locales/');
+  private localesPath = join(__dirname, 'assets', 'locales');
   private localeRegex = /^messages\.[a-z]{2}\.xlf$/;
   private translations: { [locale: string]: cheerio.CheerioAPI } = {};
 
-  constructor() {
+  public constructor() {
     this.loadFiles();
   }
 
@@ -37,23 +37,24 @@ export class I18nService {
 
   private loadFiles() {
     try {
-      const files = fs.readdirSync(this.localesPath, 'utf-8');
+      const files = readdirSync(this.localesPath, 'utf-8');
       for (const file of files) {
-        if (!this.localeRegex.test(file)) continue;
-        if (!fs.existsSync(`${this.localesPath}${file}`)) {
+        if (!this.localeRegex.test(file)) {
+          continue;
+        }
+        if (!existsSync(join(this.localesPath, file))) {
           throw new Error(`File: ${file} not found`);
         } else {
-          const xmlData = fs.readFileSync(`${this.localesPath}${file}`, 'utf8');
+          const xmlData = readFileSync(join(this.localesPath, file), 'utf8');
           this.translations[file.split('.')[1]] = this.parseXml(xmlData);
         }
       }
     } catch (error) {
-      console.log(error);
+      Logger.error(error, 'I18nService');
     }
   }
 
   private parseXml(xmlData: string): cheerio.CheerioAPI {
-    const selectorFn = cheerio.load(xmlData, { xmlMode: true });
-    return selectorFn;
+    return cheerio.load(xmlData, { xmlMode: true });
   }
 }
