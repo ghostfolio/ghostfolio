@@ -10,4 +10,4 @@ import { GfLogoModule } from '@ghostfolio/ui/logo';
   imports: [CommonModule, GfLogoModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GFMembershipCardModule {}
+export class GfMembershipCardModule {}
