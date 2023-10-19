@@ -15,25 +15,27 @@ export class I18nService {
 
   public getTranslation({
     id,
-    locale
+    languageCode
   }: {
     id: string;
-    locale: string;
+    languageCode: string;
   }): string {
-    const $ = this.translations[locale];
+    const $ = this.translations[languageCode];
 
     if (!$) {
-      Logger.warn(`Translation not found for locale '${locale}'`);
+      Logger.warn(`Translation not found for locale '${languageCode}'`);
     }
 
     const translatedText = $(
       `trans-unit[id="${id}"] > ${
-        locale === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
+        languageCode === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
       }`
     ).text();
 
     if (!translatedText) {
-      Logger.warn(`Translation not found for id '${id}' in locale '${locale}'`);
+      Logger.warn(
+        `Translation not found for id '${id}' in locale '${languageCode}'`
+      );
     }
 
     return translatedText;

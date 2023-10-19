@@ -123,8 +123,8 @@ export const HtmlTemplateMiddleware = async (
       path,
       rootUrl,
       description: i18nService.getTranslation({
-        id: 'metaDescription',
-        locale: languageCode
+        languageCode,
+        id: 'metaDescription'
       }),
       featureGraphicPath:
         locales[path]?.featureGraphicPath ?? 'assets/cover.png',
