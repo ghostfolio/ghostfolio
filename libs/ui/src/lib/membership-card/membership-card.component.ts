@@ -7,6 +7,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   templateUrl: './membership-card.component.html'
 })
 export class MembershipCardComponent {
-  @Input() public expiresAt: Date;
+  @Input() public expiresAt: string;
   @Input() public name: string;
+
+  public routerLinkPricing = ['/' + $localize`pricing`];
 }

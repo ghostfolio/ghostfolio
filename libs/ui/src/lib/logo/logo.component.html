@@ -1,4 +1,8 @@
 <span class="align-items-center d-flex"
-  ><span class="d-inline-block logo mr-1"></span>
+  ><span
+    class="d-inline-block logo"
+    [ngClass]="{ 'mr-1': showLabel }"
+    [ngStyle]="{ 'background-color': color }"
+  ></span>
   <span *ngIf="showLabel" class="label">{{ label ?? 'Ghostfolio' }}</span></span
 >
