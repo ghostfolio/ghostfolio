@@ -38,7 +38,7 @@ export class I18nService {
       );
     }
 
-    return translatedText;
+    return translatedText.trim();
   }
 
   private loadFiles() {
