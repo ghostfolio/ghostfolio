@@ -267,7 +267,7 @@ export class ImportActivitiesDialog implements OnDestroy {
 
           return;
         } else if (file.name.endsWith('.csv')) {
-          const content: string[] = fileContent.split('\n').slice(1);
+          const content = fileContent.split('\n').slice(1);
 
           try {
             const data = await this.importActivitiesService.importCsv({
