@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Allowed to edit today’s historical market data in the asset profile details dialog of the admin control panel
 
+### Fixed
+
+- Trimmed text in `i18n` service to query `messages.*.xlf` files on the server
+
 ## 2.13.0 - 2023-10-20
 
 ### Added
