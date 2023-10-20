@@ -34,6 +34,7 @@ import { Subject, Subscription, distinctUntilChanged, takeUntil } from 'rxjs';
 })
 export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() activities: Activity[];
+  @Input() dataSource: MatTableDataSource<Activity>;
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
@@ -61,7 +62,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   public allFilters: Filter[];
-  public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
   public defaultDateFormat: string;
   public displayedColumns = [];
   public endOfToday = endOfToday();
@@ -144,6 +144,10 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
 
     this.defaultDateFormat = getDateFormatString(this.locale);
 
+    if (!this.dataSource) {
+      this.dataSource = new MatTableDataSource(this.activities);
+    }
+
     if (this.activities) {
       this.activities = this.activities.map((activity) => {
         return {
@@ -161,7 +165,6 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
 
       this.allFilters = this.getSearchableFieldValues(this.activities);
 
-      this.dataSource = new MatTableDataSource(this.activities);
       this.dataSource.filterPredicate = (data, filter) => {
         const filterableLabels = this.getFilterableValues(data).map(
           ({ label }) => {
@@ -177,6 +180,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
         }
         return includes;
       };
+
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = get;

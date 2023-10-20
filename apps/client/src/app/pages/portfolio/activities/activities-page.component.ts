@@ -22,6 +22,7 @@ import { takeUntil } from 'rxjs/operators';
 import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog/create-or-update-activity-dialog.component';
 import { ImportActivitiesDialog } from './import-activities-dialog/import-activities-dialog.component';
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'gf-activities-page',
@@ -30,6 +31,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 })
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public activities: Activity[];
+  public dataSource: MatTableDataSource<Activity> = new MatTableDataSource();
   public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -108,6 +110,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities }) => {
         this.activities = activities;
+
+        this.dataSource = new MatTableDataSource(this.activities);
 
         if (
           this.hasPermissionToCreateActivity &&

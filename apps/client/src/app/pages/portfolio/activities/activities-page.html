@@ -5,6 +5,7 @@
       <gf-activities-table
         [activities]="activities"
         [baseCurrency]="user?.settings?.baseCurrency"
+        [dataSource]="dataSource"
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
