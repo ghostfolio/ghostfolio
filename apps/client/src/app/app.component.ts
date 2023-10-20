@@ -17,7 +17,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { environment } from '../environments/environment';
 import { DataService } from './services/data.service';
 import { TokenStorageService } from './services/token-storage.service';
 import { UserService } from './services/user/user.service';
@@ -60,7 +59,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public routerLinkResources = ['/' + $localize`resources`];
   public showFooter = false;
   public user: User;
-  public version = environment.version;
 
   private unsubscribeSubject = new Subject<void>();
 
