@@ -1,0 +1,24 @@
+:host {
+  display: block;
+  max-width: 25rem;
+
+  .card-item {
+    aspect-ratio: 1.586;
+    background-color: #343a40 !important;
+    border-radius: 1rem;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+
+    &.premium {
+      background-color: #1d2124 !important;
+    }
+
+    .card-item-heading {
+      font-size: 13px;
+    }
+
+    .card-item-name {
+      color: rgba(var(--light-primary-text));
+      font-size: 18px;
+    }
+  }
+}

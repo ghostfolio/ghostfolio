@@ -81,8 +81,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
-
-    this.update();
   }
 
   public onChangeDateRange(dateRange: DateRange) {

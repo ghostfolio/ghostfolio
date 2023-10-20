@@ -2,21 +2,13 @@
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Membership</h1>
   <div class="row">
     <div class="col">
+      <gf-membership-card
+        class="mb-5 mx-auto"
+        [expiresAt]="(user?.subscription?.expiresAt | date: defaultDateFormat) ?? '∞'"
+        [name]="user?.subscription?.type"
+      ></gf-membership-card>
       <div class="d-flex">
         <div class="mx-auto">
-          <div class="align-items-center d-flex mb-1">
-            <a [routerLink]="routerLinkPricing"
-              >{{ user?.subscription?.type }}</a
-            >
-            <gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Premium'"
-              class="ml-1"
-            ></gf-premium-indicator>
-          </div>
-          <div *ngIf="user?.subscription?.type === 'Premium'">
-            <ng-container i18n>Valid until</ng-container> {{
-            user?.subscription?.expiresAt | date: defaultDateFormat }}
-          </div>
           <div *ngIf="user?.subscription?.type === 'Basic'">
             <ng-container
               *ngIf="hasPermissionForSubscription && hasPermissionToUpdateUserSettings"

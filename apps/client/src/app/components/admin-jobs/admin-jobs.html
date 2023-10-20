@@ -28,20 +28,15 @@
             <ng-container i18n>Type</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
-            <span class="align-items-center d-flex">
-              <ion-icon
-                class="mr-1"
-                name="arrow-down-circle-outline"
-              ></ion-icon>
-              <ng-container *ngIf="element.name === 'GATHER_ASSET_PROFILE'">
-                <span i18n>Asset Profile</span>
-              </ng-container>
-              <ng-container
-                *ngIf="element.name === 'GATHER_HISTORICAL_MARKET_DATA'"
-              >
-                <span i18n>Historical Market Data</span>
-              </ng-container>
-            </span>
+            <ng-container *ngIf="element.name === 'GATHER_ASSET_PROFILE'" i18n>
+              Asset Profile
+            </ng-container>
+            <ng-container
+              *ngIf="element.name === 'GATHER_HISTORICAL_MARKET_DATA'"
+              i18n
+            >
+              Historical Market Data
+            </ng-container>
           </td>
         </ng-container>
 

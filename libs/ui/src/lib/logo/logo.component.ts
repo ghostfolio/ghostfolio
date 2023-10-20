@@ -13,6 +13,7 @@ import {
 })
 export class LogoComponent {
   @HostBinding('class') @Input() size: 'large' | 'medium' = 'medium';
+  @Input() color: string;
   @Input() label: string;
   @Input() showLabel = true;
 

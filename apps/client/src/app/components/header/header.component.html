@@ -131,6 +131,9 @@
           <gf-assistant
             #assistant
             [deviceType]="deviceType"
+            [hasPermissionToAccessAdminControl]="
+              hasPermissionToAccessAdminControl
+            "
             (closed)="closeAssistant()"
           />
         </mat-menu>

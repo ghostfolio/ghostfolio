@@ -10,8 +10,18 @@
   </h1>
   <gf-access-table
     [accesses]="accesses"
-    [hasPermissionToCreateAccess]="hasPermissionToCreateAccess"
     [showActions]="hasPermissionToDeleteAccess"
     (accessDeleted)="onDeleteAccess($event)"
   ></gf-access-table>
+  <div *ngIf="hasPermissionToCreateAccess" class="fab-container">
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [queryParams]="{ createDialog: true }"
+      [routerLink]="[]"
+    >
+      <ion-icon name="add-outline" size="large"></ion-icon>
+    </a>
+  </div>
 </div>
