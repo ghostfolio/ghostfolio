@@ -2,40 +2,42 @@
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Membership</h1>
   <div class="row">
     <div class="col">
-      <gf-membership-card
-        class="mb-5 mx-auto"
-        [expiresAt]="(user?.subscription?.expiresAt | date: defaultDateFormat) ?? '∞'"
-        [name]="user?.subscription?.type"
-      ></gf-membership-card>
-      <div class="d-flex">
-        <div class="mx-auto">
-          <div *ngIf="user?.subscription?.type === 'Basic'">
-            <ng-container
-              *ngIf="hasPermissionForSubscription && hasPermissionToUpdateUserSettings"
-            >
-              <button color="primary" mat-flat-button (click)="onCheckout()">
-                <ng-container *ngIf="user.subscription.offer === 'default'" i18n
-                  >Upgrade</ng-container
-                >
-                <ng-container *ngIf="user.subscription.offer === 'renewal'" i18n
-                  >Renew</ng-container
-                >
-              </button>
-              <div *ngIf="price" class="mt-1">
-                <ng-container *ngIf="coupon"
-                  ><del class="text-muted"
-                    >{{ baseCurrency }}&nbsp;{{ price }}</del
-                  >&nbsp;{{ baseCurrency }}&nbsp;{{ price - coupon
-                  }}</ng-container
-                >
-                <ng-container *ngIf="!coupon"
-                  >{{ baseCurrency }}&nbsp;{{ price }}</ng-container
-                >&nbsp;<span i18n>per year</span>
-              </div>
-            </ng-container>
+      <div class="align-items-center d-flex flex-column">
+        <gf-membership-card
+          [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
+          [name]="user?.subscription?.type"
+        ></gf-membership-card>
+        <div
+          *ngIf="user?.subscription?.type === 'Basic'"
+          class="d-flex flex-column mt-5"
+        >
+          <ng-container
+            *ngIf="hasPermissionForSubscription && hasPermissionToUpdateUserSettings"
+          >
+            <button color="primary" mat-flat-button (click)="onCheckout()">
+              <ng-container *ngIf="user.subscription.offer === 'default'" i18n
+                >Upgrade</ng-container
+              >
+              <ng-container *ngIf="user.subscription.offer === 'renewal'" i18n
+                >Renew</ng-container
+              >
+            </button>
+            <div *ngIf="price" class="mt-1 text-center">
+              <ng-container *ngIf="coupon"
+                ><del class="text-muted"
+                  >{{ baseCurrency }}&nbsp;{{ price }}</del
+                >&nbsp;{{ baseCurrency }}&nbsp;{{ price - coupon
+                }}</ng-container
+              >
+              <ng-container *ngIf="!coupon"
+                >{{ baseCurrency }}&nbsp;{{ price }}</ng-container
+              >&nbsp;<span i18n>per year</span>
+            </div>
+          </ng-container>
+          <div class="align-items-center d-flex justfiy-content-center mt-4">
             <a
               *ngIf="!user?.subscription?.expiresAt"
-              class="mr-2 my-2"
+              class="mx-1"
               mat-stroked-button
               [href]="trySubscriptionMail"
               ><span i18n>Try Premium</span>
@@ -46,7 +48,7 @@
             ></a>
             <a
               *ngIf="hasPermissionToUpdateUserSettings"
-              class="mr-2 my-2"
+              class="mx-1"
               i18n
               mat-stroked-button
               [routerLink]=""
