@@ -4,15 +4,9 @@
   }
 
   .logo {
-    background-color: rgba(var(--dark-primary-text));
+    background-color: currentColor;
     margin-top: -2px;
     mask: url('/assets/ghost.svg') no-repeat center;
-  }
-}
-
-:host-context(.is-dark-theme) {
-  .logo {
-    background-color: rgba(var(--light-primary-text));
   }
 }
 

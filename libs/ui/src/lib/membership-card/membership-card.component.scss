@@ -4,12 +4,14 @@
 
   .card-item {
     aspect-ratio: 1.586;
-    background-color: #343a40 !important;
+    background-color: #ffffff;
     border-radius: 1rem;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    color: rgba(var(--dark-primary-text));
 
     &.premium {
-      background-color: #1d2124 !important;
+      background-color: #1d2124;
+      color: rgba(var(--light-primary-text));
     }
 
     .card-item-heading {
@@ -17,7 +19,6 @@
     }
 
     .card-item-name {
-      color: rgba(var(--light-primary-text));
       font-size: 18px;
     }
   }
