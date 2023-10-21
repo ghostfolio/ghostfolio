@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the style of the active page in the header navigation
 - Trimmed text in `i18n` service to query `messages.*.xlf` files on the server
 
 ## 2.13.0 - 2023-10-20
