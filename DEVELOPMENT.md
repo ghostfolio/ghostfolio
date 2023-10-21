@@ -1,5 +1,17 @@
 # Ghostfolio Development Guide
 
+## Experimental Features
+
+New functionality can be enabled using a feature flag switch from the user settings.
+
+### Backend
+
+Remove permission in `UserService` using `without()`
+
+### Frontend
+
+Use `*ngIf="user?.settings?.isExperimentalFeatures"` in HTML template
+
 ## Git
 
 ### Rebase
