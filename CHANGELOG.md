@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _OpenFIGI_ data enhancer for _Financial Instrument Global Identifier_ (FIGI)
+- Added `figi`, `figiComposite` and `figiShareClass` to the asset profile model
+
 ### Changed
 
 - Moved the fees on account level feature from experimental to general availability
