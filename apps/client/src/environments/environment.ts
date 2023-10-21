@@ -5,8 +5,7 @@
 export const environment = {
   lastPublish: null,
   production: false,
-  stripePublicKey: '',
-  version: 'dev'
+  stripePublicKey: ''
 };
 
 /*
