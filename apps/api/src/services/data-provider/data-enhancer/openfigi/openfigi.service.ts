@@ -30,11 +30,11 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
+    const headers: Headers = {};
     const { exchange, ticker } = parseSymbol({
       symbol,
       dataSource: response.dataSource
     });
-    const headers: Headers = {};
 
     if (this.configurationService.get('OPEN_FIGI_API_KEY')) {
       headers['X-OPENFIGI-APIKEY'] =

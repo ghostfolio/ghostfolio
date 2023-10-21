@@ -326,8 +326,8 @@ export function parseSymbol({ dataSource, symbol }: UniqueAsset) {
   const [ticker, exchange] = symbol.split('.');
 
   return {
-    exchange: exchange ?? (dataSource === 'YAHOO' ? 'US' : undefined),
-    ticker
+    ticker,
+    exchange: exchange ?? (dataSource === 'YAHOO' ? 'US' : undefined)
   };
 }
 
