@@ -39,7 +39,8 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
 })
 export class CurrencySelectorComponent
   extends AbstractMatFormField<Currency>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   @Input() private currencies: Currency[] = [];
   @Input() defaultValue: Currency;
 
