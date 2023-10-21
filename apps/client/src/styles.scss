@@ -446,6 +446,12 @@ ngx-skeleton-loader {
 
 .mat-mdc-menu-panel {
   .mat-mdc-menu-item {
+    &.font-weight-bold {
+      .mat-mdc-menu-item-text {
+        --mat-menu-item-label-text-weight: 700;
+      }
+    }
+
     .mdc-list-item__primary-text {
       align-items: center;
       display: flex;
