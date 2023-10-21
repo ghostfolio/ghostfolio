@@ -39,9 +39,9 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
 })
 export class CurrencySelectorComponent
   extends AbstractMatFormField<Currency>
-  implements OnInit, OnDestroy
-{
+  implements OnInit, OnDestroy {
   @Input() private currencies: Currency[] = [];
+  @Input() defaultValue: Currency;
 
   @ViewChild(MatInput, { static: false }) private input: MatInput;
 
@@ -62,6 +62,12 @@ export class CurrencySelectorComponent
     super(_elementRef, _focusMonitor, ngControl);
 
     this.controlType = 'currency-autocomplete';
+  }
+
+  public ngOnChanges() {
+    if (this.defaultValue) {
+      this.value = this.defaultValue;
+    }
   }
 
   public ngOnInit() {

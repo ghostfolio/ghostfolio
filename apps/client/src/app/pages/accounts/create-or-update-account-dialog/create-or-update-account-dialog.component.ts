@@ -31,6 +31,7 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdateAccountDialog implements OnDestroy {
   public accountForm: FormGroup;
+  public accountCurrency: Currency;
   public currencies: Currency[] = [];
   public filteredPlatforms: Observable<Platform[]>;
   public platforms: Platform[];
@@ -51,6 +52,10 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       label: currency,
       value: currency
     }));
+    this.accountCurrency = {
+      label: this.data.account.currency,
+      value: this.data.account.currency
+    };
     this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({

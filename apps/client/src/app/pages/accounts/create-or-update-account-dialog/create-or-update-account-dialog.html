@@ -23,6 +23,7 @@
         <gf-currency-autocomplete
           formControlName="currency"
           [currencies]="currencies"
+          [defaultValue]="accountCurrency"
         />
       </mat-form-field>
     </div>
@@ -36,7 +37,7 @@
           (keydown.enter)="$event.stopPropagation()"
         />
         <span class="ml-2" matTextSuffix
-          >{{ accountForm.controls['currency'].value }}</span
+          >{{ accountForm.controls['currency']?.value?.value }}</span
         >
       </mat-form-field>
     </div>
