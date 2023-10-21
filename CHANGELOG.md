@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the fees on account level feature from experimental to general availability
+- Moved the interest on account level feature from experimental to general availability
+- Moved the search for a holding from experimental to general availability
 - Improved the error message in the activities import for `csv` files
 - Removed the application version from the client
 - Allowed to edit today’s historical market data in the asset profile details dialog of the admin control panel
