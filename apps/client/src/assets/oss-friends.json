@@ -1,5 +1,5 @@
 {
-  "createdAt": "2023-10-05T00:00:00.000Z",
+  "createdAt": "2023-10-21T00:00:00.000Z",
   "data": [
     {
       "name": "BoxyHQ",
@@ -22,9 +22,19 @@
       "href": "https://documenso.com"
     },
     {
+      "name": "dyrector.io",
+      "description": "dyrector.io is an open-source continuous delivery & deployment platform with version management.",
+      "href": "https://dyrector.io"
+    },
+    {
       "name": "Erxes",
       "description": "The Open-Source HubSpot Alternative. A single XOS enables to create unique and life-changing experiences that work for all types of business.",
       "href": "https://erxes.io"
+    },
+    {
+      "name": "Firecamp",
+      "description": "vscode for apis, open-source postman/insomnia alternative",
+      "href": "https://firecamp.io"
     },
     {
       "name": "Formbricks",
@@ -45,6 +55,11 @@
       "name": "Hanko",
       "description": "Open-source authentication and user management for the passkey era. Integrated in minutes, for web and mobile apps.",
       "href": "https://www.hanko.io"
+    },
+    {
+      "name": "Hook0",
+      "description": "Open-Source Webhooks-as-a-service (WaaS) that makes it easy for developers to send webhooks.",
+      "href": "https://www.hook0.com/"
     },
     {
       "name": "HTMX",
@@ -87,9 +102,19 @@
       "href": "https://rivet.gg"
     },
     {
+      "name": "Shelf.nu",
+      "description": "Open Source Asset and Equipment tracking software that lets you create QR asset labels, manage and overview your assets across locations.",
+      "href": "https://www.shelf.nu/"
+    },
+    {
       "name": "Sniffnet",
       "description": "Sniffnet is a network monitoring tool to help you easily keep track of your Internet traffic.",
       "href": "https://www.sniffnet.net"
+    },
+    {
+      "name": "Spark.NET",
+      "description": "The .NET Web Framework for Makers. Build production ready, full-stack web applications fast without sweating the small stuff.",
+      "href": "https://spark-framework.net"
     },
     {
       "name": "Tolgee",
@@ -102,14 +127,14 @@
       "href": "https://trigger.dev"
     },
     {
-      "name": "Typebot",
-      "description": "Typebot gives you powerful blocks to create unique chat experiences. Embed them anywhere on your apps and start collecting results like magic.",
-      "href": "https://typebot.io"
-    },
-    {
       "name": "Twenty",
       "description": "A modern CRM offering the flexibility of open-source, advanced features and sleek design.",
       "href": "https://twenty.com"
+    },
+    {
+      "name": "Typebot",
+      "description": "Typebot gives you powerful blocks to create unique chat experiences. Embed them anywhere on your apps and start collecting results like magic.",
+      "href": "https://typebot.io"
     },
     {
       "name": "Webiny",
@@ -120,11 +145,6 @@
       "name": "Webstudio",
       "description": "Webstudio is an open source alternative to Webflow",
       "href": "https://webstudio.is"
-    },
-    {
-      "name": "Spark.NET",
-      "description": "The .NET Web Framework for Makers. Build production ready, full-stack web applications fast without sweating the small stuff.",
-      "href": "https://spark-framework.net"
     }
   ],
   "source": "https://formbricks.com/api/oss-friends"
