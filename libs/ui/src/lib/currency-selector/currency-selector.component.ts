@@ -9,7 +9,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormControl, NgControl } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgControl } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent
@@ -42,7 +42,7 @@ export class CurrencySelectorComponent
   implements OnInit, OnDestroy
 {
   @Input() private currencies: Currency[] = [];
-  @Input() defaultValue: Currency;
+  @Input() private formControlName: string;
 
   @ViewChild(MatInput, { static: false }) private input: MatInput;
 
@@ -58,6 +58,7 @@ export class CurrencySelectorComponent
     public readonly _elementRef: ElementRef,
     public readonly _focusMonitor: FocusMonitor,
     public readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly formGroupDirective: FormGroupDirective,
     public readonly ngControl: NgControl
   ) {
     super(_elementRef, _focusMonitor, ngControl);
@@ -65,15 +66,21 @@ export class CurrencySelectorComponent
     this.controlType = 'currency-autocomplete';
   }
 
-  public ngOnChanges() {
-    if (this.defaultValue) {
-      this.value = this.defaultValue;
-    }
-  }
-
   public ngOnInit() {
     if (this.disabled) {
       this.control.disable();
+    }
+
+    const formGroup = this.formGroupDirective.form;
+
+    if (formGroup) {
+      const control = formGroup.get(this.formControlName);
+
+      if (control) {
+        this.value = this.currencies.find(({ value }) => {
+          return value === control.value;
+        });
+      }
     }
 
     this.control.valueChanges
