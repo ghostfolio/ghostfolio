@@ -322,6 +322,15 @@ export function parseDate(date: string): Date | null {
   return parseISO(date);
 }
 
+export function parseSymbol({ dataSource, symbol }: UniqueAsset) {
+  const [ticker, exchange] = symbol.split('.');
+
+  return {
+    exchange: exchange ?? (dataSource === 'YAHOO' ? 'US' : undefined),
+    ticker
+  };
+}
+
 export function prettifySymbol(aSymbol: string): string {
   return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
 }
