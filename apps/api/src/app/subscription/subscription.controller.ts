@@ -104,7 +104,7 @@ export class SubscriptionController {
     response.redirect(
       `${this.configurationService.get(
         'ROOT_URL'
-      )}/${DEFAULT_LANGUAGE_CODE}/account`
+      )}/${DEFAULT_LANGUAGE_CODE}/account/membership`
     );
   }
 
