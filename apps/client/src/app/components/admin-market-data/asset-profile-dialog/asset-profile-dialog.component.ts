@@ -79,7 +79,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder
-  ) { }
+  ) {}
 
   public ngOnInit(): void {
     this.benchmarks = this.dataService.fetchInfo().benchmarks;
@@ -152,14 +152,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => { });
+      .subscribe(() => {});
   }
 
   public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => { });
+      .subscribe(() => {});
   }
 
   public onImportHistoricalData() {
@@ -212,13 +212,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       scraperConfiguration = JSON.parse(
         this.assetProfileForm.controls['scraperConfiguration'].value
       );
-    } catch { }
+    } catch {}
 
     try {
       symbolMapping = JSON.parse(
         this.assetProfileForm.controls['symbolMapping'].value
       );
-    } catch { }
+    } catch {}
 
     const assetProfileData: UpdateAssetProfileDto = {
       assetClass: this.assetProfileForm.controls['assetClass'].value,

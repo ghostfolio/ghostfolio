@@ -13,7 +13,7 @@ import { continents, countries } from 'countries-list';
 
 @Injectable()
 export class SymbolProfileService {
-  public constructor(private readonly prismaService: PrismaService) { }
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async add(
     assetProfile: Prisma.SymbolProfileCreateInput
