@@ -116,7 +116,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
             type: 'ACCOUNT'
           }
         ],
-        range: 'max'
+        range: 'max',
+        withExcludedAccounts: true
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {

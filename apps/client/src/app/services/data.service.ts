@@ -386,13 +386,19 @@ export class DataService {
 
   public fetchPortfolioPerformance({
     filters,
-    range
+    range,
+    withExcludedAccounts = false
   }: {
     filters?: Filter[];
     range: DateRange;
+    withExcludedAccounts?: boolean;
   }): Observable<PortfolioPerformanceResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
     params = params.append('range', range);
+
+    if (withExcludedAccounts) {
+      params = params.append('withExcludedAccounts', withExcludedAccounts);
+    }
 
     return this.http
       .get<any>(`/api/v2/portfolio/performance`, {

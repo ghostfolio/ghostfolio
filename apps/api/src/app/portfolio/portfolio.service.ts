@@ -372,20 +372,23 @@ export class PortfolioService {
     filters,
     impersonationId,
     userCurrency,
-    userId
+    userId,
+    withExcludedAccounts = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userCurrency: string;
     userId: string;
+    withExcludedAccounts?: boolean;
   }): Promise<HistoricalDataContainer> {
     userId = await this.getUserId(impersonationId, userId);
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
-        userId
+        userId,
+        withExcludedAccounts
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1110,12 +1113,14 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
-    userId
+    userId,
+    withExcludedAccounts = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
+    withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1124,7 +1129,8 @@ export class PortfolioService {
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
-        userId
+        userId,
+        withExcludedAccounts
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1174,7 +1180,8 @@ export class PortfolioService {
       filters,
       impersonationId,
       userCurrency,
-      userId
+      userId,
+      withExcludedAccounts
     });
 
     const itemOfToday = historicalDataContainer.items.find((item) => {
@@ -1763,7 +1770,7 @@ export class PortfolioService {
     filters,
     includeDrafts = false,
     userId,
-    withExcludedAccounts
+    withExcludedAccounts = false
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
@@ -1851,7 +1858,7 @@ export class PortfolioService {
     portfolioItemsNow,
     userCurrency,
     userId,
-    withExcludedAccounts
+    withExcludedAccounts = false
   }: {
     filters?: Filter[];
     orders: OrderWithAccount[];
