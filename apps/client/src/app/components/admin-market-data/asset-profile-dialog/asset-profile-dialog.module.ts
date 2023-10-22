@@ -12,6 +12,7 @@ import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-propo
 import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { AssetProfileDialog } from './asset-profile-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [AssetProfileDialog],
@@ -26,6 +27,7 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     MatDialogModule,
     MatInputModule,
     MatMenuModule,
+    MatSelectModule,
     ReactiveFormsModule,
     TextFieldModule
   ],

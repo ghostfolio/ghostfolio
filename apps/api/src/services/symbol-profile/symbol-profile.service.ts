@@ -13,7 +13,7 @@ import { continents, countries } from 'countries-list';
 
 @Injectable()
 export class SymbolProfileService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) { }
 
   public async add(
     assetProfile: Prisma.SymbolProfileCreateInput
@@ -86,14 +86,24 @@ export class SymbolProfileService {
   }
 
   public updateSymbolProfile({
+    assetClass,
+    assetSubClass,
     comment,
     dataSource,
+    name,
     scraperConfiguration,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     return this.prismaService.symbolProfile.update({
-      data: { comment, scraperConfiguration, symbolMapping },
+      data: {
+        assetClass,
+        assetSubClass,
+        comment,
+        name,
+        scraperConfiguration,
+        symbolMapping
+      },
       where: { dataSource_symbol: { dataSource, symbol } }
     });
   }

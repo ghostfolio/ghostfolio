@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
@@ -17,7 +17,12 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
-import { MarketData, SymbolProfile } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  MarketData,
+  SymbolProfile
+} from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { parse as csvToJson } from 'papaparse';
 import { Subject } from 'rxjs';
@@ -33,14 +38,23 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   styleUrls: ['./asset-profile-dialog.component.scss']
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
-  public assetClass: string;
+  public assetProfileClass: string;
+  public assetClasses = Object.keys(AssetClass).map((assetClass) => {
+    return { id: assetClass, label: translate(assetClass) };
+  });
+  public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
+    return { id: assetSubClass, label: translate(assetSubClass) };
+  });
   public assetProfile: AdminMarketDataDetails['assetProfile'];
   public assetProfileForm = this.formBuilder.group({
+    assetClass: new FormControl<AssetClass>(undefined),
+    assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
+    name: ['', Validators.required],
     scraperConfiguration: '',
     symbolMapping: ''
   });
-  public assetSubClass: string;
+  public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
   public countries: {
     [code: string]: { name: string; value: number };
@@ -65,7 +79,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.benchmarks = this.dataService.fetchInfo().benchmarks;
@@ -86,8 +100,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
-        this.assetClass = translate(this.assetProfile?.assetClass);
-        this.assetSubClass = translate(this.assetProfile?.assetSubClass);
+        this.assetProfileClass = translate(this.assetProfile?.assetClass);
+        this.assetProfileSubClass = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
         this.isBenchmark = this.benchmarks.some(({ id }) => {
           return id === this.assetProfile.id;
@@ -114,6 +128,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
 
         this.assetProfileForm.setValue({
+          name: this.assetProfile.name,
+          assetClass: this.assetProfile.assetClass,
+          assetSubClass: this.assetProfile.assetSubClass,
           comment: this.assetProfile?.comment ?? '',
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
@@ -135,14 +152,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe(() => { });
   }
 
   public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe(() => { });
   }
 
   public onImportHistoricalData() {
@@ -195,18 +212,21 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       scraperConfiguration = JSON.parse(
         this.assetProfileForm.controls['scraperConfiguration'].value
       );
-    } catch {}
+    } catch { }
 
     try {
       symbolMapping = JSON.parse(
         this.assetProfileForm.controls['symbolMapping'].value
       );
-    } catch {}
+    } catch { }
 
     const assetProfileData: UpdateAssetProfileDto = {
+      assetClass: this.assetProfileForm.controls['assetClass'].value,
+      assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
+      comment: this.assetProfileForm.controls['comment'].value ?? null,
+      name: this.assetProfileForm.controls['name'].value,
       scraperConfiguration,
-      symbolMapping,
-      comment: this.assetProfileForm.controls['comment'].value ?? null
+      symbolMapping
     };
 
     this.adminService
