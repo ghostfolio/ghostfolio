@@ -7,8 +7,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
+import { GfCurrencySelectorModule } from '@ghostfolio/ui/currency-selector/currency-selector.module';
 
 import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.component';
 
@@ -17,6 +17,7 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
   imports: [
     CommonModule,
     FormsModule,
+    GfCurrencySelectorModule,
     GfSymbolIconModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -24,7 +25,6 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     ReactiveFormsModule
   ]
 })
