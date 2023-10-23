@@ -337,6 +337,10 @@ export class ImportActivitiesService {
             return Type.BUY;
           case 'dividend':
             return Type.DIVIDEND;
+          case 'fee':
+            return Type.FEE;
+          case 'interest':
+            return Type.INTEREST;
           case 'item':
             return Type.ITEM;
           case 'liability':

@@ -1,0 +1,29 @@
+<div
+  class="card-container position-relative"
+  [ngClass]="{ premium: name === 'Premium' }"
+>
+  <a
+    class="card-item d-flex flex-column justify-content-between p-4"
+    [routerLink]="routerLinkPricing"
+  >
+    <div class="d-flex justify-content-end">
+      <gf-logo
+        size="large"
+        [ngClass]="{ 'text-muted': name === 'Basic' }"
+        [showLabel]="false"
+      />
+    </div>
+    <div class="d-flex justify-content-between">
+      <div>
+        <div class="heading text-muted" i18n>Membership</div>
+        <div class="text-truncate value">{{ name }}</div>
+      </div>
+      <div *ngIf="expiresAt">
+        <div class="heading text-muted" i18n>Valid until</div>
+        <div class="text-truncate value">
+          {{ expiresAt }}
+        </div>
+      </div>
+    </div>
+  </a>
+</div>

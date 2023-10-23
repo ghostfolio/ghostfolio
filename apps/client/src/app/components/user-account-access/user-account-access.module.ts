@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
@@ -16,6 +17,7 @@ import { UserAccountAccessComponent } from './user-account-access.component';
     GfCreateOrUpdateAccessDialogModule,
     GfPortfolioAccessTableModule,
     GfPremiumIndicatorModule,
+    MatButtonModule,
     MatDialogModule,
     RouterModule
   ]

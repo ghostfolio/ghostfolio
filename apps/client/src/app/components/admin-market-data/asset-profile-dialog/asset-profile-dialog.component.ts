@@ -11,12 +11,15 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 import { MarketData, SymbolProfile } from '@prisma/client';
+import { format, parseISO } from 'date-fns';
+import { parse as csvToJson } from 'papaparse';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -42,12 +45,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
+  public historicalDataAsCsvString: string;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
 
+  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
+    new Date(),
+    DATE_FORMAT
+  )};123.45`;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -66,6 +74,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public initialize() {
+    this.historicalDataAsCsvString =
+      AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
+
     this.adminService
       .fetchAdminMarketDataBySymbol({
         dataSource: this.data.dataSource,
@@ -132,6 +143,29 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
+  }
+
+  public onImportHistoricalData() {
+    const marketData = csvToJson(this.historicalDataAsCsvString, {
+      dynamicTyping: true,
+      header: true,
+      skipEmptyLines: true
+    }).data;
+
+    this.adminService
+      .postMarketData({
+        dataSource: this.data.dataSource,
+        marketData: {
+          marketData: marketData.map(({ date, marketPrice }) => {
+            return { marketPrice, date: parseISO(date) };
+          })
+        },
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.initialize();
+      });
   }
 
   public onMarketDataChanged(withRefresh: boolean = false) {

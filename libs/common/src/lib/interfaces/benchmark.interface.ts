@@ -5,6 +5,7 @@ export interface Benchmark {
   name: EnhancedSymbolProfile['name'];
   performances: {
     allTimeHigh: {
+      date: Date;
       performancePercent: number;
     };
   };

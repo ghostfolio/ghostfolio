@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { environment } from '@ghostfolio/client/../environments/environment';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
@@ -20,7 +19,6 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public routerLinkFaq = ['/' + $localize`faq`];
   public routerLinkFeatures = ['/' + $localize`features`];
   public user: User;
-  public version = environment.version;
 
   private unsubscribeSubject = new Subject<void>();
 

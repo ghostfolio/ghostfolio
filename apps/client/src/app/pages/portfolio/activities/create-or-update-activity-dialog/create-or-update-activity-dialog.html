@@ -20,10 +20,7 @@
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
-          <mat-option
-            *ngIf="data.user?.settings?.isExperimentalFeatures"
-            value="FEE"
-          >
+          <mat-option value="FEE">
             <span><b>{{ typesTranslationMap['FEE'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >One-time fee, annual account fees</small
@@ -35,10 +32,7 @@
               >Distribution of corporate earnings</small
             >
           </mat-option>
-          <mat-option
-            *ngIf="data.user?.settings?.isExperimentalFeatures"
-            value="INTEREST"
-          >
+          <mat-option value="INTEREST">
             <span><b>{{ typesTranslationMap['INTEREST'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Revenue for lending out money</small
