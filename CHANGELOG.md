@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style and wording of the position detail dialog
+- Changed the currency selector in the create or update account dialog to `@angular/material/autocomplete`
 - Upgraded `yahoo-finance2` from version `2.8.0` to `2.8.1`
 
 ## 2.14.0 - 2023-10-21

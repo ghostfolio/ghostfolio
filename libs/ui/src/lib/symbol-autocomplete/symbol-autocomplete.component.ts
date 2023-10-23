@@ -19,6 +19,7 @@ import { MatInput } from '@angular/material/input';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { translate } from '@ghostfolio/ui/i18n';
+import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 import { isString } from 'lodash';
 import { Subject, tap } from 'rxjs';
 import {
@@ -28,8 +29,6 @@ import {
   switchMap,
   takeUntil
 } from 'rxjs/operators';
-
-import { AbstractMatFormField } from './abstract-mat-form-field';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +53,7 @@ export class SymbolAutocompleteComponent
   @Input() private includeIndices = false;
   @Input() public isLoading = false;
 
-  @ViewChild(MatInput, { static: false }) private input: MatInput;
+  @ViewChild(MatInput) private input: MatInput;
 
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
