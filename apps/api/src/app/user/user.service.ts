@@ -164,10 +164,10 @@ export class UserService {
     let currentPermissions = getPermissions(user.role);
 
     if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {
-      currentPermissions = without(
-        currentPermissions,
-        permissions.accessAssistant
-      );
+      // currentPermissions = without(
+      //   currentPermissions,
+      //   permissions.xyz
+      // );
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {

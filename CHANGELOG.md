@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.14.0 - 2023-10-21
+
+### Added
+
+- Added the _OpenFIGI_ data enhancer for _Financial Instrument Global Identifier_ (FIGI)
+- Added `figi`, `figiComposite` and `figiShareClass` to the asset profile model
+
+### Changed
+
+- Moved the fees on account level feature from experimental to general availability
+- Moved the interest on account level feature from experimental to general availability
+- Moved the search for a holding from experimental to general availability
+- Improved the error message in the activities import for `csv` files
+- Removed the application version from the client
+- Allowed to edit today’s historical market data in the asset profile details dialog of the admin control panel
+
+### Fixed
+
+- Fixed the style of the active page in the header navigation
+- Trimmed text in `i18n` service to query `messages.*.xlf` files on the server
+
+## 2.13.0 - 2023-10-20
+
+### Added
+
+- Added a chart to the account detail dialog
+- Added an `i18n` service to query `messages.*.xlf` files on the server
+
+### Changed
+
+- Changed the users table in the admin control panel to an `@angular/material` data table
+- Improved the styling of the membership status
+
+### Fixed
+
+- Fixed an issue where holdings were requested twice from the server
+
 ## 2.12.0 - 2023-10-17
 
 ### Added

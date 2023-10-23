@@ -26,6 +26,7 @@ export interface Environment extends CleanedEnvAccessors {
   JWT_SECRET_KEY: string;
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_ITEM_IN_CACHE: number;
+  OPEN_FIGI_API_KEY: string;
   PORT: number;
   RAPID_API_API_KEY: string;
   REDIS_HOST: string;
