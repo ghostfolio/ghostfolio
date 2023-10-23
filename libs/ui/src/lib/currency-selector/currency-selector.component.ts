@@ -20,8 +20,6 @@ import { Currency } from '@ghostfolio/common/interfaces/currency.interface';
 import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 import { Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
-import { cloneDeep } from 'lodash';
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -133,7 +131,8 @@ export class CurrencySelectorComponent
   }
 
   public set value(value: Currency) {
-    const newValue = cloneDeep(value);
+    const newValue =
+      typeof value === 'object' && value !== null ? { ...value } : value;
     this.control.setValue(newValue);
     super.value = newValue;
   }
