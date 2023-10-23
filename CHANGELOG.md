@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Changed the currency selector in the create or update account dialog to `@angular/material/autocomplete`
+
 ### Fixed
 
 - Fixed the chart in the account detail dialog for accounts excluded from analysis
