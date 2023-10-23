@@ -20,11 +20,10 @@
     <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
-        <mat-select formControlName="currency">
-          <mat-option *ngFor="let currency of currencies" [value]="currency"
-            >{{ currency }}</mat-option
-          >
-        </mat-select>
+        <gf-currency-selector
+          formControlName="currency"
+          [currencies]="currencies"
+        />
       </mat-form-field>
     </div>
     <div>
@@ -37,7 +36,7 @@
           (keydown.enter)="$event.stopPropagation()"
         />
         <span class="ml-2" matTextSuffix
-          >{{ accountForm.controls['currency'].value }}</span
+          >{{ accountForm.controls['currency']?.value?.value }}</span
         >
       </mat-form-field>
     </div>
