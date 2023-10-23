@@ -32,7 +32,7 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
       useExisting: CurrencySelectorComponent
     }
   ],
-  selector: 'gf-currency-autocomplete',
+  selector: 'gf-currency-selector',
   styleUrls: ['./currency-selector.component.scss'],
   templateUrl: 'currency-selector.component.html'
 })
@@ -43,7 +43,7 @@ export class CurrencySelectorComponent
   @Input() private currencies: Currency[] = [];
   @Input() private formControlName: string;
 
-  @ViewChild(MatInput, { static: false }) private input: MatInput;
+  @ViewChild(MatInput) private input: MatInput;
 
   @ViewChild('currencyAutocomplete')
   public currencyAutocomplete: MatAutocomplete;
@@ -62,7 +62,7 @@ export class CurrencySelectorComponent
   ) {
     super(_elementRef, _focusMonitor, ngControl);
 
-    this.controlType = 'currency-autocomplete';
+    this.controlType = 'currency-selector';
   }
 
   public ngOnInit() {

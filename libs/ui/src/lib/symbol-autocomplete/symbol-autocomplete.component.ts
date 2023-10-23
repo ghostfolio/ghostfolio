@@ -53,7 +53,7 @@ export class SymbolAutocompleteComponent
   @Input() private includeIndices = false;
   @Input() public isLoading = false;
 
-  @ViewChild(MatInput, { static: false }) private input: MatInput;
+  @ViewChild(MatInput) private input: MatInput;
 
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
