@@ -14,7 +14,8 @@ import {
   IsNumber,
   IsOptional,
   IsPositive,
-  IsString
+  IsString,
+  Min
 } from 'class-validator';
 import { isString } from 'lodash';
 
@@ -48,6 +49,7 @@ export class UpdateOrderDto {
   date: string;
 
   @IsNumber()
+  @Min(0)
   fee: number;
 
   @IsString()
