@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.11.0",
+  "version": "2.14.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -82,8 +82,8 @@
     "@nestjs/schedule": "3.0.2",
     "@nestjs/serve-static": "4.0.0",
     "@prisma/client": "5.4.2",
-    "@simplewebauthn/browser": "5.2.1",
-    "@simplewebauthn/server": "5.2.1",
+    "@simplewebauthn/browser": "8.3.1",
+    "@simplewebauthn/server": "8.3.2",
     "@stripe/stripe-js": "1.47.0",
     "alphavantage": "2.2.0",
     "big.js": "6.2.1",
@@ -129,7 +129,7 @@
     "svgmap": "2.6.0",
     "twitter-api-v2": "1.14.2",
     "uuid": "9.0.0",
-    "yahoo-finance2": "2.8.0",
+    "yahoo-finance2": "2.8.1",
     "zone.js": "0.13.1"
   },
   "devDependencies": {
@@ -157,7 +157,7 @@
     "@nx/web": "16.7.4",
     "@nx/workspace": "16.7.4",
     "@schematics/angular": "16.2.0",
-    "@simplewebauthn/typescript-types": "5.2.1",
+    "@simplewebauthn/typescript-types": "8.0.0",
     "@storybook/addon-essentials": "7.3.2",
     "@storybook/angular": "7.3.2",
     "@storybook/core-server": "7.3.2",

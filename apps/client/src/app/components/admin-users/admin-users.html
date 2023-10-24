@@ -2,136 +2,232 @@
   <div class="row">
     <div class="col">
       <div class="users">
-        <table class="gf-table">
-          <thead>
-            <tr class="mat-mdc-header-row">
-              <th class="mat-mdc-header-cell px-1 py-2 text-right">#</th>
-              <th class="mat-mdc-header-cell px-1 py-2" i18n>User</th>
-              <th
-                *ngIf="hasPermissionForSubscription"
-                class="mat-mdc-header-cell px-1 py-2"
-              >
-                <ng-container i18n>Country</ng-container>
-              </th>
-              <th class="mat-mdc-header-cell px-1 py-2">
-                <ng-container i18n>Registration</ng-container>
-              </th>
-              <th class="mat-mdc-header-cell px-1 py-2 text-right">
-                <ng-container i18n>Accounts</ng-container>
-              </th>
-              <th class="mat-mdc-header-cell px-1 py-2 text-right">
-                <ng-container i18n>Activities</ng-container>
-              </th>
-              <th
-                *ngIf="hasPermissionForSubscription"
-                class="mat-mdc-header-cell px-1 py-2 text-right"
-              >
-                <ng-container i18n>Engagement per Day</ng-container>
-              </th>
-              <th
-                *ngIf="hasPermissionForSubscription"
-                class="mat-mdc-header-cell px-1 py-2"
-                i18n
-              >
-                Last Request
-              </th>
-              <th class="mat-mdc-header-cell px-1 py-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let userItem of users; let i = index"
-              class="mat-mdc-row"
+        <table class="gf-table" mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="index">
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2 text-right"
+              mat-header-cell
             >
-              <td class="mat-mdc-cell px-1 py-2 text-right">{{ i + 1 }}</td>
-              <td class="mat-mdc-cell px-1 py-2">
-                <div class="d-flex align-items-center">
-                  <span class="d-none d-sm-inline-block text-monospace"
-                    >{{ userItem.id }}</span
-                  >
-                  <span class="d-inline-block d-sm-none text-monospace"
-                    >{{ (userItem.id | slice:0:5) + '...' }}</span
-                  >
-                  <gf-premium-indicator
-                    *ngIf="userItem?.subscription?.type === 'Premium'"
-                    class="ml-1"
-                    [enableLink]="false"
-                    [title]="'Expires ' + formatDistanceToNow(userItem.subscription.expiresAt) + ' (' + (userItem.subscription.expiresAt | date: defaultDateFormat) + ')'"
-                  ></gf-premium-indicator>
-                </div>
-              </td>
-              <td
-                *ngIf="hasPermissionForSubscription"
-                class="mat-mdc-cell px-1 py-2"
-              >
-                <span class="h5" [title]="userItem.country"
-                  >{{ getEmojiFlag(userItem.country) }}</span
+              #
+            </th>
+            <td
+              *matCellDef="let element; let i=index"
+              class="mat-mdc-cell px-1 py-2 text-right"
+              mat-cell
+            >
+              {{ i + 1 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="user">
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2"
+              i18n
+              mat-header-cell
+            >
+              User
+            </th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2"
+              mat-cell
+            >
+              <div class="d-flex align-items-center">
+                <span class="d-none d-sm-inline-block text-monospace"
+                  >{{ element.id }}</span
                 >
-              </td>
-              <td class="mat-mdc-cell px-1 py-2">
-                {{ formatDistanceToNow(userItem.createdAt) }}
-              </td>
-              <td class="mat-mdc-cell px-1 py-2 text-right">
-                <gf-value
-                  class="d-inline-block justify-content-end"
-                  [locale]="user?.settings?.locale"
-                  [value]="userItem.accountCount"
-                ></gf-value>
-              </td>
-              <td class="mat-mdc-cell px-1 py-2 text-right">
-                <gf-value
-                  class="d-inline-block justify-content-end"
-                  [locale]="user?.settings?.locale"
-                  [value]="userItem.transactionCount"
-                ></gf-value>
-              </td>
-              <td
-                *ngIf="hasPermissionForSubscription"
-                class="mat-mdc-cell px-1 py-2 text-right"
+                <span class="d-inline-block d-sm-none text-monospace"
+                  >{{ (element.id | slice:0:5) + '...' }}</span
+                >
+                <gf-premium-indicator
+                  *ngIf="element?.subscription?.type === 'Premium'"
+                  class="ml-1"
+                  [enableLink]="false"
+                  [title]="'Expires ' + formatDistanceToNow(element.subscription.expiresAt) + ' (' + (element.subscription.expiresAt | date: defaultDateFormat) + ')'"
+                ></gf-premium-indicator>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container
+            *ngIf="hasPermissionForSubscription"
+            matColumnDef="country"
+          >
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2"
+              mat-header-cell
+            >
+              <ng-container i18n>Country</ng-container>
+            </th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2"
+              mat-cell
+            >
+              <span class="h5" [title]="element.country"
+                >{{ getEmojiFlag(element.country) }}</span
               >
-                <gf-value
-                  class="d-inline-block justify-content-end"
-                  [locale]="user?.settings?.locale"
-                  [precision]="0"
-                  [value]="userItem.engagement"
-                ></gf-value>
-              </td>
-              <td
-                *ngIf="hasPermissionForSubscription"
-                class="mat-mdc-cell px-1 py-2"
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="registration">
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2"
+              mat-header-cell
+            >
+              <ng-container i18n>Registration</ng-container>
+            </th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2"
+              mat-cell
+            >
+              {{ formatDistanceToNow(element.createdAt) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="accounts">
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2 text-right"
+              mat-header-cell
+            >
+              <ng-container i18n>Accounts</ng-container>
+            </th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2 text-right"
+              mat-cell
+            >
+              <gf-value
+                class="d-inline-block justify-content-end"
+                [locale]="user?.settings?.locale"
+                [value]="element.accountCount"
+              ></gf-value>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="activities">
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2 text-right"
+              mat-header-cell
+            >
+              <ng-container i18n>Activities</ng-container>
+            </th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2 text-right"
+              mat-cell
+            >
+              <gf-value
+                class="d-inline-block justify-content-end"
+                [locale]="user?.settings?.locale"
+                [value]="element.transactionCount"
+              ></gf-value>
+            </td>
+          </ng-container>
+
+          <ng-container
+            *ngIf="hasPermissionForSubscription"
+            matColumnDef="engagementPerDay"
+          >
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2 text-right"
+              mat-header-cell
+            >
+              <ng-container i18n>Engagement per Day</ng-container>
+            </th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2 text-right"
+              mat-cell
+            >
+              <gf-value
+                class="d-inline-block justify-content-end"
+                [locale]="user?.settings?.locale"
+                [precision]="0"
+                [value]="element.engagement"
+              ></gf-value>
+            </td>
+          </ng-container>
+
+          <ng-container
+            *ngIf="hasPermissionForSubscription"
+            matColumnDef="lastRequest"
+          >
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2"
+              i18n
+              mat-header-cell
+            >
+              Last Request
+            </th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2"
+              mat-cell
+            >
+              {{ formatDistanceToNow(element.lastActivity) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th
+              *matHeaderCellDef
+              class="mat-mdc-header-cell px-1 py-2"
+              mat-header-cell
+            ></th>
+            <td
+              *matCellDef="let element"
+              class="mat-mdc-cell px-1 py-2"
+              mat-cell
+            >
+              <button
+                class="mx-1 no-min-width px-2"
+                mat-button
+                [matMenuTriggerFor]="userMenu"
+                (click)="$event.stopPropagation()"
               >
-                {{ formatDistanceToNow(userItem.lastActivity) }}
-              </td>
-              <td class="mat-mdc-cell px-1 py-2">
+                <ion-icon name="ellipsis-horizontal"></ion-icon>
+              </button>
+              <mat-menu #userMenu="matMenu" xPosition="before">
                 <button
-                  class="mx-1 no-min-width px-2"
-                  mat-button
-                  [matMenuTriggerFor]="userMenu"
-                  (click)="$event.stopPropagation()"
+                  *ngIf="hasPermissionToImpersonateAllUsers"
+                  mat-menu-item
+                  (click)="onImpersonateUser(element.id)"
                 >
-                  <ion-icon name="ellipsis-horizontal"></ion-icon>
+                  <ion-icon class="mr-2" name="contract-outline"></ion-icon>
+                  <span i18n>Impersonate User</span>
                 </button>
-                <mat-menu #userMenu="matMenu" xPosition="before">
-                  <button
-                    *ngIf="hasPermissionToImpersonateAllUsers"
-                    mat-menu-item
-                    (click)="onImpersonateUser(userItem.id)"
-                  >
-                    <ion-icon class="mr-2" name="contract-outline"></ion-icon>
-                    <span i18n>Impersonate User</span>
-                  </button>
-                  <button
-                    mat-menu-item
-                    [disabled]="userItem.id === user?.id"
-                    (click)="onDeleteUser(userItem.id)"
-                  >
-                    <ion-icon class="mr-2" name="trash-outline"></ion-icon>
-                    <span i18n>Delete User</span>
-                  </button>
-                </mat-menu>
-              </td>
-            </tr>
-          </tbody>
+                <button
+                  mat-menu-item
+                  [disabled]="element.id === user?.id"
+                  (click)="onDeleteUser(element.id)"
+                >
+                  <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                  <span i18n>Delete User</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr
+            *matHeaderRowDef="displayedColumns"
+            class="mat-mdc-header-row"
+            mat-header-row
+          ></tr>
+          <tr
+            *matRowDef="let row; columns: displayedColumns"
+            class="mat-mdc-row"
+            mat-row
+          ></tr>
         </table>
       </div>
     </div>

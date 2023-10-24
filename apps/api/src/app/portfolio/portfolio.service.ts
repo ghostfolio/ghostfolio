@@ -1088,6 +1088,7 @@ export class PortfolioService {
         return {
           ...position,
           assetClass: symbolProfileMap[position.symbol].assetClass,
+          assetSubClass: symbolProfileMap[position.symbol].assetSubClass,
           averagePrice: new Big(position.averagePrice).toNumber(),
           grossPerformance: position.grossPerformance?.toNumber() ?? null,
           grossPerformancePercentage:

@@ -64,7 +64,7 @@ export class WebAuthService {
       }
     };
 
-    const options = generateRegistrationOptions(opts);
+    const options = await generateRegistrationOptions(opts);
 
     await this.userService.updateUser({
       data: {
@@ -88,10 +88,16 @@ export class WebAuthService {
     let verification: VerifiedRegistrationResponse;
     try {
       const opts: VerifyRegistrationResponseOpts = {
-        credential,
         expectedChallenge,
         expectedOrigin: this.expectedOrigin,
-        expectedRPID: this.rpID
+        expectedRPID: this.rpID,
+        response: {
+          clientExtensionResults: credential.clientExtensionResults,
+          id: credential.id,
+          rawId: credential.rawId,
+          response: credential.response,
+          type: 'public-key'
+        }
       };
       verification = await verifyRegistrationResponse(opts);
     } catch (error) {
@@ -117,8 +123,8 @@ export class WebAuthService {
          */
         existingDevice = await this.deviceService.createAuthDevice({
           counter,
-          credentialPublicKey,
-          credentialId: credentialID,
+          credentialId: Buffer.from(credentialID),
+          credentialPublicKey: Buffer.from(credentialPublicKey),
           User: { connect: { id: user.id } }
         });
       }
@@ -152,7 +158,7 @@ export class WebAuthService {
       userVerification: 'preferred'
     };
 
-    const options = generateAuthenticationOptions(opts);
+    const options = await generateAuthenticationOptions(opts);
 
     await this.userService.updateUser({
       data: {
@@ -181,7 +187,6 @@ export class WebAuthService {
     let verification: VerifiedAuthenticationResponse;
     try {
       const opts: VerifyAuthenticationResponseOpts = {
-        credential,
         authenticator: {
           credentialID: device.credentialId,
           credentialPublicKey: device.credentialPublicKey,
@@ -189,9 +194,16 @@ export class WebAuthService {
         },
         expectedChallenge: `${user.authChallenge}`,
         expectedOrigin: this.expectedOrigin,
-        expectedRPID: this.rpID
+        expectedRPID: this.rpID,
+        response: {
+          clientExtensionResults: credential.clientExtensionResults,
+          id: credential.id,
+          rawId: credential.rawId,
+          response: credential.response,
+          type: 'public-key'
+        }
       };
-      verification = verifyAuthenticationResponse(opts);
+      verification = await verifyAuthenticationResponse(opts);
     } catch (error) {
       Logger.error(error, 'WebAuthService');
       throw new InternalServerErrorException({ error: error.message });

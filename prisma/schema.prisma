@@ -132,6 +132,9 @@ model SymbolProfile {
   createdAt              DateTime                @default(now())
   currency               String
   dataSource             DataSource
+  figi                   String?
+  figiComposite          String?
+  figiShareClass         String?
   id                     String                  @id @default(uuid())
   isin                   String?
   name                   String?
