@@ -13,7 +13,9 @@ import {
   IsISO8601,
   IsNumber,
   IsOptional,
-  IsString
+  IsPositive,
+  IsString,
+  Min
 } from 'class-validator';
 import { isString } from 'lodash';
 
@@ -47,12 +49,14 @@ export class UpdateOrderDto {
   date: string;
 
   @IsNumber()
+  @Min(0)
   fee: number;
 
   @IsString()
   id: string;
 
   @IsNumber()
+  @IsPositive()
   quantity: number;
 
   @IsString()
@@ -66,5 +70,6 @@ export class UpdateOrderDto {
   type: Type;
 
   @IsNumber()
+  @IsPositive()
   unitPrice: number;
 }
