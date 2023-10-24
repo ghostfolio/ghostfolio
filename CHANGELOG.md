@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the validation in the activities import (expects positive values for `quantity` and `unitPrice`)
+
+## Unreleased
+
 ### Added
 
 - Added the endpoint `GET api/v1/account/:id/balances` which provides historical cash balances
