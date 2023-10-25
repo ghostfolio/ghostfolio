@@ -3,7 +3,7 @@
   <div *ngIf="user?.settings?.viewMode !== 'ZEN'" class="my-4 text-center">
     <gf-toggle
       [defaultValue]="user?.settings?.dateRange"
-      [isLoading]="isLoadingBenchmarkComparator"
+      [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
       [options]="dateRangeOptions"
       (change)="onChangeDateRange($event.value)"
     ></gf-toggle>
@@ -23,7 +23,7 @@
         [benchmarks]="benchmarks"
         [colorScheme]="user?.settings?.colorScheme"
         [daysInMarket]="daysInMarket"
-        [isLoading]="isLoadingBenchmarkComparator"
+        [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
         [locale]="user?.settings?.locale"
         [performanceDataItems]="performanceDataItemsInPercentage"
         [user]="user"
@@ -149,7 +149,7 @@
           [daysInMarket]="daysInMarket"
           [historicalDataItems]="performanceDataItems"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-          [isLoading]="isLoadingBenchmarkComparator"
+          [isLoading]="isLoadingInvestmentChart"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
         ></gf-investment-chart>

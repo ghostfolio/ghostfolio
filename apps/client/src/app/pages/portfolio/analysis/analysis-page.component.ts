@@ -309,7 +309,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   private update() {
-    this.isLoadingBenchmarkComparator = true;
     this.isLoadingInvestmentChart = true;
 
     this.dataService
@@ -386,34 +385,36 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   private updateBenchmarkDataItems() {
     this.benchmarkDataItems = [];
-    this.isLoadingBenchmarkComparator = false;
 
-    if (!this.user.settings.benchmark) return;
+    if (this.user.settings.benchmark) {
+      const { dataSource, symbol } =
+        this.benchmarks.find(({ id }) => {
+          return id === this.user.settings.benchmark;
+        }) ?? {};
 
-    const { dataSource, symbol } =
-      this.benchmarks.find(({ id }) => {
-        return id === this.user.settings.benchmark;
-      }) ?? {};
+      if (dataSource && symbol) {
+        this.isLoadingBenchmarkComparator = true;
 
-    if (dataSource && symbol) {
-      this.isLoadingBenchmarkComparator = true;
-      this.dataService
-        .fetchBenchmarkBySymbol({
-          dataSource,
-          symbol,
-          startDate: this.firstOrderDate
-        })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ marketData }) => {
-          this.benchmarkDataItems = marketData.map(({ date, value }) => {
-            return {
-              date,
-              value
-            };
+        this.dataService
+          .fetchBenchmarkBySymbol({
+            dataSource,
+            symbol,
+            startDate: this.firstOrderDate
+          })
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(({ marketData }) => {
+            this.benchmarkDataItems = marketData.map(({ date, value }) => {
+              return {
+                date,
+                value
+              };
+            });
+
+            this.isLoadingBenchmarkComparator = false;
+
+            this.changeDetectorRef.markForCheck();
           });
-
-          this.isLoadingBenchmarkComparator = false;
-        });
+      }
     }
   }
 }
