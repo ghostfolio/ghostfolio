@@ -240,6 +240,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
+  public onTestScraper(symbol: string) {
+    const today = new Date();
+    this.adminService
+      .gatherSymbol({ dataSource: 'MANUAL', date: today, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((response) => {
+        if (response !== null) alert('Current Market Price is: ' + response);
+        else alert('Please try again.');
+      });
+  }
+
   public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })

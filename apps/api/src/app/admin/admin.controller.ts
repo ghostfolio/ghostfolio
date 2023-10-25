@@ -221,7 +221,7 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
-  ): Promise<MarketData> {
+  ): Promise<MarketData | number> {
     if (
       !hasPermission(
         this.request.user.permissions,

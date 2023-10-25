@@ -182,7 +182,7 @@ export class AdminService {
       url = `${url}/${format(date, DATE_FORMAT)}`;
     }
 
-    return this.http.post<MarketData | void>(url, {});
+    return this.http.post<MarketData | number | void>(url, {});
   }
 
   public fetchSymbolForDate({
