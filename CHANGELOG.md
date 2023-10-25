@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style and wording of the position detail dialog
 - Improved the validation in the activities import (expects positive values for `fee`, `quantity` and `unitPrice`)
+- Improved the validation in the cash balance transfer from one to another account (expects a positive value)
 - Changed the currency selector in the create or update account dialog to `@angular/material/autocomplete`
 - Upgraded `uuid` from version `9.0.0` to `9.0.1`
 - Upgraded `yahoo-finance2` from version `2.8.0` to `2.8.1`
