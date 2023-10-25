@@ -203,15 +203,25 @@ export class AdminService {
   }
 
   public patchAssetProfile({
+    assetClass,
+    assetSubClass,
     comment,
     dataSource,
+    name,
     scraperConfiguration,
     symbol,
     symbolMapping
   }: UniqueAsset & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
-      { comment, scraperConfiguration, symbolMapping }
+      {
+        assetClass,
+        assetSubClass,
+        comment,
+        name,
+        scraperConfiguration,
+        symbolMapping
+      }
     );
   }
 

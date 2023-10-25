@@ -86,14 +86,24 @@ export class SymbolProfileService {
   }
 
   public updateSymbolProfile({
+    assetClass,
+    assetSubClass,
     comment,
     dataSource,
+    name,
     scraperConfiguration,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     return this.prismaService.symbolProfile.update({
-      data: { comment, scraperConfiguration, symbolMapping },
+      data: {
+        assetClass,
+        assetSubClass,
+        comment,
+        name,
+        scraperConfiguration,
+        symbolMapping
+      },
       where: { dataSource_symbol: { dataSource, symbol } }
     });
   }

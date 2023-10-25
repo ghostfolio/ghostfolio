@@ -303,15 +303,21 @@ export class AdminService {
   }
 
   public async patchAssetProfileData({
+    assetClass,
+    assetSubClass,
     comment,
     dataSource,
+    name,
     scraperConfiguration,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     await this.symbolProfileService.updateSymbolProfile({
+      assetClass,
+      assetSubClass,
       comment,
       dataSource,
+      name,
       scraperConfiguration,
       symbol,
       symbolMapping
