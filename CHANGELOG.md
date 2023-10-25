@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the chart in the account detail dialog for accounts excluded from analysis
 
+### Fixed
+
+- Verified the current benchmark before loading it on the analysis page
+
 ## 2.14.0 - 2023-10-21
 
 ### Added
