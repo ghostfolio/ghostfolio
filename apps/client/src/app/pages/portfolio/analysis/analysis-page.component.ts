@@ -385,12 +385,18 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   private updateBenchmarkDataItems() {
-    if (this.user.settings.benchmark) {
-      const { dataSource, symbol } =
-        this.benchmarks.find(({ id }) => {
-          return id === this.user.settings.benchmark;
-        }) ?? {};
+    this.benchmarkDataItems = [];
+    this.isLoadingBenchmarkComparator = false;
 
+    if (!this.user.settings.benchmark) return;
+
+    const { dataSource, symbol } =
+      this.benchmarks.find(({ id }) => {
+        return id === this.user.settings.benchmark;
+      }) ?? {};
+
+    if (dataSource && symbol) {
+      this.isLoadingBenchmarkComparator = true;
       this.dataService
         .fetchBenchmarkBySymbol({
           dataSource,
@@ -407,13 +413,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           });
 
           this.isLoadingBenchmarkComparator = false;
-
-          this.changeDetectorRef.markForCheck();
         });
-    } else {
-      this.benchmarkDataItems = [];
-
-      this.isLoadingBenchmarkComparator = false;
     }
   }
 }
