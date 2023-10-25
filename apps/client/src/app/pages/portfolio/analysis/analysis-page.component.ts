@@ -309,7 +309,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   private update() {
-    this.isLoadingBenchmarkComparator = true;
     this.isLoadingInvestmentChart = true;
 
     this.dataService
@@ -385,35 +384,37 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   private updateBenchmarkDataItems() {
+    this.benchmarkDataItems = [];
+
     if (this.user.settings.benchmark) {
       const { dataSource, symbol } =
         this.benchmarks.find(({ id }) => {
           return id === this.user.settings.benchmark;
         }) ?? {};
 
-      this.dataService
-        .fetchBenchmarkBySymbol({
-          dataSource,
-          symbol,
-          startDate: this.firstOrderDate
-        })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ marketData }) => {
-          this.benchmarkDataItems = marketData.map(({ date, value }) => {
-            return {
-              date,
-              value
-            };
+      if (dataSource && symbol) {
+        this.isLoadingBenchmarkComparator = true;
+
+        this.dataService
+          .fetchBenchmarkBySymbol({
+            dataSource,
+            symbol,
+            startDate: this.firstOrderDate
+          })
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(({ marketData }) => {
+            this.benchmarkDataItems = marketData.map(({ date, value }) => {
+              return {
+                date,
+                value
+              };
+            });
+
+            this.isLoadingBenchmarkComparator = false;
+
+            this.changeDetectorRef.markForCheck();
           });
-
-          this.isLoadingBenchmarkComparator = false;
-
-          this.changeDetectorRef.markForCheck();
-        });
-    } else {
-      this.benchmarkDataItems = [];
-
-      this.isLoadingBenchmarkComparator = false;
+      }
     }
   }
 }
