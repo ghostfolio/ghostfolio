@@ -1,6 +1,7 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
@@ -62,6 +63,17 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: $localize`Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: BeanvestPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'beanvest',
+    name: 'Beanvest',
+    origin: $localize`France`,
+    pricingPerYear: '$100',
+    slogan: 'Stock Portfolio Tracker for Smart Investors'
   },
   {
     component: CapMonPageComponent,
