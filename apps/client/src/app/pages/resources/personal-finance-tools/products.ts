@@ -1,6 +1,7 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
+import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
@@ -28,6 +29,7 @@ import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
+import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 
 export const products: Product[] = [
@@ -62,6 +64,17 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: $localize`Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: BeanvestPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'beanvest',
+    name: 'Beanvest',
+    origin: $localize`France`,
+    pricingPerYear: '$100',
+    slogan: 'Stock Portfolio Tracker for Smart Investors'
   },
   {
     component: CapMonPageComponent,
@@ -352,6 +365,18 @@ export const products: Product[] = [
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
     useAnonymously: true
+  },
+  {
+    component: WealthicaPageComponent,
+    founded: 2015,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'wealthica',
+    languages: ['English', 'Français'],
+    name: 'Wealthica',
+    origin: $localize`Canada`,
+    pricingPerYear: '$50',
+    slogan: 'See all your investments in one place'
   },
   {
     component: YeekateePageComponent,
