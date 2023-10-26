@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsPositive, IsString } from 'class-validator';
 
 export class TransferBalanceDto {
   @IsString()
@@ -8,5 +8,6 @@ export class TransferBalanceDto {
   accountIdTo: string;
 
   @IsNumber()
+  @IsPositive()
   balance: number;
 }
