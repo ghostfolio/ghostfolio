@@ -1,4 +1,3 @@
+/.nx/cache
 /dist
 /test/import
-
-/.nx/cache

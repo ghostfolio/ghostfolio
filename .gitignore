@@ -27,6 +27,7 @@
 /.angular/cache
 .env
 .env.prod
+.nx/cache
 /.sass-cache
 /connect.lock
 /coverage
@@ -40,5 +41,3 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
-
-.nx/cache
