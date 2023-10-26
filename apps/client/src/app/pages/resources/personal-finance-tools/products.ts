@@ -29,6 +29,7 @@ import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
+import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 
 export const products: Product[] = [
@@ -364,6 +365,18 @@ export const products: Product[] = [
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
     useAnonymously: true
+  },
+  {
+    component: WealthicaPageComponent,
+    founded: 2015,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'wealthica',
+    languages: ['English', 'Français'],
+    name: 'Wealthica',
+    origin: $localize`Canada`,
+    pricingPerYear: '$50',
+    slogan: 'See all your investments in one place'
   },
   {
     component: YeekateePageComponent,
