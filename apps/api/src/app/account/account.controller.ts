@@ -194,6 +194,24 @@ export class AccountController {
       return id;
     });
 
+    const fromAccountBalance = accountsOfUser.find(
+      (account) => account.id === accountIdFrom
+    ).balance;
+
+    if (fromAccountBalance < balance) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (accountIdFrom === accountIdTo) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
     if (
       ![accountIdFrom, accountIdTo].every((accountId) => {
         return currentAccountIds.includes(accountId);

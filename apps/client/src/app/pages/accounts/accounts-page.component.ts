@@ -283,7 +283,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       data: {
         accounts: this.accounts
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
