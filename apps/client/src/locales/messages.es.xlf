@@ -10925,6 +10925,14 @@
           <context context-type="linenumber">377</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="slogan" datatype="html">
+        <source>Open Source Wealth Management Software</source>
+        <target state="new">Open Source Wealth Management Software</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
