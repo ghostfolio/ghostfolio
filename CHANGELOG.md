@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability and validation in the cash balance transfer from one to another account
+- Improved the localized meta data (keywords) in `html` files
 
 ## 2.15.0 - 2023-10-26
 
