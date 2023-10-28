@@ -10932,20 +10932,20 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="763978324449731326" datatype="html">
-        <source>Oops, transfer cash balance has failed.</source>
-        <target state="new">Oops, transfer cash balance has failed.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.component.ts</context>
-          <context context-type="linenumber">305</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="metaKeywords" datatype="html">
         <source> app, asset, cryptocurrency, dashboard, etf, finance, management, performance, portfolio, software, stock, trading, wealth, web3 </source>
         <target state="new"> app, asset, cryptocurrency, dashboard, etf, finance, management, performance, portfolio, software, stock, trading, wealth, web3 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">8,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1868064391111970959" datatype="html">
+        <source>Oops, cash balance transfer has failed.</source>
+        <target state="new">Oops, cash balance transfer has failed.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.component.ts</context>
+          <context context-type="linenumber">305</context>
         </context-group>
       </trans-unit>
     </body>
