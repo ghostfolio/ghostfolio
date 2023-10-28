@@ -49,6 +49,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() benchmarkLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
+  @Input() dataDecimation = false;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
   @Input() locale: string;
@@ -209,6 +210,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
+              },
+              decimation: {
+                enabled: this.dataDecimation,
+                algorithm: 'min-max'
               }
             },
             scales: {
