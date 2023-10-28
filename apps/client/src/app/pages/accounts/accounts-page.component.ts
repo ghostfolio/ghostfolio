@@ -302,7 +302,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             })
             .pipe(
               catchError(() => {
-                alert($localize`Oops, transfer cash balance has failed.`);
+                alert($localize`Oops, cash balance transfer has failed.`);
 
                 return EMPTY;
               }),
