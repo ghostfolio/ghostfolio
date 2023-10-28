@@ -2,6 +2,7 @@
   <button
     class="align-items-center d-flex"
     mat-stroked-button
+    [disabled]="dataSource?.data.length < 2"
     (click)="onTransferBalance()"
   >
     <ion-icon class="mr-2" name="arrow-redo-outline"></ion-icon>

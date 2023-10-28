@@ -13,8 +13,8 @@ import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Account as AccountModel } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject, Subscription } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/create-or-update-account-dialog.component';
 import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
@@ -283,7 +283,6 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       data: {
         accounts: this.accounts
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -301,7 +300,14 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
               accountIdTo,
               balance
             })
-            .pipe(takeUntil(this.unsubscribeSubject))
+            .pipe(
+              catchError(() => {
+                alert($localize`Oops, transfer cash balance has failed.`);
+
+                return EMPTY;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
             .subscribe(() => {
               this.fetchAccounts();
             });
