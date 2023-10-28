@@ -7,7 +7,10 @@ import {
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
-import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  getAssetProfileIdentifier,
+  resetHours
+} from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -331,9 +334,9 @@ export class AdminController {
     const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
       ({ date, marketPrice }) => ({
         dataSource,
-        date,
         marketPrice,
         symbol,
+        date: resetHours(parseISO(date)),
         state: 'CLOSE'
       })
     );

@@ -247,25 +247,6 @@ export class AdminService {
     return this.http.post<Tag>(`/api/v1/tag`, aTag);
   }
 
-  public putMarketData({
-    dataSource,
-    date,
-    marketData,
-    symbol
-  }: {
-    dataSource: DataSource;
-    date: Date;
-    marketData: UpdateMarketDataDto;
-    symbol: string;
-  }) {
-    const url = `/api/v1/admin/market-data/${dataSource}/${symbol}/${format(
-      date,
-      DATE_FORMAT
-    )}`;
-
-    return this.http.put<MarketData>(url, marketData);
-  }
-
   public putPlatform(aPlatform: UpdatePlatformDto) {
     return this.http.put<Platform>(
       `/api/v1/platform/${aPlatform.id}`,
