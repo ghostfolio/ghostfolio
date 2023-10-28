@@ -127,6 +127,10 @@ export const HtmlTemplateMiddleware = async (
       }),
       featureGraphicPath:
         locales[path]?.featureGraphicPath ?? 'assets/cover.png',
+      keywords: i18nService.getTranslation({
+        languageCode,
+        id: 'metaKeywords'
+      }),
       title:
         locales[path]?.title ??
         `${title} – ${i18nService.getTranslation({
