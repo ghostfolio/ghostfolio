@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability and validation in the cash balance transfer from one to another account
+- Changed the checkboxes to slide toggles in the overview of the admin control panel
 - Improved the localized meta data (keywords) in `html` files
 - Improved the language localization for German (`de`)
 
