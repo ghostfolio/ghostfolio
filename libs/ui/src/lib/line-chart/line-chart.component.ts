@@ -202,6 +202,9 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
             },
             interaction: { intersect: false, mode: 'index' },
             plugins: <unknown>{
+              decimation: {
+                enabled: this.dataDecimation
+              },
               legend: {
                 align: 'start',
                 display: this.showLegend,
@@ -210,10 +213,6 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
               tooltip: this.getTooltipPluginConfiguration(),
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
-              },
-              decimation: {
-                enabled: this.dataDecimation,
-                algorithm: 'min-max'
               }
             },
             scales: {
