@@ -2,6 +2,7 @@ import { Product } from '@ghostfolio/common/interfaces';
 
 import { AltooPageComponent } from './products/altoo-page.component';
 import { BeanvestPageComponent } from './products/beanvest-page.component';
+import { CapitallyPageComponent } from './products/capitally-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
@@ -75,6 +76,16 @@ export const products: Product[] = [
     origin: $localize`France`,
     pricingPerYear: '$100',
     slogan: 'Stock Portfolio Tracker for Smart Investors'
+  },
+  {
+    component: CapitallyPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'capitally',
+    name: 'Capitally',
+    origin: $localize`Poland`,
+    pricingPerYear: '€50',
+    slogan: 'Optimize your investments performance'
   },
   {
     component: CapMonPageComponent,
