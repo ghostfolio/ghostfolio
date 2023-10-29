@@ -1,3 +1,4 @@
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -91,6 +92,7 @@ const europeMarkets = require('../../assets/countries/europe-markets.json');
 @Injectable()
 export class PortfolioService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly currentRateService: CurrentRateService,
     private readonly dataProviderService: DataProviderService,
@@ -1195,6 +1197,16 @@ export class PortfolioService {
       ).div(100);
     }
 
+    const balancesValue = await this.accountBalanceService.getAccountBalances({
+      userId: userId
+    });
+
+    let totalBalance = 0;
+
+    balancesValue.balances.map((item) => {
+      totalBalance += item.value;
+    });
+
     return {
       errors,
       hasErrors,
@@ -1211,7 +1223,9 @@ export class PortfolioService {
             netPerformanceInPercentage,
             value,
             netPerformance: netPerformanceOfItem,
-            totalInvestment: totalInvestmentOfItem
+            totalInvestment: totalInvestmentOfItem,
+            totalAccountBalance: totalBalance,
+            netWorth: value + totalBalance
           };
         }
       ),

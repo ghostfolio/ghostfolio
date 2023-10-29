@@ -5,7 +5,9 @@ export interface HistoricalDataItem {
   marketPrice?: number;
   netPerformance?: number;
   netPerformanceInPercentage?: number;
+  netWorth?: number;
   quantity?: number;
+  totalAccountBalance?: number;
   totalInvestment?: number;
   value?: number;
   valueInPercentage?: number;

@@ -346,10 +346,19 @@ export class PortfolioController {
       this.userService.isRestrictedView(this.request.user)
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
-        ({ date, netPerformanceInPercentage, totalInvestment, value }) => {
+        ({
+          date,
+          netPerformanceInPercentage,
+          totalInvestment,
+          value,
+          totalAccountBalance,
+          netWorth
+        }) => {
           return {
             date,
             netPerformanceInPercentage,
+            netWorth,
+            totalAccountBalance,
             totalInvestment: new Big(totalInvestment)
               .div(performanceInformation.performance.totalInvestment)
               .toNumber(),

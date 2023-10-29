@@ -19,7 +19,7 @@ export class AccountBalanceService {
     accountId,
     userId
   }: {
-    accountId: string;
+    accountId?: string;
     userId: string;
   }): Promise<AccountBalancesResponse> {
     const balances = await this.prismaService.accountBalance.findMany({
