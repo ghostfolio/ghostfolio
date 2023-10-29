@@ -145,10 +145,22 @@
             <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
               <button
                 mat-menu-item
+                (click)="onOpenAssetProfileDialog({ dataSource: element.dataSource, element: row.symbol })"
+              >
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="create-outline"></ion-icon>
+                  <span i18n>Edit</span>
+                </span>
+              </button>
+              <button
+                mat-menu-item
                 [disabled]="element.activitiesCount !== 0"
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >
-                <ng-container i18n>Delete</ng-container>
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                  <span i18n>Delete</span>
+                </span>
               </button>
             </mat-menu>
           </td>
