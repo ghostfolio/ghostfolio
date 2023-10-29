@@ -29,6 +29,7 @@ import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 import {
   Chart,
+  Decimation,
   Filler,
   LineController,
   LineElement,
@@ -74,6 +75,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {
     Chart.register(
+      Decimation,
       Filler,
       LineController,
       LineElement,
