@@ -11,7 +11,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   UniqueAsset
@@ -23,7 +23,7 @@ import {
   MarketData,
   SymbolProfile
 } from '@prisma/client';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { parse as csvToJson } from 'papaparse';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -174,7 +174,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         dataSource: this.data.dataSource,
         marketData: {
           marketData: marketData.map(({ date, marketPrice }) => {
-            return { marketPrice, date: parseISO(date) };
+            return { marketPrice, date: parseDate(date).toISOString() };
           })
         },
         symbol: this.data.symbol

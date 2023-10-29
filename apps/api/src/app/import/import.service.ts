@@ -83,6 +83,7 @@ export class ImportService {
 
         const isDuplicate = orders.some((activity) => {
           return (
+            activity.accountId === Account?.id &&
             activity.SymbolProfile.currency === assetProfile.currency &&
             activity.SymbolProfile.dataSource === assetProfile.dataSource &&
             isSameDay(activity.date, parseDate(dateString)) &&
@@ -482,6 +483,7 @@ export class ImportService {
         const date = parseISO(<string>(<unknown>dateString));
         const isDuplicate = existingActivities.some((activity) => {
           return (
+            activity.accountId === accountId &&
             activity.SymbolProfile.currency === currency &&
             activity.SymbolProfile.dataSource === dataSource &&
             isSameDay(activity.date, date) &&

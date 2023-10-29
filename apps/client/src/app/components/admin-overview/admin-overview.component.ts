@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -169,17 +169,17 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onReadOnlyModeChange(aEvent: MatCheckboxChange) {
-    this.putAdminSetting({
-      key: PROPERTY_IS_READ_ONLY_MODE,
-      value: aEvent.checked ? true : undefined
-    });
-  }
-
-  public onEnableUserSignupModeChange(aEvent: MatCheckboxChange) {
+  public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
     this.putAdminSetting({
       key: PROPERTY_IS_USER_SIGNUP_ENABLED,
       value: aEvent.checked ? undefined : false
+    });
+  }
+
+  public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
+    this.putAdminSetting({
+      key: PROPERTY_IS_READ_ONLY_MODE,
+      value: aEvent.checked ? true : undefined
     });
   }
 

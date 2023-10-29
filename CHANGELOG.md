@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for data decimation in the line chart component
 
+### Changed
+
+- Improved the check for duplicates in the preview step of the activities import (allow different accounts)
+- Improved the usability and validation in the cash balance transfer from one to another account
+- Changed the checkboxes to slide toggles in the overview of the admin control panel
+- Switched from the deprecated (`PUT`) to the new endpoint (`POST`) to manage historical market data in the asset profile details dialog of the admin control panel
+- Improved the date parsing in the import historical market data of the admin control panel
+- Improved the localized meta data (keywords) in `html` files
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.4.2` to `5.5.2`
+
 ## 2.15.0 - 2023-10-26
 
 ### Added
