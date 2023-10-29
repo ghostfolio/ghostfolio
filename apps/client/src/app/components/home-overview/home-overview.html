@@ -69,6 +69,7 @@
             symbol="Performance"
             unit="%"
             [colorScheme]="user?.settings?.colorScheme"
+            [dataDecimation]="true"
             [hidden]="historicalDataItems?.length === 0"
             [historicalDataItems]="historicalDataItems"
             [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
