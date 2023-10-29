@@ -85,6 +85,10 @@
           <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products/capitally-page.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products/capmon-page.component.ts</context>
           <context context-type="linenumber">25</context>
         </context-group>
@@ -272,6 +276,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products/beanvest-page.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products/capitally-page.component.ts</context>
           <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
@@ -605,6 +613,10 @@
           <context context-type="linenumber">28</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products/capitally-page.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products/capmon-page.component.ts</context>
           <context context-type="linenumber">28</context>
         </context-group>
@@ -925,6 +937,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">332</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">183</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -1993,49 +2009,49 @@
         <source>Read-only Mode</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">93</context>
         </context-group>
       </trans-unit>
       <trans-unit id="860e5f056b59410ec8db65cb53955505c6931752" datatype="html">
         <source>System Message</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">102</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="657028d5fc9c3da8f2d667b6b15cd0df8b9a3729" datatype="html">
         <source>Set Message</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">126</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e698b03c34b459b1b006d7f0473a49b9fcf5dfc1" datatype="html">
         <source>Coupons</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">134</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e799e6b926557f0098f41888cdf8df868eff3d47" datatype="html">
         <source>Housekeeping</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">185</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c7ac907e52a7ce2ac70b1786eb5f403ce306ce1f" datatype="html">
         <source>Flush Cache</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
-          <context context-type="linenumber">187</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e587f3aaad8881a0b7732fb3e86df8a4c91f25d2" datatype="html">
@@ -4715,9 +4731,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="22b5e65488d6bea8df323f9e78b5f4dea1b6204b" datatype="html">
         <source> Are you looking for an open source alternative to <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> is a powerful portfolio management tool that provides individuals with a comprehensive platform to track, analyze, and optimize their investments. Whether you are an experienced investor or just starting out, Ghostfolio offers an intuitive user interface and a <x id="START_LINK_1" equiv-text="&lt;a [routerLink]=&quot;routerLinkFeatures&quot; &gt;"/>wide range of functionalities<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> to help you make informed decisions and take control of your financial future. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">13,25</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">13,25</context>
@@ -4969,9 +4993,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">26,36</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">26,36</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="99c044073f74d52eaeb34e64da6d973eff46203d" datatype="html">
         <source> Let’s dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION_1" equiv-text="{{ product2.name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">37,44</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">37,44</context>
@@ -5223,9 +5255,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">67</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="950b5f04a2efd3f11c0f76418d5a4212381e792e" datatype="html">
         <source>Origin</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">72</context>
@@ -5477,9 +5517,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="c5a2349fd1775501aa7a16c423816a734b959db4" datatype="html">
         <source> Available in </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">82,84</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">82,84</context>
@@ -5733,7 +5781,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -5854,6 +5902,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -6105,6 +6165,14 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">136</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">150</context>
         </context-group>
         <context-group purpose="location">
@@ -6353,7 +6421,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
-          <context context-type="linenumber">169</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -6474,6 +6542,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">169</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">169</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">176</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -6728,7 +6808,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -6849,6 +6929,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">129</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">140</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -7100,6 +7192,14 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">152</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">159</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">159</context>
         </context-group>
         <context-group purpose="location">
@@ -7345,6 +7445,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">171</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">171</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
@@ -7597,9 +7705,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">113,114</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">113,114</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="ff2d2e1c823a7f2f04ab702a021c486d9bfe9854" datatype="html">
         <source> Self-Hosting </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">118,120</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">118,120</context>
@@ -7851,9 +7967,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">145,147</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">145,147</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="f37bf6923c7cffbb879c67fcb782950e28c431d0" datatype="html">
         <source> Free Plan </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">164,166</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">164,166</context>
@@ -8105,9 +8229,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">184,186</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">184,186</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="ba3c9b8c160c2630e437e3eab15ce6020c8453c7" datatype="html">
         <source>Starting from <x id="INTERPOLATION" equiv-text="{{ product2.pricingPerYear }}"/> / year</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">189,190</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">189,190</context>
@@ -8359,9 +8491,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">195</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="4f3f075e923a45b4f024c9a76982e34062427737" datatype="html">
         <source> Please note that the information provided in the Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table is based on our independent research and analysis. This website is not affiliated with <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> or any other product mentioned in the comparison. As the landscape of personal finance tools evolves, it is essential to verify any specific details or changes directly from the respective product page. Data needs a refresh? Help us maintain accurate data on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">203,213</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">203,213</context>
@@ -8613,9 +8753,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">216,219</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">216,219</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="47e58765787443fe08ef8ccc25a1419310e43b2a" datatype="html">
         <source> Effortlessly track, analyze, and visualize your wealth with Ghostfolio. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">220,223</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">220,223</context>
@@ -8867,9 +9015,17 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">225,227</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">225,227</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="2a9166b3eef0128afb3981b4eeed6e087414adbd" datatype="html">
         <source>Personal Finance Tools</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">292</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">292</context>
@@ -8999,42 +9155,84 @@
         <source>Switzerland</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">364</context>
+          <context context-type="linenumber">375</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">387</context>
+          <context context-type="linenumber">398</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">388</context>
+          <context context-type="linenumber">399</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3437679369074503203" datatype="html">
         <source>Global</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">307</context>
+          <context context-type="linenumber">318</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6133495983093212227" datatype="html">
         <source>United States</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">203</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">228</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">230</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">294</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">305</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6787546539374733271" datatype="html">
+        <source>Belgium</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">118</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6014862663057951430" datatype="html">
+        <source>Germany</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
           <context context-type="linenumber">95</context>
@@ -9045,7 +9243,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">172</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
@@ -9053,103 +9255,57 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">217</context>
+          <context context-type="linenumber">215</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">219</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">283</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">294</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6787546539374733271" datatype="html">
-        <source>Belgium</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">107</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6014862663057951430" datatype="html">
-        <source>Germany</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">118</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">161</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">171</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">181</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">204</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">239</context>
+          <context context-type="linenumber">250</context>
         </context-group>
       </trans-unit>
       <trans-unit id="21641575311466062" datatype="html">
         <source>Austria</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2427223107800831324" datatype="html">
         <source>Italy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">250</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3783587393795767345" datatype="html">
         <source>Netherlands</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">260</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2040543873210054611" datatype="html">
         <source>Thailand</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">272</context>
+          <context context-type="linenumber">283</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3591085113786124083" datatype="html">
         <source>New Zealand</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">305</context>
+          <context context-type="linenumber">316</context>
         </context-group>
       </trans-unit>
       <trans-unit id="724957661944599897" datatype="html">
         <source>Czech Republic</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">316</context>
+          <context context-type="linenumber">327</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">353</context>
+          <context context-type="linenumber">364</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2446117790692479672" datatype="html">
@@ -10021,15 +10177,15 @@
         <source>France</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">327</context>
+          <context context-type="linenumber">338</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">343</context>
+          <context context-type="linenumber">354</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a4b530787884b16ad8cca4fecf19b2d22c1f4c6a" datatype="html">
@@ -10139,7 +10295,7 @@
         <source>Finland</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">335</context>
+          <context context-type="linenumber">346</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8fe73a4787b8068b2ba61f54ab7e0f9af2ea1fc9" datatype="html">
@@ -10342,12 +10498,16 @@
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">48,50</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
+          <context context-type="linenumber">48,50</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="3486679398271885916" datatype="html">
         <source>Canada</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
-          <context context-type="linenumber">377</context>
+          <context context-type="linenumber">388</context>
         </context-group>
       </trans-unit>
       <trans-unit id="slogan" datatype="html">
@@ -10369,6 +10529,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.component.ts</context>
           <context context-type="linenumber">305</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2356316679035829946" datatype="html">
+        <source>Poland</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit>
     </body>
