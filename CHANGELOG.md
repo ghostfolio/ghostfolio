@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the date parsing in the import historical market data of the admin control panel
 - Improved the localized meta data (keywords) in `html` files
 - Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.4.2` to `5.5.2`
 
 ## 2.15.0 - 2023-10-26
 
