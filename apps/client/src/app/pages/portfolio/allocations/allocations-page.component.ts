@@ -61,12 +61,13 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
   };
   public placeholder = '';
-  public platforms: {
+  public platformsValues: {
     [id: string]: Pick<Platform, 'name'> & {
       id: string;
       value: number;
     };
   };
+  public platforms: Platform[];
   public portfolioDetails: PortfolioDetails;
   public positions: {
     [symbol: string]: Pick<
@@ -107,6 +108,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
+    const { platforms } = this.dataService.fetchInfo();
+    this.platforms = platforms;
+
     route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
@@ -173,8 +177,15 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           this.user = state.user;
 
           const accountFilters: Filter[] = this.user.accounts.map(
-            ({ id, name }) => {
+            ({ id, name, platformId }) => {
+              let accountPlatformUrl = '';
+              for (const platform of this.platforms) {
+                if (platform.id === platformId) {
+                  accountPlatformUrl = platform.url;
+                }
+              }
               return {
+                accountPlatformUrl,
                 id,
                 label: name,
                 type: 'ACCOUNT'
@@ -286,7 +297,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
-    this.platforms = {};
+    this.platformsValues = {};
     this.portfolioDetails = {
       accounts: {},
       filteredValueInPercentage: 0,
@@ -517,7 +528,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value = valueInBaseCurrency;
       }
 
-      this.platforms[id] = {
+      this.platformsValues[id] = {
         id,
         name,
         value

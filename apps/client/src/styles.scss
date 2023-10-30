@@ -459,6 +459,10 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-optgroup-label {
+  font-weight: bold;
+}
+
 .mat-mdc-paginator {
   background-color: rgba(var(--palette-foreground-base-light), 0.02);
 

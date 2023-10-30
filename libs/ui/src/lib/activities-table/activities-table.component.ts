@@ -10,6 +10,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
+import { getCurrencySymbol } from '@angular/common';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -307,15 +308,16 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
       fieldValueMap[activity.Account.id] = {
         id: activity.Account.id,
         label: activity.Account.name,
+        accountPlatformUrl: activity.Account.Platform?.url,
         type: 'ACCOUNT'
       };
     }
 
     if (activity.SymbolProfile?.currency) {
       fieldValueMap[activity.SymbolProfile.currency] = {
-        id: activity.SymbolProfile.currency,
+        id: getCurrencySymbol(activity.SymbolProfile.currency, 'narrow'),
         label: activity.SymbolProfile.currency,
-        type: 'TAG'
+        type: 'CURRENCY'
       };
     }
 
@@ -325,21 +327,30 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
     ) {
       fieldValueMap[activity.SymbolProfile.symbol] = {
         id: activity.SymbolProfile.symbol,
-        label: activity.SymbolProfile.symbol,
+        label: activity.SymbolProfile.name,
+        symbolDataSource: activity.SymbolProfile.dataSource,
         type: 'SYMBOL'
+      };
+    }
+
+    for (const { name } of activity.tags) {
+      fieldValueMap[name] = {
+        id: name,
+        label: name,
+        type: 'TAG'
       };
     }
 
     fieldValueMap[activity.type] = {
       id: activity.type,
       label: activity.type,
-      type: 'TAG'
+      type: 'TYPE'
     };
 
     fieldValueMap[format(new Date(activity.date), 'yyyy')] = {
       id: format(new Date(activity.date), 'yyyy'),
       label: format(new Date(activity.date), 'yyyy'),
-      type: 'TAG'
+      type: 'YEAR'
     };
 
     return Object.values(fieldValueMap);

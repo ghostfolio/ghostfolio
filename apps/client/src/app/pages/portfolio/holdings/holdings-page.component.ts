@@ -14,7 +14,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetClass, DataSource } from '@prisma/client';
+import { AssetClass, DataSource, Platform } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -33,6 +33,7 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateOrder: boolean;
   public isLoading = false;
   public placeholder = '';
+  public platforms: Platform[];
   public portfolioDetails: PortfolioDetails;
   public positionsArray: PortfolioPosition[];
   public user: User;
@@ -49,6 +50,9 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
+    const { platforms } = this.dataService.fetchInfo();
+    this.platforms = platforms;
+
     route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
@@ -114,8 +118,15 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
           );
 
           const accountFilters: Filter[] = this.user.accounts.map(
-            ({ id, name }) => {
+            ({ id, name, platformId }) => {
+              let accountPlatformUrl = '';
+              for (const { id, url } of this.platforms) {
+                if (id === platformId) {
+                  accountPlatformUrl = url;
+                }
+              }
               return {
+                accountPlatformUrl,
                 id,
                 label: name,
                 type: 'ACCOUNT'

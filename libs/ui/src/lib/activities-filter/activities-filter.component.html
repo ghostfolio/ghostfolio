@@ -38,7 +38,43 @@
         *ngFor="let filter of filterGroup.filters"
         [value]="filter.id"
       >
-        {{ filter.label | gfSymbol }}
+        <ng-container *ngIf="filter.type === 'ACCOUNT'">
+          <gf-symbol-icon
+            *ngIf="filter.accountPlatformUrl"
+            [tooltip]="filter.label"
+            [url]="filter.accountPlatformUrl"
+          ></gf-symbol-icon>
+          {{ filter.label }}
+        </ng-container>
+        <ng-container *ngIf="filter.type === 'CURRENCY'">
+          <b>{{ filter.id !== filter.label ? filter.id : '' }}</b>
+          {{ filter.label }}
+        </ng-container>
+        <ng-container *ngIf="filter.type === 'SYMBOL'">
+          <gf-symbol-icon
+            *ngIf="filter.symbolDataSource"
+            [dataSource]="filter.symbolDataSource"
+            [symbol]="filter.id"
+            [tooltip]="filter.label"
+          />
+          <small class="text-muted">
+            {{ filter.id }}
+          </small>
+          {{ filter.label | gfSymbol }}
+        </ng-container>
+        <ng-container *ngIf="filter.type === 'TYPE'">
+          <gf-activity-type [activityType]="$any(filter.id)"></gf-activity-type>
+        </ng-container>
+        <ng-container
+          *ngIf="
+            filter.type !== 'ACCOUNT' &&
+            filter.type !== 'CURRENCY' &&
+            filter.type !== 'SYMBOL' &&
+            filter.type !== 'TYPE'
+          "
+        >
+          {{ filter.label }}
+        </ng-container>
       </mat-option>
     </mat-optgroup>
   </mat-autocomplete>

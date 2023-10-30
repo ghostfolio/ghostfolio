@@ -6,6 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { GfActivityTypeModule } from '@ghostfolio/ui/activity-type/activity-type.module';
+import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 
 import { ActivitiesFilterComponent } from './activities-filter.component';
@@ -15,6 +17,8 @@ import { ActivitiesFilterComponent } from './activities-filter.component';
   exports: [ActivitiesFilterComponent],
   imports: [
     CommonModule,
+    GfActivityTypeModule,
+    GfSymbolIconModule,
     GfSymbolModule,
     MatAutocompleteModule,
     MatButtonModule,

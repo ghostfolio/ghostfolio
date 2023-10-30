@@ -18,7 +18,12 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetClass, DataSource, SymbolProfile } from '@prisma/client';
+import {
+  AssetClass,
+  DataSource,
+  Platform,
+  SymbolProfile
+} from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -57,6 +62,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public placeholder = '';
+  public platforms: Platform[];
   public portfolioEvolutionDataLabel = $localize`Deposit`;
   public streaks: PortfolioInvestments['streaks'];
   public top3: Position[];
@@ -76,8 +82,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    const { benchmarks } = this.dataService.fetchInfo();
+    const { benchmarks, platforms } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
+    this.platforms = platforms;
 
     route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -139,8 +146,15 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           this.user = state.user;
 
           const accountFilters: Filter[] = this.user.accounts.map(
-            ({ id, name }) => {
+            ({ id, name, platformId }) => {
+              let accountPlatformUrl = '';
+              for (const { id, url } of this.platforms) {
+                if (id === platformId) {
+                  accountPlatformUrl = url;
+                }
+              }
               return {
+                accountPlatformUrl,
                 id,
                 label: name,
                 type: 'ACCOUNT'
