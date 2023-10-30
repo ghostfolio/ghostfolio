@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the biometric authentication
 - Fixed the alignment of the icons in various menus
 
 ## 2.16.0 - 2023-10-29
