@@ -15,6 +15,7 @@ import { Type as ActivityType } from '@prisma/client';
 })
 export class ActivityTypeComponent implements OnChanges {
   @Input() activityType: ActivityType;
+  @Input() disableResponsive?: boolean;
 
   public activityTypeLabel: string;
 

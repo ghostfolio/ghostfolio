@@ -63,7 +63,10 @@
           {{ filter.label | gfSymbol }}
         </ng-container>
         <ng-container *ngIf="filter.type === 'TYPE'">
-          <gf-activity-type [activityType]="$any(filter.id)"></gf-activity-type>
+          <gf-activity-type
+            [activityType]="$any(filter.id)"
+            [disableResponsive]="true"
+          ></gf-activity-type>
         </ng-container>
         <ng-container
           *ngIf="

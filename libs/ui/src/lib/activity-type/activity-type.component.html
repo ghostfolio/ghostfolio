@@ -28,5 +28,7 @@
     *ngIf="activityType === 'SELL'"
     name="arrow-down-circle-outline"
   ></ion-icon>
-  <span class="d-none d-lg-block mx-1">{{ activityTypeLabel }}</span>
+  <span class="mx-1" [ngClass]="disableResponsive ? '' : 'd-none d-lg-block'">{{
+    activityTypeLabel
+  }}</span>
 </div>
