@@ -12,6 +12,7 @@ import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/ap
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
@@ -67,7 +68,9 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
+  isValid,
   max,
+  min,
   parseISO,
   set,
   setDayOfYear,
@@ -91,6 +94,7 @@ const europeMarkets = require('../../assets/countries/europe-markets.json');
 @Injectable()
 export class PortfolioService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly currentRateService: CurrentRateService,
     private readonly dataProviderService: DataProviderService,
@@ -384,6 +388,7 @@ export class PortfolioService {
   }): Promise<HistoricalDataContainer> {
     userId = await this.getUserId(impersonationId, userId);
 
+    // TODO: Don't get all transaction points again
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
@@ -1126,6 +1131,18 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
+    const accountBalances = await this.accountBalanceService.getAccountBalances(
+      {
+        userId
+      }
+    );
+
+    const accountBalanceItems: HistoricalDataItem[] =
+      accountBalances.balances.map(({ date, value }) => {
+        // TODO: convert value to user currency
+        return { value, date: format(date, DATE_FORMAT) };
+      });
+
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
@@ -1139,7 +1156,7 @@ export class PortfolioService {
       orders: portfolioOrders
     });
 
-    if (transactionPoints?.length <= 0) {
+    if (accountBalanceItems?.length <= 0 && transactionPoints?.length <= 0) {
       return {
         chart: [],
         firstOrderDate: undefined,
@@ -1157,7 +1174,15 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
+    const portfolioStart = min(
+      [
+        parseDate(accountBalanceItems[0]?.date),
+        parseDate(transactionPoints[0]?.date)
+      ].filter((date) => {
+        return isValid(date);
+      })
+    );
+
     const startDate = this.getStartDate(dateRange, portfolioStart);
     const {
       currentValue,
@@ -1175,7 +1200,7 @@ export class PortfolioService {
     let currentNetPerformance = netPerformance;
     let currentNetPerformancePercent = netPerformancePercentage;
 
-    const historicalDataContainer = await this.getChart({
+    const { items } = await this.getChart({
       dateRange,
       filters,
       impersonationId,
@@ -1184,7 +1209,7 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    const itemOfToday = historicalDataContainer.items.find((item) => {
+    const itemOfToday = items.find((item) => {
       return item.date === format(new Date(), DATE_FORMAT);
     });
 
@@ -1195,27 +1220,16 @@ export class PortfolioService {
       ).div(100);
     }
 
+    const mergedHistoricalDataItems = this.mergeHistoricalDataItems(
+      accountBalanceItems,
+      items
+    );
+
     return {
       errors,
       hasErrors,
-      chart: historicalDataContainer.items.map(
-        ({
-          date,
-          netPerformance: netPerformanceOfItem,
-          netPerformanceInPercentage,
-          totalInvestment: totalInvestmentOfItem,
-          value
-        }) => {
-          return {
-            date,
-            netPerformanceInPercentage,
-            value,
-            netPerformance: netPerformanceOfItem,
-            totalInvestment: totalInvestmentOfItem
-          };
-        }
-      ),
-      firstOrderDate: parseDate(historicalDataContainer.items[0]?.date),
+      chart: mergedHistoricalDataItems,
+      firstOrderDate: parseDate(items[0]?.date),
       performance: {
         currentValue: currentValue.toNumber(),
         currentGrossPerformance: currentGrossPerformance.toNumber(),
@@ -1998,5 +2012,33 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
+  }
+
+  private mergeHistoricalDataItems(
+    array1: HistoricalDataItem[],
+    array2: HistoricalDataItem[]
+  ): HistoricalDataItem[] {
+    const historicalDataItemsMap: { [date: string]: HistoricalDataItem } = {};
+
+    for (const item of array1.concat(array2)) {
+      historicalDataItemsMap[item.date] = {
+        ...item,
+        netWorth: (historicalDataItemsMap[item.date]?.value ?? 0) + item.value,
+        totalAccountBalance: 0 // TODO: if from array1, then take value, otherwise 0
+      };
+    }
+
+    // Convert to an array and sort by date in ascending order
+    const historicalDataItems = Object.keys(historicalDataItemsMap).map(
+      (date) => {
+        return historicalDataItemsMap[date];
+      }
+    );
+
+    historicalDataItems.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    return historicalDataItems;
   }
 }

@@ -350,6 +350,7 @@ export class PortfolioController {
           return {
             date,
             netPerformanceInPercentage,
+            netWorthInPercentage: 0, // TODO
             totalInvestment: new Big(totalInvestment)
               .div(performanceInformation.performance.totalInvestment)
               .toNumber(),
