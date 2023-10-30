@@ -134,13 +134,15 @@ export class CoinGeckoService implements DataProviderInterface {
     return DataSource.COINGECKO;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const results: { [symbol: string]: IDataProviderResponse } = {};
+  public async getQuotes({
+    symbols
+  }: {
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    const response: { [symbol: string]: IDataProviderResponse } = {};
 
-    if (aSymbols.length <= 0) {
-      return {};
+    if (symbols.length <= 0) {
+      return response;
     }
 
     try {
@@ -151,7 +153,7 @@ export class CoinGeckoService implements DataProviderInterface {
       }, DEFAULT_REQUEST_TIMEOUT);
 
       const response = await got(
-        `${this.URL}/simple/price?ids=${aSymbols.join(
+        `${this.URL}/simple/price?ids=${symbols.join(
           ','
         )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
         {
@@ -162,7 +164,7 @@ export class CoinGeckoService implements DataProviderInterface {
 
       for (const symbol in response) {
         if (Object.prototype.hasOwnProperty.call(response, symbol)) {
-          results[symbol] = {
+          response[symbol] = {
             currency: DEFAULT_CURRENCY,
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: DataSource.COINGECKO,
@@ -175,7 +177,7 @@ export class CoinGeckoService implements DataProviderInterface {
       Logger.error(error, 'CoinGeckoService');
     }
 
-    return results;
+    return response;
   }
 
   public getTestSymbol() {
