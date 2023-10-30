@@ -1197,13 +1197,15 @@ export class PortfolioService {
       ).div(100);
     }
 
-    const accountBalances = await this.accountBalanceService.getAccountBalances({
-      userId
-    });
+    const accountBalances = await this.accountBalanceService.getAccountBalances(
+      {
+        userId
+      }
+    );
 
     let totalBalance = 0;
 
-    balancesValue.balances.map(({value) => {
+    accountBalances.balances.map(({ value }) => {
       totalBalance += value;
     });
 
@@ -1222,9 +1224,9 @@ export class PortfolioService {
             date,
             netPerformanceInPercentage,
             netPerformance: netPerformanceOfItem,
-            netWorth: value + totalBalance,            
+            netWorth: value + totalBalance,
             totalAccountBalance: totalBalance,
-            totalInvestment: totalInvestmentOfItem,            
+            totalInvestment: totalInvestmentOfItem,
             value
           };
         }

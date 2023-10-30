@@ -350,9 +350,9 @@ export class PortfolioController {
           date,
           netPerformanceInPercentage,
           netWorth,
-          totalAccountBalance, 
+          totalAccountBalance,
           totalInvestment,
-          value         
+          value
         }) => {
           return {
             date,
