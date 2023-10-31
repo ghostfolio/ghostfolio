@@ -154,7 +154,7 @@
               </button>
               <button
                 mat-menu-item
-                [disabled]="activitiesCount !== 0"
+                [disabled]="element.activitiesCount !== 0"
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >
                 <span class="align-items-center d-flex">
