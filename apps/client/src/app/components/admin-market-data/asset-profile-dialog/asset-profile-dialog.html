@@ -235,17 +235,19 @@
     <div *ngIf="assetProfile?.dataSource === 'MANUAL'">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Scraper Configuration</mat-label>
-        <div class="d-flex">
+        <div class="align-items-end d-flex">
           <textarea
             cdkTextareaAutosize
             formControlName="scraperConfiguration"
             matInput
             type="text"
+            (keyup.enter)="$event.stopPropagation()"
           ></textarea>
           <button
-            class="mr-1"
-            color="primary"
+            color="accent"
             mat-flat-button
+            type="button"
+            [disabled]="assetProfileForm.controls['scraperConfiguration'].value === '{}'"
             (click)="onTestScraper(assetProfile?.symbol)"
           >
             <ng-container i18n>Test</ng-container>
