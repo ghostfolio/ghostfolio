@@ -26,6 +26,7 @@ import {
   Get,
   HttpException,
   Inject,
+  Logger,
   Param,
   Patch,
   Post,
@@ -37,7 +38,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
-import { isDate, parseISO } from 'date-fns';
+import { isDate, isToday, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
@@ -242,6 +243,11 @@ export class AdminController {
         getReasonPhrase(StatusCodes.BAD_REQUEST),
         StatusCodes.BAD_REQUEST
       );
+    }
+
+    if (dataSource === 'MANUAL' && isDryRun && isToday(date)) {
+      // TODO
+      Logger.log(`Check ${symbol} via scraperConfiguration`);
     }
 
     return this.dataGatheringService.gatherSymbolForDate({
