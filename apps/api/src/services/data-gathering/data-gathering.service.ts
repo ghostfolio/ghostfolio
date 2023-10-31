@@ -21,7 +21,7 @@ import {
 import { BenchmarkProperty, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, MarketDataState } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -84,10 +84,12 @@ export class DataGatheringService {
   public async gatherSymbolForDate({
     dataSource,
     date,
+    isDryRun,
     symbol
   }: {
     dataSource: DataSource;
     date: Date;
+    isDryRun: boolean;
     symbol: string;
   }) {
     try {
@@ -96,10 +98,22 @@ export class DataGatheringService {
         date,
         date
       );
-
-      var marketPrice =
+      const marketPrice =
         historicalData[symbol]?.[format(getYesterday(), DATE_FORMAT)]
           .marketPrice;
+
+      if (isDryRun) {
+        const date = new Date();
+        return {
+          dataSource,
+          date,
+          marketPrice,
+          symbol,
+          createdAt: null,
+          id: null,
+          state: MarketDataState.INTRADAY
+        };
+      }
 
       if (marketPrice) {
         return await this.prismaService.marketData.upsert({
@@ -116,9 +130,7 @@ export class DataGatheringService {
     } catch (error) {
       Logger.error(error, 'DataGatheringService');
     } finally {
-      if (dataSource === 'MANUAL' && marketPrice !== undefined)
-        return marketPrice;
-      else return undefined;
+      return undefined;
     }
   }
 

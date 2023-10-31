@@ -220,8 +220,9 @@ export class AdminController {
   public async gatherSymbolForDate(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
-    @Param('symbol') symbol: string
-  ): Promise<MarketData | number> {
+    @Param('symbol') symbol: string,
+    @Query('dryRun') isDryRun?: boolean
+  ): Promise<MarketData> {
     if (
       !hasPermission(
         this.request.user.permissions,
@@ -246,6 +247,7 @@ export class AdminController {
     return this.dataGatheringService.gatherSymbolForDate({
       dataSource,
       date,
+      isDryRun,
       symbol
     });
   }

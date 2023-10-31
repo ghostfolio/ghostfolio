@@ -175,14 +175,16 @@ export class AdminService {
     symbol
   }: UniqueAsset & {
     date?: Date;
+  } & {
+    isDryRun?: boolean;
   }) {
     let url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
 
     if (date) {
-      url = `${url}/${format(date, DATE_FORMAT)}`;
+      url = `${url}/${format(date, DATE_FORMAT)}?dryRun=true`;
     }
 
-    return this.http.post<MarketData | number | void>(url, {});
+    return this.http.post<MarketData | void>(url, {});
   }
 
   public fetchSymbolForDate({

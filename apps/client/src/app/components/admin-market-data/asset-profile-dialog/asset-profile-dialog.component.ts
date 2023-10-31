@@ -243,11 +243,19 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public onTestScraper(symbol: string) {
     const today = new Date();
     this.adminService
-      .gatherSymbol({ dataSource: 'MANUAL', date: today, symbol })
+      .gatherSymbol({
+        dataSource: 'MANUAL',
+        date: today,
+        isDryRun: true,
+        symbol
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        if (response !== null) alert('Current Market Price is: ' + response);
-        else alert('Please try again.');
+        if (response !== null) {
+          alert($localize`Please try again.`);
+        } else {
+          alert($localize`Current Market Price is:` + ' ' + response);
+        }
       });
   }
 
