@@ -1,5 +1,5 @@
 import * as currencies from '@dinero.js/currencies';
-import { DataSource } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 import Big from 'big.js';
 import {
   getDate,
@@ -15,12 +15,43 @@ import { de, es, fr, it, nl, pl, pt, tr } from 'date-fns/locale';
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark, UniqueAsset } from './interfaces';
 import { ColorScheme } from './types';
+import { BenchmarkTrend } from './types/benchmark-trend-type.type';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
 
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
+
+export function calculateBenchmarkTrend(
+  historicalData: MarketData[],
+  days: number
+): BenchmarkTrend {
+  const hasEnoughData = historicalData.length >= 2 * days;
+  if (!hasEnoughData) return null;
+  const latestDataAvg = calculateMovingAverage(
+    historicalData.slice(0, days).map((hData) => new Big(hData.marketPrice)),
+    days
+  );
+  const oldDataAvg = calculateMovingAverage(
+    historicalData
+      .slice(days, 2 * days)
+      .map((hData) => new Big(hData.marketPrice)),
+    days
+  );
+  return latestDataAvg > oldDataAvg
+    ? 'UP'
+    : latestDataAvg < oldDataAvg
+      ? 'DOWN'
+      : 'NEUTRAL';
+}
+
+export function calculateMovingAverage(prices: Big[], days: number) {
+  return prices
+    .reduce((prev, curr) => prev.add(curr), new Big(0))
+    .div(days)
+    .toNumber();
+}
 
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
