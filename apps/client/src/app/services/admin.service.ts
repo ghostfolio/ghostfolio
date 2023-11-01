@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
@@ -203,15 +202,25 @@ export class AdminService {
   }
 
   public patchAssetProfile({
+    assetClass,
+    assetSubClass,
     comment,
     dataSource,
+    name,
     scraperConfiguration,
     symbol,
     symbolMapping
   }: UniqueAsset & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
-      { comment, scraperConfiguration, symbolMapping }
+      {
+        assetClass,
+        assetSubClass,
+        comment,
+        name,
+        scraperConfiguration,
+        symbolMapping
+      }
     );
   }
 
@@ -235,25 +244,6 @@ export class AdminService {
 
   public postTag(aTag: CreateTagDto) {
     return this.http.post<Tag>(`/api/v1/tag`, aTag);
-  }
-
-  public putMarketData({
-    dataSource,
-    date,
-    marketData,
-    symbol
-  }: {
-    dataSource: DataSource;
-    date: Date;
-    marketData: UpdateMarketDataDto;
-    symbol: string;
-  }) {
-    const url = `/api/v1/admin/market-data/${dataSource}/${symbol}/${format(
-      date,
-      DATE_FORMAT
-    )}`;
-
-    return this.http.put<MarketData>(url, marketData);
   }
 
   public putPlatform(aPlatform: UpdatePlatformDto) {

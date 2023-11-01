@@ -112,7 +112,11 @@
         >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [hidden]="!assetClass" [value]="assetClass"
+        <gf-value
+          i18n
+          size="medium"
+          [hidden]="!assetProfileClass"
+          [value]="assetProfileClass"
           >Asset Class</gf-value
         >
       </div>
@@ -120,8 +124,8 @@
         <gf-value
           i18n
           size="medium"
-          [hidden]="!assetSubClass"
-          [value]="assetSubClass"
+          [hidden]="!assetProfileSubClass"
+          [value]="assetProfileSubClass"
           >Asset Sub Class</gf-value
         >
       </div>
@@ -173,6 +177,38 @@
           </div>
         </ng-template>
       </ng-container>
+    </div>
+    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Name</mat-label>
+        <input formControlName="name" matInput type="text" />
+      </mat-form-field>
+    </div>
+    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Asset Class</mat-label>
+        <mat-select formControlName="assetClass">
+          <mat-option [value]="null"></mat-option>
+          <mat-option
+            *ngFor="let assetClass of assetClasses"
+            [value]="assetClass.id"
+            >{{ assetClass.label }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Asset Sub Class</mat-label>
+        <mat-select formControlName="assetSubClass">
+          <mat-option [value]="null"></mat-option>
+          <mat-option
+            *ngFor="let assetSubClass of assetSubClasses"
+            [value]="assetSubClass.id"
+            >{{ assetSubClass.label }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="d-flex my-3">
       <div class="w-50">

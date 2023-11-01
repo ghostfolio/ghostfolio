@@ -4,7 +4,13 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { Account } from '@prisma/client';
@@ -35,11 +41,16 @@ export class TransferBalanceDialog implements OnDestroy {
   public ngOnInit() {
     this.accounts = this.data.accounts;
 
-    this.transferBalanceForm = this.formBuilder.group({
-      balance: [0, Validators.required],
-      fromAccount: ['', Validators.required],
-      toAccount: ['', Validators.required]
-    });
+    this.transferBalanceForm = this.formBuilder.group(
+      {
+        balance: ['', Validators.required],
+        fromAccount: ['', Validators.required],
+        toAccount: ['', Validators.required]
+      },
+      {
+        validators: this.compareAccounts
+      }
+    );
 
     this.transferBalanceForm.get('fromAccount').valueChanges.subscribe((id) => {
       this.currency = this.accounts.find((account) => {
@@ -65,5 +76,14 @@ export class TransferBalanceDialog implements OnDestroy {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private compareAccounts(control: AbstractControl): ValidationErrors {
+    const accountFrom = control.get('fromAccount');
+    const accountTo = control.get('toAccount');
+
+    if (accountFrom.value === accountTo.value) {
+      return { invalid: true };
+    }
   }
 }

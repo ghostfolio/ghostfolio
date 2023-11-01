@@ -190,36 +190,46 @@ export class AccountController {
       this.request.user.id
     );
 
-    const currentAccountIds = accountsOfUser.map(({ id }) => {
-      return id;
+    const accountFrom = accountsOfUser.find(({ id }) => {
+      return id === accountIdFrom;
     });
 
-    if (
-      ![accountIdFrom, accountIdTo].every((accountId) => {
-        return currentAccountIds.includes(accountId);
-      })
-    ) {
+    const accountTo = accountsOfUser.find(({ id }) => {
+      return id === accountIdTo;
+    });
+
+    if (!accountFrom || !accountTo) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
         StatusCodes.NOT_FOUND
       );
     }
 
-    const { currency } = accountsOfUser.find(({ id }) => {
-      return id === accountIdFrom;
-    });
+    if (accountFrom.id === accountTo.id) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (accountFrom.balance < balance) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
 
     await this.accountService.updateAccountBalance({
-      currency,
-      accountId: accountIdFrom,
+      accountId: accountFrom.id,
       amount: -balance,
+      currency: accountFrom.currency,
       userId: this.request.user.id
     });
 
     await this.accountService.updateAccountBalance({
-      currency,
-      accountId: accountIdTo,
+      accountId: accountTo.id,
       amount: balance,
+      currency: accountFrom.currency,
       userId: this.request.user.id
     });
   }
