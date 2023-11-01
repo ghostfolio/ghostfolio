@@ -51,6 +51,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
     name: ['', Validators.required],
+    tags: new FormControl<string[]>(undefined),
     scraperConfiguration: '',
     symbolMapping: ''
   });
@@ -65,6 +66,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+
+  public HoldingTags: { id: string; label: string }[];
 
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
@@ -132,6 +135,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetClass: this.assetProfile.assetClass,
           assetSubClass: this.assetProfile.assetSubClass,
           comment: this.assetProfile?.comment ?? '',
+          tags: this.assetProfile?.tags,
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
@@ -225,6 +229,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
       comment: this.assetProfileForm.controls['comment'].value ?? null,
       name: this.assetProfileForm.controls['name'].value,
+      tag: this.assetProfileForm.controls['tags'].value,
       scraperConfiguration,
       symbolMapping
     };

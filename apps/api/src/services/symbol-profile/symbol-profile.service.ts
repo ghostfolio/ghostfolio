@@ -91,6 +91,7 @@ export class SymbolProfileService {
     comment,
     dataSource,
     name,
+    tags,
     scraperConfiguration,
     symbol,
     symbolMapping
@@ -101,6 +102,7 @@ export class SymbolProfileService {
         assetSubClass,
         comment,
         name,
+        tags,
         scraperConfiguration,
         symbolMapping
       },

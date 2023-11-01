@@ -308,6 +308,7 @@ export class AdminService {
     comment,
     dataSource,
     name,
+    tags,
     scraperConfiguration,
     symbol,
     symbolMapping
@@ -318,6 +319,7 @@ export class AdminService {
       comment,
       dataSource,
       name,
+      tags,
       scraperConfiguration,
       symbol,
       symbolMapping

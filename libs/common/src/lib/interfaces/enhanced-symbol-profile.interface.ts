@@ -23,4 +23,5 @@ export interface EnhancedSymbolProfile {
   symbolMapping?: { [key: string]: string };
   updatedAt: Date;
   url?: string;
+  tags?: string[];
 }
