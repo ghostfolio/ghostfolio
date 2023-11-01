@@ -23,7 +23,13 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { AssetSubClass, Prisma, Property, SymbolProfile } from '@prisma/client';
+import {
+  AssetSubClass,
+  DataSource,
+  Prisma,
+  Property,
+  SymbolProfile
+} from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
 
@@ -94,9 +100,17 @@ export class AdminService {
           return currency !== DEFAULT_CURRENCY;
         })
         .map((currency) => {
+          const label1 = DEFAULT_CURRENCY;
+          const label2 = currency;
+
           return {
-            label1: DEFAULT_CURRENCY,
-            label2: currency,
+            label1,
+            label2,
+            dataSource:
+              DataSource[
+                this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
+              ],
+            symbol: `${label1}${label2}`,
             value: this.exchangeRateDataService.toCurrency(
               1,
               DEFAULT_CURRENCY,

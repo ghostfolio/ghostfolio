@@ -55,6 +55,18 @@
                   </td>
                   <td class="pl-1">{{ exchangeRate.label2 }}</td>
                   <td>
+                    <a
+                      class="h-100 mx-1 no-min-width px-2"
+                      mat-button
+                      [queryParams]="{
+                        assetProfileDialog: true,
+                        dataSource: exchangeRate.dataSource,
+                        symbol: exchangeRate.symbol
+                      }"
+                      [routerLink]="['/admin', 'market-data']"
+                    >
+                      <ion-icon name="create-outline"></ion-icon>
+                    </a>
                     <button
                       *ngIf="customCurrencies.includes(exchangeRate.label2)"
                       class="h-100 mx-1 no-min-width px-2"
