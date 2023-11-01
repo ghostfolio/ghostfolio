@@ -9,17 +9,21 @@ import {
   MAX_CHART_ITEMS,
   PROPERTY_BENCHMARKS
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  calculateBenchmarkTrend,
+} from '@ghostfolio/common/helper';
 import {
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
   BenchmarkResponse,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { Injectable } from '@nestjs/common';
-import { SymbolProfile } from '@prisma/client';
+import { BenchmarkTrend } from '@ghostfolio/common/types/benchmark-trend-type.type';
+import { Injectable, Logger } from '@nestjs/common';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { uniqBy } from 'lodash';
 import ms from 'ms';
 
@@ -35,7 +39,7 @@ export class BenchmarkService {
     private readonly redisCacheService: RedisCacheService,
     private readonly symbolProfileService: SymbolProfileService,
     private readonly symbolService: SymbolService
-  ) {}
+  ) { }
 
   public calculateChangeInPercentage(baseValue: number, currentValue: number) {
     if (baseValue && currentValue) {
@@ -43,6 +47,31 @@ export class BenchmarkService {
     }
 
     return 0;
+  }
+
+  public async getBenchMarkTrends(dataSource: DataSource, symbol: string) {
+    return this.marketDataService
+      .marketDataItems({
+        orderBy: {
+          date: 'desc'
+        },
+        select: {
+          date: true,
+          marketPrice: true
+        },
+        where: {
+          dataSource,
+          symbol,
+          date: { gte: subDays(new Date(), 400) }
+        }
+      })
+      .then((historicalData) => {
+        const fiftyDayAvg = calculateBenchmarkTrend(historicalData, 50);
+        const twoHundrredDayAvg = calculateBenchmarkTrend(historicalData, 200);
+        Logger.debug(`50d: ${fiftyDayAvg} and 200d: ${twoHundrredDayAvg}`);
+
+        return { trend200d: twoHundrredDayAvg, trend50d: fiftyDayAvg };
+      });
   }
 
   public async getBenchmarks({ useCache = true } = {}): Promise<
@@ -59,12 +88,16 @@ export class BenchmarkService {
         if (benchmarks) {
           return benchmarks;
         }
-      } catch {}
+      } catch { }
     }
 
     const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles();
 
     const promises: Promise<{ date: Date; marketPrice: number }>[] = [];
+    const movingAvgPromises: Promise<{
+      trend50d: BenchmarkTrend;
+      trend200d: BenchmarkTrend;
+    }>[] = [];
 
     const quotes = await this.dataProviderService.getQuotes({
       items: benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
@@ -74,9 +107,13 @@ export class BenchmarkService {
 
     for (const { dataSource, symbol } of benchmarkAssetProfiles) {
       promises.push(this.marketDataService.getMax({ dataSource, symbol }));
+      movingAvgPromises.push(this.getBenchMarkTrends(dataSource, symbol));
     }
 
-    const allTimeHighs = await Promise.all(promises);
+    const [allTimeHighs, benchmarkTrends] = await Promise.all([
+      Promise.all(promises),
+      Promise.all(movingAvgPromises)
+    ]);
     let storeInCache = true;
 
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
@@ -93,6 +130,7 @@ export class BenchmarkService {
       } else {
         storeInCache = false;
       }
+
       return {
         marketCondition: this.getMarketCondition(
           performancePercentFromAllTimeHigh
@@ -100,8 +138,10 @@ export class BenchmarkService {
         name: benchmarkAssetProfiles[index].name,
         performances: {
           allTimeHigh: {
-            date: allTimeHigh.date,
-            performancePercent: performancePercentFromAllTimeHigh
+            date: allTimeHigh?.date || new Date(),
+            performancePercent: performancePercentFromAllTimeHigh,
+            trend50d: benchmarkTrends[index].trend50d,
+            trend200d: benchmarkTrends[index].trend200d
           }
         }
       };
@@ -186,9 +226,9 @@ export class BenchmarkService {
                 marketPriceAtStartDate === 0
                   ? 0
                   : this.calculateChangeInPercentage(
-                      marketPriceAtStartDate,
-                      marketDataItem.marketPrice
-                    ) * 100
+                    marketPriceAtStartDate,
+                    marketDataItem.marketPrice
+                  ) * 100
             };
           })
       ]
