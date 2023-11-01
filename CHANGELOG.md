@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a button to edit the exchange rates in the admin control panel
+
 ### Changed
 
 - Improved the language localization for German (`de`)
