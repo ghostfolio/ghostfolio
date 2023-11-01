@@ -311,7 +311,9 @@ export class DataProviderService {
           i + maximumNumberOfSymbolsPerRequest
         );
 
-        const promise = Promise.resolve(dataProvider.getQuotes(symbolsChunk));
+        const promise = Promise.resolve(
+          dataProvider.getQuotes({ symbols: symbolsChunk })
+        );
 
         promises.push(
           promise.then(async (result) => {

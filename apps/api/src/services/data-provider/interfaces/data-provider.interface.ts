@@ -36,9 +36,11 @@ export interface DataProviderInterface {
 
   getName(): DataSource;
 
-  getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }>;
+  getQuotes({
+    symbols
+  }: {
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }>;
 
   getTestSymbol(): string;
 
