@@ -11,7 +11,7 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
-  calculateBenchmarkTrend,
+  calculateBenchmarkTrend
 } from '@ghostfolio/common/helper';
 import {
   BenchmarkMarketDataDetails,
@@ -39,7 +39,7 @@ export class BenchmarkService {
     private readonly redisCacheService: RedisCacheService,
     private readonly symbolProfileService: SymbolProfileService,
     private readonly symbolService: SymbolService
-  ) { }
+  ) {}
 
   public calculateChangeInPercentage(baseValue: number, currentValue: number) {
     if (baseValue && currentValue) {
@@ -88,7 +88,7 @@ export class BenchmarkService {
         if (benchmarks) {
           return benchmarks;
         }
-      } catch { }
+      } catch {}
     }
 
     const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles();
@@ -226,9 +226,9 @@ export class BenchmarkService {
                 marketPriceAtStartDate === 0
                   ? 0
                   : this.calculateChangeInPercentage(
-                    marketPriceAtStartDate,
-                    marketDataItem.marketPrice
-                  ) * 100
+                      marketPriceAtStartDate,
+                      marketDataItem.marketPrice
+                    ) * 100
             };
           })
       ]
