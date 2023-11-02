@@ -12,6 +12,7 @@ import { FinaryPageComponent } from './products/finary-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
+import { IntuitMintPageComponent } from './products/intuit-mint-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
@@ -93,7 +94,7 @@ export const products: Product[] = [
     key: 'capmon',
     name: 'CapMon.org',
     origin: $localize`Germany`,
-    note: 'Sunset in 2023',
+    note: 'CapMon.org has discontinued in 2023',
     slogan: 'Next Generation Assets Tracking'
   },
   {
@@ -183,6 +184,17 @@ export const products: Product[] = [
     slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
+    component: IntuitMintPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'intuit-mint',
+    name: 'Intuit Mint',
+    note: 'Intuit Mint has discontinued in 2023',
+    origin: $localize`United States`,
+    pricingPerYear: '$60',
+    slogan: 'Managing money, made simple'
+  },
+  {
     component: JustEtfPageComponent,
     founded: 2011,
     hasFreePlan: true,
@@ -224,7 +236,7 @@ export const products: Product[] = [
     key: 'maybe-finance',
     languages: ['English'],
     name: 'Maybe Finance',
-    note: 'Sunset in 2023',
+    note: 'Maybe Finance has discontinued in 2023',
     origin: $localize`United States`,
     pricingPerYear: '$145',
     region: $localize`United States`,
@@ -352,7 +364,7 @@ export const products: Product[] = [
     key: 'stockmarketeye',
     name: 'StockMarketEye',
     origin: $localize`France`,
-    note: 'Sunset in 2023',
+    note: 'StockMarketEye has discontinued in 2023',
     slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
