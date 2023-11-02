@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RouterModule } from '@angular/router';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
@@ -21,7 +22,8 @@ import { AdminOverviewComponent } from './admin-overview.component';
     MatCardModule,
     MatSelectModule,
     MatSlideToggleModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterModule
   ],
   providers: [CacheService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
