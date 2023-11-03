@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -52,14 +53,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     comment: '',
     name: ['', Validators.required],
     scraperConfiguration: '',
-    symbolMapping: ''
+    symbolMapping: '',
+    historicalData: this.formBuilder.group({
+      csvString: ''
+    })
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public historicalDataAsCsvString: string;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -78,7 +81,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) {}
 
   public ngOnInit(): void {
@@ -88,9 +92,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public initialize() {
-    this.historicalDataAsCsvString =
-      AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
-
     this.adminService
       .fetchAdminMarketDataBySymbol({
         dataSource: this.data.dataSource,
@@ -135,7 +136,10 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
+          historicalData: {
+            csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
+          }
         });
 
         this.assetProfileForm.markAsPristine();
@@ -163,26 +167,34 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onImportHistoricalData() {
-    const marketData = csvToJson(this.historicalDataAsCsvString, {
-      dynamicTyping: true,
-      header: true,
-      skipEmptyLines: true
-    }).data;
+    try {
+      const marketData = csvToJson(
+        this.assetProfileForm.controls['historicalData'].controls['csvString']
+          .value,
+        {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true
+        }
+      ).data;
 
-    this.adminService
-      .postMarketData({
-        dataSource: this.data.dataSource,
-        marketData: {
-          marketData: marketData.map(({ date, marketPrice }) => {
-            return { marketPrice, date: parseDate(date).toISOString() };
-          })
-        },
-        symbol: this.data.symbol
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.initialize();
-      });
+      this.adminService
+        .postMarketData({
+          dataSource: this.data.dataSource,
+          marketData: {
+            marketData: marketData.map(({ date, marketPrice }) => {
+              return { marketPrice, date: parseDate(date).toISOString() };
+            })
+          },
+          symbol: this.data.symbol
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(() => {
+          this.initialize();
+        });
+    } catch (err) {
+      this.snackBar.open('Unable to parse data', undefined, { duration: 3000 });
+    }
   }
 
   public onMarketDataChanged(withRefresh: boolean = false) {
