@@ -30,16 +30,17 @@ export class YahooFinanceService implements DataProviderInterface {
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
-    const { assetClass, assetSubClass, currency, name } =
-      await this.yahooFinanceDataEnhancerService.getAssetProfile(aSymbol);
+    let symbol = aSymbol;
+    let { assetClass, assetSubClass, currency, name } =
+      await this.yahooFinanceDataEnhancerService.getAssetProfile(symbol);
 
     return {
       assetClass,
       assetSubClass,
       currency,
       name,
-      dataSource: this.getName(),
-      symbol: aSymbol
+      symbol,
+      dataSource: this.getName()
     };
   }
 
@@ -60,7 +61,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const historicalResult = await yahooFinance.historical(
-        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+        await this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
           symbol
         ),
         {
@@ -112,7 +113,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
     try {
       const historicalResult = await yahooFinance.historical(
-        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+        await this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
           aSymbol
         ),
         {
@@ -167,9 +168,17 @@ export class YahooFinanceService implements DataProviderInterface {
       return response;
     }
 
-    const yahooFinanceSymbols = symbols.map((symbol) =>
-      this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(symbol)
-    );
+    const yahooFinanceSymbols: string[] = [];
+    const yahooFinanceSymbolMap: { [yahooFinanceSymbol: string]: string } = {};
+
+    for (const symbol of symbols) {
+      const yahooFinanceSymbol =
+        await this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+          symbol
+        );
+      yahooFinanceSymbolMap[yahooFinanceSymbol] = symbol;
+      yahooFinanceSymbols.push(yahooFinanceSymbol);
+    }
 
     try {
       let quotes: Pick<
@@ -193,9 +202,10 @@ export class YahooFinanceService implements DataProviderInterface {
       for (const quote of quotes) {
         // Convert symbols back
         const symbol =
-          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
-            quote.symbol
-          );
+          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol({
+            yahooFinanceSymbolMap,
+            yahooFinanceSymbol: quote.symbol
+          });
 
         response[symbol] = {
           currency: quote.currency,
@@ -332,9 +342,9 @@ export class YahooFinanceService implements DataProviderInterface {
         });
 
         const symbol =
-          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
-            marketDataItem.symbol
-          );
+          this.yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol({
+            yahooFinanceSymbol: marketDataItem.symbol
+          });
 
         const { assetClass, assetSubClass } =
           this.yahooFinanceDataEnhancerService.parseAssetClass({
