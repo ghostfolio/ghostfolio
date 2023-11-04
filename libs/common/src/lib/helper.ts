@@ -16,6 +16,10 @@ import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark, UniqueAsset } from './interfaces';
 import { ColorScheme } from './types';
 
+export const DATE_FORMAT = 'yyyy-MM-dd';
+export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
+export const DATE_FORMAT_YEARLY = 'yyyy';
+
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
 export function capitalize(aString: string) {
@@ -240,10 +244,6 @@ export function groupBy<T, K extends keyof T>(
   return map;
 }
 
-export function isCurrency(aSymbol = '') {
-  return currencies[aSymbol];
-}
-
 export function interpolate(template: string, context: any) {
   return template?.replace(/[$]{([^}]+)}/g, (_, objectPath) => {
     const properties = objectPath.split('.');
@@ -254,43 +254,9 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function resetHours(aDate: Date) {
-  const year = getYear(aDate);
-  const month = getMonth(aDate);
-  const day = getDate(aDate);
-
-  return new Date(Date.UTC(year, month, day));
+export function isCurrency(aSymbol = '') {
+  return currencies[aSymbol];
 }
-
-export function resolveFearAndGreedIndex(aValue: number) {
-  if (aValue <= 25) {
-    return { emoji: '🥵', text: 'Extreme Fear' };
-  } else if (aValue <= 45) {
-    return { emoji: '😨', text: 'Fear' };
-  } else if (aValue <= 55) {
-    return { emoji: '😐', text: 'Neutral' };
-  } else if (aValue < 75) {
-    return { emoji: '😜', text: 'Greed' };
-  } else {
-    return { emoji: '🤪', text: 'Extreme Greed' };
-  }
-}
-
-export function resolveMarketCondition(
-  aMarketCondition: Benchmark['marketCondition']
-) {
-  if (aMarketCondition === 'BEAR_MARKET') {
-    return { emoji: '🐻' };
-  } else if (aMarketCondition === 'BULL_MARKET') {
-    return { emoji: '🐮' };
-  } else {
-    return { emoji: '⚪' };
-  }
-}
-
-export const DATE_FORMAT = 'yyyy-MM-dd';
-export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
-export const DATE_FORMAT_YEARLY = 'yyyy';
 
 export function parseDate(date: string): Date | null {
   // Transform 'yyyyMMdd' format to supported format by parse function
@@ -333,4 +299,38 @@ export function parseSymbol({ dataSource, symbol }: UniqueAsset) {
 
 export function prettifySymbol(aSymbol: string): string {
   return aSymbol?.replace(ghostfolioScraperApiSymbolPrefix, '');
+}
+
+export function resetHours(aDate: Date) {
+  const year = getYear(aDate);
+  const month = getMonth(aDate);
+  const day = getDate(aDate);
+
+  return new Date(Date.UTC(year, month, day));
+}
+
+export function resolveFearAndGreedIndex(aValue: number) {
+  if (aValue <= 25) {
+    return { emoji: '🥵', text: 'Extreme Fear' };
+  } else if (aValue <= 45) {
+    return { emoji: '😨', text: 'Fear' };
+  } else if (aValue <= 55) {
+    return { emoji: '😐', text: 'Neutral' };
+  } else if (aValue < 75) {
+    return { emoji: '😜', text: 'Greed' };
+  } else {
+    return { emoji: '🤪', text: 'Extreme Greed' };
+  }
+}
+
+export function resolveMarketCondition(
+  aMarketCondition: Benchmark['marketCondition']
+) {
+  if (aMarketCondition === 'BEAR_MARKET') {
+    return { emoji: '🐻' };
+  } else if (aMarketCondition === 'BULL_MARKET') {
+    return { emoji: '🐮' };
+  } else {
+    return { emoji: '⚪' };
+  }
 }
