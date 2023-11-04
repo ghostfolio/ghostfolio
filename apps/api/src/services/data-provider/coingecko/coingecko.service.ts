@@ -139,10 +139,10 @@ export class CoinGeckoService implements DataProviderInterface {
   }: {
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+    const quotes: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
-      return response;
+      return quotes;
     }
 
     try {
@@ -164,20 +164,22 @@ export class CoinGeckoService implements DataProviderInterface {
 
       for (const symbol in response) {
         if (Object.prototype.hasOwnProperty.call(response, symbol)) {
-          response[symbol] = {
+          const quote: IDataProviderResponse = {
             currency: DEFAULT_CURRENCY,
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: DataSource.COINGECKO,
             marketPrice: response[symbol][DEFAULT_CURRENCY.toLowerCase()],
             marketState: 'open'
           };
+
+          quotes[symbol] = quote;
         }
       }
     } catch (error) {
       Logger.error(error, 'CoinGeckoService');
     }
 
-    return response;
+    return quotes;
   }
 
   public getTestSymbol() {
