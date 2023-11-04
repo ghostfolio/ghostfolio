@@ -10,6 +10,7 @@ import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { EightFiguresPageComponent } from './products/eightfigures-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
+import { FinWisePageComponent } from './products/finwise-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
@@ -162,6 +163,16 @@ export const products: Product[] = [
     name: 'Finary',
     origin: $localize`United States`,
     slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
+  },
+  {
+    component: FinWisePageComponent,
+    founded: 2023,
+    hasFreePlan: true,
+    key: 'finwise',
+    name: 'FinWise',
+    origin: $localize`South Africa`,
+    pricingPerYear: '€69.99',
+    slogan: 'Personal finances, simplified'
   },
   {
     component: FolisharePageComponent,

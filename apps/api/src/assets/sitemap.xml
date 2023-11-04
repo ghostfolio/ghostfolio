@@ -95,6 +95,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-finwise</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-folishare</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -374,6 +378,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-finary</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-finwise</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -687,6 +695,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-finwise</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-folishare</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -840,6 +852,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-finary</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-finwise</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
