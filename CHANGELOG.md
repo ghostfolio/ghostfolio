@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a new tag with the major version to the docker image on _Docker Hub_
+
 ### Changed
 
 - Upgraded `angular` from version `16.2.1` to `16.2.12`
