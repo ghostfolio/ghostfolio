@@ -23,6 +23,7 @@ import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
 import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
+import { RocketMoneyPageComponent } from './products/rocket-money-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
@@ -306,6 +307,15 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$108',
     slogan: 'Build Financial Plans You Love.'
+  },
+  {
+    component: RocketMoneyPageComponent,
+    founded: 2015,
+    hasSelfHostingAbility: false,
+    key: 'rocket-money',
+    name: 'Rocket Money',
+    origin: $localize`United States`,
+    slogan: 'Track your net worth'
   },
   {
     component: SeekingAlphaPageComponent,
