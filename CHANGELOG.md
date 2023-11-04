@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a new tag with the major version to the docker image on _Docker Hub_
 
+### Changed
+
+- Upgraded `angular` from version `16.2.1` to `16.2.12`
+
 ### Fixed
 
 - Loosened the validation in the activities import (expects values greater than or equal to 0 for `fee`, `quantity` and `unitPrice`)
