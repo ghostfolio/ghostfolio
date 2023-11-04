@@ -7,6 +7,7 @@ import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
+import { EightFiguresPageComponent } from './products/eightfigures-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
@@ -23,6 +24,7 @@ import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
 import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
+import { RocketMoneyPageComponent } from './products/rocket-money-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
@@ -130,6 +132,15 @@ export const products: Product[] = [
     origin: $localize`Germany`,
     pricingPerYear: '€65',
     slogan: 'Your personal Dividend Calendar'
+  },
+  {
+    alias: '8figures',
+    component: EightFiguresPageComponent,
+    founded: 2022,
+    key: 'eightfigures',
+    name: '8FIGURES',
+    origin: $localize`United States`,
+    slogan: 'Portfolio Tracker Designed by Professional Investors'
   },
   {
     component: ExirioPageComponent,
@@ -306,6 +317,15 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$108',
     slogan: 'Build Financial Plans You Love.'
+  },
+  {
+    component: RocketMoneyPageComponent,
+    founded: 2015,
+    hasSelfHostingAbility: false,
+    key: 'rocket-money',
+    name: 'Rocket Money',
+    origin: $localize`United States`,
+    slogan: 'Track your net worth'
   },
   {
     component: SeekingAlphaPageComponent,
