@@ -22,6 +22,7 @@ jobs:
           images: ghostfolio/ghostfolio
           tags: |
             type=semver,pattern={{version}}
+            type=semver,pattern={{major}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
