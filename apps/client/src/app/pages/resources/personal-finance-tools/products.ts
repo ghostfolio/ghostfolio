@@ -7,6 +7,7 @@ import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
+import { EightFiguresPageComponent } from './products/eightfigures-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
@@ -131,6 +132,15 @@ export const products: Product[] = [
     origin: $localize`Germany`,
     pricingPerYear: '€65',
     slogan: 'Your personal Dividend Calendar'
+  },
+  {
+    alias: '8figures',
+    component: EightFiguresPageComponent,
+    founded: 2022,
+    key: 'eightfigures',
+    name: '8FIGURES',
+    origin: $localize`United States`,
+    slogan: 'Portfolio Tracker Designed by Professional Investors'
   },
   {
     component: ExirioPageComponent,
