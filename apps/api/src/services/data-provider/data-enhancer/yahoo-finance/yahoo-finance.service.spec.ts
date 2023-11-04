@@ -38,19 +38,19 @@ describe('YahooFinanceDataEnhancerService', () => {
 
   it('convertFromYahooFinanceSymbol', async () => {
     expect(
-      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
-        'BRK-B'
-      )
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol({
+        yahooFinanceSymbol: 'BRK-B'
+      })
     ).toEqual('BRK-B');
     expect(
-      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
-        'BTC-USD'
-      )
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol({
+        yahooFinanceSymbol: 'BTC-USD'
+      })
     ).toEqual('BTCUSD');
     expect(
-      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol(
-        'EURUSD=X'
-      )
+      await yahooFinanceDataEnhancerService.convertFromYahooFinanceSymbol({
+        yahooFinanceSymbol: 'EURUSD=X'
+      })
     ).toEqual('EURUSD');
   });
 
