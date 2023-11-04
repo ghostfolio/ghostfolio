@@ -33,6 +33,7 @@ import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
+import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 
@@ -408,6 +409,16 @@ export const products: Product[] = [
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
     useAnonymously: true
+  },
+  {
+    component: VyzerPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    key: 'vyzer',
+    name: 'Vyzer',
+    origin: $localize`United States`,
+    pricingPerYear: '$348',
+    slogan: 'Virtual Family Office for Smart Wealth Management'
   },
   {
     component: WealthicaPageComponent,
