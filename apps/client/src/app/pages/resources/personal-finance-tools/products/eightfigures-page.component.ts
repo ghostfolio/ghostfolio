@@ -8,7 +8,7 @@ import { products } from '../products';
 @Component({
   host: { class: 'page' },
   imports: [CommonModule, MatButtonModule, RouterModule],
-  selector: 'gf-8figures-page',
+  selector: 'gf-eightfigures-page',
   standalone: true,
   styleUrls: ['../product-page-template.scss'],
   templateUrl: '../product-page-template.html'
