@@ -139,10 +139,10 @@ export class CoinGeckoService implements DataProviderInterface {
   }: {
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const quotes: { [symbol: string]: IDataProviderResponse } = {};
+    const response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
-      return quotes;
+      return response;
     }
 
     try {
@@ -152,7 +152,7 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, DEFAULT_REQUEST_TIMEOUT);
 
-      const response = await got(
+      const quotes = await got(
         `${this.URL}/simple/price?ids=${symbols.join(
           ','
         )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
@@ -162,24 +162,20 @@ export class CoinGeckoService implements DataProviderInterface {
         }
       ).json<any>();
 
-      for (const symbol in response) {
-        if (Object.prototype.hasOwnProperty.call(response, symbol)) {
-          const quote: IDataProviderResponse = {
-            currency: DEFAULT_CURRENCY,
-            dataProviderInfo: this.getDataProviderInfo(),
-            dataSource: DataSource.COINGECKO,
-            marketPrice: response[symbol][DEFAULT_CURRENCY.toLowerCase()],
-            marketState: 'open'
-          };
-
-          quotes[symbol] = quote;
-        }
+      for (const symbol in quotes) {
+        response[symbol] = {
+          currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
+          dataSource: DataSource.COINGECKO,
+          marketPrice: quotes[symbol][DEFAULT_CURRENCY.toLowerCase()],
+          marketState: 'open'
+        };
       }
     } catch (error) {
       Logger.error(error, 'CoinGeckoService');
     }
 
-    return quotes;
+    return response;
   }
 
   public getTestSymbol() {
