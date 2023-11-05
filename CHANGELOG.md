@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a data migration to set `accountType` to `NULL` in the account database table
+
 ### Fixed
 
 - Improved the handling of derived currencies (`GBp`, `ILA`, `ZAc`)
