@@ -10,6 +10,7 @@ import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { EightFiguresPageComponent } from './products/eightfigures-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
+import { FinWisePageComponent } from './products/finwise-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
@@ -33,6 +34,7 @@ import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
+import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 
@@ -161,6 +163,16 @@ export const products: Product[] = [
     name: 'Finary',
     origin: $localize`United States`,
     slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
+  },
+  {
+    component: FinWisePageComponent,
+    founded: 2023,
+    hasFreePlan: true,
+    key: 'finwise',
+    name: 'FinWise',
+    origin: $localize`South Africa`,
+    pricingPerYear: '€69.99',
+    slogan: 'Personal finances, simplified'
   },
   {
     component: FolisharePageComponent,
@@ -408,6 +420,16 @@ export const products: Product[] = [
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
     useAnonymously: true
+  },
+  {
+    component: VyzerPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    key: 'vyzer',
+    name: 'Vyzer',
+    origin: $localize`United States`,
+    pricingPerYear: '$348',
+    slogan: 'Virtual Family Office for Smart Wealth Management'
   },
   {
     component: WealthicaPageComponent,
