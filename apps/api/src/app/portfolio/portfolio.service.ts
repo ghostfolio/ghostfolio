@@ -1892,9 +1892,13 @@ export class PortfolioService {
       });
     } else {
       const accountIds = uniq(
-        orders.map(({ accountId }) => {
-          return accountId;
-        })
+        orders
+          .filter(({ accountId }) => {
+            return accountId;
+          })
+          .map(({ accountId }) => {
+            return accountId;
+          })
       );
 
       currentAccounts = await this.accountService.accounts({
