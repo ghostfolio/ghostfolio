@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to import activities by `isin` in the _Yahoo Finance_ service
 - Added a new tag with the major version to the docker image on _Docker Hub_
+- Added a blog post: _Hacktoberfest 2023 Debriefing_
 
 ### Changed
 
