@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Loosened the validation in the activities import (expects values greater than or equal to 0 for `fee`, `quantity` and `unitPrice`)
+- Handled an issue with a failing database query (`account.findMany()`) related to activities without account
 
 ## 2.17.0 - 2023-11-02
 
