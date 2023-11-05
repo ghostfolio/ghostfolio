@@ -230,18 +230,18 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 }
 ```
 
-| Field      | Type                | Description                                          |
-| ---------- | ------------------- | ---------------------------------------------------- |
-| accountId  | string (`optional`) | Id of the account                                    |
-| comment    | string (`optional`) | Comment of the activity                              |
-| currency   | string              | `CHF` \| `EUR` \| `USD` etc.                         |
-| dataSource | string              | `COINGECKO` \| `MANUAL` (for type `ITEM`) \| `YAHOO` |
-| date       | string              | Date in the format `ISO-8601`                        |
-| fee        | number              | Fee of the activity                                  |
-| quantity   | number              | Quantity of the activity                             |
-| symbol     | string              | Symbol of the activity (suitable for `dataSource`)   |
-| type       | string              | `BUY` \| `DIVIDEND` \| `ITEM` \| `SELL`              |
-| unitPrice  | number              | Price per unit of the activity                       |
+| Field      | Type                | Description                                                                   |
+| ---------- | ------------------- | ----------------------------------------------------------------------------- |
+| accountId  | string (`optional`) | Id of the account                                                             |
+| comment    | string (`optional`) | Comment of the activity                                                       |
+| currency   | string              | `CHF` \| `EUR` \| `USD` etc.                                                  |
+| dataSource | string              | `COINGECKO` \| `MANUAL` (for type `ITEM`) \| `YAHOO`                          |
+| date       | string              | Date in the format `ISO-8601`                                                 |
+| fee        | number              | Fee of the activity                                                           |
+| quantity   | number              | Quantity of the activity                                                      |
+| symbol     | string              | Symbol of the activity (suitable for `dataSource`)                            |
+| type       | string              | `BUY` \| `DIVIDEND` \| `FEE` \| `INTEREST` \| `ITEM` \| `LIABILITY` \| `SELL` |
+| unitPrice  | number              | Price per unit of the activity                                                |
 
 #### Response
 
