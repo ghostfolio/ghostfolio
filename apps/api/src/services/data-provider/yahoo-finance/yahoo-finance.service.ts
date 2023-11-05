@@ -30,7 +30,7 @@ export class YahooFinanceService implements DataProviderInterface {
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
-    const { assetClass, assetSubClass, currency, name } =
+    const { assetClass, assetSubClass, currency, name, symbol } =
       await this.yahooFinanceDataEnhancerService.getAssetProfile(aSymbol);
 
     return {
@@ -38,8 +38,8 @@ export class YahooFinanceService implements DataProviderInterface {
       assetSubClass,
       currency,
       name,
-      dataSource: this.getName(),
-      symbol: aSymbol
+      symbol,
+      dataSource: this.getName()
     };
   }
 
