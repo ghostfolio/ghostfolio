@@ -163,6 +163,15 @@ const routes: Routes = [
         './2023/09/hacktoberfest-2023/hacktoberfest-2023-page.component'
       ).then((c) => c.Hacktoberfest2023PageComponent),
     title: 'Hacktoberfest 2023'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2023/11/hacktoberfest-2023-debriefing',
+    loadComponent: () =>
+      import(
+        './2023/11/hacktoberfest-2023/hacktoberfest-2023-debriefing-page.component'
+      ).then((c) => c.Hacktoberfest2023DebriefingPageComponent),
+    title: 'Hacktoberfest 2023 Debriefing'
   }
 ];
 
