@@ -1190,6 +1190,7 @@ export class PortfolioService {
             dataProviderResponses[position.symbol]?.marketState ?? 'delayed',
           name: symbolProfileMap[position.symbol].name,
           netPerformance: position.netPerformance?.toNumber() ?? null,
+          tags: symbolProfileMap[position.symbol].tags,
           netPerformancePercentage:
             position.netPerformancePercentage?.toNumber() ?? null,
           quantity: new Big(position.quantity).toNumber()

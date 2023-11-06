@@ -298,13 +298,30 @@ export class OrderService {
     }
 
     if (filtersByTag?.length > 0) {
-      where.tags = {
-        some: {
-          OR: filtersByTag.map(({ id }) => {
-            return { id };
-          })
+      where.OR = [
+        {
+          tags: {
+            some: {
+              OR: filtersByTag.map(({ id }) => {
+                return {
+                  id: id
+                };
+              })
+            }
+          }
+        },
+        {
+          SymbolProfile: {
+            tags: {
+              some: {
+                OR: filtersByTag.map(({ id }) => {
+                  return { id };
+                })
+              }
+            }
+          }
         }
-      };
+      ];
     }
 
     if (types) {
@@ -330,7 +347,11 @@ export class OrderService {
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          SymbolProfile: true,
+          SymbolProfile: {
+            include: {
+              tags: true
+            }
+          },
           tags: true
         },
         orderBy: { date: 'asc' }
