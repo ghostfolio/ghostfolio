@@ -57,7 +57,14 @@ const locales = {
   Europe: $localize`Europe`,
   'North America': $localize`North America`,
   Oceania: $localize`Oceania`,
-  'South America': $localize`South America`
+  'South America': $localize`South America`,
+
+  // Fear and Greed Index
+  EXTREME_FEAR: $localize`Extreme Fear`,
+  EXTREME_GREED: $localize`Extreme Greed`,
+  FEAR: $localize`Fear`,
+  GREED: $localize`Greed`,
+  NEUTRAL: $localize`Neutral`
 };
 
 export function translate(aKey: string): string {
