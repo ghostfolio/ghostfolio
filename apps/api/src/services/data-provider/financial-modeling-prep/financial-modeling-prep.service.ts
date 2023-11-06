@@ -113,13 +113,15 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return DataSource.FINANCIAL_MODELING_PREP;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const results: { [symbol: string]: IDataProviderResponse } = {};
+  public async getQuotes({
+    symbols
+  }: {
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    const response: { [symbol: string]: IDataProviderResponse } = {};
 
-    if (aSymbols.length <= 0) {
-      return {};
+    if (symbols.length <= 0) {
+      return response;
     }
 
     try {
@@ -130,7 +132,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       }, DEFAULT_REQUEST_TIMEOUT);
 
       const response = await got(
-        `${this.URL}/quote/${aSymbols.join(',')}?apikey=${this.apiKey}`,
+        `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -138,7 +140,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       ).json<any>();
 
       for (const { price, symbol } of response) {
-        results[symbol] = {
+        response[symbol] = {
           currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
@@ -150,7 +152,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       Logger.error(error, 'FinancialModelingPrepService');
     }
 
-    return results;
+    return response;
   }
 
   public getTestSymbol() {

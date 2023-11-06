@@ -8,12 +8,10 @@ import {
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsArray,
-  IsBoolean,
   IsEnum,
   IsISO8601,
   IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   Min
 } from 'class-validator';
@@ -56,7 +54,7 @@ export class UpdateOrderDto {
   id: string;
 
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   quantity: number;
 
   @IsString()
@@ -70,6 +68,6 @@ export class UpdateOrderDto {
   type: Type;
 
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   unitPrice: number;
 }

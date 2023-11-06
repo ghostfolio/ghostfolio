@@ -87,15 +87,17 @@ export class RapidApiService implements DataProviderInterface {
     return DataSource.RAPID_API;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
+  public async getQuotes({
+    symbols
+  }: {
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    if (symbols.length <= 0) {
       return {};
     }
 
     try {
-      const symbol = aSymbols[0];
+      const symbol = symbols[0];
 
       if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();

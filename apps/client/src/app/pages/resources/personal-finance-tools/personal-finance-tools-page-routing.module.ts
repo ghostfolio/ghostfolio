@@ -16,10 +16,10 @@ const routes: Routes = [
     .filter(({ key }) => {
       return key !== 'ghostfolio';
     })
-    .map(({ component, key, name }) => {
+    .map(({ alias, component, key, name }) => {
       return {
         canActivate: [AuthGuard],
-        path: $localize`open-source-alternative-to` + `-${key}`,
+        path: $localize`open-source-alternative-to` + `-${alias ?? key}`,
         loadComponent: () =>
           import(`./products/${key}-page.component`).then(() => component),
         title: $localize`Open Source Alternative to ${name}`
