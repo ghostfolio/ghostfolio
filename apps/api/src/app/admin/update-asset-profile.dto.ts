@@ -1,4 +1,4 @@
-import { AssetClass, AssetSubClass, Prisma } from '@prisma/client';
+import { AssetClass, AssetSubClass, Prisma, Tag } from '@prisma/client';
 import {
   IsArray,
   IsEnum,
@@ -26,7 +26,7 @@ export class UpdateAssetProfileDto {
 
   @IsArray()
   @IsOptional()
-  tags?: string[];
+  tags?: Tag[];
 
   @IsObject()
   @IsOptional()

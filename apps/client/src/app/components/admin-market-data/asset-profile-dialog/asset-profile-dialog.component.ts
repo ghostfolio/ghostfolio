@@ -2,9 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Inject,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -21,7 +23,8 @@ import {
   AssetClass,
   AssetSubClass,
   MarketData,
-  SymbolProfile
+  SymbolProfile,
+  Tag
 } from '@prisma/client';
 import { format } from 'date-fns';
 import { parse as csvToJson } from 'papaparse';
@@ -29,6 +32,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AssetProfileDialogParams } from './interfaces/interfaces';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -38,6 +43,8 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   styleUrls: ['./asset-profile-dialog.component.scss']
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
   public assetProfileClass: string;
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
     return { id: assetClass, label: translate(assetClass) };
@@ -51,7 +58,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
     name: ['', Validators.required],
-    tags: new FormControl<string[]>(undefined),
+    tags: new FormControl<Tag[]>(undefined),
     scraperConfiguration: '',
     symbolMapping: ''
   });
@@ -67,7 +74,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     [name: string]: { name: string; value: number };
   };
 
-  public HoldingTags: { id: string; label: string }[];
+  public HoldingTags: { id: string; name: string }[];
 
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
@@ -93,6 +100,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public initialize() {
     this.historicalDataAsCsvString =
       AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
+
+    this.adminService
+      .fetchTags()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((tags) => {
+        this.HoldingTags = tags.map(({ id, name }) => {
+          return { id, name };
+        });
+        this.dataService.updateInfo();
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.adminService
       .fetchAdminMarketDataBySymbol({
@@ -229,7 +248,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
       comment: this.assetProfileForm.controls['comment'].value ?? null,
       name: this.assetProfileForm.controls['name'].value,
-      tag: this.assetProfileForm.controls['tags'].value,
+      tags: this.assetProfileForm.controls['tags'].value,
       scraperConfiguration,
       symbolMapping
     };
@@ -256,6 +275,24 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public onRemoveTag(aTag: Tag) {
+    this.assetProfileForm.controls['tags'].setValue(
+      this.assetProfileForm.controls['tags'].value.filter(({ id }) => {
+        return id !== aTag.id;
+      })
+    );
+  }
+
+  public onAddTag(event: MatAutocompleteSelectedEvent) {
+    this.assetProfileForm.controls['tags'].setValue([
+      ...(this.assetProfileForm.controls['tags'].value ?? []),
+      this.HoldingTags.find(({ id }) => {
+        return id === event.option.value;
+      })
+    ]);
+    this.tagInput.nativeElement.value = '';
   }
 
   public ngOnDestroy() {

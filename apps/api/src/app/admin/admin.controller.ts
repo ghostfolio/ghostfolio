@@ -448,10 +448,23 @@ export class AdminController {
       );
     }
 
+    await this.adminService.patchAssetProfileData({
+      dataSource,
+      symbol,
+      tags: {
+        set: []
+      }
+    });
+
     return this.adminService.patchAssetProfileData({
       ...assetProfileData,
       dataSource,
-      symbol
+      symbol,
+      tags: {
+        connect: assetProfileData.tags?.map(({ id }) => {
+          return { id };
+        })
+      }
     });
   }
 
