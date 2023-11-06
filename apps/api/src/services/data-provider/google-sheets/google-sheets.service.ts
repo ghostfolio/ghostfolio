@@ -99,18 +99,20 @@ export class GoogleSheetsService implements DataProviderInterface {
     return DataSource.GOOGLE_SHEETS;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
-      return {};
+  public async getQuotes({
+    symbols
+  }: {
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    const response: { [symbol: string]: IDataProviderResponse } = {};
+
+    if (symbols.length <= 0) {
+      return response;
     }
 
     try {
-      const response: { [symbol: string]: IDataProviderResponse } = {};
-
       const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        aSymbols.map((symbol) => {
+        symbols.map((symbol) => {
           return {
             symbol,
             dataSource: this.getName()
@@ -129,7 +131,7 @@ export class GoogleSheetsService implements DataProviderInterface {
         const marketPrice = parseFloat(row['marketPrice']);
         const symbol = row['symbol'];
 
-        if (aSymbols.includes(symbol)) {
+        if (symbols.includes(symbol)) {
           response[symbol] = {
             marketPrice,
             currency: symbolProfiles.find((symbolProfile) => {

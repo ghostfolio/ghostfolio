@@ -105,9 +105,11 @@ export class AlphaVantageService implements DataProviderInterface {
     return DataSource.ALPHA_VANTAGE;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  public async getQuotes({
+    symbols
+  }: {
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     return {};
   }
 

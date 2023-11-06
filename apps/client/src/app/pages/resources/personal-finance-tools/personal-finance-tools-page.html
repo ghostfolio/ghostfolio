@@ -28,8 +28,8 @@
             <div class="flex-nowrap no-gutters row">
               <a
                 class="d-flex overflow-hidden w-100"
-                title="Compare Ghostfolio to {{ product.name }}"
-                [routerLink]="[pathResources, 'personal-finance-tools', pathAlternativeTo + product.key]"
+                title="Compare Ghostfolio to {{ product.name }} - {{ product.slogan }}"
+                [routerLink]="[pathResources, 'personal-finance-tools', pathAlternativeTo + (product.alias ?? product.key)]"
               >
                 <div class="flex-grow-1 overflow-hidden">
                   <div class="h6 m-0 text-truncate" i18n>

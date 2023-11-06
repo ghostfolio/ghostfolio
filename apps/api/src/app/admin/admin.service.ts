@@ -28,6 +28,7 @@ import {
   Prisma,
   Property,
   SymbolProfile,
+  DataSource,
   Tag
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
@@ -100,9 +101,17 @@ export class AdminService {
           return currency !== DEFAULT_CURRENCY;
         })
         .map((currency) => {
+          const label1 = DEFAULT_CURRENCY;
+          const label2 = currency;
+
           return {
-            label1: DEFAULT_CURRENCY,
-            label2: currency,
+            label1,
+            label2,
+            dataSource:
+              DataSource[
+                this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
+              ],
+            symbol: `${label1}${label2}`,
             value: this.exchangeRateDataService.toCurrency(
               1,
               DEFAULT_CURRENCY,

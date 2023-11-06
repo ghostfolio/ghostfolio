@@ -131,16 +131,20 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return DataSource.EOD_HISTORICAL_DATA;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const symbols = aSymbols.map((symbol) => {
-      return this.convertToEodSymbol(symbol);
-    });
+  public async getQuotes({
+    symbols
+  }: {
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    let response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
-      return {};
+      return response;
     }
+
+    const eodHistoricalDataSymbols = symbols.map((symbol) => {
+      return this.convertToEodSymbol(symbol);
+    });
 
     try {
       const abortController = new AbortController();
@@ -150,9 +154,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
       }, DEFAULT_REQUEST_TIMEOUT);
 
       const realTimeResponse = await got(
-        `${this.URL}/real-time/${symbols[0]}?api_token=${
+        `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?api_token=${
           this.apiKey
-        }&fmt=json&s=${symbols.join(',')}`,
+        }&fmt=json&s=${eodHistoricalDataSymbols.join(',')}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -160,10 +164,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
       ).json<any>();
 
       const quotes =
-        symbols.length === 1 ? [realTimeResponse] : realTimeResponse;
+        eodHistoricalDataSymbols.length === 1
+          ? [realTimeResponse]
+          : realTimeResponse;
 
       const searchResponse = await Promise.all(
-        symbols
+        eodHistoricalDataSymbols
           .filter((symbol) => {
             return !symbol.endsWith('.FOREX');
           })
@@ -176,7 +182,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         return items[0];
       });
 
-      const response = quotes.reduce(
+      response = quotes.reduce(
         (
           result: { [symbol: string]: IDataProviderResponse },
           { close, code, timestamp }

@@ -150,11 +150,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
 
         this.assetProfileForm.setValue({
-          name: this.assetProfile.name,
-          assetClass: this.assetProfile.assetClass,
-          assetSubClass: this.assetProfile.assetSubClass,
+          assetClass: this.assetProfile.assetClass ?? null,
+          assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
           tags: this.assetProfile?.tags,
+          name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
