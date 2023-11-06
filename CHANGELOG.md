@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for the _Fear & Greed Index_ (market mood)
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Improved the handling of derived currencies (`GBp`, `ILA`, `ZAc`)
+
 ## 2.18.0 - 2023-11-05
 
 ### Added
